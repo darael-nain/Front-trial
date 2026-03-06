@@ -1,0 +1,5 @@
+{
+	"id": <!--#4DIF Not(Undefined(id))--><!--#4DIF Type(id)=Is Text-->"<!--#4DHTML id-->"<!--#4DELSE--><!--#4DHTML id--><!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"negocio": "<!--#4DHTML _V3_escapeString(negocio)-->",
+	"cerrado": <!--#4DIF cerrado-->true<!--#4DELSE-->false<!--#4DENDIF-->
+}

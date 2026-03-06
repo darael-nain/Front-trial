@@ -1,0 +1,10 @@
+{
+	"rows": [
+<!--#4DLOOP aVersionId -->
+		{
+			"id": "<!--#4DHTML aVersionId{aVersionId}-->",
+			"precio_unitario": "<!--#4DHTML aPrecioUnitario{aVersionId}-->"
+		}<!--#4DIF NOT(aVersionId{aVersionId} = aVersionId{Size of array(aVersionId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

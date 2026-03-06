@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_serverInfo-->
+<html>
+	<head>
+
+		<title>Logs</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="/v3/views/compras/lista.css">
+		<script>
+			$(document).ready(function() {
+				document.title = nombreEmpresa + ' / Historial';
+				unaBase.toolbox.init();
+				var params = {
+					searchOff: true,
+					url: function() { return '/4DACTION/_V3_getLogsV3' },
+					entity: 'Logs',
+					data: {},
+					row: {
+						html: function(i, rows) {
+							return '<tr data-id="' + rows[i].id + '">' +
+								'<td>' + rows[i].fecha + '</td>' +
+								'<td>' + rows[i].hora + '</td>' +
+								'<td>' + rows[i].login + '</td>' +
+								'<td class="left"><p>' + rows[i].descripcion.replaceAll('***', '<br>') + '</p></td>' +
+								'<td>' + rows[i].modulo + '</td>' +
+								'<td>' + rows[i].folio + '</td>' +
+								//'<td>' + rows[i].ip + '</td>' +
+								//'<td class="left">' + rows[i].url + '</td>' +
+								//'<td class="left">' + rows[i].navegador + '</td>' +
+							'</tr>'
+						}
+					},
+					// detail: {
+					// 	url: function(id) { return '/v3/views/logs/content.shtml?id=' + id },
+					// 	iframe: false
+					// },
+					// Inflexiones
+					inflection: {
+						singular: 'log',
+						plural: 'logs',
+						none: 'ningún'
+					},
+					filters: [
+						{ name: 'created_at', type: 'month', caption: 'Fecha de creación', range: true, currentMonth: true },
+						{ name: 'created_at_day', type: 'new_date', caption: 'Fecha de creación', range: true, currentMonth: true, currentDay: true }
+					],
+					container : "listindex"
+				};
+
+				unaBase.toolbox.search.init(params);
+				unaBase.toolbox.menu.init({
+					entity: 'Logs',
+					buttons: ['searchOff']
+				});
+
+			});
+		</script>
+	</head>
+	<body style="min-width: 900px !important;">
+		<table style="min-width: 900px !important; width: 100% !important;" data-tipogasto="OC" class="results especial listindex">
+				<thead>
+					<tr>
+						<th width="10%">Fecha</th>
+						<th width="10%">Hora</th>
+						<th width="10%">Usuario</th>
+						<th width="50%">Descripción</th>
+						<th width="10%">Módulo</th>
+						<th width="10%">Folio / id</th>
+						<!--<th width="10%">Dirección ip</th>
+						<th width="10%">Url</th>
+						<th width="20%">Navegador</th>-->
+					</tr>
+				</thead>
+				<tfoot></tfoot>
+				<tbody id="table-logs"></tbody>
+			</table>
+	</body>
+
+	<script>
+		$(document).ready(function(){
+			$("#table-logs").removeClass("ui-selectable");
+		});
+	</script>
+</html>

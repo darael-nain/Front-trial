@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Fusionar</title>
+		<meta charset="utf-8">
+		<script>
+			$(document).ready(function() {
+				unaBase.toolbox.init();
+				unaBase.toolbox.menu.init({
+					entity: 'InstancesByProducto',
+					buttons: ['save'],
+					//buttons: [],
+					data: function() {
+						return $('.merge').serializeAnything() + '&' + $('.merge-extra').serializeAnything();
+					},
+					validate: function() {
+						return ($('table.merge > tbody > tr > td:last-of-type > input:checked').length == 1 && $('input[name="producto[text]"]').val() != '');
+					}
+				});
+
+				var autocompleteData = function() {
+					var most_used_id, most_used_name, prev_instances = 0;
+					$('#dialog-viewport table.merge tbody tr').each(function(key, item) {
+						if (key == 0) {
+							most_used_id = $(item).data('id');
+							most_used_name = decodeURIComponent($(item).data('text'));
+						}
+						var current_instances = parseInt($(item).find('td:nth-of-type(3)').text()) + parseInt($(item).find('td:nth-of-type(4)').text());
+						if (current_instances > prev_instances) {
+							most_used_id = $(item).data('id');
+							most_used_name = decodeURIComponent($(item).data('text'));
+						}
+						prev_instances = current_instances;
+					});
+
+					$('#dialog-viewport table.merge tbody tr[data-id="' + most_used_id + '"]').find('input[name="id"]').prop('checked', true);
+					$('#dialog-viewport .merge-extra input[name="text"]').val(most_used_name);
+
+					$('#dialog-menu [data-name="save"] button').button({
+						icons: {
+							primary: 'ui-icon-circle-triangle-e'
+						},
+					}).find('.ui-button-text').text('Siguiente');
+				};
+
+				$('#viewport > table > tbody > tr > td > div.chk > input[type="checkbox"]:checked').each(function() {
+					var instances = 0;
+					var that = this;
+					$.ajax({
+						url: '/4DACTION/_V3_getInstancesByProducto',
+						data: {
+							id: $(this).parentTo('tr').data('id')
+						},
+						dataType: 'json',
+						async: false,
+						success: function(data) {
+							$('#dialog-viewport table.merge > tbody').append('																												\
+								<tr data-id="' + data.id + '" data-text="' + encodeURIComponent(data.text) +  '">																					\
+									<td>' + $(that).parentTo('tr').find('td:nth-of-type(2)').clone().children().remove().end().text() + '</td>																\
+									<td>' + $(that).parentTo('tr').find('td:nth-of-type(3)').text() + '</td>																\
+									<td>' + data.total.negocios + '</td>																												\
+									<td>' + data.total.gastos + '</td>																												\
+									<td>																																	\
+										<input type="radio" name="id" value="' + data.id + '">										\
+										<input type="hidden" name="producto[' + data.id + ']" value="' + $(that).parentTo('tr').data('id') + '">	\
+									</td>																																	\
+								</tr>																																		\
+							');
+						}
+					});
+				});
+				autocompleteData();
+
+				$('#dialog-viewport table.merge').on('change', 'input[name="id"]', function(event) {
+					var text = decodeURIComponent($(event.target).closest('tr').data('text'));
+					$('#dialog-viewport .merge-extra input[name="text"]').val(text);
+				});
+
+			});
+			
+		</script>
+	</head>
+	<body>
+		<fieldset>
+			<legend>¿Qué ítem del catálogo representa mejor al grupo?</legend>
+			<table class="merge">
+				<thead>
+					<tr>
+						<th>Nombre</th>
+						<th>Categoría</th>
+						<th>Uso en Negocios</th>
+						<th>Uso en OC</th>
+						<th>Sel.</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</fieldset>
+		<fieldset class="merge-extra">
+			<legend>¿Qué nombre desea asignar al grupo?</legend>
+			<label>
+				<span>Nombre</span>
+				<input type="text" name="text" required>
+			</label>
+		</fieldset>
+	</body>
+</html>

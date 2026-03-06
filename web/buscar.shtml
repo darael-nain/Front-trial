@@ -1,0 +1,46 @@
+<!--#4DINCLUDE head.shtml-->
+<body>
+<!--#4DIF vSesion>0-->
+<!--#4DINCLUDE menuSuperior.shtml-->
+<!--#4DINCLUDE mensajes2.shtml-->
+<section>
+    <!--#4DINCLUDE info_usuario.shtml-->
+
+    <a class="link-crear" title="Crear Proveedor" href="/4DACTION/W_CREA_CONT/<!--#4DVAR vOpcionCrear-->">
+      <p>
+        <img src="/imagenes/add2.png" border="0" />
+        <span>Nuevo Proveedor</span>
+      </p>
+    </a>
+    
+    <!--#4DIF vOpcionCrear="oc"-->
+      <h1>Buscar Proveedor</h1>
+    <!--#4DELSE-->
+      <h1>Buscar Responsable</h1>
+    <!--#4DENDIF-->
+	
+        <article>         
+        <form id="frmbuscadores" class="frmbuscadores"  action="/4DACTION/W_BUSCAR_CONTACTOS" method="post" >
+            <label for="cboBuscarpor">Buscar x:</label>      
+            <select name="opcionbuscarneg" id="opcionbuscarneg" class="listas-especiales2" >
+             <option value="razon" selected="selected">Razon Social</option>
+             <option value="rut">Rut</option>                
+            </select>        
+            <input required autofocus class="txtbuscar" id="txtbuscar" name="txtbuscar" type="text"/>
+            <input name="opcioncrear" type="hidden" value="<!--#4DVAR vOpcionCrear-->"/>
+            <button  id="buttonbuscar"class="buttonbuscar" type="submit">
+                    <img src="/imagenes/search.gif" border="0" /> Buscar
+            </button> 
+           <!-- <input id="bn-buscar" class="bn-buscar" type="submit" value="Buscar" />       -->   	
+        </form>    
+     </article>
+</section>
+<!--#4DELSE-->
+    <p>
+    LA SESI&Oacute;N HA EXPIRADO...!!!
+    <a class="enlaces" href="index.shtml?t=<!--#4DVAR String(Milliseconds+Random(2))-->">VOLVER A INICIAR</a>
+    </p>
+<!--#4DENDIF-->      
+
+</body>
+</html>

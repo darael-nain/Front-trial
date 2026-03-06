@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--#4DSCRIPT/_V3_proxy_getCotizacionContent/print-->
+        <meta charset="utf-8">
+        <title>Cotización</title>
+        <!--<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">-->
+        <style>
+             @font-face {
+                font-family: 'Lato-Regular';
+                src: url('./font/Lato-Regular.ttf')  format('truetype');
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            @font-face {
+                font-family: 'Lato-Bold';
+                src: url('./font/Lato-Bold.ttf')  format('truetype');
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                font-family: 'Lato-Regular';
+                font-size: 16px;
+            }
+
+            /*header div.primary-container img {
+                float: left;
+                max-width: 500px;
+                max-height: 500px;
+            }
+
+            header section.primary-info {
+                float: right;
+                text-align: right;
+            }*/
+
+            header section.secondary-info ul {
+                display: inline-block;
+                width: auto;
+                margin-right: 20px;
+                vertical-align: top;
+            }
+
+           /* header h1 {
+                text-transform: uppercase;
+                font-size: 26px;
+            }
+
+            header h2 {
+                font-size: 18px;
+                margin-top: 10px;
+            }
+
+            header section.primary-info p {
+                font-size: 14px;
+            }*/
+
+            header section.secondary-info ul {
+                list-style: none;
+            }
+
+            header section.secondary-info li {
+                font-size: 16px;
+            }
+
+            header section.secondary-info li > * {
+                display: inline-block;
+                vertical-align: top;
+            }
+
+            header section.secondary-info li > *:first-child {
+                width: 90px;
+            }
+
+            header section.secondary-info li > *:first-child:after {
+                content: ':';
+            }
+
+            header section.secondary-info li > *:last-child {
+                /*width: 210px;*/
+                width: 300px;
+                text-transform: uppercase;
+            }
+
+            header div.summary-info {
+                margin-top: 10px;
+                margin-bottom: 15px;
+            }
+
+            header div.summary-info strong {
+                display: inline-block;
+                /*width: 305px;*/
+                width: 395px;
+                margin-right: 20px;
+            }
+
+            header div.summary-info strong,
+            header div.summary-info span {
+                text-transform: uppercase;
+            }
+
+            header div.summary-info p {
+                font-weight: bold;
+                font-size: 17px;
+                margin-top: 12px;
+                width: 775px;
+            }
+
+            section table.items {
+                width: 100%;
+                border-spacing: 0;
+                border-collapse: collapse;
+            }
+
+            section table.items tr.thead {
+                background-color: <!--#4DVAR vColorCorporativoCSS-->;
+                color: white;
+                text-transform: none;
+                <!--#4DIF (compartir_ocultar_cantidades | Not(show_item))-->
+                display: none;
+                <!--#4DENDIF-->
+            }
+
+            section table.item tr.thead th {
+                text-align: center !important;
+            }
+
+            /*section table.items {
+                border-top: 20px solid <!--#4DVAR vColorCorporativoCSS-->;
+            } */
+
+            section table.items tbody th,
+            section table.items tr.tfoot th {
+                /*background-color: lightgrey;*/
+                background-color: <!--#4DVAR vColorCorporativoCSS-->;
+                color: white;
+            }
+
+            section table.items tr.tfoot th {
+                font-size: 18px !important;
+            }
+
+            section table.items tbody th {
+                text-align: left;
+            }
+
+            section table.items tbody th p {
+                font-weight: normal !important;
+                font-size: 14px;
+            }
+
+            section table.items tbody tr th,
+            section table.items tbody tr td {
+                padding-top: 5px;
+                padding-bottom: 5px;
+            }
+
+            /*section table.items tbody tr.title:not(:first-of-type) th {
+                border-top: 20px solid white;
+            }*/
+
+            section table.items tr.tfoot.first th {
+                /*border-top: 20px solid white;*/
+            }
+
+            section table.items tbody tr.title:not(:last-of-type) th,
+            section table.items tbody tr:last-of-type td {
+                /*border-bottom: 20px solid white;*/
+            }
+
+            section table.items tr.tfoot {
+                text-align: right !important;
+            }
+
+            section table.items tr.tfoot:first-of-type th:nth-last-of-type(1),
+            section table.items tr.tfoot:first-of-type th:nth-last-of-type(2) {
+                border-top: 1px solid black;
+            }
+
+            section table.items tr.tfoot:first-of-type th:not(:nth-last-of-type(1)):not(:nth-last-of-type(2)) {
+                border-top: 1px solid white;
+            }
+
+            section table.items tr.tfoot th {
+                padding-top: 5px;
+                padding-bottom: 5px;
+                font-size: 15px;
+            }
+
+            section table.items col.code {
+                width: 100px;
+            }
+
+            section table.items col.price {
+                width: 150px;
+            }
+
+            section table.items col.subtotal {
+                width: 150px;
+            }
+
+            section table.items .numeric {
+                text-align: right;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            section section.observaciones h1 {
+                display: block;
+                width: 100%;
+                /*background-color: lightgrey;*/
+                background-color: <!--#4DVAR vColorCorporativoCSS-->;
+                color: white;
+                padding-top: 5px;
+                padding-bottom: 5px;
+                text-indent: 5px;
+                font-size: 15px;
+                margin-top: 30px;
+            }
+
+            section section.observaciones h2 {
+                margin-top: 10px;
+                font-weight: normal;
+                font-size: 17px;
+            }
+
+            section section.observaciones p {
+                color: grey;
+                word-wrap: break-word;
+                white-space: pre;
+            }
+
+            section section.observaciones table {
+            	margin-top: 15px;
+
+            }
+            section section.observaciones table td{
+            	color: grey;
+                word-wrap: break-word;
+                white-space: pre;
+            }
+
+            section section.observaciones strong {
+            	font-weight: bold;
+            }
+
+
+        </style>
+    </head>
+    <body>
+        <header>
+            <section class="secondary-info">
+                <ul>
+                    <li>
+                        <span>Para</span>
+                        <strong><!--#4DVAR Uppercase(vnombrecontacto;*)--></strong>
+                    </li>
+                    <li>
+                        <span>Cliente</span>
+                        <strong><!--#4DVAR Uppercase(valias;*)--></strong>
+                    </li>
+                    <li>
+                        <span>De</span>
+                        <span><!--#4DVAR vDeEmisor--></span>
+                    </li>
+                    <li>
+                        <span>Email</span>
+                        <span><!--#4DIF vDeEmisorEmail#""--><!--#4DVAR Uppercase(vDeEmisorEmail;*)--><!--#4DELSE-->N/A<!--#4DENDIF--></span>
+                    </li>
+                </ul>
+                <ul>
+                    <li>
+                        <span>Empresa</span>
+                        <span><!--#4DVAR Uppercase(vempresa;*)--></span>
+                    </li>
+                    <li>
+                        <span><!--#4DTEXT country_label_rut--></span>
+                        <span><!--#4DIF vrut#""--><!--#4DVAR Uppercase(vrut;*)--><!--#4DELSE-->N/A<!--#4DENDIF--></span>
+                    </li>
+                    <li>
+                        <span>Dirección</span>
+                        <span><!--#4DIF vdireccion#""--><!--#4DVAR Uppercase(vdireccion;*)--><!--#4DELSE-->N/A<!--#4DENDIF--></span>
+                    </li>
+                    <li>
+                        <span>Tel.</span>
+                        <span><!--#4DIF vfono#""--><!--#4DVAR Uppercase(vfono;*)--><!--#4DELSE-->N/A<!--#4DENDIF--></span>
+                    </li>
+                </ul>
+                <div class="summary-info">
+                    <strong>1<!--#4DVAR vreferencia--></strong>
+                    <span>CC: <!--#4DVAR param4--></span>
+                    <!--<p><!#4DVAR vComentarios</p>-->
+                </div>
+            </section>
+        </header>
+        <section>
+            <table class="items">
+                <colgroup>
+                    <col class="code">
+                    <col class="name">
+                    <col class="qty">
+                    <col class="qty2">
+                    <col class="extra">
+                    <col class="price">
+                    <col class="subtotal">
+                </colgroup>
+                <tbody>
+                    <tr class="thead">
+                        <th>&nbsp;</th>
+                        <th>Nombre</th>
+                        <th>
+                            <!--#4DIF Not(compartir_ocultar_cantidades)-->
+                            Cant.
+                            <!--#4DENDIF-->
+                        </th>
+                        <th></th>
+                        <th>
+                            <!--#4DIF Not(compartir_ocultar_cantidades)-->
+                            Días
+                            <!--#4DENDIF-->
+                        </th>
+                        <th>
+                            <!--#4DIF Not(compartir_ocultar_cantidades)-->
+                            P.U.
+                            <!--#4DENDIF-->
+                        </th>
+                        <th>Subtotal</th>
+                    </tr>
+                    <!--#4DLOOP a_tipo_det-->
+                    <!--#4DIF a_tipo_det{a_tipo_det}="TITULO"-->
+                    <!--#4DIF (Not((special_item_summary) & (a_especial{a_tipo_det})) & Not(a_items_ocultar_print{a_tipo_det}))-->
+                    <tr class="title">
+                        <th></th>
+                        <th colspan="5">
+                            <!--#4DVAR a_des{a_tipo_det}-->
+                            <p><!--#4DHTML Replace string(Replace string(Replace string(_V3_escapeString(a_observ_items{a_tipo_det});"<";"&lt");">";"&gt;");"\\n";"<br>")--></p>
+                        </th>
+                        <th class="numeric">
+                            <!--#4DIF (show_total_titulo) -->
+                            <!--#4DVAR a_subtotal{a_tipo_det}-->
+                            <!--#4DENDIF-->
+                        </th>
+                    </tr>
+                    <!--#4DENDIF-->
+                    <!--#4DELSE-->
+                    <!--#4DIF (show_item) & ((compartir_ocultar_items_cero & (a_subtotal_raw{a_tipo_det}#0)) | Not(compartir_ocultar_items_cero))-->
+                    <!--#4DIF (Not((special_item_summary) & (a_especial{a_tipo_det})) & Not(a_items_ocultar_print{a_tipo_det}))-->
+                    <tr>
+                        <td></td>
+                        <td>
+                            <!--#4DVAR a_des{a_tipo_det}-->
+                            <p><!--#4DHTML Replace string(Replace string(Replace string(_V3_escapeString(a_observ_items{a_tipo_det});"<";"&lt");">";"&gt;");"\\n";"<br>")--></p>
+                        </td>
+                        <td class="numeric">
+                            <!--#4DIF Not(compartir_ocultar_cantidades)-->
+                            <!--#4DVAR a_cantidad{a_tipo_det}-->
+                            <!--#4DENDIF-->
+                        </td>
+                        <td></td>
+                        <td class="numeric">
+                            <!--#4DIF (Not(compartir_ocultar_cantidades) & vUsarsegunda_cantidad)-->
+                            <!--#4DVAR a_cantidad2{a_tipo_det}-->
+                            <!--#4DENDIF-->
+                        </td>
+                        <td class="numeric">
+                            <!--#4DIF (Not(compartir_ocultar_cantidades) & show_total_item)-->
+                            <!--#4DVAR a_pu1{a_tipo_det}-->
+                            <!--#4DENDIF-->
+                        </td>
+                        <td class="numeric">
+                            <!--#4DIF (show_total_item)-->
+                            <!--#4DVAR a_subtotal{a_tipo_det}-->
+                            <!--#4DENDIF-->
+                        </td>
+                    </tr>
+                    <!--#4DENDIF-->
+                    <!--#4DENDIF-->
+                    <!--#4DENDIF-->
+                    <!--#4DENDLOOP-->
+                    <tr class="tfoot first">
+                        <th></th>
+                        <th></th>
+                        <th class="numeric" colspan="4">Total neto</th>
+                        <th class="numeric"><!--#4DVAR vtotalneto--></th>
+                    </tr>
+                    <tr class="tfoot">
+                        <th></th>
+                        <th></th>
+                        <th class="numeric" colspan="4"><!--#4DVAR <>_V3_IVAName--> (<!--#4DVAR <>_V3_IVARate-->%)</th>
+                        <th class="numeric"><!--#4DVAR vtotaliva--></th>
+                    </tr>
+                    <tr class="tfoot">
+                        <th></th>
+                        <th></th>
+                        <th class="numeric" colspan="4">Total</th>
+                        <th class="numeric"><!--#4DVAR vtotalneg--></th>
+                    </tr>
+                </tbody>
+            </table>
+            <section class="observaciones">
+            	<h1>Observaciones</h1>
+                <table>
+                	  <!--#4DIF vComentarios#""-->
+					 <tr>
+					   <strong><td class="condiciones-datos-item"><!--#4DVAR vComentarios--></td></strong>
+					 </tr>
+					 <!--#4DENDIF-->
+                </table>
+
+                <h2>Forma de pago:</h2>
+                <p><!--#4DVAR vFormaPago--></p>
+            </section>
+        </section>
+    </body>
+</html>

@@ -1,0 +1,16 @@
+{
+	
+	"notifyUsers": "<!--#4DHTML _V3_escapeString(notifyUsers)-->",
+	"ufUrl": "<!--#4DHTML _V3_escapeString(ufUrl)-->",
+	"urlEmailMs": "<!--#4DHTML _V3_escapeString(urlEmailMs)-->",
+	"emailMsApiKey": "<!--#4DHTML _V3_escapeString(emailMsApiKey)-->",
+	"pdfMicroservice": <!--#4DIF $pdfMicroservice-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"chatOnline": <!--#4DIF chatOnline-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"unableSocket": <!--#4DIF unableSocket-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"supportLogs": <!--#4DIF supportLogs-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"notAskChangePass": <!--#4DIF notAskChangePass-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"experimental": <!--#4DIF experimental-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"nativePrint": <!--#4DIF nativePrint-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"emailMs": <!--#4DIF emailMs-->true<!--#4DELSE-->false<!--#4DENDIF-->
+
+}

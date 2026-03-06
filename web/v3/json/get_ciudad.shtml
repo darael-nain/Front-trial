@@ -1,0 +1,9 @@
+{	
+	"rows": [
+<!--#4DLOOP aCiudad -->
+		{
+			"text": "<!--#4DTEXT _V3_escapeString(aCiudad{aCiudad})-->"			
+		}<!--#4DIF NOT(aCiudad{aCiudad} = aCiudad{Size of array(aCiudad)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

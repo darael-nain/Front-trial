@@ -1,0 +1,676 @@
+
+<div id="dialog-send-file" style="display: none;">
+    <label>
+        <span>Email</span>
+        <input type="email" name="email">
+    </label>
+</div>
+<div id="tab-1-datos-ot">
+
+    <!--
+    <div class="validation-section">
+        <div class="text">OT PENDIENTES POR VALIDAR - EXCEDE HORAS PRESUPUESTADAS</div>
+        <div class="text-validador">Responsable de validar: Ricardo Cañas</div>
+        <div><button>Validar</button></div>
+    </div>
+    -->
+
+    <!--#4dif vFolioOt#"S/N"-->
+        <!--#4dif vNotify = false-->
+            <!--#4dif vDisabledCerrado=""-->
+            <div id="label-notify" class="msg-status-notify-false">Por Notificar.</div>
+            <!--#4dendif-->
+        <!--#4delse-->
+            <div id="label-notify" class="msg-status-notify-true">Notificada.</div>
+        <!--#4dendif-->
+        <!--#4DIF ot_validated-->
+            <div id="label-notify" class="msg-status-notify-true" style="margin-top: 30px;">Validada.</div>
+        <!--#4DELSE-->
+            <div id="label-notify" class="msg-status-notify-false" style="margin-top: 30px; margin-left: -60px;">Por validar.</div>
+        <!--#4DENDIF-->
+    <!--#4dendif-->
+
+    <div class="folio-ot"><!--#4DVAR vFolioOt--></div>
+    <div class="stateot <!--#4DVAR vStyleStateOt-->">
+        <!--#4dif vFolioOt#"S/N"-->
+            <span><!--#4DVAR vEstadoOT_--></span>
+        <!--#4dendif-->
+    </div>
+
+    <!--#4DIF vEstadoOT_="CERRADA"-->
+    <div style="text-align:right;margin-bottom:10px">
+        <label class="color-blue" for="referencia-ot">Por </label>
+        <span class="color-blue"><!--#4DVAR vNombreCerrador--></span>
+        <label class="color-blue" for="referencia-ot">El </label>
+        <span class="color-blue"><!--#4DVAR vFechaCierre--></span>
+        <label class="color-blue" for="referencia-ot">A las </label>
+        <span class="color-blue"><!--#4DVAR vHoraCierre--> Hrs.</span>
+        <br>
+        <label class="color-blue" for="referencia-ot">Observación:</label>
+        <span class="color-blue"><!--#4DHTMLVAR vMensajeCierre--></span>
+    </div>
+    <!--#4dendif-->
+
+    <article id="scrollval" style="margin-top: 10px; margin-bottom: 10px; text-align: left;">
+        <h1 style="font-weight: bold; font-size: 16px; text-align: left; text-indent: 40px; padding-top: 10px; padding-bottom: 5px; display: inline-block; vertical-align: top;">Validaciones</h1>
+        <header class="header-v3" style="display: inline-block; width: auto; vertical-align: top; padding-top: 10px; zoom: .8;">
+            <nav class="toolbox" id="menu">
+                <ul style="height: auto !important;"></ul>
+            </nav>
+        </header>
+        <h2 style="display: none;"><strong>Estado</strong> <span></span> <span></span></h2>
+        <ul class="steps"></ul>
+    </article>
+
+    <!--#4dif vFolioOt#"S/N"-->
+        <!--#4DIF vCodTipoOt="PROYECTO2"-->
+            <div class="box-top">
+                <label class="label-1" for="referencia-ot">Del Proyecto : </label>
+                <span style="text-transform:uppercase!important;font-size:15px"><!--#4DVAR vRefProyNeg--></span>
+            </div>
+        <!--#4dendif-->
+        <!--#4DIF vCodTipoOt="PROYECTO"-->
+            <div class="box-top">
+                <label class="label-1" for="referencia-ot">De Cotización / Negocio : </label>
+                <a href="#" id="goto-neg-cot" style="text-decoration: underline;color:blue;" data-id="<!--#4DVAR vIdNvProyecto-->"><span style="text-transform:uppercase!important;font-size:15px;vertical-align:middle;"><!--#4DVAR vRefProyNeg--></span></a>
+            </div>
+        <!--#4dendif-->
+
+        <div class="box-top">
+            <span class="fancy-text-content">Creada por <!--#4DTEXT vNombreEmisor--> el <!--#4DTEXT vFechaEmision--> a las <!--#4DTEXT vHoraEmision--> Hrs.</span>
+    <!--#4dendif-->
+
+        <script>
+
+        $(document).ready(function(){
+            var divModulo = $('div.moduloOrigen');
+            var moduloOt = "<!--#4DHTML moduloOt-->";
+            var id_proyecto = "<!--#4DHTML id_proyecto-->";
+            var id_nv = "<!--#4DHTML vIdNvProyecto-->";
+            var estadonv = "<!--#4DHTML vEstadoNvProyecto-->";
+            var folio_proyecto = "<!--#4DHTML folio_proyecto-->";
+            var referencia_proyecto = "<!--#4DHTML referencia_proyecto-->";
+            divModulo.find('p')[0].innerHTML = moduloOt + ' ' + folio_proyecto;
+            divModulo.find('p')[0].title = referencia_proyecto;
+
+            if( moduloOt != ""){
+                divModulo.css('display','inline-block');
+            }
+
+            divModulo.on('click', 'p', function(){
+                if(moduloOt = "PROYECTO"){
+                    window.open("http://" + window.location.host + "/4DACTION/wbienvenidos#/proyectos/content.shtml?id="+ id_proyecto , '_blank'); 
+                }
+            });
+
+            $('#goto-neg-cot').click(function(){
+                var id = $(this).data('id');
+                if (estadonv == "NOTA DE VENTA") {
+                    window.open("http://" + window.location.host + "/4DACTION/wbienvenidos#negocios/content.shtml?id="+ id , '_blank'); 
+                }else{
+                     window.open("http://" + window.location.host + "/4DACTION/wbienvenidos#cotizaciones/content.shtml?id="+ id , '_blank'); 
+                }
+            });
+
+            // alert(id_nv + " "+ estadonv);
+
+            // campos opcionales
+            $('.box-motivo').hide();
+            $('.box-area-negocio').hide();
+            $('.box-area-plantilla').hide();
+            $('.box-param-personalizados').hide();
+            
+        });
+        </script>
+        <div class="moduloOrigen" style="display: none">
+            <label>Módulo origen</label>
+            <p></p>
+        </div>
+
+    <div class="box-top">
+        <label class="label-1" for="referencia-ot">Nombre</label>
+        <!--#4DIF (aCheckPermiso{18}) | (vLogin=vLoginResp_creado)-->
+            <input required autocomplete="off" class="input-1 guardar-express-ot req" id="referencia-ot" name="referenciaot" type="text" value="<!--#4dvar vReferencia-->" <!--#4DVAR vDisabledCerrado--> />
+        <!--#4delse-->
+            <input required disabled autocomplete="off" class="input-1 guardar-express-ot req" id="referencia-ot" name="referenciaot" type="text" value="<!--#4dvar vReferencia-->" />
+        <!--#4dendif-->
+        <span class="obligatorio">*</span>
+    </div>
+
+    <div class="box-left">
+        <div class="box-tipoot">
+            <label class="label-1" for="referencia-ot">Tipo</label>
+            <!--#4dif (aCheckPermiso{18}=true) | (vLogin=vLoginResp_creado)-->
+                <!--#4dif vCodTipoOt="PROYECTO2"-->
+                    <select disabled class="select-1 guardar-express-ot" id="tipo-ot" name="tipoot">
+                <!--#4delse-->
+                    <select class="select-1 guardar-express-ot" id="tipo-ot" name="tipoot" <!--#4DVAR vDisabledCerrado-->>
+                <!--#4dendif-->
+                    <option selected="selected" value="<!--#4dvar vCodTipoOt-->"><!--#4dvar vDesTipoOt--></option>
+                    <!--#4dloop a_TipoOt-->
+                        <!--#4dif a_TipoOt{a_TipoOt}#vCodTipoOt-->
+                            <!--#4dif a_TipoOt{a_TipoOt}="PROYECTO"-->
+                                <!--<option value="<!- -#4dvar a_TipoOt{a_TipoOt}- ->"><!- -#4dvar a_TipoOt{a_TipoOt}- -></option>-->
+                                <option value="<!--#4dvar a_TipoOt{a_TipoOt}-->">COTIZACIÓN / NEGOCIO</option>
+                            <!--#4delse-->
+                                <option value="<!--#4dvar a_TipoOt{a_TipoOt}-->"><!--#4dvar a_TipoOt{a_TipoOt}--></option>
+                            <!--#4dendif-->
+                        <!--#4dendif-->
+                    <!--#4dendloop-->
+                </select>
+            <!--#4delse-->
+                <select disabled class="select-1 guardar-express-ot" id="tipo-ot" name="tipoot">
+                    <option selected="selected" value="<!--#4dvar vCodTipoOt-->"><!--#4dvar vDesTipoOt--></option>
+                    <!--#4dloop a_TipoOt-->
+                        <!--#4dif a_TipoOt{a_TipoOt}#vCodTipoOt-->
+                             <!--#4dif a_TipoOt{a_TipoOt}="PROYECTO"-->
+                                <option value="<!--#4dvar a_TipoOt{a_TipoOt}-->"><!--#4dvar a_TipoOt{a_TipoOt}--></option>
+                            <!--#4delse-->
+                                <option value="<!--#4dvar a_TipoOt{a_TipoOt}-->"><!--#4dvar a_TipoOt{a_TipoOt}--></option>
+                            <!--#4dendif-->
+                        <!--#4dendif-->
+                    <!--#4dendloop-->
+                </select>
+            <!--#4dendif-->
+        </div>
+
+
+
+        <div class="buscador-de-proyectos">
+            <div class="box-busca-proy">
+
+                <!--#4dif vCodTipoOt="PROYECTO"-->
+                     <label class="label-1" for="referencia-ot">Cotización / Negocio</label>
+                <!--#4dendif-->
+                <!--#4dif vCodTipoOt="PROYECTO2"-->
+                     <label class="label-1" for="referencia-ot">Proyecto</label>
+                <!--#4dendif-->
+                <!--#4dif vCodTipoOt="GENERAL"-->
+                     <label class="label-1" for="referencia-ot">Proyecto</label>
+                <!--#4dendif-->
+
+                <input id="idproyecto-select" name="idnvproyecto" type="hidden" value="<!--#4dvar vIdNvProyecto-->" />
+
+                <div style="display:inline-block">
+                <!--#4dif (aCheckPermiso{18}=true) | (vLogin=vLoginResp_creado)-->
+                    <input required class="buscadores guardar-express-ot req" id="buscar-proyectos-auto" name="buscar-empresa" placeholder="buscar por referencia, razon" value="<!--#4dvar vRefProyecto-->" type="text" <!--#4DVAR vDisabledCerrado--> />
+                <!--#4delse-->
+                    <input required class="buscadores guardar-express-ot req" disabled id="buscar-proyectos-auto" name="buscar-empresa" placeholder="buscar por referencia, razon" value="<!--#4dvar vRefProyecto-->" type="text"/>
+                <!--#4dendif-->
+                </div>
+                <span class="obligatorio">*</span>
+            </div>
+
+            <div class="items-p-ot">
+                <label class="label-1" for="referencia-ot">Origen</label>
+                <!--#4dif (aCheckPermiso{18}=true) | (vLogin=vLoginResp_creado)-->
+                    <select id="items-tipo-ot" name="items-tipo-ot" class="guardar-express-ot req" <!--#4DVAR vDisabledCerrado-->>
+                        <option selected="selected" value="<!--#4dvar vTipoItemsIdSelect-->">
+                            <!--#4dvar vTipoItemsDesSelect-->
+                        </option>
+                        <!--#4dif vTipoItemsIdSelect#"ITEM DIRECTO"-->
+                         <option value="ITEM DIRECTO">ITEM DIRECTO</option>
+                        <!--#4dendif-->
+                        <!--#4dif vTipoItemsIdSelect#"OTROS GASTOS"-->
+                        <option value="OTROS GASTOS">OTROS GASTOS</option>
+                        <!--#4dendif-->
+                    </select>
+                <!--#4delse-->
+                    <select disabled id="items-tipo-ot" name="items-tipo-ot" class="guardar-express-ot req">
+                        <option selected="selected" value="<!--#4dvar vTipoItemsIdSelect-->">
+                            <!--#4dvar vTipoItemsDesSelect-->
+                        </option>
+                        <!--#4dif vTipoItemsIdSelect#"ITEM DIRECTO"-->
+                         <option value="ITEM DIRECTO">ITEM DIRECTO</option>
+                        <!--#4dendif-->
+                        <!--#4dif vTipoItemsIdSelect#"OTROS GASTOS"-->
+                        <option value="OTROS GASTOS">OTROS GASTOS</option>
+                        <!--#4dendif-->
+                    </select>
+                <!--#4dendif-->
+            </div>
+            <div class="itemsnv">
+                <!--#4dif (aCheckPermiso{18}=true) | (vLogin=vLoginResp_creado)-->
+                    <select class="combos-normal guardar-express-ot req" id="llave-det-nvx" name="llave-det-nvx" <!--#4DVAR vDisabledCerrado-->>       <!--#4dif Not(Undefined(vLista))-->
+                            <!--#4dvar vLista-->
+                        <!--4dendif-->
+                    </select>
+                <!--#4delse-->
+                    <select disabled class="combos-normal guardar-express-ot req" id="llave-det-nvx" name="llave-det-nvx">
+                        <!--#4dif Not(Undefined(vLista))-->
+                            <!--#4dvar vLista-->
+                        <!--4dendif-->
+                    </select>
+                <!--#4dendif-->
+            </div>
+        </div>
+
+        <div class="buscador-de-empresas">
+           <div class="box-busca-emp">
+                <label class="label-1" for="referencia-ot">Cliente</label>
+                <input id="idempresa-select" name="idempresa" type="hidden" value="<!--#4dvar vIdEmp-->"/>
+                <div style="display:inline-block">
+                    <!--#4dif (aCheckPermiso{18}=true) | (vLogin=vLoginResp_creado)-->
+                        <!--#4dif vCodTipoOt="PROYECTO2"-->
+                             <input required class="buscadores guardar-express-ot req" disabled id="buscar-empresas-auto" name="buscar-empresa" placeholder="buscar por razon, rut, email" value="<!--#4dvar vNombreEmp-->" type="text" style="text-transform:uppercase;"/>
+                        <!--#4delse-->
+                            <input required class="buscadores guardar-express-ot req" id="buscar-empresas-auto" name="buscar-empresa" placeholder="buscar por razon, rut, email" value="<!--#4dvar vNombreEmp-->" type="text" style="text-transform:uppercase;" <!--#4DVAR vDisabledCerrado--> />
+                        <!--#4dendif-->
+                    <!--#4delse-->
+                         <input required class="buscadores guardar-express-ot req" disabled id="buscar-empresas-auto" name="buscar-empresa" placeholder="buscar por razon, rut, email" value="<!--#4dvar vNombreEmp-->" type="text" style="text-transform:uppercase;"/>
+                    <!--#4dendif-->
+                    <span class="obligatorio">*</span>
+                </div>
+                <!--<i class="fas fa-user-edit ub-user-edit"></i>-->
+            </div>
+        </div>
+        <!--#4DIF param_v3_ot_simple=False -->
+             <div class="box-motivo">
+                <label class="label-1">Motivo</label>
+                <select required="" id="motivo" name="motivo" class="guardar-express-ot req">
+                    <option <!--#4DIF (vMotivo="") & (vIdMotivo=0)-->selected="selected" <!--#4DENDIF-->value="0">SELECCIONAR</option>
+                    <!--#4DLOOP aMotivoIds-->
+                    <option value="<!--#4DVAR aMotivoIds{aMotivoIds}-->"<!--#4DIF (vIdMotivo=aMotivoIds{aMotivoIds})--> selected="selected"<!--#4DENDIF-->><!--#4DTEXT Uppercase(aMotivoNombres{aMotivoIds};*)--></option>
+                    <!--#4DENDLOOP-->
+                </select>
+            </div>
+
+             <div class="box-area-negocio">
+                <label class="label-1">Área de negocio</label>
+                <select required="" id="areanegocio" name="areanegocio" class="guardar-express-ot req">
+                    <option <!--#4DIF (vAreaNegocio="") & (vIdAreaNegocio=0)-->selected="selected" <!--#4DENDIF-->value="0">SELECCIONAR</option>
+                    <!--#4DLOOP aAreaNegocioId-->
+                    <option value="<!--#4DVAR aAreaNegocioId{aAreaNegocioId}-->"<!--#4DIF (vIdAreaNegocio=aAreaNegocioId{aAreaNegocioId})--> selected="selected"<!--#4DENDIF-->><!--#4DTEXT Uppercase(aAreaNegocioNombre{aAreaNegocioId};*)--></option>
+                    <!--#4DENDLOOP-->
+                </select>
+            </div>
+
+            <div class="box-area-plantilla">
+                <label class="label-1">Plantilla</label>
+                <select required="" id="idplantilla" name="idplantilla" class="guardar-express-ot req">
+                    <option <!--#4DIF (vNombrePlantilla="") & (vIdPlantilla=0)-->selected="selected" <!--#4DENDIF-->value="0">SELECCIONAR</option>
+                    <!--#4DLOOP aPlantillaId-->
+                    <option value="<!--#4DVAR aPlantillaId{aPlantillaId}-->"<!--#4DIF (aPlantillaId=aPlantillaId{aPlantillaId})--> selected="selected"<!--#4DENDIF-->><!--#4DTEXT Uppercase(aPlantillaNombre{aPlantillaId};*)--></option>
+                    <!--#4DENDLOOP-->
+                </select>
+            </div>
+
+             <div class="box-param-personalizados">
+                <label class="label-1" style="text-transform: capitalize;"><!--#4DTEXT vParam1Label--></label>
+                <input id="param1" name="param1" class="guardar-express-ot req" type="text" value="<!--#4DTEXT vParam1Valor-->"/>
+            </div>
+        <!--#4DENDIF-->
+        <div class="dates-and-times">
+            <div>
+                <label class="label-1 show-hide-horas">Fecha inicio</label>
+                <input  <!--#4DIF Not(_V3_verifica_permisos_web(vLogin;611))-->disabled<!--#4DENDIF--> name="fecha_comienzo" class="datepicker guardar-express-ot ff req" type="text" value="<!--#4DTEXT string(vFechaComienzo;1)-->"/>
+
+                <label class="label-1 show-hide-horas">Hora inicio</label>
+                <input <!--#4DIF Not(_V3_verifica_permisos_web(vLogin;611))-->disabled<!--#4DENDIF--> name="hora_comienzo" class="guardar-express-ot req" value="<!--#4DTEXT vHoraComienzo-->" type="time" step="1">
+            </div>
+
+             <div>
+                <label class="label-1 show-hide-horas">Fecha termino</label>
+                <input name="fechavcto" class="datepicker guardar-express-ot req ff" type="text" value="<!--#4dvar string(vFechaVcto;1)-->" <!--#4DVAR vDisabledCerrado--> />
+                <label class="label-1 show-hide-horas">Hora termino</label>
+                <input name="hora" class="guardar-express-ot req" value="<!--#4DTEXT vHoraDes-->" type="time" step="1" <!--#4DVAR vDisabledCerrado-->>
+            </div>
+
+            <!--#4DIF _V3_verifica_permisos_web(vLogin;610)-->
+            <div>
+                <label class="label-1 show-hide-horas"><!--#4DTEXT textLabelFechaFInal--></label>
+                <input id="fecha_final" name="fecha_final" class="datepicker guardar-express-ot req ff" type="text" value="<!--#4DTEXT string(vFechaFinal;1)-->"/>
+
+                <label class="label-1 show-hide-horas"><!--#4DTEXT textLabelHoraFInal--></label>
+                <input name="hora_final" class="guardar-express-ot req" value="<!--#4DTEXT vHoraFinal-->" type="time" step="1">
+                <label></label>
+            </div>
+            <!--#4DENDIF-->
+        </div>
+
+    </div>
+
+    <div class="box-right">
+        <div class="box-importancia">
+            <label class="label-1">Importancia</label>
+            <!--#4dif (_V3_verifica_permisos_web(vLogin;18)) | (vLogin=vLoginResp_creado)-->
+                <select required id="importancia" name="importancia" class="guardar-express-ot req" <!--#4DVAR vDisabledCerrado-->>
+                    <option selected="selected" value="<!--#4dvar vIdPrioridad-->"><!--#4dvar vDesPrioridad--></option>
+                    <!--#4dloop aPrio-->
+                        <!--#4dif aPrio{aPrio}#vIdPrioridad-->
+                        <option value="<!--#4dvar aPrio{aPrio}-->"><!--#4dvar aPrio{aPrio}--></option>
+                        <!--#4dendif-->
+                    <!--#4dendloop-->
+                </select>
+            <!--#4delse-->
+                <select required disabled id="importancia" name="importancia" class="guardar-express-ot req" >
+                    <option selected="selected" value="<!--#4dvar vIdPrioridad-->"><!--#4dvar vDesPrioridad--></option>
+                    <!--#4dloop aPrio-->
+                        <!--#4dif aPrio{aPrio}#vIdPrioridad-->
+                        <option value="<!--#4dvar aPrio{aPrio}-->"><!--#4dvar aPrio{aPrio}--></option>
+                        <!--#4dendif-->
+                    <!--#4dendloop-->
+                </select>
+            <!--#4dendif-->
+            <span class="obligatorio">*</span>
+        </div>
+
+        <div>
+            <label class="label-1">Areas de trabajo</label>
+            <!--#4dif (_V3_verifica_permisos_web(vLogin;18)) | (vLogin=vLoginResp_creado)-->
+                <select required class="guardar-express-ot req" id="area-trabajo" name="areatrabajo" onChange="fn_load_user(this.value)" <!--#4DVAR vDisabledCerrado-->>
+                    <option selected="selected" value="<!--#4dvar vIdArea-->"><!--#4dvar vDesArea--></option>
+                    <!--#4dloop aAreaId-->
+                        <!--#4dif aAreaId{aAreaId}#vIdArea-->
+                        <option value="<!--#4dvar aAreaId{aAreaId}-->"><!--#4dvar aAreaNombre{aAreaId}--></option>
+                        <!--#4dendif-->
+                    <!--#4dendloop-->
+                </select>
+            <!--#4delse-->
+                <select required class="guardar-express-ot req" disabled id="area-trabajo" name="areatrabajo" onChange="fn_load_user(this.value)" >
+                    <option selected="selected" value="<!--#4dvar vIdArea-->"><!--#4dvar vDesArea--></option>
+                    <!--#4dloop aAreaId-->
+                        <!--#4dif aAreaId{aAreaId}#vIdArea-->
+                        <option value="<!--#4dvar aAreaId{aAreaId}-->"><!--#4dvar aAreaNombre{aAreaId}--></option>
+                        <!--#4dendif-->
+                    <!--#4dendloop-->
+                </select>
+            <!--#4dendif-->
+            <span class="obligatorio">*</span>
+        </div>
+
+        <div class="box-responsable">
+            <label class="label-1">Responsable</label>
+            <!--#4dif (_V3_verifica_permisos_web(vLogin;18)) | (vLogin=vLoginResp_creado)-->
+                <select required class="guardar-express-ot req" id="responsables-area" name="responsables-area" onChange="guarda_responsable(this.value)" <!--#4DVAR vDisabledCerrado-->>
+                    <option selected="selected" value="<!--#4dvar vLoginResp-->"><!--#4dvar vNomResp--></option>
+                    <!--#4dif(Not(Undefined(aLoginAreaResp)))-->
+                        <!--#4dloop aLoginAreaResp-->
+                            <!--#4dif aLoginAreaResp{aLoginAreaResp}#vLoginResp-->
+                            <option value="<!--#4dvar aLoginAreaResp{aLoginAreaResp}-->">
+                                <!--#4dvar aNombresAreaResp{aLoginAreaResp}-->
+                            </option>
+                            <!--#4dendif-->
+                        <!--#4dendloop-->
+                    <!--#4dendif-->
+                </select>
+            <!--#4delse-->
+                <select required class="guardar-express-ot req" readonly id="responsables-area" name="responsables-area" onChange="guarda_responsable(this.value)">
+                    <option selected="selected" value="<!--#4dvar vLoginResp-->"><!--#4dvar vNomResp--></option>
+                    <!--#4dloop aLoginAreaResp-->
+                        <!--#4dif aLoginAreaResp{aLoginAreaResp}#vLoginResp-->
+                        <option value="<!--#4dvar aLoginAreaResp{aLoginAreaResp}-->">
+                            <!--#4dvar aNombresAreaResp{aLoginAreaResp}-->
+                        </option>
+                        <!--#4dendif-->
+                    <!--#4dendloop-->
+                </select>
+            <!--#4dendif-->
+            <span class="obligatorio">*</span>
+        </div>
+
+        <div class="box-part">
+             <!--#4dif ( (_V3_verifica_permisos_web(vLogin;18)) | (vLogin=vLoginResp_creado) ) & (vDisabledCerrado="") -->
+             <div class="s-box-btns-add-part">
+                <a class="a-participantes add-participantes"></a>
+                <a class="a-invitados add-invitados"></a>
+             </div>
+            <!--#4dendif-->
+            <div id="box-participantesx">
+            <!--#4dloop aLoginAsig-->
+                <!--#4dif aTipoAsig{aLoginAsig}="INTEGRANTE"-->
+
+                    <!--#4dif aActivoAsig{aLoginAsig}-->
+                    <div class="items-asignados-int">
+                    <!--#4delse-->
+                    <div class="items-asignados-int part-enabled" title="Usuario no se encuentra habilitado en el sistema">
+                    <!--#4dendif-->
+
+                        <!--#4dif (aVistoPorAsig{aLoginAsig})-->
+                        <span class="check-ot" title="El participante ha visto la OT">✓</span>
+                        <!--#4dendif-->
+                        <!--#4dvar lowercase(aNombreAsig{aLoginAsig})-->
+                        <!--#4dif (aDefectoAsig{aLoginAsig}="no") & (vDisabledCerrado="") -->
+                            <a id="<!--#4dvar aLoginAsig{aLoginAsig}-->" class="delete-part-ot">x</a>
+                        <!--#4dendif-->
+                    </div>
+                <!--#4dendif-->
+                <!--#4dif (aTipoAsig{aLoginAsig}="INVITADO") & (vDisabledCerrado="") -->
+                    <div class="items-asignados-inv">
+                        <!--#4dif (aVistoPorAsig{aLoginAsig})-->
+                        <span class="check-ot" title="El participante ha visto la OT">✓</span>
+                        <!--#4dendif-->
+                        <!--#4dvar lowercase(aNombreAsig{aLoginAsig})-->
+                        <a id="<!--#4dvar aLoginAsig{aLoginAsig}-->" class="delete-part-ot">x</a>
+                    </div>
+                <!--#4dendif-->
+            <!--#4dendloop-->
+            </div>
+        </div>
+    </div>
+
+    <div class="box-hrs-vcto" style="margin-left: 40px; text-align: left !important;">
+        <div>
+
+
+
+        <!--#4dif vCodTipoOt="PROYECTO"-->
+            <!--#4DIF _V3_verifica_permisos_web(vLogin;494)-->
+                <!--#4DIF param_v3_ot_simple=False -->
+                    <label class="label-1 show-hide-horas">H. Presup.</label>
+                    <input class="hasignada2 show-hide-horas" id="htotal" readonly type="text" value="<!--#4dvar vHPres-->" />
+                <!--#4DENDIF-->
+            <!--#4DENDIF-->
+        <!--#4DENDIF-->
+
+            <label class="label-1">H. Asignadas</label>
+        <!--#4dif (_V3_verifica_permisos_web(vLogin;18)) | (vLogin=vLoginResp_creado)-->
+            <input required class="hasignada guardar-express-ot" id="hasignada" name="hasignada" type="text" value="<!--#4dvar vHAsiganadas-->" <!--#4DVAR vDisabledCerrado--> />
+        <!--#4delse-->
+            <input required readonly class="hasignada guardar-express-ot" id="hasignada" name="hasignada" type="text" value="<!--#4dvar vHAsiganadas-->" />
+        <!--#4dendif-->
+
+        <!--#4dif vCodTipoOt="PROYECTO"-->
+
+            <!--#4DIF _V3_verifica_permisos_web(vLogin;494)-->
+              <!--#4DIF param_v3_ot_simple=False -->
+                <label class="label-1 show-hide-horas">Diferencia</label>
+                <input class="hasignada2 show-hide-horas" id="hdisp" readonly type="text" value="<!--#4dvar vHDisp-->" />
+                <!--#4DENDIF-->
+                <label class="label-1 show-hide-horas">H. Reales</label>
+                <input readonly class="hasignada2 show-hide-horas" type="text" value="<!--#4DTEXT  HRealeshh-->"/>
+
+                <label class="label-1 show-hide-horas">Costo. Unit</label>
+                <input style="width:100px" readonly class="hasignada2 show-hide-horas" type="text" value="<!--#4DTEXT  String(CostoUnihh;"$ ###.###.###.##0")-->" />
+
+                <label class="label-1 show-hide-horas">Total Real</label>
+                <input style="width:100px" readonly class="hasignada2 show-hide-horas" type="text" value="<!--#4DTEXT  String(costoTotalReal;"$ ###.###.###.##0")-->" />
+
+           <!--#4DENDIF-->
+           </div>
+
+            <!-- <label class="label-1 show-hide-horas" >Total</label>
+            #4dif num(vHDif)<0- ->
+            <input class="hasignada2 color-red-normal show-hide-horas" id="htotal" disabled type="text" value="<!- -#4dvar vHTotal- ->" />
+            <!- -#4delse- ->
+            <input class="hasignada2 show-hide-horas" id="htotal" disabled type="text" value="<!- -#4dvar vHTotal- ->" />
+            < !- -#4dendif
+
+            <label class="label-1 show-hide-horas">Restantes</label>
+            <input class="hasignada2 show-hide-horas" id="hrest" disabled type="text" value="<! - -#4dvar vHDisp" />   -->
+        <!--#4dendif-->
+
+    </div>
+
+    <div class="box-bottom">
+        <div>
+            <label class="label-1">Descripci&oacute;n</label>
+            <!--#4dif (_V3_verifica_permisos_web(vLogin;18)) | (vLogin=vLoginResp_creado)-->
+                <textarea required class="guardar-express-ot req" id="idcomment-otxx" name="content" <!--#4DVAR vDisabledCerrado-->><!--#4dvar vMensaje--></textarea>
+            <!--#4delse-->
+                <textarea required class="guardar-express-ot req" readonly id="idcomment-otxx" name="content"><!--#4dvar vMensaje--></textarea>
+            <!--#4dendif-->
+            <span class="obligatorio">*</span>
+
+            <!--#4dif vDisabledCerrado=""-->
+            <!--<a class="agrandar-text">+</a>-->
+            <!--<a style="display:none" class="reducir-text">-</a>-->
+            <div style="text-align:left;margin-left:-15px">
+                <button title="OT" type="button" id="btn-subir-archivo">Adjuntar archivo</button>
+            </div>
+            <!--#4dendif-->
+        </div>
+
+        <div class="contaianer-todo-file">
+            <div class="label-archivos-ot"><label>Archivos : </label><label> Descargar haciendo click en el archivo.</label></div>
+            <div class="box-files-ot">
+                <!--#4dloop aIdArchivo-->
+                    <!--#4dif (aFrom{aIdArchivo}="OT") | (aFrom{aIdArchivo}="COMPONENTE")-->
+                    <div id="id<!--#4dvar aIdArchivo{aIdArchivo}-->" class="box-items-files">
+                        <!--#4dif aDesFormatoArchivo{aIdArchivo}="IMAGEN"-->
+                            <!--#4dif aFrom{aIdArchivo}="OT"-->
+                                 <img alt="<!--#4dvar aAncho{aIdArchivo}-->-<!--#4dvar aAlto{aIdArchivo}-->" id="<!--#4dvar aIdArchivo{aIdArchivo}-->" class="img-popup" src="/uploads/<!--#4dvar aIdArchivo{aIdArchivo}-->.<!--#4dvar aFormatoArchivo{aIdArchivo}-->">
+                            <!--#4delse-->
+                                 <img alt="<!--#4dvar aAncho{aIdArchivo}-->-<!--#4dvar aAlto{aIdArchivo}-->" id="<!--#4dvar aIdArchivo{aIdArchivo}-->" class="img-popup" src="/uploads_componentes_tarea/<!--#4dvar aNombreArchivo{aIdArchivo}-->">
+                            <!--#4dendif-->
+                        <!--#4delse-->
+                            <!--#4dif aDesFormatoArchivo{aIdArchivo}="AUDIO"-->
+                                <!--#4dif aFrom{aIdArchivo}="OT"-->
+                                    <a target="_black" href="/uploads/<!--#4dvar aIdArchivo{aIdArchivo}-->.<!--#4dvar aFormatoArchivo{aIdArchivo}-->">
+                                    <audio controls="controls">
+                                        <source src="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->" type="audio/mpeg" />
+                                        Tu navegador no soporta el elemento de audio, actualize a uno mas moderno, :)!
+                                    </audio>
+                                    </a>
+                                <!--#4delse-->
+                                    <a target="_black" href="/uploads_componentes_tarea/<!--#4dvar aNombreArchivo{aIdArchivo}-->">
+                                    <audio controls="controls">
+                                        <source src="/uploads_componentes_tarea/<!--#4dvar aNombreArchivo{aIdArchivo}-->" type="audio/mpeg" />
+                                        Tu navegador no soporta el elemento de audio, actualice a uno mas moderno, :)!
+                                    </audio>
+                                </a>
+                                <!--#4dendif-->
+                            <!--#4delse-->
+                                <!--#4dif aFrom{aIdArchivo}="OT"-->
+                                    <a target="_black" href="/uploads/<!--#4dvar aIdArchivo{aIdArchivo}-->.<!--#4dvar aFormatoArchivo{aIdArchivo}-->">
+                                     <img src="/extensiones/PNG/<!--#4dvar aFormatoArchivo{aIdArchivo}-->.png">
+                                    </a>
+                                <!--#4delse-->
+                                    <a target="_black" href="/uploads_componentes_tarea/<!--#4dvar aNombreArchivo{aIdArchivo}-->">
+                                     <img src="/extensiones/PNG/<!--#4dvar aFormatoArchivo{aIdArchivo}-->.png">
+                                    </a>
+                                <!--#4dendif-->
+                            <!--#4dendif-->
+                        <!--#4dendif-->
+                        <span class="des-file"><!--#4dvar aDesArchivo{aIdArchivo}--></span>
+
+                        <!--#4dif aFrom{aIdArchivo}="COMPONENTE"-->
+                            <a rel="<!--#4dvar aIdArchivo{aIdArchivo}-->" class="delete-file-comp" style="cursor:pointer">x</a>
+                        <!--#4delse-->
+                            <a rel="<!--#4dvar aIdArchivo{aIdArchivo}-->" class="delete-file-normal" style="cursor:pointer">x</a>
+                        <!--#4dendif-->
+                        <a rel="<!--#4dvar aIdArchivo{aIdArchivo}-->" class="send-file" style="cursor:pointer" title="Enviar archivo por email">@</a>
+                    </div>
+                    <!--#4dendif-->
+                <!--#4dendloop-->
+            </div>
+        </div>
+    </div>
+
+    <div class="box-bottom-2-">
+
+
+        <div class="box-comment-ot">
+            <!--#4dif vFolioOt#"S/N"-->
+            <label class="caca">Comentarios : </label><img id="status-save-comment" src='/imagenes_green/ajaxloader.gif'>
+            <div>
+                <span class="photo-comment"><img src="<!--#4DVAR vFotoLogueado-->"></span>
+                <span>
+                    <textarea id="text-coment-ot" class="input-coment-det-rev" placeholder="Agregar un comentario..."></textarea>
+                </span>
+                <button id="btn-comment-ot" type="button">Comentar</button>
+            </div>
+            <!--4dendif-->
+            <div class="list-comment-ot">
+                <!--#4dloop aIdComOt-->
+                  <div class="items-comentario" id="<!--#4DVAR aIdComOt{aIdComOt}-->">
+                    <div>
+                        <span class="nro"><!--#4DVAR aNroComOt{aIdComOt}--></span>
+                        <span class="photo"><img src="<!--#4DVAR aPhotoRespComOt{aIdComOt}-->"></span>
+                        <span class="name">
+                            <!--#4DVAR aNomRespComOt{aIdComOt}--> /
+                            <span class="especial-span"><!--#4DVAR aEmailRespComOt{aIdComOt}--></span>
+                            <!--#4dif aTypeRespComOt{aIdComOt}="guest"-->
+                                <span class="guest-tag">( Invitado )</span>
+                            <!--#4dendif-->
+                        </span>
+                    </div>
+                    <div>
+                        <span class="comment"><!--#4DHTMLVAR aDesComOt{aIdComOt}--></span>
+                        <span class="date">
+                            Comentado el <!--#4DVAR aDateComOt{aIdComOt}--> a las <!--#4DVAR aTimeComOt{aIdComOt}-->
+                        </span>
+                    </div>
+                  </div>
+                <!--#4dendloop-->
+            </div>
+        </div>
+    </div>
+
+    <hr class="linea-ql">
+
+
+    <p class="set-botones">
+        <!--#4dif vDisabledCerrado=""-->
+        <button id="saveot-ajax" type="button">Guardar</button>
+        <!--#4dendif-->
+
+        <!--#4dif vFolioOt#"S/N"-->
+            <!--#4dif vDisabledCerrado=""-->
+            <button id="notificar-ot" type="button">Notificar</button>
+            <!--#4dendif-->
+
+            <button id="duplicar-ot" type="button">Duplicar</button>
+
+            <!--#4dif vEstadoOT_="ANULADA"-->
+                <button id="btn-cancel-ot" class="hide-target" type="button">Anular</button>
+                <button id="btn-close-ot" class="hide-target" type="button">Cerrar</button>
+            <!--#4dendif-->
+
+            <!--#4dif vEstadoOT_="CERRADA"-->
+                <button id="btn-cancel-ot" class="hide-target" type="button">Anular</button>
+                <button id="btn-close-ot" class="hide-target" type="button">Cerrar</button>
+                <!--#4dif (_V3_verifica_permisos_web(vLogin;21)-->
+                <button id="btn-open-ot" class="show-target" type="button">Abrir</button>
+                <!--#4dendif-->
+            <!--#4dendif-->
+
+            <!--#4dif (vEstadoOT_="PENDIENTE")|(vEstadoOT_="ATRASADA")-->
+                <!--#4DIF (_V3_verifica_permisos_web(vLogin;20)-->
+                    <button id="btn-cancel-ot" class="show-target" type="button">Anular</button>
+                <!--#4DENDIF-->
+                <!--#4dif (_V3_verifica_permisos_web(vLogin;21)-->
+                    <button id="btn-close-ot" class="show-target" type="button">Cerrar</button>
+                <!--#4dendif-->
+                    <button id="btn-open-ot" class="hide-target" type="button">Abrir</button>
+            <!--#4dendif-->
+
+            <button id="btn-create-cot" class="show-target" type="button">Crear cotización</button>
+
+
+        <!--#4dendif-->
+    </p>
+</div>
+
+
+<script type="text/javascript">
+    var autoresize = function(target){
+        target.height(target[0].scrollHeight);
+    }
+    $(document).ready(function() {
+        autoresize($("#idcomment-otxx"));
+        $("#idcomment-otxx").change(function(){
+            autoresize($(this));
+        });
+    });
+</script>

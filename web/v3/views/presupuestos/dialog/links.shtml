@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--<!- -#4DSCRIPT/_V3_proxy_getCotizacionContent- ->-->
+		<title>Archivos enlazados</title>
+		<meta charset="utf-8">
+		<script>
+			$(document).ready(function() {
+
+				unaBase.toolbox.init();
+
+				var loadList = function() {
+					$('.ui-dialog table > tbody > *').remove();
+					$.ajax({
+						url: '/4DACTION/_V3_getLinkByCotizacion',
+						data: {
+							id: $('section.sheet').data('id')
+						},
+						dataType: 'json',
+						success: function(data) {
+							var htmlObject;
+							$.each(data.rows, function(key, item) {
+								htmlObject = $('<tr data-id="' + item.id + '" data-username="' + item.username + '">' +
+									'<td>' + item.text + '</td>' +
+									'<td>' + ((item.updated_at !== undefined)? '<time datetime="' + new Date(item.updated_at).toISOString() + '">' + $.datepicker.formatDate('dd-mm-yy', new Date(item.updated_at)) + ' <span>' + new Date(item.updated_at).toTimeString().match( /^([0-9]{2}:[0-9]{2}:[0-9]{2})/ )[0].substring(0, 5) +  '</span></time>' : 'N/A' ) + '</td>' +
+									'<td>' + item.username + '</td>' +
+									'<td>' + item.notas + '</td>' +
+									'<td class="options">' +
+									'<button class="preview"></button>' +
+									'<button class="delete"></button>' +
+									'</td>' +
+								'</tr>');
+								htmlObject.find('button.preview').button({
+									caption: 'Vista previa',
+									icons: {
+										primary: 'ui-icon-search'
+									},
+									text: false
+								}).click(function() {
+									$.fancybox(
+									{
+										'autoScale'			: true,
+										'type'				: 'iframe',
+										'href'				: item.href
+									});
+								});
+								htmlObject.find('button.delete').button({
+									caption: 'Eliminar',
+									icons: {
+										primary: 'ui-icon-trash'
+									},
+									text: false
+								}).click(function() {
+									if (confirm('¿Está seguro que desea eliminar el enlace?'))
+										$.ajax({
+											url: '/4DACTION/_V3_removeLink',
+											data: {
+												id: item.id
+											},
+											dataType: 'json',
+											success: function(data) {
+												if (data.success) {
+													toastr.success('El enlace fue eliminado con éxito!');
+													loadList();
+												} else
+													toastr.error('El enlace no pudo eliminarse. Es posible que esté bloqueado.');
+											}
+										});
+								});
+								$('.ui-dialog table > tbody').append(htmlObject);
+							});
+						}
+					});
+				};
+
+				loadList();
+
+				$('.ui-dialog fieldset button').button({
+					icons: {
+						primary: 'ui-icon-circle-arrow-n'
+					},
+					text: true
+				}).click(function() {
+					$.ajax({
+						url: '/4DACTION/_V3_setLinkByCotizacion',
+						type: 'POST',
+						data: {
+							'link[href]': $('.ui-dialog fieldset [name="link[href]"]').val(),
+							'link[nombre]': $('.ui-dialog fieldset [name="link[nombre]"]').val(),
+							'link[descripcion]': $('.ui-dialog fieldset [name="link[descripcion]"]').val(),
+							'fk': $('section.sheet').data('id')
+						},
+						dataType: 'json',
+						success: function(data) {
+							toastr.success('Enlace guardado con éxito!');
+							$('.ui-dialog fieldset [name="link["]').val('');
+							loadList();
+						}
+					});
+				});
+				
+			});
+		</script>
+	</head>
+	<body>
+		<fieldset>
+			<legend>Añadir nuevo enlace</legend>
+			<label>
+				<span>Nombre</span>
+				<input type="text" name="link[nombre]">
+			</label>
+			<label>
+				<span>Descripción</span>
+				<input type="text" name="link[descripcion]">
+			</label>
+			<label>
+				<span>URL</span>
+				<input type="url" name="link[href]">
+			</label>
+			<button>Guardar</button>
+		</fieldset>
+		<table>
+			<thead>
+				<tr>
+					<th>Nombre</th>
+					<th>Fecha</th>
+					<th>Usuario</th>
+					<th>Notas</th>
+					<th>Acción</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</body>
+</html>

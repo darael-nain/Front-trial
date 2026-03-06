@@ -1,0 +1,159 @@
+
+<input id="globalTypeUser" type="hidden" value="normal">
+
+
+
+<header id="header-superior">
+
+  <div class="logo-header"><img src="/imagenes_green/logo_una_base.png"></div>
+
+  <h1 id="titulo-principal"><!--#4DVAR titleHeader--></h1>
+
+</header>
+
+
+
+<nav id="nav-superior">
+
+	<ul id="menu-horizontal">
+
+
+
+    <!--#4DIF aCheckPermiso{24}=false-->
+
+
+
+
+
+		<li>
+
+      <!--#4DIF aCheckPermiso{1}=true-->
+
+      <a href="/4DACTION/W_LISTA_NEG">NEGOCIOS</a>
+
+      <!--#4DELSE-->
+
+       <a class="link-sin-acceso" href="#">NEGOCIOS</a>
+
+      <!--#4DENDIF-->
+
+      <ul>
+
+        <!--#4DIF aCheckPermiso{2}=true-->
+
+        <li><a href="/4DACTION/W_LISTA_NEGOCIOS_DUP">Crear Cotizaci&oacute;n</a></li>
+
+        <!--#4DENDIF-->       
+
+      </ul>
+
+    </li>    
+
+
+
+		<li>
+
+      <!--#4DIF aCheckPermiso{4}=true-->
+
+      <a href="/4DACTION/W_LISTA_OC/e">OC</a>
+
+      <!--#4DELSE-->
+
+      <a class="link-sin-acceso" href="#">OC</a>
+
+      <!--#4DENDIF-->
+
+      
+
+      <ul>
+
+        <!--#4DIF aCheckPermiso{3}=true-->
+
+        <li><a href="/4DACTION/W_BUSCADOR">Crear OC</a></li>
+
+        <!--#4DENDIF-->       
+
+      </ul>
+
+    </li>
+
+
+
+    <!--#4DIF aCheckPermiso{5}=true-->
+
+		  <li><a href="/4DACTION/W_LISTA_SOL/ln/0">RENDICION</a></li>
+
+    <!--#4DELSE-->
+
+      <li><a class="link-sin-acceso" href="#">RENDICION</a></li>
+
+    <!--#4DENDIF-->
+
+
+
+    <!--#4DIF aCheckPermiso{6}=true-->
+
+      <li><a href="/4DACTION/W_LISTA_PAGOS">PAGOS</a></li>
+
+    <!--#4DELSE-->
+
+		  <li><a class="link-sin-acceso" href="#">PAGOS</a></li>
+
+    <!--#4DENDIF-->
+
+
+
+    <!--#4DENDIF-->
+
+
+
+    <!--#4DIF aCheckPermiso{15}=true-->
+
+      <li><a href="/lista_ot.shtml?r=<!--#4DVAR Random-->">OT</a></li>      
+
+    <!--#4DELSE-->
+
+		  <li><a class="link-sin-acceso" href="#">OT</a></li>
+
+    <!--#4DENDIF-->
+
+
+
+    <!--#4DIF aCheckPermiso{37}=true-->  
+
+      <li><a href="/proyectos.shtml?r=<!--#4DVAR Random-->">PROYECTOS</a></li>      
+
+    <!--#4DELSE-->
+
+      <li><a class="link-sin-acceso" href="#">PROYECTOS</a></li>   
+
+    <!--#4DENDIF-->    
+
+
+
+	</ul>
+
+</nav>
+
+
+
+<div class="cerrar-sesion">
+
+  <label>Usuario :</label><span> <!--#4DVAR Lowercase(vNomUsr2;*)--></span>
+
+  <a href="/4DACTION/W_CERRAR_SESION">
+
+    <img src="/imagenes/disconnect.png" border="0" /><span>Cerrar Sesión</span>
+
+  </a>
+
+  <a target="_blank" href="/4DACTION/W_CAMBIAR_PASSWORD">
+
+    <img src="/imagenes/password.png" border="0" /><span>Cambiar Contraseña</span>
+
+  </a>
+
+
+
+</div> 
+

@@ -1,0 +1,66 @@
+<!--#4DINCLUDE head.shtml-->
+<body>
+<!--#4DINCLUDE menuSuperior.shtml-->
+	
+<div id="bgtransparent" class="bgtransparent">
+	<div id="bgmodal" class="bgmodal">
+		<img src="/imagenes/cargando.gif" width="50px" height="50px" />
+		<p>Registrando la Orden de trabajo, espere un momento...</p>
+	</div>
+</div>
+
+<!--#4dscript/datos_generales_ot-->
+<section>   
+	<h1>Editar Orden de Trabajo</h1>
+    <article>
+        <form name="frmnuevaot" id="frmnuevaot" action="/4DACTION/wsaveot" method="post" >
+                      
+
+            <ul class="tabs">  
+                <li><a href="#tab1">Datos de la OT</a></li>  
+                <li><a href="#tab2">Revisiones</a></li>
+                <li><a href="#tab3">Archivos</a></li> 
+            </ul>  
+            <div class="tab_container">  
+                <div id="tab1" class="tab_content"><!--#4DINCLUDE ot_tabs_datos_edit.shtml--></div>  
+                <div id="tab2" class="tab_content"><!--#4DINCLUDE ot_tabs_revision.shtml--></div>
+                <div id="tab3" class="tab_content"><!--#4DINCLUDE ot_tabs_archivos.shtml--></div>  
+            </div>
+
+            <p class="set-botones">
+                <button title="Guardar" class="button-inf" id="saveot" type="button">
+                    <img src="/imagenes/disk.png" border="0" />
+                    <span>Guardar</span>
+                </button>
+
+                <!--
+                <button title="Duplicar" class="button-inf" type="button">
+                    <img src="/imagenes/books.png" border="0" />
+                    <span>Duplicar</span>
+                </button>
+
+              -->
+
+                <button title="Cerrar" class="button-inf" type="button">
+                    <img src="/imagenes/book.png" border="0" />
+                    <span><br/>Cerrar</span>
+                </button>
+
+                <button title="Abrir" class="button-inf" type="button">
+                    <img src="/imagenes/book_open.png" border="0" />
+                    <span><br/>Abrir</span>
+                </button>
+
+                <button title="Imprimir" class="button-inf" type="button">
+                    <img src="/imagenes/printer.png" border="0" />
+                    <span><br/>Imprimir</span>
+                </button>
+
+               <!--<a href="/4DACTION/wnotificacionot" >test</a>-->
+            </p>
+
+        </form>                          
+     </article>         
+</section>
+</body>
+</html>

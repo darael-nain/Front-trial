@@ -1,0 +1,60 @@
+{
+	"rows": [
+		<!--#4DLOOP aIdOC-->
+		{
+			
+			"folio": "<!--#4DHTML _V3_escapeString(aFolio{aidOc})-->",
+			"tipoDoc": "<!--#4DHTML _V3_escapeString(aTipoDoc{aIdOC})-->",
+			"formaPago": "<!--#4DHTML  _V3_escapeString(aFormaPago{aIdOC})-->",
+			"login": "<!--#4DHTML _V3_escapeString(aLogin{aIdOC})-->",
+			"fecha": "<!--#4DHTML _V3_escapeString(aFecha{aIdOC};7)-->",
+			"fechaVencimiento": "<!--#4DHTML _V3_escapeString(aFechaVen{aIdOC};7)-->",
+			"referencia": "<!--#4DHTML _V3_escapeString(aReferenciaOC{aIdOC})-->",
+			"estado": "<!--#4DHTML _V3_escapeString(aEstado{aIdOC})-->",
+			"proveedor": "<!--#4DHTML _V3_escapeString(aProveedorOC{aIdOC})-->",
+			"correoProveedor": "<!--#4DHTML _V3_escapeString(aCorreo{aIdOC})-->",
+			"clabe": "<!--#4DHTML _V3_escapeString(aClabe{aIdOC})-->",
+			"bancoProveedor": "<!--#4DHTML _V3_escapeString(aBanco{aIdOC})-->",
+			"rut": "<!--#4DHTML _V3_escapeString(aRut{aIdOC})-->",
+			"cuentaProveedor": "<!--#4DHTML _V3_escapeString(aCuenta{aIdOC})-->",
+			"tipoCuentaProveedor": "<!--#4DHTML _V3_escapeString(aTipoCuenta{aIdOC})-->",
+			"aAfectolOC": "<!--#4DHTML _V3_escapeString(aAfectolOC{aIdOC})-->",
+			"aExentoOC": "<!--#4DHTML _V3_escapeString(aExentoOC{aIdOC})-->",
+			"aAdicionalOC": "<!--#4DHTML _V3_escapeString(aAdicionalOC{aIdOC})-->",
+			"aImpuestoOC": "<!--#4DHTML _V3_escapeString(aImpuestoOC{aIdOC})-->",
+			"totalOC": "<!--#4DHTML _V3_escapeString(aTotalOC{aIdOC})-->",
+			"aOrigen": "<!--#4DHTML _V3_escapeString(aOrigen{aIdOC})-->",
+			"aFolioNeg": "<!--#4DHTML _V3_escapeString(aFolioNeg{aIdOC})-->",
+			"aRefNeg": "<!--#4DHTML _V3_escapeString(aRefNeg{aIdOC})-->",
+			"aAreaNeg": "<!--#4DHTML _V3_escapeString(aAreaNeg{aIdOC})-->",
+			"aJustificado": <!--#4DHTML aJustificado{aIdOC}-->,
+			"aPorJustificar": <!--#4DHTML aPorJustificar{aIdOC}-->,
+			"aPagado": <!--#4DHTML aPagado{aIdOC}-->,
+			"infoDtcOC": "<!--#4DHTML _V3_escapeString(aInfoDtcOC{aIdOC})-->",
+			"aPorPagar": <!--#4DHTML aPorPagar{aIdOC}-->,
+			"aValidada": <!--#4DIF aValidada{aIdOC}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"aSolicitudPago": <!--#4DIF aSolicitudPago{aIdOC}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			<!--#4DHTML _V3_getPagosByOc(aIdOC{aIdOC})-->
+			"OPRecords": <!--#4DHTML contadorDePagos-->,
+			"OP": [
+
+				<!--#4DLOOP aContPag-->
+				{		
+					"idOP": <!--#4DHTML aIdPagos{aContPag}-->,
+					"infoDTC":  "<!--#4DHTML _V3_escapeString(aInfoDTC{aContPag})-->",
+					"pagoFolio": "<!--#4DHTML _V3_escapeString(aPagoFolio{aContPag})-->",
+					"pagoFecha": "<!--#4DHTML String(aPagoFecha{aContPag})-->",
+					"pagoTotal": "<!--#4DHTML _V3_escapeString(aPagoTotal{aContPag})-->"
+					
+					
+				}<!--#4DIF NOT(aContPag{aContPag} = aContPag{Size of array(aContPag)})-->,<!--#4DENDIF-->
+				<!--#4DENDLOOP-->
+			
+			]
+			
+		}<!--#4DIF NOT(aIdOC{aIdOC} = aIdOC{Size of array(aIdOC)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+		
+	]
+	
+}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Home</title>
+    <meta charset="utf-8">
+
+</head>
+
+<style>
+    #iframe-container {
+        height: 100vh;
+        /* Establece la altura del contenedor en la altura de la ventana actual */
+        overflow-y: auto;
+        /* Oculta el overflow de la página principal */
+    }
+</style>
+
+<body style="min-width: 900px !important;">
+    <!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->
+
+    <iframe id="mi-marco" name="mi-marco" src="about:blank" style="width: 100%;"></iframe>
+
+
+    <script type="text/javascript">
+        var miMarco = document.getElementById('mi-marco');
+
+        const sid = () => {
+            // var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                // if (c.indexOf(name) == 0) {
+                if (c.match(/UNABASE/g)) {
+                    return c.substring(c.indexOf("UNABASE"));
+                }
+            }
+            return "";
+        }
+
+        const toHomeRedirect = (e) => {
+            var frame = document.getElementById("mi-marco");
+            let url = window.origin
+            let newUrl = url.substring(8, url.length)
+            let username = 'soporte'
+            //let url = `https://dev-panel.herokuapp.com/dashboard?from=v3&user=${currentUser.username}&url=${window.origin.substring(8, window.origin.length)}&sid=${unaBase.sid.encoded()}`
+            frame.src = `https://app.unabase.cc/login`;
+            frame.style.height = "calc(100vh - 48px - 41px)";
+            //https://dev-panel.herokuapp.com/sica?from=v3&user=soporte&url=pruebasrober.unabase.com&sid=UNABASE_AQIAEMZLtZ6nnnNPU2bbsvAO4IilBBwalg%2acRFTjEZ352LFuMu1GWMKwu-EikV%2a4GXbA-TmjJXRgOgUBHiE%2aSerlNg__
+        }
+
+        (function init() {
+
+
+            toHomeRedirect()
+            unaBase.ui.unblock()
+
+
+
+        })();
+
+
+
+
+    </script>
+</body>
+<script>
+</script>
+
+</html>

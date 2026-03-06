@@ -1,0 +1,16 @@
+{
+	"rows": [
+<!--#4DLOOP aVersionId -->
+		{
+			"id": "<!--#4DHTML aVersionId{aVersionId}-->",
+			"current": <!--#4DIF aVersionCurrent{aVersionId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"username": "<!--#4DHTML aVersionUsername{aVersionId}-->",
+			"updated_at": "<!--#4DHTML Substring(String(aVersionFecha{aVersionId};8);1;10)--> <!--#4DHTML aVersionHora{aVersionId}-->",
+			"text": "<!--#4DHTML _V3_escapeString(aVersionText{aVersionId})-->",
+			"total_neto": <!--#4DHTML Round(aVersionTotalNeto{aVersionId};0)-->,
+      "hidden": <!--#4DIF aVersionHidden{aVersionId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+      "diferencia": <!--#4DIF aDiferencia{aVersionId}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aVersionId{aVersionId} = aVersionId{Size of array(aVersionId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

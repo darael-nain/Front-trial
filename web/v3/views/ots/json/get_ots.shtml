@@ -1,0 +1,23 @@
+{	
+	"total": "<!--#4DHTML total-->",
+	"rows": [
+<!--#4DLOOP aIdOT -->
+		{
+			"id": <!--#4DHTML aIdOT{aIdOT}-->,
+			"folio": "<!--#4DHTML aFolioOT{aIdOT}-->",
+			"fecha_emision": "<!--#4DHTML aFechaEmiOT{aIdOT}-->",
+			"fecha_vcto": "<!--#4DHTML aFechaVctoOT{aIdOT}-->",
+			"hora_vcto": "<!--#4DHTML aHoraVctoOT{aIdOT}-->",
+			"horas": "<!--#4DHTML aHrsAsignadasOT{aIdOT}-->",
+			"cliente": "<!--#4DHTML aClienteProvOT{aIdOT}-->",
+			"folio_negocio": <!--#4DHTML aFolioNegocioOT{aIdOT}-->,
+			"origen": "<!--#4DHTML _v3_escapeString(aRefProyOT{aIdOT})-->",
+			"referencia": "<!--#4DHTML _v3_escapeString(aReferenciaOT{aIdOT})-->",
+			"responsable": "<!--#4DHTML aResponsableOT{aIdOT}-->",
+			"emisor": "<!--#4DHTML aEmitidoPorOT{aIdOT}-->",
+			"estado": "<!--#4DHTML aEstadoOT{aIdOT}-->",
+			"notificado": <!--#4DHTML aNotificadoProyOT{aIdOT}-->
+		}<!--#4DIF NOT(aIdOT{aIdOT} = aIdOT{Size of array(aIdOT)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

@@ -1,0 +1,6 @@
+{
+
+	"bciGrand": <!--#4DIF bciGrand-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"bciGen": <!--#4DIF bciGen-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"email_not_pago_v3": "<!--#4DHTML _V3_escapeString(email_not_pago_v3)-->"
+}

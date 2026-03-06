@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getDtcContent-->
+		<title>Documentos de compra</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/views/dtc/library/dtc.js"></script>
+		<script type="text/javascript" src="/v3/views/dtc/script/content.js"></script>
+		<script type="text/javascript" src="/v3/views/dtc/script/proveedor.js"></script>		
+		<script type="text/javascript" src="/v3/script/datepicker_es.js"></script>
+		<link rel="stylesheet" href="/v3/design/gray_and_white.css?<!--#4DTEXT random-->">   
+		<script>
+			var container = $('#sheet-dtc');		
+			var resumen_info_general = function(){			
+				var documento = $('select[name="tipo_doc[id]"] option:selected').text();
+				var folio = $('input[name="dtc[nro_folio]"]').val();
+				var emision =  $('#femision').val();
+				var referencia = $('input[name="dtc[referencia]"]').val();
+				$('strong[name="resumen[dtc][documento]"]').text('');
+				$('span[name="resumen[dtc][folio]"]').text('');
+				$('strong[name="resumen[dtc][emision]"]').text('');
+				$('span[name="resumen[dtc][referencia]"]').text('');
+				if (documento != '[ Seleccionar ]' && folio != '' && emision != ''  && referencia != ''){
+					$('strong[name="resumen[dtc][documento]"]').text(documento);
+					$('span[name="resumen[dtc][folio]"]').text('Nro. ' + folio);
+					$('strong[name="resumen[dtc][emision]"]').text('Emitida el ' + emision);
+					$('span[name="resumen[dtc][referencia]"]').text(referencia);
+				}
+			}
+			var resumen_info_proveedor = function(){				
+				var alias = $('input[name="contacto[info][alias]"]').val();				
+				var razon = $('input[name="contacto[info][razon_social]"]').val();						
+				$('strong[name="resumen[contacto][alias]"]').text(alias);
+				$('span[name="resumen[contacto][razon]"]').text(razon);				
+			}
+			var resumen_info_totales = function(){				
+				$('strong[name="resumen[dtc][neto]"]').hide();
+				var neto = $('input[name="dtc[total_neto]"]').val();
+				if (neto != '0') {
+					$('strong[name="resumen[dtc][neto]"]').show();
+					$('span[name="resumen[dtc][neto_valor]"]').text(neto).number(true, 2, ',', '.');								
+				};
+			}
+			$(".datepicker2").datepicker({
+				onSelect: function(){	
+					resumen_info_general();
+				}
+			});
+			var full_fields = function(){				
+				container.find('input:not([type="radio"])').each(function() {
+					if ($(this).val() != "") {						
+						$(this).css("background-color","#FECA40");
+					}
+				});
+				if (container.find('textarea').val() != "") {						
+					container.find('textarea').css("background-color","#FECA40");
+				}
+				container.find('.totales-suma-items input').css("background-color","white");
+				
+			}
+			$(document).ready(function() {
+				//full_fields();
+				resumen_info_general();
+				resumen_info_proveedor();
+				resumen_info_totales();
+
+				$('button.add.dtc').button({
+					icons: {
+						primary: 'ui-icon-plus'
+					},					
+					text: true
+				}).click(function() {				
+					var factura = container.data('id');
+					var folioFactura = container.data('index');
+					$.ajax({
+						url: '/4DACTION/_V3_setDtc',
+						dataType: 'json',
+						type: 'POST',
+						data: {
+							'extra[nc_nd]':true,
+							'extra[tipo_ncnd]':'nc',
+							'extra[id_factura_nc]':factura,
+							'extra[folio_factura_nc]':folioFactura				
+						}
+					}).done(function(data) {
+						unaBase.loadInto.viewport('/v3/views/dtc/content.shtml?id=' + data.id+'&registrado=no');
+					});										
+				});
+
+				$('span.link.factura').click(function(){					
+					unaBase.loadInto.viewport('/v3/views/dtc/content.shtml?id='+ $(this).data('id') +'&registrado=si');
+				});
+
+				$('span.link.oc').click(function(){
+					unaBase.loadInto.viewport('/v3/views/compras/content.shtml?id='+ $(this).data('id') +'&from=dtc');					
+				});
+
+				// not show nc
+				var tipodoc = container.data('tipodoc');
+				if (tipodoc == '61') {
+					$('.notshownc').hide();
+				}else{
+					$('.notshownc').show();
+				}				
+
+				// cambia resumen info general
+		        $(".infogeneral").bind("change", function(){
+		        	resumen_info_general();
+		        });
+
+		        // cambia resumen info proveedor
+		        $(".infoproveedor").bind("change", function(){
+		        	resumen_info_proveedor();
+		        });
+
+				// get tipo de documentos
+				var select2 = $('select[name="tipo_doc[id]"]');
+				var optionsObject;				      
+		        $.ajax({
+		          url: '/4DACTION/_V3_getTiposDocDeCompras',
+		          dataType: 'json',
+		          data:{},
+		          success: function(data) {           
+		            $.each(data.rows, function(key, item){             
+		              optionsObject = $('<option data-impuesto="'+ item.valor_imp +'" data-tipo="'+ item.tipo_imp +'" value="'+ item.id +'">'+ item.des +'</option>');
+		              select2.append(optionsObject);
+		            });           
+		          }
+		        });
+
+		        // get formas de pago
+		        var optionsObject;
+		        var select3 = $('select[name="forma_pago[id]"]');
+		        $.ajax({
+		          url: '/4DACTION/_V3_getFormaPagos?compra=true',
+		          dataType: 'json',
+		          data:{},
+		          success: function(data) {           
+		            $.each(data.rows, function(key, item){             
+		              optionsObject = $('<option value="'+ item.id +'">'+ item.des +'</option>');
+		              select3.append(optionsObject);
+		            });           
+		          }
+		        });
+
+		        // Items
+		        var folio = container.data('folio');
+		        var version = container.data('version');
+		        if (folio == "" || version != "v3") {
+		        	$('.box-items').hide();
+		        }
+
+			});		
+		</script>
+
+		<style type="text/css">
+			.temp_style_tipo{
+				width:200px!important;
+				color:rgb(67,175,124)!important;
+			}
+			.bg{
+				background-color:white!important;
+			}
+			.labels > span{
+				display: inline-block;
+				border: 1px solid #C9DECB;
+				background-color: #C9DECB;
+				padding:2px;
+				border-radius:3px;
+				font-size:10px!important;
+				font-weight: bold;
+				text-transform: uppercase;
+				margin:2px;
+			}			
+			.purchase_search{
+				border:2px solid #FECA40!important;
+				border-radius: 3px;
+				font-size:12px;
+				padding:5px;
+				width:400px!important;
+			}
+			.purchase_search[placeholder] {
+				text-transform:none!important;
+			}			
+		</style>
+
+	</head>
+	<body>		
+		<section id="sheet-dtc" class="sheet sheet-gastos" data-from="<!--#4DTEXT from-->" data-estado="<!--#4DTEXT [Doc_Tributario_Compra]ESTADO_DOCUMENTO-->" data-version="<!--#4DTEXT [Doc_Tributario_Compra]version-->" data-modulo="dtc" data-create="<!--#4DTEXT vRegistrado-->" data-id="<!--#4DTEXT [Doc_Tributario_Compra]ID_DOC-->" data-index="<!--#4DTEXT [Doc_Tributario_Compra]FOLIO_DOCUMENTO-->"  data-idoc="<!--#4DTEXT idOc-->" data-tipogasto="<!--#4DTEXT vIdTipoGasto-->" data-idfacturanc="<!--#4DTEXT [Doc_Tributario_Compra]v3_id_factura_nc-->" data-tipodoc="<!--#4DTEXT [Doc_Tributario_Compra]TIPO_DOCUMENTO-->">
+			<input type="hidden" name="dtc[id]" value="<!--#4DTEXT [Doc_Tributario_Compra]ID_DOC-->">
+			<input type="hidden" name="id" value="<!--#4DTEXT [Doc_Tributario_Compra]ID_DOC-->">			
+			<input type="hidden" name="folio" value="<!--#4DTEXT [Doc_Tributario_Compra]FOLIO_DOCUMENTO-->">
+				
+			<!-- Ini - Cantidad de titulo y correlativo de la oc, en el caso que se cree items desde el dtc-->
+			<input type="hidden" name="oc[rows][cant_titulos]" value="<!--#4DTEXT vCantTitulosRowsOC-->">
+			<input type="hidden" name="oc[rows][correlativo]" value="<!--#4DTEXT vCorrelativoRowsOC-->">
+			<!-- Fin -->
+			
+			<footer>				
+				<header>
+					<ul class="botton">
+						<li class="bold"><!--#4DTEXT [Doc_Tributario_Compra]ESTADO_DOCUMENTO--></li>
+						<li>Creada por <!--#4DTEXT Uppercase([Doc_Tributario_Compra]RESPONSABLE_REGISTRO;*)--> el <!--#4DTEXT [Doc_Tributario_Compra]FECHA_REGISTRO--> a las <!--#4DTEXT [Doc_Tributario_Compra]HORA_REGISTRO--> hrs.</li>
+					</ul>
+				</header>				
+				<article>					
+					<h1><strong>Información general</strong></h1>
+					<button class="expand active"></button>
+					<h2 onClick="$(this).siblings('.expand').click()"><strong title="TIPO DE DOCUMENTO" name="resumen[dtc][documento]"></strong> <span title="NÚMERO DEL DOCUMENTO" name="resumen[dtc][folio]"></span> <strong title="FECHA DE EMISIÓN DEL DOCUMENTO" name="resumen[dtc][emision]"></strong> <span title="REFERENCIA DEL DOCUMENTO" name="resumen[dtc][referencia]"></span></h2>
+					<section class="expandable">
+						<ul>
+							<li>
+								<label class="fixed">Referencia:</label>
+								<input required class="large infogeneral" name="dtc[referencia]" placeholder="Ingresar aquí referencia para el documento" value="<!--#4DTEXT [Doc_Tributario_Compra]REFERENCIA_DOCUMENTO-->" type="text">
+							</li>
+						</ul>					
+						<ul class="inline">
+							<li>
+								<label class="fixed">Tipo documento:</label>
+								<select required class="infogeneral" name="tipo_doc[id]">
+									<option data-impuesto="0" data-tipo="" value="" selected>[ Seleccionar ]</option>						
+								</select>
+							</li>
+							<li>
+								<label>Nro. documento:</label>
+								<input required class="nro small infogeneral" placeholder="S/N" type="text" name="dtc[nro_folio]" value="<!--#4DTEXT [Doc_Tributario_Compra]FOLIO_DOCUMENTO-->">
+							</li>
+							<li>
+								<label>Fecha de emisión:</label>
+								<input id="femision" class="datepicker2 small infogeneral" placeholder="dd-mm-aaaa" type="text" name="dtc[fecha_emision]" value="<!--#4DTEXT [Doc_Tributario_Compra]FECHA_EMISION-->">
+							</li>
+						</ul>															
+				</article>
+				<article>
+					<h1><strong>Información del proveedor</strong></h1>					
+					<button class="expand active"></button>
+					<h2 onClick="$(this).siblings('.expand').click()"><strong title="ALIAS DEL PROVEEDOR" name="resumen[contacto][alias]"><!--#4DTEXT Uppercase(v_alias;*)--></strong> <span title="RAZÓN SOCIAL DEL PROVEEDOR" name="resumen[contacto][razon]"><!--#4DTEXT Lowercase(v_razon;*)--></span></h2>
+					<section class="expandable">
+						<ul>
+							<li>
+								<label class="fixed">Buscar:</label>
+								<input required class="medium" name="contacto[info][alias]" required id="empresa" type="search" data-id="<!--#4DTEXT [Orden_de_compra]Id_Empresa-->" placeholder="Buscar por alias, rut, razón social" value="<!--#4DVAR v_alias-->" type="text"><button class="profile2 empresa">Perfil</button><input name="contacto[info][id]" type="hidden" value="<!--#4DTEXT [Orden_de_compra]Id_Empresa-->">
+							</li>
+							<li>
+								<label class="fixed">Razón social:</label>
+								<input class="medium" readonly required type="text" name="contacto[info][razon_social]" placeholder="" value="<!--#4DTEXT v_razon-->">
+							</li>
+							<li>
+								<label class="fixed">Rut:</label>
+								<input class="medium" readonly required type="text" name="contacto[info][rut]" value="<!--#4DTEXT vRut-->">
+							</li>
+							<li>
+								<label class="fixed">Giro:</label>
+								<input class="medium" readonly required type="text" name="contacto[info][giro]" placeholder="" value="<!--#4DTEXT v_giro-->">
+							</li>
+						</ul>
+						<ul>
+							<li>
+								<label class="fixed">Forma de pago:</label>
+								<select required name="forma_pago[id]">
+									<option value="" selected>[ Seleccionar ]</option>								
+								</select>
+							</li>
+						</ul>
+					</section>							
+				</article>
+				<article class="totales-finales">
+					<h1><strong>Montos totales</strong></h1>
+					<button class="expand active"></button>
+					<h2 onClick="$(this).siblings('.expand').click()"><strong name="resumen[dtc][neto]">Total Neto <span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span name="resumen[dtc][neto_valor]"></span></span></strong></h2>
+					<section class="expandable">
+						<ul class="inline">
+							<li>
+								<label class="fixed">Subtotal <!--#4DVAR _V3_defaultCurrencySymbol-->:</label>
+								<span class="numeric currency"><input required class="money" type="text" name="dtc[sub_total]" value="<!--#4DTEXT [Doc_Tributario_Compra]SUBTOTAL-->"></span>
+							</li>
+							<li>
+								<label class="fixed">Descuento <!--#4DVAR _V3_defaultCurrencySymbol-->:</label>
+								<span class="numeric currency"><input class="money" class="dscto" type="text" name="dtc[descuento]" value="<!--#4DTEXT String([Doc_Tributario_Compra]TOTAL_DESCUENTO)-->"></span>
+							</li>
+							<li>
+								<label class="fixed">Neto <!--#4DVAR _V3_defaultCurrencySymbol-->:</label>
+								<span class="numeric currency"><input class="money" readonly type="text" name="dtc[total_neto]" value="<!--#4DTEXT [Doc_Tributario_Compra]TOTAL_NETO-->"></span>
+							</li>							
+							<li>
+								<label class="fixed">Iva <!--#4DVAR _V3_defaultCurrencySymbol-->:</label>
+								<span class="numeric currency"><input class="money" readonly type="text" name="dtc[total_iva]" value="<!--#4DTEXT vTotalIva-->"></span>
+							</li>
+							<li>
+								<label class="fixed">Retención <!--#4DVAR _V3_defaultCurrencySymbol-->:</label>
+								<span class="numeric currency"><input class="money" readonly type="text" name="dtc[total_retencion]" value="<!--#4DTEXT vTotalRet-->"></span>
+							</li>
+							<li>
+								<label class="fixed">Adicional <!--#4DVAR _V3_defaultCurrencySymbol-->:</label>
+								<span class="numeric currency"><input class="money" type="text" name="dtc[total_adicional]" value="<!--#4DTEXT [Doc_Tributario_Compra]TOTAL_OTROSIMPUESTOS-->"></span>
+							</li>
+							<li>
+								<label class="fixed">Total <!--#4DVAR _V3_defaultCurrencySymbol-->:</label>
+								<span class="numeric currency"><input class="money" readonly type="text" name="dtc[total]" value="<!--#4DTEXT [Doc_Tributario_Compra]TOTAL_DOCUMENTO-->"></span>
+							</li>
+						</ul>						
+						<input type="hidden" readonly name="dtc[descuento_nc]" value="0">					
+					</section>								
+				</article>				
+				<article class="box-items">
+					<h1>Ítem del documento</h1>					
+					<table class="items" data-impuesto="<!--#4DTEXT [Parametros]Iva-->">
+						<thead>
+								<th></th>
+								<th>Ítem</th>	
+								<th>Descripción</th>						
+								<th>Compra</th>
+								<th>Impuesto</th>
+								<th>Cant.</th>
+								<th>P.U.[<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+								<th>Subtotal [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>						
+								<th>Dscto [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+								<th>Total [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+								<th class="notshownc">Por Justificar [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>												
+							</tr>
+						</thead>
+						<tbody></tbody>
+						<tfoot class="totales-suma-items">
+							<tr><th colspan="11"></th></tr>
+							<tr>
+								<th colspan="5"></th>
+								<th></th>
+								<th></th>		
+								<th class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span><input type="text" readonly name="dtc[suma_subtotal]" value=""></span></th>					
+								<th class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span><input type="text" readonly name="dtc[suma_dscto]" value=""></span></th>						
+								<th class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span><input type="text" readonly name="dtc[suma_total]" value=""></span></th>
+								<th class="numeric currency notshownc"><!--#4DVAR _V3_defaultCurrencySymbol--> <span><input type="text" readonly name="dtc[suma_por_justificar]" value=""></span></th>						
+							</tr>
+						</tfoot>
+					</table>
+				</article>				
+				<article id="scrollocs">
+					<h1>Órdenes de compra (<span>0</span>)</h1>
+					<div style="margin:2px;"><button class="add ocs">Agregar</button></div>
+					<table class="ocs" width="99%">
+						<thead>
+							<tr>
+								<th width="5%">Número</th>
+								<th width="20%">Documento</th>
+								<th width="20%" class="left">Proveedor</th>								
+								<th width="20%" class="left">Referencia</th>							
+								<th width="10%">Emisión</th>
+								<th width="10%">Estado</th>								
+								<th width="10%">Justificado [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+								<th></th>							
+							</tr>
+						</thead>
+						<tbody class="ui-selectable"></tbody>
+						<tfoot>
+							<tr>
+								<th colspan="6"></th>							
+								<th class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--><input style="width:100px!important" readonly name="oc[suma_justificado]" type="text" value="<!--#4DTEXT [Orden_de_compra]v3_total_justificado-->"></th>	
+							</tr>							
+						</tfoot>			
+					</table>
+				</article>
+				<article>					
+					<h1><strong>Información adicional</strong></h1>					
+					<section>												
+						<ul>							
+							<li>
+								<label>Observación:</label>
+								<textarea name="dtc[observacion]"><!--#4DTEXT Uppercase([Doc_Tributario_Compra]Observaciones;*)--></textarea>
+							</li>
+						<ul>								
+					</section>
+				</article>
+				<!--#4DIF ([Doc_Tributario_Compra]TIPO_DOCUMENTO="30") | ([Doc_Tributario_Compra]TIPO_DOCUMENTO="33")-->
+				<article id="scrollncnd" class="bg">
+					<h1>Notas de crédito (<span>0</span>)</h1>
+					<div style="margin:2px;"><button class="add dtc">Agregar</button></div>
+					<table class="nc" width="99%">
+						<thead>
+							<tr>
+								<th width="5%">Número</th>
+								<th width="20%">Documento</th>
+								<th width="20%">Proveedor</th>
+								<th width="20%">Referencia</th>		
+								<th width="10%">Emisión</th>
+								<th width="10%">Estado</th>						
+								<th width="10%">Monto [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>						
+							</tr>
+						</thead>
+						<tbody class="ui-selectable"></tbody>
+						<tfoot>
+							<tr>
+								<th colspan="6"></th>							
+								<th class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--><input style="width:200px!important;text-align:right" readonly name="dtc[suma_nc]" type="text" value=""></th>	
+							</tr>							
+						</tfoot>			
+					</table>
+				</article>
+				<!--#4DENDIF-->
+
+				
+			</footer>
+
+
+		</section>
+	</body>
+</html>

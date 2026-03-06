@@ -1,0 +1,14 @@
+{
+	"row": [
+	<!--#4DLOOP aCodigo -->
+			{
+				"codigo": "<!--#4DHTML aCodigo{aCodigo}-->",
+				"nombre": "<!--#4DHTML aNombre{aCodigo}-->",
+				"value": "<!--#4DHTML aValue{aCodigo}-->",
+				"asignada":<!--#4DIF Not(Undefined( aAsignada))--><!--#4DIF aAsignada{aCodigo}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+				"current_value": "<!--#4DHTML aCurrentValue{aCodigo}-->",
+				"asignada_print":<!--#4DIF Not(Undefined( aAsignadaPrint))--><!--#4DIF aAsignadaPrint{aCodigo}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->
+			}<!--#4DIF NOT(aCodigo{aCodigo} = aCodigo{Size of array(aCodigo)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

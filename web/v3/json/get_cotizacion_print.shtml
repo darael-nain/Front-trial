@@ -1,0 +1,81 @@
+{
+    "tipo_cambio": "<!--#4DTEXT tipoCambioAux-->",
+    "tipo_cambio_simbolo": "<!--#4DTEXT tipoCambioSimboloAux-->",
+    "valor_cambio": <!--#4DVAR String(valorCambioAux;"&xml")-->,
+    "empresa": {
+        "razon": "<!--#4DHTML _V3_escapeString(razonPropietaria)-->",
+        "giro": "<!--#4DHTML _V3_escapeString(giroPropietaria)-->",
+        "direccion": "<!--#4DHTML _V3_escapeString(direccionPropietaria)-->",
+        "telefono": "<!--#4DHTML _V3_escapeString(telefonoPropietaria)-->",
+        "comuna": "<!--#4DHTML _V3_escapeString(comunaPropietaria)-->",
+        "ciudad": "<!--#4DHTML _V3_escapeString(ciudadPropietaria)-->"
+    },
+    "general": {
+        "folio": "<!--#4DVAR idNegocioPrint-->",
+        "referencia": "<!--#4DHTML _V3_escapeString(vreferencia)-->",
+        "para": "<!--#4DHTML _V3_escapeString(Uppercase(vnombrecontacto;*))-->",
+        "cliente": "<!--#4DHTML _V3_escapeString(Uppercase(valias;*))-->",
+        "de": "<!--#4DHTML _V3_escapeString(vDeEmisor)-->",
+        "email": "<!--#4DHTML _V3_escapeString(Uppercase(vDeEmisorEmail;*))-->",
+        "empresa": "<!--#4DHTML _V3_escapeString(Uppercase(vempresa;*))-->",
+        "rut": "<!--#4DHTML _V3_escapeString(Uppercase(vrut;*))-->",
+        "direccion": "<!--#4DHTML _V3_escapeString(Uppercase(vdireccion;*))-->",
+        "telefono": "<!--#4DHTML _V3_escapeString(Uppercase(vfono;*))-->"
+    },
+    "items": [
+        <!--#4DLOOP a_secuencia-->
+        {
+            "titulo": <!--#4DIF a_tipo_det{a_secuencia}="TITULO"-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+            "tipo": "<!--#4DHTML a_tipo_det{a_secuencia}-->",
+            "codigo": "<!--#4DVAR _V3_escapeString(a_codigo{a_secuencia})-->",
+            "referencia": "<!--#4DHTML _V3_escapeString(Uppercase(a_des{a_secuencia};*))-->",
+            <!--#4DIF a_tipo_det{a_secuencia}="ITEM"-->
+            "cantidad": <!--#4DVAR String(Num(a_cantidad{a_secuencia});"&xml")-->,
+            "factor": <!--#4DVAR String(Num(a_cantidad2{a_secuencia});"&xml")-->,
+            "precio_unitario": <!--#4DVAR String(a_pu1_raw{a_secuencia};"&xml")-->,
+            <!--#4DENDIF-->
+            "subtotal": <!--#4DVAR String(a_subtotal_raw{a_secuencia};"&xml")-->,
+            "observacion": "<!--#4DHTML _V3_escapeString(a_observ_items{a_secuencia})-->"
+        }<!--#4DIF a_secuencia{a_secuencia} # a_secuencia{Size of array(a_secuencia)}-->,<!--#4DENDIF-->
+        <!--#4DENDLOOP-->
+    ],
+    "sobrecargos": [
+        <!--#4DLOOP $aSobrecargosActivos_index-->
+        {
+            "nombre": "<!--#4DTEXT $aSobrecargosActivos_nombre{$aSobrecargosActivos_index}-->",
+            "porcentaje": <!--#4DTEXT String($aSobrecargosActivos_porcentaje{$aSobrecargosActivos_index};"&xml")-->,
+            "monto": <!--#4DTEXT String($aSobrecargosActivos_monto{$aSobrecargosActivos_index};"&xml")-->
+        }
+        <!--#4DIF $aSobrecargosActivos_index{$aSobrecargosActivos_index} # $aSobrecargosActivos_index{Size of array($aSobrecargosActivos_index)}-->,<!--#4DENDIF-->
+        <!--#4DENDLOOP-->
+    ],
+    "resumen": {
+        "subtotal": <!--#4DHTML String(vsuma_subtotales_raw;"&xml")-->,
+        "descuento_porcentaje": <!--#4DVAR String(Round(valor_por_desc;2);"&xml")-->,
+        "descuento_monto": <!--#4DVAR String(T_descuento_raw;"&xml")-->,
+        "total_neto": <!--#4DVAR String(vtotalneto_raw;"&xml")-->,
+        "iva_porcentaje": <!--#4DVAR String(<>_V3_IVARate;"&xml")-->,
+        "iva_monto": <!--#4DVAR String(vtotaliva_raw;"&xml")-->,
+        "total": <!--#4DVAR String(vtotalneg_raw;"&xml")-->
+    },
+    "otros": {
+        "forma_pago": "<!--#4DVAR _V3_escapeString(vFormaPago)-->",
+        "fecha_realizacion": "<!--#4DVAR vFechaVencimiento-->",
+        "observaciones": "<!--#4DHTML _V3_escapeString(vComentarios)-->"
+    },
+    "settings": {
+        "usar_segunda_cantidad": true
+    },
+    "currency" : {
+        "code" : "<!--#4DTEXT _V3_defaultCurrencyCode-->",
+        "name" : "<!--#4DTEXT _V3_defaultCurrencyName-->",
+        "symbol" : "<!--#4DTEXT _V3_defaultCurrencySymbol-->",
+        "right" : <!--#4DIF _V3_defaultCurrencyRight-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+        "decimal": <!--#4DTEXT _V3_defaultCurrencyDecimals-->,
+        "decimal_sep": "<!--#4DTEXT _V3_defaultCurrencyDecimalSep-->",
+        "thousand_sep" : "<!--#4DTEXT _V3_defaultCurrencyThousandSep-->",
+        "decimal_text_excel" : "<!--#4DTEXT _V3_defaultCurrencyDecimalsText-->",
+        "format_code_excel" : "<!--#4DTEXT _V3_defaultCurrencyFormatCode-->",
+        "label_rut" : "<!--#4DTEXT country_label_rut-->"
+    }
+}

@@ -1,0 +1,19 @@
+{
+	"rows": [
+	<!--#4DLOOP aPagoId -->
+		{
+			"id": <!--#4DHTML aPagoId{aPagoId}-->,
+			"empresa": {
+				"id": <!--#4DHTML aPagoEmpresaId{aPagoId}-->,
+				"rut": "<!--#4DHTML aPagoEmpresaRut{aPagoId}-->"	
+			},
+			"retiva": "<!--#4DHTML aPagoRetIva{aPagoId}-->",
+			"tipo_prov":"<!--#4DHTML aPagoTipoProv{aPagoId}-->",
+			"regimen_fiscal":"<!--#4DHTML aPagoRegimenFiscal{aPagoId}-->",
+			"tasa_cero":"<!--#4DHTML aPagoTasaCero{aPagoId}-->",
+			"exento":"<!--#4DHTML aPagoExento{aPagoId}-->",
+			"total": "<!--#4DHTML aPagoTotalPago{aPagoId}-->"
+		}<!--#4DIF NOT(aPagoId{aPagoId} = aPagoId{Size of array(aPagoId)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

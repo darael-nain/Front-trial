@@ -1,0 +1,229 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="/out/style.css"/>
+    <script src="/out/jquery.js"></script> 
+    <title>OC NRO <!--#4DVAR vfolio_oc--></title>
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $(".text-motivo").hide();
+        $("#link-rechazar").click(function(){
+            $(".text-motivo").fadeIn();
+        });
+        $("#bton-aceptar").click(function(){
+            var idoc = $("#idoc").val();
+            var loginAnulador = $("#loginAnulador").val();
+            var motivo = $("#motivo-anular").val();           
+            location.href="/4DACTION/anula_oc_correo/"+idoc+"/"+loginAnulador+"/"+motivo;
+        });
+        $("#bton-cancelar").click(function(){
+            $(".text-motivo").fadeOut();
+        });		
+		
+      });
+    </script>
+</head>
+<body>
+<div class="contenedor" align="center">
+ <div class="cuadro">
+
+<div class="box-validar">  
+  <!--#4dif verificaValidacion=""-->
+      <a href="/4DACTION/prevalida_oc_correo/<!--#4DVAR vid_oc-->/<!--#4DVAR loginValidador-->">Pre-Validar</a>
+      <a href="#" id="link-rechazar">Rechazar</a>
+      <div class="text-motivo">
+        <input id="idoc" value="<!--#4DVAR vid_oc-->" type="hidden">
+        <input id="loginAnulador" value="<!--#4DVAR loginValidador-->" type="hidden">
+        <label>Ingrese motivo anulaci&oacute;n:</label>
+        <textarea id="motivo-anular"></textarea>
+        <button id="bton-aceptar" type="button">Aceptar</button>
+        <button id="bton-cancelar" type="button">Cancelar</button>
+      </div>
+  <!--#4delse-->
+      <!--#4dif verificaValidacion="VALIDADA"-->
+        <div class="msgvalidada"><!--#4DVAR vMsgTitle--></div>
+        <div class="datos-msgvalidada">
+          Por el Usuario <span><!--#4DVAR vUsuarioValidado--></span>
+          el dia <span> <!--#4DVAR vFechaValidacion--> a las <!--#4DVAR vHoraValidacion-->
+          </span>
+        </div>   
+      <!--#4delse-->
+        <div class="msgAnulada"><!--#4DVAR vMsgTitle--></div>
+        <div class="datos-msgAnulada">
+          Por el Usuario <span><!--#4DVAR vUsuarioAnul--></span>
+          el dia <span> <!--#4DVAR vFechaAnul--> a las <!--#4DVAR vHoraAnul-->
+          </span>
+        </div>   
+      <!--#4dendif-->         
+  <!--#4dendif-->
+
+
+</div>
+   
+<table class="tabla-header" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td valign="top" class="left"><img src="<!--#4DVAR vUrlImagenLogo-->" width="<!--#4DVAR vAnchoPicture-->" height="<!--#4DVAR vAltoPicture-->" /></td>
+        <!--<td valign="top" class="left"><img src="/imagenes/logo_empresa.jpg" alt="" width="141" height="71" /></td>-->
+        <td valign="top" class="right"><div class="nro">N&deg; : <!--#4DVAR vfolio_oc--></div><div class="fecha"><!--#4DVAR vFechaEmi1--></div></td>
+      </tr>
+ </table>
+
+ 
+ <div align="left" class="header-datos">
+ <table class="tabla-datos" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td class="etiquetas" width="44">Para</td>
+    <td class="para-cliente" width="69"> : <!--#4DVAR vnombrecontacto--></td>
+    <td class="etiquetas" width="59">Empresa</td>
+    <td class="otros-header" width="197"> : <!--#4DVAR vempresa--></td>
+  </tr>
+  <tr>
+    <td class="etiquetas">Raz&#243;n Social</td>
+    <td class="para-cliente"> :  <!--#4DVAR vempresa--></td>
+    <td class="etiquetas">Rut</td>
+    <td class="otros-header"> :  <!--#4DVAR vrut--></td>
+  </tr>
+  <tr>
+    <td class="etiquetas">De</td>
+    <td class="otros-header"> : <!--#4DVAR vDeEmisor--></td>
+    <td class="etiquetas">Direcci&#243;n</td>
+    <td class="otros-header"> : <!--#4DVAR vdireccion--></td>
+  </tr>
+  <tr>
+    <td class="etiquetas">E-mail</td>
+    <td class="otros-header"> : <!--#4DVAR vDeEmisorEmail--></td>
+    <td class="etiquetas">Tel.</td>
+    <td class="otros-header"> : <!--#4DVAR vfono--></td>
+  </tr>  
+</table>
+ </div>
+ 
+<table class="tabla-detalle" border="0" cellpadding="1" cellspacing="0">
+	<tr>
+    <td colspan="5" class="tipooc"><!--#4DVAR vInfoNegocioOC--></td>    
+  </tr>
+	<tr>
+    <td colspan="5" class="tipooc">
+      <div><!--#4DVAR vtipo_oc--></div>
+      <div>La O.C se encuentra <!--#4DVAR vEstadoOcnew--></div>
+    </td>    
+  </tr>
+  <tr>
+    <td colspan="4" class="referencia"><!--#4DVAR vreferencia--></td>
+    <td class="tipo">ORDEN DE COMPRA</td>
+  </tr>
+  <tr bgcolor="#000000">
+    <td class="left-h"><div class="cuadradito"></div>Item</td>
+    <td class="center-h">Nombre</td>
+    <td class="center-h">Cant.</td>
+    <td class="center-h">P.U.</td>
+    <td class="center-h">Subtotal</td>
+  </tr>
+ 	 <!--#4DLOOP a_llave_detalle_oc-->        
+    <!--#4DIF a_titulo{a_llave_detalle_oc}="TITULO"-->
+      <tr bgcolor="#CCCCCC">
+        <td colspan="5" class="titulos"><!--#4DVAR a_des{a_llave_detalle_oc}--></td>    
+      </tr>
+    <!--#4DELSE-->
+        <tr>
+            <td class="orden-alfa"><!--#4DVAR a_llave_detalle_oc{a_llave_detalle_oc}--></td>
+            <td class="items">
+            	<!--#4DVAR a_des{a_llave_detalle_oc}-->
+          		<div class="observacion-items"><!--#4DVAR a_observ_items{a_llave_detalle_oc}--></div>
+            </td>
+            <td class="nro-items-cant"><!--#4DVAR a_cantidad{a_llave_detalle_oc}--></td>
+            <td class="nro-items-subtotal"><!--#4DVAR a_pu1{a_llave_detalle_oc}--></td>
+            <td class="nro-items-subtotal"><!--#4DVAR a_subtotal{a_llave_detalle_oc}--></td>    
+        </tr>  
+    <!--#4DENDIF-->    
+    <!--#4DENDLOOP--> 
+</table>
+
+<div align="right" class="totales">
+<table border="0">
+  <tr>
+      <td align="right" valign="top">
+            <table class="bloque2" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                <td class="etiquetas-valores">SUBTOTAL</td>
+                <td class="valores-totales"><!--#4DVAR string(vsubtotal;"$###.###.###.###")--></td>
+                </tr>
+                <tr>
+                <td class="etiquetas-valores">0% DESCUENTO</td>
+                <td class="valores-totales"><!--#4DVAR string(vdescuento;"$###.###.###.###")--></td>
+                </tr>
+                 <tr>
+                <td class="etiquetas-valores">TOTAL NETO</td>
+                <td class="valores-totales"><!--#4DVAR string(vNeto_OC_Print;"$###.###.###.###")--></td>
+                </tr>
+                <tr>
+                <td class="etiquetas-valores"><!--#4DVAR vetiqueta--></td>
+                <td class="valores-totales"><!--#4DVAR string(vIva_OC_Print;"$###.###.###.###")--></td>
+                </tr>
+                <tr>
+                <td class="etiquetas-valores-total">TOTAL</td>
+                <td class="valores-totales"><!--#4DVAR string(vTotal_OC_Print;"$###.###.###.###")--></td>
+                </tr>
+                </table>
+    </td>
+  </tr>
+</table>       
+</div>
+
+<table class="tabla-condiciones" border="0" cellpadding="0" cellspacing="0">
+  <tr bgcolor="#CCCCCC">
+    <td class="condiciones">CONDICIONES</td>
+  </tr>
+  <tr>
+    <td class="condiciones-datos-tit">Forma de pago : </td>
+  </tr>
+  <tr>
+    <td class="condiciones-datos-item"><!--#4DVAR vFormaPago--></td>
+  </tr>
+  <tr>
+    <td class="condiciones-datos-tit">Observaciones : </td>
+  </tr>
+  <tr>
+    <td class="condiciones-datos-item"><!--#4DVAR vComentarios--></td>
+  </tr>
+</table>
+
+<table class="tabla-condiciones" border="0" cellpadding="0" cellspacing="0">
+  <tr bgcolor="#CCCCCC">
+    <td class="condiciones">DATOS FACTURACION</td>
+  </tr>
+  <tr>
+    <td class="condiciones-datos-tit">Razon Social : <span class="condiciones-datos-item2"><!--#4DVAR razon_empresa--></span></td>
+  </tr>
+   <tr>
+    <td class="condiciones-datos-tit">Rut : <span class="condiciones-datos-item2"><!--#4DVAR rut_empresa--></span></td>
+  </tr> 
+   <tr>
+    <td class="condiciones-datos-tit">Giro : <span class="condiciones-datos-item2"><!--#4DVAR giro_empresa--></span></td>
+  </tr>  
+   <tr>
+    <td class="condiciones-datos-tit">Direcci&#243;n : <span class="condiciones-datos-item2"><!--#4DVAR dir_empresa--></span></td>
+  </tr>  
+   <tr>
+    <td class="condiciones-datos-tit">Telefono : <span class="condiciones-datos-item2"><!--#4DVAR fono_empresa--></span></td>
+  </tr>  
+</table>
+<table class="tabla-condiciones" border="0" cellpadding="0" cellspacing="0">
+  <tr bgcolor="#CCCCCC">
+    <td class="condiciones">Imagenes</td>
+  </tr>
+  <tr>
+    <td style="text-align:center"><!--#4DINCLUDE ../oc_img_comp.shtml--></td>
+  </tr>
+</table>
+<p class="datos-empresa">
+	<!--#4DVAR nom_empresa--> / 
+    <!--#4DVAR fono_empresa--> / 
+    <!--#4DVAR dir_empresa--> / 
+    <a target="_blank" href="<!--#4DVAR sitio_empresa-->"><!--#4DVAR sitio_empresa--></a>
+</p>
+</div>
+</div>
+</body>
+</html>

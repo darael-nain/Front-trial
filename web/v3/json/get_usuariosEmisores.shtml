@@ -1,0 +1,10 @@
+{
+	"rows": [
+<!--#4DLOOP aLoginEmisores-->
+		{
+			"id": "<!--#4DHTML aLoginEmisores{aLoginEmisores}-->",
+			"text": "<!--#4DHTML aLoginEmisores{aLoginEmisores}-->"
+		}<!--#4DIF NOT(aLoginEmisores{aLoginEmisores} = aLoginEmisores{Size of array(aLoginEmisores)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

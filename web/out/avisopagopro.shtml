@@ -1,0 +1,215 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="/out/style.css"/>
+    <title>COMPROBANTE DE PAGO</title>
+	<style>
+		hr{margin-left:50px;margin-right:50px;border:1px solid #000000;}	
+		h1{text-align:right;margin-right:50px;font-size:15px;}
+		h2{margin:0;font-size:20px;color:#848484}
+		h3{margin:0;font-size:15px;}
+		.fila1{text-align:left;margin-left:50px; }
+		.fila1 span{margin-right:100px;}
+		.origen {display:inline-block; width:430px; height:120px;vertical-align:top}
+		.origen  h3{margin:0;padding:0;text-align:left}
+		.origen  div{margin:0;padding:0;text-align:left}
+		.destino{border-left:2px solid #000000; display:inline-block; width:450px;height:120px;vertical-align:top}
+		.destino  h3{margin:0;padding:0;margin-left:5px;text-align:left}
+		.destino  div{margin:0;padding:0;text-align:left;margin-left:5px;}
+		h4{text-align:left;font-size:15px;color:#848484;margin-left:50px; padding:0;margin-top:0;margin-bottom:0;}
+		.letra-dato{font-size:11px;}
+		.letra-label{font-size:11px;font-weight:bold}
+	</style>
+</head>
+<body>
+<div class="contenedor" align="center">
+ <div class="cuadro">
+
+<h1><!--#4DVAR vtipopago_c--> : <!--#4DVAR vNroPago_c--></h1>
+<table class="tabla-header" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td>
+			<img src="<!--#4DVAR vUrlImagenLogo-->" width="<!--#4DVAR vAnchoPicture-->" height="<!--#4DVAR vAltoPicture-->" />
+	   </td>
+        <td>
+			<h2>COMPROBANTE DE PAGO</h1>
+			<h3>Ref: <!--#4DVAR vReferencia_c--></h2>
+	   </td>
+      </tr>
+ </table>
+  
+  <div class="fila1">
+	 <span class="">Emisor: <!--#4DVAR vEmisor_c--></span>
+	 <span class="">Fecha: <!--#4DVAR vFechaRegistro_c--></span>
+	 <span class="">Hora: <!--#4DVAR vHoraRegistro_c--></span>
+  </div>
+   
+  <hr/>
+	  <div class="origen">
+			<h3>Origen:</h3>
+			 <div class="letra-label2">Con cargo a cta: <!--#4DVAR vDesCtaCte--></div>
+			 <div class="letra-label2">Fecha Emision: <!--#4DVAR vFechaPropuesta_c--></div>
+			 <div class="letra-label2">Total Pago: <!--#4DVAR vTotalPago_c--></div>			 
+	  </div>
+	  <div class="destino">
+			<h3>Destino:</h3>
+			 <div class="">Tipo Cta: <!--#4DVAR vTipoCuenta_c--></div>
+			 <div class="">Banco / Cuenta : <!--#4DVAR vBancoCta_c-->  <!--#4DVAR vNroCuenta_c--></div>
+			 <div class="">Emitido a: <!--#4DVAR vEmitidoa_c--></div>
+			 <div class="">Rut: <!--#4DVAR vRuta_c--></div>
+	  </div>
+  <hr/>
+  
+  <h4>ORDEN DE PAGO RELACIONADA</h4>
+  <table border="0">
+		<tr>
+			<td>
+				<div class="">Numero OP: <!--#4DVAR vFolioOp_c--></div>
+				<div class="">Emitida por: <!--#4DVAR vEmitidaPorOp_c--></div>
+			</td>
+			<td><div class="">Fecha OP: <!--#4DVAR vFechaPagoOP_c--> <!--#4DVAR vHoraPagoOP_c--></div></td>			
+		</tr>
+  </table>  
+  <hr/>
+  
+  <!--#4DIF vIdSolicitudFondo>0-->
+  <h4>RENDICION DE FONDOS ASOCIADA</h4>
+  <table border="0">
+		<tr>
+			<td>
+				<div class="">Numero RF: <!--#4DVAR vNroRF--></div>
+				<div class="">Emitida por: <!--#4DVAR vEmitidaPorRF--></div>
+				<div class="">Referencia: <!--#4DVAR vRefereciaRF--></div>
+			</td>
+			<td><div class="">Fecha RF: <!--#4DVAR vFechaRF--> <!--#4DVAR vHoraRF--></div></td>			
+		</tr>
+  </table>
+  <!--#4DELSE-->
+  <h4>NO HAY RENDICION DE FONDOS ASOCIADA</h4>
+  <!--#4DENDIF-->  
+  <hr/>
+  
+  <!--#4DIF vCantOcx=0-->
+  <h4>NO HAY ORDENES DE COMPRA ASOCIADAS</h4>
+  <!--#4DELSE-->
+  		    <!--#4DIF vIdSolicitudFondo>0-->
+  		   		<!--#4DIF vCantOcx=1-->
+  		   			<h4>ORDEN DE COMPRA ASOCIADA(S)</h4>
+		   			<table border="0">
+						<tr>
+							<td class="letra-label">NRO OC</td>
+							<td class="letra-label">FECHA</td>
+							<td class="letra-label">ESTADO</td>
+							<td class="letra-label">PROVEEDOR</td>
+							<td class="letra-label">REFERENCIA</td>
+							<td class="letra-label">TOTAL</td>
+						</tr>
+						<!--#4DLOOP aIdOc_-->
+						<tr>
+							<td class="letra-dato"><!--#4DVAR aNroOc_{aIdOc_}--></td>
+							<td class="letra-dato"><!--#4DVAR aFechaOc_{aIdOc_}--></td>
+							<td class="letra-dato"><!--#4DVAR aEstadoOc_{aIdOc_}--></td>
+							<td class="letra-dato"><!--#4DVAR aProveedorOc_{aIdOc_}--></td>
+							<td class="letra-dato"><!--#4DVAR aReferenciaOc_{aIdOc_}--></td>
+							<td class="letra-dato" align="right"><!--#4DVAR string(aTotalOc_{aIdOc_};"$###.###.###.###")--></td>
+						</tr>
+						<!--#4DENDLOOP-->
+			  		</table>
+  		   		<!--#4DELSE-->
+					<h4><!--#4DVAR vCantOcx--> ORDENES DE COMPRA ASOCIADOS - VER EN RENDICION</h4>
+		  		<!--#4DENDIF-->
+  		    <!--#4DELSE-->
+  		   		<h4>ORDEN DE COMPRA ASOCIADA(S)</h4>
+		   		<table border="0">
+					<tr>
+						<td class="letra-label">NRO OC</td>
+						<td class="letra-label">FECHA</td>
+						<td class="letra-label">ESTADO</td>
+						<td class="letra-label">PROVEEDOR</td>
+						<td class="letra-label">REFERENCIA</td>
+						<td class="letra-label">TOTAL</td>
+					</tr>
+					<!--#4DLOOP aIdOc_-->
+					<tr>
+						<td class="letra-dato"><!--#4DVAR aNroOc_{aIdOc_}--></td>
+						<td class="letra-dato"><!--#4DVAR aFechaOc_{aIdOc_}--></td>
+						<td class="letra-dato"><!--#4DVAR aEstadoOc_{aIdOc_}--></td>
+						<td class="letra-dato"><!--#4DVAR aProveedorOc_{aIdOc_}--></td>
+						<td class="letra-dato"><!--#4DVAR aReferenciaOc_{aIdOc_}--></td>
+						<td class="letra-dato" align="right"><!--#4DVAR string(aTotalOc_{aIdOc_};"$###.###.###.###")--></td>
+					</tr>
+					<!--#4DENDLOOP-->
+			  </table>
+  		   <!--#4DENDIF-->		   	  
+  <!--#4DENDIF-->
+
+   <hr/> 
+
+
+  <!--#4DIF vCantDTC=0-->
+  <h4>NO HAY DOCUMENTOS DE COMPRA ASOCIADOS</h4>
+  <!--#4DELSE-->
+  		<!--#4DIF vIdSolicitudFondo>0-->
+  			<!--#4DIF vCantDTC=1-->
+  				<h4>DOCUMENTO(S) DE COMPRA ASOCIADO(S)</h4>
+				<table border="0">
+					<tr>
+						<td class="letra-label">FOLIO DTC</td>
+						<td class="letra-label">FECHA</td>
+						<td class="letra-label">TIPO DOC</td>
+						<td class="letra-label">ESTADO</td>
+						<td class="letra-label">REFERENCIA</td>
+						<td class="letra-label">TOTAL</td>
+					</tr>
+					 <!--#4DLOOP aIdDTC-->
+					<tr>
+						<td class="letra-dato"><!--#4DVAR aNroDTC{aIdDTC}--></td>
+						<td class="letra-dato"><!--#4DVAR aFechaDTC{aIdDTC}--></td>
+						<td class="letra-dato"><!--#4DVAR aTipoDocDTC{aIdDTC}--></td>
+						<td class="letra-dato"><!--#4DVAR aEstadoDTC{aIdDTC}--></td>
+						<td class="letra-dato"><!--#4DVAR aReferenciaDTC{aIdDTC}--></td>
+						<td class="letra-dato"><!--#4DVAR string(aTotalDTC{aIdDTC};"$###.###.###.###")--></td>
+					</tr>
+					<!--#4DENDLOOP-->
+				</table>
+  			<!--#4DELSE-->
+					<h4><!--#4DVAR vCantDTC--> DOCUMENTOS DE COMPRA ASOCIADOS - VER EN RENDICION</h4>
+	  		<!--#4DENDIF-->
+  		<!--#4DELSE-->
+  			<h4>DOCUMENTO(S) DE COMPRA ASOCIADO(S)</h4>
+				<table border="0">
+					<tr>
+						<td class="letra-label">FOLIO DTC</td>
+						<td class="letra-label">FECHA</td>
+						<td class="letra-label">TIPO DOC</td>
+						<td class="letra-label">ESTADO</td>
+						<td class="letra-label">REFERENCIA</td>
+						<td class="letra-label">TOTAL</td>
+					</tr>
+					 <!--#4DLOOP aIdDTC-->
+					<tr>
+						<td class="letra-dato"><!--#4DVAR aNroDTC{aIdDTC}--></td>
+						<td class="letra-dato"><!--#4DVAR aFechaDTC{aIdDTC}--></td>
+						<td class="letra-dato"><!--#4DVAR aTipoDocDTC{aIdDTC}--></td>
+						<td class="letra-dato"><!--#4DVAR aEstadoDTC{aIdDTC}--></td>
+						<td class="letra-dato"><!--#4DVAR aReferenciaDTC{aIdDTC}--></td>
+						<td class="letra-dato"><!--#4DVAR string(aTotalDTC{aIdDTC};"$###.###.###.###")--></td>
+					</tr>
+					<!--#4DENDLOOP-->
+				</table>
+  		<!--#4DENDIF-->		
+	<!--#4DENDIF-->
+	
+  <hr/>
+  
+<p class="datos-empresa">
+	<!--#4DVAR nom_empresa--> / 
+    <!--#4DVAR fono_empresa--> / 
+    <!--#4DVAR dir_empresa--> / 
+    <a target="_blank" href="<!--#4DVAR sitio_empresa-->"><!--#4DVAR sitio_empresa--></a>
+</p>
+</div>
+</div>
+</body>
+</html>

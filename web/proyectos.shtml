@@ -1,0 +1,91 @@
+<!--#4DINCLUDE head2.shtml-->
+<!--4DACTION/listp-->
+<!--#4DSCRIPT/_V3_serverInfo-->
+<body>
+
+	<!-- add for export-->	
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script  src="/v3/script/access.js?<!--#4DTEXT _V3_version-->"></script>
+
+	<script src="/v3/script/jquery/plugins/serializeanything/jquery.serializeanything.js"></script>
+	<!-- <script type="text/javascript" src="//<! --#4DVAR _V3_nodejs_public_ipaddr- ->:<!- -#4DVAR _V3_nodejs_port-- >/socket.io/socket.io.js"></script> -->
+	<!-- <script src="/v3/script/chat.js?<!- -#4DTEXT _V3_version- ->"></script> -->
+	<script src="/v3/script/jquery/plugins/jquery-cookie/jquery.cookie.js"></script>
+	<script src="/v3/script/unabase.js?<!--#4DTEXT _V3_version-->"></script>
+	<script src="/v3/script/home.js?<!--#4DTEXT _V3_version-->"></script>
+	<script>
+	window.onbeforeunload = undefined;
+	</script>
+	<script src="/v3/script/hashref.js?<!--#4DTEXT _V3_version-->"></script>
+	<script src="/v3/script/help.js?<!--#4DTEXT _V3_version-->"></script>
+	<script src="/v3/script/jquery/plugins/tooltipster/js/jquery.tooltipster.js"></script>
+	<script src="/v3/script/jquery/plugins/bindWithDelay/bindWithDelay.js"></script>
+	<!-- add for export-->
+<script>
+
+
+	var current_username = "<!--#4DHTML vLogin-->";
+	var v3_data_username = "<!--#4DHTML vLogin-->";
+	var v3_data_username_name = "<!--#4DTEXT vNomUsr2-->";
+	var v3_data_username_email = "<!--#4DTEXT vEmail-->";
+
+	
+	var hash = '<!--#4DHTML _V3_hash-->';
+	var nodejs_port = <!--#4DHTML _V3_nodejs_port-->;
+	var nodejs_public_ipaddr = "<!--#4DHTML _V3_nodejs_public_ipaddr-->";
+	var is_demo = <!--#4DIF _V3_demo -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+	var login = "<!--#4DTEXT vLogin-->";
+</script>
+
+<!--#4DINCLUDE menu_superior_green.shtml-->
+<div id="main-container">
+	<div class="box-button">
+		<!--#4DIF aCheckPermiso{38}=true-->
+			<a class="boton" href="/4DACTION/proyectos/createp/0">Nuevo Proyecto</a>
+		<!--#4DENDIF-->
+
+		<a href="#" class="boton export">Exportar a excel</a>
+	</div>  
+	<h2 class="sub-title2"><img class="img-title-calendar" src="/imagenes_green/list_work.png">Proyectos</h2>
+	 <div class="search-proy">
+    	<label>Buscar por</label>
+    	<input type="text" id="search-text-p" class="busq-combinada-proyecto" placeholder="Nro, Nombre proyecto, Cliente, Emisor">
+
+    	<label>Estado</label>
+		<select id="search-estado-p" class="busq-combinada-proyecto">			
+			<option selected="selected" value="EN PROCESO">EN PROCESO</option>
+			<option value="CERRADA">CERRADA</option>			
+			<option value="ANULADA">ANULADA</option>
+			<option value="TODAS">TODAS</option>
+		</select>
+		
+    </div>
+
+	<div style="margin-top:110px" id="contenedor-lista-proyectos">
+   	<!--#4DINCLUDE lista_proyectos_encontrados.shtml-->
+	</div>	
+</div>
+</body>
+	<script>
+	$(document).ready(function(){
+			$('.export').on('click',function(){
+			var sid = '';
+			$.each($.cookie(),function(clave, valor) { if (clave == hash && valor.match(/UNABASE/g)) sid = valor; });
+			var modulo = "PROYECTOS-V2"
+			var url = ""
+			// var filters = $('#search-form-ots').serializeAnything(true);
+
+			url = 'http://' + nodejs_public_ipaddr + ':' + nodejs_port + '/export-proyectos-v2/?download2=true&sid=' + encodeURIComponent(sid)+'&hostname='+window.location.origin;
+			unaBase.log.save('Ha exportado el listado de proyectos v2', 'proyectos');
+
+			var download = window.open(url);
+			download.blur();
+			window.focus();
+
+	});
+
+
+		
+	});
+	</script>
+</html>

@@ -1,0 +1,5 @@
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link, .unas-btn-success{
+    color: #fff;
+    background-color: #20A789;
+}
+

@@ -1,0 +1,41 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Categoria_Servicio1]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP aCategoriaId -->
+		{
+			"id": <!--#4DHTML aCategoriaId{aCategoriaId}-->,
+			"text": "<!--#4DHTML _V3_escapeString(aCategoriaNombre{aCategoriaId})-->",
+			"especial": <!--#4DIF aCategoriaEspecial{aCategoriaId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"ocultar_print": <!--#4DIF aCategoriaOcultarPrint{aCategoriaId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"mostrar_carta_cliente": <!--#4DIF aCategoriaMostrarCartaCliente{aCategoriaId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"gasto_fijo": <!--#4DIF aCategoriaGastoFijo{aCategoriaId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+<!--#4DSCRIPT/_V3_proxy_getProductoCategoria-->
+<!--#4DIF Not(Undefined(strict))-->
+			"productos": [
+<!--#4DLOOP aProductoId -->
+				{
+					"id": <!--#4DHTML aProductoId{aProductoId}-->,
+					"index": "<!--#4DHTML aProductoIndex{aProductoId}-->",
+					"text": "<!--#4DHTML _V3_escapeString(aProductoNombre{aProductoId})-->",
+					"observacion": "<!--#4DHTML _V3_escapeString(aProductoObservacion{aProductoId})-->",
+					"precio": <!--#4DIF (String(aProductoPrecio{aProductoId}) = "I")-->null<!--#4DELSE--><!--#4DHTML aProductoPrecio{aProductoId}--><!--#4DENDIF-->,
+					"costo": <!--#4DIF (String(aProductoCosto{aProductoId}) = "I")-->null<!--#4DELSE--><!--#4DHTML aProductoCosto{aProductoId}--><!--#4DENDIF-->,
+					"unidad": "<!--#4DHTML Substring(aProductoUnidad{aProductoId};1;3)-->",
+					"aplica_sobrecargo": <!--#4DIF aProductoAplicaSobrecargo{aProductoId}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+				}<!--#4DIF NOT(aProductoId{aProductoId} = aProductoId{Size of array(aProductoId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+			],
+<!--#4DENDIF-->
+			"compra": <!--#4DIF aCategoriaCompra{aCategoriaId}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aCategoriaId{aCategoriaId} = aCategoriaId{Size of array(aCategoriaId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

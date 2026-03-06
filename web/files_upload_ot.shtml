@@ -1,0 +1,63 @@
+<!--#4dif Size of array(aNombreArchivo)>0-->
+<!--#4dloop aIdArchivo-->
+
+<!--#4dif aFrom{aIdArchivo}="OT"-->
+<div class="items-file-revison"  id="rev<!--#4dvar aIdArchivo{aIdArchivo}-->">
+
+	<!--#4dif aDesFormatoArchivo{aIdArchivo}="IMAGEN"-->
+	<div class="imagenes">
+		<img src="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->">
+		<span class="des-file">
+			<!--#4dvar aNombreArchivo{aIdArchivo}-->
+			<a class="delete-file" title="file-rev" id="<!--#4dvar aIdArchivo{aIdArchivo}-->" href="#">x</a>
+		</span>
+	</div>
+	<!--#4dendif-->
+
+	<!--#4dif aDesFormatoArchivo{aIdArchivo}="VIDEO"-->
+	<div class="archivo">
+		<img src="/imagenes_formato/<!--#4dvar aFormatoArchivo{aIdArchivo}-->.png">
+		<span class="des-file">
+			<!--#4dvar aNombreArchivo{aIdArchivo}-->
+			<a class="delete-file" title="file-rev" id="<!--#4dvar aIdArchivo{aIdArchivo}-->" href="#">x</a>
+		</span>
+	</div>
+	<!--#4dendif-->
+
+	<!--#4dif aDesFormatoArchivo{aIdArchivo}="AUDIO"-->
+	<div class="audio">
+	    <audio controls="controls">                 
+	        <source src="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->" type="audio/mpeg" />
+	        Your browser does not support the audio element.
+	    </audio>
+	    <span class="des-file">
+	    	<!--#4dvar aNombreArchivo{aIdArchivo}-->
+	    	<a class="delete-file" title="file-rev" id="<!--#4dvar aIdArchivo{aIdArchivo}-->" href="#">x</a>
+	    </span>
+	</div>
+	<!--#4dendif-->
+
+	<!--#4dif aDesFormatoArchivo{aIdArchivo}="DOCUMENTO"-->
+	<div class="archivo">
+		<img src="/imagenes_formato/<!--#4dvar aFormatoArchivo{aIdArchivo}-->.png">
+		<span class="des-file">
+			<!--#4dvar aNombreArchivo{aIdArchivo}-->
+			<a class="delete-file" title="file-rev" id="<!--#4dvar aIdArchivo{aIdArchivo}-->" href="#">x</a>
+		</span>
+	</div>
+	<!--#4dendif-->
+
+	<!--#4dif aDesFormatoArchivo{aIdArchivo}="COMPRIMIDO"-->
+	<div class="archivo">
+		<img src="/imagenes_formato/<!--#4dvar aFormatoArchivo{aIdArchivo}-->.png">
+		<span class="des-file">
+			<!--#4dvar aNombreArchivo{aIdArchivo}-->
+			<a class="delete-file" title="file-rev" id="<!--#4dvar aIdArchivo{aIdArchivo}-->" href="#">x</a>
+		</span>
+	</div>
+	<!--#4dendif-->
+ 
+</div>
+<!--#4dendif-->
+<!--#4dendloop-->
+<!--#4dendif-->

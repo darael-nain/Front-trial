@@ -1,0 +1,97 @@
+<div class="sumatotalesitems" id="sumatotalesitems">
+<table border="0">
+<tr>
+<td>
+<div>Subtotales <input readonly id="presub" name="presub" type="text" value="<!--#4DVAR vsuma_sub_total-->" /></div>
+<div>Afecto a comision <input readonly id="precom" name="precom" type="text" value="<!--#4DVAR vafecto_a_comision-->" /></div></td>
+<td>Gasto P. <input readonly id="gastop" name="" type="text" value="<!--#4DVAR vafecto_a_comision-->" /></td>
+<td>Utilidad P. <input  readonly id="utilidadp" name="" type="text" value="<!--#4DVAR vafecto_a_comision-->" /></td>
+</tr>
+</table>
+</div>
+
+<div align="right" class="totales">
+<table border="1">
+  <tr>
+<td valign="top" align="right">
+    		<!--#4DIF mostrar_bloque1=true-->
+            <table class="bloque1" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td class="valor-comision">
+                    	<!--#4DIF comision1_activa=true-->
+                        	<input onkeyup="calculaComisiones(this.id,this.value)" id="valorcomision1" name="feepor" value="<!--#4DVAR valor_por_comision1-->" type="text">
+                            <span class="label-comision1">%&nbsp;<!--#4DVAR nom_comision1--></span>
+                            <input id="montocomision1" readonly name="montocomision1" type="text" value="<!--#4DVAR monto_comision1-->" />
+                            <span class="label-comision1">SUBTOTAL 1&nbsp;</span>
+                           <input id="sumatotal1" readonly name="sumatotal1" type="text" value="<!--#4DVAR suma_subtotal1-->" />
+                           <input id="chk-cerrado1" value="<!--#4DVAR checked1-->" type="checkbox" disabled="disabled"/><span class="label-comision1">Cerrado</span>                              
+                        <!--#4DENDIF--> 
+                     </td>              
+                </tr>
+                <tr>
+                    <td class="valor-comision">
+                    	<!--#4DIF comision2_activa=true-->
+                        	<input onkeyup="calculaComisiones(this.id,this.value)" id="valorcomision2" name="feepor2" class="box-small-comision2" value="<!--#4DVAR valor_por_comision2-->" type="text">
+                           <span class="label-comision2">%&nbsp;<!--#4DVAR nom_comision2--></span>
+                      <input id="montocomision2" readonly class="box-big-comision2" name="montocomision2" type="text" value="<!--#4DVAR monto_comision2-->" />
+                            <span class="label-comision2">SUBTOTAL 2&nbsp;</span>
+                            <input id="sumatotal2" readonly class="box-big-comision2"  name="sumatotal2" type="text" value="<!--#4DVAR suma_subtotal2--> " />
+                            <input id="chk-cerrado2" value="<!--#4DVAR checked2-->" type="checkbox" disabled="disabled"/><span class="label-comision2">Cerrado</span>                                                 
+                        <!--#4DENDIF--> 
+                     </td>              
+                </tr>
+                <tr>
+                    <td class="valor-comision">                    
+                    	<!--#4DIF comision3_activa=true-->
+                        
+<!--#4DIF com_sobre_total=true-->
+<input id="com_sobre_total" name="com_sobre_total" type="hidden" value="si"/>
+<span class="com_sobre_total"></span>
+<!--#4DELSE-->
+<input id="com_sobre_total" name="com_sobre_total" type="hidden" value="no"/>
+<!--#4DENDIF-->
+                            
+<input id="valorcomision3" onkeyup="calculaComisiones(this.id,this.value)" name="feepor3" class="box-small-comision3" value="<!--#4DVAR valor_por_comision3-->" type="text">
+<span class="label-comision3">%&nbsp;<!--#4DVAR nom_comision3--></span>
+
+<!--#4DIF com_sobre_total=true-->
+<input id="montocomision3" readonly class="box-big-comision3" name="montocomision3" type="text" value="<!--#4DVAR suma_subtotal3-->" />
+<span class="label-comision3">SUBTOTAL 3&nbsp;</span>
+<input id="sumatotal3" readonly class="box-big-comision3"  name="sumatotal3" type="text" value="<!--#4DVAR monto_comision3--> " />  
+<!--#4DELSE-->
+<input id="montocomision3" readonly class="box-big-comision3" name="montocomision3" type="text" value="<!--#4DVAR monto_comision3-->" />
+<span class="label-comision3">SUBTOTAL 3&nbsp;</span>
+<input id="sumatotal3" readonly class="box-big-comision3"  name="sumatotal3" type="text" value="<!--#4DVAR suma_subtotal3--> " />    
+<!--#4DENDIF-->
+                      <input id="chk-cerrado3" value="<!--#4DVAR checked3-->" type="checkbox" disabled="disabled"/><span class="label-comision3">Cerrado</span>                     
+                        <!--#4DENDIF--> 
+                  </td>              
+              </tr>        
+            </table>
+            <!--#4DENDIF-->
+    </td>
+    <td valign="top">
+    		 <table class="bloque2" cellpadding="0" cellspacing="0" >
+                <tr>
+                    <td><input  onkeyup="calculaDescuento(this.id,this.value)" id="descuentos" name="descuentofinal" class="amarillo-chico" type="text" value="<!--#4DVAR valor_por_desc-->" />% DESC&nbsp;</td>
+                    <td><input id="totaldescuento"  name="totaldescuento" readonly class="amarillo-grande" type="text" value="<!--#4DVAR t_descuento-->" /> </td>
+                </tr>
+                <tr>
+                    <td>SUB TOTAL NETO [$]&nbsp;</td>
+                    <td> 
+  <input name="subtotalfinal" id="subtotalfinal" readonly class="amarillo-grande" type="text" value="<!--#4DVAR vtotalneto-->"  />
+  					</td>
+                </tr>
+                <tr>
+                    <td>IVA -19% [$]&nbsp;</td>
+                    <td> <input name="ivafinal" id="ivafinal" readonly class="amarillo-grande" type="text" value="<!--#4DVAR vtotaliva-->"   /> </td>
+                </tr>
+                <tr>
+                    <td>TOTAL [$]&nbsp;</td>
+                    <td> <input name="totalfinal" id="totalfinal" readonly class="amarillo-grande" type="text" value="<!--#4DVAR vtotalneg-->"   /> </td>
+                </tr>
+    		</table> 
+    </td>
+  </tr>
+</table>
+</div>

@@ -1,0 +1,43 @@
+{	
+	"rows": [
+<!--#4DLOOP $aid_dtc-->
+		{
+			"id": <!--#4DHTML $aid_dtc{$aid_dtc}-->,			
+			"referencia": "<!--#4DHTML _V3_escapeString($aref_dtc{$aid_dtc})-->",
+			"proveedor": "<!--#4DHTML _V3_escapeString($arazon_dtc{$aid_dtc})-->",
+			"proveedor_rut": "<!--#4DHTML _V3_escapeString($aProveedorRut{$aid_dtc})-->",
+			"id_tipodoc": "<!--#4DHTML _V3_escapeString($atipodoc_dtc{$aid_dtc})-->",	
+			"documento": "<!--#4DHTML _V3_escapeString($adestipodoc_dtc{$aid_dtc})-->",
+			"numero": "<!--#4DHTML $afolio_dtc{$aid_dtc}-->",
+			"emision": "<!--#4DHTML $afecha_dtc{$aid_dtc}-->",
+			"responsable": "<!--#4DHTML _V3_escapeString($aResponsable{$aid_dtc})-->",
+			"estado": "<!--#4DHTML $aestado_dtc{$aid_dtc}-->",
+			"neto_": "<!--#4DHTML $aneto_dtc{$aid_dtc}-->",
+			"total_": "<!--#4DHTML $atotal_dtc{$aid_dtc}-->",
+			"neto": <!--#4DHTML String($aneto_dtc{$aid_dtc};"&xml")-->,
+			"exento": <!--#4DHTML String($aexento_dtc{$aid_dtc};"&xml")-->,
+			"impuesto": <!--#4DHTML String($aimpuesto_dtc{$aid_dtc};"&xml")-->,
+			"adicional": <!--#4DHTML String($aadicional_dtc{$aid_dtc};"&xml")-->,
+			"total": <!--#4DHTML String($atotal_dtc{$aid_dtc};"&xml")-->,
+			"justificado": <!--#4DHTML String($ajustificado_dtc{$aid_dtc};"&xml")-->,			
+			"cant_nc": <!--#4DHTML $acantnc_dtc{$aid_dtc}-->,
+			"tiene_nc": <!--#4DHTML $atienenc_dtc{$aid_dtc}-->,
+			"en_rendicion": <!--#4DHTML $asociado_a_fxr_dtc{$aid_dtc}-->,
+			"nro_fxr": "<!--#4DHTML $a_nroFxr_asociado_dtc{$aid_dtc}-->"
+		}<!--#4DIF NOT($aid_dtc{$aid_dtc} = $aid_dtc{Size of array($aid_dtc)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	],
+	"impuestos_dtc": [
+		<!--#4DIF NOT(UNDEFINED(aAdicionalImpId))-->
+			<!--#4DLOOP aAdicionalImpId-->
+				{		
+					"id": <!--#4DHTML aAdicionalImpId{aAdicionalImpId}-->,
+					"id_dtc": "<!--#4DHTML aAdicionalImpIdDtc{aAdicionalImpId}-->",
+					"impuesto_valor": "<!--#4DHTML String(aAdicionalImpMValor{aAdicionalImpId};"&xml")-->",
+					"impuesto_porc": "<!--#4DHTML String(aAdicionalImpMPorc{aAdicionalImpId};"&xml")-->",
+					"impuesto_name": "<!--#4DHTML String(aAdicionalImpName{aAdicionalImpId};"&xml")-->"
+				}<!--#4DIF NOT(aAdicionalImpId{aAdicionalImpId} = aAdicionalImpId{Size of array(aAdicionalImpId)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		<!--#4DENDIF-->
+	]
+}

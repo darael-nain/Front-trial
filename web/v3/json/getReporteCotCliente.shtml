@@ -1,0 +1,30 @@
+{
+	"clientes" : [
+	<!--#4DLOOP aInformeCT_idcliente1-->
+		{
+			"id": <!--#4DHTML aInformeCT_idcliente1{aInformeCT_idcliente1}-->,
+			"cliente": "<!--#4DIF aInformeCT_cliente1{aInformeCT_idcliente1}#""--><!--#4DHTML _V3_escapeString(aInformeCT_cliente1{aInformeCT_idcliente1})--><!--#4DELSE--><!--#4DHTML _V3_escapeString(aInformeCT_alias1{aInformeCT_idcliente1})--><!--#4DENDIF-->",
+			"realizadas": <!--#4DHTML String(aInformeCT_realizadas1{aInformeCT_idcliente1};"&xml")-->,
+			"anuladas": <!--#4DHTML String(aInformeCT_anuladas1{aInformeCT_idcliente1};"&xml")-->,
+			"concretadas": <!--#4DHTML String(aInformeCT_concretadas1{aInformeCT_idcliente1};"&xml")-->,
+			"proceso": <!--#4DHTML String(aInformeCT_proceso1{aInformeCT_idcliente1};"&xml")-->,
+			"motivos_anulacion": "<!--#4DHTML _V3_escapeString(aInformeCT_anuladasmotivos1{aInformeCT_idcliente1})-->"
+		}<!--#4DIF NOT(aInformeCT_idcliente1{aInformeCT_idcliente1} = aInformeCT_idcliente1{Size of array(aInformeCT_idcliente1)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	],
+	"informe_cantidad": <!--#4DIF bCant-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"informe_porcentaje": <!--#4DIF bPorc-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"informe_monto": <!--#4DIF bMonto-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"currency" : {
+        "code" : "<!--#4DTEXT _V3_defaultCurrencyCode-->",
+        "name" : "<!--#4DTEXT _V3_defaultCurrencyName-->",
+        "symbol" : "<!--#4DTEXT _V3_defaultCurrencySymbol-->",
+        "right" : <!--#4DIF _V3_defaultCurrencyRight-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+        "decimal": <!--#4DTEXT _V3_defaultCurrencyDecimals-->,
+        "decimal_sep": "<!--#4DTEXT _V3_defaultCurrencyDecimalSep-->",
+        "thousand_sep" : "<!--#4DTEXT _V3_defaultCurrencyThousandSep-->",
+        "decimal_text_excel" : "<!--#4DTEXT _V3_defaultCurrencyDecimalsText-->",
+        "format_code_excel" : "<!--#4DTEXT _V3_defaultCurrencyFormatCode-->",
+        "label_rut" : "<!--#4DTEXT country_label_rut-->"
+    }
+}

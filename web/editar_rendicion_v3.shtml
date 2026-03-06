@@ -1,0 +1,139 @@
+<!--#4DSCRIPT/_V3_proxy_getFxrContent-->
+<!--#4DINCLUDE head.shtml-->
+<body>
+<!--#4DINCLUDE mensajes.shtml-->
+<!--#4DINCLUDE menuSuperior.shtml-->
+<section>
+	<input id="tipoItemsRend" type="hidden" value="<!--#4DVAR vTipoRend-->" />
+	<input id="llave-items-i" type="hidden" value="<!--#4DVAR vLlaveItemsRend-->" />
+	<input id="llave-titulo-i" type="hidden" value="<!--#4DVAR vLlaveTituloItemsRend-->" />
+	<input id="nombre-items-i" type="hidden" value="<!--#4DVAR vNombreItemsRend-->" />
+	<input id="nombre-titulo-i" type="hidden" value="<!--#4DVAR vNombreTituloItemsRend-->" />
+
+    <input id="globalLogin" type="hidden" value="<!--#4DVAR vLogin-->" />
+	
+	<div id="bg-pop-add-prov" class="bg-popup" style="display:none">
+		<div id="modal-pop-add-prov" class="modal-popup"></div>
+	</div>	
+	
+	<h1>Editar rendicion</h1>
+    <article>
+        <form  name="frmeditarrendicion" id="frmeditarrendicion" action="/4DACTION/W_ACTUALIZA_REND" method="post">
+            <input id="id_rendicion" name="id_rendicion" type="hidden" value="<!--#4DVAR vIdRendicionF-->" />
+            <input id="opcionSend" name="opcion" type="hidden" value="" />
+			
+            <p style="margin-left:5px">Estado : <span style="font-weight:bold"><!--#4DVAR vEstadoRendicion--></span></p>
+			
+			<!--#4Dif vValidado_sf="SI"-->
+				 <p style="margin-left:5px"><span style="font-weight:bold;color:green">La rendición está Validada.</span></p>
+			<!--#4Delse-->
+				 <p style="margin-left:5px"><span style="font-weight:bold;color:red">La rendición NO está Validada.</span></p>
+			<!--#4Dendif-->
+
+            <!--#4Dif vCierreProdEstado-->
+                <p style="margin-left:5px">
+                    <span style="font-weight:bold;color:green">La rendición está cerrada por producción.</span>
+                    <span>(Realizada por: <!--#4DVAR vCierreProdPor--> )</span>
+                </p>                   
+            <!--#4Dendif-->
+							
+            <p class="emitido-por">Emitido por, <!--#4DVAR vRespEmision--> el d&iacute;a <!--#4DVAR vFechaEmision--> a las <!--#4DVAR vHoraEmision--> hrs.</p>
+
+            <div class="container-fieldset-izq">        
+                <fieldset class="fieldset-especiales">
+                    <legend>DATOS DEL RESPONSABLE</legend>
+                    <div><span class="negrita">Razon social :</span><span><!--#4DVAR vRazonRespx--></span></div>
+    				<div><span class="negrita">Rut :</span><span><!--#4DVAR vRutRespx--></span></div>
+    				<div><span class="negrita">Giro :</span><span><!--#4DVAR vGiroRespx--></span></div>                                          
+                </fieldset>
+                            
+                <fieldset class="fieldset-especiales">                              
+                    <legend>DATOS DEL NEGOCIO</legend>
+                    <div><span class="negrita">Proyecto :</span><span><!--#4DVAR vRefNegx--></span></div>				
+                    <div><span class="negrita">Id Negocio :</span><span><!--#4DVAR vIdNegx--></span></div>                   
+                </fieldset>
+    			
+    			<fieldset class="fieldset-especiales">                              
+                    <legend>DATOS DE LA RENDICION</legend>
+                    <div><span class="negrita">Referencia :</span><span><!--#4DVAR vRefSolx--></span></div>                               
+                    <div><span class="negrita">Folio :</span><span><!--#4DVAR vFolioSolx--></span></div>
+                    <hr/>                   
+                    <div><span class="negrita">Tipo : </span><span><!--#4DVAR vTipoRend--></span></div>
+                     <!--#4dif ((vTipoRend="GASTO DIRECTO ITEM")|(vTipoRend="VARIOS ITEMS"))-->
+                    <div><span class="negrita">Título : </span><span><!--#4DVAR vCategoriaItemsRend--></span></div>
+                    <div><span class="negrita">Items Relacionado : </span><span><!--#4DVAR vRefItemsRend--></span></div>
+                     <!--#4dendif-->
+                </fieldset>
+            </div>
+
+            <div class="container-fieldset-der">
+                <fieldset class="fieldset-especiales-derecho">                              
+                    <legend>TOTALES RENDICION</legend>
+                    <div><span class="labels">TOTAL DOCS. VENTA :</span><span class=" valor"><!--#4DVAR t_TotalDV--></span></div>                     
+                    <div><span class="labels">TOTAL DOCS. COMPRA :</span><span class=" valor verde"><!--#4DVAR vTotalDC--></span></div>
+                    <div><span class="labels">TOTAL PAGOS :</span><span class=" valor"><!--#4DVAR t_TotalPagos--></span></div>
+                    <div><span class="labels">TOTAL INGRESOS :</span><span class="valor verde"><!--#4DVAR vTotalIngresos--></span></div>
+                    <hr/>
+                    <div><span class="labels">SALDO :</span><span class="valor amarillo"><!--#4DVAR vSaldoSolx--></span></div>               
+                </fieldset>
+
+                <fieldset class="fieldset-observaciones-derecho">
+                    <legend>OBSERVACIONES</legend>
+                    <div><span class="label"><textarea rows="2" cols="45" disabled><!--#4DVAR v_observaciones--></textarea></span></div>
+                </fieldset>
+            </div>
+
+            <fieldset>                              
+                <legend>PAGOS</legend>
+                <div style= "overflow:auto"><!--#4DINCLUDE pagos_rendicion.shtml--></div>                                           
+            </fieldset>
+
+            <fieldset id="det-items">                              
+                <legend>DOCUMENTOS DE COMPRA</legend>
+						<!--#4Dif vEstadoRendicion#"ANULADA"-->
+							<!--#4Dif vValidado_sf="SI"-->
+								<button title="Agregar documento de compra" class="button-bkn" type="button" onclick="fn_agregar_row();">+ DOC</button>
+							<!--#4Dendif-->
+						<!--#4Dendif-->
+					<div style= "overflow:auto"><!--#4DINCLUDE items_dtc_rendicion.shtml--></div>				
+            </fieldset>        
+
+            <p>           
+            	<button style="vertical-align:middle" title="Guardar rendicion" class="button-inf" onClick="enviarEditarRend('enviar')" type="button">
+                	<img src="/imagenes/disk.png" border="0" />
+                	<span>Guardar</span>
+                </button>
+				
+				<!--#4Dif vValidado_sf="SI"-->
+				<button style="vertical-align:middle" title="IMPRIMIR" class="button-inf" type="button" onClick="window.open('/4DACTION/outEmailSol/<!--#4DVAR vIdRendicionF-->/<!--#4DVAR vLogin-->');">
+					<img src="/imagenes/printer.png" border="0" />
+					<span>Imprimir</span>
+				</button>
+				<!--#4Dendif-->				
+                
+                <button style="vertical-align:middle" title="Enviar notificacion" class="button-inf" onClick="fn_dialog_notificar()" type="button">
+                    <img src="/imagenes/email.png" border="0" />                   
+                    <span>Notificar</span>
+                </button>
+				
+                <!--#4dif (vEstadoRendicion#"ANULADA") & (vEstadoRendicion#"CERRADA")-->                   
+                    <button style="vertical-align:middle" title="Anular" class="button-inf" type="button" 
+                    onClick="fn_anular_rendicion('<!--#4DVAR vIdRendicionF-->')">
+                        <img src="/imagenes/delete.png" border="0" />
+                        <span>Anular</span>
+                    </button>
+                <!--#4dendif-->            
+                
+                <!--#4Dif (vValidado_sf="SI") & (vEstadoRendicion#"ANULADA") & (vEstadoRendicion#"CERRADA") & (vCierreProdEstado=false)-->
+                    <button id="cierre-produccion" style="vertical-align:middle" title="Cierre de producción" class="button-inf" onClick="fn_dialog_notificar()" type="button">
+                        <img src="/imagenes/email.png" border="0" />                   
+                        <span>Cierre de Prod.</span>
+                    </button>
+                <!--#4Dendif-->                
+                
+            </p>
+        </form>                          
+    </article>         
+</section>  
+</body>
+</html>

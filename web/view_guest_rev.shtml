@@ -1,0 +1,122 @@
+<!--#4DINCLUDE headgreen.shtml-->
+<body>
+<!--#4dif vCantRev>0-->
+<div id="loading-global">
+    <div class="cargasxxx">
+        <img src="/imagenes/ajax-loader2.gif" />
+        <p></p>
+    </div>
+</div>
+<style>
+	.box-guest-not{
+		text-align:left;
+	}
+	.box-guest-not h3{		
+		margin:0;
+		font-size:15px;
+	}
+
+	.box-guest-not .block-1{
+		margin:10px;
+	}
+	.box-guest-not .block-1 div{
+		margin:2px 0 2px 5px;
+	}
+	.box-guest-not .block-1 div label{
+		font-style:italic;
+	}
+	.box-guest-not .block-1 div span{
+		font-size:13px;
+	}
+
+	.box-guest-not .block-2{
+		margin:10px;
+	}
+
+	#ver-all-revisionesx{
+		font-style:italic;
+		font-size:12px;
+		color:black;
+		margin-left:10px;
+		text-decoration:underline;		
+	}
+
+	h5{
+		text-align:right;
+		text-transform:capitalize;
+		margin:10px;
+	}
+
+</style>
+<!--#4DINCLUDE menu_superior_green_guest.shtml-->
+<section id="main-container">
+	<div class="base">
+		<h5>invitado : <!--#4dvar vNameGuest--></h5>
+		<div class="box-guest-not">
+
+			<div class="block-1">
+				<h3>Datos de la orden de trabajo :</h3>
+				<div>
+					<label>Nro :</label>
+					<span><!--#4dvar vNroOTGuest--></span>
+				</div>
+				<div>
+					<label>Referencia :</label>
+					<span><!--#4dvar vRefOTGuest--></span>
+				</div>
+				<div>
+					<label>Prioridad :</label>
+					<span><!--#4dvar vPriOTGuest--></span>
+				</div>
+			</div>
+
+			<div class="block-2">
+				<!--<h3>Revisiones :</h3>-->
+				<div class="list-revisiones">
+				    <!--#4dloop aRevLogin--> 
+				    <div class="items-revision items-revision2" id="<!--#4DVAR aRevIdRev{aRevLogin}-->">
+				      <span
+				        style="<!--#4DVAR aRevIdRev{aRevLogin}-->" 
+				        class="click subject"><!--#4DVAR aRevAsunto{aRevLogin}-->
+				      </span>
+				      <span 
+				        style="<!--#4DVAR aRevIdRev{aRevLogin}-->" 
+				        class="click photo">
+				          <img src="<!--#4DVAR aRevLogoResp{aRevLogin}-->">
+				      </span>
+				      <span 
+				        style="<!--#4DVAR aRevIdRev{aRevLogin}-->" 
+				        class="click name"><!--#4DVAR aRevNombreResp{aRevLogin}-->
+				      </span>
+				      <span 
+				        style="<!--#4DVAR aRevIdRev{aRevLogin}-->" 
+				        class="click comment"><!--#4DVAR aRevComentario{aRevLogin}-->
+				      </span>
+				      <span 
+				        style="<!--#4DVAR aRevIdRev{aRevLogin}-->" 
+				        class="click date">
+				        <!--#4DVAR string(aRevFechaVcto{aRevLogin})--> a las <!--#4DVAR string(aRevHoraVcto{aRevLogin};5)-->
+				      </span>
+				      <span 
+				        style="<!--#4DVAR aRevIdRev{aRevLogin}-->" 
+				        class="click number-comment"><!--#4DVAR aRevCantCommentResp{aRevLogin}--> Comentarios.
+				      </span>				      
+				    </div>    
+				    <!--#4dendloop-->   
+				</div>			
+			</div>
+
+			<div class="pest-det-rev" id="idpest-det-rev">
+			    <a id="ver-all-revisionesx" href="#">Ver todas las revisiones</a>
+			    <div class="detalle"></div>
+			</div>
+
+		</div>
+
+	</div>      
+</section>
+<!--#4delse-->
+	<h2 style="margin-top:50px;color:red;font-size:20px">"Lo sentimos, puede ser que la revisi&oacute;n haya sido eliminada."</h2>
+<!--#4dendif-->
+</body>
+</html>

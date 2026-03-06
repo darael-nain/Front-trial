@@ -1,0 +1,11 @@
+{	
+	"rows": [
+	<!--#4DLOOP aLoginUsers-->
+		{
+			"login": "<!--#4DHTML aLoginUsers{aLoginUsers}-->",
+			"name": "<!--#4DHTML aNameUsers{aLoginUsers}-->",
+			"email": "<!--#4DHTML aEmailUsers{aLoginUsers}-->"			
+		}<!--#4DIF NOT(aLoginUsers{aLoginUsers} = aLoginUsers{Size of array(aLoginUsers)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

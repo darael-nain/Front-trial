@@ -1,0 +1,14 @@
+#sheet-dtc footer > article > h2 > span label {
+  color: #43af7c; }
+#sheet-dtc footer > article > h2 > span input {
+  border-bottom: 1px solid gray !important; }
+#sheet-dtc footer > article > h2 > span .nro {
+  width: 200px !important; }
+#sheet-dtc footer > article > h2 > span .referencia {
+  width: 400px !important; }
+#sheet-dtc footer > article > p {
+  text-transform: uppercase; }
+.redBold{
+	color: red;
+	font-weight: 900;
+}

@@ -1,0 +1,515 @@
+<div id="tab-1-datos-ot">
+    <div class="folio-ot"><!--#4DVAR vFolioOt--></div>
+    <div class="stateot <!--#4DVAR vStyleStateOt-->">
+        <!--#4dif vFolioOt#"S/N"-->
+            <span><!--#4DVAR vEstadoOT_--></span>
+        <!--#4dendif-->
+    </div>
+
+    <div class="box-top form-guest">
+        <label class="label-1" for="referencia-ot">Referencia</label>
+        <!--#4DIF (aCheckPermiso{18}=true) | (vLogin=vLoginResp)-->
+            <input autocomplete="off" class="input-1" id="referencia-ot" name="referenciaot" type="text" value="<!--#4dvar vReferencia-->"/>
+        <!--#4delse-->
+            <input disabled autocomplete="off" class="input-1" id="referencia-ot" name="referenciaot" type="text" value="<!--#4dvar vReferencia-->"/>
+        <!--#4dendif-->
+    </div>
+
+    <div class="box-left form-guest">
+        <div class="box-tipoot">            
+            <label class="label-1" for="referencia-ot">Tipo OT</label>
+            <!--#4dif (aCheckPermiso{18}=true) | (vLogin=vLoginResp)-->
+                <select class="select-1" id="tipo-ot" name="tipoot">
+                    <option selected="selected" value="<!--#4dvar vTipoOtSelect-->"><!--#4dvar vTipoOtSelect--></option>   
+                    <option value="<!--#4dvar vTipoOtOption-->"><!--#4dvar vTipoOtOption--></option>               
+                </select>
+            <!--#4delse-->
+                <select disabled class="select-1" id="tipo-ot" name="tipoot">                
+                    <option selected="selected" value="<!--#4dvar vTipoOtSelect-->"><!--#4dvar vTipoOtSelect--></option>   
+                    <option value="<!--#4dvar vTipoOtOption-->"><!--#4dvar vTipoOtOption--></option>               
+                </select>
+            <!--#4dendif-->
+        </div>
+
+        <div class="buscador-de-proyectos">
+            <div class="box-busca-proy">
+                <label class="label-1" for="referencia-ot">Proyecto</label>
+                <input id="idproyecto-select" name="idnvproyecto" type="hidden" value="<!--#4dvar vIdNvProyecto-->"/>
+                <div style="display:inline-block">
+                <!--#4dif (aCheckPermiso{18}=true) | (vLogin=vLoginResp)-->
+                    <input autocomplete="off" class="dym-buscardor-proy <!--#4dvar styleBorderColorProy-->" id="buscar-proyecto" name="buscar-proyecto" placeholder="buscar por ref, razon, login" type="text" value="<!--#4dvar vRefProyecto-->">
+                <!--#4delse-->
+                    <input disabled autocomplete="off" class="dym-buscardor-proy <!--#4dvar styleBorderColorProy-->" id="buscar-proyecto" name="buscar-proyecto" placeholder="buscar por ref, razon, login" type="text" value="<!--#4dvar vRefProyecto-->">
+                <!--#4dendif-->                     
+                    <div class="lista-proyectos-ot" id="result-proyectos"></div>
+                </div>               
+            </div>
+
+            <div class="items-p-ot">
+                <label class="label-1" for="referencia-ot">Origen</label>
+                <!--#4dif (aCheckPermiso{18}=true) | (vLogin=vLoginResp)-->
+                    <select id="items-tipo-ot" name="items-tipo-ot">
+                        <option selected="selected" value="<!--#4dvar vTipoItemsIdSelect-->">
+                            <!--#4dvar vTipoItemsDesSelect-->
+                        </option>
+                        <!--#4dif vTipoItemsIdSelect#"ITEM DIRECTO"-->
+                         <option value="ITEM DIRECTO">ITEM DIRECTO</option>
+                        <!--#4dendif-->
+                        <!--#4dif vTipoItemsIdSelect#"OTROS GASTOS"-->
+                        <option value="OTROS GASTOS">OTROS GASTOS</option>
+                        <!--#4dendif-->
+                    </select>
+                <!--#4delse-->
+                    <select disabled id="items-tipo-ot" name="items-tipo-ot">                
+                        <option selected="selected" value="<!--#4dvar vTipoItemsIdSelect-->">
+                            <!--#4dvar vTipoItemsDesSelect-->
+                        </option>
+                        <!--#4dif vTipoItemsIdSelect#"ITEM DIRECTO"-->
+                         <option value="ITEM DIRECTO">ITEM DIRECTO</option>
+                        <!--#4dendif-->
+                        <!--#4dif vTipoItemsIdSelect#"OTROS GASTOS"-->
+                        <option value="OTROS GASTOS">OTROS GASTOS</option>
+                        <!--#4dendif-->
+                    </select>
+                <!--#4dendif-->                             
+            </div>            
+            <div class="itemsnv">
+                <!--#4dif (aCheckPermiso{18}=true) | (vLogin=vLoginResp)-->
+                    <select class="combos-normal" id="llave-det-nvx" name="llave-det-nvx">                       
+                        <!--#4dvar vLista-->       
+                    </select>
+
+                <!--#4delse-->
+
+                    <select disabled class="combos-normal" id="llave-det-nvx" name="llave-det-nvx">             
+
+                        <!--#4dvar vLista-->       
+
+                    </select>
+
+                <!--#4dendif-->         
+
+            </div>
+
+        </div>
+
+
+
+        <div class="buscador-de-empresas">
+
+           <div class="box-busca-emp">
+
+                <label class="label-1" for="referencia-ot">Empresa</label>
+
+                <input id="idempresa-select" name="idempresa" type="hidden" value="<!--#4dvar vIdEmp-->"/>
+
+                
+
+                <div style="display:inline-block">
+
+                    <!--#4dif (aCheckPermiso{18}=true) | (vLogin=vLoginResp)-->
+
+                        <input autocomplete="off" class="dym-buscardor-proy <!--#4dvar styleBorderColorGen-->" id="buscar-empresa" name="buscar-empresa" placeholder="buscar por razon, rut, email" type="text" value="<!--#4dvar vNombreEmp-->">
+
+                    <!--#4delse-->
+
+                        <input disabled autocomplete="off" class="dym-buscardor-proy <!--#4dvar styleBorderColorGen-->" id="buscar-empresa" name="buscar-empresa" placeholder="buscar por razon, rut, email" type="text" value="<!--#4dvar vNombreEmp-->">
+
+                    <!--#4dendif-->                    
+
+                    <div class="lista-proyectos-ot" id="result-empresas"></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="box-fecha-vcto">
+
+            <label class="label-1">Vencimiento</label>
+
+            <!--#4dif (aCheckPermiso{18}=true) | (vLogin=vLoginResp)-->
+
+                <input id="fecha-vcto" name="fechavcto" class="datepicker" type="text" value="<!--#4dvar vFechaVcto-->" />
+
+            <!--#4delse-->
+
+                <input disabled id="fecha-vcto" name="fechavcto" class="datepicker" type="text" value="<!--#4dvar vFechaVcto-->" />
+
+            <!--#4dendif-->
+
+            
+
+            <label class="label-1">Hora</label>
+
+            <!--#4dif (aCheckPermiso{18}=true) | (vLogin=vLoginResp)-->
+
+                <select id="hora" name="hora">
+
+                    <option selected="selected" value="<!--#4dvar vHoraId-->"><!--#4dvar vHoraDes--></option>
+
+                    <!--#4dloop aHora-->
+
+                        <!--#4dif aHora{aHora}#vHoraId-->    
+
+                            <option value="<!--#4dvar aHora{aHora}-->"><!--#4dvar aHora{aHora}--></option>
+
+                        <!--#4dendif-->
+
+                    <!--#4dendloop-->
+
+                </select>
+
+            <!--#4delse-->
+
+                <select disabled id="hora" name="hora">
+
+                    <option selected="selected" value="<!--#4dvar vHoraId-->"><!--#4dvar vHoraDes--></option>
+
+                    <!--#4dloop aHora-->
+
+                        <!--#4dif aHora{aHora}#vHoraId-->    
+
+                            <option value="<!--#4dvar aHora{aHora}-->"><!--#4dvar aHora{aHora}--></option>
+
+                        <!--#4dendif-->
+
+                    <!--#4dendloop-->
+
+                </select>
+
+            <!--#4dendif-->
+
+            
+
+            <!--#4dif (aCheckPermiso{18}=true) | (vLogin=vLoginResp)-->
+
+                <a id="ver-planner-from-ot" rel="<!--#4dvar Current date(*)-->" href="#">
+
+                    <img class="img-title-calendar" src="/imagenes_green/planner.png">
+
+                </a> 
+
+            <!--#4delse-->
+
+               <img class="img-title-calendar" src="/imagenes_green/planner.png">
+
+            <!--#4dendif-->                       
+
+        </div>
+
+
+
+        <div class="box-hrs-vcto">
+            <label class="label-1">Cant. Hrs.</label>
+                <input disabled class="hasignada guardar-express-ot" id="hasignada" name="hasignada" type="text" value="<!--#4dvar vHAsiganadas-->" />
+
+        </div>
+
+
+
+    </div>
+
+
+
+    <div class="box-right form-guest">
+
+        <div class="box-importancia">
+
+            <label class="label-1">Importancia</label>
+
+            <!--#4dif (aCheckPermiso{18}=true) | (vLogin=vLoginResp)-->
+
+                <select id="importancia" name="importancia">
+
+                    <option selected="selected" value="<!--#4dvar vIdPrioridad-->"><!--#4dvar vDesPrioridad--></option>
+
+                    <!--#4dloop aPrio-->
+
+                        <!--#4dif aPrio{aPrio}#vIdPrioridad-->         
+
+                        <option value="<!--#4dvar aPrio{aPrio}-->"><!--#4dvar aPrio{aPrio}--></option>
+
+                        <!--#4dendif-->
+
+                    <!--#4dendloop-->                                                   
+
+                </select>   
+
+            <!--#4delse-->
+
+                <select disabled id="importancia" name="importancia">
+
+                    <option selected="selected" value="<!--#4dvar vIdPrioridad-->"><!--#4dvar vDesPrioridad--></option>
+
+                    <!--#4dloop aPrio-->
+
+                        <!--#4dif aPrio{aPrio}#vIdPrioridad-->         
+
+                        <option value="<!--#4dvar aPrio{aPrio}-->"><!--#4dvar aPrio{aPrio}--></option>
+
+                        <!--#4dendif-->
+
+                    <!--#4dendloop-->                                                   
+
+                </select>
+
+            <!--#4dendif-->               
+
+        </div>
+
+
+
+        <div>
+
+            <label class="label-1">Areas de trabajo</label>
+
+            <!--#4dif (aCheckPermiso{18}=true) | (vLogin=vLoginResp)-->
+
+                <select id="area-trabajo" name="areatrabajo" onChange="fn_load_user(this.value)" >
+
+                    <option selected="selected" value="<!--#4dvar vIdArea-->"><!--#4dvar vDesArea--></option>
+
+                    <!--#4dloop aAreaId-->
+
+                        <!--#4dif aAreaId{aAreaId}#vIdArea-->     
+
+                        <option value="<!--#4dvar aAreaId{aAreaId}-->"><!--#4dvar aAreaNombre{aAreaId}--></option>
+
+                        <!--#4dendif-->
+
+                    <!--#4dendloop-->
+
+                </select>
+
+            <!--#4delse-->
+
+                <select disabled id="area-trabajo" name="areatrabajo" onChange="fn_load_user(this.value)" >
+
+                    <option selected="selected" value="<!--#4dvar vIdArea-->"><!--#4dvar vDesArea--></option>
+
+                    <!--#4dloop aAreaId-->
+
+                        <!--#4dif aAreaId{aAreaId}#vIdArea-->     
+
+                        <option value="<!--#4dvar aAreaId{aAreaId}-->"><!--#4dvar aAreaNombre{aAreaId}--></option>
+
+                        <!--#4dendif-->
+
+                    <!--#4dendloop-->
+
+                </select>
+
+            <!--#4dendif-->            
+
+        </div>
+
+
+
+        <div class="box-responsable">
+
+            <label class="label-1">Responsable</label>
+
+            <!--#4dif (aCheckPermiso{18}=true) | (vLogin=vLoginResp)-->
+
+                <select id="responsables-area" name="responsables-area">
+
+                    <option selected="selected" value="<!--#4dvar vLoginResp-->"><!--#4dvar vNomResp--></option>
+
+                    <!--#4dloop aLoginAreaResp-->
+
+                        <!--#4dif aLoginAreaResp{aLoginAreaResp}#vLoginResp-->     
+
+                        <option value="<!--#4dvar aLoginAreaResp{aLoginAreaResp}-->">
+
+                            <!--#4dvar aNombresAreaResp{aLoginAreaResp}-->
+
+                        </option>
+
+                        <!--#4dendif-->
+
+                    <!--#4dendloop-->
+
+                </select>
+
+            <!--#4delse-->
+
+                <select disabled id="responsables-area" name="responsables-area">
+
+                    <option selected="selected" value="<!--#4dvar vLoginResp-->"><!--#4dvar vNomResp--></option>
+
+                    <!--#4dloop aLoginAreaResp-->
+
+                        <!--#4dif aLoginAreaResp{aLoginAreaResp}#vLoginResp-->     
+
+                        <option value="<!--#4dvar aLoginAreaResp{aLoginAreaResp}-->">
+
+                            <!--#4dvar aNombresAreaResp{aLoginAreaResp}-->
+
+                        </option>
+
+                        <!--#4dendif-->
+
+                    <!--#4dendloop-->
+
+                </select>
+
+            <!--#4dendif-->            
+
+        </div>
+
+        <div class="box-part">
+
+            <label id="box-part-" class="label-1">Participantes</label>
+
+            <div id="box-participantes">
+
+            <!--#4dloop aLoginAsig-->
+
+                <!--#4dif aTipoAsig{aLoginAsig}="RESPONSABLE"-->
+
+                <div class="items-asignados-resp"><!--#4dvar aNombreAsig{aLoginAsig}-->
+
+                  <input type="hidden" name="userasignado" value="res/<!--#4dvar aLoginAsig{aLoginAsig}-->"/>
+
+                </div>
+
+                <!--#4dendif-->
+
+                <!--#4dif aTipoAsig{aLoginAsig}="INTEGRANTE"-->
+
+                <div class="items-asignados-int"><!--#4dvar aNombreAsig{aLoginAsig}-->
+
+                  <input type="hidden" name="userasignado" value="int/<!--#4dvar aLoginAsig{aLoginAsig}-->"/>
+
+                </div>
+
+                <!--#4dendif-->
+
+                <!--#4dif aTipoAsig{aLoginAsig}="INVITADO"-->
+
+                <div class="items-asignados-inv"><!--#4dvar aNombreAsig{aLoginAsig}-->
+
+                  <input type="hidden" name="userasignado" value="inv/<!--#4dvar aNombreAsig{aLoginAsig}-->/<!--#4dvar aLoginAsig{aLoginAsig}-->"/>
+
+                </div>
+
+                <!--#4dendif-->
+
+            <!--#4dendloop--> 
+
+            </div>
+            
+
+        </div>
+
+    </div>
+
+
+    <div class="box-bottom">
+        <div>
+            <label class="label-1">Descripci&oacute;n</label>
+                <textarea class="guardar-express-ot" disabled id="idcomment-otxx" name="content"><!--#4dvar vMensaje--></textarea>
+            <span class="obligatorio">*</span>                          
+        </div>
+        
+        <div class="contaianer-todo-file">      
+            <div class="label-archivos-ot"><label>Archivos : </label><label> Descargar haciendo click en el archivo.</label></div>
+            <div class="box-files-ot">                   
+                <!--#4dloop aIdArchivo-->
+                    <!--#4dif (aFrom{aIdArchivo}="OT") | (aFrom{aIdArchivo}="COMPONENTE")-->
+                    <div id="id<!--#4dvar aIdArchivo{aIdArchivo}-->" class="box-items-files">
+                        <!--#4dif aDesFormatoArchivo{aIdArchivo}="IMAGEN"-->
+                            <!--#4dif aFrom{aIdArchivo}="OT"--> 
+                                 <img alt="<!--#4dvar aAncho{aIdArchivo}-->-<!--#4dvar aAlto{aIdArchivo}-->" id="<!--#4dvar aIdArchivo{aIdArchivo}-->" class="img-popup" src="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->">
+                            <!--#4delse--> 
+                                 <img alt="<!--#4dvar aAncho{aIdArchivo}-->-<!--#4dvar aAlto{aIdArchivo}-->" id="<!--#4dvar aIdArchivo{aIdArchivo}-->" class="img-popup" src="/uploads_componentes_tarea/<!--#4dvar aNombreArchivo{aIdArchivo}-->">
+                            <!--#4dendif-->                           
+                        <!--#4delse-->
+                            <!--#4dif aDesFormatoArchivo{aIdArchivo}="AUDIO"-->
+                                <!--#4dif aFrom{aIdArchivo}="OT"--> 
+                                    <a target="_black" href="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->">
+                                    <audio controls="controls">                 
+                                        <source src="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->" type="audio/mpeg" />
+                                        Tu navegador no soporta el elemento de audio, actualize a uno mas moderno, :)!    
+                                    </audio>
+                                    </a>
+                                <!--#4delse--> 
+                                    <a target="_black" href="/uploads_componentes_tarea/<!--#4dvar aNombreArchivo{aIdArchivo}-->">
+                                    <audio controls="controls">                 
+                                        <source src="/uploads_componentes_tarea/<!--#4dvar aNombreArchivo{aIdArchivo}-->" type="audio/mpeg" />
+                                        Tu navegador no soporta el elemento de audio, actualize a uno mas moderno, :)!    
+                                    </audio>
+                                </a>
+                                <!--#4dendif-->                                
+                            <!--#4delse-->
+                                <!--#4dif aFrom{aIdArchivo}="OT"--> 
+                                    <a target="_black" href="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->">
+                                     <img src="/extensiones/PNG/<!--#4dvar aFormatoArchivo{aIdArchivo}-->.png">
+                                    </a> 
+                                <!--#4delse--> 
+                                    <a target="_black" href="/uploads_componentes_tarea/<!--#4dvar aNombreArchivo{aIdArchivo}-->">
+                                     <img src="/extensiones/PNG/<!--#4dvar aFormatoArchivo{aIdArchivo}-->.png">
+                                    </a> 
+                                <!--#4dendif-->                                                          
+                            <!--#4dendif-->                
+                        <!--#4dendif-->
+                        <span class="des-file"><!--#4dvar aDesArchivo{aIdArchivo}--></span>
+
+                        <!--#4dif aFrom{aIdArchivo}="COMPONENTE"-->
+                            <a rel="<!--#4dvar aIdArchivo{aIdArchivo}-->" class="delete-file-comp" style="cursor:pointer">x</a>
+                        <!--#4delse-->
+                            <a rel="<!--#4dvar aIdArchivo{aIdArchivo}-->" class="delete-file-normal" style="cursor:pointer">x</a>
+                        <!--#4dendif-->                        
+                    </div>
+                    <!--#4dendif-->
+                <!--#4dendloop-->
+            </div>
+        </div>
+    </div>    
+
+    <div class="box-bottom-2-">     
+        <div class="box-comment-ot">               
+            <label class="caca">Comentarios : </label><img id="status-save-comment" src='/imagenes_green/ajaxloader.gif'>
+            <div>
+                <span class="photo-comment">
+                    <img src="<!--#4DVAR vFotoLogueado-->">
+                </span>
+                <span>
+                    <textarea id="text-coment-ot" class="input-coment-det-rev" placeholder="Agregar un comentario..."></textarea>                    
+                </span>
+                <button id="btn-comment-ot" type="button">Comentar</button>
+            </div>                
+            <div class="list-comment-ot">
+                <!--#4dloop aIdComOt-->
+                  <div class="items-comentario" id="<!--#4DVAR aIdComOt{aIdComOt}-->">
+                    <div>
+                        <span class="nro"><!--#4DVAR aNroComOt{aIdComOt}--></span>
+                        <span class="photo"><img src="<!--#4DVAR aPhotoRespComOt{aIdComOt}-->"></span>
+                        <span class="name">
+                            <!--#4DVAR aNomRespComOt{aIdComOt}--> / 
+                            <span class="especial-span"><!--#4DVAR aEmailRespComOt{aIdComOt}--></span>
+                            <!--#4dif aTypeRespComOt{aIdComOt}="guest"-->
+                                <span class="guest-tag">( Invitado )</span>
+                            <!--#4dendif-->
+                        </span>
+                    </div>                    
+                    <div>                                  
+                        <span class="comment"><!--#4DHTMLVAR aDesComOt{aIdComOt}--></span>
+                        <span class="date">
+                            Comentado el <!--#4DVAR aDateComOt{aIdComOt}--> a las <!--#4DVAR aTimeComOt{aIdComOt}-->
+                        </span>
+                    </div>             
+                  </div>
+                <!--#4dendloop-->
+            </div>            
+        </div>
+    </div>
+
+</div>
+
+
+

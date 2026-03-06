@@ -1,0 +1,80 @@
+{
+	"records": {
+			"total_records": <!--#4DHTML totalRecords-->
+	},
+	"data":{
+			"iddoc": "<!--#4DHTML $id-->",
+			"banco": "<!--#4DHTML banco-->",
+			"conciliado": <!--#4DIF Not(Undefined(conciliado))--><!--#4DIF  conciliado-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+			"siimov_contraparte" :"<!--#4DHTML  _V3_escapeString(contraparteMov)-->",
+			"siimov_banco": "<!--#4DHTML  _V3_escapeString(bancoMov)-->",
+			"siimov_cuenta": "<!--#4DHTML  _V3_escapeString(numeroCuentaMov)-->",
+			"siimov_desc": "<!--#4DHTML  _V3_escapeString(descMov)-->",
+			"siimov_total": "<!--#4DHTML  totalMov-->",
+			"siimov_fecha": "<!--#4DHTML  _V3_escapeString(fechaMov)-->",
+			"siimov_rut": "<!--#4DHTML  _V3_escapeString(rutMov)-->",
+			"siimov_tipo": "<!--#4DHTML  _V3_escapeString(tipoMov)-->",
+			"cuenta_contable":"<!--#4DHTML  _V3_escapeString(cuentaContable)-->",
+			"nombre_cuenta":"<!--#4DHTML  _V3_escapeString(nombreCuenta)-->",
+			"debe":"<!--#4DHTML  String(debe)-->",
+			"haber":"<!--#4DHTML  String(haber)-->",
+			"rows": [
+					<!--#4DLOOP aIdDtc-->
+					{
+						"idoc": <!--#4DHTML aIdDtc{aIdDtc}-->,
+						"folio": "<!--#4DHTML aFolioDtc{aIdDtc}-->",
+						"estado": "<!--#4DHTML aEstadoDtc{aIdDtc}-->",
+						<!--#4DHTML _sii_getTipoPagos()-->
+						"tipo_pagos": [
+							<!--#4DLOOP aIdItem-->
+							{
+								"id": <!--#4DHTML aId{aIdItem}-->,
+								"desc_pago": "<!--#4DHTML aDescPago{aIdItem}-->",
+								"codigo_pago": "<!--#4DHTML aCodigoPago{aIdItem}-->",
+								"ingreso": "<!--#4DHTML ingreso{aIdItem}-->",
+								"egreso": "<!--#4DHTML egreso{aIdItem}-->",
+								"estado_pago": "<!--#4DHTML estado_pago{aIdItem}-->",
+								"tipo_pago": "<!--#4DHTML aIdTipoPago{aIdItem}-->"
+
+							}<!--#4DIF NOT(aIdItem{aIdItem} = aIdItem{Size of array(aIdItem)})-->,<!--#4DENDIF-->
+							<!--#4DENDLOOP-->
+						],
+						"tipo_mov":"<!--#4DHTML aTipoMov{aIdDtc}-->",
+						"tipo":"<!--#4DHTML aTipo{aIdDtc}-->",
+						"total_oc": "<!--#4DHTML aTotalDtc{aIdDtc}-->",
+						"debe": "<!--#4DHTML aDebeComp{aIdDtc}-->",
+						"haber": "<!--#4DHTML aHaberComp{aIdDtc}-->",
+						"fecha_emision": "<!--#4DHTML aFechaDtc{aIdDtc}-->",
+						"tipodoc": "<!--#4DHTML aTipoDtc{aIdDtc}-->",
+						"referencia": "<!--#4DHTML  _V3_escapeString(aRefDtc{aIdDtc})-->",
+						"proveedor": "<!--#4DHTML  _V3_escapeString(aProveedorDtc{aIdDtc})-->",
+						"siimov_contraparte" :"<!--#4DHTML  _V3_escapeString(aContraparteMov{aIdDtc})-->",
+						"siimov_banco": "<!--#4DHTML  _V3_escapeString(aBancoMov{aIdDtc})-->",
+						"siimov_cuenta": "<!--#4DHTML  _V3_escapeString(aNumeroCuentaMov{aIdDtc})-->",
+						"siimov_desc": "<!--#4DHTML  _V3_escapeString(aDescMov{aIdDtc})-->",
+						"siimov_total": "<!--#4DHTML  aTotalMov{aIdDtc}-->",
+						"siimov_fecha": "<!--#4DHTML  _V3_escapeString(aFechaMov{aIdDtc})-->"
+					}<!--#4DIF NOT(aIdDtc{aIdDtc} = aIdDtc{Size of array(aIdDtc)})-->,<!--#4DENDIF-->
+					<!--#4DENDLOOP-->
+			],
+			"nominas": [
+				<!--#4DLOOP aIdN-->
+				{
+					"id_cont": <!--#4DHTML aIdN{aIdN}-->,
+					"id_nomina": <!--#4DHTML aIdNomina{aIdN}-->,
+					"name_nomina": "<!--#4DHTML _V3_escapeString(aNameNomina{aIdN})-->",
+					"id_comprobante": <!--#4DHTML aIdComp{aIdN}-->
+				}<!--#4DIF NOT(aIdN{aIdN} = aIdN{Size of array(aIdN)})-->,<!--#4DENDIF-->
+				<!--#4DENDLOOP-->
+			]
+
+
+		
+
+	}
+	
+}
+
+
+
+

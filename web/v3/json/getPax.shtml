@@ -1,0 +1,14 @@
+{
+	"rows": [
+<!--#4DLOOP [pax]-->
+		{
+			"id": <!--#4DHTML [pax]id-->,
+			"idnv": <!--#4DHTML [pax]idnv-->,
+			"nombre": "<!--#4DHTML _V3_escapeString([pax]nombre)-->",
+			"dni": "<!--#4DHTML _V3_escapeString([pax]dni)-->",
+			"edad": "<!--#4DHTML _V3_escapeString([pax]edad)-->",
+			"nacionalidad": "<!--#4DHTML _V3_escapeString([pax]nacionalidad)-->"
+		}<!--#4DIF Selected record number([pax])<Records in selection([pax])-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

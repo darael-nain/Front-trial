@@ -1,0 +1,24 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([regla_validacion]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP aReglaValidacionId -->
+		{
+			"id": <!--#4DHTML aReglaValidacionId{aReglaValidacionId}-->,
+			"prioridad": <!--#4DHTML aReglaValidacionPrioridad{aReglaValidacionId}-->,
+			"criterio": {
+				"text": "<!--#4DHTML aReglaValidacionCriterio{aReglaValidacionId}-->"
+			},
+			"operator": "<!--#4DHTML aReglaValidacionOperator{aReglaValidacionId}-->",
+			"value": "<!--#4DHTML aReglaValidacionValue{aReglaValidacionId}-->"
+		}<!--#4DIF NOT(aReglaValidacionId{aReglaValidacionId} = aReglaValidacionId{Size of array(aReglaValidacionId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

@@ -1,0 +1,11 @@
+{
+
+	"id": <!--#4DIF Not(Undefined(id))--><!--#4DIF Type(id)=Is Text-->"<!--#4DVAR id-->"<!--#4DELSE--><!--#4DVAR id--><!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"number": <!--#4DIF Not(Undefined(folioOc))-->"<!--#4DHTML folioOc-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"name": <!--#4DIF Not(Undefined(referencia_oc))-->"<!--#4DHTML referencia_oc-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"total": "<!--#4DHTML String(total_oc;"&xml")-->",
+	"rendido": "<!--#4DHTML String(justificado;"&xml")-->",
+	"xrendir": "<!--#4DHTML String(total_oc;"&xml")-->",
+	"pagado": "<!--#4DHTML String(pagado;"&xml")-->",
+	"xpagar": "<!--#4DHTML String(total_oc;"&xml")-->"
+}

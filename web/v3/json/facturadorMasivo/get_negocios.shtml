@@ -1,0 +1,52 @@
+{
+    "rows": [
+<!--#4DLOOP aProyectoId -->
+        {
+        "id": <!--#4DHTML aProyectoId{aProyectoId}-->,
+        "folio": <!--#4DHTML aProyectoFolio{aProyectoId}-->,
+
+        "fecha_asignacion": "<!--#4DHTML Substring(String(aProyectoAsignacionFecha{aProyectoId};8);1;10)-->T00:00:00-04:00",
+        "fecha_asignacion_": "<!--#4DHTML String(aProyectoAsignacionFecha{aProyectoId})-->",
+
+        "estado_programacion": <!--#4DIF Not(Undefined(aEstadoProgramacion))--><!--#4DIF aEstadoProgramacion{aProyectoId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+
+        "correo_programacion": <!--#4DIF Not(Undefined(aCorreoProgramacion))--><!--#4DIF (aCorreoProgramacion{aProyectoId}#"")-->"<!--#4DHTML aCorreoProgramacion{aProyectoId}-->"<!--#4DELSE-->""<!--#4DENDIF--><!--#4DELSE-->""<!--#4DENDIF-->,
+        "glosa_programacion": <!--#4DIF Not(Undefined(aGlosaProgramacion))--><!--#4DIF (aGlosaProgramacion{aProyectoId}#"")-->"<!--#4DHTML aGlosaProgramacion{aProyectoId}-->"<!--#4DELSE-->""<!--#4DENDIF--><!--#4DELSE-->""<!--#4DENDIF-->,
+
+        "fecha_programacion": <!--#4DIF Not(Undefined(aFechaProgramacion))-->"<!--#4DHTML aFechaProgramacion{aProyectoId}-->"<!--#4DELSE-->"00-00-00"<!--#4DENDIF-->,
+
+        "programacion_tipo": <!--#4DIF Not(Undefined(aTipoFechaProgramacion))-->"<!--#4DHTML aTipoFechaProgramacion{aProyectoId}-->"<!--#4DELSE-->"monthly"<!--#4DENDIF-->,
+
+        "programacion_dia_semana": <!--#4DIF Not(Undefined(aDiaSemanalProgramacion))-->"<!--#4DHTML aDiaSemanalProgramacion{aProyectoId}-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+
+        "monto_facturacion": <!--#4DIF Not(Undefined(aMontoFacturacion))--><!--#4DIF (aMontoFacturacion{aProyectoId}>0)--><!--#4DHTML aMontoFacturacion{aProyectoId}--><!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->,
+        "saldo_por_facturar_exchange": <!--#4DIF Not(Undefined(aExchangeSaldoPorFacturar))--><!--#4DIF (aExchangeSaldoPorFacturar{aProyectoId}>0)--><!--#4DHTML aExchangeSaldoPorFacturar{aProyectoId}--><!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->,
+        "total_facturado_exchange": <!--#4DIF Not(Undefined(aExchangeTotalFacturado))--><!--#4DIF (aExchangeTotalFacturado{aProyectoId}>0)--><!--#4DHTML aExchangeTotalFacturado{aProyectoId}--><!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->,
+        "tipo_exchange": <!--#4DIF Not(Undefined(aExchangeTipo))-->"<!--#4DHTML aExchangeTipo{aProyectoId}-->"<!--#4DELSE-->"CLP"<!--#4DENDIF-->,
+        "estado": "<!--#4DTEXT aProyectoEstado2{aProyectoId}-->",
+        "saldo_por_facturar": <!--#4DHTML String(Round(aSaldoPorFacturar{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->,
+        "total_facturado": <!--#4DHTML String(Round(aTotalFacturado{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->,
+
+        "text": "<!--#4DHTML _V3_escapeString(aProyectoNombre{aProyectoId})-->",
+        "referencia": "<!--#4DHTML _V3_escapeString(aProyectoReferenciaProyecto{aProyectoId})-->",
+
+        "rutClient": "<!--#4DHTML _V3_escapeString(aRutClient{aProyectoId})-->",
+
+        "nro_oc_cliente": "<!--#4DHTML _V3_escapeString(aNroOCCliente{aProyectoId})-->",
+        "id_oc_cliente": "<!--#4DHTML aIdOCCliente{aProyectoId}-->",
+        "tipo_oc_cliente": "<!--#4DHTML _V3_escapeString(aTipoOCCliente{aProyectoId})-->",
+
+        "oc_cliente": "<!--#4DHTML _V3_escapeString(aNroOCCliente{aProyectoId})-->",
+
+        "empresa": {
+        "id": <!--#4DHTML aProyectoEmpresaId{aProyectoId}-->,
+        "alias": "<!--#4DHTML _V3_escapeString(aProyectoEmpresaAlias{aProyectoId})-->",
+        "razon_social": "<!--#4DHTML _V3_escapeString(aProyectoEmpresaRazonSocial{aProyectoId})-->",
+        "rut": "<!--#4DHTML _V3_escapeString(aRutClient{aProyectoId})-->"
+        },
+
+        "cliente": "<!--#4DHTML _V3_escapeString(aProyectoEmpresaAlias{aProyectoId})-->"
+        }<!--#4DIF NOT(aProyectoId{aProyectoId} = aProyectoId{Size of array(aProyectoId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+  ]
+}

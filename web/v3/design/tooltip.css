@@ -1,0 +1,72 @@
+.toasty_toastHolder {
+	font-family: 'Open Sans', sans-serif !important;
+	font-size: 12px !important;
+	text-align: center;
+	text-shadow: 0 1px rgba( 0, 0, 0, .5 );
+	line-height: 1.5;
+	color: #fff;
+	background: #333;
+	background: -webkit-gradient( linear, left top, left bottom, from( rgba( 0, 0, 0, .7 ) ), to( rgba( 0, 0, 0, .9 ) ) );
+	background: -webkit-linear-gradient( top, rgba( 0, 0, 0, .7 ), rgba( 0, 0, 0, .9 ) );
+	background: -moz-linear-gradient( top, rgba( 0, 0, 0, .7 ), rgba( 0, 0, 0, .9 ) );
+	background: -ms-radial-gradient( top, rgba( 0, 0, 0, .7 ), rgba( 0, 0, 0, .9 ) );
+	background: -o-linear-gradient( top, rgba( 0, 0, 0, .7 ), rgba( 0, 0, 0, .9 ) );
+	background: linear-gradient( top, rgba( 0, 0, 0, .7 ), rgba( 0, 0, 0, .9 ) );
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	-webkit-box-shadow: 0 3px 5px rgba( 0, 0, 0, .4 );
+	-moz-box-shadow: 0 3px 5px rgba( 0, 0, 0, .4 );
+	box-shadow: 0 3px 5px rgba( 0, 0, 0, .4 );
+	position: absolute;
+	z-index: 100;
+	padding: 15px;
+	right: 75px;
+	top: 70px;
+}
+
+	.toasty_toastHolder > .toasty_toastMsg {
+		margin: 0;
+		padding: 0;
+		font: inherit;
+		background: none;
+		border: none;
+		width: 340px;
+		left: 0;
+		top: 0;
+	}
+
+		.toasty_toastHolder > .toasty_toastMsg > .toasty_head {
+			overflow: hidden;
+		}
+
+			.toasty_toastHolder > .toasty_toastMsg > .toasty_head > .toasty_autoHideTimer {
+				margin-left: 3px;
+				background-color: green !important;
+			}
+
+			.toasty_toastHolder > .toasty_toastMsg > .toasty_head > .toasty_title {
+				text-decoration: none !important;
+				font-weight: bold;
+				font-size: 13px;
+			}
+
+		.toasty_toastHolder > .toasty_toastMsg > .toasty_message {
+			
+		}
+
+			.toasty_toastHolder > .toasty_toastMsg > .toasty_message a:link {
+				border-bottom: 1px solid white;
+			}
+
+			.toasty_toastHolder > .toasty_toastMsg > .toasty_message a:hover {
+				text-decoration: none;
+			}
+
+			.toasty_toastHolder > .toasty_toastMsg > .toasty_message ul {
+				list-style: disc !important;
+			}
+
+			.toasty_toastHolder > .toasty_toastMsg > .toasty_message > .toasty_closeBtn {
+
+			}

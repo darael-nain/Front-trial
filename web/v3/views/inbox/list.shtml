@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Bandeja de entrada</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="/v3/views/inbox/design/main.css?<!#--4DHTML Random-->">
+		<script>
+
+			$(document).ready(function() {
+
+				unaBase.toolbox.init();
+
+				var params = {
+					// url: function() { return '/4DACTION/_V3_getLogValidacion' },
+					url: function() { return '/4DACTION/_V3_getInbox' },
+					// entity: 'LogValidacion',
+					entity: 'Inbox',
+					searchOff: true,
+					callback : function(data){
+						$('table').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false });
+
+						// contadores de mensajes
+						$('[data-name="solicitudes"] span').html('Solicitudes&nbsp;(' + data.total.solicitudes + ')');
+						$('[data-name="avisos"] span').html('Avisos&nbsp;(' + data.total.avisos + ')');
+						$('[data-name="reportes"] span').html('Reportes&nbsp;(' + data.total.reportes + ')');
+						$('[data-name="archivado"] span').html('Archivado&nbsp;(' + data.total.archivado + ')');
+					},
+					row: {
+						html: function(i, rows) {
+							var htmlData;
+							/*
+							if (!rows[i].reply)
+								htmlData = '<tr data-id="' + rows[i].record.id + '|' + rows[i].id + '" data-username="' + rows[i].username + '" data-index="' + rows[i].record.index + '">' +
+									'<td>' + rows[i].record.username + '</td>' +
+									'<td>' + rows[i].username + '</td>' +
+									'<td colspan="4">Solicita validar ' + rows[i].record.name + ' Nº ' + rows[i].record.index + ' / ' + rows[i].record.text + '</td>' +
+									'<td>' + ((rows[i].created_at !== undefined)? '<time datetime="' + Date.parse(rows[i].created_at).toISOString() + '">' + $.datepicker.formatDate('dd-mm-yy', Date.parse(rows[i].created_at)) + ' <span>' + Date.parse(rows[i].created_at).toTimeString().match( /^([0-9]{2}:[0-9]{2}:[0-9]{2})/ )[0].substring(0, 5) +  '</span></time>' : 'N/A' ) + '</td>' +
+								'</tr>';
+							else {
+								if (rows[i].approved)
+									htmlData = '<tr data-id="' + rows[i].record.id + '|' + rows[i].id + '" data-username="' + rows[i].record.username + '" data-index="' + rows[i].record.index + '">' +
+										'<td>' + rows[i].username + '</td>' +
+										'<td>' + rows[i].record.username + '</td>' +
+										'<td colspan="4">Aceptó validar ' + rows[i].record.name + ' Nº ' + rows[i].record.index + ' / ' + rows[i].record.text + '</td>' +
+										'<td>' + ((rows[i].updated_at !== undefined)? '<time datetime="' + Date.parse(rows[i].updated_at).toISOString() + '">' + $.datepicker.formatDate('dd-mm-yy', Date.parse(rows[i].updated_at)) + ' <span>' + Date.parse(rows[i].updated_at).toTimeString().match( /^([0-9]{2}:[0-9]{2}:[0-9]{2})/ )[0].substring(0, 5) +  '</span></time>' : 'N/A' ) + '</td>' +
+									'</tr>';
+								else
+									htmlData = '<tr data-id="' + rows[i].record.id + '|' + rows[i].id + '" data-username="' + rows[i].record.username + '" data-index="' + rows[i].record.index + '">' +
+										'<td>' + rows[i].username + '</td>' +
+										'<td>' + rows[i].record.username + '</td>' +
+										'<td colspan="4">Rechazó validar ' + rows[i].record.name + ' Nº ' + rows[i].record.index + ' / ' + rows[i].record.text + '</td>' +
+										'<td>' + ((rows[i].updated_at !== undefined)? '<time datetime="' + Date.parse(rows[i].updated_at).toISOString() + '">' + $.datepicker.formatDate('dd-mm-yy', Date.parse(rows[i].updated_at)) + ' <span>' + Date.parse(rows[i].updated_at).toTimeString().match( /^([0-9]{2}:[0-9]{2}:[0-9]{2})/ )[0].substring(0, 5) +  '</span></time>' : 'N/A' ) + '</td>' +
+									'</tr>';
+							}
+							htmlData = '<tr onmouseover="$(this).qtip({ content: \'' + addslashes(addslashes(rows[i].text)) + '\', show: \'mouseover\', hide: \'mouseout\', position: { type: \'relative\', corner: { target: \'center\', tooltip: \'center\'}, adjust: { mouse: false, screen: true, resize: true, x: -$(\'section#viewport\').width() / 2 } } }); $(this).qtip(\'show\');" onmouseout="$(this).qtip(\'destroy\');" data-id="' + rows[i].id + '" data-from="' + rows[i].from + '" data-index="' + rows[i].index + '">' +
+								'<td>' + rows[i].from.text + '</td>' +
+								//'<td>' + rows[i].to + '</td>' +
+								'<td colspan="4" class="left">' + rows[i].subject + '</td>' +
+								'<td><time datetime="' + Date.parse(rows[i].created_at).toISOString() + '">' + $.datepicker.formatDate('dd-mm-yy', Date.parse(rows[i].created_at)) + ' <span>' + Date.parse(rows[i].created_at).toTimeString().match( /^([0-9]{2}:[0-9]{2}:[0-9]{2})/ )[0].substring(0, 5) +  '</span></time></td>' +
+							'</tr>';*/
+							htmlData = '<tr data-content="' + escape(rows[i].text) + '" onmouseover="$(this).qtip({ content: unescape($(this).data(\'content\')), show: \'mouseover\', hide: \'mouseout\', position: { type: \'relative\', corner: { target: \'center\', tooltip: \'center\'}, adjust: { mouse: false, screen: true, resize: true, x: -$(\'section#viewport\').width() / 2 } } }); $(this).qtip(\'show\');" onmouseout="$(this).qtip(\'destroy\');" data-id="' + rows[i].id + '" data-from="' + rows[i].from + '" data-index="' + rows[i].index + '">' +
+								'<td>' + rows[i].from.text + '</td>' +
+								//'<td>' + rows[i].to + '</td>' +
+								'<td colspan="4" class="left">' + rows[i].subject + '</td>' +
+								'<td><time datetime="' + Date.parse(rows[i].created_at).toISOString() + '">' + $.datepicker.formatDate('dd-mm-yy', Date.parse(rows[i].created_at)) + ' <span>' + Date.parse(rows[i].created_at).toTimeString().match( /^([0-9]{2}:[0-9]{2}:[0-9]{2})/ )[0].substring(0, 5) +  '</span></time></td>' +
+							'</tr>';
+							return htmlData;
+						}
+					},
+					detail: {
+						url: function(id) {
+							var href;
+							$.ajax({
+								url: '/4DACTION/_V3_setInbox',
+								data: {
+									id: id,
+									read_mark: true
+								},
+								dataType: 'json',
+								async: false,
+								success: function(data) {
+									href = data.index;
+								}
+							});
+							if (href.split(':')[0] == 'dialog')
+								$('section#viewport > table > tbody > tr[data-id="' + id + '"]').remove();
+							return href;
+						},
+					},
+					inflection: {
+						singular: 'mensaje',
+						plural: 'mensajes',
+						none: 'ningún'
+					},
+					filters: [
+						{ name: 'created_at', type: 'month', caption: 'Fecha', range: true },
+						{ name: 'bandeja', type: 'checkbox', caption: 'Bandeja', options: [
+							{ caption: 'Solicitudes', name: 'solicitudes', value: true },
+							{ caption: 'Avisos', name: 'avisos', value: false },
+							{ caption: 'Reportes', name: 'reportes', value: false },
+							{ caption: 'Archivado', name: 'archivado', value: false }
+						] }
+					]
+				};
+
+				unaBase.toolbox.search.init(params);
+
+				unaBase.toolbox.menu.init({
+					entity: 'Inbox',
+					buttons: ['searchOff']					  
+				});
+
+				var filterInbox = function(event) {
+					var name = $(this).data('name');
+					$('fieldset#search > div.checkboxes > label > input[type="checkbox"]').prop('checked', false);
+					$('fieldset#search > div.checkboxes > label > input[type="checkbox"][name="' + name + '"]').prop('checked', true).trigger('update');
+					$(this).parentTo('ul').find('li').removeClass('active');
+					$(this).addClass('active');
+				};
+
+				$('header.inbox > nav > ul > li').click(filterInbox);
+
+				// Test
+				$('button.test-inbox').click(function() {
+					unaBase.inbox.send({
+						to: 'gin',
+						subject: 'Test inbox - iframe - lista OT - Solicitudes',
+						into: 'iframe',
+						href: '/lista_ot.shtml',
+						tag: 'solicitudes'
+					});
+					unaBase.inbox.send({
+						to: 'gin',
+						subject: 'Test inbox - vista normal - index cotización',
+						into: 'viewport',
+						href: '/v3/views/cotizaciones/index.shtml',
+						standalone: true,
+						tag: 'solicitudes'
+					});
+					unaBase.inbox.send({
+						to: 'gin',
+						subject: 'Test inbox - vista normal - lista cotización',
+						into: 'viewport',
+						href: '/v3/views/cotizaciones/list.shtml',
+						tag: 'solicitudes'
+					});
+					unaBase.inbox.send({
+						to: 'gin',
+						subject: 'Test inbox - vista popup - perfil usuario',
+						into: 'dialog',
+						href: '/v3/views/user-profile/index.shtml',
+						tag: 'solicitudes',
+						size: 'medium'
+					});
+				});
+
+				// registra log de ingreso a modulos y acciones - by gin 04-08-16
+				$('.tosavelogs').click(function(){
+					var modulo = $(this).data("logsmodulo");
+					var descripcion = $(this).data("logsdes");
+					unaBase.log.save(descripcion, modulo, 0);
+				});
+
+			});
+		</script>
+	</head>
+	<body style="min-width: 900px !important;">
+		<header class="inbox">
+			<nav>
+				<ul style="padding-top: 0; background-color: grey;">
+					<li style="height: 15px; background-color: inherit;"></li>
+					<li style="height: 15px; background-color: inherit;">No leídos</li>
+					<li style="height: 15px; background-color: inherit;"></li>
+					<li style="height: 15px; background-color: inherit;">&nbsp;&nbsp;&nbsp;Leídos</li>
+				</ul>
+				<ul>
+					<li class="tosavelogs" data-logsmodulo="inbox" data-logsdes="Ha ingresado a solicitudes de inbox" data-name="solicitudes" class="active"><span>Solicitudes</span></li>
+					<li class="tosavelogs" data-logsmodulo="inbox" data-logsdes="Ha ingresado a avisos de inbox" data-name="avisos"><span>Avisos</span></li>
+					<li class="tosavelogs" data-logsmodulo="inbox" data-logsdes="Ha ingresado a reportes de inbox" data-name="reportes"><span>Reportes</span></li>
+					<li class="tosavelogs" data-logsmodulo="inbox" data-logsdes="Ha ingresado a archivado de inbox" data-name="archivado"><span>Archivado</span></li>
+				</ul>
+			</nav>
+		</header>
+		<!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->
+		<table class="results" style="min-width: 900px !important; width: 100% !important;">
+			<thead>
+				<tr>
+					<th>De</th>
+					<!-- <th>Para</th> -->
+					<th colspan="4" class="left">Asunto</th>
+					<th>Fecha</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+			<tfoot></tfoot>
+		</table>
+		<!-- <button type="button" class="test-inbox">Test inbox Solicitudes</button> -->
+	</body>
+
+</html>

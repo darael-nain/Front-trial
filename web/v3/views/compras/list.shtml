@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_serverInfo-->
+<html>
+	<head>
+		<title>Compras</title>
+		<meta charset="utf-8">		
+		<script>
+
+			$(document).ready(function() {
+				// current_tab = 0;
+
+				unaBase.toolbox.init();
+
+				// Inicializamos un buscador
+				var params = {
+					searchOff: true,
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/_V3_getCompras' },
+					entity: 'Compras',
+					// Función que genera cada fila de la tabla, dado el valor de i (índice de posición)
+					// y el valor de rows (array con todos los resultados)
+					// El contenido de rows corresponde al objeto de mismo nombre generado mediante la llamada
+					// a la api JSON. Ver /v3/json/xxxxx.shtml para conocer el formato.
+					row: {
+						html: function(i, rows) {
+							var v2 = "";
+							if (rows[i].version=="") {
+								v2 = '<strong style="font-size:8px!important;font-weight:bold">V2</strong>';
+							}
+							return '<tr data-id="' + rows[i].id + '">' +
+								'<td width="0px">'+v2+'</td>' +
+								'<td width="50px">' + rows[i].folio + '</td>' +
+								'<td width="80px">' + rows[i].fecha + '</td>' +
+								'<td width="80px">' + rows[i].tipo + '</td>' +
+								'<td class="left">' + rows[i].referencia + '</td>' +							
+								'<td class="left">' + rows[i].proveedor + '</td>' +
+								'<td class="left">' + rows[i].origen + '</td>' +
+								'<td>' + rows[i].emisor + '</td>' +
+								'<td width="100px" class="right">' + rows[i].neto + '</td>' +
+								'<td width="100px" class="right">' + rows[i].total + '</td>' +
+								'<td width="80px">' + rows[i].estado + '</td>' +
+								'<td>' + rows[i].validado + '</td>' +							
+							'</tr>'
+						}
+					},
+					detail: {
+						url: function(id) { return '/v3/views/compras/content.shtml?id=' + id +'&from=self'},
+						iframe: false
+					},
+					// Inflexiones
+					inflection: {
+						singular: 'gasto',
+						plural: 'gastos',
+						none: 'ningún'
+					},									
+					filters: [
+						{ name: 'created_at', type: 'month', caption: 'Fecha de creación', range: true },			
+						{ name: 'tipo_gasto', type: 'autocomplete', caption: 'Tipo de gastos', dataSource: 'get_tipo_gasto' },
+						{ name: 'validacion_gasto', type: 'autocomplete', caption: 'Según validación', dataSource: 'get_validacion' },
+						{ name: 'estado', type: 'checkbox', caption: 'Estado de la compra', options: [
+							{ caption: 'Emitida', name: 'estado_emitida', value: true },
+							{ caption: 'Pagada', name: 'estado_pagada', value: false },							
+							{ caption: 'Cerrada', name: 'estado_cerrada', value: false },
+							{ caption: 'Anulada', name: 'estado_nulo', value: false }					
+						]}
+					]
+				};
+
+				unaBase.toolbox.search.init(params);
+				unaBase.toolbox.menu.init({
+					entity: 'Compras', // especifica entidad sobre la cual se almacenan los datos
+										  // y nombre para referenciar los views
+					/*buttons: [ 'new', 'clone', 'print' ]*/
+					buttons: [ 'create_oc2', 'views' ]
+				});
+
+
+			});
+		</script>
+	</head>
+	<body style="min-width: 900px !important;">
+		<!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->
+		<table style="min-width: 850px !important; width: 100% !important;">
+			<thead>
+				<tr>
+					<th></th>
+					<th>Número</th>
+					<th>Fecha</th>
+					<th>Tipo</th>
+					<th>Referencia</th>
+					<th>Proveedor</th>	
+					<th>Origen</th>				
+					<th>Emisor</th>
+					<th>Neto[<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+					<th>Total[<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+					<th>Estado</th>
+					<th>Validado</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+			<tfoot></tfoot>
+		</table>
+	</body>
+</html>

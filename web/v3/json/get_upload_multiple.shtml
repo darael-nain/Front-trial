@@ -1,0 +1,35 @@
+{
+  "ok": true,
+  "negocio": "<!--#4DVAR _V3_escapeString($nombreNegocio)-->",
+  "items": [
+<!--#4DLOOP aItemLlaveNv -->
+    {
+      "llave_nv": "<!--#4DVAR _V3_escapeString(aItemLlaveNv{aItemLlaveNv})-->",
+      "nombre": "<!--#4DVAR _V3_escapeString(aItemNombre{aItemLlaveNv})-->",
+      "gastos": [
+	  <!--#4DLOOP aGastoIdOC --><!--#4DIF (aGastoItemLlaveNv{aGastoIdOC} = aItemLlaveNv{aItemLlaveNv})--><!--#4DVAR aGastoSep{aGastoIdOC}-->
+		{
+          "id_oc": <!--#4DVAR aGastoIdOC{aGastoIdOC}-->,
+          "nombre": "<!--#4DVAR _V3_escapeString(aGastoNombre{aGastoIdOC})-->",
+          "documentos": [<!--#4DLOOP aDocIdDoc --><!--#4DIF (aDocItemLlaveNv{aDocIdDoc} = aItemLlaveNv{aItemLlaveNv})--><!--#4DVAR aDocSep{aDocIdDoc}-->{
+              "id_doc": <!--#4DVAR aDocIdDoc{aDocIdDoc}-->,
+              "nombre": "<!--#4DVAR _V3_escapeString(aDocNombre{aDocIdDoc})-->",
+              "adjunto": <!--#4DIF aDocUploadPos{aDocIdDoc} > 0 -->{
+                "id": <!--#4DVAR aUploadEntityId{aDocUploadPos{aDocIdDoc}}-->,
+                "id_upload": <!--#4DVAR aUploadIdUpload{aDocUploadPos{aDocIdDoc}}-->,
+                "index": "<!--#4DVAR _V3_escapeString(aUploadIndex{aDocUploadPos{aDocIdDoc}})-->",
+                "username": "<!--#4DVAR _V3_escapeString(aUploadUsername{aDocUploadPos{aDocIdDoc}})-->",
+                "user_full_name": "<!--#4DVAR _V3_escapeString(aUploadUserFullName{aDocUploadPos{aDocIdDoc}})-->",
+                "created_at_date": "<!--#4DVAR String(aUploadCreatedAtDate{aDocUploadPos{aDocIdDoc}};ISO date format)-->",
+                "created_at_time_raw": <!--#4DVAR aUploadCreatedAtTimeRaw{aDocUploadPos{aDocIdDoc}}-->,
+                "filename": "<!--#4DVAR _V3_escapeString(aUploadFilename{aDocUploadPos{aDocIdDoc}})-->",
+                "mimetype": "<!--#4DVAR _V3_escapeString(aUploadMimetype{aDocUploadPos{aDocIdDoc}})-->"
+              }<!--#4DELSE-->null<!--#4DENDIF-->
+            }<!--#4DENDIF--><!--#4DENDLOOP-->
+          ]
+        }<!--#4DENDIF--><!--#4DENDLOOP-->
+      ]
+    }<!--#4DIF NOT(aItemLlaveNv{aItemLlaveNv} = aItemLlaveNv{Size of array(aItemLlaveNv)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+  ]
+}

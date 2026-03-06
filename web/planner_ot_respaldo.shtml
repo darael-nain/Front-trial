@@ -1,0 +1,95 @@
+
+<!--#4DINCLUDE headgreen.shtml-->
+<body>
+
+<div id="bgtransparent" class="bgtransparent">
+ <div id="bgmodal" class="bgmodal">
+  <img src="/imagenes/cargando.gif" width="50px" height="50px" />
+  <p>Cargando...</p>
+ </div>
+</div>
+
+<section id="main-container">
+    <!--#4DINCLUDE sub_menu_ots.shtml-->
+         <div class="box-button">
+            <!--#4DIF aCheckPermiso{19}=true-->
+            <a class="boton" href="/4DACTION/nueva_ot" target="_blank">Nueva OT</a>
+            <!--#4DENDIF-->             
+
+            <!--#4DIF aCheckPermiso{16}=true-->
+            <button id="btn-planner-ot" type="button">Planificador</button>          
+            <!--#4DENDIF-->
+
+            <!--#4DIF aCheckPermiso{25}=true-->
+            <button id="btn-mycalendar-ot" type="button">Mi Calendario</button>
+            <!--#4DENDIF-->          
+        </div>        
+
+        <h2 class="sub-title">
+            <img class="img-title-calendar" src="/imagenes_green/planner.png">
+            <!--#4DVAR subTitle-->
+        </h2>
+
+		<div class="planner-box-filters">
+			<label>Responsables:</label>
+            <!--#4DIF size of array(aLoginAreaResp1)=1-->
+                <select style="width:150px" id="filters-resp-planner">
+                    <option selected="selected" value="<!--#4DVAR aLoginAreaResp1{1}-->">
+                        <!--#4DVAR aNombresAreaResp1{1}-->                        
+                    </option>        
+                </select>
+            <!--#4delse-->
+                <select style="width:150px" id="filters-resp-planner">
+                    <!--#4dif vLoginFilter="all"-->
+                        <option selected="selected" value="all">[ Seleccionar ]</option>
+                    <!--#4delse-->
+                        <option selected="selected" value="<!--#4DVAR vLoginFilter-->"><!--#4DVAR vLoginFilterName--></option>
+                    <!--#4dendif-->                    
+                    <!--#4DLOOP aLoginAreaResp1-->
+                        <!--#4dif aLoginAreaResp1{aLoginAreaResp1}#vLoginFilter-->
+                            <option value="<!--#4DVAR aLoginAreaResp1{aLoginAreaResp1}-->"><!--#4DVAR aNombresAreaResp1{aLoginAreaResp1}--></option>
+                        <!--#4dendif-->                 
+                    <!--#4DENDLOOP-->
+                    <option value="all">TODOS</option>
+                </select>
+            <!--#4dendif-->
+
+			<label>Prioridad:</label>
+            <select style="width:150px;text-transform:capitalize" id="filter-priority">                
+                <!--#4dif vPriorityFilter="all"-->
+                    <option selected="selected" value="all">[ Seleccionar ]</option>
+                <!--#4delse-->
+                    <option selected="selected" value="<!--#4DVAR vPriorityFilter-->"><!--#4DVAR Lowercase(vPriorityFilter;*)--></option>
+                <!--#4dendif-->              
+                <!--#4dif vPriorityFilter#"alta"--><option value="ALTA">Alta</option><!--#4dendif-->
+                <!--#4dif vPriorityFilter#"media"--><option value="MEDIA">Media</option><!--#4dendif-->
+                <!--#4dif vPriorityFilter#"baja"--><option value="BAJA">Baja</option><!--#4dendif-->
+                <!--#4dif vPriorityFilter#"all"--><option value="all">Todos</option><!--#4dendif-->
+            </select>		
+
+			<label>Proyectos:</label>
+			<select style="width:150px" id="filter-proyect">
+                 <!--#4dif vNvFilter="all"-->
+                    <option selected="selected" value="all">[ Seleccionar ]</option>
+                <!--#4delse-->
+                    <option selected="selected" value="<!--#4DVAR vNvFilter-->"><!--#4DVAR vNvNameFilter--></option>
+                <!--#4dendif-->			
+    			<!--#4DLOOP aIdNvSearch-->
+    				<!--4dif string(aIdNvSearch{aIdNvSearch})#vNvFilter-->    
+    				<option value="<!--#4DVAR aIdNvSearch{aIdNvSearch}-->">
+    					<!--#4DVAR aIdNegNvSearch{aIdNvSearch}--> / <!--#4DVAR aRefNvSearch{aIdNvSearch}-->
+    				</option>
+    				<!--4dendif-->                  
+    			<!--#4DENDLOOP-->
+    			<option value="all">TODOS</option>   
+			</select>
+
+		</div>   
+
+     <div id="container-all-planner"><!--begin all planner-->
+        <!--4DINCLUDE ajax/week_planner.html-->
+     </div> <!--end all planner-->
+</section>
+</body>
+</html>
+

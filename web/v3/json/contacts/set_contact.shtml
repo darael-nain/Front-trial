@@ -1,0 +1,8 @@
+{
+	"id": <!--#4DHTML $id-->,
+	"name": "<!--#4DHTML _V3_escapeString($name)-->",
+	"full_name": "<!--#4DHTML _V3_escapeString($full_name)-->",
+	"position": "<!--#4DHTML _V3_escapeString($position)-->",
+	"email": "<!--#4DHTML _V3_escapeString($email)-->",
+	"rut": "<!--#4DHTML _V3_escapeString($rut)-->"
+}

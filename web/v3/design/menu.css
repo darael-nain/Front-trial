@@ -1,0 +1,481 @@
+@import url('reset.css');
+@import url('screen.css?v=3.897.63');
+/*@import url('print.css');*/
+html > body.menu > .header > button.current {
+	position: absolute;
+	right: 180px;
+	top: 1px;
+}
+html > body.menu > .header > button.nodeServer {
+	position: absolute;
+	right: 240px;
+	top: 1px;
+	cursor: pointer;
+}
+button.nodeServer.online{
+	border: 3px solid #01C73E;
+}
+button.nodeServer.offline{
+	border: 3px solid red;
+}
+html > body.menu > .header > button.access {
+	position: absolute;
+	right: 90px;
+	top: 1px;
+}
+
+html > body.menu > .header > button.intercom-btn {
+	position: absolute;
+	right: 240px;
+	top: 1px;
+}
+html > body.menu > .header > button.notifications {
+	position: absolute;
+	right: 120px;
+	top: 1px;
+}
+html > body.menu > .header > button.reportes {
+	position: absolute;
+	right: 180px;
+	top: 1px;
+}
+
+html > body.menu > .header > button.settings {
+	position: absolute;
+	right: 150px;
+	top: 1px;
+}
+
+html > body.menu > .header > button.help {
+	position: absolute;
+	right: 180px;
+	top: 1px;
+}
+
+html > body.menu > .header > button.info {
+	position: absolute;
+	right:210px;
+	top: 1px;
+}
+
+html > body.menu > .header > p {
+	display: inline-block;
+	font-size: 14px;
+	color: white;
+}
+
+html > body.menu > .header > p:first-of-type {
+	float: right;
+	width: 83px;
+	height: 47px;
+	vertical-align: top;
+	background-image: url('html/body.menu/header/p_first-of-type.png');
+	background-position: 100px -100px;
+	background-repeat: no-repeat;
+	font-size: 13px;
+	transition: background 1s ease-in-out;
+	z-index: 10;
+}
+
+html > body.menu > .header > p:first-of-type:hover {
+	background-position: 0 0;
+}
+
+html > body.menu > .header > p:first-of-type > a {
+	display: inline-block;
+	height: 13px;
+	margin-left: 25px;
+	margin-top: 5px;
+	padding-left: 16px;
+	background-image: url('html/body.menu/header/p_first-of-type/a.png');
+	background-repeat: no-repeat;
+	line-height: 16px;
+}
+
+html > body.menu > .header > p:last-of-type {
+	/* Added */ display: none;
+	float: right;
+	margin-right: 40px;
+	margin-top: 10px;
+}
+
+html > body.menu > .header > p:last-of-type > span:first-of-type {
+	display: inline-block;
+	width: 80px;
+	vertical-align: middle;
+}
+
+html > body.menu > .header > p:last-of-type > span:last-of-type {
+	display: inline-block;
+	width: 41px;
+	height: 24px;
+	background-image: url('html/body.menu/header/p_last-of-type/span_last-of-type.png');
+	line-height: 20px;
+	text-indent: 3px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+html > body.menu > nav {
+	position: fixed;
+	display: inline-block;
+	/*width: 205px;*/
+	/* width: 180px; */
+	width: 150px;
+	overflow: hidden;
+	height: 664px;
+	/*background-image: url('html/body.menu/nav.png');*/
+	background-image: url('html/body.menu/nav.webp');
+	background-size: 100% 664px;
+	vertical-align: top;
+	transition: display .5s ease-in-out;
+}
+
+html > body.menu.tablet > nav {
+	display: none;
+	transition: display .5s ease-in-out;
+}
+
+html > body.menu > nav > h1 {
+	width: 140px;
+	height: 86px;
+	margin: 10px auto 34px auto;
+	padding-top: 7px;
+	/*background-image: url('html/body.menu/nav/h1.png');*/
+	background-image: url('html/body.menu/nav/h1.webp');
+	/*background-size: stretch;*/
+	background-size: contain;
+	cursor: pointer;
+	background-repeat: no-repeat;
+	/*background-position-y: center;*/
+	background-position: center;
+}
+
+html > body.menu > nav > h1 > span {
+	display: none;
+}
+
+html > body.menu > nav > img,
+html > body.menu > aside > div > div > h1 {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+html > body.menu > nav > img {
+	/*margin-left: 20px;*/
+}
+
+html > body.menu > aside > div > div > h1 {
+	display: inline-block;
+	width: 110px;
+	/* font-size: 16px; */
+	font-size: 13px;
+	overflow: hidden;
+	text-transform: capitalize;
+	vertical-align: top;
+}
+html > body.menu > nav > a {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	margin-top: -5px;
+	cursor: pointer;
+}
+
+html > body.menu > nav > a.show.user-profile {
+	margin-left: calc(100% - 25px - 24px);
+	background-image: url('html/body.menu/nav/a.png');
+	transition: -webkit-transform .2s ease-in-out;
+}
+
+html > body.menu > nav > a.client-mode {
+	background-image: url('html/body.menu/nav/client-mode.png');
+}
+
+html > body.menu > nav > a.client-mode.active {
+	background-image: url('html/body.menu/nav/client-mode-active.png');
+}
+
+html > body.menu > nav > a.show.user-profile:hover {
+	-webkit-transform: rotate(132deg);
+}
+
+html > body.menu > nav > a > span {
+	display: none;
+}
+
+html > body.menu > nav > ul {
+	width: 100%;
+	margin-top: 15px;
+	font-size: 13px;
+	color: rgb(103,103,103);
+}
+
+html > body.menu > nav > ul > li {
+	width: 176px; /* Safari */
+	/*width: calc(200px - 24px);
+	width: calc(100% - 29px);*/
+	padding-left: 24px;
+	/*
+	height: 24px;
+	line-height: 24px;
+	*/
+	height: 20px;
+	line-height: 18px;
+
+	background-image: url('html/body.menu/nav/ul/li.active.png');
+	background-repeat: no-repeat;
+	background-position-x: -200px;
+	transition: background .5s ease-in-out, color .5s ease-in-out;
+}
+
+html > body.menu > nav > ul > li.active,
+html > body.menu > nav > ul > li:hover {
+	background-position-x: 0;
+	color: white;
+}
+
+html > body.menu > nav > ul > li > a{
+	position: relative;
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+html > body.menu > nav > ul > li > a:hover {
+	text-decoration: none;
+	color: white;
+}
+
+html > body.menu > nav > ul > li > a:focus {
+	text-decoration: none;
+	color: white;
+}
+
+html > body.menu > nav > ul > li > a > span {
+	position: absolute;
+	right: 6px;
+	top: 4px;
+	display: inline-block;
+	height: 16px;
+	padding: 0 5px;
+	border-radius: 8px;
+	background-color: darkgrey;
+	color: white;
+	text-align: center;
+	line-height: 17px;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+html > body.menu > nav > ul > li > a:hover > span,
+html > body.menu > nav > ul > li.active > a > span {
+	background-color: white;
+	color: darkgrey;
+	transition: background-color .5s ease-in-out, color .5s ease-in-out;
+}
+
+html > body.menu > section {
+	position: relative;
+	/* margin-top: 85px; */
+	top: 15px;
+	display: block;
+	width: 80%; /* Safari */
+	/* width: calc(100% - 180px - 5px - 10px); */
+	width: calc(100% - 120px - 5px - 10px);
+	/* height: 100vh; */
+	margin-left: 242px; /* Safari */
+	/* margin-left: calc(180px + 5px); */
+	margin-left: calc(110px + 5px);
+	overflow: hidden;
+}
+
+html > body.menu.tablet > section {
+	width: 98%; /* Safari */
+	width: calc(100% - 20px - 5px + 40px);
+	margin-left: 25px; /* Safari */
+	margin-left: calc(-35px);
+	transition: .5s;
+}
+
+html > body.menu > section > div.widgets {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+}
+
+html > body.menu > section > div.widgets > article {
+	display: inline-block;
+	width: 155px; /* Safari */
+	width: calc(178px - 13px - 10px);
+	height: 113px; /* Safari */
+	height: calc(128px - 5px - 10px);
+	padding: 5px 13px 10px 10px;
+	background-image: url('html/body.menu/section/div.widgets/article.png');
+	cursor: move;
+}
+
+html > body.menu > section > div.widgets > article > header {
+	margin-bottom: 5px;
+	font-size: 14px;
+	color: white;
+}
+
+html > body.menu > section > div.widgets > article > h2,
+html > body.menu > section > div.widgets > article > p {
+	font-size: 11px;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+html > body.menu > section > div.widgets > article > h2 {
+	margin-top: 15px;
+	color: rgb(67,175,124);
+}
+
+html > body.menu > section > div.widgets > article > p {
+	margin-top: 3px;
+	color: rgb(103,103,103);
+}
+
+html > body.menu > footer {
+	position: fixed;
+	bottom: 0;
+}
+
+html > body.menu > footer > nav {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+}
+
+
+html > body.menu > footer > nav > span {
+	padding: 10px;
+}
+
+
+
+html > body.menu > footer > nav > *:last-child {
+	margin-left: auto;
+}
+
+html > body.menu > footer > button {
+	position: absolute;
+	right: 60px;
+	bottom: 0;
+	width: 144px;
+	height: 37px;
+	margin-top: 12px;
+	background-image: url('html/body.menu/footer/button.png');
+	font-size: 10px;
+	line-height: 14px;
+	font-weight: bold;
+	text-indent: 16px;
+	text-align: center;
+	vertical-align: middle;
+	color: white;
+	margin-left: 30px;
+	margin-right: 60px;
+}
+
+html > body.menu > footer > article.chat {
+	position: absolute;
+	right: 55px;
+	bottom: 55px;
+	display: inline-block;
+	width: 155px; /* Safari */
+	width: calc(178px - 13px - 10px);
+	height: 113px; /* Safari */
+	height: calc(256px - 5px - 10px);
+	padding: 5px 13px 10px 10px;
+	background-image: url('html/body.menu/footer/article.chat.png');
+	line-height: 100%;
+}
+
+html > body.menu > footer > article.chat > header {
+	margin-bottom: 5px;
+	font-size: 14px;
+	color: white;
+}
+
+html > body.menu > footer > article.chat > section {
+	height: 198px;
+	margin-top: 15px;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	word-wrap: break-word;
+}
+
+html > body.menu > footer > article.chat > section > h2,
+html > body.menu > footer > article.chat > section > p {
+	font-size: 11px;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+html > body.menu > footer > article.chat > section > h2 {
+	margin-top: 0;
+	color: rgb(67,175,124);
+	text-transform: capitalize;
+}
+
+html > body.menu > footer > article.chat > section > h2 > time {
+	font-size: 8px;
+}
+
+html > body.menu > footer > article.chat > section > p {
+	margin-top: 3px;
+	margin-bottom: 5px;
+	color: rgb(103,103,103);
+}
+
+html > body.menu > footer > article.chat > footer > input {
+	display: inline-block;
+	width: 134px;
+	border: 1px ridge lightgrey;
+}
+
+html > body.menu > footer > article.chat > footer > button {
+	display: inline-block;
+	width: 16px;
+	padding-left: 2px;
+	border: 1px ridge lightgrey;
+	background-color: lightgrey;
+	font-weight: bold;
+}
+
+html > body.menu > footer > article.chat > footer > button:after {
+	content: '⏎';
+}
+
+html > body.menu > footer > article.chat > footer > button > span {
+	display: none;
+}
+
+html > body.menu > footer > p.users {
+	position: absolute;
+	bottom: 4px;
+	right: 230px;
+	line-height: 15px;
+}
+
+html > body.menu > footer > p.users > span:first-of-type {
+	display: inline-block;
+	vertical-align: middle;
+	margin-right: 10px;
+}
+
+html > body.menu > footer > p.users > span:last-of-type {
+	display: inline-block;
+	width: 41px;
+	height: 24px;
+	background-image: url('html/body.menu/header/p_last-of-type/span_last-of-type.png');
+	line-height: 20px;
+	text-indent: 3px;
+	text-align: center;
+	vertical-align: middle;
+	color: white;
+	margin-right: 50px;
+}

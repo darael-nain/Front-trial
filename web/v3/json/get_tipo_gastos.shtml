@@ -1,0 +1,12 @@
+{
+	"rows": [
+		{
+		  	"id":"OC",
+		  	"text":"ORDEN DE COMPRA"
+		},
+		{
+			"id":"FXR",
+			"text":"<!--#4DTEXT Uppercase(etiqueta_rendiciones)-->"
+		}
+	]
+}

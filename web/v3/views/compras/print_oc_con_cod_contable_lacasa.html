@@ -1,0 +1,206 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <!--#4DSCRIPT/_v3_print_oc-->
+    <meta charset="utf-8"/>
+    <script src="/v3/script/jquery/jquery.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" media="print" href="/v3/design/print.css"/>
+    <title>NRO <!--#4DTEXT [Orden_de_compra]Folio_OC--></title>
+    <style>
+    @media print {
+      <!--#4DIF (preview="true") & (nullified#"true")-->
+      html > body:before {
+        display: block;
+        position: absolute;
+        top: 100px;
+        left: 50px;
+        width: 100vw;
+        text-align: center;
+        content: 'VISTA PREVIA';
+        color: rgba(0,0,0,.3);
+        font-size: 160px;
+        font-weight: bold;
+        -webkit-transform: rotate(-45deg); 
+      }
+      <!--#4DENDIF-->
+      <!--#4DIF nullified="true"-->
+      html > body:before {
+        display: block;
+        position: absolute;
+        top: 235px;
+        left: 120px;
+        width: 100vw;
+        text-align: center;
+        content: 'ANULADO';
+        color: rgba(0,0,0,.3);
+        font-size: 145px;
+        font-weight: bold;
+        -webkit-transform: rotate(-45deg); 
+      }
+      <!--#4DENDIF-->
+      body {
+        font-family: 'Open Sans', sans-serif !important;
+      }
+    }
+      
+       .cuadradito {
+          background-color: <!--#4DVAR vColorCorporativoCSS--> !important;
+      }
+      .underline{
+        text-decoration:underline
+      }
+      .borders td, th{
+        border:1px solid gray;
+        padding:2px;
+      }      
+    </style>  
+</head>
+<body>
+<div class="contenedor" align="center">
+ <div class="cuadro" style="1px solid red">
+
+<section class="new-header">
+  <img src="<!--#4DTEXT vUrlImagenLogo-->" width="<!--#4DTEXT Num(vAnchoPicture)*2-->" style="max-width: 150px; max-height: 150px; padding: 10px; margin-left: 30px;">
+  <p>
+    <label><!--#4DTEXT razonPropietaria--></label>
+    <label><!--#4DTEXT giroPropietaria--></label>
+    <label><!--#4DTEXT rutPropietaria--></label>
+    <label><!--#4DTEXT direccionPropietaria--></label>
+    <label><!--#4DTEXT telefonoPropietaria--></label>
+    <label><!--#4DTEXT comunaPropietaria--> - <!--#4DTEXT ciudadPropietaria--></label>
+  </p>
+  <p class="atributos">
+    <span>N&deg; <!--#4DTEXT [Orden_de_compra]Folio_OC--></span>
+    <span><!--#4DTEXT String([Orden_de_compra]fecha;5)--></span>
+  </p>
+</section>
+
+<section>
+  <article class="from">
+    <div><strong>De:</strong><span><!--#4DIF nombreEmisor#""--><!--#4DVAR nombreEmisor--><!--#4DELSE-->N/A<!--#4DENDIF--></span></div>
+    <div><strong>Email:</strong><span><!--#4DIF emailEmisor#""--><!--#4DVAR emailEmisor--><!--#4DELSE-->N/A<!--#4DENDIF--></span></div>
+    <!--#4DIF Not(Undefined(nombreCliente))-->
+    <div><strong>Cliente:</strong><span><!--#4DIF nombreCliente#""--><!--#4DVAR nombreCliente--><!--#4DELSE-->N/A<!--#4DENDIF--></span></div>
+    <!--#4DENDIF-->
+  </article>
+  <article class="to">
+    <div><strong>Para:</strong><span><!--#4DIF nombreContacto#""--><!--#4DVAR nombreContacto--><!--#4DELSE-->N/A<!--#4DENDIF--></span></div>
+    <div><strong>Proveedor:</strong><span><!--#4DIF razonEmp#""--><!--#4DVAR razonEmp--><!--#4DELSE-->N/A<!--#4DENDIF--></span></div>
+    <div><strong>Rut:</strong><span><!--#4DIF rutEmp#""--><!--#4DVAR rutEmp--><!--#4DELSE-->N/A<!--#4DENDIF--></span></div>
+    <div><strong>Dirección:</strong><span><!--#4DIF direccionEmp#""--><!--#4DVAR direccionEmp--><!--#4DELSE-->N/A<!--#4DENDIF--></span></div>
+    <div><strong>Teléfono:</strong><span><!--#4DIF fono1Emp#""--><!--#4DVAR fono1Emp--><!--#4DELSE-->N/A<!--#4DENDIF--></span></div>
+    <!--#4DIF ((print_datos_bancarios_oc) & (nombreBancoEmp#"") & (nroCuentaEmp#"") & (tipoCuentaEmp#""))-->
+    <div>
+      <strong>Cta. bancaria:</strong>
+      <span>Nº <!--#4DVAR nroCuentaEmp--> - <!--#4DVAR tipoCuentaEmp--> - <!--#4DVAR nombreBancoEmp--></span>
+    </div>
+    <!--#4DENDIF-->
+  </article>
+</section>
+
+<table class="tabla-detalle" border="0" cellpadding="1" cellspacing="0">
+  <tr>
+    <td colspan="6" class="tipooc"><!--#4DTEXT vInfoNegocio--></td>    
+  </tr>
+  <tr>
+    <td colspan="6" class="tipooc">
+      <div style="font-weight:bold;font-size:20px"><!--#4DIF [Orden_de_compra]FacturaTipo#"RENDICION"--><!--#4DTEXT [Orden_de_compra]FacturaTipo--><!--#4DENDIF--></div>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="6" class="referencia">
+      <div style="text-align:left;font-weight:normal"><!--#4DTEXT [Orden_de_compra]Referencia--></div>
+      <div style="text-align:right;margin-top:5px;font-size:25px;color:rgb(67,175,124)"><!--#4DTEXT [Orden_de_compra]des_tipo_gasto--></div>
+    </td>   
+  </tr>
+  <tr bgcolor="#000000">
+    <td class="left-h"><div class="cuadradito"></div>Item</td>
+    <!--#4DIF cantNegocios > 1--><td class="center-h">Neg.</td><!--#4DENDIF-->
+    <td class="center-h">Código</td>
+    <td class="center-h">Nombre</td>
+    <td class="center-h">Cant.</td>
+    <td class="center-h">P.U.</td>
+    <td class="center-h">SubTotal</td>
+  </tr>
+   <!--#4DLOOP a_llave_detalle_oc-->        
+    <!--#4DIF a_titulo{a_llave_detalle_oc}="TITULO"-->
+      <tr class="tr-titulo" bgcolor="#DDDDDD">
+        <td></td>
+        <!--#4DIF cantNegocios > 1--><td></td><!--#4DENDIF-->
+        <td></td>
+        <!--<td colspan="4" class="titulos"><!- -#4DTEXT a_des{a_llave_detalle_oc}- -></td>-->
+        <td colspan="4" style="text-align:left;font-weight:bold"><!--#4DTEXT a_des{a_llave_detalle_oc}--></td>
+      </tr>
+    <!--#4DELSE-->
+        <tr class="tr-item">
+            <td class="orden-alfa"><!--#4DVAR a_llave_detalle_oc{a_llave_detalle_oc}--></td>
+            <!--#4DIF cantNegocios > 1--><td class="orden-alfa"><!--#4DVAR a_id_neg{a_llave_detalle_oc}--></td><!--#4DENDIF-->
+            <td class="orden-alfa"><!--#4DTEXT a_codigo{a_llave_detalle_oc}--></td>
+            <td class="items"><!--#4DVAR a_des{a_llave_detalle_oc}-->
+            <!--#4DIF mostrar_detalle_item--><div class="observacion-items"><!--#4DVAR a_observ_items{a_llave_detalle_oc}--></div><!--#4DENDIF--></td>
+            <td class="nro-items-cant"><!--#4DTEXT a_cantidad{a_llave_detalle_oc}--></td>
+            <td class="nro-items-subtotal"><!--#4DTEXT a_pu1{a_llave_detalle_oc}--></td>
+            <td class="nro-items-subtotal"><!--#4DTEXT a_subtotal{a_llave_detalle_oc}--></td>    
+        </tr>  
+    <!--#4DENDIF-->    
+    <!--#4DENDLOOP--> 
+</table>
+<div align="right" class="totales">
+<table border="0">
+  <tr>
+      <td align="right" valign="top">
+    <table class="bloque2" border="0" cellpadding="0" cellspacing="0">
+
+       <!--#4DIF [Orden_de_compra]id_tipo_gasto="OC"-->      
+
+        <!--#4DIF [Orden_de_compra]Descuento>0-->
+        <tr>
+          <td class="etiquetas-valores">SUBTOTAL</td>
+          <td class="valores-totales"><!--#4DTEXT subtotalPrint--></td>
+        </tr>        
+        <tr>
+          <td class="etiquetas-valores">DESCUENTO</td>
+          <td class="valores-totales"><!--#4DTEXT descuentoPrint--></td>
+        </tr>
+        <!--#4DENDIF-->
+        <tr>
+          <td class="etiquetas-valores">TOTAL NETO</td>
+          <td class="valores-totales"><!--#4DTEXT netoPrint--></td>
+        </tr>
+        
+        <!--#4DIF vImpuesto-->
+        <tr>
+          <td class="etiquetas-valores"><!--#4DTEXT labelImpuestos--></td>
+          <td class="valores-totales"><!--#4DTEXT ivaPrint--></td>
+        </tr>
+        <!--#4DELSE-->    
+        <tr>
+          <td class="etiquetas-valores"><!--#4DTEXT labelImpuestos--></td>
+          <td class="valores-totales"><!--#4DTEXT retencionPrint--></td>
+        </tr>
+        <!--#4DENDIF-->
+
+      <!--#4DENDIF-->
+
+        <tr>
+          <td class="etiquetas-valores-total">TOTAL</td>
+          <td class="valores-totales"><!--#4DTEXT totalPrint--></td>
+        </tr>
+
+        </table>
+    </td>
+  </tr>
+</table>       
+</div>
+
+<!--#4DIF [Orden_de_compra]id_tipo_gasto="OC"-->
+  <!--#4DINCLUDE print_oc.shtml-->
+<!--#4DELSE-->
+  <!--#4DINCLUDE print_fxr.shtml-->
+<!--#4DENDIF-->
+
+</div>
+</div>
+</body>
+</html>

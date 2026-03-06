@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="utf-8"/>
+	<title>AVISO</title>
+	<style>
+		body{margin:0;font-family:arial;background:white}
+		h1{color:black;font-size:25px;text}
+		a{color:black;font-size:15px;margin:0 20px 0 0;font-weight:bold;}
+		a:hover{text-decoration:underline;color:green}
+		.container{
+			background:white;
+			padding:20px;
+		}
+	</style>
+	<script>
+		if(history.forward(1)){
+			history.replace(history.forward(1));
+		}	
+	</script>	
+</head>
+<body>
+	<div class="container">
+	<!--#4DIF vTipo="oc"-->
+		<h1>"La Orden de Compra fue guardada correctamente, pero no se pudo Notificar."</h1>
+		<!--<h1>"No se pudo realizar el envío de la notificación, debido a un problema con el servidor de correos."</h1>-->		
+		<a href="/4DACTION/W_VIEW_OC/<!--#4Dvar vidCreado-->">Ir a la Orden de Compra</a>
+		<!--<a href="/4DACTION/W_LISTA_OC/#4DVAR vSesion/e">Ir a la lista de Ordenes de Compra</a>-->
+	<!--#4DENDIF-->
+	<div>
+</body>
+</html>

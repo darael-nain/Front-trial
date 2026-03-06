@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_proxy_getDtcPorJustificar-->
+<html>
+	<head>
+		<title>Documentos de compras disponibles</title>
+		<meta charset="utf-8">
+		<style type="text/css">
+			.dialog{
+				position: relative;
+			}
+
+			.dialog #dialog-menu li[data-name="asociar_dct_a_gasto"] > button{
+				position: absolute!important;
+				top: 70px!important;
+				right:20px!important;
+				border: 2px solid gray!important;
+			}
+				.dialog #dialog-menu li[data-name="asociar_dct_a_gasto"] > button > .ui-button-text{
+					font-weight: bold;
+				}
+				
+		</style>
+		
+		<script>
+			$(document).ready(function() {
+				var tipogasto = "<!--#4DTEXT tipogasto-->";
+				/*if(tipogasto != "FXR"){
+					$(".ocultar").hide();
+				}*/
+				unaBase.toolbox.init();
+				var params = {
+					url: function() { return '/4DACTION/_V3_get_dtc_por_justificar' },
+					entity: 'dtc_compras',
+					searchOff: true,
+					data: {
+						'id' : "<!--#4DTEXT id-->"
+					},
+					row: {
+						html: function(i, rows) {							
+							return '<tr data-id="' + rows[i].id + '" data-proveedor="' + rows[i].id_proveedor + '" data-doc="' + rows[i].id_tipo_doc + '">' +
+								'<td>' + ((rows[i].version == "V3")? '': '<strong title="dtc creada en versión antigua" style="font-size:11px!important;font-weight:bold;vertical-align:middle;display:inline-block">*</strong>  ') + rows[i].folio + '</td>' +
+								'<td>' + rows[i].emision + '</td>' +
+								'<td>' + rows[i].tipo + '</td>' +
+								'<td>' + rows[i].estado + '</td>' +
+								'<td class="left">' + rows[i].proveedor + '</td>' +
+								'<td class="left">' + rows[i].referencia + '</td>' +
+								'<td>' + rows[i].total + '</td>' +
+								// '<td>' + rows[i].saldo_por_pagar + '</td>' +							
+								'<td>' + rows[i].saldo_por_justificar + '</td>' +
+								'<td><input style="width:20px!important;height:20px!important" class="select" name="dtcselect[id]'+rows[i].id+'" value="'+rows[i].id+'" type="checkbox"></td>' +						
+							'</tr>'
+						}
+					},
+					inflection: {
+						singular: 'negocio',
+						plural: 'negocios',
+						none: 'ningún'
+					},									
+					filters: [
+						{ name: 'tipo_dtc', type: 'autocomplete', caption: 'Tipo Doc.', dataSource: 'getTiposDocDeCompras' }
+					]
+				};
+
+				unaBase.toolbox.search.init(params);
+				unaBase.toolbox.menu.init({
+					entity: 'dtc_compras',
+					buttons: ['searchOff',"asociar_dct_a_gasto"]					  
+				});			
+
+			});
+		</script>
+	</head>
+	<body>		
+		<section id="dtc-por-justificar" class="sheet" data-oc="<!--#4DTEXT id-->" data-tipo="<!--#4DTEXT tipogasto-->">
+			<table class="results">
+				<thead>
+					<tr>
+						<th width="5%">Número</th>
+						<th width="10%">Emisión</th>
+						<th width="5%">Documento</th>
+						<th width="3%">Estado</th>
+						<th width="20%">Proveedor</th>
+						<th width="20%">Referencia</th>						
+						<th width="10%">Total [$]</th>
+						<!--<th width="10%">Por pagar [$]</th>-->
+						<th width="10%">Por Justificar [$]</th>
+						<th width="2%">Seleccionar para agregar</th>						
+					</tr>
+				</thead>
+				<tbody></tbody>
+				<tfoot></tfoot>
+			</table>
+		</section>
+	</body>
+</html>

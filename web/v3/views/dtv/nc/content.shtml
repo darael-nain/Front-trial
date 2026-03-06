@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--#4DSCRIPT/_V3_proxy_getNcVentasContent-->
+    <title>Notas de credito de ventas</title>
+    <meta charset="utf-8">
+    <script>
+      unaBase.ui.block();
+      $(document).ready(function() {
+        $("#tabs-notas" ).tabs();
+        $("#tabs-1").load('/v3/views/dtv/nc/general.shtml', 'id=<!--#4DVAR id-->');
+        $('a[href="#tabs-2"]').click(function() {
+          unaBase.interval.clearAll();
+          $("#tabs-2").empty();
+          $("#tabs-2").load('/v3/views/historial/index.shtml', 'id=<!--#4DVAR id-->&mod=dtv_nc');
+        });
+        $('a[href="#tabs-1"]').trigger('click');
+      });
+    </script>
+    <style>
+      .ui-tabs .ui-tabs-panel {
+        padding: 0 !important;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="main-container" data-id="<!--#4DTEXT id-->">
+      <section id="tabs-notas">
+        <ul class="infinite-tabs">
+          <li><a href="#tabs-1">General</a></li>
+          <li class="load-historial" data-id="<!--#4DTEXT id-->"><a href="#tabs-2">Historial</a></li>
+        </ul>
+        <article id="tabs-1"></article>
+        <article id="tabs-2"></article>
+      </section>
+    </div>
+  </body>
+</html>

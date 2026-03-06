@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--#4DSCRIPT/_V3_serverInfo-->
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex">
+    <title>UNA Base</title>
+    <!-- <link rel="icon" href="/favicon.png"> -->
+    <link rel="icon" href="/faviconNew.png">    <link rel="stylesheet" href="/v3/design/login.css">
+    <link rel="stylesheet" href="/v3/design/tooltip.css">
+      <script src="/login/script/login.js"></script>
+    <link rel="stylesheet" href="/seguridad/css/passwordRecovery.css">
+
+    <script src="/v3/script/jquery/jquery.js"></script>
+    <script src="/script/mobileCheck.js"></script>
+    <script src="/v3/script/jquery/plugins/jquery-ui/js/jquery-ui.js"></script>
+    <script src="/v3/script/jquery/plugins/toastr/toastr.js"></script>
+    <link rel="stylesheet" href="/v3/script/jquery/jquery-plugins.css">
+
+    <script src="/v3/script/jquery/plugins/tooltipster/js/jquery.tooltipster.js"></script>
+    <script src="/v3/script/hashref.js"></script>
+    <script src="/seguridad/js/passwordRecovery.js"></script>
+
+    <script>
+    let experimental = <!--#4DIF experimental -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+    var nodejs_port = <!--#4DHTML _V3_nodejs_port-->;
+    var nodejs_public_ipaddr = "<!--#4DHTML _V3_nodejs_public_ipaddr-->";
+    var nodeUrl = 'http://' + nodejs_public_ipaddr + ':' + nodejs_port;
+
+    var SourceWeb = "<!--#4DTEXT SourceWeb-->";
+    var url_string = decodeURIComponent(window.location.href); //window.location.href
+    var urlx = new URL(url_string);
+    var reqUrl = urlx.searchParams.get("reqUrl");
+
+    // verifica si es mobile lo redirecciona a la version mobile
+      // if(mobileCheck() && SourceWeb != "web"){
+      //   // window.location.replace(nodeUrl+'/agentControl/false');
+      //   window.location.replace(nodeUrl+'/wrongLogin?reqUrl='+reqUrl);
+      // }
+
+      $(document).ready(function() {
+        $('input[name="reqUrl"]').val(reqUrl);
+
+        toastr.warning("Su contraseña ha sido reinciada hace mas de una hora, se ha enviado una nueva a su correo electrónico");
+        var content = $('div.passwordRecovery');
+        // $('p.passwordLost').tooltipster({
+        //       content: toolcontent,
+        //       contentAsHTML: true,  
+        //       contentCloning: false,
+        //       interactive: true,
+        //       maxWidth: 400,
+        //       trigger: 'click'
+        //     });
+          $('p.passwordLost').click(function(){
+          $('.recoverPass').toggleClass('hide');
+          $('.showLogin').toggleClass('hide');
+          $(this).toggleClass('hide');
+          $('.backToLogin').toggleClass('hide');
+
+        });
+        $('p.backToLogin').click(function(){
+          $('.recoverPass').toggleClass('hide');
+          $('.showLogin').toggleClass('hide');
+          $(this).toggleClass('hide');
+          $('.passwordLost').toggleClass('hide');
+
+        });
+        $('button.recoverPass').click(function(event){
+          event.preventDefault();
+          pass(true);
+        })
+      });
+
+    </script>
+    <style type="text/css">
+    </style>
+  </head>
+  <body class="login">
+      <section>
+      <!--#4DIF (experimental)-->
+        <form id="formLogin" method="post" onsubmit="login(event)">
+      <!--#4DELSE-->
+        <form id="formLogin" method="post" action="/4DACTION/W_INICIA_SESION">
+      <!--#4DENDIF-->
+          <fieldset>
+            <legend><span>Bienvenido a Unabase</span></legend>
+            <label>
+              <span>Usuario</span>
+              <input type="text" name="txtUsuario" required>
+            </label>
+            <label class="showLogin">
+              <span>Contraseña</span>
+              <input type="password" name="txtPassword" required>
+            </label>
+            <label class="recoverPass hide">
+              <span>Correo Electrónico</span>
+              <input type="text" name="email" >
+            </label>
+            <!--<label>
+              <input type="checkbox" name="remember">
+              <span>Recordar contraseña</span>
+            </label>-->
+            <span>
+              <button class="showLogin" type="submit">Acceder</button>
+              <button class="recoverPass hide"  >Recuperar contraseña</button>
+              
+            </span>
+
+            <div style="display:none">
+              <h2 style="text-align:left!important;font-weight:bold;margin:20px 0 10px 45px;">O BIEN</h2>
+              <div style="margin-left:43px;margin-top:20px" class="g-signin2" data-onsuccess="onSignIn"></div>
+            </div>
+            <br><br>
+          <p class="passwordLost">¿Olvidaste tu contraseña?</p>
+          <p class="backToLogin hide" >Iniciar sesión</p>
+          </fieldset>
+        </form>
+      </section>
+    <footer
+      itemscope
+      itemtype="http://schema.org/Organization">
+      &copy; 2013 <span itemprop="name">UNA Sistemas Ltda.</span>
+      Todos los derechos reservados.
+      <address
+        itemprop="address"
+        itemscope
+        itemtype="http://data-vocabulary.org/Address">
+        <span itemprop="street-address">Monseñor Eyzaguirre 660</span>,
+        <span itemprop="locality">Ñuñoa</span>,
+        <span itemprop="region">Santiago</span> -
+        <span itemprop="country">Chile</span>
+      </address>
+      <p itemprop="telephone">
+        <a href="tel:+56222398622">(56 - 2) 2239 8622</a>
+      </p>
+      <nav>
+        <ul>
+          <li class="skype"><a href="callto:soporte.unasistemas"><span>Skype</span></a></li>
+          <li class="email"><a href="mail:soporte@una.cl"><span>Email</span></a></li>
+        </ul>
+      </nav>
+    </footer>
+    
+  </body>
+</html>

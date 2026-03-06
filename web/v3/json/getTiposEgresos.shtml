@@ -1,0 +1,10 @@
+{
+	"rows": [
+	<!--#4DLOOP aIdTipoEgresos-->
+		{
+		  	"id": "<!--#4DTEXT aDesTipoEgresos{aIdTipoEgresos}-->",
+		  	"text": "<!--#4DTEXT aDesTipoEgresos{aIdTipoEgresos}-->"
+		}<!--#4DIF NOT(aIdTipoEgresos{aIdTipoEgresos} = aIdTipoEgresos{Size of array(aIdTipoEgresos)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

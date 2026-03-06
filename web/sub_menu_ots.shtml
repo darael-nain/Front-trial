@@ -1,0 +1,10 @@
+<nav>	
+	<!--#4DIF _V3_verifica_permisos_web (vLogin;19)-->
+	<a class="boton create" href="/4DACTION/nueva_ot">Crear</a>
+	<!--#4DENDIF-->	
+
+	<!--<a class="boton download" href="/4DACTION/exportar_ot/PA/<!- -#4DVAR vLogin- ->/all/all/all/all/all" target="black_">Descargar Excel</a>-->
+	
+	<!--<a title="Participante y Copiado" class="boton go" href="lista_ot_de_participante.shtml?e=PA&r=<!- -#4DVAR String(Milliseconds+Random)- ->">Ver Otras OT</a>-->
+
+</nav>

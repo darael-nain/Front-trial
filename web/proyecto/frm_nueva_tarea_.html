@@ -1,0 +1,89 @@
+<!--#4dscript/areas_de_trabajo-->
+<div class="grupo-ots">
+	<input type="hidden" name="idtarea" value="<!--#4DVAR vIdTareaCreada-->">
+	<h3>
+		<span class="titulo-tarea"></span>
+		<!--<button title="Agregar nueva OT" class="mas-ot add-tarea">Notificar</button>-->
+		<!--<button title="Agregar nueva OT" class="mas-ot add-tarea">ir a OT</button>-->		
+		<button type="button" title="Eliminar OT" class="delete-tarea"></button>		
+	</h3>
+	<div>
+	  <p>
+	  	<label>Ref. : </label>
+		<input name="nombre-tarea" class="save-tarea nombre-tarea textos" placeholder="Ingresar nombre de la tarea..."
+		value="" >
+
+		<label for="">Area de Trabajo : </label>
+		<select name="area-trabajo" class="save-tarea select" >
+			<option selected="selected" value="0">[ Seleccionar ]</option>    		
+    		<!--#4dloop aAreaId-->    	
+				<option value="<!--#4dvar aAreaId{aAreaId}-->">
+					<!--#4dvar aAreaNombre{aAreaId}-->
+				</option>		    	
+	    	<!--#4dendloop-->
+    	</select>
+
+    	<label for="">Responsable : </label>
+		<select class="save-tarea responsables select" name="responsables">
+			<option selected="selected" value="">[Seleccionar]</option>				
+		</select>
+
+		<label for="">F.Vcto : </label>
+		<input value="00-00-00" name="fecha-vcto" class="datepicker save-tarea fecha-vcto textos" type="text" >
+
+		<label for="">Importancia : </label>
+		<select name="prioridad" class="save-tarea select">
+			<option selected="selected" value="">[Seleccionar]</option>
+			<option value="ALTA">ALTA</option>
+			<option value="MEDIA">MEDIA</option>
+			<option value="BAJA">BAJA</option>			
+		</select>
+
+		<div>
+			<label>Descripción : </label>
+			<textarea name="descripcion" class="save-tarea"></textarea>			
+		</div>
+
+		<article class="block-blue block-participantes" id="<!--#4DVAR vIdTareaCreada-->">
+			<div class="title">
+				<div class="actions">
+					<button type="button" title="Agregar participantes" class="mas-ot add-participantes">Participantes</button>	
+				</div>
+			</div>
+			<div class="content-p">
+				<!--#4dscript/web_asognados_ot_express-->	
+				<!--#4dif size of array(aLoginAsig)>0-->
+					<!--#4dloop aLoginAsig-->
+					<!--#4dif aTipoAsig{aLoginAsig}#"RESPONSABLE"-->
+						<!--#4dif aDefectoAsig{aLoginAsig}="no"-->
+							<div>
+								<span><!--#4dvar aNombreAsig{aLoginAsig}--></span>
+								<a id="<!--#4dvar aLoginAsig{aLoginAsig}-->" class="delete-part">x</a>
+							</div>
+						<!--#4delse-->
+							<div>
+								<span><!--#4dvar aNombreAsig{aLoginAsig}--></span>				
+							</div>
+						<!--#4dendif-->	
+					<!--#4dendif-->					            
+					<!--#4dendloop-->
+				<!--#4delse-->
+					<h2>Aún no se han agregado participantes.</h2>
+				<!--#4dendif-->				
+			</div>			
+		</article>
+
+		<div class="block-blue block-componentes" id="<!--#4DVAR vIdTareaCreada-->">
+			<div class="title">				
+				<div class="actions">
+					<button type="button" title="Agregar componentes" class="mas-ot add-componentes">Archivos</button>								
+				</div>
+			</div>
+			<div class="content-componente">				
+				<div class="list-componente-<!--#4DVAR vIdTareaCreada-->"></div>
+			</div>			
+		</div>
+
+	  </p>
+	</div>
+</div>

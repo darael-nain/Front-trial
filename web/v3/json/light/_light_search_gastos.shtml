@@ -1,0 +1,35 @@
+{
+	"records": {
+			"total_records": <!--#4DHTML totalRecords-->
+	},
+	"data":{
+			<!--#4DIF totalRecords > 0-->
+
+		"rows": [
+			<!--#4DLOOP aIds-->
+			{
+				"idoc": <!--#4DHTML aIds{aIds}-->,
+				"folio": "<!--#4DHTML aFolio{aIds}-->",
+				"estado": "<!--#4DHTML aEstado{aIds}-->",
+				"pagado": "<!--#4DHTML aPagado{aIds}-->",
+				"total_oc": "<!--#4DHTML aTotalOc{aIds}-->",
+				"fecha_emision": "<!--#4DHTML aFechaEmision{aIds}-->",
+				"total_justificado": "<!--#4DHTML  aTotalJustificado{aIds}-->",
+				"tipogasto": "<!--#4DHTML  _V3_escapeString(aTipoG{aIds})-->",
+				"tipodoc": "<!--#4DHTML aTipoDoc{aIds}-->",
+				"referencia": "<!--#4DHTML  _V3_escapeString(aReferencia{aIds})-->",
+				"proveedor": "<!--#4DHTML  _V3_escapeString(aProveedor{aIds})-->"
+			}<!--#4DIF NOT(aIds{aIds} = aIds{Size of array(aIds)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		]
+
+
+		<!--#4DENDIF-->
+
+	}
+	
+	
+}
+
+
+

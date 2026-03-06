@@ -1,0 +1,19 @@
+<fieldset>
+	<legend>Condiciones generales</legend>
+ 
+	<article>
+	    <div>
+	    	<label>De pago:</label>	    	
+	    	<input readonly name="oc[forma_pago]" placeholder="Seleccionar forma de pago" type="search" value="<!--#4DTEXT [Formas_Pago]Desc_forma_pago-->">
+	    	<button type="button" class="show forma-pago">ver formas de pagos</button>    	
+	    	<input name="oc[id_forma_pago]" type="hidden" value="<!--#4DTEXT [Formas_Pago]ID_forma-->">
+	    </div>
+	</article>
+
+	<article>
+		<div>
+	    	<label class="label-textarea">Observaciones:</label>
+	    	<textarea class="textarea-big" name="oc[comentarios]"><!--#4DTEXT Uppercase([Orden_de_compra]comentarios;*)--></textarea>    	
+	    </div>
+	</article>  
+</fieldset>

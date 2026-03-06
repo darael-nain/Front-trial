@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!--#4DSCRIPT/_V3_proxy_getPerfilContacto-->
+	<meta charset="utf-8">
+	<title>Perfil contacto</title>
+  <script type="text/javascript" src="/v3/views/contactos/content.js"></script>
+	<link rel="stylesheet" href="/v3/design/temporal.css?<!--#4DTEXT random-->">	
+</head>
+<body>
+<div id="main-container">
+  <div class="perfil-contactos">
+    <div id="dialog-profile-contacto">
+      <ul>
+        <li><a href="#tabs-1">Datos generales</a></li>
+        <li><a href="#tabs-2">Relacionados</a></li>
+        <!--<li><a href="#tabs-3">Otros</a></li>-->
+      </ul>
+      <div id="tabs-1">
+        <p>
+          <form id="form-contacto" class="form-popup">
+            <input type="hidden" name="id" value="<!--#4DTEXT [Contacto]Id_Cont-->">
+            <input type="hidden" name="mostrar-contacto" value="<!--#4DTEXT [Contacto]mostrar_contacto-->">
+            <input type="hidden" name="estado" value="<!--#4DTEXT [Contacto]Estado_Cont-->">
+            <input type="hidden" name="tipo" value="<!--#4DTEXT [Contacto]Tipo-->">
+
+            <nav>
+              <a data-estado="<!--#4DTEXT [Contacto]Estado_Cont-->" href="#"><!--#4DIF [Contacto]Estado_Cont-->Desactivar<!--#4DELSE-->Activar<!--#4DENDIF--></a>         
+            </nav>
+                 
+            <fieldset>
+              <legend><strong>Información básica</strong></legend>
+              <article>
+                <div><label>Alias:</label><input name="alias" placeholder="Ingrese alias" type="text" value="<!--#4DTEXT Uppercase([Contacto]Alias_Cont;*)-->"></div>
+                <div><label></label><!--#4DIF [Contacto]mostrar_contacto#"razon"--><input class="mostrar-alias" type="checkbox" checked><span> (Mostrando Alias en listados)</span><!--#4DELSE--><input class="mostrar-alias" type="checkbox"><span> (Seleccionar opción para mostrar en listados)</span><!--#4DENDIF--></div>
+              </article>
+
+              <!--#4DIF [Contacto]Tipo="EMPRESA"-->
+              <article>
+                <div><label>Razón social:</label><input name="razon" placeholder="Ingrese razón social" type="text" value="<!--#4DTEXT Uppercase([Contacto]Razon_Cont;*)-->"></div>
+                <div><label></label><!--#4DIF [Contacto]mostrar_contacto="razon"--><input class="mostrar-razon" type="checkbox" checked><span> (Mostrando Razón social en listados)</span><!--#4DELSE--><input class="mostrar-razon" type="checkbox"><span> (Seleccionar opción para mostrar en listados)</span><!--#4DENDIF--></div>
+              </article>
+
+              <article>
+                <div><label class="country-label-rut">Rut:</label><input name="rut" placeholder="Ingrese rut (Ej: 13740690-6)" type="text" value="<!--#4DTEXT vRut-->"></div>
+                <div><label></label><!--#4DIF [Contacto]valida_rut--><input name="validar-rut" title="validar" type="checkbox" checked><span> (Rut validado) </span><!--#4DELSE--><input name="validar-rut" title="validar" type="checkbox"><span> (Rut pendiente de validación) </span><!--#4DENDIF--></div>
+              </article>
+
+              <article>
+                <div><label>Giro:</label><input name="giro" placeholder="Ingrese giro" type="text" value="<!--#4DTEXT Uppercase([Contacto]Giro_Cont;*)-->"></div>
+              </article>
+              <!--#4DELSE-->
+
+              <article>
+                <div><label>Nombres:</label><input name="nombre" placeholder="Ingrese nombres" value="<!--#4DTEXT Uppercase([Contacto]Nombre_Cont;*)-->" type="text"></div>
+                <div><label>A. Paterno:</label><input name="paterno" placeholder="Ingrese apellido paterno" value="<!--#4DTEXT Uppercase([Contacto]Paterno_Cont;*)-->" type="text"></div>
+                <div><label>A. Materno:</label><input name="materno" placeholder="Ingrese apellido materno" value="<!--#4DTEXT Uppercase([Contacto]Materno_cont;*)-->" type="text"></div>
+                <div><label></label><!--#4DIF [Contacto]mostrar_contacto="razon"--><input class="mostrar-razon" type="checkbox" checked><span> (Mostrando Nombre completo en listados)</span><!--#4DELSE--><input class="mostrar-razon" type="checkbox"><span> (Seleccionar opción para mostrar en listados)</span><!--#4DENDIF--></div> 
+            </article>
+
+              <article>
+                <div><label class="country-label-rut">Rut:</label><input name="rut" placeholder="Ingrese rut (Ej: 13740690-6)" type="text" value="<!--#4DTEXT vRut-->"></div>
+                <div><label></label><!--#4DIF [Contacto]valida_rut--><input name="validar-rut" title="validar" type="checkbox" checked><span> (Rut validado) </span><!--#4DELSE--><input name="validar-rut" title="validar" type="checkbox"><span> (Rut pendiente de validación) </span><!--#4DENDIF--></div>
+              </article>
+
+            <!--#4DENDIF-->
+
+            </fieldset>        
+
+            <fieldset>
+              <legend><strong>Información de contacto</strong></legend>
+              <article>
+                <div><label>Correo electrónico:</label><input name="correo" placeholder="Ingrese un correo" value="<!--#4DTEXT Uppercase([Contacto]Email_Cont;*)-->" type="email"></div>
+              </article>
+              <article>
+                <div><label>Teléfono:</label><input name="fono1" placeholder="Ingrese teléfono" value="<!--#4DTEXT [Contacto]Telefono1_Cont-->" type="tel"></div>
+                <div><label></label><input name="fono2" placeholder="Ingrese otro teléfono" value="<!--#4DTEXT [Contacto]Telefono2_Cont-->" type="tel"></div>
+              </article>
+              <article>
+                <div><label>Celular:</label><input name="celular" placeholder="Ingrese un nro. de celular" value="<!--#4DTEXT [Contacto]Celular_Cont-->" type="tel"></div>
+              </article>
+
+              <article>
+                <div><label>Dirección:</label><input name="direccion" placeholder="Ingrese una dirección" value="<!--#4DTEXT Uppercase([Contacto]Dir_Calle_Cont;*)-->" type="text"></div>
+
+                <div>
+                  <label>Ciudad:</label>
+                  <input name="ciudad" placeholder="Ingrese ciudad" value="<!--#4DTEXT Uppercase([Contacto]ciudad_cont;*)-->" type="search">
+                </div>
+
+                <div><label>Comuna:</label><input name="comuna" placeholder="Ingrese comuna" value="<!--#4DTEXT Uppercase([Comuna]Des_Comuna;*)-->" type="search"><input name="idcomuna" type="hidden" value="<!--#4DTEXT [Comuna]Id_Comuna-->"></div>          
+              </article>
+
+              <article>
+                <div><label>Sitio web:</label><input name="sitio" placeholder="Ingrese dirección sitio web" value="<!--#4DTEXT Uppercase([Contacto]Sitio_Cont;*)-->" type="tel"></div>
+              </article>    
+            </fieldset>
+
+            <fieldset>
+              <legend><strong>Información bancaria</strong></legend>
+
+              <article>
+                <div><label>Forma de pago:</label>
+                  <button type="button" class="show formapago">Forma de pagos</button>
+                  <input name="forma-pago" placeholder="Seleccione forma pago" value="<!--#4DTEXT Uppercase([Formas_Pago]Desc_forma_pago;*)-->" type="text" readonly></div>
+                  <input name="idformapago" type="hidden" value="<!--#4DTEXT [Formas_Pago]ID_forma-->">
+              </article>
+
+              <article>
+                <div>
+                  <label>Documento de compra:</label>
+                  <button type="button" class="show dtc">Documentos de compra</button>
+                  <input name="dtc" placeholder="Seleccione documento de compra" value="<!--#4DTEXT Uppercase([Tipo_Doctribu]DESCRIPCION_TIPO;*)-->" type="text" readonly><input name="iddtc" type="hidden" value="<!--#4DTEXT [Tipo_Doctribu]ID_TIPODOC-->">
+                </div>              
+              </article>        
+
+              <article>
+                <div>
+                  <label>Banco:</label>
+                  <button type="button" class="show banco">Banco</button>
+                  <input name="banco" placeholder="Seleccione un banco" value="<!--#4DTEXT Uppercase([Banco]Banco;*)-->" type="text"><input name="idbanco" type="hidden" value="<!--#4DTEXT [Banco]Id_banco-->">
+                </div>
+
+                <div>
+                  <label>Tipo de cuenta:</label>
+                  <button type="button" class="show tipo-cuenta">Tipo de cuenta</button>
+                  <input name="tipo-cuenta" placeholder="Seleccione tipo de cuenta" value="<!--#4DTEXT Uppercase([Contacto]Tipo_Cuenta;*)-->" type="text">
+                </div>
+
+                <div>
+                  <label>Nro. cuenta:</label>
+                  <input name="nro-cuenta" placeholder="Ingrese nro. de cuenta" value="<!--#4DTEXT [Contacto]Nro_Cuenta-->" type="text">
+                </div>          
+              </article>
+            </fieldset>
+           
+          </form>
+        </p>
+      </div>
+
+      <div id="tabs-2">
+        <table>
+          <thead>
+            <tr>
+              <th>POR DEFECTO</th> 
+              <th>CONTACTO</th> 
+              <th>CARGO</th>         
+              <th>FONO</th>
+              <th>MAIL</th>
+              <th>OBSERVACIÓN</th>
+              <th></th>          
+            </tr>
+          </thead>
+          <tbody>
+            <!--#4DLOOP aId -->
+            <tr class="editable">
+              <td><input type="checkbox" disabled name="defecto" <!--#4DIF aSelRel{aId}-->checked<!--#4DENDIF-->></td>
+              <td><input type="hidden" name="id" value="<!--#4DTEXT aId{aId}-->"><!--#4DTEXT Uppercase(aNomRel{aId};*)--></td>
+              <td><input type="text" readonly name="cargo" value="<!--#4DTEXT Uppercase(aCargoRel{aId};*)-->"></td>
+              <td><input type="text" readonly name="fono" value="<!--#4DTEXT aFonoRel{aId}-->"></td>
+              <td><input type="text" readonly name="email" value="<!--#4DTEXT Uppercase(aEmailRel{aId};*)-->"></td>
+              <td><textarea readonly name="observacion"><!--#4DTEXT Uppercase(aObervacionRel{aId};*)--></textarea></td>
+              <td><button class="unlockpop contactopop">Modificar datos de la relación</button><button class="editpop savepop contactopop">Guardar cambios de la relación</button><button class="editpop discardpop contactopop">Descartar cambios de la relación</button></td>
+            </tr>
+            <!--#4DENDLOOP-->
+          </tbody>
+          <tfoot></tfoot>
+        </table>
+      </div>
+
+      <!--<div id="tabs-3">
+        <h1> :) </h1>
+      </div>-->
+
+    </div>
+  </div>
+</div>
+</body>
+</html>
+
+
+

@@ -1,0 +1,17 @@
+{
+	"total": "<!--#4DHTML total-->",
+	"rows": [
+<!--#4DLOOP aIdProyecto_ -->
+		{
+			"id": "<!--#4DHTML aIdProyecto_{aIdProyecto_}-->",
+			"folio": "<!--#4DHTML aFolioProyecto_{aIdProyecto_}-->",
+			"nombre": "<!--#4DHTML aNombreProyecto_{aIdProyecto_}-->",
+			"cliente": "<!--#4DHTML aClienteProyecto_{aIdProyecto_}-->",
+			"login": "<!--#4DHTML aLoginProyecto_{aIdProyecto_}-->",
+			"estado": "<!--#4DHTML aEstadoProyecto_{aIdProyecto_}-->",
+			"plantilla_por_defecto": <!--#4DIF aPlantillaProyecto_{aIdProyecto_}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"fecha": "<!--#4DHTML String(aFechaProyecto_{aIdProyecto_};7)-->"
+		}<!--#4DIF NOT(aIdProyecto_{aIdProyecto_} = aIdProyecto_{Size of array(aIdProyecto_)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

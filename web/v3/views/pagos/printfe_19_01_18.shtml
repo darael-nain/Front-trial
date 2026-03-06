@@ -1,0 +1,374 @@
+<!DOCTYPE HTML>
+<html class="test-cheque">
+<head>
+    <!--#4DSCRIPT/_v3_print_cheque-->
+    <meta charset="utf-8"/>
+    <script src="/v3/script/jquery/jquery.js"></script>
+    <!-- <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700' rel='stylesheet' type='text/css'> -->
+    <link rel="stylesheet" media="print" href="/v3/design/print.css"/>
+    <title>NRO <!--#4DTEXT [Orden_Pago]Folio_OPago--></title>
+    <style>
+    @media print {
+      <!--#4DIF (preview="true") & (nullified#"true")-->
+      html > body:before {
+        display: block;
+        position: absolute;
+        top: 100px;
+        left: 50px;
+        width: 100vw;
+        text-align: center;
+        content: 'VISTA PREVIA';
+        color: rgba(0,0,0,.3);
+        font-size: 160px;
+        font-weight: bold;
+        -webkit-transform: rotate(-45deg);
+      }
+      <!--#4DENDIF-->
+      <!--#4DIF nullified="true"-->
+      html > body:before {
+        display: block;
+        position: absolute;
+        top: 235px;
+        left: 120px;
+        width: 100vw;
+        text-align: center;
+        content: 'ANULADO';
+        color: rgba(0,0,0,.3);
+        font-size: 145px;
+        font-weight: bold;
+        -webkit-transform: rotate(-45deg);
+      }
+      <!--#4DENDIF-->
+      body {
+        font-family: 'Open Sans', sans-serif !important;
+      }
+    }
+
+       .cuadradito {
+          background-color: <!--#4DVAR vColorCorporativoCSS--> !important;
+      }
+      .underline{
+        text-decoration:underline
+      }
+      .borders td, th{
+        border:1px solid gray;
+        padding:2px;
+      }
+
+      .info-extra{
+        padding:0px;
+        position:absolute;
+        right:-100px;
+        top:70px;
+      }
+      .info-extra > span{
+        display:block;
+        font-weight:bold;
+        text-align: right;
+      }
+      .fecha{
+        text-align: left !important;
+      }
+       .emisor{
+        text-align: left !important;
+      }
+
+      .titulo{
+        text-align: center !important;
+      }
+
+      .atributos{
+        float: right !important;
+        text-align: left !important;
+      }
+
+
+      html{
+        overflow-x: hidden;
+
+      }
+
+      /*
+      html.test-cheque {
+        background-image: url('/v3/design/cheque.png');
+        background-repeat: no-repeat;
+        background-size: 1200px 1697px;
+        background-position: center center;
+        outline: 1px solid blue;
+        width: 1100px;
+        height: 1556px;
+        margin: 0 !important;
+        overflow-x: hidden;
+      }*/
+
+
+
+      .cheque{
+        position: absolute;
+        outline: 1px solid blue;"
+
+      }
+
+     .monto_cheque{
+
+       position:absolute !important;
+       top:1262px !important;
+       left:947px !important;
+       width: 150px !important;
+
+      }
+
+      .monto_texto_cheque{
+        position:absolute !important;
+        top:1472px !important;
+        left:400px !important;
+
+      }
+
+
+
+      div.nombre_cheque{
+        position:absolute !important;
+        top:1410px !important;
+        left:400px !important;
+
+      }
+
+
+      .fecha_cheque{
+        position:absolute !important;
+        top:1365px !important;
+        left:790px !important;
+        width: 300px !important;
+        text-transform: uppercase !important;
+
+      }
+
+
+      .tabla1{
+        border: 1px solid black !important;
+        position:absolute !important;
+        top:1145px !important;
+        left:500px !important;
+      }
+
+      .tabla2{
+        border: 1px solid black !important;
+
+      }
+
+      .linea{
+
+        position:absolute !important;
+        top:1175px !important;
+        left:100px !important;
+
+      }
+
+/*
+      .aaa{
+
+      border:1px solid red;
+
+      }*/
+
+      .firma{
+
+        position:absolute !important;
+        top:1185px !important;
+        left:230px !important;
+        text-decoration: underline !important;
+
+      }
+
+      .datos_fe{
+        position:absolute !important;
+        text-align: left !important;
+        top:95px !important;
+        left:50px !important;
+
+
+      }
+
+      .linea_vertical1 {
+        position:absolute !important;
+        left:365px !important;
+        top:1250px !important;
+        border-left: 1px solid #000000;
+        width:1px;
+        height:350px;
+    }
+
+    .linea_vertical2 {
+        position:absolute !important;
+        left:335px !important;
+        top:1250px !important;
+        border-left: 1px solid #000000;
+        width:1px;
+        height:350px;
+    }
+
+
+
+    </style>
+</head>
+<body>
+
+<div class="contenedor" align="center">
+ <div class="cuadro" style="1px solid red">
+
+  <h2 class="titulo"  style="text-decoration: underline;">COMPROBANTE DE EGRESO</h2>
+
+<section class="new-header">
+  <img src="<!--#4DTEXT vUrlImagenLogo-->" width="<!--#4DTEXT Num(vAnchoPicture)*2-->" style="max-width: 150px; max-height: 150px; padding: 10px; margin-left: 30px;">
+  <p>
+    <label><!--#4DTEXT razonPropietaria--></label><br/>
+    <label><!--#4DTEXT direccionPropietaria--></label>, <label><!--#4DTEXT comunaPropietaria--></label><br/>
+    <label><!--#4DTEXT telefonoPropietaria--></label>
+
+  </p>
+
+  <div class="datos_fe">
+
+    <label><!--#4DTEXT razonPropietaria--></label><br/>
+    <label><!--#4DTEXT direccionPropietaria--></label>, <label><!--#4DTEXT comunaPropietaria--></label><br/>
+    <label><!--#4DTEXT telefonoPropietaria--></label>
+   </div>
+   <br/>
+   <br/>
+
+  <div style="text-align: right;">Emitido por <!--#4DTEXT emisor --> el <!--#4DTEXT String(fecha_emision;5)--></div>
+</section>
+
+<section>
+
+
+  <hr style="color: #0056b2;" />
+  <h3  style="text-decoration: underline;">Datos Pago</h3>
+  <span><strong>Numero Cheque: </strong><!--#4DTEXT numero_cheque--></span><br/>
+  <span><strong>Monto Cheque: </strong><!--#4DTEXT total_pago--></span><br/>
+  <span><strong>Fecha Documento:</strong><!--#4DTEXT String(fecha_emision;5) --></span><br/>
+  <span><strong>A la orden de: </strong><!--#4DTEXT a_la_orden_de--></span><br/>
+  <span><strong>Proveedor: </strong><!--#4DTEXT proveedor--></span><br/>
+  <span><strong>RUT: </strong><!--#4DTEXT rut_empresa--></span><br/>
+  <!--#4DIF vProyectoOrigenOP#""-->
+  <span><strong>Proyecto: </strong><!--#4DTEXT vProyectoOrigenOP--></span><br/>
+  <!--#4DELSE -->
+  <span><strong>Proyecto: </strong>N/A</span><br/>
+  <!--#4DENDIF-->
+
+  <span><strong>Orden de Pago: </strong><!--#4DTEXT folio_OP--></span><br/>
+</section>
+
+<section>
+  <hr style="color: #0056b2;" />
+  <h3 style="text-decoration: underline;">Origen del Pago</h3>
+  <span><strong>Origen Pago: </strong><!--#4DTEXT vTipoOrigenOP--></span><br/>
+
+  <!--#4DIF vEmisorOrigenOP#""-->
+  <span><strong>Emisor: </strong><!--#4DTEXT vEmisorOrigenOP--></span><br/>
+  <!--#4DELSE -->
+
+  <!--#4DENDIF-->
+
+   <!--#4DIF vEmisorOrigenOP#""-->
+  <span><strong>Fecha Emision: </strong><!--#4DTEXT vFechaOrigenOP--></span><br/>
+  <!--#4DELSE -->
+
+  <!--#4DENDIF-->
+
+   <!--#4DIF vEmisorOrigenOP#""-->
+   <span><strong>Nro: </strong><!--#4DTEXT vFolioOrigenOP--></span><br/>
+  <!--#4DELSE -->
+
+  <!--#4DENDIF-->
+
+  <!--#4DIF vEmisorOrigenOP#""-->
+  <span><strong>Referencia: </strong><!--#4DTEXT vReferenciaOrigenOP--></span><br/>
+  <!--#4DELSE -->
+
+  <!--#4DENDIF-->
+
+
+
+
+</section>
+
+<section>
+  <hr style="color: #0056b2;" />
+  <h3  style="text-decoration: underline;">Datos Documento Proveedor</h3>
+  <!--#4DIF Size of array(a_dtc_id)>5-->
+    <div style="color:gray">Existe más de 5 documentos asociados al egreso. Imprimir el boucher con el detalle.</div>
+  <!--#4DELSE-->
+  <table class="tabla2" width="1100" border="1" color="solid black">
+    <tr>
+      <td style="width: 100px;  height:20px;  text-align: center; font-weight: bold;">Tipo</td>
+      <td style="width: 50px;  height:20px;  text-align: center; font-weight: bold;" >Numero</td>
+      <td style="width: 50px;  height:20px;  text-align: center; font-weight: bold;">Fecha</td>
+      <td style="width: 300px;  height:20px;  text-align: center; font-weight: bold;">Referencia</td>
+      <td style="width: 100px;  height:20px;  text-align: center; font-weight: bold;">Total Neto</td>
+      <td style="width: 100px;  height:20px;  text-align: center; font-weight: bold;">Impuesto</td>
+      <td style="width: 100px;  height:20px;  text-align: center; font-weight: bold;">Total</td>
+      <td style="width: 100px;  height:20px;  text-align: center; font-weight: bold;">Pagado</td>
+    </tr>
+    <tbody>
+       <!--4DLOOP a_dtc_id-->
+        <tr>
+          <td><!--#4DTEXT a_dtc_des{a_dtc_id}--></td>
+          <td><!--#4DTEXT a_dtc_folio{a_dtc_id}--></td>
+          <td><!--#4DTEXT a_dtc_emision{a_dtc_id}--></td>
+          <td><!--#4DTEXT a_dtc_ref{a_dtc_id}--></td>
+          <td><!--#4DTEXT String(a_dtc_neto{a_dtc_id};"$ ###.###.##0")--></td>
+          <td><!--#4DTEXT String(a_dtc_impuesto{a_dtc_id};"$ ###.###.##0")--></td>
+          <td><!--#4DTEXT String(a_dtc_total{a_dtc_id};"$ ###.###.##0")--></td>
+          <td><!--#4DTEXT String(a_dtc_abono{a_dtc_id};"$ ###.###.##0")--></td>
+        </tr>
+        <!--4DENDLOOP-->
+    </tbody>
+  </table>
+   <!--#4DENDIF-->
+
+</section>
+
+
+<hr class="linea" style="color: #0056b2; width: 300px;" />
+<div class="firma">Firma</div>
+<div>
+  <table class="tabla1" width="500" border="1" color="solid black">
+    <tr>
+      <td style="border: 1px solid black; width: 500px;  height:10px;">Nombre: </td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid black; width: 500px;  height:10px;">Rut: </td>
+    </tr>
+    <tr>
+      <td style="border: 1px solid black; width: 500px;  height:10px;">Fecha: </td>
+    </tr>
+  </table>
+</div>
+
+
+  <div class="monto_cheque aaa"><strong><!--#4DTEXT total_pago2--></strong></div>
+  <div class="fecha_cheque aaa"><strong>SANTIAGO <!--#4DTEXT vFecha2--></strong></div>
+  <div class="monto_texto_cheque aaa"><strong><!--#4DTEXT vCadena--></strong></div>
+  <div class="nombre_cheque aaa"><strong><!--#4DTEXT razon_empresa--></strong></div>
+
+   <!--#4DIF cruzado=true-->
+  <div class="linea_vertical1"></div>
+  <div class="linea_vertical2"></div>
+  <!--#4DELSE -->
+
+  <!--#4DENDIF-->
+
+
+
+
+
+
+
+
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+{
+	"date_from" : "<!--#4DTEXT created_at_from-->",
+	"date_to" : "<!--#4DTEXT created_at_to-->",
+	"current_account" : {
+		"id" : <!--#4DTEXT $id_ctacte_defecto-->,
+		"banco" : "<!--#4DTEXT $banco_ctacte-->",
+		"numero" : "<!--#4DTEXT $nro_ctacte-->",
+		"saldo_final" : <!--#4DHTML String($saldo_final_ctacte_actual;"&xml")-->,
+		"saldo_lc" : <!--#4DHTML String($saldo_lc_ctacte_actual;"&xml")-->
+	},
+	"bankcards": [
+	<!--#4DLOOP a_id_movimiento-->
+		{	
+			"id": <!--#4DTEXT a_id_movimiento{a_id_movimiento}-->,
+			"fecha_movimiento": "<!--#4DTEXT a_fecha_movimiento{a_id_movimiento}-->",
+			"tipo_movimiento": "<!--#4DTEXT a_tipo_movimiento{a_id_movimiento}-->",
+			"descripcion_movimiento": "<!--#4DHTML _V3_escapeString(a_des_tipo_movimiento{a_id_movimiento})-->",
+			"nro_movimiento": "<!--#4DHTML _V3_escapeString(a_nro_movimiento{a_id_movimiento})-->",
+			"cargo": <!--#4DHTML String(a_cargo_movimiento{a_id_movimiento};"&xml")-->,
+			"abono": <!--#4DHTML String(a_abono_movimiento{a_id_movimiento};"&xml")-->,
+			"saldo_diario": <!--#4DHTML String(a_saldo_diario_movimiento{a_id_movimiento};"&xml")-->,
+			"conciliado": <!--#4DIF a_conciliado_movimiento{a_id_movimiento}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"verificado": <!--#4DIF a_verificado_movimiento{a_id_movimiento}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"creado_fecha": "<!--#4DTEXT a_creado_fecha_movimiento{a_id_movimiento})-->",
+			"creado_hora": "<!--#4DTEXT a_creado_hora_movimiento{a_id_movimiento})-->",
+			"login": "<!--#4DTEXT a_login_movimiento{a_id_movimiento})-->",
+			"importado": <!--#4DIF a_importado_movimiento{a_id_movimiento}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(a_id_movimiento{a_id_movimiento} = a_id_movimiento{Size of array(a_id_movimiento)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

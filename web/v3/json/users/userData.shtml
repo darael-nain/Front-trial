@@ -1,0 +1,6 @@
+{
+	
+	"login": "<!--#4DHTML aLogin{aLogin}-->",
+	"email": "<!--#4DHTML aEmail{aLogin}-->",
+	"name": "<!--#4DHTML _V3_escapeString(aName{aLogin})-->"
+}

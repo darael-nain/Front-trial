@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_proxy_getCotizacionContent-->
+<!--#4DSCRIPT/_V3_proxy_getNegocioContent-->
+<!--#4DSCRIPT/_V3_saveLog/Ha ingresado al negocio/negocios-->
+<html>
+	<head>
+		<title>Negocios</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/views/presupuestos/content.js"></script>
+		<link rel="stylesheet" href="/v3/design/temporal.css?<!--#4DTEXT random-->">
+		<script>
+			
+			/* Cotización */
+			var autoriza_modificacion = false;
+			var contentLoaded = false;
+			var contentChanged = false;
+			var contentReady = false;
+			<!--#4DIF compartir_ocultar_cantidades-->
+			var compartir_ocultar_cantidades = true;
+			<!--#4DELSE-->
+			var compartir_ocultar_cantidades = false;
+			<!--#4DENDIF-->
+			var aplica_sobrecargo_items = <!--#4DIF aplica_sobrecargo_items-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			var fixedTotalCliente = <!--#4DIF _V3_param_totalClienteFijo-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			// var totalNeto = <!--#4DTEXT String([Nota_de_venta]Total_Neto;"&xml")-->;
+			var deferReglaValidacion = <!--#4DIF _V3_param_diferirRV-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			var scDirectInput = <!--#4DIF _V3_param_scSinPorcentaje-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+			<!--#4DIF Not(Undefined(template))-->
+			var fromTemplate = true;
+			<!--#4DENDIF-->
+
+			var selected_currency = undefined;
+			var valor_usd = 1;
+			var valor_clf = 1;
+			var exchange_rate = 1;
+
+			var valor_usd_cotizacion = <!--#4DTEXT String([Nota_de_venta]param_dolar;"&xml")-->;
+			var valor_usd = valor_usd_cotizacion;
+			var valor_clf_cotizacion = <!--#4DTEXT String([Nota_de_venta]UF_ValorCambio;"&xml")-->;
+			var valor_clf = valor_clf_cotizacion;
+
+			if (valor_usd == 0) {
+				valor_usd = 1;
+				valor_usd_cotizacion = 1;
+			}
+
+			if (valor_usd == 0) {
+				valor_clf = 1;
+				valor_clf_cotizacion = 1;
+			}
+
+			<!--#4DIF Not(Undefined(working_currency))-->
+
+			<!--#4DIF (working_currency="USD")-->
+			var selected_currency = 'USD';
+			var exchange_rate = (valor_usd_cotizacion > 0)? valor_usd_cotizacion : valor_usd;
+			<!--#4DENDIF-->
+
+			<!--#4DIF (working_currency="CLF")-->
+			var selected_currency = 'CLF';
+			var exchange_rate = (valor_clf_cotizacion > 0)? valor_clf_cotizacion : valor_clf;
+			<!--#4DENDIF-->
+
+			<!--#4DIF (working_currency="CLP")-->
+			var exchange_rate = 1;
+			<!--#4DENDIF-->
+
+			<!--#4DELSE-->
+
+			var exchange_rate = 1;
+
+			<!--#4DENDIF-->
+
+			var totalNeto = <!--#4DTEXT String([Nota_de_venta]Total_Neto;"&xml")-->/exchange_rate;
+
+
+
+			/* Negocio */
+
+			var scDirectInput = <!--#4DIF _V3_param_scSinPorcentaje-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+			var summaryNegocioData = {};
+
+			$(document).ready(function() {
+
+				if ($('#main-container').data('closed')) {
+					$('[data-name="open_compras_negocio"]').hide();
+					$('[data-name="convert_cotizacion"]').hide();
+				}
+
+				$.ajax({
+					url: '/4DACTION/_V3_getSummaryByNegocio',
+					data: {
+						id: <!--#4DTEXT [Nota_de_venta]ID_NV-->
+					},
+					dataType: 'json',
+					async: false,
+					success: function(data) {
+						summaryNegocioData = data;
+					}
+				});
+
+				$('#tabs-1').load('/v3/views/presupuestos/general.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+				// $('#tabs-2').load('/v3/views/negocios/detalle.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+				
+				<!--#4DIF Not(Undefined(working_currency))-->
+				$("#tabs-2a").load('/v3/views/presupuestos/detalle2.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->&rand=<!--#4DTEXT random-->&working_currency=<!--#4DVAR working_currency-->');
+				<!--#4DELSE-->
+				$("#tabs-2a").load('/v3/views/presupuestos/detalle2.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->&rand=<!--#4DTEXT random-->');
+				<!--#4DENDIF-->
+
+
+				$('a[href="#tabs-1"]').click(function() {
+					unaBase.interval.clearAll();
+					//$("#tabs-1").parentTo('section').('section').find('article').empty();
+					//$("#tabs-1").load('/v3/views/negocios/general.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+				}).trigger('click');
+
+				/*$('a[href="#tabs-2"]').click(function() {
+					unaBase.interval.clearAll();
+					//$("#tabs-2").parentTo('section').find('article').empty();
+					//$("#tabs-2").load('/v3/views/negocios/detalle.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+				});*/
+
+				$('a[href="#tabs-2a"]').click(function() {
+					unaBase.interval.clearAll();
+					//$("#tabs-2a").parentTo('section').find('article').empty();
+					//$("#tabs-2a").load('/v3/views/negocios/detalle2.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->&rand=<!--#4DTEXT random-->');
+				});
+
+				$('a[href="#tabs-3"]').click(function() {
+					unaBase.interval.clearAll();
+					//$("#tabs-3").parentTo('section').find('article').empty();
+
+					unaBase.ui.block();
+					$("#tabs-3").load('/v3/views/presupuestos/ocs.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+				});
+
+				$('a[href="#tabs-4"]').click(function() {
+					unaBase.interval.clearAll();
+					//$("#tabs-4").parentTo('section').find('article').empty();
+
+					unaBase.ui.block();
+					$("#tabs-4").load('/v3/views/presupuestos/fxr.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+				});
+
+				$('a[href="#tabs-5"]').click(function() {
+					unaBase.interval.clearAll();
+					//$("#tabs-5").parentTo('section').find('article').empty();
+					$("#tabs-5").load('/v3/views/presupuestos/ots.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+				});
+
+				<!--#4DIF _V3_verifica_permisos_web (_V3_data_username;493)-->
+				$('a[href="#tabs-6"]').click(function() {
+					unaBase.interval.clearAll();
+					//$("#tabs-6").parentTo('section').find('article').empty();
+					$("#tabs-6").load('/v3/views/presupuestos/staff.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+				});
+				<!--#4DENDIF-->
+
+
+				/*
+				$('a[href="#tabs-8"]').click(function() {
+					unaBase.interval.clearAll();
+					//$("#tabs-8").parentTo('section').find('article').empty();
+					$("#tabs-8").load('/v3/views/presupuestos/resumen.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+				})
+				*/;
+
+				$('a[href="#tabs-9"]').click(function() {
+					unaBase.interval.clearAll();
+					//$("#tabs-9").parentTo('section').find('article').empty();
+					$("#tabs-9").load('/v3/views/historial/index.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->&mod=negocios');
+				});
+
+
+				if ($('#main-container').data('closed'))
+					$('#menu li[data-name="close_negocio"]').hide();
+				else
+					$('#menu li[data-name="open_negocio"]').hide();
+
+
+				/*
+				var htmlObject;
+
+				htmlObject = $('\
+					<ul id="dropdown_menu" class="dropdown-menu" style="position: absolute; top: 49px; right: 13px; z-index: 1000;"> \
+						<li><a href="/v3/views/cotizaciones/dialog/dato_adicional.shtml" data-size="medium"><span class="ui-icon ui-icon-wrench"></span>Datos adicionales</a></li> \
+						<li><a href="/v3/views/cotizaciones/dialog/attachment.shtml" data-size="x-large"><span class="ui-icon ui-icon-image"></span>Imágenes adjuntas</a></li> \
+						<li><a href="/v3/views/cotizaciones/dialog/links.shtml" data-size="x-large"><span class="ui-icon ui-icon-link"></span>Archivos enlazados</a></li> \
+						<!--#4DIF _V3_verifica_permisos_web(_V3_data_username;546)--><li><a href="#" class="print-negocio"><span class="ui-icon ui-icon-print"></span>Imprimir negocio</a></li> \
+						<!--#4DENDIF-->\
+						<li><a href="/v3/views/presupuestos/dialog/period_actuals.shtml" data-size="small"><span class="ui-icon ui-icon-document"></span>Period actuals</a></li> \
+					</ul> \
+				');
+
+				htmlObject.find('a.print-negocio').click(function(event) {
+					var sid = '';
+					$.each($.cookie(),function(clave,valor) { if (clave == hash && valor.match(/UNABASE/g)) sid = valor; });
+
+					var url = nodeUrl + '/print/?entity=negocios&id=' + $('#main-container').data('id') + '&folio=' + ((typeof $('#main-container').data('index') != 'undefined')? $('#main-container').data('index') : 'S/N') + '&sid=' + encodeURIComponent(sid) + '&nullified=' + $('#main-container').data('readonly') + '&horizontal=true&hostname=' + window.location.origin;
+					unaBase.loadInto.dialog(url, 'Datos del negocio', 'x-large', true);
+					event.preventDefault();
+				});
+
+				htmlObject.find('a[href!="#"]').each(function() {
+					$(this).click(function(event) {
+						unaBase.loadInto.dialog($(this).attr('href'), $(this).text(), $(this).data('size'));
+						$(this).parentTo('ul').hide();
+						event.preventDefault();
+					});
+				});
+
+				htmlObject.menu().hide();
+
+				$('#dropdown_launcher').parentTo('header').before(htmlObject);
+				$('#dropdown_launcher').show();
+
+				$('#dropdown_launcher').click(function() {
+					var element = this;
+					$('#dropdown_menu').toggle();
+				});
+
+				*/
+
+			});
+
+
+		</script>
+		<style>
+			.ui-tabs .ui-tabs-panel {
+				padding: 0 !important;
+				overflow: hidden;
+			}
+
+			section#dialog-profile-negocio{
+				width:100%!important;
+			}
+			.infinite-tabs.ui-tabs-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all{
+				width:99%!important;
+			}
+
+		</style>
+	</head>
+	<body>
+		<section id="content-cot-neg-fixed" data-id="<!--#4DVAR id-->"></section>
+
+		<div id="main-container" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->" data-index="<!--#4DTEXT [Nota_de_venta]ID_Negocio-->" data-closed-compras="<!--#4DIF [Nota_de_venta]Check_Cerrada_compras-->true<!--#4DELSE-->false<!--#4DENDIF-->" data-closed="<!--#4DIF [Nota_de_venta]Estado_NV="CERRADO"-->true<!--#4DELSE-->false<!--#4DENDIF-->">
+			<section id="dialog-profile-negocio">
+				<ul class="infinite-tabs">
+					<li><a href="#tabs-1">General</a></li>
+					<li style="display: none !important;" class="load-detalle" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-2">Detalle</a></li>
+					<li class="load-detalle-2" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-2a">Detalle</a></li>
+					<li class="load-compras" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-3">Órdenes de compra</a></li>
+					<li class="load-rendiciones" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-4">Rendiciones</a></li>
+					<li class="load-ots" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-5">Órdenes de trabajo</a></li>
+					<!--#4DIF _V3_verifica_permisos_web (_V3_data_username;493)-->
+					<li class="load-staff" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-6">Staff / Equipo</a></li>
+					<!--#4DENDIF-->
+					<!--
+					<li class="load-resumen" data-id="< ! - - #4DTEXT [Nota_de_venta]ID_NV - - > "><a href="#tabs-8">Resumen</a></li>
+					-->
+					<!--#4DIF _V3_verifica_permisos_web (_V3_data_username;523)-->
+					<li class="load-historial" data-id="<!--#4DTEXT id-->"><a href="#tabs-9">Historial</a></li>
+					<!--#4DENDIF-->
+				</ul>
+				<article id="tabs-1"></article>
+				<article id="tabs-2"></article>
+				<article id="tabs-2a"></article>
+				<article id="tabs-3"></article>
+				<article id="tabs-4"></article>
+				<article id="tabs-5"></article>
+				<article id="tabs-6"></article>
+				<!--
+				<article id="tabs-8"></article>
+				-->
+				<!--#4DIF _V3_verifica_permisos_web (_V3_data_username;523)-->
+				<article id="tabs-9"></article>
+				<!--#4DENDIF-->
+			</section>
+		</div>
+	</body>
+</html>

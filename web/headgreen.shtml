@@ -1,0 +1,130 @@
+<!--4DSCRIPT/web_verificar_sesion-->
+<!--#4DSCRIPT/_V3_serverInfo-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<title>INTRANET ::: UNA BASE</title>
+	<meta charset="utf-8"/>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script>
+	var current_username = "<!--#4DHTML vLogin-->";
+	var v3_data_username = "<!--#4DHTML vLogin-->";
+	var v3_data_username_name = "<!--#4DTEXT vNomUsr2-->";
+	var v3_data_username_email = "<!--#4DTEXT vEmail-->";
+
+	// files names cot, oc , fxr
+	var file_name_internal_cot = '<!--#4DTEXT file_name_internal_cot-->';
+	var file_name_oficial_cot = '<!--#4DTEXT file_name_oficial_cot-->';
+	var file_name_oficial_oc = '<!--#4DTEXT file_name_oficial_oc-->';
+	var file_name_oficial_fxr = '<!--#4DTEXT file_name_oficial_fxr-->';
+	</script>
+
+	<script src="/script/jQuery_v1.7.2.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+	<script src="/script/prefixfree.min.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+	<!--<script src="/script/jquery.validate.js"></script>	-->
+	<script src="/script/script2.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+	<script src="/script/modalgin.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+	<link rel="stylesheet" href="/css/modal2.css?<!--#4DVAR String(Milliseconds+Random)-->"/>
+
+	<script src="/script/dialog.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+	<link rel="stylesheet" href="/css/dialog.css?<!--#4DVAR String(Milliseconds+Random)-->"/>
+
+	<script src="/script/jquery-ui-1.10.2.custom/js/jquery-ui-1.10.2.custom.min.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+	<link rel="stylesheet" href="/script/jquery-ui-1.10.2.custom/css/custom-theme-base1/jquery-ui-1.10.2.custom.min.css?<!--#4DVAR String(Milliseconds+Random)-->"/>
+
+	<!--<script src="/script/ckeditor/ckeditor.js"></script>-->
+
+	<script src="/script/ui.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+
+	<script src="/script/loading.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+  	<link rel="stylesheet" href="/css/loading.css?<!--#4DVAR String(Milliseconds+Random)-->"/>
+
+	<script src="/script/accounting.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+	<script src="/script/grilla.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+
+	<link rel="stylesheet" type="text/css" href="/style_green.css?<!--#4DVAR String(Milliseconds+Random)-->"/>
+	<!--<link rel="stylesheet" type="text/css" href="/style_menu_green.css"/>
+	<link rel="stylesheet" type="text/css" href="/estilos_ot.css"/>-->
+
+	<script src="/script/tabs/tabs.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+	<link rel="stylesheet" href="/script/tabs/tabs.css?<!--#4DVAR String(Milliseconds+Random)-->"/>
+
+	<script src="/script/initialize.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+   	<script src="/script/ajaxfileupload.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+	<script src="/script/ajax.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+
+	<script src="/script/jsOt.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+
+	<script src="/script/jsMyCalendar.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+	<link rel="stylesheet" href="/css/styleMyCalendar.css?<!--#4DVAR String(Milliseconds+Random)-->"/>
+
+	<!--<script src="/script/jsPlanner.js?<!- -#4DVAR String(Milliseconds+Random)"></script>
+	<link rel="stylesheet" href="/css/stylePlanner.css?#4DVAR String(Milliseconds+Random)"/>-->
+
+	<script src="/script/modal_green.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+	<link rel="stylesheet" href="/css/style_modal_green.css?<!--#4DVAR String(Milliseconds+Random)-->"/>
+
+	<script src="/script/leanModal.v1.1/jquery.leanModal.min.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+
+	<!--<script src="/script/jquery.tablesorter/jquery.tablesorter.js?<!- -#4DVAR String(Milliseconds+Random)- ->"></script>-->
+
+	<link rel="stylesheet" href="/css/main.css?<!--#4DVAR String(Milliseconds+Random)-->"/>
+
+	<script src="/v3/script/jquery/plugins/json.fn/jsonfn.js"></script>
+	<script src="/v3/script/jquery/plugins/jquery-cookie/jquery.cookie.js"></script>
+	<script src="/v3/script/jquery/plugins/toastr/toastr.js"></script>
+	<script src="/v3/script/jquery/plugins/tooltipster/js/jquery.tooltipster.js"></script>
+	<script src="/v3/script/jquery/plugins/bindWithDelay/bindWithDelay.js"></script>
+
+	<script type="text/javascript">
+		var hash = '<!--#4DHTML _V3_hash-->';
+		var nodejs_port = <!--#4DHTML _V3_nodejs_port-->;
+		var nodejs_public_ipaddr = "<!--#4DHTML _V3_nodejs_public_ipaddr-->";
+		var is_demo = <!--#4DIF _V3_demo -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+		var version_Actual = "<!--#4DTEXT _V3_version-->";
+	</script>
+
+	<script src="/v3/script/strings.js"></script>
+	<script src="/v3/script/sprintf.js"></script>
+
+	
+<!-- 	<script src="/v3/script/chat.js?<!- -#4DTEXT _V3_version- ->"></script> -->
+	<script src="/v3/script/access.js?<!--#4DTEXT _V3_version-->"></script>
+	<script src="/v3/script/help.js?<!--#4DTEXT _V3_version-->"></script>
+
+	<script src="/v3/script/unabase.js?<!--#4DTEXT _V3_version-->"></script>
+	<script src="/v3/script/home.js?<!--#4DTEXT _V3_version-->"></script>
+
+	<link rel="stylesheet" href="/v3/design/screen.css?<!--#4DTEXT _V3_version-->"/>
+	<link rel="stylesheet" href="/v3/design/home.css?<!--#4DTEXT _V3_version-->"/>
+
+	<style>
+	html > body {
+		height: auto !important;
+		overflow: auto !important;
+	}
+	</style>
+
+	<!--<script type="text/javascript">
+		$(document).ready(function(){
+			initializeOrderTable();
+		});
+
+		function initializeOrderTable(){
+			$("#myTable").tablesorter({
+				sortlist:[[2,0]],
+				sortClassDesc: 'headerSortDown',
+				sortClassAsc: 'headerSortUp',
+				headerClass: 'header',
+				dateFormat: 'dd-mm-yyyy',
+				widgets: ['zebra'],
+				headers: {1:{sorter: 'fechas'}, 2:{sorter: 'fechas'}}
+			});
+		}
+
+		/*if(history.forward(1)){
+			history.replace(history.forward(1));
+		}*/
+	</script>-->
+
+</head>

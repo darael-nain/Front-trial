@@ -1,0 +1,132 @@
+{
+	"id": <!--#4DTEXT [Nota_Credito_Debito]Id_Nota-->,
+	"referencia" : "<!--#4DHTML _V3_escapeString([Nota_Credito_Debito]Referencia)-->",
+	"next_folio" : "<!--#4DTEXT siguiente_folio-->",
+	"folio" : "<!--#4DTEXT [Nota_Credito_Debito]Folio_Nota-->",
+	"fecha_registro" : "<!--#4DTEXT [Nota_Credito_Debito]Fecha_Emision-->",
+	"hora_registro" : "<!--#4DTEXT [Nota_Credito_Debito]Hora_Emision-->",
+	"login_registro" : "<!--#4DTEXT [Nota_Credito_Debito]Login_Responsable-->",
+	"current_date" : "<!--#4DTEXT String(Current date(*))-->",
+	"fecha_emision" : "<!--#4DTEXT [Nota_Credito_Debito]Fecha_Emision-->",
+	"hora_emision" : "<!--#4DTEXT [Nota_Credito_Debito]Hora_Impresion-->",
+	"urlPdfbsale" : "<!--#4DTEXT [Nota_Credito_Debito]urlPdfbsale-->",
+	"login_emision" : "<!--#4DTEXT [Nota_Credito_Debito]Resp_Impresion-->",
+	"estado" : "<!--#4DTEXT [Nota_Credito_Debito]Estado_Nota-->",
+	"id_tipo_doc" : "<!--#4DTEXT [Nota_Credito_Debito]TIPO_ID_DTE-->",
+	"codigo_sii" : "<!--#4DTEXT $idTipoDocSii-->",
+	"des_tipo_doc" : "<!--#4DHTML _V3_escapeString([Nota_Credito_Debito]Tipo)-->",
+	"motivo" : "<!--#4DHTML _V3_escapeString([Nota_Credito_Debito]Motivo)-->",
+	"motivo_sunat" : "<!--#4DHTML _V3_escapeString([Nota_Credito_Debito]pe_DesMotivoAux)-->",
+	"exento" : <!--#4DIF [Nota_Credito_Debito]exento-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"fecha_emision_formato_FE" : "<!--#4DTEXT fechaEmisionFormatoFE-->",
+	"fecha_vencimiento_formato_FE" : "<!--#4DTEXT fechaVctoFormatoFE-->",
+	"serieActualFE" : "<!--#4DTEXT serieActualFE-->",
+	"folioActualFE" : <!--#4DTEXT folioActualFE-->,
+	"folioNextFE" : <!--#4DTEXT folioNextFE-->,
+	"tipoDocumentoFEPE" :  "<!--#4DTEXT tipoDocumentoFEPE-->",
+	"codigoTipoAfectacionFEPE" :  "<!--#4DTEXT codigoTipoAfectacionFEPE-->",
+	"tasaIGVIVA" : <!--#4DHTML String($tasaIGVIVA;"&xml")-->,
+	"tipoMotivoNotaModificatoria" : "<!--#4DTEXT tipoMotivoNotaModificatoria-->",
+	"sustento" : "<!--#4DTEXT sustento-->",
+	"negocio" : {
+		"id" : <!--#4DTEXT [Nota_Credito_Debito]Id_NV-->,
+		"folio" : "<!--#4DTEXT [Nota_Credito_Debito]Folio_Negocio-->",
+		"referencia" :  "<!--#4DHTML _V3_escapeString([Nota_Credito_Debito]Referencia_neg)-->"
+	},
+	"cliente" : {
+		"id" : <!--#4DTEXT [Nota_Credito_Debito]Id_Empresa-->,
+		"razon" : "<!--#4DHTML _V3_escapeString([Nota_Credito_Debito]EmpresaRazon)-->",
+		"giro" : "<!--#4DHTML _V3_escapeString([Nota_Credito_Debito]EmpresaGiro)-->",
+		"alias" : "<!--#4DHTML _V3_escapeString([Nota_Credito_Debito]EmpresaAlias)-->",
+		"rut" : "<!--#4DTEXT [Nota_Credito_Debito]EmpresaRut-->",
+		"dv" : "<!--#4DTEXT [Nota_Credito_Debito]EmpresaDV-->",
+		"nombre_completo" : "<!--#4DHTML _V3_escapeString([Nota_Credito_Debito]EmpresaRazon)-->",
+		"comuna" : "<!--#4DHTML _V3_escapeString(vcomuna)-->",
+		"direccion" : "<!--#4DHTML _V3_escapeString(vdireccion)-->",
+		"email_receptor_fe" : "<!--#4DHTML email_receptor_FE-->"
+	},
+	"relacionado" : {
+		"id" : <!--#4DTEXT [Nota_Credito_Debito]Id_Contacto-->,
+		"nombre" : "<!--#4DHTML _V3_escapeString(nombreContacto)-->",
+		"cargo" : "<!--#4DHTML _V3_escapeString(cargoContacto)-->",
+		"email" : "<!--#4DHTML _V3_escapeString(emailContacto)-->"
+	},
+	"emisor" : {
+		"razon" : "<!--#4DHTML _V3_escapeString(emisorRazon)-->",
+		"nrodoc" : "<!--#4DHTML emisorNroDoc-->",
+		"direccion" : "<!--#4DHTML _V3_escapeString(emisorDireccion)-->"
+	},
+	"referenciadoc": {
+      "serieRef" : "<!--#4DTEXT referenciaSerie-->",
+      "correlativo" : "<!--#4DTEXT referenciaNro-->",
+	  "id_bsale" : "<!--#4DTEXT id_bsale-->",
+      "fechaEmisionRef" : "<!--#4DTEXT referenciaFechaEmisionText-->",
+      "tipoDocumentoRef" : "<!--#4DTEXT referenciatipoDocumento-->"
+    },
+	<!--#4DIF ((_V3_defaultCurrencyCode="PEN") & ([Nota_Credito_Debito]v3_exchange_type="USD"))-->
+		"montos" : {
+			"sub_total" : <!--#4DHTML String([Nota_Credito_Debito]Subtotal/[Nota_Credito_Debito]v3_exchange_rate;"&xml")-->,
+			"porc_descuento" : <!--#4DHTML String([Nota_Credito_Debito]FacturaPorcDesc/[Nota_Credito_Debito]v3_exchange_rate;"&xml")-->,
+			"descuento" : <!--#4DHTML String([Nota_Credito_Debito]FacturaDescuento/[Nota_Credito_Debito]v3_exchange_rate;"&xml")-->,
+			"exento" : <!--#4DHTML String([Nota_Credito_Debito]total_exento/[Nota_Credito_Debito]v3_exchange_rate;"&xml")-->,
+			"neto" : <!--#4DHTML String([Nota_Credito_Debito]Total_Neto/[Nota_Credito_Debito]v3_exchange_rate;"&xml")-->,
+			"iva" : <!--#4DHTML String([Nota_Credito_Debito]Total_IVA/[Nota_Credito_Debito]v3_exchange_rate;"&xml")-->,
+			"adicional" : <!--#4DHTML String([Nota_Credito_Debito]total_Adic/[Nota_Credito_Debito]v3_exchange_rate;"&xml")-->,
+			"total" : <!--#4DHTML String([Nota_Credito_Debito]Total_Nota/[Nota_Credito_Debito]v3_exchange_rate;"&xml")-->
+		},
+		"items": [
+		<!--#4DLOOP [Detalle_Nota_Credito_Debito]-->
+			{
+				"det_id": "<!--#4DHTML [Detalle_Nota_Credito_Debito]Llave_Detalle_Nota-->",
+				"det_correlativo": <!--#4DHTML [Detalle_Nota_Credito_Debito]Correlativo-->,
+				"det_codigo": "<!--#4DHTML [Detalle_Nota_Credito_Debito]Codigo_Producto-->",
+				"det_descripcion": "<!--#4DHTML _V3_escapeString([Detalle_Nota_Credito_Debito]Nombre_Producto)-->",
+				"det_descripcion_larga": "<!--#4DHTML _V3_escapeString([Detalle_Nota_Credito_Debito]des_larga)-->",
+				"det_cantidad": <!--#4DHTML String([Detalle_Nota_Credito_Debito]Cantidad;"&xml")-->,
+				"det_precio": <!--#4DHTML String([Detalle_Nota_Credito_Debito]Precio_Unitario/[Nota_Credito_Debito]v3_exchange_rate;"&xml")-->,
+				"det_subtotal": <!--#4DHTML String([Detalle_Nota_Credito_Debito]Subtotal/[Nota_Credito_Debito]v3_exchange_rate;"&xml")-->,
+				"unidadMedidaItemFEPE": "ZZ"
+			}<!--#4DIF Selected record number([Detalle_Nota_Credito_Debito])<Records in selection([Detalle_Nota_Credito_Debito])-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+		],
+	<!--#4DELSE-->
+		"montos" : {
+			"sub_total" : <!--#4DHTML String([Nota_Credito_Debito]Subtotal;"&xml")-->,
+			"porc_descuento" : <!--#4DHTML String([Nota_Credito_Debito]FacturaPorcDesc;"&xml")-->,
+			"descuento" : <!--#4DHTML String([Nota_Credito_Debito]FacturaDescuento;"&xml")-->,
+			"exento" : <!--#4DHTML String([Nota_Credito_Debito]total_exento;"&xml")-->,
+			"neto" : <!--#4DHTML String([Nota_Credito_Debito]Total_Neto;"&xml")-->,
+			"iva" : <!--#4DHTML String([Nota_Credito_Debito]Total_IVA;"&xml")-->,
+			"adicional" : <!--#4DHTML String([Nota_Credito_Debito]total_Adic;"&xml")-->,
+			"total" : <!--#4DHTML String([Nota_Credito_Debito]Total_Nota;"&xml")-->
+		},
+		"items": [
+		<!--#4DLOOP [Detalle_Nota_Credito_Debito]-->
+			{
+				"det_id": "<!--#4DHTML [Detalle_Nota_Credito_Debito]Llave_Detalle_Nota-->",
+				"det_correlativo": <!--#4DHTML [Detalle_Nota_Credito_Debito]Correlativo-->,
+				"det_codigo": "<!--#4DHTML [Detalle_Nota_Credito_Debito]Codigo_Producto-->",
+				"det_descripcion": "<!--#4DHTML _V3_escapeString([Detalle_Nota_Credito_Debito]Nombre_Producto)-->",
+				"det_descripcion_larga": "<!--#4DHTML _V3_escapeString([Detalle_Nota_Credito_Debito]des_larga)-->",
+				"det_cantidad": <!--#4DHTML String([Detalle_Nota_Credito_Debito]Cantidad;"&xml")-->,
+				"det_precio": <!--#4DHTML String([Detalle_Nota_Credito_Debito]Precio_Unitario;"&xml")-->,
+				"det_subtotal": <!--#4DHTML String([Detalle_Nota_Credito_Debito]Subtotal;"&xml")-->,
+				"unidadMedidaItemFEPE": "ZZ"
+			}<!--#4DIF Selected record number([Detalle_Nota_Credito_Debito])<Records in selection([Detalle_Nota_Credito_Debito])-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+		],
+	<!--#4DENDIF-->
+	"exchange" : {
+		"default" : "<!--#4DTEXT _V3_defaultCurrencyCode-->",
+		"type" : "<!--#4DTEXT [Nota_Credito_Debito]v3_exchange_type-->",
+		"rate" : <!--#4DHTML String([Nota_Credito_Debito]v3_exchange_rate;"&xml")-->,
+		"monto" : <!--#4DHTML String([Nota_Credito_Debito]v3_exchange_monto_facturado;"&xml")-->
+	},
+	"apiFE" : {
+		"token" : "<!--#4DHTML _V3_escapeString(FEPE_tokenFEPE)-->",
+		"urlServicio" : "<!--#4DTEXT FEPE_urlServicioToken-->",
+		"urlEmision" : "<!--#4DTEXT FEPE_urlEmisionDoc-->",
+		"string" : "<!--#4DHTML _V3_escapeString(FEPE_tokenString)-->",
+		"tokenStatus" : <!--#4DIF FEPE_tokenStatus-->true<!--#4DELSE-->false<!--#4DENDIF-->
+	}
+}

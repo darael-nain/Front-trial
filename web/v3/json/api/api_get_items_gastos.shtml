@@ -1,0 +1,37 @@
+{
+	
+	"rows": [
+		<!--#4DLOOP aIdItem-->
+		{
+			"id": <!--#4DHTML aIdItem{aIdItem}-->,
+			"id_oc": <!--#4DHTML aIdOC{aIdItem}-->,
+			"id_nv": <!--#4DHTML aIdNV{aIdItem}-->,
+			"id_impuesto": <!--#4DHTML aIdImpuesto{aIdItem}-->,
+			"cod": "<!--#4DHTML aCodigo{aIdItem}-->",
+			"llave_item": "<!--#4DHTML aLlaveItem{aIdItem}-->",
+			"llave_titulo": "<!--#4DHTML aLlaveTitulo{aIdItem}-->",
+			"tipo_item": "<!--#4DHTML aTipoItem{aIdItem}-->",
+			"categoria": "<!--#4DHTML  _V3_escapeString(aCategoria{aIdItem})-->",
+			"num_item": "<!--#4DHTML aNumItem{aIdItem}-->",
+			"nombre": "<!--#4DHTML  _V3_escapeString(aNombreItem{aIdItem})-->",
+			"descripcion": "<!--#4DHTML _V3_trim(_V3_escapeString(aDescripcionLarga{aIdItem}))-->",
+			"cantidad": "<!--#4DHTML aCantidad{aIdItem}-->",
+			"cantidad2": "<!--#4DHTML aCantidad2{aIdItem}-->",
+			"cont_items":<!--#4DHTML aContItems{aIdItem}-->,
+			"pu_venta": "<!--#4DHTML aPuVenta{aIdItem}-->",
+			"sub_venta": "<!--#4DHTML aSubVenta{aIdItem}-->",
+			"justificado": "<!--#4DHTML aJustificado{aIdItem}-->",
+			"por_justificar": "<!--#4DHTML aPorJustificar{aIdItem}-->",
+			"pagado": "<!--#4DHTML aPagado{aIdItem}-->",
+			"por_pagar": "<!--#4DHTML aPorPagar{aIdItem}-->",
+			"gasto_real": "<!--#4DHTML aGastoReal{aIdItem}-->",
+			"total_impuesto": "<!--#4DHTML aTotalImpuesto{aIdItem}-->",
+			"valor_impuesto": "<!--#4DHTML aValorImpuesto{aIdItem}-->"
+		}<!--#4DIF NOT(aIdItem{aIdItem} = aIdItem{Size of array(aIdItem)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	]
+	
+}
+
+
+

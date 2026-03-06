@@ -1,0 +1,141 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="/out/style.css"/>
+        <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+-->
+     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <title>REPORTES-UNABASE</title>
+    <style>
+      /*  p{text-align:left;display:block!important; margin: 30px 0 0 40px;}
+        label{font-weight:bold;font-size:12px} 
+        */
+        table thead tr td{
+            font-size: 10px!important;
+        }
+        /*table tbody {
+            font-size: 10px!important;
+        }*/
+        table tfoot {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .bg-reporte{
+            background-color:lightgray!important;
+            font-weight:bold!important;
+        }
+
+        .box-ejecutivo{
+            margin:5px;
+            padding: 5px;
+        }
+            .box-ejecutivo h3{
+                margin: 5px 25px;
+                padding: 0px;
+                text-align:left;
+            }
+            .box-ejecutivo td{
+               text-transform: uppercase;
+               padding:2px;
+            }
+
+        .left{
+            text-align:left;
+        }
+        .right{
+            text-align:right;
+        }
+        .center{
+            text-align:center;
+        }
+
+    /*    .totaleshead td.title{
+           font-weight: bold!important;
+           font-size: 12px!important;
+        }
+
+        .totaleshead td.text{
+           font-size: 12px!important;
+        }*/
+
+        .line{
+            border-bottom: 2px solid gray!important;
+        }
+
+
+        .reg{
+            text-align: left;
+            margin: 5px 5px 5px 25px;
+            padding: 0px;
+            font-size:12px;
+        }
+
+        .negrita{
+            font-weight:bold;
+        }
+
+    </style>
+</head>
+<body>
+<div class="contenedor" align="center">
+ <div class="cuadro2">
+   <div>
+        <div style="margin-left:20px;color:gray;font-size:11px;"><!--#4DTEXT nom_empresa--></div>
+        <h4><!--#4DTEXT v_Tit_Informe--></h4>
+        <!--<p><!- -#4DTEXT String(aReporteDesc)- -></p>-->
+
+    </div>
+    <p><img src="<!--#4DTEXT vUrlImagenLogo-->" width="<!--#4DTEXT vAnchoPicture-->" height="<!--#4DTEXT vAltoPicture-->" border="0"/></p>
+
+    <div class="row">
+
+    <!--<table class="totaleshead">  
+        <tr>
+            <td class="title">TOTAL NETO</td>
+            <td class="text"><!- -#4DTEXT _V3_formatCurrency(vTotalNetos)- -></td>  
+        </tr>
+        <tr>
+            <td class="title">TOTAL FACTURADO</td>
+            <td class="text line"><!- -#4DTEXT _V3_formatCurrency(vTotalFacturado)- -></td>  
+        </tr>
+        <tr>
+            <td class="title">TOTAL POR FACTURAR</td>
+            <td class="text bold redtext"><!- -#4DTEXT _V3_formatCurrency(vTotalPorFacturar)- -></td>  
+        </tr>
+    </table>-->
+
+    <table class="totaleshead">  
+        <tr>
+            <td colspan="2" style="padding:2px;">TOTAL DOCUMENTOS : <span><!--#4DVAR _V3_formatCurrency(vTotalNetos)--></span></td>
+        </tr>
+            <td  colspan="2" style="padding:2px;">TOTAL POR PAGAR : <span style="font-weight:bold;"><!--#4DVAR _V3_formatCurrency(vTotalPorFacturar)--></span></td>
+        </tr>
+    </table>
+
+
+    <div class="totalreg">Total Documentos: <!--#4DTEXT v_TotReg--></div>
+
+<!--#4DLOOP aIdReg-->  
+    <!--#4DHTML aContenidoReg{aIdReg}-->
+<!--#4DENDLOOP-->
+</div>
+<div class="contenedor-footer">
+    <span class="datos-empresa-izq">
+    <!--#4DTEXT nom_empresa--> / <!--#4DTEXT dir_empresa--> / <a target="_blank" href="<!--#4DTEXT sitio_empresa-->"><!--#4DTEXT sitio_empresa--></a></span><em></em>
+    <span class="datos-empresa-der">Reporte enviado por <a href="http://www.unabase.com" target="_blank" >unabase.com</a></span>
+</div>
+</div>
+</div>
+</body>
+</html>

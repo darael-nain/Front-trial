@@ -1,0 +1,14 @@
+
+
+html {
+  font-size: 0.9rem;
+}
+span {
+  font-size: 0.9rem;
+}
+input {
+  font-size: 0.9rem;
+}
+::-webkit-scrollbar {
+    display: none;
+}

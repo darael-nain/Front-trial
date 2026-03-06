@@ -1,0 +1,7 @@
+{
+	"diferencia" : <!--#4DHTML String(diferencia;"&xml")-->,
+	"venta" : <!--#4DHTML String(venta;"&xml")-->,
+	"gastoReal" : <!--#4DHTML String(gastoReal;"&xml")-->,
+    "considerarSoloGastosValidados" : <!--#4DIF considerarSoloGastosValidados-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+    "validado" : <!--#4DIF validado-->true<!--#4DELSE-->false<!--#4DENDIF-->
+}

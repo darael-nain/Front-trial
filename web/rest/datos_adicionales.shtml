@@ -1,0 +1,48 @@
+{
+	"page": 1,
+	"total": <!--#4DVAR -INT((Size of array(aDatosAdicionalesId)/8)* -1)-->,
+	"records": <!--#4DVAR Size of array(aDatosAdicionalesId)-->,
+	"rows": [
+<!--#4DIF newDatosAdicionales-->
+		{
+			"text": "<!--#4DVAR q-->"
+		}<!--#4DIF Size of array(aDatosAdicionalesId) > 0-->,<!--#4DENDIF-->
+<!--#4DENDIF-->
+<!--#4DLOOP aDatosAdicionalesId-->
+		{
+			"id": <!--#4DVAR aDatosAdicionalesId{aDatosAdicionalesId}-->,
+			"text": "<!--#4DVAR aDatosAdicionalesValue{aDatosAdicionalesId}-->",
+			"options": [
+	<!--#4DIF (aDatosAdicionalesId{aDatosAdicionalesId}=1)-->
+		<!--#4DLOOP aDatosAdicionales1Id-->
+				{
+					"id": <!--#4DVAR aDatosAdicionales1Id{aDatosAdicionales1Id}-->,
+					"text": "<!--#4DVAR aDatosAdicionales1Value{aDatosAdicionales1Id}-->",
+					"enabled": <!--#4DIF aDatosAdicionales1Enabled{aDatosAdicionales1Id}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+				}<!--#4DIF (NOT(aDatosAdicionales1Id{aDatosAdicionales1Id}=aDatosAdicionales1Id{Size of array(aDatosAdicionales1Id)}))-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	<!--#4DENDIF-->
+	<!--#4DIF (aDatosAdicionalesId{aDatosAdicionalesId}=2)-->
+		<!--#4DLOOP aDatosAdicionales2Id-->
+				{
+					"id": <!--#4DVAR aDatosAdicionales2Id{aDatosAdicionales2Id}-->,
+					"text": "<!--#4DVAR aDatosAdicionales2Value{aDatosAdicionales2Id}-->",
+					"enabled": <!--#4DIF aDatosAdicionales2Enabled{aDatosAdicionales2Id}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+				}<!--#4DIF (NOT(aDatosAdicionales2Id{aDatosAdicionales2Id}=aDatosAdicionales2Id{Size of array(aDatosAdicionales2Id)}))-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	<!--#4DENDIF-->
+	<!--#4DIF (aDatosAdicionalesId{aDatosAdicionalesId}=3)-->
+		<!--#4DLOOP aDatosAdicionales3Id-->
+				{
+					"id": <!--#4DVAR aDatosAdicionales3Id{aDatosAdicionales3Id}-->,
+					"text": "<!--#4DVAR aDatosAdicionales3Value{aDatosAdicionales3Id}-->",
+					"enabled": <!--#4DIF aDatosAdicionales3Enabled{aDatosAdicionales3Id}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+				}<!--#4DIF (NOT(aDatosAdicionales3Id{aDatosAdicionales3Id}=aDatosAdicionales3Id{Size of array(aDatosAdicionales3Id)}))-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	<!--#4DENDIF-->
+			],
+			"enabled": <!--#4DIF aDatosAdicionalesEnabled{aDatosAdicionalesId}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+		}<!--#4DIF (NOT(aDatosAdicionalesId{aDatosAdicionalesId}=aDatosAdicionalesId{Size of array(aDatosAdicionalesId)})))-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getDetalleItems-->
+		<title>Nueva oc cliente</title>
+		<meta charset="utf-8">
+		<style type="text/css">
+			.general-items textarea{
+				height: 100px;
+				width: calc(100% - 10px)!important;
+			}
+		</style>
+		<script type="text/javascript">
+			var get_valor_hh_responsable = function(){
+				$('select[name="item[][responsable_asig]"]').change(function(){
+			      var login = $(this).val();
+			      if(login!=""){
+			        $.ajax({
+			          url:'/4DACTION/_V3_getValuesHHResponsable',
+			          data:{
+			            'responsable':login
+			          },
+			          dataType:'json',
+			          success: function(data){
+			            if (data.success) {
+			              var cant = parseFloat($('input[name="item[][cant_hh_asig]"]').val());
+			              var costoPresupuestado = cant * parseFloat(data.costo_hh_unitario);
+			              $('input[name="item[][costo_hh_unitario]"]').val(data.costo_hh_unitario);
+			              $('input[name="item[][costo_hh_presupuestado]"]').val(costoPresupuestado);
+			            }else{
+			              toastr.error(NOTIFY.get('ERROR_INTERNAL', 'Error'));
+			            }
+			          }
+			        });
+			      }else{
+			        toastr.warning('No ha seleccionado un responsable.');
+			      }
+			    });
+			}
+			$(document).ready(function(){
+				$('.numeric.currency input').number(true, currency.decimals, ',', '.');
+				get_valor_hh_responsable();
+
+				// Calcula costo presupuestado desde cantidad
+		         $('input[name="item[][cant_hh_asig]"]').keyup(function(){
+		            var cant = parseFloat($(this).val());
+		            var costoUnitario =  parseFloat($('input[name="item[][costo_hh_unitario]"]').val());
+		            var costoPresupuestado = cant * costoUnitario;
+		            $('input[name="item[][costo_hh_presupuestado]"]').val(costoPresupuestado);
+		         });
+
+		          // Calcula gasto p hh desde gasto unitario
+		         $('input[name="item[][costo_hh_unitario]"]').blur(function(){
+		            var costoUnitario = parseFloat($(this).val());
+		            var cant =  parseFloat($('input[name="item[][cant_hh_asig]"]').val());
+		            var login = $('select[name="item[][responsable_asig]"]').val();
+		            var costoPresupuestado = cant * costoUnitario;
+		            $('input[name="item[][costo_hh_presupuestado]"]').val(costoPresupuestado);
+		            //reference_cost();
+		            if(costoUnitario>0 && login!=""){
+		              confirm("Desea modificar el valor en ficha del responsable?").done(function(data) {
+		                  if (data) {
+		                    $.ajax({
+		                      url:'/4DACTION/_V3_changesValueHHOt',
+		                      data:{
+		                        'responsable':login,
+		                        'costo':costoUnitario
+		                      },
+		                      dataType:'json',
+		                      success: function(data){
+		                        if (data.success) {
+		                         toastr.success(NOTIFY.get('SUCCESS_SAVE'));
+		                        }else{
+		                          if (data.readonly) {
+		                            toastr.error(NOTIFY.get('ERROR_RECORD_READONLY'));
+		                          }else{
+		                            toastr.error(NOTIFY.get('ERROR_INTERNAL'));
+		                          }
+		                        }
+		                      }
+		                    });
+		                  }
+		              });
+		            }
+		         });
+
+		         if ($('html > body > aside > div > div > ul > li.active[data-name="negocios"]').length == 1 || $('html > body > aside > div > div > ul > li.active[data-name="gastos"]').length == 1 || $('html > body > aside > div > div > ul > li.active[data-name="rendiciones"]').length == 1) {
+		         	$('.ui-dialog section.general-items input').attr('disabled', true);
+		         	$('.ui-dialog section.general-items textarea').attr('disabled', true);
+		         	$('.ui-dialog section.general-items select').attr('disabled', true);
+		         	if (!($('html > body > aside > div > div > ul > li.active[data-name="gastos"]').length == 1 || $('html > body > aside > div > div > ul > li.active[data-name="rendiciones"]').length == 1))
+		         		$('.ui-dialog header').hide();
+		         	else {
+		         		// $('.ui-dialog [data-name="save"]').hide();
+		         		$('.ui-dialog section.general-items textarea').attr('disabled', false);
+		         	}
+		         }
+
+
+			});
+		</script>
+	</head>
+	<body>
+		<section class="general-items">
+			<fieldset>
+				<legend>Información general</legend>
+				<label>
+					<span>Nombre del ítem</span>
+					<input readonly type="text" value="<!--#4DTEXT Uppercase([Detalle_NV]Nombre_Producto;*)-->">
+				</label>
+				<label>
+					<span>Cantidad</span>
+					<input readonly type="text" value="<!--#4DTEXT [Detalle_NV]Cantidad-->">
+				</label><br>
+				<label>
+					<span>Código</span>
+					<input readonly type="text" value="<!--#4DTEXT Uppercase([Detalle_NV]Codigo_Producto;*)-->">
+				</label><br>
+				<label style="width:calc(100% - 10px)">
+					<span>Descripción larga</span>
+					<textarea name="item[][observacion]"><!--#4DTEXT [Detalle_NV]ObservacionesItem--></textarea>
+				</label><br>
+				<label style="width:calc(100% - 10px)">
+					<span>Observaciones (internas)</span>
+					<textarea name="item[][comentario]"><!--#4DTEXT [Detalle_NV]Comentarios_item--></textarea>
+				</label><br>
+				<label>
+					<span>Tipo documento</span>
+					<select name="item[][tipo_documento]">
+                        <option default value="">Seleccionar...</option>
+                        <!--#4DLOOP [Tipo_Doctribu]-->
+                        <option value="<!--#4DVAR [Tipo_Doctribu]ID_TIPODOC-->"<!--#4DIF [Tipo_Doctribu]ID_TIPODOC=[Detalle_NV]ID_Tipo_documento--> selected<!--#4DENDIF-->><!--#4DVAR [Tipo_Doctribu]DESCRIPCION_TIPO--></option>
+                        <!--#4DENDLOOP-->
+                      </select>
+				</label>
+			</fieldset>
+
+			<fieldset>
+				<legend>Origen</legend>
+				<label>
+					<span>Servicio</span>
+					<input readonly type="text" value="<!--#4DTEXT Uppercase([Servicio]Nombre_Servicio;*)-->">
+				</label><br>
+				<label>
+					<span>Clasificación</span>
+					<input readonly type="text" value="<!--#4DTEXT Uppercase([Categoria_Servicio1]NOMBRE_CAT;*)-->">
+				</label>
+			</fieldset>
+
+			<fieldset>
+				<legend>Precios</legend>
+				<label>
+					<span>Costo</span>
+					<input type="text" readonly value='<!--#4DTEXT String([Detalle_NV]Subtotal_GastoPresupuestado;"$ ###.###.###.##0")-->'>
+				</label>
+				<label>
+					<span>% Margen</span>
+					<input type="text" readonly value='<!--#4DTEXT String([Detalle_NV]GPST;"% ###")-->'>
+				</label>
+				<label>
+					<span>Venta</span>
+					<input type="text" readonly value='<!--#4DTEXT String([Detalle_NV]Subtotal2;"$ ###.###.###.##0")-->'>
+				</label>
+			</fieldset>
+
+			<fieldset>
+				<legend>Gasto interno (OT)</legend>
+				<label>
+					<span>Cant. HH Asignadas</span>
+					<input style="background:white;width:100px!important;margin-left:14px" name="item[][cant_hh_asig]" type="text" value="<!--#4DTEXT [Detalle_NV]Param_CantRealOT-->">
+                </div>
+				</label>
+				<label>
+					<span>Responsable</span>
+					<select style="text-transform:capitalize;margin-left:14px" name="item[][responsable_asig]">
+
+                    <!--#4DIF [Detalle_NV]login_asociado_hh_ot#""-->
+                      <option default value="<!--#4DTEXT [Detalle_NV]login_asociado_hh_ot-->"><!--#4DTEXT [Detalle_NV]nombre_login_asociado_hh_ot--></option>
+                    <!--#4DELSE-->
+                      <option default value="">Seleccionar...<!--#4DTEXT [Detalle_NV]login_asociado_hh_ot--></option>
+                    <!--#4DENDIF-->
+
+                    <!--#4DLOOP aLoginResp-->
+                    <!--#4DIF aLoginResp{aLoginResp}#[Detalle_NV]login_asociado_hh_ot-->
+                      <option value="<!--#4DTEXT aLoginResp{aLoginResp}-->"><!--#4DTEXT aNamesResp{aLoginResp}--></option>
+                    <!--#4DENDIF-->
+                    <!--#4DENDLOOP-->
+
+                  </select>
+				</label>
+
+				<label>
+					<span>Gasto P. interno unitario</span>
+					<span style="color:gray" class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input style="background:white;width:100px!important" name="item[][costo_hh_unitario]" type="text" value="<!--#4DTEXT [Detalle_NV]costo_hh_unitario_ot-->"></span> <span data-ref="costo" style="color:gray"></span>
+				</label>
+
+				<label>
+					<span>Gasto P. interno total</span>
+					<span style="color:gray" class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input readonly name="item[][costo_hh_presupuestado]" type="text" value="<!--#4DTEXT [Detalle_NV]costo_hh_presupuestado_ot-->"></span>
+				</label>
+			</fieldset>
+		</section>
+	</body>
+</html>

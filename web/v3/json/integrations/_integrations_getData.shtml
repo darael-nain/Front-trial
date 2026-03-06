@@ -1,0 +1,55 @@
+{
+	"rows": 
+	[
+		<!--#4DLOOP aIds -->
+		{
+			"id": <!--#4DHTML aIds{aIds}-->,
+			"name": "<!--#4DHTML aNames{aIds}-->",
+			"status": <!--#4DIF aStatus{aIds}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"stage": <!--#4DHTML aStages{aIds}-->,
+			"pipeline": <!--#4DHTML aPipelines{aIds}-->,
+			"name_pipeline": "<!--#4DHTML String(aNamePipeline{aIds})-->",
+			"charge": "<!--#4DHTML String(aCharges{aIds})-->",
+			"name_stage": "<!--#4DHTML String(aNameStage{aIds})-->",
+			"token": "<!--#4DHTML String(aTokens{aIds})-->",
+			"token2": "<!--#4DHTML String(aTokens2{aIds})-->",
+			"credential": "<!--#4DHTML String(aCredential{aIds})-->",
+			"base_url": "<!--#4DHTML String(aBaseUrl{aIds})-->",
+			"stages": 
+			[
+				<!--#4DLOOP aIdStages -->
+				{
+					"id": <!--#4DHTML aIdStages{aIdStages}-->,
+					"name": "<!--#4DHTML aNameStages{aIdStages}-->",
+					"id_stage": <!--#4DHTML aIdExtStages{aIdStages}-->,
+					"id_pipeline": <!--#4DHTML aIdExtStagesPipelines{aIdStages}-->
+				}<!--#4DIF NOT(aIdStages{aIdStages} = aIdStages{Size of array(aIdStages)})-->,<!--#4DENDIF-->
+				<!--#4DENDLOOP-->
+			],
+			"stages_to_charge":
+			[
+				<!--#4DLOOP aStagesToCharge -->
+				{
+					"id": <!--#4DHTML aStagesToCharge{aStagesToCharge}-->
+					
+				}<!--#4DIF NOT(aStagesToCharge{aStagesToCharge} = aStagesToCharge{Size of array(aStagesToCharge)})-->,<!--#4DENDIF-->
+				<!--#4DENDLOOP-->
+			],
+			"pipelines": 
+			[
+				<!--#4DLOOP aIdPipelines -->
+				{
+					"id": <!--#4DHTML aIdPipelines{aIdPipelines}-->,
+					"name": "<!--#4DHTML aNamePipelines{aIdPipelines}-->",
+					"id_pipeline": <!--#4DHTML aIdExtPipelines{aIdPipelines}-->
+				}<!--#4DIF NOT(aIdPipelines{aIdPipelines} = aIdPipelines{Size of array(aIdPipelines)})-->,<!--#4DENDIF-->
+				<!--#4DENDLOOP-->
+			],
+			"valid": <!--#4DIF aValid{aIds}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aIds{aIds} = aIds{Size of array(aIds)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	]
+}
+
+
+

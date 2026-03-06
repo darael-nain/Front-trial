@@ -1,0 +1,54 @@
+html > body > div.toggle.menu,
+html > body > header,
+html > body > nav,
+html > body > section > h1,
+html > body > section > div.loader,
+html > body > section > header,
+html > body > section > section#viewport > div#main-container > section > ul.infinite-tabs,
+html > body > footer,
+html > body > div {
+	display: none !important;
+}
+
+html,
+html > body {
+	background: none !important;
+}
+
+html > body > section {
+	margin: 0 !important;
+}
+
+html > body > section > section#viewport > div#main-container > section {
+	border: none !important;
+}
+
+section#viewport,
+html > body > section,
+div#main-container,
+div#main-container > section {
+	width: 100% !important;
+	height: 100% !important;
+	overflow: visible !important;
+}
+
+section#viewport article[role="tabpanel"] {
+	width: 100% !important;
+	height: 100% !important;
+	min-width: inherit !important;
+	max-height: inherit !important;
+	overflow: visible !important;
+}
+
+section#viewport {
+	border: none !important;
+}
+
+html > body.home > section > section#viewport section.sheet {
+	min-width: inherit !important;
+	min-height: inherit !important;
+}
+
+.print {
+	display: none !important;
+}

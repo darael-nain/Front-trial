@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!--#4DSCRIPT/_V3_proxy_getDetalleItems-->
+	<meta charset="utf-8">
+	<title>Contactos</title>
+	<link rel="stylesheet" href="/v3/design/temporal.css?<!--#4DTEXT random-->">	
+	<script>
+		$(document).ready(function() {			
+			$( "#dialog-profile-detalleItem").tabs();    
+      
+      unaBase.toolbox.init();
+        unaBase.toolbox.menu.init({
+          entity: 'ItemByCotizacion', // especifica entidad sobre la cual se almacenan los datos
+                      // y nombre para referenciar los views
+          // acá se envía la data que debe validar la API al presionar el botón save
+          // y enviar en caso de ser válida
+          buttons: ['save'],
+          data: function() {
+            
+
+            var target;
+            $('table.items > tbody > tr').each(function() {
+              if ($(this).data('id') == '<!--#4DTEXT id-->') {
+                target = $(this);
+                return false;
+              }
+            });
+
+            //var target = $('table.items > tbody > tr');
+            
+            target.data('observacion', $('textarea[name="item[][observacion]"]').val());
+            target.data('comentario', $('textarea[name="item[][comentario]"]').val());
+            target.data('tipo-documento', $('select[name="item[][tipo_documento]"]').val());
+            
+            $.ajax({
+              url: '/4DACTION/_V3_getTipoDocumento',
+              data: {
+                q: target.data('tipo-documento'),
+                filter: 'id'
+              },
+              dataType: 'json',
+              async: false,
+              success: function(data) {
+                if (data.rows[0].ratio == 0)
+                  target.find('input[name="item[][precio_unitario]"]').removeClass('edited');
+                target.data('tipo-documento-text', data.rows[0].text);
+                target.data('tipo-documento-ratio', data.rows[0].ratio);
+                target.data('tipo-documento-inverse', data.rows[0].inverse);
+              }
+            });
+            
+            return $('#form-detalle-items').serializeAnything();
+          },
+          validate: function() {
+            return true;
+          }
+        });
+
+      });
+      
+	</script>
+</head>
+<body>
+<div id="main-container">
+  <div class="detalle-items">
+      <div id="dialog-profile-detalleItem">
+        <ul>
+          <li><a href="#tabs-1">Datos generales</a></li>
+          <li><a href="#tabs-2">Origen</a></li>
+          <li><a href="#tabs-3">Precios</a></li>
+        </ul>
+        <form id="form-detalle-items" class="form-popup">
+          <input type="hidden" name="id" value="<!--#4DTEXT [Detalle_NV]Llave_NV-->">
+        <div id="tabs-1">
+          <p>
+           
+              <fieldset>
+                  <!--<legend><strong>Información básica</strong></legend>-->
+                  <article>
+                    <div>
+                      <label>Nombre del ítem:</label>
+                      <input readonly type="text" value="<!--#4DTEXT Uppercase([Detalle_NV]Nombre_Producto;*)-->">
+                    </div>
+                    <div>
+                      <label>Código:</label>
+                      <input readonly type="text" value="<!--#4DTEXT Uppercase([Detalle_NV]Codigo_Producto;*)-->">
+                    </div>
+                    <div>
+                      <label class="label-textarea">Descripción larga:</label>
+                      <textarea name="item[][observacion]"><!--#4DTEXT [Detalle_NV]ObservacionesItem--></textarea>
+                    </div>
+                    <div>
+                      <label class="label-textarea">Observación:</label>
+                      <textarea name="item[][comentario]"><!--#4DTEXT [Detalle_NV]Comentarios_item--></textarea>
+                    </div>
+                    <div>
+                      <label>Tipo documento</label>
+                      <select name="item[][tipo_documento]">
+                        <option default value="">Seleccionar...</option>
+                        <!--#4DLOOP [Tipo_Doctribu]-->
+                        <option value="<!--#4DVAR [Tipo_Doctribu]ID_TIPODOC-->"<!--#4DIF [Tipo_Doctribu]ID_TIPODOC=[Detalle_NV]ID_Tipo_documento--> selected<!--#4DENDIF-->><!--#4DVAR [Tipo_Doctribu]DESCRIPCION_TIPO--></option>
+                        <!--#4DENDLOOP-->
+                      </select>
+                    </div>
+                  </article>           
+              </fieldset>
+           
+          </p>      
+        </div>
+
+        <div id="tabs-2">
+          <fieldset>             
+              <article>
+                <div>
+                  <label>Origen del servicio:</label>
+                  <input readonly type="text" value="<!--#4DTEXT Uppercase([Servicio]Nombre_Servicio;*)-->">
+                </div>
+                 <div>
+                  <label>Clasificación:</label>
+                  <input readonly type="text" value="<!--#4DTEXT Uppercase([Categoria_Servicio1]NOMBRE_CAT;*)-->">
+                </div>    
+              </article>                  
+            </fieldset>
+        </div>
+
+        <div id="tabs-3">
+          <fieldset>              
+              <article>
+                <div>
+                  <label>Costo:</label>
+                  <input type="text" readonly value='<!--#4DTEXT String([Detalle_NV]Subtotal_GastoPresupuestado;"$ ###.###.###.##0")-->'>
+                </div>
+                <div>
+                  <label>% Margen:</label>
+                  <input type="text" readonly value='<!--#4DTEXT String([Detalle_NV]GPST;"% ###")-->'>
+                </div>
+                 <div>
+                  <label>Venta:</label>
+                  <input type="text" readonly value='<!--#4DTEXT String([Detalle_NV]Subtotal2;"$ ###.###.###.##0")-->'>
+                </div>    
+              </article>                  
+          </fieldset>
+        </div>
+      </form>
+      </div>
+  </div>
+</div>
+</body>
+</html>
+
+
+

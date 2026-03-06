@@ -1,0 +1,19 @@
+{
+	"rows": [
+<!--#4DLOOP aIDDetalle -->
+		{
+			"version_ub": "<!--#4DHTML aVersionId{aIDDetalle}-->",
+			"control_version": "<!--#4DHTML aVersionControl{aIDDetalle}-->",
+			"idDetalle": "<!--#4DHTML aIDDetalle{aIDDetalle}-->",
+			"codigoProducto": "<!--#4DHTML aCodigo{aIDDetalle}-->",
+			"categoria": "<!--#4DHTML aCategoria{aIDDetalle}-->",
+			"item_parent": "<!--#4DHTML aItemParent{aIDDetalle}-->",
+			"nombreProducto": "<!--#4DHTML aNombreProducto{aIDDetalle}-->",
+			"precioUnitario": "<!--#4DHTML aPrecioUnitario{aIDDetalle}-->",
+			"cantidad": "<!--#4DHTML aCantidad{aIDDetalle}-->",
+			"subtotal": "<!--#4DHTML aSubtotal{aIDDetalle}-->",
+			"tipoDoc": "<!--#4DHTML aTipoDoc{aIDDetalle}-->"
+		}<!--#4DIF NOT(aIDDetalle{aIDDetalle} = aIDDetalle{Size of array(aIDDetalle)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

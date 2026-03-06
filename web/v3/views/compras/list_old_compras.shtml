@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_serverInfo-->
+<html>
+	<head>
+		<title>Compras</title>
+		<meta charset="utf-8">
+		<script>
+
+			$(document).ready(function() {
+				// Inicializamos un buscador
+				unaBase.toolbox.init();
+				unaBase.toolbox.search.init({
+					// Función que genera una URL de listado JSON, dado el sid (identificador de sesión)
+					url: function(sid) { return '/4DACTION/_V3_getCompras' },
+					// Función que genera cada fila de la tabla, dado el valor de i (índice de posición)
+					// y el valor de rows (array con todos los resultados)
+					// El contenido de rows corresponde al objeto de mismo nombre generado mediante la llamada
+					// a la api JSON. Ver /v3/json/get_cotizacion.shtml para conocer el formato.
+					row: {
+						html: function(i, rows) {
+							return '<tr data-id="' + rows[i].id + '">' +
+								'<td>' + rows[i].folio + '</td>' +
+								'<td>' + rows[i].fecha + '</td>' +
+								'<td>' + rows[i].referencia + '</td>' +								
+								'<td>' + rows[i].proveedor + '</td>' +
+								'<td>' + rows[i].negocio + '</td>' +
+								'<td>' + rows[i].emisor + '</td>' +
+								'<td class="currency">' + rows[i].total + '</td>' +
+								'<td>' + rows[i].estado + '</td>' +
+								'<td>' + rows[i].validado + '</td>' +							
+							'</tr>'
+						}
+					},
+					detail: {
+						url: function(id) { return '/v3/views/compras/content.shtml?id=' + id },
+						iframe: false
+					},
+					inflection: {
+						singular: 'compra',
+						plural: 'compras',
+						none: 'ninguna'
+					}
+				});			
+
+			});
+		</script>
+	</head>
+	<body>
+		<!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->
+		<table>
+			<thead>
+				<tr>
+					<th>Número</th>
+					<th>Fecha</th>
+					<th>Referencia</th>
+					<th>Proveedor</th>	
+					<th>Negocio</th>				
+					<th>Emisor</th>
+					<th>Total</th>
+					<th>Estado</th>
+					<th>Validado</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+			<tfoot></tfoot>
+		</table>
+	</body>
+
+</html>

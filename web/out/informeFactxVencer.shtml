@@ -1,0 +1,100 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="/out/style.css"/>
+        <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+-->
+     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <title>REPORTES-UNABASE</title>
+    <script type="text/javascript" src="/out/report.js"></script>
+    <style>
+      /*  p{text-align:left;display:block!important; margin: 30px 0 0 40px;}
+        label{font-weight:bold;font-size:12px}     */  
+    </style>
+</head>
+<body>
+<div class="contenedor" align="center">
+ <div class="cuadro2">
+   <div>
+        <h4><!--#4DVAR v_Tit_Informe--></h4>
+        <!--<p><!- -#4DVAR String(aReporteDesc)- -></p>-->
+        <p>Facturas por vencer dentro de los próximos 7 días.</p>
+    </div>
+
+    <p><img src="<!--#4DVAR vUrlImagenLogo-->" width="<!--#4DVAR vAnchoPicture-->" height="<!--#4DVAR vAltoPicture-->" border="0"/></p>
+
+
+
+    <div class="row">
+        <table class="totaleshead">  
+                    <tr>
+                        <td width="85%" class="title" style="font-weight:bold;">TOTAL NETO</td>
+                        <td width="15%" class="text"><!--#4DVAR _V3_formatCurrency(V_NVTotal)--></td>  
+                    </tr>
+                    <tr>
+                        <td width="85%" class="title" style="font-weight:bold;">TOTAL SALDO </td>
+                        <td width="15%" class="text" style="font-weight:bold;"><!--#4DVAR _V3_formatCurrency(V_NVSaldo)--></td>  
+                    </tr>    
+        </table>
+
+
+        <div class="totalreg">Total facturas: <!--#4DVAR v_TotReg--></div>
+
+    <table class="table table-responsive table-bordered">
+        <thead>
+            <tr >
+                <td class="center-c">Folio</td>
+                <td class="center-c">Forma pago</td>
+                <td class="center-c">Fecha Emision</td>
+                <td class="center-c">F. Recepción</td>
+                <td class="center-c">Fecha Vcto</td>
+                <!--<td class="center-c">Responsable</td>-->
+                <td class="center-c">Cliente</td>
+                <td class="center-c">Total Neto</td>
+                <td class="center-c">Total <!--#4DVAR _V3_IVAName--></td>
+                <td class="center-c">Total</td>
+                <td class="center-c">Abono</td>
+                <td class="center-c">Saldo</td>
+                <!--<td class="center-c">Estado</td>-->
+            </tr>
+        </thead>
+     	 <!--#4DLOOP aInfoFolio-->     
+         <tbody>
+            <tr>
+                <td class="orden-alfa"><!--#4DVAR aInfoFolio{aInfoFolio}--></td>
+                <td class="center"><!--#4DVAR aFormaPago{aInfoFolio}--></td>
+                <td class="center"><!--#4DVAR aInfoFechaEmision{aInfoFolio}--></td>
+                <td class="center"><!--#4DVAR aFechaRecepcion{aInfoFolio}--></td>
+                <td class="center"><!--#4DVAR aFechaVcto{aInfoFolio}--></td>
+                <!--<td class="items"><!- -#4DVAR aInfoResponsable{aInfoFolio}- -></td>-->
+                <td class="nro-items-cant" style="text-align:left;text-transform:uppercase;"><!--#4DVAR aInfoCliente{aInfoFolio}--></td>
+                <td class="nro-items-subtotal"><!--#4DVAR  _V3_formatCurrency(aInfoTotalNeto{aInfoFolio})--></td>
+                <td class="nro-items-subtotal"><!--#4DVAR _V3_formatCurrency(aInfoTotalIva{aInfoFolio})--></td>    
+                <td class="nro-items-subtotal"><!--#4DVAR _V3_formatCurrency(aInfoTotal{aInfoFolio})--></td>
+                <td class="nro-items-subtotal"><!--#4DVAR _V3_formatCurrency(aInfoAbono{aInfoFolio})--></td>  
+                <td class="nro-items-subtotal" style="font-weight:bold"><!--#4DVAR _V3_formatCurrency(aInfoSaldo{aInfoFolio})--></td>  
+                <!--<td class="nro-items-subtotal"><!- -#4DVAR aInfoEstado{aInfoFolio}- -></td>-->
+            </tr>   
+        </tbody>          
+        <!--#4DENDLOOP--> 
+    </table>
+</div>
+<div class="contenedor-footer">
+	<span class="datos-empresa-izq">
+    <!--#4DVAR nom_empresa--> / <!--#4DVAR dir_empresa--> / <a target="_blank" href="<!--#4DVAR sitio_empresa-->"><!--#4DVAR sitio_empresa--></a></span><em></em>
+    <span class="datos-empresa-der">Reporte enviado por <a href="http://www.unabase.com" target="_blank" >unabase.com</a></span>
+</div>
+</div>
+</div>
+</body>
+</html>

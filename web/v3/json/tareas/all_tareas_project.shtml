@@ -1,0 +1,48 @@
+{
+	"tomorrow": <!--#4DTEXT sum_tomorrow-->,
+	"today": <!--#4DTEXT sum_today-->,
+	"yesterday": <!--#4DTEXT sum_yesterday-->,
+	"old": <!--#4DTEXT sum_old-->,
+	"total_reg": <!--#4DTEXT $total_reg-->,
+	"see_all": <!--#4DIF seeAll-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"userSeeAll": <!--#4DIF userSeeAll-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"state": "<!--#4DTEXT $state-->",
+	"task": [
+	<!--#4DLOOP a_id_tareas-->
+		{	
+			"id": <!--#4DTEXT a_id_tareas{a_id_tareas}-->,
+			"complete": <!--#4DTEXT a_subtask_complete{a_id_tareas}-->,
+			"folio": "<!--#4DTEXT a_folio_tareas{a_id_tareas}-->",
+			"nombre": "<!--#4DHTML _V3_escapeString(a_nombre_tareas{a_id_tareas})-->",
+			"referencia": "<!--#4DHTML _V3_escapeString(a_referencia_tareas{a_id_tareas})-->",
+			"notas": "<!--#4DHTML _V3_escapeString(a_notas_tareas{a_id_tareas})-->",
+			"fecha": "<!--#4DTEXT a_fecha_tareas{a_id_tareas})-->",
+			"fecha_inicio": "<!--#4DTEXT a_fecha_inicio_tareas{a_id_tareas})-->",
+			"hora_inicio": "<!--#4DTEXT a_hora_inicio_tareas{a_id_tareas})-->",
+			"fecha_anulacion": "<!--#4DTEXT a_fecha_anulacion_tareas{a_id_tareas})-->",
+			"hora_anulacion": "<!--#4DTEXT a_hora_anulacion_tareas{a_id_tareas})-->",
+			"fecha_termino": "<!--#4DTEXT a_fecha_termino_tareas{a_id_tareas})-->",
+			"hora_termino": "<!--#4DTEXT a_hora_termino_tareas{a_id_tareas})-->",
+			"times": "<!--#4DTEXT a_time_tareas{a_id_tareas})-->",
+			"vencida": <!--#4DIF a_vencidas_tareas{a_id_tareas}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"estado": "<!--#4DTEXT a_estado_tareas{a_id_tareas})-->",
+			"nombre_responsable": "<!--#4DTEXT a_nombre_resp_tareas{a_id_tareas})-->",
+			"iniciales": "<!--#4DTEXT a_iniciales_tareas{a_id_tareas})-->",
+			"fecha_cierre": "<!--#4DTEXT a_fecha_cierre_tareas{a_id_tareas})-->",
+			"hora_cierre": "<!--#4DTEXT a_hora_cierre_tareas{a_id_tareas})-->",
+			"agendada": <!--#4DIF a_agendada_tareas{a_id_tareas}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(a_id_tareas{a_id_tareas} = a_id_tareas{Size of array(a_id_tareas)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	],
+	"vLogin": {
+		"login": "<!--#4DHTML _V3_escapeString(vLogin)-->",
+		"name": "<!--#4DHTML _V3_escapeString(vNomUsr2)-->",
+		"email": "<!--#4DHTML _V3_escapeString(vEmail)-->",
+		"google_id": "<!--#4DHTML _V3_escapeString(vGoogle_id)-->",
+		"google_email": "<!--#4DHTML _V3_escapeString(vGoogle_email)-->",
+		"google_name": "<!--#4DHTML _V3_escapeString(vGoogle_name)-->",
+		"google_access_token": "<!--#4DHTML _V3_escapeString(vGoogle_access_token)-->",
+		"google_refresh_token": "<!--#4DHTML _V3_escapeString(vGoogle_refresh_token)-->",
+		"google_img": "<!--#4DHTML _V3_escapeString(vGoogle_img)-->"
+	}
+}

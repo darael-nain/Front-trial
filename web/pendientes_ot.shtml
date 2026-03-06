@@ -1,0 +1,120 @@
+<!--#4DINCLUDE headgreen.shtml-->
+<body>
+<!--#4DINCLUDE menu_superior_green.shtml-->
+
+<div id="signup" class="leanmodal"></div>
+
+<section id="main-container">
+    <div class="base">        
+
+      <div class="box-button">
+        <!--#4DIF aCheckPermiso{19}=true-->
+        <a class="boton" href="/4DACTION/nueva_ot" target="_blank">Nueva OT</a>
+        <!--#4DENDIF-->     
+
+        <!--#4DIF aCheckPermiso{30}=true-->
+        <button id="btn-pend-ot" type="button">Pendientes</button>    
+        <!--#4DENDIF-->
+
+        <!--#4DIF aCheckPermiso{16}=true-->
+        <button id="btn-planner-ot" type="button">Planificador</button>          
+        <!--#4DENDIF-->
+
+        <!--#4DIF aCheckPermiso{25}=true-->
+        <button id="btn-mycalendar-ot" type="button">Mi Calendario</button>
+        <!--#4DENDIF-->       
+          
+    </div>  
+
+
+        <h2 class="sub-title">
+            <img class="img-title-calendar" src="/imagenes_green/list_work.png">
+            Lista de Pendientes
+        </h2>
+		
+		
+        
+        <div class="search">
+            <div class="box-filters-resp-otx">                
+                <select class="combos-any-size" id="search-by-proy-pend">
+                    <option selected="selected" value="-1">[ Buscar por proyecto ]</option>                    
+                    <!--#4DLOOP aSearchIdNv-->
+                        <option value="<!--#4DVAR aSearchIdNv{aSearchIdNv}-->">
+                            <!--#4DVAR aSearchRefNv{aSearchIdNv}-->
+                        </option>
+                    <!--#4DENDLOOP-->
+                    <option value="0">TODOS</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="content-list-ot-pend" class="content">
+            <table id="myTable2" width="100%" border="0" cellspacing="0" cellspadding="0" >
+                <thead>
+                    <tr class="table-header">
+                        <th class="center">Nro</th>
+                        <th class="left">Proyecto</th>
+						<th class="left">Cliente</th>
+                        <th class="left">Items</th>
+                        <th class="center">F.Entrega</th>                        
+                        <th class="center">Cant.Hrs</th>
+                        <th class="center">OC</th>
+                        <th class="center">OT</th>
+                        <!--<th class="center"></th>  -->
+                    </tr>        
+                </thead>
+
+                <tbody>
+                <!--#4dif Size of array(aIdNVPDetNv)>0-->
+                    <!--#4DLOOP aIdNVPDetNv-->        
+                    <tr class="table-items2" data-id="<!--#4DVAR aIdNVPDetNv{aIdNVPDetNv}-->">
+                        <td class="center color-negrita">
+                            <a href="#signup" class="link-leanModal" style="" name="signup" rel="leanModal" id="go">
+                                <!--#4DVAR aNroPDetNv{aIdNVPDetNv}-->
+                            </a>
+                        </td>
+                        <td class="left">
+                            <a href="#signup" class="link-leanModal" style="" name="signup" rel="leanModal" id="go">
+                                <!--#4DVAR Lowercase(aProyDetNv{aIdNVPDetNv};*)-->
+                            </a>
+                        </td>
+						<td class="left">
+                            <a href="#signup" class="link-leanModal" style="" name="signup" rel="leanModal" id="go">
+                                <!--#4DVAR Lowercase(aClienteDetNv{aIdNVPDetNv};*)-->
+                            </a>
+                        </td>
+                        <td class="left">
+                            <a href="#signup" class="link-leanModal" style="" name="signup" rel="leanModal" id="go">
+                                <!--#4DVAR Lowercase(aDesDetNv{aIdNVPDetNv};*)-->
+                            </a>
+                        </td>
+                        <td class="center">
+                           <input name="<!--#4DVAR aIdNVPDetNv{aIdNVPDetNv}-->:<!--#4DVAR aLlaveDetNv{aIdNVPDetNv}-->" class="input-date-pend datepicker cj-put-pend" type="text" value="<!--#4DVAR aFechEntDetNv{aIdNVPDetNv}-->">
+                        </td>     
+                        <td class="center">
+                           <input name="<!--#4DVAR aIdNVPDetNv{aIdNVPDetNv}-->:<!--#4DVAR aLlaveDetNv{aIdNVPDetNv}-->" class="input-hours-pend cj-put-pend2" type="text" value="<!--#4DVAR aCHADetNv{aIdNVPDetNv}-->">
+                        </td>    
+                        <td class="center">
+                            <a href="#signup" class="link-leanModal" style="" name="signup" rel="leanModal" id="go">
+                                0
+                            </a>
+                        </td>
+                        <td class="center">
+                            <a href="#signup" class="link-leanModal" style="" name="signup" rel="leanModal" id="go">
+                                0
+                            </a>
+                        </td>
+                        <!--<td class="center"><a href="#">Ver todos</a></td>      -->                         
+                    </tr>       
+                    <!--#4DENDLOOP-->
+                <!--#4DELSE-->
+                     <tr><td colspan="10"><span class="not-result">No se encontraron resultados!</span></td>
+                <!--#4DENDIF-->
+                </tbody>
+
+            </table>
+        </div>
+    </div>      
+</section>
+</body>
+</html>

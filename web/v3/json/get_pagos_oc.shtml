@@ -1,0 +1,18 @@
+{
+	"rows": [
+<!--#4DLOOP aOCOP_id -->
+		{
+			"id": <!--#4DHTML aOCOP_id{aOCOP_id}-->,
+			"origen": "<!--#4DHTML aOCOP_origen{aOCOP_id}-->",
+			"folio": "<!--#4DHTML aOCOP_folio{aOCOP_id}-->",
+			"emision": "<!--#4DHTML aOCOP_fechaemision{aOCOP_id}-->",
+			"vencimiento": "<!--#4DHTML aOCOP_fechavencimiento{aOCOP_id}-->",
+			"documento": "<!--#4DHTML _V3_escapeString(aOCOP_documento{aOCOP_id})-->",
+			"tipo": "<!--#4DHTML aOCOP_tipo{aOCOP_id}-->",
+			"abono": "<!--#4DHTML aOCOP_abono{aOCOP_id}-->",
+			"saldo": "<!--#4DHTML aOCOP_saldo{aOCOP_id}-->",
+			"estado": "<!--#4DHTML aOCOP_estado{aOCOP_id}-->"		
+		}<!--#4DIF NOT(aOCOP_id{aOCOP_id} = aOCOP_id{Size of array(aOCOP_id)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

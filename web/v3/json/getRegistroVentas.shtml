@@ -1,0 +1,70 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DIF results#0--><!--#4DHTML -INT(($total/results)* -1)--><!--#4DELSE-->0<!--#4DENDIF-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Doc_Tributario_Compra]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"sort": {
+		"by": "<!--#4DTEXT sort_by-->",
+		"order": "<!--#4DTEXT sort_order-->"
+	},
+	"rows": [
+<!--#4DLOOP INDEX-->
+		{
+			"IDS": <!--#4DTEXT IDS{INDEX}-->,
+			"CTAPORCOBRAR": "<!--#4DTEXT CTAPORCOBRAR{INDEX}-->",
+			"RUC": "<!--#4DTEXT RUC{INDEX}-->",
+			"NOMBRE": "<!--#4DHTML _V3_escapeString(NOMBRE{INDEX})-->",
+			"TIPDOC": "<!--#4DHTML TIPDOC{INDEX}-->",
+			"SERDOC": "<!--#4DHTML SERDOC{INDEX}-->",
+			"NUMDOC": "<!--#4DHTML NUMDOC{INDEX}-->",
+			"FECHA": "<!--#4DHTML String(FECHA{INDEX})-->",
+			"EMISION": "<!--#4DHTML String(EMISION{INDEX})-->",
+			"VENCIM": "<!--#4DHTML String(VENCIM{INDEX})-->",
+			"GLOSA": "<!--#4DHTML _V3_escapeString(GLOSA{INDEX})-->",
+			"MONEDA": "<!--#4DHTML MONEDA{INDEX}-->",
+			"VALVTA": <!--#4DHTML String(VALVTA{INDEX};"&xml")-->,
+			"ISC": <!--#4DHTML String(ISC{INDEX};"&xml")-->,
+			"CIF": <!--#4DHTML String(CIF{INDEX};"&xml")-->,
+			"ADVALOREM":<!--#4DHTML String(ADVALOREM{INDEX};"&xml")-->,
+			"EXONERADO":<!--#4DHTML String(EXONERADO{INDEX};"&xml")-->,
+			"INAFECTO": <!--#4DHTML String(INAFECTO{INDEX};"&xml")-->,
+			"TIPOIGV": "<!--#4DHTML TIPOIGV{INDEX}-->",
+			"IGV": <!--#4DHTML String(IGV{INDEX};"&xml")-->,
+			"RETENCION": <!--#4DHTML String(RETENCION{INDEX};"&xml")-->,
+			"PERCEPCION": <!--#4DHTML String(PERCEPCION{INDEX};"&xml")-->,
+			"OTROS": <!--#4DHTML String(OTROS{INDEX};"&xml")-->,
+			"TC": <!--#4DHTML String(TC{INDEX};"&xml")-->,
+			"CTABASEIMPO": "<!--#4DHTML CTABASEIMPO{INDEX}-->",
+			"CTAINAFECTO": "<!--#4DHTML CTAINAFECTO{INDEX}-->",
+			"CTABASEEXONERADO": "<!--#4DHTML CTABASEEXONERADO{INDEX}-->",
+			"CTAISC": "<!--#4DHTML CTAISC{INDEX}-->",
+			"CTARETENCION": "<!--#4DHTML CTARETENCION{INDEX}-->",
+			"CTAOTROS": "<!--#4DHTML CTAOTROS{INDEX}-->",
+			"NRONEG": "<!--#4DHTML NRONEG{INDEX}-->",
+			"CENCOSTO": "<!--#4DHTML CENCOSTO{INDEX}-->",
+			"PROYECTO": "<!--#4DHTML PROYECTO{INDEX}-->",
+			"TIPREF": "<!--#4DHTML TIPREF{INDEX}-->",
+			"SERREF": "<!--#4DHTML SERREF{INDEX}-->",
+			"NUMREF": "<!--#4DHTML NUMREF{INDEX}-->",
+			"FCHREF": "<!--#4DHTML String(FCHREF{INDEX})-->"
+		}<!--#4DIF NOT(INDEX{INDEX} = INDEX{Size of array(INDEX)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	],
+	"currency" : {
+	    "code" : "<!--#4DTEXT _V3_defaultCurrencyCode-->",
+	    "name" : "<!--#4DTEXT _V3_defaultCurrencyName-->",
+	    "symbol" : "<!--#4DTEXT _V3_defaultCurrencySymbol-->",
+	    "right" : <!--#4DIF _V3_defaultCurrencyRight-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	    "decimal": <!--#4DTEXT _V3_defaultCurrencyDecimals-->,
+	    "decimal_sep": "<!--#4DTEXT _V3_defaultCurrencyDecimalSep-->",
+	    "thousand_sep" : "<!--#4DTEXT _V3_defaultCurrencyThousandSep-->",
+	    "decimal_text_excel" : "<!--#4DTEXT _V3_defaultCurrencyDecimalsText-->",
+	    "format_code_excel" : "<!--#4DTEXT _V3_defaultCurrencyFormatCode-->",
+	    "label_rut" : "<!--#4DTEXT country_label_rut-->"
+	}
+}

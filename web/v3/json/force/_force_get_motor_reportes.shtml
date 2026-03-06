@@ -1,0 +1,13 @@
+{
+    "rows": [
+    <!--#4DLOOP aCodigoReporte -->
+        {
+            "codigo": "<!--#4DHTML aCodigoReporte{aCodigoReporte}-->",
+            "enviar_a": "<!--#4DHTML aEnviarA{aCodigoReporte}-->",
+            "con_copia_a": "<!--#4DHTML aConCopiaA{aCodigoReporte}-->",
+            "tipo_envio": "<!--#4DHTML aTipoEnvio{aCodigoReporte}-->",
+            "enviar": "<!--#4DHTML aEnviar{aCodigoReporte}-->"
+        }<!--#4DIF NOT(aCodigoReporte{aCodigoReporte} = aCodigoReporte{Size of array(aCodigoReporte)})-->,<!--#4DENDIF-->
+    <!--#4DENDLOOP-->
+    ]
+}

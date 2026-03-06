@@ -1,0 +1,62 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML Size of array(aPagoId)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Orden_Pago]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"totales": {
+		"total": "<!--#4DHTML _V3_formatCurrency(vTotal)-->"
+	},
+	"rows": [
+<!--#4DLOOP aPagoId -->
+		{
+			"id": <!--#4DHTML aPagoId{aPagoId}-->,
+			"folio": "<!--#4DHTML aPagoFolio{aPagoId}-->",
+			"folioOc": "<!--#4DHTML aFolioOc{aPagoId}-->",
+			"folioDtc": "<!--#4DHTML aFolioDtc{aPagoId}-->",
+			"text": "<!--#4DHTML _V3_escapeString(apagoNombre{aPagoId})-->",
+			"username": "<!--#4DHTML aPagousuario{aPagoId}-->",
+			"empresa": {
+				"id": <!--#4DHTML aPagoEmpresaId{aPagoId}-->,
+				"rut": "<!--#4DHTML _V3_escapeString(aPagoEmpresaRut{aPagoId})-->",
+				"alias": "<!--#4DHTML _V3_escapeString(aPagoEmpresaAlias{aPagoId})-->",
+				"razon_social": "<!--#4DHTML _V3_escapeString(aPagoEmpresaRazonSocial{aPagoId})-->"
+			},
+			"total": <!--#4DHTML Round(aPagoTotalPago{aPagoId};0)-->,
+			"total_raw": <!--#4DHTML  String(aPagoTotalPago{aPagoId};"&xml")-->,
+			"status": <!--#4DIF aPagoEstado{aPagoId}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"contabilizado": <!--#4DIF aContabilizado{aPagoId}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"conciliado": <!--#4DIF aConciliado{aPagoId}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"created_at": "<!--#4DTEXT aPagoCreacionFecha{aPagoId}-->",
+			"param4": "<!--#4DTEXT aParam4{aPagoId}-->",
+			"expires_at": "<!--#4DTEXT aPagoVencimientoFecha{aPagoId}-->",
+			"FormaPago": "<!--#4DTEXT aFormaPago{aPagoId}-->",
+			"NumeroPago": "<!--#4DHTML _V3_escapeString(aNumeroPago{aPagoId})-->",
+			"FechaPago": "<!--#4DTEXT aFechaPago{aPagoId}-->",
+			"Cuenta_cte": "<!--#4DTEXT aNumCuentaCtePago{aPagoId}-->",
+			"estado": "<!--#4DTEXT aPagoEstadoText{aPagoId}-->",
+			"bankcardsConciliado": <!--#4DIF aPagoBankcardsConciliado{aPagoId}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"bankcardsVerificado": <!--#4DIF aPagoBankcardsVerificado{aPagoId}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"monedaTipo": "<!--#4DHTML aMonedaTipoOP{aPagoId}-->",
+			"monedaValorCambio": <!--#4DHTML  String(aMonedaValorCambioOP{aPagoId};"&xml")-->
+		}<!--#4DIF NOT(aPagoId{aPagoId} = aPagoId{Size of array(aPagoId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	],
+	"currency" : {
+	    "code" : "<!--#4DTEXT _V3_defaultCurrencyCode-->",
+	    "name" : "<!--#4DTEXT _V3_defaultCurrencyName-->",
+	    "symbol" : "<!--#4DTEXT _V3_defaultCurrencySymbol-->",
+	    "right" : <!--#4DIF _V3_defaultCurrencyRight-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	    "decimal": <!--#4DTEXT _V3_defaultCurrencyDecimals-->,
+	    "decimal_sep": "<!--#4DTEXT _V3_defaultCurrencyDecimalSep-->",
+	    "thousand_sep" : "<!--#4DTEXT _V3_defaultCurrencyThousandSep-->",
+	    "decimal_text_excel" : "<!--#4DTEXT _V3_defaultCurrencyDecimalsText-->",
+	    "format_code_excel" : "<!--#4DTEXT _V3_defaultCurrencyFormatCode-->",
+		"valorIva": <!--#4DHTML valorIva-->,
+	    "label_rut" : "<!--#4DTEXT country_label_rut-->"
+	}
+}

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getFacturaParcial-->
+		<title>Programar Facturas Agrupadas</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/script/datepicker_es.js?<!--#4DTEXT _V3_version-->"></script>
+		<script>
+
+			// ================= Helper =================================
+			function escapeHtml(str){
+				str = (str === null || typeof str === "undefined") ? "" : String(str);
+				return str.replace(/[&<>"']/g, function(m){
+					return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]);
+				});
+			}
+
+			var emitir_facturas_mayor_negocio = <!--#4DTEXT emitir_facturas_mayor_negocio-->;
+			
+			var payout = {
+				"container" : $('#dtvporfacturar'),
+				menu: function(){
+					unaBase.toolbox.menu.init({
+						entity: 'dtc_pagos',
+						buttons: [ "programm_grouped_factura_next_step", "pay_previous_step", "schedule_grouped_invoices"]
+					});
+				},
+				dtc: {
+					dtcTypeNumber: true,
+					get: function(){
+						let direct = Object.entries(unaBase.doc).length > 0 ? true : false
+						$.ajax({
+					    	'url':'/4DACTION/_V3_get_dtv_to_create',
+						    data: {
+						    	negocios: '<!--#4DVAR negocios-->',
+								direct
+						    },
+					   		dataType:'json',
+						    success:function(data){
+
+								var updateSuma = function(event) {
+
+									if (typeof event == 'undefined') {
+										var list = $('table.step-1 > tbody').find('tr');
+									} else {
+										var list = $(event.target).closest('tbody').find('tr');
+									}
+
+									var suma = 0;
+									list.each(function(key, item) {
+										//suma += parseFloat($(item).find('input[name="monto"]').val());
+										suma += parseFloat($(item).data('monto'));
+									});
+
+									if (textExchangeLabel !='') {
+										suma = $.number(suma, 2, ',', '.');
+									}else{
+										suma = $.number(suma, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+										$('.valor-cambio').hide();
+
+									}
+									
+									$('.total-facturar').text(suma);
+
+									if (textExchangeLabel !='') {
+										$('.exchange-label').text(textExchangeLabel);
+									}
+								};
+								
+								var textExchangeLabel = '';
+								var rateExchangeGlobal = 0;
+
+								var containerTableStep1 = payout.container.find('table.step-1 > tbody');
+								var htmlObject;
+								containerTableStep1.find("*").remove();
+								if (data.rows.length > 0) {
+									
+									rateExchangeGlobal = data.exchange.value.replaceAll(",",".");
+
+									$.each(data.rows, function(key, item){
+										var ref = item.referencia || item.text || "";
+
+										if (textExchangeLabel == '') {
+											textExchangeLabel = item.exchange_type;
+										}
+
+										
+										var saldoAux = item.saldo;
+										if (item.exchange_type != "") {
+								    		var saldoAux = item.saldo/item.exchange_rate
+								    	}
+
+
+									    htmlObject = $('<tr data-id="'+ item.id +'" data-idpro="'+ item.idproveedor + 'data-referencia="' + escapeHtml(ref) + '" ' + '" data-cliente="' + item.proveedor +  '" data-saldo="' + saldoAux + '" data-neto-negocio="' + item.neto_negocio + '" data-rut-cliente="' + item.rut + '" data-monto="' + saldoAux + '" data-exchangetype="' + item.exchange_type + '" data-exchangerate="' + item.exchange_rate + '">' +
+											'<td>' + item.numero + '</td>' +
+											'<td>' + item.vencimiento + '</td>' +
+											'<td>' + item.proveedor + '</td>' +
+											'<td class="left">' + escapeHtml(ref) + '</td>' +
+											'<td class="right">' + unaBase.utilities.transformNumber(item.exchange_rate,'int') + '</td>' +
+									      //'<td class="numeric currency">' + currency.symbol + ' <input style="width:80px!important;" class="fill1" name="exchange_rate" type="text" value="' + (item.exchange_rate) + '"></td>' +
+
+											(
+												(item.exchange_type != "")?
+													'<td>' + item.exchange_type + ' <input style="font-weight:bold;width:100px;" data-value="'+ saldoAux +'" class="fill1" name="monto" type="text" value="' + (saldoAux).numberFormat(2, ',', '.') + '"></td>' 
+													: '<td class="numeric currency">' + currency.symbol + ' <input style="font-weight:bold" data-value="'+ item.saldo +'" class="fill1" name="monto" type="text" value="' + $.number(item.saldo, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '"></td>' 
+											) +
+
+									      '<td class="numeric percent">' + ' <input style="width:50px;" class="fill2" type="text" name="porcentaje" value="100" data-porcentaje="100"> % </td>' +
+									       '<td class="numeric currency"><label class="exchange-label">' + currency.symbol + '</label> <input style="width: 80px; background-color: transparent !important;" readonly class="fill1" type="text" data-value="' + 0 + '" name="saldo" value="' + 0 + '"></td>' +
+									    '</tr>');
+
+									    containerTableStep1.append(htmlObject);
+										htmlObject.find('input[name="glosa"]').on("input blur", function(e){ $(this).closest('tr').data('glosa', $(this).val()); });
+										htmlObject.find('input[name="monto"]').on("focus", function(event){
+											var deciAux = currency.decimals + 2;
+											$(event.target).number(true, deciAux, currency.decimals_sep, currency.thousands_sep);
+											$(event.target).val($(event.target).data('value'));
+										});
+
+										htmlObject.find('input[name="monto"]').on("keypress", function(event){
+											payout.dtc.dtcTypeNumber = true;
+											console.warn("by number");
+										});
+
+									    htmlObject.find('input[name="monto"]').on("blur", function(event){
+									    	if(payout.dtc.dtcTypeNumber){
+										    	var tr = $(event.target).closest('tr');
+												let montoRaw = toNumberJS($(event.target).val(), currency.decimals_sep);
+												let saldoRaw = toNumberJS(tr.data('saldo'), currency.decimals_sep);
+												var monto = montoRaw;
+												var saldo = saldoRaw;
+												if (monto > 0) {
+													var neto_negocio = tr.data('neto-negocio');
+													var exchange_type = tr.data('exchangetype');
+													var exchange_rate = tr.data('exchangerate');
+													let dif = 0;
+													if (!emitir_facturas_mayor_negocio) {
+														if (saldo < monto) {
+												    		toastr.warning('El monto de facturación no puede exceder el saldo.');
+												    		let percentage = 1 * 100.00;
+												    		tr.find('input[name="porcentaje"]').val(percentage);
+															tr.find('input[name="porcentaje"]').data('porcentaje', percentage);
+															$(event.target).data('value', saldo).val(saldo).number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+															dif = 0;
+												    	} else {
+												    		let percentage = (monto/saldo) * 100.00;
+												    		tr.find('input[name="porcentaje"]').val($.number(percentage, 2, ',', '.'));
+															tr.find('input[name="porcentaje"]').data('porcentaje', percentage);
+															dif = (saldo - monto);
+															tr.find('input[name="saldo"]').val($.number(dif, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+															$(event.target).data('value', monto);
+															$(event.target).val(monto);
+															tr.data('monto', montoRaw);
+															updateSuma(event);	
+												    	}
+													}else{
+														let percentage = (monto/saldo) * 100.00;
+														tr.find('input[name="porcentaje"]').val($.number(percentage, 2, ',', '.'));
+														tr.find('input[name="porcentaje"]').data('porcentaje', percentage);
+														dif = (saldo - monto);
+														tr.find('input[name="saldo"]').val($.number(dif, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+														$(event.target).data('value', monto);
+														$(event.target).val(monto);
+														tr.data('monto', montoRaw);
+														updateSuma(event);
+													}
+												}else{
+													$(event.target).data('value', saldo).val(saldo).number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+												}
+
+												$(event.target).unbind(".format");
+												$(event.target).number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+									    	}
+									    });
+
+										htmlObject.find('input[name="porcentaje"]').focus(function(event) {
+											
+											var porcentaje = $(event.target).data('porcentaje');
+											$(event.target).number(true, 2, ',', '.');
+											$(event.target).val(porcentaje);
+										});
+
+										
+
+										htmlObject.find('input[name="porcentaje"]').on("keypress", function(event){
+											payout.dtc.dtcTypeNumber = false;
+											console.warn("by percentage");
+										});
+
+									    htmlObject.find('input[name="porcentaje"]').blur(function(event) {
+									    	if(!payout.dtc.dtcTypeNumber){
+										    	var porcentajeRaw = toNumberJS($(event.target).val(), ",");
+										    	var porcentaje = porcentajeRaw;
+										    	
+										    	if (porcentaje > 0 && porcentaje < 101) {
+										    		var tr = $(event.target).closest('tr');
+
+										    		$(event.target).data('value', porcentaje);
+										    		$(event.target).data('porcentaje', porcentaje);
+													$(event.target).number(true, 2, ',', '.');
+
+											    	var exchange_type = tr.data('exchangetype');
+											    	var exchange_rate = parseFloat(tr.data('exchangerate'));
+											    	var saldoActual = toNumberJS(tr.data('saldo'), currency.decimals_sep);
+
+											    	let factor = porcentaje/100;
+										    		let monto = saldoActual * factor;
+										    		let saldoFinal = saldoActual - monto;
+
+										    		if (exchange_type != "") {
+										    			tr.find('input[name="monto"]').data('value', monto).val($.number(monto, 2, ',', '.'));
+										    			tr.find('input[name="saldo"]').val($.number(saldoFinal, 2, ',', '.'));
+										    		}else{
+										    			tr.find('input[name="monto"]').data('value', monto).val($.number(monto, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+										    			tr.find('input[name="saldo"]').data('value', saldoFinal).val($.number(saldoFinal, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+										    		}
+
+											    	tr.data('monto', monto);
+													updateSuma(event);
+
+										    	}else{
+
+										    		let porcentaje = parseFloat($(event.target).data('porcentaje'));
+
+										    		// set value
+										    		$(event.target).val(porcentaje);
+
+										    		// set format
+										    		$(event.target).number(true, 2, ',', '.');
+													
+										    	}
+
+									    	}
+									    });
+									});
+									updateSuma();
+								}else{
+									htmlObject = $('<tr><td colspan="7">Hubo un problema al cargar la lista.</td></tr>');
+									containerTableStep1.append(htmlObject);
+								}								
+
+								if (textExchangeLabel !='') {
+									//$('.global-exchange-rate').show();
+									$('.exchange-label').text(textExchangeLabel);
+									$('input[name="exchange_rate_global"]').data('value', );
+									$('input[name="exchange_rate_global"]').val(unaBase.utilities.transformNumber(rateExchangeGlobal ,'int'));
+								}
+
+						    }
+					  	});
+					}
+				},
+				payments: {
+					preview: function(agrupado){
+						var rows = $('table.step-1 > tbody > tr');
+						var containerTableStep2 = payout.container.find('table.step-2 > tbody');
+						var htmlObject2;
+						containerTableStep2.find("*").remove();
+						if (rows.length > 0) {
+							$.each(rows, function(key, item){
+								if (containerTableStep2.find('tr[data-rut-cliente="' + $(item).data('rut-cliente') + '"]').length == 0 || !agrupado) {
+
+									var exchange_type = $(item).data('exchangetype');
+									var exchange_rate = $(item).data('exchangerate');
+									var rut = $(item).data('rut-cliente');
+									var referencia = payout.getReferenciaFromRow($(item));
+
+
+									htmlObject2 = $(
+									'<tr ' +
+										'data-rut-cliente="' + escapeHtml(rut) + '" ' +
+										'data-id-negocios="' + $(item).data('id') + '" ' +
+										'data-referencia="' + escapeHtml(referencia) + '" ' +
+    									'data-glosa="' + escapeHtml(referencia) + '" ' +
+										'data-montos="' + $(item).data('monto') + '" ' +
+										'data-id-cliente="' + $(item).data('idpro') + '" ' +
+										'data-cliente="' + escapeHtml($(item).data('cliente')) + '" ' +
+										'data-exchangetype="' + exchange_type + '" ' +
+										'data-exchangerate="' + exchange_rate + '">' +
+										'<td>S/N</td>' +
+										'<td class="left">' + escapeHtml($(item).data('cliente')) + '</td>' +
+										'<td class="left col-referencia">' + escapeHtml(referencia) + '</td>' +
+										'<td><input class="datepicker fill2" placeholder="dd-mm-aaaa" type="text" name="fecha" value="'+ payout.currentdate() +'"></td>' +
+										(
+											(exchange_type != "") ?
+											'<td class="center">' + exchange_type + ' <span style="font-weight:bold;padding:5px" class="monto">' + $(item).find('input[name="monto"]').val() + '</span></td>'
+											:
+											'<td class="right">' + currency.symbol + ' <span style="font-weight:bold;padding:5px" class="monto">' + $.number($(item).find('input[name="monto"]').data('value'), currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</span></td>'
+										) +
+									'</tr>'
+									);
+
+									htmlObject2.click(function(event){
+								    	if (event.target.nodeName == "TD") {
+								    		console.log($(event.target).closest('tr').data('id-negocios'));
+								    	}
+								    });
+
+								} else {
+									var refPrev = htmlObject2.data('referencia') || "";
+									var refNew  = payout.getReferenciaFromRow($(item)) || "";
+
+									if (refNew && refPrev.indexOf(refNew) === -1) {
+										var merged = refPrev ? (refPrev + " | " + refNew) : refNew;
+										htmlObject2.data('referencia', merged);
+										htmlObject2.data('glosa', merged); // opcional compat
+										htmlObject2.find('td.col-referencia').text(merged);
+									}
+									htmlObject2 = containerTableStep2.find('tr[data-rut-cliente="' + $(item).data('rut-cliente') + '"]');
+									/* Regex Helper*/
+									function escapeRegExp(str){ return String(str).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+									
+									let regexForThousandsSeparator = currency.thousands_sep === " " ? /[\s\u00A0\u202F\u2009]+/g : new RegExp(escapeRegExp(currency.thousands_sep), "g");
+									const raw = htmlObject2.find('td span.monto').text();
+									const cleaned = raw.replace(regexForThousandsSeparator, '');
+
+									if (currency.thousands_sep == ",") {
+										var monto_anterior = parseFloat(htmlObject2.find('td span.monto').text().replace(regexForThousandsSeparator, '.'));
+										var monto_actual = parseFloat($(item).find('input[name="monto"]').val().replace(regexForThousandsSeparator, '.'));
+									}else{
+										// var monto_anterior = parseFloat(htmlObject2.find('td span.monto').text().replace(regexForThousandsSeparator, ''));
+										// var monto_actual = parseFloat($(item).find('input[name="monto"]').val());
+										var monto_anterior = parseFloat(htmlObject2.find('td span.monto').text().replace(regexForThousandsSeparator, ''));
+										var monto_actual = parseFloat($(item).find('input[name="monto"]').data("value"));
+									}
+									htmlObject2.find('td span.monto').text((monto_anterior + monto_actual));
+									htmlObject2.find('td span.monto').text($.number((monto_anterior + monto_actual), currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+									var id_negocios_anterior = htmlObject2.data('id-negocios');
+									var id_negocios_actual = $(item).data('id');
+									htmlObject2.data('id-negocios', id_negocios_anterior + '|' + id_negocios_actual);
+
+									var montos_anterior = htmlObject2.data('montos');
+									var montos_actual = $(item).data('monto');
+									htmlObject2.data('montos', montos_anterior + '|' + montos_actual);
+
+								}
+								
+							    containerTableStep2.append(htmlObject2);
+							});
+
+							var cant = $('table.step-2 > tbody > tr').length;
+							if (cant == 1) {
+								$('#dtvporfacturar').find('.steps-text').text("SE GENERARÁ "+ cant +" FACTURA");
+							}else{
+								if (cant > 1) {
+									$('#dtvporfacturar').find('.steps-text').text("SE GENERARÁN "+ cant +" FACTURAS");
+								}
+							}
+
+						}else{
+							htmlObject2 = $('<tr><td colspan="7">Hubo un problema al cargar la lista.</td></tr>');
+							containerTableStep2.append(htmlObject2);
+						}
+						$('.numeric.currency span').number(true, currency.decimals, ',', '.');
+						$(".datepicker" ).datepicker();
+					}
+				},
+				next: function(agrupado){
+					// Verificar si hay saldo por facturar
+					var totalFacturar = parseFloat($('.total-facturar').text().replace(/[.,]/g, ''));
+					if (totalFacturar <= 0) {
+						toastr.warning('No hay saldo por facturar.');
+						return;
+					}
+
+					payout.container.find('table.step-1').hide();
+					payout.container.find('table.step-2').show();
+					$('#dialog-menu ul').find('li[data-name=]').hide();
+					$('#dialog-menu ul').find('li[data-name="programm_grouped_factura_next_step"]').hide();
+					$('#dialog-menu ul').find('li[data-name="pay_previous_step"]').show();
+					$('#dialog-menu ul').find('li[data-name="schedule_grouped_invoices"]').show().find('button').addClass('ui-state-hover').find('.ui-button-text').addClass('bold');
+					$('#dtvporfacturar').find('.steps-labels').text("Paso 2 de 2");
+					payout.payments.preview(agrupado);
+				},
+				previous: function(){
+					payout.container.find('table.step-1').show();
+					payout.container.find('table.step-2').hide();
+					$('#dialog-menu ul').find('li[data-name=]').show();
+					$('#dialog-menu ul').find('li[data-name="programm_grouped_factura_next_step"]').show();
+					$('#dialog-menu ul').find('li[data-name="pay_previous_step"]').hide();
+					$('#dialog-menu ul').find('li[data-name="schedule_grouped_invoices"]').hide();
+					payout.container.find('.steps-labels').text("Paso 1 de 2");
+					$('#dtvporfacturar').find('.steps-text').text("CONFIRMACIÓN DE MONTO");
+				},
+				display: {
+					init: function(){
+						$('#dialog-menu ul').find('li[data-name="pay_previous_step"]').hide();
+						$('#dialog-menu ul').find('li[data-name="generate_payments"]').hide();
+						$('#dialog-menu ul').find('li[data-name="schedule_grouped_invoices"]').hide();
+						payout.container.find('table.step-2').hide();
+					}
+				},
+				currentdate: function(){
+					var today = new Date();
+					var dd = today.getDate();
+					var mm = today.getMonth()+1; //January is 0!
+					var yyyy = today.getFullYear();
+					if(dd < 10){
+				        dd ='0'+ dd;
+				    }
+				    if(mm < 10){
+				        mm ='0'+ mm;
+				    }
+					return dd +'/'+ mm +'/'+ yyyy;
+				},
+				getReferenciaFromRow: function($tr){
+					var v = $tr.data('referencia');
+					if (typeof v === "string") return v;
+
+					// fallback: la 4ta columna del step-1 (Número, Fecha, Cliente, Glosa/Referencia)
+					v = $tr.find("td").eq(3).text();
+					return String(v || "").trim();
+				},
+
+			}
+
+			var toNumberJS = function(value, decimals_sep){
+				/*CL-UF/*-DOLAR-%
+				separador miles = "."
+				separador decimal = ","
+				text = "500.000,00"
+				text.replace(/\./g, '');
+				js = 500000,00
+
+				PE
+				separador miles = ","
+				separador decimal = "."
+				text = "500,000.00"
+				text = text.replace(/\,/g, '');
+				text = "500000.00"
+				text = text.replace(/\./g, ',');
+				js = 500000,00*/
+
+				// otros caso = "179918.5"
+				// 1.es texto
+				// 2.no tiene coma
+
+
+				let number = 0;
+				if (typeof value === 'string') {
+					/*if (decimals_sep == ',') {
+						number = parseFloat(value.replace(/\./g, ''));
+					}else if(decimals_sep == '.'){
+						value = value.replace(/\,/g, '');
+						value = value.replace(/\./g, ',');
+						number = parseFloat(value);
+					}*/
+					number = parseFloat(value.replace(/\,/g, ''));
+				}else if(typeof value === 'number'){
+					number = value;
+				}
+				return number;		
+			}
+
+			$(document).ready(function() {
+				payout.menu();
+				payout.dtc.get();
+				payout.display.init();
+
+				let moneyDefault = unaBase.money.find(v => v.default)
+				
+				let counter = $(`<span class="counter global-exchange-rate" name="valor_cambio_nv" style="margin-right: 20px; font-weight: bold; font-size: 12px; margin-top: 5px; color: #222; ${unaBase.doc.currencyCode == moneyDefault.codigo ? 'display: none;' : ''}"><span class="symbol valor-cambio">Valor de cambio: <label><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input  onkeyup="unaBase.utilities.general.formater(this)"  style="width:80px!important;" class="fill1" name="exchange_rate_global" type="text" value=""></span></span><span class="counter" style="margin-right: 20px; font-weight: bold; font-size: 12px; margin-top: 5px; color: #222;"><span class="symbol">Total a facturar: <label class="exchange-label"><!--#4DVAR _V3_defaultCurrencySymbol--></label> </span><span class="value total-facturar">0</span></span>`);
+				$('#dialog-menu').prepend(counter);
+
+				let htmlObjectRateGlobal = counter.find('input[name="exchange_rate_global"]');
+
+				// htmlObjectRateGlobal.focus(function(event) {
+				// 	$(this).val($(this).data('value'));
+				// });
+
+				htmlObjectRateGlobal.focusout(function(event) {
+					this.value= unaBase.utilities.transformNumber(this.value,'view',true)
+				});
+
+			});
+
+		</script>
+		<style type="text/css">
+			.fill1{
+				background:#f2fe8a;
+				text-align: right;
+				padding:5px;
+			}
+			.fill2{
+				background:#f2fe8a;
+				text-align: center;
+				padding:5px;
+			}
+			.fill3{
+				background:#f2fe8a;
+				text-align:left;
+				padding:5px;
+				width:90%;
+				text-transform: uppercase;
+			}
+			.dialog header{
+				text-align:right!important;
+			}
+			.reset{
+				zoom:80%;
+				width:15px;
+				height:15px;
+				padding:0px;
+				margin:0px;
+			}
+			.steps-labels{
+				font-weight:bold;
+				padding:5px;
+				float: right;
+			}
+			.steps-text{
+				font-size:12px;
+				font-weight:bold;
+				padding:5px;
+				float: left;
+			}
+			.bold{
+				font-weight:bold!important;
+				border-radius:5px;
+				zoom:100%;
+			}
+
+		</style>
+	</head>
+	<body>
+		<section id="dtvporfacturar" class="sheet" style="width: calc(100% - 10px);">
+			<h2><div class="steps-text">CONFIRMACIÓN DE MONTO</div><div class="steps-labels">Paso 1 de 2</div></h2>
+			<div class="exchange_rate"><input type="text" name="exchange_rate" value="">
+				<div style="display:inline-block; float: inline-end;"><span style="margin-right: 20px; font-weight: bold; font-size: 12px; margin-top: 5px; color: #222; ">Usar valor cambio por negocio <span><input type="checkbox" value="" name="exchange_x_neg"></span></span> </div>  
+			</div>
+			<table class="step-1" style="width: calc(100% - 20px);">
+				<thead>
+					<tr>
+						<th width="7%" class="center">Número</th>
+						<th width="7%" class="center">Fecha asignación</th>
+						<th width="15%" class="center">Cliente</th>
+						<th width="16%" class="center">Glosa</th>
+						<th width="18%" class="center">Valor cambio en negocio</th>
+						<!--<th width="10%" class="center">Valor de cambio [$]</th>-->
+						<th width="15%" class="center">Monto a facturar <label class="exchange-label">[$]</label></th>
+						<th width="7%" class="center">%</th>
+						<th width="15%">Saldo <label class="exchange-label">[$]</label></th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+				<tfoot></tfoot>
+			</table>
+			<table class="step-2">
+				<thead>
+					<tr>
+						<th width="15%" class="center">Número</th>
+						<th width="15%" class="left">Cliente</th>
+						<th width="15%" class="left">Referencia</th>
+						<th width="5%" class="center">Fecha programacion</th>
+						<th width="20%" class="center">Monto factura [$]</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+				<tfoot></tfoot>
+			</table>
+		</section>
+	</body>
+</html>

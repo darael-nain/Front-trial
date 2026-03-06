@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js">
+	</script>
+	<![endif]-->
+	<title>ORDENES DE TRABAJO</title>
+	<meta charset="utf-8"/>		
+	<script src="/script/jquery.js"></script>	
+	<script src="/pantallas/pantalla_ot.js"></script>	
+	<link rel="stylesheet" href="/pantallas/pantalla_ot.css"/>
+</head>
+<body>
+
+	<div class="header">
+		<h1>ORDENES DE TRABAJO : </h1>
+		<h2 class="cant"></h2>
+	</div>
+
+	<div class="dates">
+		<span><!--#4DVAR vDate--></span>		
+		<span id="spanreloj"></span>
+	</div>
+
+	<div class="box-filters">
+		<label class="labels">Estado:</label>
+	    <select id="filters-state" class="combos filters-all">
+	    	<option selected="selected" value="PENDIENTE/ATRASADA">Pendiente / Atrasada</option>
+			<option value="PENDIENTE">Pendiente</option>
+			<option value="ATRASADA">Atrasada</option>
+			<option value="CERRADA">Cerrada</option>
+			<option value="ANULADA">Anulada</option>			               
+			<option value="TODAS">Todas</option>
+	    </select>	  
+	</div>
+	<div class="info">
+		<span class="letter-atrasada">ATRASADA</span> /
+		<span class="letter-pendientes">PENDIENTE</span> /
+		<span class="letter-cerradas">CERRADA</span> /
+		<span class="letter-anuladas">ANULADA</span>
+	</div>
+
+<div id="box">
+
+<table class="tables" width="100%">
+<thead>	
+<tr>
+	<th width="3%">Folio</th>
+	<th width="3%">Creación</th>
+	<th width="3%">Vencimiento</th>
+	<th width="3%">Cliente</th>
+	<th width="3%">Origen</th>
+	<th width="3%">Referencia</th>
+	<th width="3%">Emisor</th>
+	<th width="3%">Responsable</th>	
+	<th width="3%">Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</body>
+</html>

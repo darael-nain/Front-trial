@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getComprasContent-->
+		<meta charset="utf-8">
+		<title>Staff / Equipo</title>
+		<script>
+		$(document).ready(function() {
+			$('input[name="staff[usuario][]"]').change(function(event) {
+				$.ajax({
+					url: '/4DACTION/_V3_setUsuarioByCompra',
+					data: {
+						id: $('section.sheet').data('id'),
+						fk: $(this).parentTo('tr').data('id'),
+						enabled: $(this).prop('checked') 
+					},
+					dataType: 'json',
+					async: false,
+					success: function(data) {
+						if (!data.success) {
+							event.preventDefaut();
+							toastr.error('Error al asignar el usuario al gasto. Tal vez el registro esté bloqueado.');
+						}
+					}
+				}).fail(function() {
+					event.preventDefault();
+					toastr.error('Error al asignar el usuario al gasto. Error de red.');
+				});
+			});
+
+		});
+		</script>
+		<style type="text/css">
+		.especial-table{
+			width:90%!important;
+
+		}
+			.especial-table > tbody > tr > td{
+				padding:5px 0 0 15px !important;
+				width:22%;
+			}
+		</style>
+	</head>
+	<body>
+		<section id="sheet-compras" data-module="compras" data-tipogasto="<!--#4DTEXT [Orden_de_compra]id_tipo_gasto-->" class="sheet sheet-gastos css-grays" data-record-name="Gasto" data-entity="Orden_de_compra" data-from="<!--#4DTEXT from-->" data-modulo="compras" data-id="<!--#4DTEXT [Orden_de_compra]Id_OCompra-->" data-index="<!--#4DTEXT [Orden_de_compra]Folio_OC-->" data-username="<!--#4DTEXT [Orden_de_compra]Login_responsable-->" data-folio="<!--#4DTEXT [Orden_de_compra]Folio_OC-->"  data-origen="<!--#4DTEXT [Orden_de_compra]Origen_OC-->" data-tipoorigen="<!--#4DTEXT vTipoOC_-->" data-validado="<!--#4DTEXT [Orden_de_compra]validacion_oc-->" data-justificado="" data-approved="<!--#4DIF [Orden_de_compra]validacion_oc-->true<!--#4DELSE-->false<!--#4DENDIF-->" data-currentdate="<!--#4DTEXT Current date(*)-->" data-estado="<!--#4DTEXT [Orden_de_compra]Estado_OC-->" data-total="<!--#4DTEXT vTotalOC_-->" data-emailpagos="<!--#4DTEXT [Parametros]email_not_pago_v3-->" data-validadatoscomerciales="<!--#4DTEXT paramValidaDatosComerciales-->">
+
+			<input type="hidden" name="id" value="<!--#4DTEXT [Orden_de_compra]Id_OCompra-->">
+			<input type="hidden" name="folio" value="<!--#4DTEXT [Orden_de_compra]Folio_OC-->">
+			<input type="hidden" name="oc[id]" value="<!--#4DTEXT [Orden_de_compra]Id_OCompra-->">
+			<input type="hidden" name="oc[negocio][id]" value="<!--#4DTEXT [Orden_de_compra]Id_NV-->">
+			<input type="hidden" name="oc[validado]" value="<!--#4DTEXT [Orden_de_compra]validacion_oc-->">
+			<footer>
+				<article>
+					<h1>Usuarios</h1>
+					<table class="especial-table">
+						<thead>
+							<tr>
+								<th></th>
+								<th class="center">Nombres</th>
+								<th class="center">Asignar</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<!--#4DLOOP aUsuarioCompraUsername-->
+							<tr data-id="<!--#4DVAR aUsuarioCompraUsername{aUsuarioCompraUsername}-->">
+								<td></td>
+								<td class="left"><!--#4DVAR aUsuarioCompraNombre{aUsuarioCompraUsername}--> (<!--#4DVAR aUsuarioCompraUsername{aUsuarioCompraUsername}-->)</td>
+								<td><input type="checkbox" name="staff[usuario][]"<!--#4DIF aUsuarioCompraEnabled{aUsuarioCompraUsername}--> checked<!--#4DENDIF--><!--#4DIF Not(_V3_verifica_permisos_web(_V3_data_username;544))--> disabled<!--#4DENDIF-->></td>
+								<td></td>
+							</tr>
+							<!--#4DENDLOOP-->
+						</tbody>
+					  	<tfoot></tfoot>
+					</table>
+				</article>
+			</footer>
+		</section>
+	</body>
+</html>

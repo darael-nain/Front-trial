@@ -1,0 +1,16 @@
+{
+	"rows": [
+<!--#4DLOOP aUploadId -->
+		{
+			"id": <!--#4DVAR aUploadId{aUploadId}-->,
+			"id_doc": <!--#4DIF Not(Undefined(aIdDoc))-->"<!--#4DHTML aIdDoc{aUploadId}-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+			"index": "<!--#4DVAR aUploadIndex{aUploadId}-->",
+			"username": "<!--#4DVAR aUploadUsername{aUploadId}-->",
+			"user_full_name": "<!--#4DVAR aUploadUserFullName{aUploadId}-->",
+			"created_at": "<!--#4DVAR Substring(String(aUploadCreatedAtDate{aUploadId};8);1;10)--> <!--#4DVAR aUploadCreatedAtTime{aUploadId}-->",
+			"filename": "<!--#4DVAR _V3_escapeString(aUploadFilename{aUploadId})-->",
+			"mimetype": "<!--#4DVAR aUploadMimetype{aUploadId}-->"
+		}<!--#4DIF NOT(aUploadId{aUploadId} = aUploadId{Size of array(aUploadId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

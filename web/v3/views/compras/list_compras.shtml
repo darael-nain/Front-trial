@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_serverInfo-->
+<html>
+	<head>
+		<title>Compras</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="/v3/views/compras/lista.css?<!--#4DTEXT _V3_version-->">
+		<link rel="stylesheet" type="text/css" href="/v3/views/compras/design/tooltips.css">
+		<link rel="stylesheet" type="text/css" href="/v3/views/compras/design/list.css">
+		<script type="text/javascript" src="/v3/views/compras/script/active_menu.js?<!--#4DTEXT _V3_version-->"></script>
+		<style type="text/css">
+			.rojoPastel{
+				color:red;
+			}
+			.folio *{
+				display: inline-block;
+			}
+
+			.padre {
+			width: 100%;
+			height: calc(100% - 50px);
+			overflow-x: auto;
+			overflow-y: auto;
+			position: relative;
+			}
+
+			.padre table {
+			width: 100%;
+			border-collapse: collapse;
+			}
+
+			.padre thead,
+			.padre tfoot {
+			position: sticky;
+			z-index: 1;
+			background-color: #fff; /* Asegura que el fondo no sea transparente */
+			}
+
+			.padre thead {
+			top: 0;
+			}
+
+			.padre tfoot {
+			bottom: 0;
+			}
+
+			/* Estilos para el icono SAP */
+			.sap-icon {
+				display: inline-block;
+				vertical-align: baseline;
+				margin-left: 5px;
+				margin-top: -2px;
+				color: #007bff;
+				font-size: 12px;
+				transition: opacity 0.2s ease;
+			}
+			
+			.sap-icon:hover {
+				opacity: 0.8;
+			}
+
+		</style>
+
+		<script>			
+
+
+			// funcionalidad para boton "por validar"
+			var ocs = {
+				oc_por_validar: function(button){
+					$('input[name="validacion_gasto2"]').trigger("click");
+					if ($('input[name="validacion_gasto2"]').prop('checked')) {
+						button.css('border','2px double gray');
+					}else{
+						button.css('border','');
+					}
+				}
+			}
+
+
+			$(document).ready(function() {
+				document.title = '<!--#4DTEXT _V3_nombre_empresa--> / OC - Lista';
+				
+				current_tab = 0;
+
+				var loadTooltips = function(target, id){
+
+					var tooltipHtml;
+					var ocValidada;
+
+		     				 $.ajax({
+				                'url':'/4DACTION/_V3_getItemFromOcList',
+				                data:{
+				                  'id_Oc':  id
+				                },
+				                dataType:'json',
+				                async: false,		                
+				                success:function(data){
+
+				                  var trbody;
+
+
+
+				                  for(var k = 0; k < data.rows.length; k++){
+
+				                  	var ocValidada = data.rows[k].ocValidada;
+
+									var aDiferencia =  $.number(data.rows[k].aPresupuesto - data.rows[k].aGastoActual, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+									
+									var aDiferenciaValidado = $.number(data.rows[k].aPresupuesto - data.rows[k].aGastoActual - data.rows[k].aItem, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+				                  	var aVenta = $.number(data.rows[k].aVenta, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+				                  	
+				                  	var aPresupuesto = $.number(data.rows[k].aPresupuesto, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+				                  	var aGastoActual = $.number(data.rows[k].aGastoActual, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+				                  	var aItem = $.number(data.rows[k].aItem, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+				          
+
+									if(access._452){
+										if(aVenta<0){
+					                  		var tdVenta = "<td class='rightNum redTd'>"+aVenta+"</td>";
+					                  	}else {
+					                  	var tdVenta = "<td class='rightNum'>"+aVenta+"</td>";
+					                  }
+									}
+
+				                  	var tdPresupuesto = "<td class='rightNum'>"+aPresupuesto+"</td>";
+
+				                  	var tdGastoActual = "<td class='rightNum'>"+aGastoActual+"</td>";
+				                 
+									var tdItem = "<td class='rightNum boldtext'>"+aItem+"</td>";
+									
+
+									if(parseFloat(aDiferencia)<0){
+										var tdDiferencia = "<td class='rightNum redTd'>"+aDiferencia+"</td>";
+									}else {
+										var tdDiferencia = "<td class='rightNum'>"+aDiferencia+"</td>";
+									}
+			                        
+									if(parseFloat(aDiferenciaValidado) < 0){
+										var tdDiferenciaValidado = "<td class='rightNum redTd'>"+aDiferenciaValidado+"</td>";
+									}else {
+										var tdDiferenciaValidado = "<td class='rightNum'>"+aDiferenciaValidado+"</td>";
+									}
+
+				                  	if(typeof trbody !== 'undefined'){
+				                  		if(ocValidada){
+						                  	trbody += "<tr>\
+						                      <td><a class='greenLink' target='_blank' href='/4DACTION/wbienvenidos#negocios/content.shtml?id="+data.rows[k].aNegocioID+"'>"+data.rows[k].aNegocio.slice(0,31)+"\
+						                      </a></td>\
+						                      <td class'nombreNv'>"+data.rows[k].aNombre+"\
+						                      </td>"+tdVenta+tdPresupuesto+tdGastoActual+tdDiferencia+"\
+						                    </tr>";
+
+				                  		}else{
+						                  	trbody += "<tr>\
+						                      <td><a class='greenLink' target='_blank' href='/4DACTION/wbienvenidos#negocios/content.shtml?id="+data.rows[k].aNegocioID+"'>"+data.rows[k].aNegocio.slice(0,31)+"\
+						                      </a></td>\
+						                      <td class'nombreNv'>"+data.rows[k].aNombre+"\
+						                      </td>"+tdVenta+tdPresupuesto+tdGastoActual+tdItem+tdDiferencia+tdDiferenciaValidado+"\
+						                    </tr>";
+
+				                  		}
+				                  		
+				                  	}else {
+				                  		if(ocValidada){
+						                  	trbody = "<tr>\
+						                      <td><a class='greenLink' target='_blank' href='/4DACTION/wbienvenidos#negocios/content.shtml?id="+data.rows[k].aNegocioID+"'>"+data.rows[k].aNegocio.slice(0,31)+"\
+						                      </a></td>\
+						                      <td class'nombreNv'>"+data.rows[k].aNombre+"\
+						                      </td>"+tdVenta+tdPresupuesto+tdGastoActual+tdDiferencia+"\
+						                    </tr>";
+
+				                  		}else{
+						                  	trbody = "<tr>\
+						                      <td><a class='greenLink' target='_blank' href='/4DACTION/wbienvenidos#negocios/content.shtml?id="+data.rows[k].aNegocioID+"'>"+data.rows[k].aNegocio.slice(0,31)+"\
+						                      </a></td>\
+						                      <td class'nombreNv'>"+data.rows[k].aNombre+"\
+						                      </td>"+tdVenta+tdPresupuesto+tdGastoActual+tdItem+tdDiferencia+tdDiferenciaValidado+"\
+						                    </tr>";
+
+				                  		}
+				                  		
+				                  	}
+				                  }
+
+					                  	// <tr>\
+					                  	// 	<th width='40%' colspan='3' class='blacknv'>Costo</th><th width='12%' class='greynv'>Presupuestado</th><th width='12%' class='orangenv'>Actual</th><th width='12%' class='orange2nv'>Por validar</th><th width='12%' class='greennv' colspan='2'>Diferencia</th>\
+					                  	// </tr>\
+					                if(access._452) { // ver precio venta
+					                	if(ocValidada){
+										tooltipHtml = "<table class='tabletooltip'>\
+					                  <thead>\
+					                    <tr>\
+					                      <th class='blacknv' width='15%'>Negocio\
+					                      </th>\
+					                      <th class='blacknv' width='30%'>Ítem\
+					                      </th>\
+					                      <th class='blacknv' width='10%'>Venta\
+					                      </th>\
+					                      <th class='greynv' width='10%'>Presupuestado\
+					                      </th>\
+					                      <th class='orangenv' width='10%'>Real Validado\
+					                      </th>\
+					                      <th class='greennv' width='10%'>Diferencia hoy\
+					                      </th>\
+					                    </tr>\
+					                  </thead>\
+					                  <tbody>\
+					                  "+trbody+"\
+					                  </tbody>\
+					                  </table>";
+
+					                	}else{
+										tooltipHtml = "<table class='tabletooltip'>\
+					                  <thead>\
+					                    <tr>\
+					                      <th class='blacknv' width='15%'>Negocio\
+					                      </th>\
+					                      <th class='blacknv' width='30%'>Ítem\
+					                      </th>\
+					                      <th class='blacknv' width='10%'>Venta\
+					                      </th>\
+					                      <th class='greynv' width='10%'>Presupuestado\
+					                      </th>\
+					                      <th class='orangenv' width='10%'>Real Validado\
+					                      </th>\
+					                      <th class='orange2nv' width='10%'>Real + Pendiente de validar\
+					                      </th>\
+					                      <th class='greennv' width='10%'>Diferencia hoy\
+					                      </th>\
+					                      <th class='greennv' width='10%'>Diferencia Posterior\
+					                      </th>\
+					                    </tr>\
+					                  </thead>\
+					                  <tbody>\
+					                  "+trbody+"\
+					                  </tbody>\
+					                  </table>";
+
+					                	}
+					    			}else{
+					                	if(ocValidada){
+					    				tooltipHtml = "<table class='tabletooltip'>\
+					                <thead>\
+					                      <th width='15%' class='blacknv'>Negocio\
+					                      </th>\
+					                      <th width='30%' class='blacknv'>Ítem\
+					                      </th>\
+					                      <th width='10%' class='greynv'>Presupuestado\
+					                      </th>\
+					                      <th width='10%' class='orangenv'>Real Validado\
+					                      </th>\
+					                      <th width='10%' class='greennv'>Diferencia hoy\
+					                      </th>\
+					                    </tr>\
+					                </thead>\
+					                  <tbody>\
+					                  "+trbody+"\
+					                  </tbody>\
+					                  </table>";
+
+					                	}else{
+					    				tooltipHtml = "<table class='tabletooltip'>\
+					                <thead>\
+					                      <th width='15%' class='blacknv'>Negocio\
+					                      </th>\
+					                      <th width='30%' class='blacknv'>Ítem\
+					                      </th>\
+					                      <th width='10%' class='greynv'>Presupuestado\
+					                      </th>\
+					                      <th width='10%' class='orangenv'>Real Validado\
+					                      </th>\
+					                      <th width='10%' class='orange2nv'>Real + Pendiente de validar\
+					                      </th>\
+					                      <th width='10%' class='greennv'>Diferencia hoy\
+					                      </th>\
+					                      <th width='10%' class='greennv'>Diferencia Posterior\
+					                      </th>\
+					                    </tr>\
+					                </thead>\
+					                  <tbody>\
+					                  "+trbody+"\
+					                  </tbody>\
+					                  </table>";
+
+					                	}
+					    			}
+
+				                }
+				            });		
+
+					target.tooltipster('update', tooltipHtml);
+
+				}
+
+				unaBase.toolbox.init();
+
+				// Inicializamos un buscador
+				var params = {
+					searchOff: true,
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/_V3_getGastosNew' },
+					entity: 'Compras',
+					data: {
+						'tipo_gasto' : "OC"
+					},
+					callback : function(data){
+						$('.especial .totales').find('span[data-neto]').text(data.totales.neto);
+						$('.especial .totales').find('span[data-exento]').text(data.totales.exento);
+						$('.especial .totales').find('span[data-adicional]').text(data.totales.adicional);
+						$('.especial .totales').find('span[data-total]').text(data.totales.total);
+						$('.especial .totales').find('span[data-pagado]').text(data.totales.pagado);
+						$('.especial .totales').find('span[data-porpagar]').text(data.totales.porpagar);
+						$('.especial .totales').find('span[data-justificado]').text(data.totales.justificado);
+						$('.especial .totales').find('span[data-porjustificar]').text(data.totales.porjustificar);
+
+						
+
+						//inicializa el tooltips con contenido vacio
+						var content = "";
+						// carga tooltips si es un negocio
+						$('td.tooltipsnv').on('hover', function(){
+							var tr = $(this).closest('tr');
+							if (tr.data('origen') == "PROYECTO") {
+								//loadTooltips($(this), tr.data('id'));
+							}else {
+
+								$(this).tooltipster('update', "Gasto General");
+							}
+						});
+						//en la colunma proveedor verifica si tienes permisos para ver contactos, habilita el link para modificar el mismo
+						var btnproovedor = $('td.proveedor span');
+						if(access._468){
+							btnproovedor.addClass('greenLink');
+							btnproovedor.click(function() {
+								unaBase.loadInto.dialog('/v3/views/contactos/content.shtml?id='+ $(this).data('proveedor'), 'Perfil del Contacto ', 'large');
+							});
+						}else{
+							btnproovedor.attr("data-goto",true);
+						}
+							
+						
+						// boton por validar
+
+						// input "por validar(validacion_gasto2)"
+						var porvalidarbtn = $('input[name=validacion_gasto2]');
+
+						//oculta el checkbox y el label
+						porvalidarbtn.closest('label').hide();
+						// color naranja a a letra del nuevo boton "por validar"
+						$('li[data-name="oc_por_validar"]').find('span.ui-button-text').css({
+							'color':'#FF6103'
+						});
+
+
+						//borde verde o naranja para validado y NO validado
+						$('td.valSI').css({
+							'border-left': '6px solid #43af7c'
+						});
+						$('td.valNO').css({
+							'border-left': '6px solid #FF6103'
+						});
+
+
+
+					},
+					row: {
+						html: function(i, rows) {
+							var v2 = "";
+							var title = "";
+							if (rows[i].version=="") {
+								//v2 = '<strong style="font-size:8px!important;font-weight:bold">V2</strong>';
+								v2 = '<strong title="oc creada en versión antigua" style="font-size:11px!important;font-weight:bold">*</strong>';
+								title = "Orden de compra creada en versión antigua";
+							}
+
+							var desOrigen = "";
+							if (rows[i].origen == "PROYECTO" || rows[i].origen == "PRESUPUESTO") {
+								desOrigen = rows[i].nro_neg +' - '+ rows[i].referencia_neg_clasif;
+							}else{
+								desOrigen = rows[i].referencia_neg_clasif;
+							}
+
+							/*var color = "";
+							var color_neto = "neto_c";
+							var color_total = "total_c";
+							var color_justificado = "justificado_c";*/
+
+							var color = "";
+							var color_neto = "";
+							var color_total = "";
+							var color_justificado = "";
+							var orangeLine = "";
+							var validado = "";
+
+							if (rows[i].estado == "ANULADA") {
+								color = "rojoPastel";
+								rows[i].saldo_a_justificar = 0;
+								rows[i].justificado = 0;
+								color_neto = color;
+								color_total = color;
+								color_justificado = color;
+							}
+
+							var monedaValorCambio = 1;
+							var monedaSymbol = currency.symbol;
+							if (rows[i].moneda_tipo != '' && rows[i].moneda_tipo != currency.code ) {
+								if (rows[i].moneda_valor_cambio > 0) {
+									monedaValorCambio = rows[i].moneda_valor_cambio;
+								}
+								monedaSymbol = rows[i].moneda_tipo;
+							}
+							
+							var netoOC = monedaSymbol + ' ' + $.number(rows[i].neto_/monedaValorCambio, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+							var exentoOC = monedaSymbol + ' ' + $.number(rows[i].exento_/monedaValorCambio, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+							var adicionalOC = monedaSymbol + ' ' + $.number(rows[i].adicional_raw/monedaValorCambio, currency.decimals, currency.decimals_sep, currency.thousands_sep);		
+							var totalOC = monedaSymbol + ' ' + $.number(rows[i].total_/monedaValorCambio, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+							var pagoOC = monedaSymbol + ' ' + $.number(rows[i].pago_/monedaValorCambio, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+							var saldoapagarOC = monedaSymbol + ' ' + $.number(rows[i].saldo_a_pagar_/monedaValorCambio, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+							var justificadoOC = monedaSymbol + ' ' + $.number(rows[i].justificado_/monedaValorCambio, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+							var porjustificarOC = monedaSymbol + ' ' + $.number(rows[i].saldo_a_justificar_/monedaValorCambio, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+							const cierreIcon = rows[i].cierre_admin ? `<span class="ui-icon ui-icon-locked" style="vertical-align: middle; margin-top: -2px; display: inline-block; visibility: visible;" title="${rows[i].cierre_admin_responsable} - ${rows[i].cierre_admin_fecha}"></span>` : ""
+							
+							// Icono para SAP
+							const hasSap = rows[i].id_sap && rows[i].id_sap !== "0" && rows[i].id_sap !== 0;
+							const sapIcon = hasSap ? `<i class="fas fa-database sap-icon" title="Esta orden de compra se encuentra registrada en SAP con ID: ${rows[i].id_sap}"></i>` : "";
+							
+							return '<tr class="'+orangeLine+'" title="'+ title +'" data-id="' + rows[i].id + '" data-state="' + rows[i].estado + '"  data-origen="'+ rows[i].origen +'">' +
+								'<td data-goto="false" width="2%" class="center val'+rows[i].validado+'"><input class="selected chk" type="checkbox" name="selected_one"></td>' +										
+								'<span class="iconval validado' + rows[i].validado + '"></span>' +
+								v2 + ' ' + rows[i].folio + cierreIcon +
+								((unaBase?.parametros?.sap_integration) ? sapIcon : '') +
+								'</span></td>'+
+								'<td data-goto="true" width="5%" class="center">' + rows[i].emisor + '</td>' +
+								'<td data-goto="true" width="2%" class="center" title="' + rows[i].doc + '">' + rows[i].abrev + '</td>' +
+								'<td data-goto="true" width="3%" class="center">' + rows[i].formapago + '</td>' +
+								'<td data-goto="true" width="5%" class="center">' + rows[i].fecha + '</td>' +
+								'<td data-goto="true" width="5%" class="center">' + rows[i].vencimiento + '</td>' +
+								'<td data-goto="true" width="5%" class="left tooltipsnv">' + desOrigen + '</td>' +
+								'<td data-goto="true" width="3%" class="center">' + rows[i].estado + '</td>' +
+								'<td data-goto="true" width="10%" data-proveedor="'+rows[i].proveedorId+'" class="left proveedor"><span>' + rows[i].proveedor + '</span></td>' +
+								'<td data-goto="true" width="13%" class="left">' + rows[i].referencia + '</td>' +
+								'<td data-goto="true" width="5%" class="center">' + rows[i].moneda_tipo + '</td>' +
+								'<td data-goto="true" width="5%" class="right">' + netoOC + '</td>' +
+								'<td data-goto="true" width="5%" class="right">' + exentoOC + '</td>' +
+								'<td data-goto="true" width="5%" class="right">' + adicionalOC + '</td>' +
+								'<td data-goto="true" width="5%" class="right">' + totalOC + '</td>' +
+								'<td data-goto="true" width="5%" class="right">' + pagoOC + '</td>' +
+								'<td data-goto="true" width="5%" class="right">' + saldoapagarOC + '</td>' +
+								'<td data-goto="true" width="5%" class="right">' + justificadoOC + '</td>' +
+								'<td data-goto="true" width="5%" class="right">' + porjustificarOC + '</td>' +
+							'</tr>';
+   
+
+						}
+
+					},
+					// detail: {
+					// 	url: function(id) { return '/v3/views/compras/content.shtml?id=' + id +'&from=self'},
+					// 	iframe: false
+					// },
+					// Inflexiones
+					inflection: {
+						singular: 'gasto',
+						plural: 'gastos',
+						none: 'ningún'
+					},
+					filters: [
+						{ name: 'created_at', type: 'month', caption: 'Fecha de emisión', range: true, currentMonth: true },
+						{ name: 'emitido_por', type: 'new_select', caption: 'Emitido por', dataSource: 'getUsuariosEmisoresOC' },
+						// { name: 'tipo_gasto', type: 'autocomplete', caption: 'Tipo de gastos', dataSource: 'get_tipo_gasto' },
+						{ name: 'validacion_gasto', type: 'new_select', caption: 'Por validación', dataSource: 'get_validacion' },
+
+						{ name: 'origen', type: 'autocomplete', caption: 'Origen', dataObject: [
+							{ id: "PROYECTO", text: 'NEGOCIOS'},
+							{ id: "PRESUPUESTO DE GASTO", text: 'PRESUPUESTO DE GASTO'},
+							{ id: "GASTO GENERAL", text: 'GASTOS GENERALES'}
+						] },
+
+						{ name: 'por_negocio', type: 'autocomplete', caption: 'Por negocio', dataSource: 'getNegociosActivos' },
+						{ name: 'por_presupuesto', type: 'autocomplete', caption: 'Por presupuesto', dataSource: 'getPresupuestosActivos' },
+						
+						{ name: 'por_clasificacion', type: 'new_select', caption: 'Por Clasificación', dataSource: 'getClasificacionGG' },
+						/*{ name: 'tipo_doc', type: 'autocomplete', caption: 'Tipo', dataSource: 'get_negocios_activos' },
+						{ name: 'forma_pago', type: 'autocomplete', caption: 'Forma pago', dataSource: 'get_negocios_activos' },*/
+						{ name: 'aprobado_por', type: 'new_select', caption: 'Validado por', dataSource: 'getUsuarioValidador?entity=Orden_de_compra' },
+						{ name: 'validar_por', type: 'new_select', caption: 'No validado por', dataSource: 'getUsuarioValidador?entity=Orden_de_compra' },
+						
+						{ name: 'centroCosto', type: 'autocomplete', caption: 'Area de negocio', dataSource: 'getCentroCosto' },
+
+						{ name: 'tipo_dtc', type: 'new_select', caption: 'Tipo Doc.', dataSource: 'getTiposDocDeCompras' },
+
+						{ name: 'formas_de_pago', type: 'new_select', caption: 'Forma de pago', dataSource: 'getFormaPagos?compra=true' },
+						{ name: 'solicitud_pago', type: 'new_select', caption: 'Solicitud de Pago', dataObject: [
+							{ id: "True", text: 'Realizada'},
+							{ id: "False", text: 'No realizada'}
+						] },
+						{ name: 'contabilizado', type: 'new_select', caption: 'Contabilizada', dataObject: [
+							{ id: "True", text: 'Contabilizada'},
+							{ id: "False", text: 'No contabilizada'}
+						] },
+
+						{ name: 'justificacion', type: 'new_select', caption: 'Por Justificar', dataObject: [
+							{ id: "justificado", text: 'Justificado'},
+							{ id: "xjustificar", text: 'Por Justificar'}
+						]},
+
+						{ name: 'mas', type: 'autocomplete', caption: 'Más filtros', dataObject: [
+							{ id: "abonado", text: 'Con abono'},
+							{ id: 'compartido', text: 'Compartido' },
+							{ id: 'no_compartido', text: 'Por compartir' },
+							{ id: 'validacion_solicitada', text: 'Validación solicitada (aún sin validar)' },
+							{ id: 'validacion_por_solicitar', text: 'Validación por solicitar' },
+							{ id: 'validacion_rechazada', text: 'Validación rechazada' }
+						]},
+
+						{ name: 'estado', type: 'checkbox', caption: 'Estado de la compra', options: [
+							{ caption: 'Emitida', name: 'estado_emitida', value: true },
+							{ caption: 'Pagada', name: 'estado_pagada', value: true },
+							{ caption: 'Cerrada', name: 'estado_cerrada', value: false },
+							{ caption: 'Anulada', name: 'estado_nulo', value: false }
+						]},
+						{ name: 'validacion_gasto2', type: 'checkbox', caption: 'Por validación', options: [
+							{ caption: 'Por Validar', name: 'validacion_gasto2', value: false },
+						] },
+					],
+					container : "listindex"
+				};
+
+				unaBase.toolbox.search.init(params);
+				if(!uVar.experimental){
+					unaBase.toolbox.menu.init({
+						entity: 'Compras',
+						buttons: ['searchOff',"create_gasto_from_oc", "export_list","export_list_projection", "export_list_items_doc", "export_softland", "oc_por_validar", "import_gastos", "importJustificarMasivo","export_list_items_OP", "importPagosMasivo", 'export_sap', 'anular_oc_masivo', 'export_list_resumido']
+					});				
+				}else{
+					unaBase.toolbox.menu.newInit({
+						searchOff: true,
+						entity: 'Compras',
+						buttonsList: [
+							{
+						name: "create_gasto_from_oc",
+						icon: "ui-icon-document",
+						access: true,
+						caption: "Crear",
+						action: function() {
+						$.ajax({
+							url: "/4DACTION/_V3_setCompras",
+							dataType: "json",
+							type: "POST",
+							data: {
+							create_from: "OC"
+							}
+						}).done(function(data) {
+							unaBase.loadInto.viewport(
+							"/v3/views/compras/content.shtml?id=" + data.id
+							);
+						});
+						}
+	          	},
+		          {
+		            name: "import_gastos",
+		            icon: "ui-icon-calculator",
+		            access: true,
+		            caption: "Importar y crear desde excel",
+		            action: function() {
+		              let tipo = "crear oc validadas";
+		        
+		              if (access._439) {
+		                // crear gastos validados
+		                unaBase.loadInto.dialog(
+		                  "/v3/views/compras/import.shtml?id=0",
+		                  "Importar y crear gastos",
+		                  "small"
+		                );
+		              } else {
+		                alert(
+		                  "Debes contar con el permiso de <span style='font-weight:bold;'>" +
+		                    tipo +
+		                    "</span> para poder realizar está acción."
+		                );
+		              }
+		            }
+		          },
+	          	{
+	          		// export list
+		            name: "export",
+		            icon: "ui-icon-calculator",
+		            caption: "Exportar a excel",
+		            access: true,
+		            action: function() {         
+		              let url = "";
+		              let filters = unaBase.getFilters();
+
+		              // --ini-- corrección para enviar parametro de orden a nodejs y exportar segun orden lista
+		              var sortParams = {};
+		              $("#viewport")
+		                .find("table.results > thead > tr > th")
+		                .each(function() {
+		                  if (typeof $(this).data("sort-order") != "undefined") {
+		                    sortParams = {
+		                      sort_by: $(this).data("sort-by"),
+		                      sort_order: $(this).data("sort-order")
+		                    };
+		                    return false;
+		                  }
+		                });
+		              filters += "&" + jQuery.param(sortParams);
+		              // --fin-- corrección para enviar parametro de orden a nodejs y exportar segun orden lista
+
+		              // elements blocked in the list
+		              var blockedElement = 0;
+
+		              var ids = [];
+		              if (
+		                !$('#viewport input[name="selected_all"]').is(":checked")
+		              ) {
+		                $(
+		                  "#viewport tbody.ui-selectable tr[data-id] td:first-of-type input.selected:checked"
+		                ).each(function() {
+		                  ids.push(
+		                    $(this)
+		                      .closest("tr")
+		                      .data("id")
+		                  );
+		                });
+		              }
+		              url =
+		                nodeUrl +
+		                "/export-list-oc/?download=true&ids=" +
+		                ids.join("|") +
+		                "&tipo_gasto=OC&sid=" +
+		                unaBase.sid.encoded() +
+		                "&" +
+		                filters +
+		                "&hostname=" +
+		                window.location.origin;
+		              unaBase.log.save(
+		                "Ha exportado el listado de órdenes de compra",
+		                "gastos"
+		              );
+
+		              if (!blockedElement) {
+		                var download = window.open(url);
+		                download.blur();
+		                window.focus();
+		              }
+		            }
+		          },
+		          {
+		            name: "export_list_items_doc",
+		            icon: "ui-icon-calculator",
+		            access: true,
+		            caption: "Exportar items a excel",
+		            action: function() {
+		           
+		              let url = "";
+
+                  url =
+                    nodeUrl + "/export-list-items-oc/?download=true&tipo_gasto=OC&sid=" + unaBase.sid.encoded() + "&" + unaBase.getFilters() + "&hostname=" + window.location.origin;
+                  unaBase.log.save(
+                    "Ha exportado el listado de ìtems de órdenes de compra",
+                    "gastos"
+                  );
+		           
+		              console.log(url)
+		              var download = window.open(url);
+		              download.blur();
+		              window.focus();
+		            }
+		          },
+		          {
+		            name: "export_softland",
+		            icon: "ui-icon-calculator",
+		            access: true,
+		            caption: "Exportar a Softland",
+		            action: function() {
+		              var url = "";
+		              // var filters = $('#search').serializeAnything(true);
+		              var ids = [];
+		              var ids_contabilizado = [];
+		              var ids_por_emitir = [];
+		              var ids_cerrada = [];
+		              var ids_libro_c = [];
+		              var ids_libro_v = [];
+		              var ids_libro_boletas = [];
+		              var ids_libro_otro = [];
+		              $("#viewport tbody.ui-selectable tr[data-id] td:first-of-type input.selected:checked")
+		              .each(function() {
+		              	let tr = $(this).closest("tr");
+		              	let trData = tr.data();
+		                if (trData.contabilizado) {
+		                  ids_contabilizado.push(trData.id);
+		                }
+		                if ( trData.estado && trData.estado == "POR EMITIR") {
+		                  ids_por_emitir.push(trData.id);
+		                }
+		                if (trData.estado && trData.estado == "CERRADA") {
+		                  ids_cerrada.push(trData.id);
+		                }
+		                if (trData.libro == "LIBRO_C") {
+		                  ids_libro_c.push(trData.id);
+		                }
+		                if (trData.libro == "LIBRO_V") {
+		                  ids_libro_v.push(trData.id);
+		                }
+		                if (trData.libro == "LIBRO_BOLETAS") {
+		                  ids_libro_boletas.push(trData.id);
+		                }
+		                if (trData.libro == "OTRO") {
+		                  ids_libro_otro.push(trData.id);
+		                }
+		                ids.push(trData.id);
+		              });
+
+		               // url = '/4DACTION/_V3_exportDtc?' + filters;
+                  var libro_v = ids_libro_v.length > 0;
+                  var libro_otro = ids_libro_otro.length > 0;
+                  var contabilizado = ids_contabilizado.length > 0;
+                  var cerrada = ids_cerrada.length > 0;
+
+                  if (!cerrada) {
+                    var htmlObject = $(
+                      '<section> \
+											<span>Seleccionar periodo contable:</span> \
+											<input required type="text" style="border-bottom:solid 1px!important;width:300px" name="month" placeholder="0000-00"> \
+										</section>'
+                    );
+
+                    htmlObject.find('input[name="month"]').monthpicker({
+                      changeMonth: true,
+                      changeYear: true,
+                      yearRange: "c-10:c+3",
+                      onSelect: function(event) {
+                        htmlObject.data("response", $(this).val());
+                        htmlObject
+                          .find("input")
+                          .css("background-color", "white");
+                      }
+                    });
+
+                    prompt(htmlObject).done(function(data) {
+                      if (data !== false && data !== "") {
+                        var exportSoftlandDtv = function(period, number) {
+                          var htmlSubObject = $(
+                            '<section> \
+														<span>Confirmar inicio de correlativo interno:</span> \
+														<input required type="number" style="border-bottom:solid 1px!important;width:300px" name="number" value="' +
+                              number +
+                              '"> \
+													</section>'
+                          );
+
+                          htmlSubObject
+                            .find("input")
+                            .on("blur change", function() {
+                              htmlSubObject.data("response", $(this).val());
+                            });
+
+                          var downloadFile = function(number) {
+                            $.ajax({
+                              url: "/4DACTION/_V3_getPeriodoContable",
+                              data: {
+                                periodo: period,
+                                number: number
+                              },
+                              dataType: "json",
+                              async: false,
+                              success: function(subsubsubdata) {
+                                if (!subsubsubdata.repeated) {
+                                  url =
+                                    "/4DACTION/_V3_ExportOC?ids=" +
+                                    ids.join("|") +
+                                    "&periodo=" +
+                                    period +
+                                    "&number=" +
+                                    number;
+                                  unaBase.log.save(
+                                    "Ha exportado pagos a Softland",
+                                    "egresos"
+                                  );
+
+                                  var download = window.open(url);
+                                  download.blur();
+                                  window.focus();
+                                } else {
+                                  toastr.warning(
+                                    "Ya existen documentos contabilizados con el correlativo indicado."
+                                  );
+                                }
+                              }
+                            });
+                          };
+                          if (libro_v) {
+                            prompt(htmlSubObject).done(function(number) {
+                              if (number) {
+                                downloadFile(number);
+                              }
+                            });
+                          } else {
+                            downloadFile(undefined);
+                          }
+                        };
+                        $.ajax({
+                          url: "/4DACTION/_V3_getPeriodoContable",
+                          data: {
+                            periodo: data
+                          },
+                          dataType: "json",
+                          async: false,
+                          success: function(subdata) {
+                            if (subdata.exists) {
+                              if (subdata.closed) {
+                                toastr.warning(
+                                  "El periodo seleccionado ya se encuentra cerrado."
+                                );
+                              } else {
+                                exportSoftlandDtv(
+                                  subdata.period,
+                                  subdata.number
+                                );
+                              }
+                            } else {
+                              confirm(
+                                "El periodo contable no está creado. Continuar para crear."
+                              ).done(function(subsubdata) {
+                                if (subsubdata) {
+                                  exportSoftlandDtv(
+                                    subdata.period,
+                                    subdata.number
+                                  );
+                                }
+                              });
+                            }
+                          }
+                        });
+                      }
+                    });
+                  } else {
+                    if (!por_emitir) {
+                      if (contabilizado) {
+                        toastr.warning(
+                          "Existen documentos ya contabilizados que están seleccionados, deben solo exportarse documentos no contabilizados."
+                        );
+                      } else {
+                        toastr.warning(
+                          "Se han seleccionado tipos de documentos diferentes. Solo se deben exportar documentos de un mismo tipo."
+                        );
+                      }
+                    } else {
+                      toastr.warning(
+                        "Existen documentos por emitir que están seleccionados, deben solo exportarse documentos con folio asignado."
+                      );
+                    }
+                  }
+
+		            }
+		          },
+		          {
+		            name: "oc_por_validar",
+		            icon: "ui-icon ui-icon-cancel",
+		            access: true,
+		            caption: "Por validar",
+		            action: function() {
+
+		              let url = `${nodeUrl}/expenses/tovalidate`;
+		              console.log(url);
+		              window.open(url, "_blank");
+		            }
+		          }
+						]
+
+					});	
+				}
+			
+
+				if(!access._437) { // crear compra
+					$('#menu ul').find('li[data-name="create_gasto_from_oc"]').hide();
+  				}
+
+
+				if(!access._685) { // crear compra
+					$('#menu ul').find('li[data-name="anular_oc_masivo"]').hide();
+  				}
+
+    			/*if(access._437) { // crear compra desde importacion
+					$('#menu ul').find('li[data-name="import_gastos"] > button > .ui-button-text').css('color', 'gray');
+    			}*/
+
+    			$('#search').find('input[name="por_negocio"]').closest('.autocomplete').hide();
+    			$('#search').find('input[name="por_clasificacion"]').closest('.autocomplete').hide();
+    			$('#search').find('input[name="por_presupuesto"]').closest('.autocomplete').hide();
+    			$('#search').find('input[name="origen"]').blur(function(){
+    				switch($(this).val()){
+    					case '' :
+    						$('#search').find('input[name="por_negocio"]').closest('.autocomplete').hide();
+    						$('#search').find('input[name="por_clasificacion"]').closest('.autocomplete').hide();
+    						$('#search').find('input[name="por_presupuesto"]').closest('.autocomplete').hide();
+    						break;
+    					case 'NEGOCIOS' :
+    						$('#search').find('input[name="por_presupuesto"]').closest('.autocomplete').hide();
+    						$('#search').find('input[name="por_negocio"]').closest('.autocomplete').show();
+    						$('#search').find('input[name="por_clasificacion"]').closest('.autocomplete').hide();
+    						break;
+    					case 'GASTOS GENERALES' :
+    						$('#search').find('input[name="por_presupuesto"]').closest('.autocomplete').hide();
+    						$('#search').find('input[name="por_negocio"]').closest('.autocomplete').hide();
+    						$('#search').find('input[name="por_clasificacion"]').closest('.autocomplete').show();
+    						break;
+    					case 'PRESUPUESTO DE GASTO' :
+    						$('#search').find('input[name="por_clasificacion"]').closest('.autocomplete').hide();
+    						$('#search').find('input[name="por_negocio"]').closest('.autocomplete').hide();
+    						$('#search').find('input[name="por_presupuesto"]').closest('.autocomplete').show();
+    						break;
+    				}
+    			});
+				$('#menu ul').find('li[data-name="export_softland"]').hide();
+				$('#menu ul').find('li[data-name="export_sap"]').hide();
+
+				$("body").on("click", "input.selected", function(){
+
+					let input = $(this);
+					
+					
+					if (input.attr('name') == "selected_all" ) {
+						if (input.prop("checked")) {
+							$('table tbody input[name="selected_one"]').prop("checked", true);
+							if(access._661){
+								$('#menu ul').find('li[data-name="export_softland"]').show();
+							}
+							//$('nav.toolbox').append(soft);
+							if (access._660) {
+								$('#menu ul').find('li[data-name="export_sap"]').show();
+							}
+						}else{
+							$('table tbody input[name="selected_one"]').prop("checked", false);
+							$('#menu ul').find('li[data-name="export_softland"]').hide();
+							$('#menu ul').find('li[data-name="export_sap"]').hide();
+						}
+					}else{
+						
+							let inputsSelected = $('tbody > tr > td > input:checked').length;
+							if (input.prop("checked")) {
+								if(input.closest('tr').attr("data-state") == "CERRADA" && access._661){
+									$('#menu ul').find('li[data-name="export_softland"]').show();
+								}else{
+									$('#menu ul').find('li[data-name="export_softland"]').hide();
+								}
+								if (access._660) {
+									$('#menu ul').find('li[data-name="export_sap"]').show();
+								}
+							}else{
+								if(inputsSelected === 0){
+									$('#menu ul').find('li[data-name="export_softland"]').hide();
+									$('#menu ul').find('li[data-name="export_sap"]').hide();
+								}
+							}
+						}
+				});
+
+				$('#menu ul').find('li[data-name="export_sap"]').hide();
+				// ir a detalle
+				$('.padre table tbody').on('click', 'tr > td[data-goto="true"]', function(event) {
+					if(event.target.tagName != "SPAN"){
+					  	var idOc = $(this).closest("tr").data("id");
+					  	unaBase.loadInto.viewport('/v3/views/compras/content.shtml?id=' + idOc+'&from=self');					
+					}
+				});
+
+
+				//$('input[name="searchCheckbox"]').hide();
+							
+			});
+
+
+		</script>
+		<style type="text/css">
+		/* ini --22.07.16 options select */
+	    	.chk{
+				display: inline-block;
+				width: 20px;
+				height: 20px;
+				margin:0px;
+				vertical-align: middle;
+				cursor:pointer;
+			}
+			.container-options{
+				height:30px;
+				margin:5px 0 0 0;
+				padding: 3px;
+				border-color: red;
+			}
+				.container-options > div{
+					display: inline-block;
+				}
+			#selectdtc{
+				height:24px;
+				width:70px;
+				background-color:#e6e6e6;
+			}
+			/* fin --22.07.16 options select */
+
+			/* ===== Paginador estilo botones ===== */
+			.pagination{
+			margin: 10px 0;
+			text-align: center;
+			font-size: 12px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 6px;
+			flex-wrap: wrap;
+			}
+
+			.pagination a,
+			.pagination span{
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+
+			padding: 6px 10px;
+			min-width: 30px;
+			height: 28px;
+
+			border-radius: 8px;
+			border: 1px solid #d0d5dd;
+			background: #ffffff;
+
+			color: #344054;
+			text-decoration: none;
+			user-select: none;
+
+			box-shadow: 0 1px 2px rgba(16, 24, 40, 0.06);
+			transition: background .15s ease, border-color .15s ease, transform .05s ease, box-shadow .15s ease;
+			}
+
+			.pagination a:hover{
+			background: #f9fafb;
+			border-color: #cbd5e1;
+			}
+
+			.pagination a:active{
+			transform: translateY(1px);
+			box-shadow: 0 0 0 rgba(16, 24, 40, 0);
+			}
+
+			.pagination a:focus-visible{
+			outline: 2px solid rgba(0, 169, 114, 0.35);
+			outline-offset: 2px;
+			}
+
+			.pagination span.current,
+			.pagination a.current{
+			background: #00a972;
+			border-color: #00a972;
+			color: #ffffff;
+			font-weight: 700;
+			}
+
+			.pagination span.disabled{
+			background: #f2f4f7;
+			border-color: #eaecf0;
+			color: #98a2b3;
+			cursor: not-allowed;
+			box-shadow: none;
+			}
+
+			.pagination span:not(.current):not(.disabled){
+			background: transparent;
+			border-color: transparent;
+			box-shadow: none;
+			cursor: default;
+			min-width: auto;
+			padding: 0 6px;
+			height: 28px;
+			}
+
+
+		</style>
+	</head>
+	<body>
+		<div  class="padre" style="width: 100%; height: calc(100% - 50px); overflow-x: scroll; overflow-y: scroll">
+			<table width="100%" data-tipogasto="OC" class="results especial listindex fixed">
+					<thead>
+						<tr>
+							<th class="center" width="2%"><div style="margin-left: 10px;"><input class="selected chk" type="checkbox" name="selected_all"></div></th>
+							<th class="center" width="5%" data-sort-by="folio" data-sort-default="desc" title="Número de OC | SAP: Registrado en SAP">Número</th>
+							<th class="center" width="5%" data-sort-by="emisor" data-sort-default="desc">Emisor</th>
+							<th class="center" width="2%" data-sort-by="doc" data-sort-default="desc">Doc.</th>
+							<th class="center" width="3%" data-sort-by="estado" data-sort-default="asc">F. Pago</th>
+							<th class="center" width="5%" data-sort-by="fecha" data-sort-default="desc">Emisión</th>
+							<th class="center" width="5%" data-sort-by="vencimiento" data-sort-default="desc">Vcto.</th>
+							<th class="center" width="5%" data-sort-by="origen" data-sort-default="desc">Neg/GG</th>
+							<th class="center" width="3%" data-sort-by="estado" data-sort-default="asc">Estado</th>
+							<th class="center" width="10%" data-sort-by="proveedor" data-sort-default="asc">Proveedor</th>
+							<th class="center" width="13%" data-sort-by="referencia" data-sort-default="asc">Referencia</th>
+							<th class="center" width="5%" data-sort-by="money" data-sort-default="asc">Moneda</th>
+							<th class="center" width="5%" data-sort-by="neto" data-sort-default="desc">Afecto</th>
+							<th class="center" width="5%" data-sort-by="exento" data-sort-default="desc">Exento</th>
+							<th class="center" width="5%" data-sort-by="adicional" data-sort-default="desc" title="Adicional">Adic.</th>
+							<th class="center" width="5%" data-sort-by="total" data-sort-default="desc">Total</th>
+							<th class="center" width="5%" data-sort-by="pago" data-sort-default="desc">Pagado</th>
+							<th class="center" width="5%" data-sort-by="saldo_a_pagar" data-sort-default="desc">Por pagar</th>
+							<th class="center" width="5%" data-sort-by="justificado" data-sort-default="desc">Justificado</th>
+							<th class="center" width="5%" data-sort-by="saldo_a_justificar" data-sort-default="desc">Por Justificar</th>
+						</tr>
+					</thead>
+					<tfoot class="totales">
+						<th width="2%"></th>
+						<th width="5%"></th>
+			            <th width="5%"></th>
+						<th width="2%"></th>
+						<th width="3%"></th>
+						<th width="5%"></th>
+						<th width="5%"></th>
+						<th width="5%"></th>
+						<th width="5%"></th>
+						<th width="3%"></th>
+						<th width="10%"></th>
+						<th width="13%"></th>
+			            <th width="5%" class="center"><span data-neto="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+			            <th width="5%" class="center"><span data-exento="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+			            <th width="5%" class="center"><span data-adicional="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+			          	<th width="5%" class="center"><span data-total="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+			           	<th width="5%" class="center"><span data-pagado="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+			            <th width="5%" class="center"><span data-porpagar="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+			            <th width="5%" class="center"><span data-justificado="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+						<th width="5%" class="center"><span data-porjustificar="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+					</tfoot>
+					<tbody></tbody>
+				</table>
+		</div>
+
+		<div id="pagination" class="pagination"></div>
+	</body>
+</html>

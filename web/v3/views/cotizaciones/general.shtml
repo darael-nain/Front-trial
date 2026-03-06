@@ -1,0 +1,2200 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getCotizacionContent/light-->
+
+		<title>Cotizaciones</title>
+		<meta charset="utf-8">
+		<script>
+		var crear_oc_validada;
+		</script>
+		<!--#4DIF _V3_param_copiarPrecioACosto-->
+		<script>
+		// Determinar si se copia precio venta al gasto P
+		var copiar_precio_a_costo = true;
+		</script>
+		<!--#4DENDIF-->
+		<!--#4DIF _V3_verifica_permisos_web(_V3_data_username;480)-->
+		<script>
+		// Determinar si es posible agregar ítems al catálogo
+		var agregar_items_catalogo = true;
+		</script>
+		<!--#4DENDIF-->
+		<!--#4DIF _V3_verifica_permisos_web(_V3_data_username;506)-->
+		<script>
+		var reiniciar_validacion_cotizaciones = true;
+		</script>
+		<!--#4DENDIF-->
+
+
+		<script>
+
+		//alert(noMostrarVentanaValidacionAlEntrar);
+
+		<!--#4DIF v3_nro_automatico_solo_neg-->
+		var v3_nro_automatico_solo_neg = true;
+		<!--#4DELSE-->
+		var v3_nro_automatico_solo_neg = false;
+		<!--#4DENDIF-->
+
+		
+		<!--#4DIF compartir_totales_titulos-->
+		var compartir_totales_titulos = true;
+		<!--#4DELSE-->
+		var compartir_totales_titulos = false;
+		<!--#4DENDIF-->
+
+		<!--#4DIF compartir_items-->
+		var compartir_items = true;
+		<!--#4DELSE-->
+		var compartir_items = false;
+		<!--#4DENDIF-->
+
+		<!--#4DIF compartir_totales_items-->
+		var compartir_totales_items = true;
+		<!--#4DELSE-->
+		var compartir_totales_items = false;
+		<!--#4DENDIF-->
+
+		<!--#4DIF compartir_totales_cotizacion-->
+		var compartir_totales_cotizacion = true;
+		<!--#4DELSE-->
+		var compartir_totales_cotizacion = false;
+		<!--#4DENDIF-->
+
+		<!--#4DIF compartir_ocultar_cantidades-->
+		var compartir_ocultar_cantidades = true;
+		<!--#4DELSE-->
+		var compartir_ocultar_cantidades = false;
+		<!--#4DENDIF-->
+
+		<!--#4DIF compartir_ocultar_items_cero-->
+		var compartir_ocultar_items_cero = true;
+		<!--#4DELSE-->
+		var compartir_ocultar_items_cero = false;
+		<!--#4DENDIF-->
+
+
+		<!--#4DIF compartir_fecha_creacion-->
+		var compartir_fecha_creacion = true;
+		<!--#4DELSE-->
+		var compartir_fecha_creacion = false;
+		<!--#4DENDIF-->
+
+		<!--#4DIF _V3_verifica_permisos_web(_V3_data_username;484)-->
+		var convertir_en_negocio = true;
+		<!--#4DENDIF-->
+
+		</script>
+		
+		<script type="text/javascript" src="/v3/views/cotizaciones/script/library/content<!--#4DIF formulario_cinemagica-->_cinemagica<!--#4DENDIF-->.js"></script>
+		<script type="text/javascript" src="/v3/views/cotizaciones/script/startup/content<!--#4DIF formulario_cinemagica-->_cinemagica<!--#4DENDIF-->.js"></script>
+		<script type="text/javascript" src="/v3/script/contact/contact.js?<!--#4DTEXT _V3_version-->"></script>
+		<style>
+
+
+			.short{
+				width: 200px !important;
+			}
+
+			
+			/* Segunda cantidad */
+			<!--#4DIF NOT(vUsarsegunda_cantidad)-->
+			.segunda-cantidad {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/* 460	Ver sección totales */
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;460))-->
+			.block-totales {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/* 461	Ver precios de venta en ítems */
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;461))-->
+			table .venta {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/* 462	Ver utilidad presupuestada en ítems */
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;462))-->
+			table .utilidad {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/* 463	Ver gasto presupuestado en ítems */
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;463))-->
+			table .costo {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/* 464	Ver márgenes en ítems */
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;464))-->
+			table .margen {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/* Márgenes según parámetro */
+
+			<!--#4DIF _V3_param_showMargenDesdeCompra-->
+			table .margen-desde-venta {
+				display: none;
+			}
+			<!--#4DELSE-->
+			table .margen-desde-compra {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			<!--#4DIF Not(_V3_param_showHorasExtras)-->
+			table .horas-extras {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			section.sheet table .collapsed {
+				display: none;
+			}
+
+			table .moving-src, table .moving-dst {
+				outline: 1px dashed black;
+				opacity: .3;
+			}
+
+			section.sheet table th:last-of-type {
+				width: 28px;
+			}
+
+			/* Nuevo */
+
+			section.sheet > footer > article {
+				position: relative;
+			}
+
+			/* Ocultar costo interno */
+
+			/* section.sheet table > tr > th.costo-interno {
+				display: none;
+			} */
+
+
+			span.costo {
+				/* color: #CF8D64; */
+				background-color: #CF8D64;
+				color: black;
+			}
+
+			span.utilidad {
+				/* color: #64CF8D; */
+				background-color: #64CF8D;
+				color: black;
+			}
+
+			span.total-neto {
+				background-color: yellow;
+				color: black;
+			}
+			.sectionForm {
+				background-color: #f2f2f3;
+				width: 800px;
+				padding: 40px 20px;
+				box-sizing: border-box;
+			}
+
+			.containerForm {
+				padding: 0px;
+				margin: 0px;
+				display: flex;
+				flex-direction: column;
+				gap: 5px;
+			}
+
+			.containerForm li {
+				list-style: none;
+				display: grid;
+				grid-template-columns: 200px 1fr;
+				gap: 10px;
+				height: 25px;
+			}
+
+			.containerForm li div {
+				display: flex;
+				align-items: center;
+				height: 100%;
+				font-weight: 700;
+				text-transform: uppercase;
+			}
+			
+			.titulofinal {
+				background-color: #fff !important;
+				padding: 0 10px !important;
+				border-radius: 4px !important;
+				transition: 0.3s !important;
+			}
+
+			.titulofinal:hover {
+				border-bottom: 1px solid #69dfc0 !important;
+				transition: 0.3s !important;
+			}
+
+			.titulofinal:active, .titulofinal:focus {
+				caret-color: #3ac7a5 !important;
+				border-bottom: 1px solid #3ac7a5 !important;
+				transition: 0.3s !important;
+			}
+
+			.checkboxCustom {
+				transform: scale(1.3);
+				margin-left: 2px;
+			}
+		</style>
+
+		<script>
+
+			var create_marca = function(){
+				var htmlObject = $('<section> \
+					<div><span>Nombre:</span> \
+					<input style="border-bottom:1px solid gray!important;width:250px;text-transform:uppercase" name="marca[name]" required></div>\
+					<div><span style="display:inline;margin-left:8px;">Código:</span> \
+					<input maxlength="3" data-sugerido="false" style="border-bottom:1px solid gray!important;text-transform:uppercase" name="marca[code]" required></div>\
+					</section>');
+				htmlObject.find('input[name="marca[code]"]').on('focusin', function() {
+					var marca = htmlObject.find('input[name="marca[name]"]').val();
+					var sugerido = $(this).data("sugerido");
+					var inicial = $(this).data("inicial");
+					if (marca != "" && !sugerido) {
+						$(this).val(marca.substring(0,3));
+						$(this).data("sugerido", true);
+					}
+				});
+				htmlObject.find('input').on('blur change', function() {
+					htmlObject.data('response', $(this).val());
+				});
+				prompt(htmlObject, "Guardar", "Cancelar").done(function(data) {
+					if (data !== false){
+						var ObjMarca = $('article.general-data').find('input[name="dato[1][valor]"]');
+						var name = htmlObject.find('input[name="marca[name]"]').val();
+						var code = htmlObject.find('input[name="marca[code]"]').val();
+						$.ajax({
+							url: '/4DACTION/_V3_setMarca',
+							data: {
+								id: 0,
+								code: code,
+								name: name
+							},
+							dataType: 'json',
+							success: function(data) {
+								if (data.success) {
+									ObjMarca.val(name);
+									ObjMarca.data("codigo", code);
+									ObjMarca.data("correlativo", 0);
+									toastr.success('La Marca ha sido creada con éxito.');
+								} else{
+									if (data.readonly) {
+										toastr.error(NOTIFY.get('ERROR_RECORD_READONLY'));
+									}else{
+										if (data.exists) {
+											toastr.warning("LA MARCA O CÓDIGO YA SE ENCUENTRA REGISTRADO.");
+										}else{
+											toastr.error(NOTIFY.get('UNKNOWN_ERROR'));
+										}
+									}
+								}
+							},
+							error: function(){
+								toastr.error(NOTIFY.get('ERROR_INTERNAL'));
+							}
+						});
+					}
+
+				});
+				$(".ui-dialog-title").text("Nueva marca");
+			}
+
+			var refreshLogValidacion = function(notify) {
+				$.ajax({
+					url: '/4DACTION/_V3_getLogValidacionByIndex',
+					data: {
+						id: $('section.sheet').data('id'),
+						index: 'Nota_de_venta|' + $('section.sheet').data('id'),
+						tablita: 'Nota_de_venta'
+					},
+					dataType: 'json',
+					success: function(data) {
+						
+						if (data.rows.length == 0) {
+							$('section.sheet ul.steps').hide();
+							$('section.sheet ul.steps').parentTo('article').hide();
+							$('#menu [data-name^="validate_"]:not([data-name="validate_send"])').hide();
+							return false;
+						}
+						var populate = function(target) {
+							$('#menu [data-name^="validate_"]').hide();
+							target.empty();
+							
+							var max_jerarquia = 0;
+							var max_priority = 0;
+
+							for (var i = 0; i < data.rows.length; i++)
+								max_jerarquia = (data.rows[i].jerarquia > max_jerarquia)? data.rows[i].jerarquia : max_jerarquia;
+
+							for (var i = 0; i < data.rows.length; i++)
+								max_priority = (data.rows[i].priority > max_priority)? data.rows[i].priority : max_priority;
+
+							// BEGIN: for TEST
+
+							var valid_rules = 0;
+							var approved_rules = 0;
+							var rejected_rules = 0;
+
+							for(var z = 0; z <= max_priority; z++) {
+
+								for (var i = 1; i <= max_jerarquia; i++) {
+									var htmlObject = $('<li><ul></ul></li>');
+
+									/*
+									var current = data.rows[i];
+									*/
+
+									/* TEST
+									var results = [];
+									for (var k = 0; k < data.rows.length; k++) {
+										for (key in data.rows[k]) {
+											// if (data.rows[k].jerarquia == i) { TEST
+											if (data.rows[k].jerarquia == i && data.rows[k].priority == z) {
+												results.push(data.rows[k]);
+											}
+										}
+									}
+									*/
+									var results = [];
+									for (var k = 0; k < data.rows.length; k++) {
+										if (data.rows[k].jerarquia == i && data.rows[k].priority == z) {
+											results.push(data.rows[k]);
+										}
+									}
+
+
+
+									if (results.length > 0) {
+
+										var current = results[0];
+										if (current.required)
+											htmlObject.find('ul').addClass('and');
+										else
+											htmlObject.find('ul').addClass('or');
+
+										var required = false;
+										var local_valid_steps = 0;
+										var local_passed_steps = 0;
+										var local_approved_steps = 0;
+										var local_rejected_steps = 0;
+
+										if (data.rows.length > 0)
+											$('section.sheet ul.steps').parentTo('article').show();
+
+										// for (var j = 0; j < data.rows.length; j++) { TEST
+										for (var j = 0; j < results.length; j++) {
+											//var current = data.rows[j]; TEST
+											var current = results[j];
+											if (current.jerarquia === i) {
+												local_valid_steps++;
+
+												/*subHtmlObject = $('<li style="text-align: left;"><div style="display: inline-block;"><div class="motivo" style="display: block; font-style: italic;"></div> <span class="name" style="text-transform: capitalize; display: inline-block; width: 150px;"></span></div><span class="indicator ui-icon"></span><button class="approve" style="vertical-align middle; width: auto; font-size: 10px !important; height: 24px !important;">Validar</button><button class="reject" style="width: auto; font-size: 10px !important; height: 24px !important; vertical-align: middle;">Rechazar</button><small class="action" style="margin-left: 10px;font-size: 10px;"></small></li>');
+												*/
+												subHtmlObject = $('<li style="text-align: left;"><div style="display: inline-block;"><div class="motivo" style="display: inline-block; font-style: italic; width: 450px;"></div> <span class="name" style="text-transform: capitalize; display: inline-block; width: 200px;"></span></div><span class="indicator ui-icon"></span><button class="approve" style="vertical-align middle; width: auto; font-size: 10px !important; height: 24px !important;">Validar</button><button class="reject" style="width: auto; font-size: 10px !important; height: 24px !important; vertical-align: middle;">Rechazar</button><small class="action" style="margin-left: 10px;font-size: 10px;"></small></li>');
+
+												subHtmlObject.data('id', current.id);
+												subHtmlObject.data('username', current.username);
+												subHtmlObject.data('observacion', current.observacion);
+												subHtmlObject.data('updated-at', current.updated_at);
+												subHtmlObject.data('updated_at_new', current.updated_at_new);
+												subHtmlObject.data('updated_at_time_new', current.updated_at_time_new);
+												subHtmlObject.find('span.name').text(current.full_name);
+												subHtmlObject.find('div.motivo').text(current.motivo);
+
+												if (current.username.toLowerCase() == $('html > body > aside > div > div > h1').data('username').toLowerCase()) {
+
+													if (current.updated_at === null) {
+
+														$('#menu [data-name^="validate_accept"]').show();
+														$('#menu [data-name^="validate_reject"]').show();
+
+														$('[data-name="share"]').hide();
+														//$('[data-name="convert_negocio"]').hide();
+														//$('[data-name="conversion_negocio_request"]').show();
+
+														//$('#scrollPagos').hide();
+
+													}
+												}
+
+												if (current.approved === true) {
+													subHtmlObject.find('span.indicator').addClass('ui-icon-check');
+													local_passed_steps++;
+													local_approved_steps++;
+												} if (current.updated_at === null) {
+													subHtmlObject.find('span.indicator').addClass('ui-icon-help');
+												} if (current.approved === false && current.updated_at !== null) {
+													subHtmlObject.find('span.indicator').addClass('ui-icon-closethick');
+													local_passed_steps++;
+													local_rejected_steps++;
+												}
+
+												if (current.username.toLowerCase() == $('html > body > aside > div > div > h1').data('username').toLowerCase()) {
+
+													subHtmlObject.find('button.approve').button({
+														icons: {
+															primary: 'ui-icon-check'
+														}
+													}).click(function() {
+														// Acciones al aprobar validación
+														$.ajax({
+															url: '/4DACTION/_V3_setLogValidacion',
+															data: {
+																id: $(this).parentTo('li').data('id'),
+																approved: true
+															},
+															dataType: 'json',
+															success: function(data) {
+																
+																if (data.success) {
+																	refreshLogValidacion();
+																	toastr.success(NOTIFY.get('SUCCESS_VALIDACION_ACCEPT'));
+																	$('#menu > ul > li[data-name^="validate_"]').hide();
+																	
+																	// Enviar correo validación aceptada
+																	var username = $('html > body.menu.home > aside > div > div > h1').data('username');
+																	var record_name = 'Cotización';
+																	var index = $('section.sheet').data('index');
+																	var text = $('input[name="cotizacion[titulo][text]"]').val();
+
+																	var usernames = [];
+																	usernames.push($('section.sheet').data('username'));
+																	$('ul.steps > li > ul > li').each(function() {
+																		var username = $(this).data('username');
+																		if (usernames.indexOf(username) == -1)
+																			usernames.push(username);
+																	});
+
+																		$.ajax({
+																			url: `/4DACTION/_V3_checkValidate?id=${$('section.sheet').data('id')}&module=nota_de_venta`,
+																			data: {
+																			},
+																			dataType: 'json',
+																			success: function(subdata) {
+																				
+																				if(subdata.validated){
+
+																					const email2 = import("../../script/unabase/email.js?1");
+																					for (k in usernames) {
+																						
+																						
+
+																						   $.ajax({
+																						      url: "/4DACTION/_V3_getUsuario",
+																						      data: {
+																						        id: usernames[k]
+																						      },
+																						      dataType: "json",
+																						      async: false,
+																						      success: function(data) {
+
+																						      	
+																						        let current = data.rows[0];
+																						        let toName = (
+																						          current.nombres.trim() +
+																						          " " +
+																						          current.ap_pat.trim()
+																						        ).trim();
+																						        let toEmail = current.email;
+
+
+																						        if(current.allow_email){
+																						        	
+
+																									var paramsData;
+																								 	
+																								 	
+													
+
+																									
+																					       			
+																					        		
+																									unaBase.email.notify(usernames[k], 'validation_accepted', record_name, index, text, null, 'cotizaciones/content.shtml', $('section.sheet').data('id'));
+																					        		
+
+																								}
+																						
+
+
+																					         
+																						        // email2.then(functions => {
+																						        // 	functions.notifyRequestValidationOC(paramsData);
+																						        	
+																						        	
+																						        // });
+
+																										
+																						        
+																						      }
+																						    });
+
+
+
+
+
+
+																						/*unaBase.email.notify(usernames[k], 'validation_accepted', record_name, index, text, null, 'cotizaciones/content.shtml', $('section.sheet').data('id'));*/
+
+																						// unaBase.email.notify(usernames[k], 'validation_accepted', record_name, index, text, null, 'cotizaciones/content.shtml', $('section.sheet').data('id'), true);
+
+																						
+																						unaBase.inbox.send({
+																							to: usernames[k],
+																							subject: 'Aceptó validar ' + record_name + ' Nº ' + index + ' / ' + text,
+																							into: 'viewport',
+																							href: '/v3/views/cotizaciones/content.shtml?id=' + $('section.sheet').data('id'),
+																							tag: 'avisos'
+																						});
+																						
+																					}
+																				}
+																				
+
+																			}
+																		});
+																	
+
+																	/*unaBase.log.save('Ha aprobado validar <!--#4DTEXT etiqueta_cotizacion-->', 'cotizaciones', index, $('section.sheet').data('id'));*/
+
+																	 $('#menu [data-name="save"]').find('button').trigger('click');
+
+																} else
+																	toastr.error(NOTIFY.get('ERROR_RECORD_READONLY'));
+															}
+														});
+													});
+
+													subHtmlObject.find('button.reject').button({
+														icons: {
+															primary: 'ui-icon-closethick'
+														}
+													}).click(function() {
+														var that = this;
+														// Acciones al rechazar validación
+														var htmlObject = $('<section> \
+															<span>Ingrese motivo de rechazo</span> \
+															<textarea name="response" required placeholder="Requerido..."></textarea> \
+														</section>');
+														htmlObject.find('textarea').on('blur change', function() {
+															htmlObject.data('response', $(this).val());
+														});
+														prompt(htmlObject).done(function(data) {
+															var promptData = data;
+															var idLogValidacion = $(that).parentTo('li').data('id');
+															if (promptData !== false)
+																$.ajax({
+																	url: '/4DACTION/_V3_setLogValidacion',
+																	data: {
+																		id: idLogValidacion,
+																		approved: false,
+																		observacion: promptData
+																	},
+																	dataType: 'json',
+																	success: function(data) {
+																		if (data.success) {
+																			refreshLogValidacion();
+																			toastr.success(NOTIFY.get('SUCCESS_VALIDACION_REJECT'));
+																			$('#menu > ul > li[data-name^="validate_"]').hide();
+																			// Enviar correo validación rechazada
+																			var username = $('section.sheet').data('username');
+																			var record_name = 'Cotización';
+																			var index = $('section.sheet').data('index');
+																			var text = $('input[name="cotizacion[titulo][text]"]').val();
+
+																			var usernames = [];
+																			usernames.push($('section.sheet').data('username'));
+
+																			/*$('ul.steps > li > ul > li').each(function() {
+																				var username = $(this).data('username');
+																				if (usernames.indexOf(username) == -1)
+																					usernames.push(username);
+																			});
+																			*/
+
+																			promptData = "Motivo: "+ promptData;
+
+																			for (k in usernames) {
+																				unaBase.email.notify(usernames[k], 'validation_rejected', record_name, index, text, promptData, 'cotizaciones/content.shtml', $('section.sheet').data('id'));
+																				unaBase.inbox.send({
+																					to: usernames[k],
+																					subject: 'Rechazó validar ' + record_name + ' Nº ' + index + ' / ' + text,
+																					into: 'viewport',
+																					href: '/v3/views/cotizaciones/content.shtml?id=' + $('section.sheet').data('id'),
+																					tag: 'avisos'
+																				});
+																			}
+
+																			unaBase.log.save('Ha rechazado validar <!--#4DTEXT etiqueta_cotizacion-->', 'cotizaciones', index, $('section.sheet').data('id'), promptData);
+
+																		} else
+																			toastr.error(NOTIFY.get('ERROR_RECORD_READONLY'));
+																	}
+																});
+														});
+													});
+
+												} else {
+													subHtmlObject.find('button.approve').remove();
+													subHtmlObject.find('button.reject').remove();
+													/*if (subHtmlObject.find('span.indicator').hasClass('ui-icon-check'))
+														subHtmlObject.find('small.action').text('El usuario aprobó validar');
+													if (subHtmlObject.find('span.indicator').hasClass('ui-icon-closethick'))
+														subHtmlObject.find('small.action').text('El usuario rechazó validar');
+													*/
+													if (subHtmlObject.find('span.indicator').hasClass('ui-icon-help'))
+														subHtmlObject.find('small.action').text('Esperando acción del usuario');
+												}
+
+												htmlObject.find('ul').append(subHtmlObject);
+
+												if (current.required)
+													required|= current.required;
+											}
+										}
+
+										if (required) {
+											if (local_valid_steps == local_approved_steps)
+												htmlObject.find('ul').addClass('approved');
+											if (local_valid_steps == local_rejected_steps)
+												htmlObject.find('ul').addClass('rejected');
+										} else {
+											if (local_passed_steps > 0)
+												htmlObject.find('ul').addClass('approved');
+											if (local_rejected_steps > 0)
+												htmlObject.find('ul').addClass('rejected');
+										}
+										if (htmlObject.find('ul').hasClass('approved') || htmlObject.find('ul').hasClass('rejected')) {
+											htmlObject.find('ul > li').each(function() {
+												var updated_at = $(this).data('updated-at');
+
+												var updated_at_new = $(this).data('updated_at_new');
+												var updated_at_time_new = $(this).data('updated_at_time_new');
+
+												//if ($(this).find('span.indicator').length > 0) {
+													if ($(this).find('span.indicator').hasClass('ui-icon-help'))
+														$(this).find('small.action').text('No se requiere acción del usuario');
+													/*if ($(this).find('span.indicator').hasClass('ui-icon-check')) {
+														$(this).find('small.action').html('El usuario aprobó validar el <time datetime="' + updated_at + '">' + Date.parse(updated_at).getDate() + '-' + (Date.parse(updated_at).getMonth() + 1) + '-' + Date.parse(updated_at).getFullYear() + ' a las ' + Date.parse(updated_at).getHours() + ':' + sprintf("%02d", Date.parse(updated_at).getMinutes()) + '</time>');
+													}*/
+													if ($(this).find('span.indicator').hasClass('ui-icon-check')) {
+														$(this).find('small.action').html('El usuario aprobó validar el <time datetime="' + updated_at_new + '">' + updated_at_new + ' a las ' + updated_at_time_new + '</time>');
+													}
+													/*if ($(this).find('span.indicator').hasClass('ui-icon-closethick')) {
+														if ($(this).data('observacion') != '')
+															$(this).find('small.action').html('El usuario rechazó validar el <time datetime="' + updated_at + '">' + Date.parse(updated_at).getDate() + '-' + (Date.parse(updated_at).getMonth() + 1) + '-' + Date.parse(updated_at).getFullYear() + ' a las ' + Date.parse(updated_at).getHours() + ':' + sprintf("%02d", Date.parse(updated_at).getMinutes()) + '</time> por:<br>&quot;<strong style="font-weight: bold;">' + $(this).data('observacion') + '</strong>&quot;');
+														else
+															$(this).find('small.action').text('El usuario rechazó validar');
+													}*/
+													if ($(this).find('span.indicator').hasClass('ui-icon-closethick')) {
+														if ($(this).data('observacion') != '')
+															$(this).find('small.action').html('El usuario rechazó validar el <time datetime="' + updated_at_new + '">' + updated_at_new + ' a las ' + updated_at_time_new + '</time> por:<br>&quot;<strong style="font-weight: bold;">' + $(this).data('observacion') + '</strong>&quot;');
+														else
+															$(this).find('small.action').text('El usuario rechazó validar');
+													}
+												//}
+											});
+											htmlObject.find('button.approve').remove();
+											htmlObject.find('button.reject').remove();
+											
+										}
+
+										if (unaBase.doc.statusnv) {
+											$('#menu [data-name="ultimate_val"]').remove();
+										}
+
+
+										target.append(htmlObject);
+									}
+								}
+
+								var valid_steps = target.find('> li').length;
+								var approved_steps = target.find('> li').has('ul.approved').length;
+								var rejected_steps = target.find('> li').has('ul.rejected').length;
+
+								// TODO: Revisar a partir de acá, pues solamente la validación debe realizarse desde el método setLogValidacion
+								// y no desde acá (código comentado, líneas 323 a 362)
+
+								/*
+								if (valid_steps == approved_steps || valid_steps == rejected_steps) {
+									if (valid_steps == approved_steps) {
+										$('section.sheet ul.steps').prevTo('h2').find('span:last-of-type').text('Aprobado');
+										$('#menu [data-name="validate_request"]').hide();
+										// Guardar campos de validación
+										if (rejected_steps == 0 && !$('section.sheet').data('approved'))
+											$.ajax({
+												url: '/4DACTION/_V3_setCompras',
+												data: {
+													id: $('section.sheet').data('id'),
+													'oc[approved]': true
+												},
+												dataType: 'json',
+												success: function(data) {
+													if (data.success) {
+														toastr.success('La orden de compra ha pasado el proceso de validación.');
+														$('section.sheet').data('approved', true);
+														$('section.sheet').data('validado', true);
+														$('section.sheet > footer > article:first-of-type > p > span:first-of-type').text('Validada');
+														$('#scrollPagos').show();
+														// método que controla los botones
+														_validationOpciones();
+													}
+												}
+											});
+
+									}
+									if (valid_steps == rejected_steps) {
+										$('section.sheet ul.steps').prevTo('h2').find('span:last-of-type').text('Rechazado');
+
+										// Si está rechazado, volver a solicitar que la validen
+										$('#menu [data-name="validate_request"]').show();
+										$('#scrollPagos').hide();
+									}
+								} else {
+									$('section.sheet ul.steps').prevTo('h2').find('span:last-of-type').text('En espera');
+									$('#menu [data-name="validate_request"]').hide();
+									$('#scrollPagos').hide();
+								}
+								*/
+
+
+								// ver si influye en algo validar que valid_steps sea mayor a 0
+
+								valid_rules++;
+
+								if (valid_steps == approved_steps || valid_steps == rejected_steps) {
+									if (valid_steps == approved_steps) {
+										approved_rules++;
+									}
+									if (valid_steps == rejected_steps) {
+										rejected_rules++;
+									}
+								}
+							}
+
+							// END: for TEST
+
+							// BEGIN Test2
+
+
+							//if (typeof reiniciar_validacion_cotizaciones == 'undefined')
+							if (!access._506)
+								$('#menu [data-name="validate_request"]').hide();
+							else
+								$('#menu [data-name="validate_request"]').show();
+
+							if (!access._645) {
+                                $('#menu [data-name="ultimate_val"]').hide();
+                                // $('#menu [data-name="validate_send"]').hide();
+                            }else{
+                                $('#menu [data-name="ultimate_val"]').show();
+                            }
+
+							if (valid_rules == approved_rules || valid_rules == rejected_rules) {
+								if (valid_rules == approved_rules) {
+									$('section.sheet ul.steps').prevTo('h2').find('span:last-of-type').text('Aprobado');
+									// solaente deja reiniciar cuando están validadas, debería ser siempre
+									/*if (typeof reiniciar_validacion_cotizaciones == 'undefined')
+										$('#menu [data-name="validate_request"]').hide();
+									else
+										$('#menu [data-name="validate_request"]').show();*/
+									// Guardar campos de validación
+
+									// revisar data approved, hasta este punto debería estar en false o null
+									if (rejected_steps == 0 && !$('section.sheet').data('approved'))
+										$.ajax({
+											url: '/4DACTION/_V3_setCotizacion',
+											data: {
+												id: $('section.sheet').data('id'),
+												'cotizacion[approved]': true
+											},
+											dataType: 'json',
+											async: false,
+											success: function(data) {
+												if (data.success) {
+													toastr.success('La cotización ha pasado el proceso de validación.');
+
+													$('section.sheet').data('approved', true);
+													$('section.sheet').data('validado', true);
+													$('span.validation-status').text('Validada');
+
+													$('[data-name="share"]').show();
+													if (access._484)
+														$('[data-name="convert_negocio"]').show();
+													else
+														$('[data-name="conversion_negocio_request"]').show();
+
+													if (access._505) {
+														$('section.sheet:not(.staff)').find('input:not([name="item[][tipo_documento]"]), textarea, tr button, tr span').prop('disabled', false); // desbloquear si hay permiso crear validada
+														$('section.sheet:not(.staff)').find('tr button, tr span.ui-icon, ul.editable button, footer button').show(); // mostrar botones al desbloquear
+													}
+
+													if (!access._505 && valid_rules > 0) {
+														$('section.sheet:not(.staff)').find('input, textarea, tr button, tr span').prop('disabled', true).attr('placeholder', '');
+														$('section.sheet:not(.staff)').find('tr button, tr span.ui-icon, ul.editable button, footer button').hide();
+														$('section.sheet:not(.staff)').find('tr.collapsed').removeClass('collapsed');
+														/*$('nav.toolbox').find(' \
+															[data-name="discard"] \
+														').hide();*/
+													}
+
+													if (!access._520) {
+														$('nav.toolbox').find(' \
+															[data-name="discard"] \
+														').hide();
+													}
+
+													//para envio automatico de cotizacion al validar desde la web
+													//$('#menu li[data-name="share_cot_val"] button').trigger('click');
+
+
+
+													
+													//$('#scrollPagos').show();
+													// método que controla los botones
+													//_validationOpciones();
+												}
+											}
+										});
+								}
+								if (valid_rules == rejected_rules) {
+									$('section.sheet ul.steps').prevTo('h2').find('span:last-of-type').text('Rechazado');
+
+									// Si está rechazado, volver a solicitar que la validen
+									$('#menu [data-name="validate_request"]').show();
+
+									$('[data-name="share"]').hide();
+									$('[data-name="convert_negocio"]').hide();
+									$('[data-name="conversion_negocio_request"]').show();
+
+									//$('#scrollPagos').hide();
+								}
+							} else {
+								$('section.sheet ul.steps').prevTo('h2').find('span:last-of-type').text('En espera');
+								//simon test
+								if (!access._548) { // Modificar cotización por validar
+									$('section.sheet:not(.staff)').find('input, textarea, tr button, tr span').prop('disabled', true); // bloquear mientras se espera validación
+									$('section.sheet:not(.staff)').find('tr.collapsed').removeClass('collapsed'); // expandir ítems contraídos al bloquear
+									$('section.sheet:not(.staff)').find('tr button, tr span.ui-icon, ul.editable button, footer button:not(.approve):not(.reject)').hide(); // ocultar botones al bloquear
+								}
+
+								if ($('section.sheet').data('username').toLowerCase() == $('html > body.menu.home > aside > div > div > h1').data('username').toLowerCase())
+									$('#menu [data-name="validate_request"]').show();
+
+								$('[data-name="share"]').hide();
+								$('[data-name="convert_negocio"]').hide();
+
+								// --ini-- agregado para verificar que cot este validado antes de mostrar el boton "solicitar conversion", g, 12.10.18
+								if ($('section.sheet').find('span.validation-status').text() == 'Validada'){
+									$('[data-name="conversion_negocio_request"]').show();
+								}
+								// --fin-- agregado para verificar que cot este validado antes de mostrar el boton "solicitar conversion", g, 12.10.18
+								
+
+								//$('#scrollPagos').hide();
+							}
+
+							// END Test2
+
+							target.show();
+
+						};
+
+						var calcProgress = function(source) {
+							var max_jerarquia = 0;
+
+							for (var i = 0; i < source.length; i++)
+								max_jerarquia = (source[i].jerarquia > max_jerarquia)? source[i].jerarquia : max_jerarquia;
+
+							var current;
+							var valid_steps = 0;
+							var passed_steps = 0;
+
+							for (var i = 1; i <= max_jerarquia; i++) {
+								var local_valid_steps = 0;
+								var local_passed_steps = 0;
+								var local_required_steps = false;
+								for (var j = 0; j < source.length; j++) {
+									current = source[j];
+									if (current.jerarquia === i) {
+										local_required_steps|= current.required;
+										local_valid_steps++;
+										if (current.updated_at !== null)
+											local_passed_steps++;
+									}
+								}
+								if (local_required_steps) {
+									valid_steps+= local_valid_steps;
+									passed_steps+= local_passed_steps;
+								} else {
+									valid_steps++;
+									passed_steps+= (local_passed_steps > 0)? 1 : 0;
+								}
+							}
+
+							return passed_steps / valid_steps;
+						};
+
+						populate($('section.sheet ul.steps'));
+
+						$('section.sheet ul.steps').prevTo('h2').find('span:first-of-type').text(Math.round(calcProgress(data.rows) * 100, 0) + '% completado');
+
+					}
+				});
+
+			};
+
+			var initLogValidacion = function(showRequestRightNow) {
+				///¡unaBase.ui.block();
+				$.ajax({
+					url: '/4DACTION/_V3_getLogValidacionByIndex',
+					data: {
+						id: $('section.sheet').data('id'),
+						index: 'Nota_de_venta|' + $('section.sheet').data('id'),
+						tablita: 'Nota_de_venta'
+					},
+					dataType: 'json',
+					success: function(data) {
+						// var email_link = '';
+
+						if (typeof showRequestRightNow == "undefined"){
+							if (notRequestRightNow) {
+								showRequestRightNow = false;
+							}else{
+								showRequestRightNow = true;
+							}
+						}
+
+						unaBase.ui.unblock();
+						if (data.rows.length == 0 && showRequestRightNow) {
+
+							var htmlObject = $('<section> \
+								<div> \
+								<p>Esta <!--#4DTEXT etiqueta_cotizacion--> debe ser autorizada por los siguientes criterios:</p> \
+								<ul style="list-style-type: none; list-style-position: outside; margin-left: 20px;"></ul> \
+								</div> \
+								<span>Ingrese algún comentario. Se notificará cuando la <!--#4DTEXT etiqueta_cotizacion--> sea autorizada o rechazada.</span> \
+								<textarea name="comentario">Por favor validar.</textarea> \
+							</section>');
+
+							var has_rules = true;
+
+							unaBase.ui.block();
+
+							$.ajax({
+								url: '/4DACTION/_V3_setLogValidacion',
+								data: {
+									table: 'Nota_de_venta',
+									id_record: $('section.sheet').data('id'),
+									index_record: $('section.sheet').data('index'),
+									ref_record: $('section.sheet').find('[name="cotizacion[titulo][text]"]').val(),
+									test: true
+								},
+								dataType: 'json',
+								async: false,
+								success: function(data) {
+
+									has_rules = (data.rows.length > 0);
+
+									// Se recorren los criterios indicados
+									// para cada criterio se apilan los nombres de usuario encargados de validar
+									// se quitan los nombres de usuario duplicados para cada criterio
+
+									var validaciones = [];
+									$.each(data.rows, function(i, item) {
+										if (typeof validaciones[data.rows[i].text] == 'undefined')
+											validaciones[data.rows[i].text] = [];
+										var temp = [];
+
+										var temp2 = [];
+
+										$.each(data.rows, function(j, jtem) {
+											if (jtem.text == item.text) {
+												temp.push(data.rows[j].username);
+												temp2.push(data.rows[j].id);
+											}
+										});
+										validaciones[data.rows[i].text]['usernames'] = temp.filter(
+											function(a){return !this[a] ? this[a] = true : false;}, {}
+										);
+
+										validaciones[data.rows[i].text]['ids'] = temp2.filter(
+											function(a){return !this[a] ? this[a] = true : false;}, {}
+										);
+									});
+
+									// Se recorren los criterios disponibles y se asignan los detalles
+									$.each(data.rows, function(i, item) {
+										var details = data.rows[i].detail.split("\n");
+
+										var temp = [];
+
+										$.each(data.rows, function(j, jtem) {
+											$.each(details, function(k, ktem) {
+												if (details[k] != '')
+													temp.push(details[k]);
+											});
+
+										});
+										validaciones[data.rows[i].text]['detail'] = temp.filter(
+											function(a){return !this[a] ? this[a] = true : false;}, {}
+										);
+										validaciones[data.rows[i].text]['']
+									});
+
+									var criteria_list = $('<ul>');
+									// var criteria_list_link = $('<ul>');
+									for (i in validaciones) {
+									//$.each(validaciones, function(i, item) {
+										var rand_class = 'rand_' + Math.floor((Math.random() * 100000) + 1);
+
+										var criteria = criteria_list.append('<li class="' + rand_class + '" style="font-size: 90% !important; display: list-item !important; margin: 10px 0 !important;">' + '<span style="font-weight: 600 !important; font-size: inherit !important; display: block;">' + i + '</span>' + '</li>').find('li.' + rand_class);
+
+										/*var criteria_link = criteria_list_link.append('<li class="' + rand_class + '" style="font-size: 90% !important; display: list-item !important; margin: 10px 0 !important;">' + '<span style="font-weight: 600 !important; font-size: inherit !important; display: block;">' + i + '</span>' + '</li>').find('li.' + rand_class);*/
+
+										if (validaciones[i]['detail'].length > 0) {
+											var detail_list = criteria.append('<ul style="list-style-type: disc; list-style-position: inside; font-size: 12px !important; color: red !important;"></ul>').find('ul');
+
+											/*var detail_list_link = criteria_link.append('<ul style="list-style-type: disc; list-style-position: inside; font-size: 12px !important; color: red !important;"></ul>').find('ul');*/
+
+											$.each(validaciones[i]['detail'], function(j, jtem) {
+												detail_list.append('<li style="font-size: inherit !important; display: list-item !important; margin: 5px !important;">' + jtem + '</li>');
+												/*detail_list_link.append('<li data-id="' + validaciones[i]['ids'][j] + '" style="font-size: inherit !important; display: list-item !important; margin: 5px !important;">' + jtem + '</li>');*/
+											});
+
+										}
+
+										var subrand_class = 'subrand_' + Math.floor((Math.random() * 100000) + 1);
+
+										var username_list = criteria.append('<p style="font: inherit !important; display: inline-block !important; margin: 5px 0 !important;">Debe' + ((validaciones[i]['usernames'].length > 1)? 'n' : '') + ' autorizar: </p> <ul class="usernames ' + subrand_class + '" style="display: inline-block !important; list-style-type: none !important; font-size: inherit !important;"></ul>').find('ul.usernames.' + subrand_class);
+
+										/*var username_list_link = criteria_link.append('<p style="vertical-align: top; font: inherit !important; display: inline-block !important; margin: 5px 0 !important;">Debe' + ((validaciones[i]['usernames'].length > 1)? 'n' : '') + ' autorizar: </p> <ul class="usernames ' + subrand_class + '" style="display: inline-block !important; list-style-type: none !important; font-size: inherit !important;"></ul>').find('ul.usernames.' + subrand_class);*/
+
+										$.each(validaciones[i]['usernames'], function(j, jtem) {
+
+											username_list.append('<li style="font-size: inherit !important; display: inline-block !important; padding: 3px; background-color: rgb(240,240,240) !important; border: 1px solid rgb(220,220,220) !important; border-radius: 3px !important; margin: 3px;">' + jtem + '</li>');
+
+											/*username_list_link.append('<li>' + jtem + ' <span class="link" data-username="' + jtem + '"><a style="font-size: inherit !important; display: inline-block !important; padding: 10px!important; background-color: rgb(67,175,124) !important; border: 1px solid rgb(67,175,124) !important; border-radius: 3px !important; margin: 5px 10px 5px 10px!important; color: white; text-decoration: none" href="http://' + window.location.hostname + ':' + window.location.port + '/v3/views/email/express_validation_accepted.shtml?i=' + validaciones[i]['ids'][j] + '">Validar</a><a style="font-size: inherit !important; display: inline-block !important; padding: 10px!important; background-color: rgb(204,51,0) !important; border: 1px solid rgb(204,51,0) !important; border-radius: 3px !important; margin: 5px 10px 5px 10px!important; color: white; text-decoration: none" href="http://' + window.location.hostname + ':' + window.location.port + '/v3/views/email/express_validation_rejected.shtml?i=' + validaciones[i]['ids'][j] + '">Rechazar</a></span></li>');
+
+												*/
+
+										});
+
+									//});
+									}
+
+									htmlObject.find('ul').append(criteria_list.html());
+									// htmlObject_link.find('ul').append(criteria_list_link.html());
+
+									// email_link = htmlObject_link.find('div')[0].outerHTML;
+
+									unaBase.ui.block();
+
+								}
+							});
+
+							htmlObject.find('textarea').change(function() {
+								htmlObject.data('response', $(this).val());
+							});
+
+							unaBase.ui.unblock();
+
+							var generate_link_email_validacion = function(data, loginValidator) {
+
+							
+
+								var htmlObject_link = $('<section> \
+									<div> \
+									<p style="font-weight:bold;background-color:#f0f0f0;padding:5px!important;margin:0!important;border:1px solid #f0f0f0;box-sizing:border-box;">Motivo:</p> \
+									<ul style="list-style-type: none; list-style-position: outside;padding:0px!important;"></ul> \
+									<!--<div class="table"><p style="font-weight:bold;background-color:#f0f0f0;padding:5px!important;margin:0!important;border:1px solid #f0f0f0;box-sizing:border-box;">Estatus de gasto del ítem:</p><div></div></div> \
+									</div>--> \
+									<!--<span>Ingrese algún comentario. Se notificará cuando el gasto sea autorizado o rechazado.</span> \
+									<textarea required name="comentario"></textarea>--> \
+								</section>');
+
+								var criteria_list_link = $('<ul>');
+								$.each(data.rows, function(i, item) {
+									if (criteria_list_link.find('li[data-motivo="' + item.motivo + '"]').length == 0) {
+										var li = '<li data-motivo="' + item.motivo + '"><div style="font-size: inherit !important;">' + item.motivo + '</div>';
+										li += '<ul style="list-style-type:none!important;margin:0px!important;padding:0px!important;">';
+										$.each(data.rows, function(k, user) {
+											if ($(li).find('li[data-user="' + user.username + '"]').length == 0 && item.motivo == user.motivo) {
+												if (user.username == loginValidator) {
+
+													/*li += '<li data-user="' + user.username + '"><span style="font-size: inherit !important; display: inline-block !important; padding: 3px; background-color: rgb(240,240,240) !important; border: 1px solid rgb(220,220,220) !important; border-radius: 3px !important; margin: 3px;text-transform:capitalize!important;">' + user.full_name.toLowerCase() + '</span><span><a style="font-size: inherit !important; display: inline-block !important; padding: 10px!important; background-color: rgb(67,175,124) !important; border: 1px solid rgb(67,175,124) !important; border-radius: 3px !important; margin: 5px 10px 5px 10px!important; color: white; text-decoration: none" href="http://' + window.location.hostname + ':' + window.location.port + '/v3/views/email/express_validation_accepted.shtml?i=' + item.id + '">Validar</a><a style="font-size: inherit !important; display: inline-block !important; padding: 10px!important; background-color: rgb(204,51,0) !important; border: 1px solid rgb(204,51,0) !important; border-radius: 3px !important; margin: 5px 10px 5px 10px!important; color: white; text-decoration: none" href="http://' + window.location.hostname + ':' + window.location.port + '/v3/views/email/express_validation_rejected.shtml?i=' + item.id + '">Rechazar</a></span></li>';*/
+
+													li += '<li data-user="' + user.username + '"><span><a style="font-size: inherit !important; display: inline-block !important; padding: 10px!important; background-color: #34CC02 !important; border: 1px solid rgb(67,175,124) !important; border-radius: 3px !important; margin: 5px 10px 5px 10px!important; color:black; text-decoration: underline" href="https://' + window.location.hostname + '/v3/views/email/express_validation_accepted.shtml?i=' + user.id + '">Validar</a><a style="font-size: inherit !important; display: inline-block !important; padding: 10px!important; background-color: #FC4903 !important; border: 1px solid rgb(204,51,0) !important; border-radius: 3px !important; margin: 5px 10px 5px 10px!important; color: black; text-decoration: underline" href="https://' + window.location.hostname + '/v3/views/email/express_validation_rejected.shtml?i=' + user.id + '">Rechazar</a></span></li>';
+
+													/*li += '<li data-user="' + user.username + '"><span style="font-size: inherit !important; display: inline-block !important; padding: 3px; background-color: rgb(240,240,240) !important; border: 1px solid rgb(220,220,220) !important; border-radius: 3px !important; margin: 3px;text-transform:capitalize!important;">' + user.full_name.toLowerCase() + '</span></li>';*/
+
+												}else{
+													/*li += '<li data-user="' + user.username + '"><span style="font-size: inherit !important; display: inline-block !important; padding: 3px; background-color: rgb(240,240,240) !important; border: 1px solid rgb(220,220,220) !important; border-radius: 3px !important; margin: 3px;text-transform:capitalize!important;">' + user.full_name.toLowerCase() + '</span></li>';*/
+												}
+											}
+										});
+										li += "</ul>";
+										li += "</li>";
+										criteria_list_link.append(li);
+									}
+								});
+
+								htmlObject_link.find('ul').append(criteria_list_link.html());
+								email_link = htmlObject_link.find('div')[0].outerHTML;
+								return email_link;
+
+								/*$.each(data.rows, function(i, item) {
+
+									var rand_class = 'rand_' + Math.floor((Math.random() * 100000) + 1);
+									var criteria_link = criteria_list_link.append('<li class="' + rand_class + '" style="font-size: 90% !important; display: list-item !important; margin: 10px 0 !important;">' + '<span style="font-weight: 600 !important; font-size: inherit !important; display: block;">' + item.motivo + '</span>' + '</li>').find('li.' + rand_class);
+
+									if (item.username == loginValidator) {
+
+										var subrand_class = 'subrand_' + Math.floor((Math.random() * 100000) + 1);
+										var username_list_link = criteria_link.append('<p style="vertical-align: top; font: inherit !important; display: inline-block !important; margin: 5px 0 !important;">Debe autorizar: </p> <ul class="usernames ' + subrand_class + '" style="display: inline-block !important; list-style-type: none !important; font-size: inherit !important;"></ul>').find('ul.usernames.' + subrand_class);
+
+
+										username_list_link.append('<li>' + item.full_name + ' <span class="link" data-username="' + item.username + '"><a style="font-size: inherit !important; display: inline-block !important; padding: 10px!important; background-color: rgb(67,175,124) !important; border: 1px solid rgb(67,175,124) !important; border-radius: 3px !important; margin: 5px 10px 5px 10px!important; color: white; text-decoration: none" href="http://' + window.location.hostname + ':' + window.location.port + '/v3/views/email/express_validation_accepted.shtml?i=' + item.id + '">Validar</a><a style="font-size: inherit !important; display: inline-block !important; padding: 10px!important; background-color: rgb(204,51,0) !important; border: 1px solid rgb(204,51,0) !important; border-radius: 3px !important; margin: 5px 10px 5px 10px!important; color: white; text-decoration: none" href="http://' + window.location.hostname + ':' + window.location.port + '/v3/views/email/express_validation_rejected.shtml?i=' + item.id + '">Rechazar</a></span></li>');
+									};
+								});*/
+
+
+							};
+
+							if (has_rules)
+								prompt(htmlObject, undefined, undefined, undefined, function() { 
+									$('[data-name="validate_request"]').hide(); 
+								}).done(function(msg) {
+									
+									//unaBase.ui.block();
+									if(typeof msg == 'undefined') msg = 'Por favor validar.'
+									$.ajax({
+										url: '/4DACTION/_V3_setLogValidacion',
+										data: {
+											table: 'Nota_de_venta',
+											id_record: $('section.sheet').data('id'),
+											index_record: $('section.sheet').data('index'),
+											ref_record: $('input[name="cotizacion[titulo][text]"]').val(),
+											mensaje: msg
+										},
+										dataType: 'json',
+										success: function(data) {
+
+
+											//get_items($('section.sheet').data('id'));
+											$.ajax({
+												url: '/4DACTION/_V3_getLogValidacionByIndex',
+												data: {
+													id: $('section.sheet').data('id'),
+													index: 'Nota_de_venta|' + $('section.sheet').data('id'),
+													tablita: 'Nota_de_venta'
+												},
+												dataType: 'json',
+												success: function(subdata) {
+
+													// acà se deberìa crear el HTML del mail, no antes
+													// email_link = generate_link_email_validacion(subdata);
+
+													var record_name = 'Cotización';
+
+													// entry.record
+
+													var userlink = {};
+
+													$.each(subdata.rows, function(key, entry) {
+														userlink[entry.username] = {
+															record: entry.record,
+															username: entry.username,
+															block_email: entry.block_email
+														};
+													});
+
+													// $.each(subdata.rows, function(key, entry) {
+													$.each(userlink, function(key, entry) {
+														var email_link = generate_link_email_validacion(subdata, entry.username);
+
+														/*var validation_message = htmlObject_link.find('div').clone(true);
+														validation_message.find('span.link[data-username!="' + entry.username + '"]').remove();*/
+
+														var comentarioEmisor = '<p style="font-weight:bold;background-color:#f0f0f0;padding:5px!important;margin:0!important;border:1px solid #f0f0f0;box-sizing:border-box;">Comentario del emisor ('+ $('html > body.menu.home > aside > div > div > h1').text() +'):</p><div style="margin:0 5px 0 5px!important"><strong>&laquo;' + msg + '&raquo;</strong></div>';
+
+														var imprimirVistaExtendidaNeg = true;
+														
+														if (!entry.block_email)
+															unaBase.email.notify(entry.username, 'validation_request', record_name, entry.record.index, entry.record.text, email_link + comentarioEmisor , 'cotizaciones/content.shtml', entry.record.id, true, true, undefined, undefined, imprimirVistaExtendidaNeg);
+
+														/*unaBase.email.notify(entry.username, 'validation_request', record_name, entry.record.index, entry.record.text, email_link + 'Comentario de <span style="text-transform: capitalize;">' + $('html > body.menu.home > aside > div > div > h1').text() + '</span>: <strong>&laquo;' + msg + '&raquo;</strong>', 'cotizaciones/content.shtml', entry.record.id, true, true, undefined, undefined, imprimirVistaExtendidaNeg);*/
+
+														unaBase.inbox.send({
+															to: entry.username,
+															subject: 'Solicita validar <!--#4DTEXT etiqueta_cotizacion--> Nº ' + entry.record.index + ' / ' + entry.record.text,
+															into: 'viewport',
+															href: '/v3/views/cotizaciones/content.shtml?id=' + entry.record.id,
+															tag: 'solicitudes',
+															text: htmlObject.find('div')[0].outerHTML + msg
+														});
+														
+													});
+
+												}
+											});
+											refreshLogValidacion(true);
+											unaBase.interval.set(refreshLogValidacion, 15000);
+											//unaBase.ui.unblock();
+										}
+									});
+								});
+							else {
+								// si no hay reglas, se valida automáticamente
+								unaBase.ui.block();
+								$.ajax({
+									url: '/4DACTION/_V3_setCotizacion',
+									data: {
+										id: $('section.sheet').data('id'),
+										'cotizacion[approved]': true,
+										'auto': true
+									},
+									dataType: 'json',
+									success: function(data) {
+										if (data.success) {
+											//toastr.success('La orden de compra ha pasado el proceso de validación.');
+											$('section.sheet').data('approved', true);
+											$('section.sheet').data('validado', true);
+											$('span.validation-status').text('Validada');
+											$('[data-name="validate_send"]').hide();
+
+											if (access._519)
+												$('[data-name="share"]').show();
+
+											if (access._484){
+												$('[data-name="convert_negocio"]').show();
+											}else{
+												if ($('section.sheet').find('span.validation-status').text() == 'Validada'){
+													$('[data-name="conversion_negocio_request"]').show();
+												}
+											}
+
+											//$('#scrollPagos').show();
+											// método que controla los botones
+											//_validationOpciones();
+										}
+										unaBase.ui.unblock();
+									}
+								});
+							}
+						} else {
+							unaBase.ui.block();
+							refreshLogValidacion();
+							unaBase.interval.set(refreshLogValidacion, 15000);
+							unaBase.ui.unblock();
+						}
+					}
+				});
+			};
+
+		</script>
+
+		<!--#4DIF ((([Nota_de_venta]via_validada#"AUTO") & ([Nota_de_venta]version="v3") & ([Nota_de_venta]Estado_NV#"NULO")) | ([Nota_de_venta]Id_Negocio=0)-->
+		<!--#4DIF (Not(_V3_verifica_permisos_web (_V3_data_username;496)))-->
+		<script>
+
+			var crear_oc_validada = false;
+
+
+			$(document).ready(function() {
+
+
+				if ($('section.sheet').data('index') != '' && $('section.sheet').data('index') > 0) {
+					if (!deferReglaValidacion){
+						if (notRequestRightNow) {
+							initLogValidacion(false); 
+						}else{
+							initLogValidacion(true); 
+						}
+					}else {
+						$.ajax({
+							url: '/4DACTION/_V3_getLogValidacionByIndex',
+							data: {
+								id: $('section.sheet').data('id'),
+								index: 'Nota_de_venta|' + $('section.sheet').data('id'),
+								tablita: 'Nota_de_venta'
+							},
+							dataType: 'json',
+							success: function(data) {
+								if (data.rows.length > 0)
+									initLogValidacion();
+								else {
+									if ($('section.sheet').find('span.validation-status').text() != 'Validada') {
+										$('#menu [data-name="share"]').hide();
+										$('#menu [data-name="convert_negocio"]').hide();
+										$('#menu [data-name="validate_send"]').show();
+										$('#scrollval').hide();
+
+										if ($('section.sheet').find('span.validation-status').text() == 'Validada') {
+											$('[data-name="conversion_negocio_request"]').show();
+										}
+
+									}
+								}
+							}
+						});
+					}
+				}
+				else {
+					$('section.sheet ul.steps').parentTo('article').hide();
+					$('#menu [data-name^="validate_"]').hide();
+				}
+				$(`input[name="cotizacion[empresa][rut]"]`).blur(function(){
+					let value = $(this).val();
+					let oldValue = this.dataset.rut;
+					const changeRut = !(value === oldValue);
+					
+					if(!$(this).attr("readonly") && changeRut){
+						contact.verifyDuplicate(null, value).then(res => {
+							if(res.success){
+								toastr.error("El rut ingresado ya existe como contacto.");
+								$(this).val("");							
+							}
+						}).catch(err => {
+							toastr.warning(NOTIFY.get("UNKNOWN_ERROR"));
+						});
+					}
+				});
+			});
+		</script>
+		<!--#4DELSE-->
+		<script>
+
+
+
+			var crear_oc_validada = true;
+			$(document).ready(function() {
+				$.ajax({
+					url: '/4DACTION/_V3_getLogValidacionByIndex',
+					data: {
+						id: $('section.sheet').data('id'),
+						index: 'Nota_de_venta|' + $('section.sheet').data('id'),
+						tablita: 'Nota_de_venta'
+					},
+					dataType: 'json',
+					success: function(data) {
+						if (data.rows.length > 0) {
+							$('#menu [data-name="validate_send"]').hide();
+							initLogValidacion();
+						} else {
+							$('section.sheet ul.steps').parentTo('article').hide();
+						}
+					}
+				});
+
+				//$('section.sheet ul.steps').parentTo('article').hide();
+				$('#menu [data-name^="validate_"]').hide();
+			});
+		</script>
+		<!--#4DENDIF-->
+		<!--#4DELSE-->
+		<script>
+			var crear_oc_validada = true;
+			$(document).ready(function() {
+				$('section.sheet ul.steps').parentTo('article').hide();
+				$('#menu [data-name^="validate_"]').hide();
+			});
+		</script>
+		<!--#4DENDIF-->
+		<script>
+
+
+
+			var getDatosByCotizacion = function(){
+				$.ajax({
+					url: '/4DACTION/_V3_getDatoByCotizacion2',
+					data: {
+						id: $('section.sheet').data('id')
+					},
+					dataType: 'json',
+					async:false,
+					success: function(data) {
+						var htmlObject;
+						var cont = 0;
+						$.each(data.rows, function(key, item) {
+							if (item.enabled) {
+								if (item.options.length > 0) {
+									var htmlObject = $(
+										'<ul class="editable" style="margin-top: 0 !important;">' +
+											'<li>' +
+												'<span>' + item.nombre + '</span>' +
+												'<span>' +
+													'<input ' +
+														(item.isDate ? 'class="datepicker-personalizados"' : 'class="inputCustom"') +
+														' data-name="' + item.nombre + '"' +
+														' readonly' +
+														' placeholder="Seleccione desde la lista"' +
+														' data-id="' + item.id + '"' +
+														' data-preguntado="0"' +
+														' data-codigo="' + item.codigo + '"' +
+														' data-correlativo="' + item.correlativo + '"' +
+														' type="' + (item.isDate ? 'text' : 'search') + '"' +
+														' name="dato[' + item.id + '][valor]"' +
+														' value="' + item.valor + '"' +
+														(item.required ? ' required' : '') +
+													'style="max-width: none;">' +
+												'</span>' +
+												'<button data-id="' + item.id + '" class="show dato_personalizado">Ver</button>' +
+											'</li>' +
+										'</ul>'
+									);
+									
+
+
+									if (campos_personalizados_abajo) {
+										// modo touch peru
+										$('article.general-data-touch-peru').append(htmlObject);
+									}else{
+										// normal
+										$('article.general-data').append(htmlObject);
+										$('article.general-data-touch-peru').hide();
+									}
+
+									htmlObject.find('.datepicker-personalizados').datepicker({
+										dateFormat: 'dd-mm-yy',
+										altField: '',
+										altFormat: 'yy-mm-dd'
+									});
+
+									htmlObject.find('input[name*="[valor]"]').autocomplete({
+										source: function(request, response) {
+											$.ajax({
+												url: '/4DACTION/_V3_getDatoOptions2',
+												dataType: 'json',
+												data: {
+													q: request.term,
+													id: item.id
+												},
+												success: function(data) {
+													response($.map(data.rows, function(item) {
+														return item;
+													}));
+												}
+											});
+										},
+
+										minLength: 0,
+										autoFocus: true,
+										// delay: 5,
+										position: { my: "left top", at: "left bottom", collision: "flip" },
+										open: function() {
+											$(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+										},
+										close: function() {
+											$(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+										},
+										focus: function(event, ui) {
+											/*if (ui.item.text != "Nueva...") {
+												$(this).val(ui.item.text);
+											}
+											return false;*/
+										},
+										response: function(event, ui) {
+										},
+										select: function(event, ui) {
+											if (ui.item.text == "Nueva...") {
+												$(this).val("");
+												create_marca();
+											}else{
+												$(this).val(ui.item.text);
+												$(this).data("codigo", ui.item.cod);
+												$(this).data("correlativo", ui.item.correlativo_actual);
+											}
+											return false;
+										}
+
+									}).data('ui-autocomplete')._renderItem = function(ul, item) {
+										return $('<li><a>' + item.text + '</a></li>').appendTo(ul);
+									};
+
+									//$('article.general-data').find('button.show.dato_personalizado').button({
+									htmlObject.find('button.show.dato_personalizado').button({
+										icons: {
+											primary: 'ui-icon-carat-1-s'
+										},
+										text: false
+									}).click(function(event) {
+										//$('article.general-data').find('input[name="dato[1][valor]"]').autocomplete('search', '@').focus();
+										$(event.target).closest('li').find('input[name*="[valor]"]').autocomplete('search', '@').focus();
+									});
+								}else{
+									if (item.id == 4) {
+										let readonly = ``;
+										if(v3_sobrecargos_cinemagica && !modifcar_campo4_personalizado){
+											readonly = `readonly  placeholder="Generación de código automático al convertir a negocio"`
+										}
+										htmlObject = $(' \
+											<ul data-id="'+ item.id + '" class="editable" style="margin-top: 0 !important;"> \
+												<li> \
+													<span>' + item.nombre + '</span> \
+													<span class="param4"><input '+ ((item.isDate)? 'class="datepicker-personalizados"' : 'class="inputCustom"') + readonly +' data-preguntado="0" data-name="' + item.nombre + '" data-codigo="' + item.codigo + '" data-correlativo="' + item.correlativo + '" type="'+ ((item.isDate)? 'text' : 'search') +'" name="dato[' + item.id + '][valor]" value="' + item.valor + '" ' + ((typeof item.maxlength != 'undefined')? ' maxlength="' + item.maxlength + '"' : '') + ((item.unique)? ' data-unique="true"' : '') +  <!--#4DIF Not(generar_codigo_automatico)--> ((item.required)? 'required' : '') + <!--#4DENDIF--> ' style="max-width: none;"></span> \
+												</li> \
+											</ul> \
+										');
+									}else{
+										htmlObject = $(' \
+											<ul data-id="'+ item.id + '" class="editable" style="margin-top: 0 !important;"> \
+												<li> \
+													<span>' + item.nombre + '</span> \
+													<span><input '+ ((item.isDate)? 'class="datepicker-personalizados"' : 'class="inputCustom"') +' data-name="' + item.nombre + '" data-preguntado="0" data-codigo="' + item.codigo + '" data-correlativo="' + item.correlativo + '" type="'+ ((item.isDate)? 'text' : 'search') +'" name="dato[' + item.id + '][valor]" value="' + item.valor + '" ' + ((typeof item.maxlength != 'undefined')? ' maxlength="' + item.maxlength + '"' : '') + ((item.unique)? ' data-unique="true"' : '') +  ((item.required)? 'required' : '') + ' style="max-width: none;"></span> \
+												</li> \
+											</ul> \
+										');
+									}
+
+									if (campos_personalizados_abajo) {
+										// modo touch peru
+										$('article.general-data-touch-peru').append(htmlObject);
+									}else{
+										// normal
+										$('article.general-data').append(htmlObject);
+										$('article.general-data-touch-peru').hide();
+									}
+
+									htmlObject.find('.datepicker-personalizados').datepicker({
+										dateFormat: 'dd-mm-yy',
+										altField: '',
+										altFormat: 'yy-mm-dd'
+									});
+
+								}
+							}
+
+						});
+
+					}
+				});
+
+
+			}
+
+
+			$(document).ready(function() {
+				if (!access._519)
+					$('[data-name="share"]').hide();
+				if (!access._520)
+					$('[data-name="discard"]').hide();
+
+				if (!access._530)
+					$('#menu [data-name="template"]').hide();
+
+				// setTimeout(function(){
+				getDatosByCotizacion();
+				// }, 10000);
+
+				// para guardar la referencia al modificar
+				$(".titulofinal").blur(function(){
+					$("#main-container").data("titulofinal", $(this).val());
+				});
+
+				$(".country-label-rut").text(country.label_rut);
+
+
+				document.title = 'COT. Nº <!--#4DVAR vid_negocio--> / <!--#4DTEXT _V3_nombre_empresa-->';
+
+
+
+				if(accountingMode && unaBase.parametros.accounting_anticipos_contactos){
+					document.getElementById('section_cuenta_contable_nv').style.display = ''
+					$.ajax({
+						url: window.origin + "/4DACTION/_force_getPlanAccounts",
+						data: {
+							only_accounts: true
+						},
+						dataType: "json",
+						success: function (data) {
+							let account = document.querySelector('#cuenta_contable_nv_input').value;
+							let select = document.getElementById('cuenta_contable_nv');
+							
+							// Crear opción "Seleccione cuenta contable" y agregarla al principio
+							let defaultOption = document.createElement('option');
+							defaultOption.text = "Seleccione cuenta contable";
+							defaultOption.value = "0"; // Sin valor
+							select.appendChild(defaultOption);
+							
+							// Añadir las otras opciones desde data.rows
+							data.rows.forEach(v => {
+								let option = document.createElement('option');
+								option.text = v.number + ' / ' + v.name;
+								option.value = v.number;
+								select.appendChild(option);
+							});
+
+							// Inicializar Tom Select
+							let settings = {
+								sortField: {
+									field: "text",
+									direction: "asc"
+								},
+								render:{
+									no_results: function( data, escape ){
+										return '<div class="no-results">Sin resultados</div>';
+									},
+								},
+							};
+							
+							let tomSelect = new TomSelect(select, settings);
+							
+							if (account === "") {
+								tomSelect.setValue("0"); // Establecer la opción "Seleccione cuenta contable"
+							} else {
+								tomSelect.setValue(account, true);
+							}
+
+							if (access._682 == 0) {
+								tomSelect.disable();
+								select.parentNode.addEventListener('click', async function (e) {
+								let res = await unaBase.utilities.getUserByPermiso(682)
+								let names = ''
+								res.data.row.forEach((v,index) => {
+									names += '- ' + v.nombre;
+									if (index < res.data.row.length - 1) {
+										names += ' SL '; 
+									}
+								})
+								
+								toastr.warning(String(`No tienes permiso para seleccionar una cuenta contable.SL Favor contactate con:SLSL ${names}`).replaceAll(/SL/g, '<br>'));
+								}, true);
+							} 
+						},
+						error: function (xhr, text, error) {
+							toastr.error(
+								NOTIFY.get("ERROR_INTERNAL", "Error")
+							);
+						}
+					});
+
+					}
+
+
+				$('input[name="cotizacion[vencimiento_cotizacion]"]').datepicker({
+					dateFormat: 'dd-mm-yy',
+					altField: 'input[name="cotizacion[vencimiento_cotizacion]',
+					altFormat: 'yy-mm-dd'
+				});
+
+
+				
+			});
+
+		</script>
+
+
+
+
+
+
+
+		<style>
+			section.sheet article > ul.steps {
+			}
+			section.sheet article > ul.steps > li {
+				display: inline-block;
+				/*width: 400px;*/
+				width: 980px;
+				vertical-align: middle;
+			}
+
+			section.sheet article > ul.steps > li:not(:last-of-type) {
+				margin: 0 auto;
+				padding-right: 26px;
+				background-image: url('/v3/design/_misc/ul.steps-li.png');
+				background-repeat: no-repeat;
+				background-position: right center;
+
+			}
+
+			section.sheet article > ul.steps > li:not(:first-of-type) {
+				padding-left: 10px;
+			}
+
+			section.sheet article > ul.steps > li > ul {
+				padding: 5px;
+				background-color: rgb(240,240,240);
+				border: 1px solid rgb(220,220,220);
+				border-radius: 3px;
+				font-size: 14px;
+			}
+
+			section.sheet article > ul.steps > li > ul.approved {
+				background-color: rgb(192,240,192);
+			}
+
+			section.sheet article > ul.steps > li > ul.rejected {
+				background-color: rgb(240,192,192);
+			}
+
+			section.sheet article > ul.steps > li > ul > li {
+				text-align: center;
+			}
+
+			section.sheet article > ul.steps > li > ul > li:not(:last-of-type) {
+				padding-bottom: 20px;
+				background-repeat: no-repeat;
+				background-position: center bottom;
+			}
+
+			section.sheet article > ul.steps > li > ul > li:not(:first-of-type) {
+				padding-top: 2px;
+			}
+
+			section.sheet article > ul.steps > li > ul.and > li:not(:last-of-type) {
+				background-image: url('/v3/design/_misc/ul.steps-li-ul.and-li.png');
+			}
+
+			section.sheet article > ul.steps > li > ul.or > li:not(:last-of-type) {
+				background-image: url('/v3/design/_misc/ul.steps-li-ul.or-li.png');
+			}
+
+			section.sheet article > ul.steps > li > ul > li > span {
+				 display: inline-block;
+				 vertical-align: middle;
+			}
+
+			/* cambia color letras validar y rechazar */
+			button.approve {
+				color: green;
+				border-color: green;
+			}
+
+			button.reject {
+				color: red;
+				border-color: red;
+			}
+
+			#menu > ul > li[data-name="validate_request"] button {
+				color: blue;
+				border-color: blue;
+			}
+
+			.ts-control{
+				font-size: 10px!important;
+				border-radius: 5px!important;
+				padding: 2px!important;
+			}
+
+			.ts-dropdown-content{
+				font-size: 10px;
+			}
+
+
+		</style>
+		<!-- END Edit -->
+
+	</head>
+	
+	<body>
+		<!-- Formularios de contenido -->
+		<section class="sheet staff u-doc-data" data-approved="<!--#4DIF [Nota_de_venta]Validada-->true<!--#4DELSE-->false<!--#4DENDIF-->" data-username="<!--#4DTEXT [Nota_de_venta]Login_responsable-->" data-module="cotizaciones" data-record-name="Cotización" data-aliasfiles="Nota_de_venta" data-entity="Nota_de_venta" data-id="<!--#4DVAR vid_nv-->" data-index="<!--#4DVAR vid_negocio-->"<!--#4DIF vNuevo--> data-new="true"<!--#4DENDIF--><!--#4DIF vAnulada--> data-readonly="true"<!--#4DENDIF--><!--#4DIF vBloqueada--> data-locked="true"<!--#4DENDIF-->>
+			<footer>
+				<article id="scrollval">
+					<h1>Validaciones</h1>
+					<h2><strong>Estado</strong> <span></span> <span></span></h2>
+					<ul class="steps"></ul>
+				</article>
+
+				<article class="general-data">
+					<h1>Información general</h1>
+					<h2><span id="index"><!--#4DIF vid_negocio=0-->Borrador<!--#4DELSE--><!--#4DIF vid_negocio=-1-->Plantilla<!--#4DELSE-->Nº <!--#4DVAR vid_negocio--><!--#4DENDIF--><!--#4DENDIF--></span> <strong><!--#4DTEXT _V3_escapeString(etiqueta_cotizacion)--></strong> <input class="titulofinal" data-text placeholder="Ingresa el nombre del proyecto..." type="text" name="cotizacion[titulo][text]" value="<!--#4DVAR vreferencia-->"></h2>
+					<p style="font-size:10px;margin:3px 0 3px 0;"><!--#4DIF ([Nota_de_venta]Estado_NV="NULO")--><span style="color: red !important;"><!--#4DTEXT [Nota_de_venta]Estado_NV--></span><!--#4DELSE--><!--#4DTEXT [Nota_de_venta]Estado_NV--><!--#4DENDIF--> - Creado por <!--#4DTEXT Uppercase([Nota_de_venta]Login_responsable;*)--> el <!--#4DTEXT [Nota_de_venta]Fecha_emision--> a las <!--#4DTEXT [Nota_de_venta]Hora_emision--> - Última modificación el <!--#4DTEXT [Nota_de_venta]Fecha_Ultima_Modificacion--> a las <!--#4DTEXT [Nota_de_venta]Hora_ultima_modifcacion--> - <span class="validation-status"><!--#4DIF ([Nota_de_venta]Validada | (Not([Nota_de_venta]Validada) & ([Nota_de_venta]version#"v3")))-->Validada<!--#4DELSE-->No validada<!--#4DENDIF--></span></p>
+					
+					<!--#4DIF [Nota_de_venta]v3_vencimiento_cotizacion<Current date(*)-->
+					<div style="margin:3px 0 3px 0;color:red">Vencimiento: <input style="width:65px!important;font-size:10px;" type="text" name="cotizacion[vencimiento_cotizacion]" value="<!--#4DTEXT [Nota_de_venta]v3_vencimiento_cotizacion-->"></div>
+					<!--#4DELSE-->
+					<div style="margin:3px 0 3px 0;">Vencimiento: <input style="width:65px!important;font-size:10px;" type="text" name="cotizacion[vencimiento_cotizacion]" value="<!--#4DTEXT [Nota_de_venta]v3_vencimiento_cotizacion-->"></div>
+					<!--#4DENDIF-->
+
+					<script>
+					
+					</script>
+
+					<!--#4DIF mostrar_seccion_proyectos-->
+					<ul class="editable" style="margin-top: 10px !important; margin-bottom: 0 !improtant;">
+						<li><span>Proyecto</span> <span><input readonly type="search" name="cotizacion[proyecto]" data-id="<!--#4DVAR vid_proyecto-->" value="<!--#4DVAR vproyecto-->" placeholder="Buscar..."></span><button class="show proyecto">Ver proyectos</button></li>
+					</ul><br>
+					<!--#4DENDIF-->
+
+					<ul class="editable" style="margin-top: 10px !important;">
+						<li><span>Área de negocio</span> <span><input class="inputCustom" style="max-width: none;" required readonly type="search" name="cotizacion[area_negocio]" data-id="<!--#4DVAR vid_areanegocio-->" data-codigo="<!--#4DVAR cod_areanegocio-->" value="" placeholder="Buscar..."></span><button class="show area-negocio">Ver mis áreas de negocio</button></li>
+					</ul>
+
+					<ul class="editable" style="margin-top: 10px !important;">
+						<li><span>Ejec. Responsable</span> <span><input id="ejecutivo" class="inputCustom" style="max-width: none;" readonly required type="search" name="cotizacion[ejecutivo][id]" data-id="<!--#4DTEXT vEjecutivoDefaultLogin-->" value="<!--#4DTEXT vEjecutivoDefaultNombre-->" placeholder="Buscar por Alias, Nombre o Apellidos..."></span><button class="show ejecutivo">Ver todos los ejecutivos</button></li>
+					</ul>
+
+					<ul class="editable" style="margin-top: 10px !important; display: none;" id="section_cuenta_contable_nv">
+						<input id="cuenta_contable_nv_input" value="<!--#4DTEXT [Nota_de_venta]cuenta_contable-->" type="text" style="display: none;">
+						<li><span>Cuenta contable</span><span><select class="cuentas_contables" id="cuenta_contable_nv" name="cotizacion[cuenta_contable]"></select></span></li>
+					</ul>
+				</article>
+
+				<article class="exclude-from-template" style="background-color: #F2F2F3;margin-bottom: 10px;">
+					<h1><!--#4DIF v3_cot_cliente_como_agencia-->Agencia<!--#4DELSE-->Cliente<!--#4DENDIF--></h1>
+					<button class="expand active"></button>
+					<h2><strong name="cotizacion[empresa][id]"><!--#4DVAR valias--></strong> <span name="cotizacion[empresa][razon_social]"><!--#4DVAR vempresa--></span> <span name="cotizacion[empresa][contacto][id]"><!--#4DVAR vnombrecontacto--></span></h2>
+					<ul class="editable expandable" style="display: inline-flex; flex-direction: column; gap: 5px;">
+						<li><span><!--#4DIF v3_cot_cliente_como_agencia-->Agencia<!--#4DELSE-->Cliente<!--#4DENDIF--> (Alias)</span> <span><input class="inputCustom" style="max-width: none;" data-help="Acá buscas o creas <!--#4DIF v3_cot_cliente_como_agencia-->la agencia<!--#4DELSE-->al cliente<!--#4DENDIF-->, por ejemplo: &laquo;UNA SISTEMAS&raquo;" required id="empresa" type="search" name="cotizacion[empresa][id]" data-id="<!--#4DVAR vid_empresa-->" data-sobrecargo-ca="<!--#4DVAR String(vsobrecargoca_empresa;"&xml")-->" value="<!--#4DVAR valias-->" placeholder="Buscar por alias,  ruk, razón social..."></span><button class="unlock empresa">Modificar datos de cliente</button><button class="profile empresa">Perfil</button></li>
+				        <!--#4DIF mostrar_rut_cotizacion-->
+						<li><span class="country-label-rut"><!--#4DVAR documentoIde--></span> <span><input class="inputCustom" style="max-width: none; width: 100%;" data-checkrut=<!--#4DIF vrut=""-->true<!--#4DELSE-->false<!--#4DENDIF-->  readonly required type="text" name="cotizacion[empresa][rut]" value="<!--#4DVAR vrut-->" data-rut="<!--#4DVAR vrut-->"></span><button class="edit save rut">Guardar cambios a datos de cliente</button><button class="edit discard rut">Descartar cambios a datos de cliente</button></li>
+						<!--#4DENDIF-->
+						<li><span>Razón social</span> <span><input class="inputCustom" style="max-width: none; width: 100%;" readonly required type="text" name="cotizacion[empresa][razon_social]" value="<!--#4DVAR vempresa-->"></span><button class="edit save empresa">Guardar cambios a datos de cliente</button><button class="edit discard empresa">Descartar cambios a datos de cliente</button></li>
+						<li><span>Condiciones de pago</span> <span class="full-width"><input class="inputCustom" style="max-width: none;" required readonly type="search" name="cotizacion[condiciones][forma_pago]" data-id="<!--#4DVAR vIdFormaPago-->" value="<!--#4DVAR vFormaPago-->" placeholder="Seleccionar..."></span><button class="show forma-pago">Ver formas de pago</button></li>
+					</ul>
+					<ul class="editable expandable" style="display: inline-flex; flex-direction: column; gap: 5px;">
+						<li><span>Para</span> <span><input class="inputCustom" style="max-width: none;" required data-help="Acá ingresas a quien enviarás la cotización, por ejemplo: &laquo;JUAN PÉREZ&raquo;" id="contacto" type="search" name="cotizacion[empresa][contacto][id]" data-id="<!--#4DVAR vid_contacto-->" value="<!--#4DVAR vnombrecontacto-->" placeholder="Buscar por Alias, Nombre o Apellidos..."></span><button class="show contacto">Ver todos los contactos</button><button class="unlock contacto">Modificar datos de contacto</button><button class="profile contacto">Perfil</button></li>
+						<li><span>Cargo</span> <span><input class="inputCustom" style="max-width: none; width: 100%;" readonly type="text" name="cotizacion[empresa][contacto][cargo]" value="<!--#4DVAR vcargocontacto-->"></span></li>
+						<li><span>E-mail</span> <span><input class="inputCustom" style="max-width: none; width: 100%;" readonly type="email" name="cotizacion[empresa][contacto][email]" value="<!--#4DVAR vemailcontacto-->"></span><button class="edit save contacto">Guardar cambios a datos de contacto</button><button class="edit discard contacto">Descartar cambios a datos de contacto</button></li>
+					</ul>
+				</article>
+
+				<article class="exclude-from-template" style="<!--#4DIF Not(v3_cot_cliente_como_agencia)-->display: none !important;<!--#4DENDIF-->">
+					<h1>Cliente</h1>
+					<button class="expand active"></button>
+					<h2><strong name="cotizacion[empresa2][id]"><!--#4DVAR valias2--></strong> <span name="cotizacion[empresa2][razon_social]"><!--#4DVAR vempresa2--></span> <span name="cotizacion[empresa2][contacto][id]"><!--#4DVAR vnombrecontacto2--></span></h2>
+					<ul class="editable expandable">
+						<li><span>Cliente (Alias)</span> <span><input data-help="Acá buscas o creas al cliente, por ejemplo: &laquo;UNA SISTEMAS&raquo;" required id="empresa2" type="search" name="cotizacion[empresa2][id]" data-id="<!--#4DVAR vid_empresa2-->" value="" placeholder="Buscar por alias,  <!--#4DTEXT documentoIde -->, razón social..."></span><button class="unlock empresa2">Modificar datos de cliente</button><button class="profile empresa2">Perfil</button></li>
+				<!--	     <!- -#4DIF mostrar_rut_cotizacion- ->
+						<li><span>Rut</span> <span><input readonly required type="text" name="cotizacion[empresa2][rut]" value="<!- -#4DVAR vrut2- ->" data-rut="<!- -#4DVAR vrut2-->"> </span><button class="edit save rut">Guardar cambios a datos de cliente</button><button class="edit discard rut">Descartar cambios a datos de cliente</button></li>
+						<!- -#4DENDIF- ->
+				-->
+						<li><span>Razón social</span> <span><input readonly required type="text" name="cotizacion[empresa2][razon_social]" value="<!--#4DVAR vempresa2-->"></span><button class="edit save empresa2">Guardar cambios a datos de cliente</button><button class="edit discard empresa2">Descartar cambios a datos de cliente</button></li>
+						<li><span>Condiciones de pago</span> <span class="full-width"><input required readonly type="search" name="cotizacion[condiciones2][forma_pago]" data-id="<!--#4DVAR vIdFormaPago2-->" value="<!--#4DVAR vFormaPago2-->" placeholder="Seleccionar..."></span><button class="show forma-pago2">Ver formas de pago</button></li>
+					</ul>
+					<ul class="editable expandable">
+						<li><span>Para</span> <span><input required data-help="Acá ingresas a quien enviarás la cotización, por ejemplo: &laquo;JUAN PÉREZ&raquo;" id="contacto" type="search" name="cotizacion[empresa2][contacto][id]" data-id="<!--#4DVAR vid_contacto2-->" value="<!--#4DVAR vnombrecontacto2-->" placeholder="Buscar por Alias, Nombre o Apellidos..."></span><button class="show contacto2">Ver todos los contactos</button><button class="unlock contacto2">Modificar datos de contacto</button><button class="profile contacto2">Perfil</button></li>
+						<li><span>Cargo</span> <span><input readonly type="text" name="cotizacion[empresa][contacto2][cargo]" value="<!--#4DVAR vcargocontacto2-->"></span></li>
+						<li><span>E-mail</span> <span><input readonly type="email" name="cotizacion[empresa][contacto2][email]" value="<!--#4DVAR vemailcontacto2-->"></span><button class="edit save contacto2">Guardar cambios a datos de contacto</button><button class="edit discard contacto">Descartar cambios a datos de contacto</button></li>
+					</ul>
+				</article>
+
+				<article class="general-data-touch-peru">
+					<h1>Información personalizada</h1>
+				</article>
+
+			</footer>
+			<footer>
+				<article>
+					<h1>Información adicional</h1>
+					<section>
+						<ul>		
+							
+							<li id="tipo_cambio_print">
+ 
+									<div style="margin-right:30px;">
+										<button style="margin-bottom: 5px; padding: initial;width: 100px;" type="button" class="btn btn-success general_params general" id="general_params" title="Conf. de monedas">
+											<img class="sup_icon" src="/v3/design/icons/Exchange.png" alt="exchange" width="30px" height="30px">
+											<span style="margin-right:13px ;">Moneda</span>
+										</button>
+									</div>
+		
+							</li>
+							
+							
+
+							<li><span>Fecha de asignación</span> <span class="full-width"><input type="text" class="inputCustom" name="cotizacion[condiciones][fecha_proyecto_datepicker]" value="<!--#4DVAR Substring(String(vFechaProyecto);1;10)-->"><input type="hidden" name="cotizacion[condiciones][fecha_proyecto]" class="inputCustom" value="<!--#4DVAR Substring(String(vFechaProyecto;ISO Date);1;10)-->"></span></li>
+							<script>
+							$(document).ready(function() {
+								$('input[name="cotizacion[condiciones][fecha_proyecto_datepicker]"]').datepicker({
+									dateFormat: 'dd-mm-yy',
+									altField: 'input[name="cotizacion[condiciones][fecha_proyecto]',
+									altFormat: 'yy-mm-dd'
+								});
+							});
+							</script>
+
+							<li><span>Fecha de realización</span> <span class="full-width"><input type="text" class="inputCustom" name="cotizacion[condiciones][fecha_entrega_datepicker]" value="<!--#4DVAR Substring(String(vFechaVencimiento);1;10)-->"><input type="hidden" name="cotizacion[condiciones][fecha_entrega]" value="<!--#4DVAR Substring(String(vFechaVencimiento;ISO Date);1;10)-->"></span></li>
+							
+							<!--#4DIF ver_fecha_estimada_facturacion -->
+								<li><span>Fecha estimada facturacion</span> <span class="full-width"><input type="text" name="cotizacion[condiciones][fecha_de_facturacion_datepicker]" value="<!--#4DVAR Substring(String(vFechaEstimadaDeFacturacion);1;10)-->"><input type="hidden" name="cotizacion[condiciones][fecha_estimada_facturacion]" value="<!--#4DVAR Substring(String(vFechaEstimadaDeFacturacion;ISO Date);1;10)-->"></span></li>
+								<script>
+									$(document).ready(function() {
+										$('input[name="cotizacion[condiciones][fecha_de_facturacion_datepicker]"]').datepicker({
+											dateFormat: 'dd-mm-yy',
+											altField: 'input[name="cotizacion[condiciones][fecha_estimada_facturacion]',
+											altFormat: 'yy-mm-dd'
+										});
+									});
+								</script>
+							
+							<!--#4DENDIF-->
+							<script>
+							$(document).ready(function() {
+								$('input[name="cotizacion[condiciones][fecha_entrega_datepicker]"]').datepicker({
+									dateFormat: 'dd-mm-yy',
+									altField: 'input[name="cotizacion[condiciones][fecha_entrega]',
+									altFormat: 'yy-mm-dd'
+								});
+								var list = $('ul.sidebar li');
+
+								for(var i =0; i < list.length; i++){ 
+									if( list[i].dataset.name != "cotizaciones"){
+										list[i].classList.remove('active')  
+									}
+								};
+							});
+							</script>
+										
+							<!-- ini agregado para ingreso de fecha facturacion y poder filtrar reportes de vebtas de acuerdo a la fecha, gin, 16-08-18, caso: modo --> 
+							<!--<li><span>Fecha de facturación</span> <span class="full-width"><input type="text" name="cotizacion[condiciones][fecha_facturacion_datepicker]" value="<!- -#4DVAR Substring(String(vFechaFacturacion);1;10)- ->"><input type="hidden" name="cotizacion[condiciones][fecha_facturacion]" value="<!- -#4DVAR Substring(String(vFechaFacturacion;ISO Date);1;10)- ->"></span></li>
+							<script>
+							$(document).ready(function() {
+								$('input[name="cotizacion[condiciones][fecha_facturacion_datepicker]"]').datepicker({
+									dateFormat: 'dd-mm-yy',
+									altField: 'input[name="cotizacion[condiciones][fecha_facturacion]',
+									altFormat: 'yy-mm-dd'
+								});
+							});
+							</script>-->
+							 <!-- fin agregado para ingreso de fecha facturacion y poder filtrar reportes de vebtas de acuerdo a la fecha, gin, 16-08-18, caso: modo --> 
+
+							<li><span>Observaciones</span> <span class="full-width"><textarea name="cotizacion[condiciones][notas]"><!--#4DVAR vNotas--></textarea></span></li>
+							<li><span>No incluye</span> <span class="full-width"><textarea name="cotizacion[condiciones][no_incluye]"><!--#4DVAR vNoIncluye--></textarea></span></li>
+						</ul>
+					</section>
+				</article>
+				<article class="automatic_clone">
+					<h1>Duplicación automática</h1>
+					<section style="margin-block: 30px;" class="sectionForm">
+						<ul class="containerForm">
+						  <li>
+							<div>Activar Duplicación</div>
+							<div class="">
+							  <input class="autoclone checkboxCustom" id="estado" type="checkbox" <!--#4DIF [proyectos_logs_autoclone]estado--> checked<!--#4DENDIF-->>
+							</div>
+						  </li>
+						  <li>
+							<div>Fecha de inicio</div>
+							<div class="short">
+							  <input class="autoclone inputCustom" style="width: 200px;" id="fecha" type="date" value="" />
+							</div>
+						  </li>
+						  <li>
+							<div>Próxima fecha de clonación</div>
+							<div class="short">
+							  <input class="autoclone inputCustom" style="width: 200px;" readonly id="fecha-proxima" type="text"  value="<!--#4DVAR [proyectos_logs_autoclone]proxima_fecha-->">
+							</div>
+						  </li>
+						  <li>
+							<div>Duración (N° Meses)</div>
+							<div>
+							  <input class="autoclone inputCustom" id="duracion" type="number" title="Ingrese el numero de meses" autocomplete="off"  value="<!--#4DVAR [proyectos_logs_autoclone]duracion_meses-->">
+							</div>
+						  </li>
+						  <li>
+							<div>N° duplicaciones restantes</div>
+							<div>
+							  <input class="inputCustom" id="repetirdor" type="number" readonly title="" autocomplete="off"  value="<!--#4DVAR [proyectos_logs_autoclone]repetidor-->">
+							</div>
+						  </li>
+						  <li>
+							<div>Referencia</div>
+							<div class="short">
+							  <input class="autoclone inputCustom" id="referencia" type="text" style="width: 200px;" value="<!--#4DVAR [proyectos_logs_autoclone]referencia-->">
+							</div>
+						  </li>
+						  <li>
+							<div>Desactivar herencia. **</div>
+							<div>
+								<input class="autoclone checkboxCustom" id="herencia" type="checkbox"  <!--#4DIF [proyectos_logs_autoclone]no_heredable--> checked<!--#4DENDIF-->>
+							</d>
+						  </li>
+						</ul>
+					</section>
+					<ul>
+						<li><span>**  La duplicacion es siempre desde este negocio. <small></small></span></li>
+						<li><span>*** Duplicacion heredada. <small>La duplicacion automatica de este negocio fue heredada.</small></span></li>
+						
+						
+					</ul>
+				</article>
+			</footer>
+		</section>
+
+
+		<script>
+			//PARA EVENTOS DE LA PESTAÑA GENERAL
+				$('section.sheet  footer   article.automatic_clone  input.autoclone').on('change', function(event) {
+					
+					let target = event.currentTarget;
+					let url = `/4DACTION/_light_set_project_autoclone?idnv=${ $('section.sheet').data('id')}`
+					let valor=target.value;
+					let id = target.attributes.id.value;
+					
+					if(id=='fecha')
+					valor =target.value.split('-').reverse().join('-');
+
+					if(target.attributes.type.value == 'checkbox')
+					valor = target.checked
+
+					let data={};
+					data[id] =valor;
+
+
+					$.ajax({
+						url: url,
+						dataType: 'json',
+						async: false,
+						cache: false,
+						data,
+						success: function (data) {
+							console.log('**********autoclone item saved*********')
+
+							
+							$('article.automatic_clone input#repetirdor').val(data.restantes)
+
+							
+							//let next_date= data.nextDate.split('-').reverse().join('-');
+							$('article.automatic_clone input#fecha-proxima').val(data.nextDate)
+
+
+
+
+
+							toastr.success("Cambio guardado!");
+
+						},
+						error: function (error) {
+							
+							console.log(error);
+						}
+					});
+					
+				});
+				
+
+				let fecha_clone ='<!--#4DVAR [proyectos_logs_autoclone]fecha_clonacion-->';
+
+				 fecha_clone =fecha_clone.split('-').reverse().join('-');
+				$('article.automatic_clone input#fecha').val(new Date(fecha_clone))
+				
+				
+				
+				$(document).ready(function() {
+
+					
+					$('section.sheet').on('click', 'button.general_params.general', function(event) {
+
+						unaBase.loadInto.dialog('/v3/views/cotizaciones/dialog/general_params.shtml?id=' + $('section.sheet').data('id') , 'Monedas', 'xm2-small');
+
+					});
+				
+				});
+		</script>
+
+
+<script>
+(async () => {
+  const CONFIG = {
+    endpoints: {
+      list: "https://devbase.unabase.com/node/businessArea/getByOrganization",
+      listContacts: "https://devbase.unabase.com/node/contacts/all",
+      create: "https://devbase.unabase.com/node/businessArea/create",
+      delete: "https://devbase.unabase.com/node/businessArea/delete",
+    },
+    methods: {
+      list: "GET",
+      listContacts: "GET",
+      create: "POST",
+      delete: "DELETE",
+    },
+    fetchOptions: {
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+    },
+  };
+
+  const qs = (sel) => document.querySelector(sel);
+
+  async function fetchJSON(endpointKey) {
+    const url = CONFIG.endpoints[endpointKey];
+    const method = CONFIG.methods[endpointKey];
+
+    if (!url || !method) throw new Error(`EndpointKey inválido: ${endpointKey}`);
+
+    const res = await fetch(url, {
+      method,
+      credentials: CONFIG.fetchOptions.credentials,
+      headers: { ...CONFIG.fetchOptions.headers },
+    });
+
+    const raw = await res.text();
+    let data;
+    try {
+      data = raw ? JSON.parse(raw) : null;
+    } catch {
+      data = raw; // si no era JSON, deja el texto
+    }
+
+    if (!res.ok) {
+      const msg = typeof data === "string" ? data : (data?.message || data?.msg || "Error desconocido");
+      throw new Error(`[${endpointKey}] HTTP ${res.status}: ${msg}`);
+    }
+
+    return data;
+  }
+
+  function setInputValueAndId(inputSelector, value, id) {
+    const el = qs(inputSelector);
+    if (!el) throw new Error(`No existe el input: ${inputSelector}`);
+    el.value = value ?? "";
+    if (id != null) el.dataset.id = id;
+  }
+
+  try {
+    // 1) Business Areas
+    const areas = await fetchJSON("list");
+	
+    const firstArea = Array.isArray(areas) ? areas[0] : null;
+    if (!firstArea) throw new Error("No llegaron áreas de negocio (array vacío).");
+
+    setInputValueAndId(
+      'input[name="cotizacion[area_negocio]"]',
+      firstArea.name,
+      firstArea._id
+    );
+
+    // 2) Contacts
+    const contacts = await fetchJSON("listContacts");
+	debugger
+    const firstContact = Array.isArray(contacts.docs) ? contacts.docs[0] : null;
+
+    if (!firstContact) throw new Error("No llegaron contactos (array vacío).");
+
+    // OJO: ajusta estos campos según el modelo real del contacto
+    setInputValueAndId(
+      'input[name="cotizacion[empresa][id]"]',
+      firstContact.data.nickName || firstContact.data.legalName || "",
+      firstContact._id
+    );
+
+    console.log("OK:", { firstArea, firstContact });
+    // 
+  } catch (err) {
+    console.error("Fetch failed:", err);
+  }
+})();
+</script>
+	</body>
+</html>

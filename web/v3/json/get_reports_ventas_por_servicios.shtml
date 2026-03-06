@@ -1,0 +1,9 @@
+[
+	<!--#4DLOOP aID-->
+		[
+			"<!--#4DHTML _V3_escapeString(aServicio{aID})-->",
+			<!--#4DHTML String(a_porc{aID};"&xml")-->
+		]
+		<!--#4DIF NOT(aID{aID} = aID{Size of array(aID)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+]

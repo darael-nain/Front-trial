@@ -1,0 +1,17 @@
+{
+	"total_records": <!--#4DHTML totalRecords-->,
+	"rows": [
+		<!--#4DLOOP aId -->
+		{
+			"id": <!--#4DHTML aId{aId}-->,
+			"valor_dolar": "<!--#4DHTML aValueDolar{aId}-->",
+			"valor_euro": "<!--#4DHTML aValueEuro{aId}-->",
+			"tipo_empresa": "<!--#4DHTML aTipoEmpresa{aId}-->"
+		}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	]
+	
+}
+
+
+

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Documentos</title>
+		<meta charset="utf-8">
+		<script>
+
+			$(document).ready(function() {
+
+				unaBase.toolbox.init();
+
+				// Inicializamos un buscador
+				var params = {
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/_V3_getFxr' },
+					entity: 'Rendiciones',
+					callback : function(){
+						$('table').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false });
+					},
+					// Función que genera cada fila de la tabla, dado el valor de i (índice de posición)
+					// y el valor de rows (array con todos los resultados)
+					// El contenido de rows corresponde al objeto de mismo nombre generado mediante la llamada
+					// a la api JSON. Ver /v3/json/xxxxx.shtml para conocer el formato.
+					row: {
+						html: function(i, rows) {
+							return '<tr data-id="' + rows[i].id + '">' +
+								'<td>' + rows[i].numero + '</td>' +
+								'<td>' + rows[i].emision + '</td>' +
+								'<td>' + rows[i].responsable + '</td>' +
+								'<td>' + rows[i].origen + '</td>' +
+								'<td>' + rows[i].referencia + '</td>' +
+								'<td>' + rows[i].saldo + '</td>' +
+								'<td>' + rows[i].pagado + '</td>' +
+								'<td>' + rows[i].rendido + '</td>' +
+								'<td>' + rows[i].estado + '</td>' +
+								'<td>' + rows[i].vcto + '</td>' +
+								'<td>' + rows[i].dias_vcto + '</td>' +
+							'</tr>'
+						}
+					},
+					detail: {
+				      url: function(id) {
+				      	return '/4DACTION/W_EDITAR_RENDICION/' + id;
+				      },
+				      external: true
+				     },
+					// Inflexiones
+					inflection: {
+						singular: 'Rendicion',
+						plural: 'Rendiciones',
+						none: 'ninguna'
+					},
+					// Filtros
+					filters: [
+						/*{ name: 'created_at', type: 'month', caption: 'Fecha de creación', range: true },
+						//{ name: 'updated_at', type: 'month', caption: 'Fecha últ. modificación', range: true },
+						// Pendiente: agregar datasource remoto y convertir a checkbox
+						// con jquery ui autocomplete
+						{ name: 'area_negocio', type: 'autocomplete', caption: 'Área de negocio', dataSource: 'getAreaNegocio' },
+						{ name: 'ejecutivo_responsable', type: 'autocomplete', caption: 'Ejecutivo responsable', dataSource: 'getUsuario' },
+						{ name: 'estado', type: 'checkbox', caption: 'Estado de la cotización', options: [
+							{ caption: 'En proceso', name: 'estado_en_proceso', value: true },
+							{ caption: 'Anulada', name: 'estado_nulo', value: false }
+						] }*/
+					]
+				};
+
+				unaBase.toolbox.search.init(params);
+				unaBase.toolbox.menu.init({
+					entity: 'Rendiciones'
+				});
+
+
+			});
+		</script>
+	</head>
+	<body>
+		<table class="results">
+			<thead>
+				<tr>
+					<th>Número</th>
+					<th>Emisión</th>
+					<th>Responsable</th>
+					<th>Origen</th>
+					<th>Referencia</th>
+					<th>Saldo</th>
+					<th>Pagado</th>
+					<th>Rendido</th>
+					<th>Estado</th>
+					<th>Vencimiento</th>
+					<th>Días Vcto.</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+			<tfoot></tfoot>
+		</table>
+	</body>
+</html>

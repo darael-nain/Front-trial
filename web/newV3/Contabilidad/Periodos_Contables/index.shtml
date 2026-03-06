@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Last-Modified" content="0">
+    <meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <title>Estado de resultados</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+</head>
+<body>
+  <style>
+    :root { --radius: 14px; --line: #d9d9d9; --text: #212121; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 24px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text); background: #fff;
+    }
+
+    .page { max-width: 1180px; margin: 0 auto; }
+    .page__header {
+      display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; font-size: 20px;
+    }
+    .page__title { font-size: 18px; font-weight: 600; margin: 0; color: #188972}
+    .year-select select {
+      padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: #E4EAEB; color: #2B7C7C; font-size: 22px;
+    }
+    .page__divider {
+      margin: 16px 0 24px; border: 0; border-top: 1px dashed var(--line); color: #000000;
+    }
+    .lock { font-size: 18px; font-weight: 600; margin: 0; color: #ffffff}
+    
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 22px;
+    }
+    @media (max-width: 1100px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 820px)  { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 520px)  { .grid { grid-template-columns: 1fr; } }
+
+    .month-card {
+      border: 1px solid #1c1c1c; border-radius: var(--radius);
+      padding: 0; overflow: hidden; background: #fff;
+    }
+    .month-card__band {
+      height: 34px; border-bottom: 1px solid #1c1c1c;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; background-color: #188972;
+      
+    }
+    .month-card__content {
+      padding: 16px 18px 20px;
+      display: grid; gap: 14px; justify-items: center; text-align: center;
+    }
+    .month-card__title { font-size: 14px; margin: 0; font-weight: 400;}
+    .btn {
+      width: 50%; padding: 8px 10px; border: 1px solid #1c1c1c; border-radius: 6px;
+      background: #E4EAEB; cursor: pointer; font-size: 13px; color: #2B7C7C; font-weight: 700;
+      margin: 10px; overflow: hidden;
+    }
+    .btn:hover { background: #f5f5f5; }
+
+    .btns {
+      width: 75%; padding: 4px 5px; border: 1px solid #1c1c1c; border-radius: 6px;
+      background: #E4EAEB; cursor: pointer; font-size: 13px; color: #2B7C7C; font-weight: 700;
+      margin: 10px; overflow: hidden;
+    }
+    .btns:hover { background: #f5f5f5; }
+
+    .grid-actions {
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: 16px;        
+    }
+
+    .open-periods .close-periods {
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      width: 20%;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 25px;
+      display: flex;
+      align-items: center; 
+      gap: 8px;           
+    }
+
+
+    /* CSS of the History Tab */
+    .history { margin-top:16px; }
+    .history-header { display:flex; align-items:center; gap:8px; color:#437188; font-weight:600; margin-bottom:10px; }
+    .history-header h2 { font-size:16px; margin:0; }
+    .history-header i { font-size:18px; }
+    .history-table-wrap {
+    border:1px solid #E4EAEB;
+    border-radius:12px;
+    background:#FAFBFC;
+    overflow:auto;
+    }
+    .history-table {
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0;
+    font-size:13px;
+    min-width:520px;
+    }
+    .history-table thead th {
+    position:sticky; top:0; z-index:1;
+    background:#F2F6F8;
+    color:#2B4758;
+    text-align:left;
+    font-weight:700;
+    padding:10px 12px;
+    border-bottom:1px solid #E4EAEB;
+    }
+    .history-table td {
+    padding:8px 12px;
+    color:#2B4758;
+    border-bottom:1px solid #EDEFF1;
+    white-space:nowrap;
+    }
+    .history-table tbody tr:nth-child(even) td { background:#F9FBFC; }
+    .history-table tbody tr:hover td { background:#EFF6FA; }
+    .history-table tbody tr td:first-child { border-left:1px solid transparent; }
+    .history-table tbody tr td:last-child  { border-right:1px solid transparent; }
+    #history-empty td {
+    text-align:center;
+    color:#7b8a8b;
+    background:#FAFBFC;
+    border-bottom:none;
+    padding:12px;
+    }
+    .table-badge{
+        display:inline-block; background:#2B4758; color:#fff; border-radius:9999px;  padding:2px 8px;  font-weight:700;font-size:12px;
+    }
+    @media (max-width: 640px) {
+    .history-table thead th,
+    .history-table td { padding:8px 10px; }
+    }
+
+    /* CSS for the Tabs to Select the Open/Close Accountant Periods or History */
+    .tabs { margin-top: 16px; font-family: system-ui, sans-serif; }
+    .tablist { display: flex; border: 1px solid #E4EAEB; border-bottom: none; border-top-left-radius: 10px; border-top-right-radius: 10px; background: #FAFBFC; overflow: hidden; }
+    .tab { flex: 1; display: flex; align-items: center; justify-content: center; padding: 10px 14px; background: #FAFBFC; color: #2B4758; font-size: 14px; font-weight: 600; border: none; border-right: 1px solid #E4EAEB; cursor: pointer; transition: background 0.2s, color 0.2s; }
+    .tab:last-child { border-right: none; }
+    .tab:hover:not(.is-active) { background: #ffffffff; border-bottom: 1px solid #35cc0286; }
+    .tab.is-active { background: #F2F6F8; color: #2B4758; border-bottom: 3px solid #34CC02; font-weight: 700; position: relative; }
+    .tab.is-active::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: #F2F6F8; }
+    .tabpanel { border: 1px solid #E4EAEB; border-top: none; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; background: #FFF; padding: 14px; }
+
+    /* CSS of the PopUp */
+    .mc-modal-backdrop[hidden]{ display:none !important; }
+
+    .mc-modal-backdrop{
+      position:fixed; inset:0; display:flex; justify-content:center; align-items:center;
+      background:rgba(0,0,0,.35); z-index:9999;
+    }
+    .mc-modal{
+      min-width:420px; max-width:520px; background:#fff; border:1px solid #bfbfbf;
+      border-radius:6px; box-shadow:0 8px 24px rgba(0,0,0,.25); overflow:hidden;
+      font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+    .mc-modal__header{
+      display:flex; justify-content:space-between; align-items:center;
+      padding:8px 10px; font-weight:600; color:#2b2b2b;
+      background:linear-gradient(#e6e6e6, #cfcfcf); border-bottom:1px solid #b5b5b5;
+    }
+    .mc-modal__close{
+      border:1px solid #9f9f9f; background:#e7e7e7; color:#555; border-radius:3px;
+      width:24px; height:24px; line-height:20px; cursor:pointer;
+    }
+    .mc-modal__closePeriods{
+      border:1px solid #9f9f9f; background:#e7e7e7; color:#555; border-radius:3px;
+      width:24px; height:24px; line-height:20px; cursor:pointer;
+    }
+    .mc-modal__body{ padding:16px 18px; border-bottom:1px solid #e2e2e2; color:#333; }
+    .mc-modal__footer{ display:flex; justify-content:flex-end; gap:8px; padding:10px 12px; background:#f6f6f6; }
+
+    .mc-btn{ border:1px solid #bdbdbd; background:#e9e9e9; color:#444; padding:8px 14px; border-radius:4px; cursor:pointer; }
+    .mc-btn--primary{ background:#e6e6e6; font-weight:700; }
+    .mc-btn:hover{ filter:brightness(0.97); }
+  </style>
+  
+
+  <!-- Year Selection Drowdown -->
+  <section class="page">
+    <header class="page__header">
+      <h1><i class="fas fa-lock"></i><span id="title" data-template=" Cierre / Apertura Meses Contables del {yearValue}"> Cierre / Apertura Meses Contables del 2025</span></h1>
+      <div class="year-select">
+        <label for="year" class="sr-only" style="position:absolute;left:-9999px;">Año</label>
+        <select id="year">
+          <option yearValue="2026">2026</option>
+          <option yearValue="2025">2025</option>
+          <option yearValue="2024">2024</option>
+          <option yearValue="2023">2023</option>
+          <option yearValue="2022">2022</option>
+          <option yearValue="2021">2021</option>
+          <option yearValue="2020">2020</option>
+          <option yearValue="2019">2019</option>
+          <option yearValue="2018">2018</option>
+          <option yearValue="2017">2017</option>
+          <option yearValue="2016">2016</option>
+          <option yearValue="2015">2015</option>
+          <option yearValue="2014">2014</option>
+          <option yearValue="2013">2013</option>
+          <option yearValue="2012">2012</option>
+          <option yearValue="2011">2011</option>
+          <option yearValue="2010">2010</option>
+        </select>
+      </div>
+    </header>
+
+    <div class="tabs">
+        <div class="tablist" role="tablist" aria-label="Secciones">
+          <button class="tab is-active" role="tab" aria-selected="true" aria-controls="panel-1" id="tab-1">Abrir/Cerrar Periodos</button>
+          <button class="tab" role="tab" aria-selected="false" aria-controls="panel-2" id="tab-2" onclick="loadLogs();">Historial</button>
+        </div>
+  
+        <section id="panel-1" class="tabpanel is-active" role="tabpanel" tabindex="0" aria-labelledby="tab-1">
+          <!--Open/Close Accounting Periods all-toggle-->
+          <div class="grid-actions">
+            <button class="btn open-periods" onclick="changePeriodState(null, null, 'open')">Abrir Periodos</button>
+            <button class="btn close-periods" onclick="changePeriodState(null, null, 'close')">Cerrar Periodos</button>
+          </div>
+  
+
+          <!-- Pop Up to create new Accountant Period -->
+          <div id="popup" class="mc-modal-backdrop" hidden>
+            <div class="mc-modal" role="dialog" aria-modal="true" aria-labelledby="mc-title">
+              <div class="mc-modal__header">
+                <span id="mc-title">Mensaje de solicitud</span>
+                <button type="button" class="mc-modal__close" aria-label="Cerrar">X</button>
+              </div>
+              <div class="mc-modal__body"><p>¿Quiere crear este asiento contable?</p></div>
+              <div class="mc-modal__footer">
+                <button id="acceptBtn" type="button" class="mc-btn mc-btn--primary">Aceptar</button>
+                <button id="cancelBtn" type="button" class="mc-btn">Cancelar</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pop Up confirmación para abrir o cerrar el Periodo Contable -->
+          <div id="popupOpnCls" class="mc-modal-backdrop" hidden>
+            <div class="mc-modal" role="dialog" aria-modal="true" aria-labelledby="mc-title">
+              <div class="mc-modal__header">
+                <span id="mc-title">Mensaje de solicitud</span>
+                <button type="button" class="modal__closePeriods" aria-label="Cerrar">X</button>
+              </div>
+              <div class="mc-modal__body"><p id="popupOpnClsText">¿Quiere abrir este asiento contable?</p></div>
+              <div class="mc-modal__footer">
+                <button id="acceptBtnOpn" type="button" class="mc-btn mc-btn--primary">Aceptar</button>
+                <button id="cancelBtnCls" type="button" class="mc-btn">Cancelar</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tarjetas para los meses -->
+          <div class="grid">
+            <!-- Tarjeta: Enero -->
+            <article class="month-card">
+              <div class="month-card__band">
+                <span class="lock"><i class="fas fa-lock"></i></span>
+              </div>
+              <div class="month-card__content">
+                <h2 class="month-card__title">Enero de 2025</h2>
+                <button class="btns toggle-month" data-number="01" data-month="Enero" data-state="close">Cerrar Enero</button>
+              </div>
+            </article>
+  
+            <!-- Tarjeta: Febrero -->
+            <article class="month-card">
+              <div class="month-card__band">
+                <span class="lock"><i class="fas fa-lock"></i></span>
+              </div>
+              <div class="month-card__content">
+                <h2 class="month-card__title">Febrero de 2025</h2>
+                <button class="btns toggle-month" data-number="02" data-month="Febrero" data-state="close">Cerrar Febrero</button>
+              </div>
+            </article>
+  
+            <!-- Tarjeta: Marzo -->
+            <article class="month-card">
+              <div class="month-card__band">
+                <span class="lock"><i class="fas fa-lock"></i></span>
+              </div>
+              <div class="month-card__content">
+                <h2 class="month-card__title">Marzo de 2025</h2>
+                <button class="btns toggle-month" data-number="03" data-month="Marzo" data-state="close">Cerrar Marzo</button>
+              </div>
+            </article>
+  
+            <!-- Tarjeta: Abril -->
+            <article class="month-card">
+              <div class="month-card__band">
+                <span class="lock"><i class="fas fa-lock"></i></span>
+              </div>
+              <div class="month-card__content">
+                <h2 class="month-card__title">Abril de 2025</h2>
+                <button class="btns toggle-month" data-number="04" data-month="Abril" data-state="close">Cerrar Abril</button>
+              </div>
+            </article>
+  
+            <!-- Tarjeta: Mayo -->
+            <article class="month-card">
+              <div class="month-card__band">
+                <span class="lock"><i class="fas fa-lock"></i></span>
+              </div>
+              <div class="month-card__content">
+                <h2 class="month-card__title">Mayo de 2025</h2>
+                <button class="btns toggle-month" data-number="05" data-month="Mayo" data-state="close">Cerrar Mayo</button>
+              </div>
+            </article>
+  
+            <!-- Tarjeta: Junio -->
+            <article class="month-card">
+              <div class="month-card__band">
+                <span class="lock"><i class="fas fa-lock"></i></span>
+              </div>
+              <div class="month-card__content">
+                <h2 class="month-card__title">Junio de 2025</h2>
+                <button class="btns toggle-month" data-number="06" data-month="Junio" data-state="close">Cerrar Junio</button>
+              </div>
+            </article>
+  
+            <!-- Tarjeta: Julio -->
+            <article class="month-card">
+              <div class="month-card__band">
+                <span class="lock"><i class="fas fa-lock"></i></span>
+              </div>
+              <div class="month-card__content">
+                <h2 class="month-card__title">Julio de 2025</h2>
+                <button class="btns toggle-month" data-number="07" data-month="Julio" data-state="close">Cerrar Julio</button>
+              </div>
+            </article>
+  
+            <!-- Tarjeta: Agosto -->
+            <article class="month-card">
+              <div class="month-card__band">
+                <span class="lock"><i class="fas fa-lock"></i></span>
+              </div>
+              <div class="month-card__content">
+                <h2 class="month-card__title">Agosto de 2025</h2>
+                <button class="btns toggle-month" data-number="08" data-month="Agosto" data-state="close">Cerrar Agosto</button>
+              </div>
+            </article>
+  
+            <!-- Tarjeta: Septiembre -->
+            <article class="month-card">
+              <div class="month-card__band">
+                <span class="lock"><i class="fas fa-lock"></i></span>
+              </div>
+              <div class="month-card__content">
+                <h2 class="month-card__title">Septiembre de 2025</h2>
+                <button class="btns toggle-month" data-number="09" data-month="Septiembre" data-state="close">Cerrar Septiembre</button>
+              </div>
+            </article>
+  
+            <!-- Tarjeta: Octubre -->
+            <article class="month-card">
+              <div class="month-card__band">
+                <span class="lock"><i class="fas fa-lock"></i></span>
+              </div>
+              <div class="month-card__content">
+                <h2 class="month-card__title">Octubre de 2025</h2>
+                <button class="btns toggle-month" data-number="10" data-month="Octubre" data-state="close">Cerrar Octubre</button>
+              </div>
+            </article>
+  
+            <!-- Tarjeta: Noviembre -->
+            <article class="month-card">
+              <div class="month-card__band">
+                <span class="lock"><i class="fas fa-lock"></i></span>
+              </div>
+              <div class="month-card__content">
+                <h2 class="month-card__title">Noviembre de 2025</h2>
+                <button class="btns toggle-month" data-number="11" data-month="Noviembre" data-state="close">Cerrar Noviembre</button>
+              </div>
+            </article>
+  
+            <!-- Tarjeta: Diciembre -->
+            <article class="month-card">
+              <div class="month-card__band">
+                <span class="lock"><i class="fas fa-lock"></i></span>
+              </div>
+              <div class="month-card__content">
+                <h2 class="month-card__title">Diciembre de 2025</h2>
+                <button class="btns toggle-month" data-number="12" data-month="Diciembre" data-state="close">Cerrar Diciembre</button>
+              </div>
+            </article>
+          </div>
+          
+        </section>
+  
+        <section id="panel-2" class="tabpanel" role="tabpanel" tabindex="0" aria-labelledby="tab-2" hidden>
+          <div class="history">
+            <div class="history-header">
+              <h2 class="history-title"><i class="fas fa-history"></i> Historial de Cambios</h2>
+            </div>
+            <table id="history-table" class="history-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Módulo</th>
+                  <th>Usuario</th>
+                  <th>Fecha</th>
+                  <th>Hora</th>
+                </tr>
+              </thead>
+              <tbody id="history-body">
+                <tr id="history-empty"><td colspan="5">Sin registros de logs.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+  </section>
+
+
+  
+
+
+</body>
+
+
+
+<script>
+  // Logica para los Pop Ups
+  let pendingToggle = null;
+  let isToggling = false;
+
+  // Pop up to create an Accountant Period
+  const popup = document.getElementById('popup');
+  const popupOpnCls = document.getElementById('popupOpnCls');
+  const popupOpnClsText = document.getElementById('popupOpnClsText');
+  const acceptBtn = document.getElementById('acceptBtn');
+  const acceptBtnOpn = document.getElementById('acceptBtnOpn')
+  const cancelBtn = document.getElementById('cancelBtn');
+  const closeIcon = document.querySelector('.mc-modal__close');
+  const closeIconPeriods = document.querySelector('.modal__closePeriods');
+
+  const select = document.getElementById('year');
+  const title = document.getElementById('title');
+  const template = title.dataset.template;
+  const cards = document.querySelectorAll('.month-card__title');
+
+  const open = () => popup.hidden = false;
+  const openTogglePeriod = () => {
+  if (!pendingToggle) return;
+
+    const { state, month } = pendingToggle;
+
+    if (state === 'close') {
+      popupOpnClsText.textContent = `¿Quiere abrir el asiento contable de ${month}?`;
+    } else {
+      popupOpnClsText.textContent = `¿Quiere cerrar el asiento contable de ${month}?`;
+    }
+    popupOpnCls.hidden = false;
+  };
+
+  const close = () => popup.hidden = true;
+  const closeTogglePeriod = () => popupOpnCls.hidden = true;
+
+  // Manejo para Crear Periodo Contable
+  acceptBtn.addEventListener('click', async () => {
+    if (!pendingToggle) { close(); return; }
+    const { year, month_number } = pendingToggle;
+    const ok = await createPeriod(year, month_number);
+    close();
+    if (ok) {
+      const { year, month, month_number, state, btn, icon } = pendingToggle;
+      togglePeriodStateBoxUI(year, month, month_number, 'close', btn, icon);
+      getAccountantPeriods(select.value);
+
+    } else {
+      alert(`No se pudo crear el periodo/asiento del mes ${month} y año ${year} `);
+    }
+    pendingToggle = null;
+  });
+
+  // Hacer Toggle al Periodo Contable
+  acceptBtnOpn.addEventListener('click', async () => {
+    if (!pendingToggle) { closeTogglePeriod(); return; }
+    if (isToggling) return;
+    isToggling = true;
+    acceptBtnOpn.disabled = true;
+    
+    const { year, month, month_number, state, btn, icon } = pendingToggle;
+    
+    try{
+    togglePeriodStateBoxUI(year, month, month_number, state, btn, icon);
+    await getAccountantPeriods(select.value);
+    } catch{
+      alert(`No se pudo crear el periodo/asiento del mes ${month} y año ${year} `);
+    }finally{
+      isToggling = false;
+      acceptBtnOpn.disabled = false;
+      closeTogglePeriod();
+      pendingToggle = null;
+    }
+  });
+
+  // Close Pop Ups
+  cancelBtn.addEventListener('click', close);
+  closeIcon.addEventListener('click', close);
+  cancelBtnCls.addEventListener('click', closeTogglePeriod);
+  closeIconPeriods.addEventListener('click', closeTogglePeriod);
+
+  popup.addEventListener('click', e => { if (e.target === popup) close(); });
+  document.addEventListener('keydown', e => { if (!popup.hidden && e.key === 'Escape') close(); });
+  
+  async function checkExistingPeriod(year, monthNumber) {
+    try {
+      const res = await fetch(`/4DACTION/_V3_get_estadoPeriodoContable?periodo=${year}-${monthNumber}&status=true`);
+      if (!res.ok) return false;           
+      const data = await res.json();
+      return data.exists === 1;            
+    } catch (err) {
+      console.error('Error al verificar asiento:', err);
+      return false;                        
+    }
+  }
+
+  async function createPeriod(year, monthNumber) {
+    try {
+      const res = await fetch(`/4DACTION/_V3_set_periodoContable?periodo=${year}-${monthNumber}`);
+      if (res.ok) return true;
+
+      // if something fails
+      return false;
+    } catch (err) {
+      console.error('Error al crear asiento:', err);
+      return false;
+    }
+  }
+
+  //
+  // Separate the Active/Closed Accountant Periods to History
+  const tabs = document.querySelectorAll('[role="tab"]');
+  const panels = document.querySelectorAll('[role="tabpanel"]');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => activateTab(tab));
+  });
+
+  function activateTab(tab) {
+    tabs.forEach(t => {
+      t.classList.remove('is-active');
+      t.setAttribute('aria-selected','false');
+      document.getElementById(t.getAttribute('aria-controls')).hidden = true;
+      document.getElementById(t.getAttribute('aria-controls')).classList.remove('is-active');
+    });
+    tab.classList.add('is-active');
+    tab.setAttribute('aria-selected','true');
+    const panel = document.getElementById(tab.getAttribute('aria-controls'));
+    panel.hidden = false;
+    panel.classList.add('is-active');
+    panel.focus();
+  }
+
+
+  // Replace the month number in number to string
+  function remplaceNumberforMonth(text) {
+    const months = [
+        '', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+    if (!text) return '';
+    // Search a number between 1 to 12 to replace it with the respective month
+    return text.replace(/(\b\d{1,2})(?=\s+del año\s+\d{4}\b|$)/, (match, number) => {
+        const n = parseInt(number, 10);
+        const nameMonth = months[n] || number;
+        return `de ${nameMonth}`;
+    });
+  } 
+
+  // Update History Log
+  async function loadLogs() {
+    const body = document.getElementById('history-body');
+    body.innerHTML = '<tr><td colspan="5">Cargando...</td></tr>';  
+    try {
+      const res = await fetch(`/4DACTION/_force_getLogsPeriodos?modulo=Periodos`);
+      const data = await res.json();
+
+      body.innerHTML = '';
+      if (!data.rows || data.rows.length === 0) {
+        body.innerHTML = '<tr id="history-empty"><td colspan="5">Sin registros de logs.</td></tr>';
+        return;
+      }
+
+
+      data.rows.forEach(row => {
+        const tr = document.createElement('tr');
+        const event = remplaceNumberforMonth(row.Event);
+        tr.innerHTML = `
+          <td>${row.modulo || ''}</td>
+          <td>${event || ''}</td>
+          <td>${row.UserName || ''}</td>
+          <td>${row.Date || ''}</td>
+          <td>${formatHour(row.Hour)}</td>
+        `;
+        body.prepend(tr);
+      });
+    } catch (err) {
+        console.error('Error al cargar logs:', err);
+        body.innerHTML = '<tr><td colspan="5">Error al cargar los logs.</td></tr>';
+    }
+  }
+  function formatHour(secondsStr) {
+    const seconds = parseInt(secondsStr, 10);
+    if (isNaN(seconds)) return secondsStr;
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${hours.toString().padStart(2, '0')}:${minutes
+      .toString()
+      .padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  }
+
+  //
+  // Changes the state of the UI boxes and also do a petition to change the state of the Accountant Period (ABIERTO o CERRADO)
+  async function togglePeriodStateBoxUI(year, month, month_number, state, btn, icon) {
+  let action = (state === 'close') ? 'open' : 'close';
+
+  const ok = await changePeriodState(year, month_number, action);
+
+  if (!ok) {
+    alert("No se pudo cambiar el estado del periodo");
+    return false;
+  }
+  if (action === 'open') {
+    btn.textContent = `Cerrar ${month}`;
+    btn.dataset.state = 'open';
+    icon.classList.replace('fa-lock', 'fa-lock-open');
+  } else {
+    btn.textContent = `Abrir ${month}`;
+    btn.dataset.state = 'close';
+    icon.classList.replace('fa-lock-open', 'fa-lock');
+  }
+
+  return true;
+}
+
+  // Open Accountant Periods
+  const allOpenBtn = document.querySelector('.open-periods');
+  allOpenBtn.addEventListener('click', () =>{
+    const buttons = document.querySelectorAll('.toggle-month');
+    const year = document.getElementById('year').value;
+
+    buttons.forEach(btn => {
+      const month = btn.dataset.month;
+      const month_number = btn.dataset.number; 
+      const state = btn.dataset.state;
+      const card = btn.closest('.month-card');
+      const icon = card.querySelector('.lock i');
+        if (state == 'close'){
+          let action = 'open'
+          btn.textContent = `Cerrar ${month}`;
+          btn.dataset.state = 'open';
+          icon.classList.replace('fa-lock', 'fa-lock-open');
+          changePeriodState(year, month_number, action)
+        }
+    });
+  });
+
+
+  // Close Accountant Periods
+  const allCloseBtn = document.querySelector('.close-periods');
+  allCloseBtn.addEventListener('click', () =>{
+    const buttons = document.querySelectorAll('.toggle-month');
+    const year = document.getElementById('year').value;
+
+    buttons.forEach(btn => {
+      const month = btn.dataset.month;
+      const month_number = btn.dataset.number; 
+      const state = btn.dataset.state;
+      const card = btn.closest('.month-card');
+      const icon = card.querySelector('.lock i');
+        if (state == 'open') {
+          let action = 'close'
+          btn.textContent = `Abrir ${month}`;
+          btn.dataset.state = 'close';
+          icon.classList.replace('fa-lock-open', 'fa-lock');
+          changePeriodState(year, month_number, action)
+        }
+    });
+  });
+
+    
+  //Change the state of each Period Box
+  document.querySelectorAll('.toggle-month').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const year  = document.getElementById('year').value;
+      const month = btn.dataset.month;
+      const month_number = btn.dataset.number;
+      const state = btn.dataset.state;
+      const card = btn.closest('.month-card');
+      const icon = card.querySelector('.lock i');
+
+      // Check if the period exists
+      pendingToggle = {year, month, month_number, state, btn, icon};
+      const exists = await checkExistingPeriod(year, month_number);
+      if (exists) {
+        openTogglePeriod()
+        return;
+      }
+      // If doesn't exists
+      open();
+    });
+  });
+
+
+
+  /*
+  Update the year and the boxes states
+  */
+
+  
+  const updateYear = () => {
+    const year = select.value;
+    title.textContent = template.replace('{yearValue}', year);
+
+    cards.forEach(cardTitle =>{
+      const text = cardTitle.textContent;
+      const newText = text.replace(/\d{4}$/, year);
+      cardTitle.textContent = newText;
+    });
+    getAccountantPeriods(select.value);
+  };
+
+  select.addEventListener('change', updateYear);
+  updateYear();
+
+
+  /*
+  Getting the Accountant Periods when a year is selected
+  */
+  function getAccountantPeriods(year){
+    fetch(`/4DACTION/_force_getEstadoPeriodos?year=${year}`)
+      .then(result => result.json())
+      .then(data => {
+        const rows = data.row || [];
+
+        const periodState = rows.map(item => ({
+          id: item.id,
+          month: item.mes,
+          state: item.estado
+        }));
+        
+        applyPeriodState(periodState); 
+      })
+      .catch(error => {
+        console.error("Error getting the state of Periods", error);
+      });
+  }
+
+  function applyPeriodState(periodState) {
+    const statePerMonth = new Map(periodState.map(r => [r.month, r.state]));
+    
+    document.querySelectorAll('.toggle-month').forEach(btn => {
+      const month = btn.dataset.month;                
+      const card  = btn.closest('.month-card');
+      const icon  = card.querySelector('.lock i');
+      
+      // Case Base: All closed
+      btn.textContent = `Abrir ${month}`;
+      btn.dataset.state = 'close';
+      icon.classList.remove('fa-lock-open')
+      icon.classList.add('fa-lock')
+    });
+
+    // Apply States if really exists
+    document.querySelectorAll(".toggle-month").forEach(btn =>{
+        const month = btn.dataset.month;                
+        const card  = btn.closest('.month-card');
+        const icon  = card.querySelector('.lock i');
+        const state = statePerMonth.get(month)
+      if (state === 'ABIERTO') {
+        btn.textContent = `Cerrar ${month}`;
+        btn.dataset.state = 'open';
+        icon.classList.remove('fa-lock')
+        icon.classList.add('fa-lock-open')
+      } else if (state === 'CERRADO'){
+        btn.textContent = `Abrir ${month}`;
+        btn.dataset.state = 'close';
+        icon.classList.remove('fa-lock-open')
+        icon.classList.add('fa-lock')
+      }
+    
+    });
+  }
+  /*
+  Change the state of the respective year and month
+  */  
+  async function changePeriodState(year, month, action) {
+    if (month == null || action == null) {
+      return false;
+    }
+
+    try {
+      const res = await fetch(
+        `/4DACTION/_V3_set_estadoPeriodoContable?periodo=${year}-${month}&action=${action}`
+      );
+
+      if (!res.ok) {
+        console.error('Error HTTP al cambiar estado:', res.status, res.statusText);
+        alert('Error al cambiar el estado del periodo');
+        return false;
+      }
+
+      return true;
+
+    } catch (error) {
+      alert('Error al cambiar el estado del periodo');
+      console.error('Error de red o fetch:', error);
+      return false; 
+    }
+  }
+
+
+
+  document.addEventListener('DOMContentLoaded', () => {
+    getAccountantPeriods(select.value);
+    loadLogs();
+    });
+</script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

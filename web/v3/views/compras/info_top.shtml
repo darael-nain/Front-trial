@@ -1,0 +1,28 @@
+<article>
+	<div>
+		<label>Emisión:</label>
+		<span> <!--#4DTEXT String([Orden_de_compra]Fecha;Internal date long)--></span>
+	</div>
+	<div>
+		<label>Hora:</label>
+		<span> <!--#4DTEXT String([Orden_de_compra]Hora;HH MM AM PM)--></span>
+	</div>
+	<div>
+		<label>Emisor:</label>
+		<span> <!--#4DTEXT [Orden_de_compra]Login_responsable--></span>
+	</div>
+</article>
+<article>
+	<div class="validar-compras">
+		<!--#4DIF [Orden_de_compra]validacion_oc-->
+				<span class="validado">VALIDADA</span>
+		<!--#4DELSE-->
+				<span class="novalidado">SIN VALIDAR</span>
+		<!--#4DENDIF-->	
+	</div>
+</article>
+<article class="derecho">
+	<h4>Nº <!--#4DTEXT [Orden_de_compra]Folio_OC--></h4>
+	<h3><!--#4DTEXT [Orden_de_compra]Estado_OC--></h3>
+	<h2><!--#4DTEXT Uppercase([Orden_de_compra]Referencia;*)--></h2>
+</article>

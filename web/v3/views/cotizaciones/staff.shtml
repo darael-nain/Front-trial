@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getNegocioContent-->
+		<meta charset="utf-8">
+		<title>Staff / Equipo</title>
+		<script>
+		$(document).ready(function() {
+			$('input[name="negocio[usuario][]"]').change(function(event) {
+				$.ajax({
+					url: '/4DACTION/_V3_setUsuarioByNegocio',
+					data: {
+						id: $('section.sheet').data('id'),
+						fk: $(this).parentTo('tr').data('id'),
+						enabled: $(this).prop('checked')
+					},
+					dataType: 'json',
+					async: false,
+					success: function(data) {
+						if (!data.success) {
+							event.preventDefaut();
+							toastr.error('Error al asignar el usuario al negocio. Tal vez el registro esté bloqueado.');
+						}
+					}
+				}).fail(function() {
+					event.preventDefault();
+					toastr.error('Error al asignar el usuario al negocio. Error de red.');
+				});
+			});
+
+			$('button.staff.item').button({
+				icons: {
+					primary: 'ui-icon-tag'
+				},
+				text: false
+			}).click(function(event) {
+				var id = $(this).parentTo('tr').data('id');
+				unaBase.loadInto.dialog('/v3/views/cotizaciones/staff_items.shtml?id=' + id + '&fk=' + $('section.sheet').data('id'), 'Seleccionar ítems del negocio', 'large');
+			});
+			//let footerInfoGeneral = document.getElementById("footerInfoGeneral");
+			//addInfo(footerInfoGeneral, unaBase.doc);
+			let section = document.querySelector(".sheet.staff");
+			section.dataset.id = unaBase.doc.id;
+			section.dataset.index = unaBase.doc.number;
+			section.dataset.new = unaBase.doc.number === 0;
+			section.dataset.readonly = unaBase.doc.state === "ANULADA";
+		});
+		</script>
+	</head>
+	<body>
+
+		<section class="sheet staff" >
+			<footer id="footerInfoGeneral">
+
+				
+			</footer>
+			<footer>
+				<article>
+					<h1>Usuarios</h1>
+					<table>
+						<thead>
+							<tr>
+								<th>Usuario</th>
+								<th>Nombre</th>
+								<th>Activo</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<!--#4DLOOP aUsuarioNegocioUsername-->
+							<tr data-id="<!--#4DVAR aUsuarioNegocioUsername{aUsuarioNegocioUsername}-->">
+								<td><!--#4DVAR aUsuarioNegocioUsername{aUsuarioNegocioUsername}--></td>
+								<td><!--#4DVAR aUsuarioNegocioNombre{aUsuarioNegocioUsername}--></td>
+								<td><input type="checkbox" name="negocio[usuario][]"<!--#4DIF aUsuarioNegocioEnabled{aUsuarioNegocioUsername}--> checked<!--#4DENDIF--><!--#4DIF Not(_V3_verifica_permisos_web(_V3_data_username;492))--> disabled<!--#4DENDIF-->></td>
+								<td><button class="staff item">Asignar ítems del negocio</button></td>
+							</tr>
+							<!--#4DENDLOOP-->
+						</tbody>
+					  	<tfoot></tfoot>
+					</table>
+				</article>
+			</footer>
+		</section>
+	</body>
+</html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getDtvContent-->
+	     <title>Documentos de venta</title>
+	    <meta charset="utf-8">
+	    <script type="text/javascript" src="/v3/views/dtv/script/dtv.js"></script>
+	    <script type="text/javascript" src="/v3/views/dtv/script/content.js"></script>
+	    <link rel="stylesheet" href="/v3/views/compras/design/main.css?<!--#4DTEXT Random-->">
+	    <link rel="stylesheet" href="/v3/design/grays.css?<!--#4DTEXT Random-->">
+	    <script type="text/javascript" src="/v3/script/datepicker_es.js"></script>
+	    <script>
+	      $(document).ready(function() {
+			  // autocomplete empresa
+			  unaBase.toolbox.form.autocomplete({
+		  		fields: [
+					{ local: 'contacto[info][alias]', remote: 'alias', type: 'text' },
+		  			{ local: 'contacto[info][razon_social]', remote: 'razon_social', type: 'text' },
+		  			{ local: 'contacto[info][rut]', remote: 'rut', type: 'text' },
+		  			{ local: 'contacto[info][giro]', remote: 'giro', type: 'text' },
+		  		],
+		  		data: {
+		  			entity: 'Empresa'
+		  		},
+		  		restrict: true,
+		  		response: function(event, ui) {
+		  			var target = $(this).parentTo('ul');
+		  			$(this).data('id', null);
+					target.find('input[name="contacto[info][id]"]').val(null);
+		  			target.find('input[name^="contacto[info]"]').not(this).val('');
+
+		  			//$('h2 [name="cotizacion[empresa][id]"]').text('');
+		  			//$('h2 [name="cotizacion[empresa][razon_social]"]').text('');
+		  		},
+		  		change: function(event, ui) {
+		  			var target = $(this).parentTo('ul');
+		  			if ($(this).val() == '') {
+		  				$('button.empresa').hide();
+		  				target.find('input').not(this).val('');
+		  			}
+
+		  			if (!target.find('input[name="contacto[info][id]"]').val() && $(this).val() != '') {
+		  				var element = this;
+		  				if (!access._551) {
+		  					confirm('El cliente "' + $(this).val() + '" no está registrado.' + "\n\n" + '¿Desea crearlo?').done(function(data) {
+		  						if (data) {
+		  							$(element).data('id', null);
+									target.find('input[name="contacto[info][id]"]').val(null);
+
+		  							target.parent().find('input[name^="cotizacion[empresa][contacto]"]').val('');
+
+		  							$('button.unlock.empresa').click();
+		  						} else {
+		  							$(element).val('');
+		  							setTimeout(
+		  								function() { $(element).focus(); }
+		  							, 500);
+		  						}
+		  					});
+		  				} else {
+		  					$(element).val('');
+		  					setTimeout(
+		  						function() { $(element).focus(); }
+		  					, 500);
+		  				}
+		  			}
+
+
+		  		},
+		  		select: function(event, ui) {
+		  			var target = $(this).parentTo('ul');
+
+		  			target.find('button.unlock.empresa').show();
+		  			target.find('button.profile.empresa').show();
+		  			target.find('button.edit.empresa').hide();
+
+		  			$('input[type="search"][name="contacto[info][alias]"]').val((ui.item.text)? ui.item.text : 'Sin Alias');
+
+					target.find('input[name="contacto[info][id]"]').val(ui.item.id);
+		  			target.find('input[name="contacto[info][razon_social]"]').val(ui.item.razon_social);
+		  			target.find('input[name="contacto[info][rut]"]').val((ui.item.rut_validar)? unaBase.data.rut.format(ui.item.rut) : ui.item.rut);
+		  			target.find('input[name="contacto[info][giro]"]').val(ui.item.giro);
+
+		  			target.find('input[name="des_forma_pago"]').data('id', ui.item.id_forma_default);
+		  			target.find('input[name="des_forma_pago"]').val(ui.item.des_forma_default);
+
+
+		  			$.ajax({
+		  				url: '/4DACTION/_V3_' + 'getContactoByEmpresa',
+		  				dataType: 'json',
+		  				async: false,
+		  				data: {
+		  					id: ui.item.id,
+		  					default: true,
+		  					strict: true
+		  				},
+		  				success: function(data) {
+		  					var target = $('input[type="search"][name="relacionado[info][nombre]"]').parentTo('ul');
+
+		  					target.find('input[name="relacionado[info][id]"]').data('id', 0); // ID 0 desvincula
+		  					target.find('input[name="relacionado[info][id]"]').val('');
+		  					target.find('input[name="relacionado[info][cargo]"]').val('');
+		  					target.find('input[name="relacionado[info][email]"]').val('');
+
+		  					$.map(data.rows, function(item) {
+		  						target.find('input[name="relacionado[info][id]"]').data('id', item.id);
+		  						target.find('input[name="relacionado[info][id]"]').val(item.nombre_completo);
+		  						target.find('[name="relacionado[info][cargo]"]').val(item.cargo);
+		  						target.find('[name="relacionado[info][email]"]').val(item.email);
+		  					});
+
+		  					target.find('button.unlock.contacto, button.profile.contacto, button.show.contacto').show();
+		  					target.find('button.edit.contacto').hide();
+		  				}
+		  			});
+
+		  			return false;
+		  		},
+		  		renderItem: function(ul, item) {
+		  			return $('<li><a><strong class="highlight">' + ((item.text)? item.text : '[Sin Alias]') + '</strong><em>' + ((item.rut_validar)? unaBase.data.rut.format(item.rut) : item.rut) + '</em><span>' + item.razon_social + '</span></a></li>').appendTo(ul);
+		  		}
+		  	});
+
+
+
+
+
+
+
+	      });
+
+
+
+
+	    </script>
+
+	    <style>
+
+	      /* ajustes diseño */
+	      .labels > span{
+	        display: inline-block;
+	        border: 1px solid rgb(220,220,220);
+	        /*background-color: #C9DECB;
+	        background-color:rgb(232, 247, 232);*/
+	        padding:3px;
+	        border-radius:3px;
+	        font-size:10px!important;
+	        font-weight: bold;
+	        text-transform: uppercase;
+	        margin:2px;
+	      }
+	      .labels > span.link{
+	        text-decoration: underline;
+	        cursor: pointer;
+	      }
+	      .labels > span.false{
+	        color:red!important
+	      }
+	      .labels > span.important{
+	        color:red!important
+	      }
+	      select.combos{
+	        border:1px solid lightgray!important;
+	        padding:3px!important;
+	        font-size: 12px!important;
+	      }
+	      .valor-moneda {
+	        border:1px solid gray;
+	        background-color:white;
+	        border-radius: 2px;
+	        padding:2px;
+	        margin:2px;
+	        width:100px!important;
+	      }
+	    </style>
+	</head>
+	<body>
+		<section id="sheet-dtv" class="sheet css-grays" data-id="<!--#4DTEXT id-->" data-new-index="<!--#4DVAR siguiente_folio-->">
+	      <footer>
+
+	        <article>
+	          <h1>Información general</h1>
+
+
+	          <h2><strong title="Tipo de documento" data-name="resumen[dtv][doc]">SIN DOCUMENTO</strong> <span title="Número" data-name="resumen[dtv][number]">00000</span> <strong title="Fecha emisión" data-name="resumen[dtv][emision]">00-00-0000</strong> <span data-name="resumen[dtv][reference]">SIN REFERENCIA</span></h2><br>
+
+	          <ul class="editable">
+	            <li>
+	              <span>Tipo factura</span><span><input readonly name="des_tipo_doc" placeholder="Seleccionar tipo factura" type="search" value="{tipo_factura}"></span><button type="button" class="show tipo full edit">ver tipos de facturas</button><input name="id_tipo_doc" type="hidden" value="0">
+	            </li>
+	            <li>
+	              <span>Referencia</span><span><input class="edit" name="referencia" placeholder="Ingresar aquí referencia para la factura" value="{referencia}" type="text"></span>
+	            </li>
+	            <li>
+	              <span>Número</span><span><input class="edit" placeholder="S/N" type="text" name="folio" value="{folio}"></span>
+	            </li>
+	            <li>
+	              <span>Fecha de emisión</span><span><input class="edit" class="datepicker" placeholder="dd-mm-aaaa" type="text" name="fecha_emision" value="{fecha_emision}"></span>
+	            </li>
+	          </ul>
+
+	        </article>
+
+	        <article>
+	          <h1><strong>Información del cliente</strong></h1>
+
+	          <h2><strong data-name="alias">{alias}</strong> <span data-name="razon">{razon}</span> <span data-name="contacto">{contacto}</span></h2>
+
+	          <ul class="editable lineal">
+	            <li>
+	              <span>Buscar</span><span><input class="sc-full" data-help="Acá buscas o creas el cliente, por ejemplo: &laquo;UNA SISTEMAS&raquo;" required type="search" name="contacto[info][alias]" value="{alias}" placeholder="Buscar por nombre, alias, RUT, razón social..."></span><button class="profile cliente">Perfil</button>
+	              <input name="contacto[info][id]" type="hidden" value="0">
+	            </li>
+	            <li><span>Razón social</span> <span><input readonly required type="text" name="contacto[info][razon_social]" value="{razon}"></span></li>
+	            <li><span>Rut</span> <span><input readonly required type="text" name="contacto[info][rut]" placeholder="Ej. 12.345.678-K ó 12345678-K" value="{rut}"></span></li>
+	            <li><span>Giro</span> <span><input readonly required type="text" name="contacto[info][giro]" placeholder="" value="{giro}"></span></li><br>
+
+	            <li>
+	              <span>Forma de pago:</span><span> <input class="edit" readonly name="des_forma_pago" placeholder="Seleccionar forma de pago" type="search" value="{forma_pago}"></span><button class="edit" type="button" class="show forma-pago">ver formas de pagos</button><input name="id_forma_pago" type="hidden" value="{id_forma}">
+	            </li>
+	            <li>
+	              <span>Vencimiento:</span><span><input class="datepicker edit" placeholder="dd-mm-aaaa" type="text" name="fecha_vencimiento" value="{vencimiento}"></span>
+	            </li>
+	          </ul>
+
+	          <ul class="editable lineal">
+	            <li>
+	              <span>Para</span><span><input class="sc-full" required data-help="Acá ingresas a quien enviarás la cotización, por ejemplo: &laquo;JUAN PÉREZ&raquo;" type="search" name="relacionado[info][nombre]" value="{contacto}" placeholder="Buscar por Alias, Nombre o Apellidos..."></span><button class="show contacto">Ver todos los contactos</button><button class="unlock contacto">Modificar datos de contacto</button><button class="profile contacto">Perfil</button>
+	              <input name="relacionado[info][id]" type="hidden" value="0">
+	            </li>
+	            <li><span>Cargo</span><span><input readonly type="text" name="relacionado[info][cargo]" value="{cargo}"></span></li>
+	            <li><span>Email</span><span><input readonly type="email" name="relacionado[info][email]" value="{email}"></span><button class="edit save contacto">Guardar cambios a datos de contacto</button><button class="edit discard contacto">Descartar cambios a datos de contacto</button></li>
+	          </ul>
+
+	        </article>
+	      </footer>
+
+	      <table class="items">
+	          <thead>
+	              <th class="container-menu-origen" style="background-color:<!--#4DVAR vColorCorporativoCSS--> !important;"></th>
+	              <th>Código</th>
+	              <th>Descripción</th>
+	              <th>Cantidad.</th>
+	              <th>P.U.[$]</th>
+	              <th>Subtotal [$]</th>
+	            </tr>
+	          </thead>
+	          <tbody></tbody>
+	        </table>
+
+	      <footer>
+	        <article style="position:relative;text-align:right">
+	          <h1>Totales</h1>
+	          <section class="totales-post-save">
+	              <ul class="css-boxtotales">
+	                <li><span>Total a cobrar</span><span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input class="decinot" readonly type="text" name="total_por_cobrar" value="0"></span></li>
+	                <li><span>Cobrado</span><span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input class="decinot" readonly type="text" name="total_cobrado" value="0"></span></li>
+	                <li><span>Saldo a cobrar</span><span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input class="decinot" readonly type="text" name="saldo_por_cobrar" value="0"></span></li>
+	              </ul>
+	            </section>
+	            <section>
+	              <ul class="css-boxtotales">
+	                <li><span>Subtotal</span><span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input readonly type="text" name="sub_total" value="0"></span></li>
+	                <li><span>Descuento</span><span class="numeric percent"><input readonly type="text" name="porc_descuento" value="0"> %</span> <span class="numeric currency">$ <input readonly type="text" name="descuento" value="0"></span></li>
+	                <li><span>Exento</span><span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input readonly type="text" name="exento" value="0"></span></li>
+	                <li><span>Neto</span><span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input readonly type="text" name="neto" value="0"></span></li>
+	                <li><span><!--#4DVAR <>_V3_IVAName--></span><span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input readonly type="text" name="impuesto" value="0"></span></li>
+	                <li><span>Total</span><span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input readonly type="text" name="total" value="0"></span></li>
+	              </ul>
+	            </section>
+	        </article>
+
+	        <article>
+	          <h1>Información adicional</h1>
+	          <section>
+	            <ul>
+	              <li><span style="vertical-align:top">Observaciones</span> <span class="full-width"><textarea class="edit" style="height:80px" name="observacion">{observacion}</textarea></span></li>
+	            </ul>
+	          </section>
+	        </article>
+
+	        <article id="scrollnvs">
+	         <h1>Negocios (<span>0</span>)</h1>
+	         <div style="margin:2px;"><button class="add nv">Agregar</button></div>
+	          <table class="nvs" width="99%">
+	            <thead>
+	              <tr>
+	                <th width="5%">Número</th>
+	                <th width="20%" class="left">Cliente</th>
+	                <th width="60%" class="left">Referencia</th>
+	                <th width="10%">Estado</th>
+	                <th></th>
+	              </tr>
+	            </thead>
+	            <tbody class="ui-selectable"></tbody>
+	            <tfoot>
+	              <tr>
+	                <th colspan="4"></th>
+	                <th class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--><input style="width:100px!important" readonly name="dtv[suma_justificado]" type="text" value=""></th>
+	              </tr>
+	            </tfoot>
+	          </table>
+	        </article>
+
+	      </footer>
+
+	    </section>
+	</body>
+</html>

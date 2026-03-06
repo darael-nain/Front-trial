@@ -1,0 +1,12 @@
+{
+	"row": [
+		<!--#4DLOOP aIdHistorial-->
+		{
+			"id_log": "<!--#4DHTML aIdHistorial{aIdHistorial}-->",
+			"descripcion": "<!--#4DHTML aDesHistorial{aIdHistorial}-->",
+			"nombre_usuario": "<!--#4DHTML aUserEnvio{aIdHistorial}-->",
+			"email_usuario": "<!--#4DHTML aUserEnvioEmail{aIdHistorial}-->"
+		}<!--#4DIF (aIdHistorial{aIdHistorial}#aIdHistorial{Size of array(aIdHistorial)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	]
+}

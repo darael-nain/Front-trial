@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Compras</title>
+	<!--#4DSCRIPT/_V3_proxy_getCotizacionContent-->
+    <style>
+        .selected {
+            width: 20px !important;
+            height: 20px !important;
+            vertical-align: middle !important;
+        }
+
+        .table-adjuntos tbody tr:hover {
+            background-color: #F0F5FF;
+        }
+
+        .table-adjuntos thead tr {
+            background-color: #E9F6FF;
+        }
+
+        .gastos tfoot {
+            background-color: #F3F4F6;
+        }
+
+        /* Ajuste del ancho de las columnas */
+        .gastos th, .gastos td {
+            padding: 8px;
+            text-align: right;
+        }
+
+        .gastos th:nth-child(1),
+        .gastos td:nth-child(1) {
+            width: 5%;
+            text-align: center;
+        }
+
+        .gastos th:nth-child(2),
+        .gastos td:nth-child(2) {
+            width: 10%;
+        }
+
+        .gastos th:nth-child(3),
+        .gastos td:nth-child(3) {
+            width: 8%;
+        }
+
+        .gastos th:nth-child(4),
+        .gastos td:nth-child(4) {
+            width: 8%;
+        }
+
+        .gastos th:nth-child(5),
+        .gastos td:nth-child(5) {
+            width: 15%;
+            text-align: left;
+        }
+
+        .gastos th:nth-child(6),
+        .gastos td:nth-child(6) {
+            width: 15%;
+            text-align: left;
+        }
+
+        .gastos th:nth-child(7),
+        .gastos td:nth-child(7) {
+            width: 8%;
+        }
+
+        .gastos th:nth-child(8),
+        .gastos td:nth-child(8),
+        .gastos th:nth-child(9),
+        .gastos td:nth-child(9),
+        .gastos th:nth-child(10),
+        .gastos td:nth-child(10),
+        .gastos th:nth-child(11),
+        .gastos td:nth-child(11),
+        .gastos th:nth-child(12),
+        .gastos td:nth-child(12),
+        .gastos th:nth-child(13),
+        .gastos td:nth-child(13) {
+            width: 10%;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            const considerarSoloGastosValidados = unaBase.parametros.considerarSoloGastosValidados;
+            const container = $('section.sheet-list-compras');
+            const tbody = container.find('table > tbody');
+            const tfoot = container.find('table > tfoot');
+
+            let totales = {
+                'costoempresa': 0,
+                'totalVentas': 0,
+                'totalCompras': 0,
+                'totalPagos': 0,
+                'totalIngresos': 0,
+                'totalSaldo': 0
+            };
+
+            const iniTotalesSumTotal = () => {
+                totales = {
+                    'costoempresa': 0,
+                    'totalVentas': 0,
+                    'totalCompras': 0,
+                    'totalPagos': 0,
+                    'totalIngresos': 0,
+                    'totalSaldo': 0
+                };
+            };
+
+            const loadTotalesFoot = () => {
+                return $(`
+                    <tr>
+                        <th colspan="7"></th>
+                        <th class="currency right">${totales.costoempresa.toFixed(2)}</th>
+                        <th class="currency right">${totales.totalVentas.toFixed(2)}</th>
+                        <th class="currency right">${totales.totalCompras.toFixed(2)}</th>
+                        <th class="currency right">${totales.totalPagos.toFixed(2)}</th>
+                        <th class="currency right">${totales.totalIngresos.toFixed(2)}</th>
+                        <th class="currency right">${totales.totalSaldo.toFixed(2)}</th>
+                    </tr>
+                `);
+            };
+
+            const updateTotales = (item) => {
+                if (item.estado !== "ANULADA" && !item.excluir_gasto && (considerarSoloGastosValidados ? item.validado : true)) {
+                    totales.costoempresa += item.costoempresa;
+                    totales.totalVentas += item.total_ventas;
+                    totales.totalCompras += item.total_compras;
+                    totales.totalPagos += item.total_pagos;
+                    totales.totalIngresos += item.total_ingresos;
+                    totales.totalSaldo += item.total_saldo;
+                }
+            };
+
+            const loadComprasNegocio = (data) => {
+                tbody.empty();
+                iniTotalesSumTotal();
+
+                $.each(data.rows, function (key, item) {
+                    updateTotales(item);
+
+                    const htmlObject = $(`
+                        <tr data-id="${item.id}" data-tipo="${item.tipo}" data-costoempresa="${item.costoempresa}" data-estado="${item.estado}" ${item.excluir_gasto ? 'data-skip="true"' : ''}>
+                            <td>${item.folio}</td>
+                            <td>${item.emisor}</td>
+                            <td>${item.fecha}</td>
+                            <td>${item.doc}</td>
+                            <td class="left">${item.proveedor}</td>
+                            <td class="left">${item.referencia}</td>
+                            <td>${item.estado}</td>
+                            <td class="currency right">${item.costoempresa}</td>
+                            <td class="currency right">${item.total_ventas}</td>
+                            <td class="currency right">${item.total_compras}</td>
+                            <td class="currency right">${item.total_pagos}</td>
+                            <td class="currency right">${item.total_ingresos}</td>
+                            <td class="currency right">${item.total_saldo}</td>
+                        </tr>
+                    `);
+                    tbody.append(htmlObject);
+                });
+
+                tfoot.html(loadTotalesFoot());
+                formatCurrency();
+                tbody.find('tr[data-estado="ANULADA"]').hide();
+            };
+
+            const fetchCompras = () => {
+                $.ajax({
+                    url: '/4DACTION/_force_getFactoringByNegocio',
+                    dataType: 'json',
+                    async: false,
+                    cache: false,
+                    data: {
+                        id: unaBase.doc.id,
+                        tipoGasto: 'FTG'
+                    },
+                    success: function (data) {
+                        loadComprasNegocio(data);
+                        unaBase.ui.unblock();
+                    }
+                }).fail(function () {
+                    unaBase.ui.unblock();
+                });
+            };
+
+            $('select.by-status').change(function () {
+                const status = $(this).val();
+                $('input.show-hide-null').prop('checked', false);
+                tbody.find('tr').show();
+
+                if (status) {
+                    tbody.find(`tr[data-estado!="${status}"]`).hide();
+                } else {
+                    tbody.find('tr[data-estado="ANULADA"]').hide();
+                }
+
+                iniTotalesSumTotal();
+                tbody.find('tr:visible').each(function () {
+                    const item = $(this);
+                    if (!item.data('skip')) {
+                        updateTotales(item.data());
+                    }
+                });
+
+                tfoot.html(loadTotalesFoot());
+                formatCurrency();
+            });
+
+            $('input.show-hide-null').change(function () {
+                iniTotalesSumTotal();
+
+                if ($(this).prop('checked')) {
+                    tbody.find('tr[data-estado="ANULADA"]').show();
+                } else {
+                    tbody.find('tr[data-estado="ANULADA"]').hide();
+                }
+
+                tbody.find('tr:visible').each(function () {
+                    const item = $(this);
+                    if (!item.data('skip')) {
+                        updateTotales(item.data());
+                    }
+                });
+
+                tfoot.html(loadTotalesFoot());
+                formatCurrency();
+            });
+
+            tbody.on('click', 'tr', function (event) {
+                if (!$(event.target).data('disabled') && event.target.localName !== 'input' && !$(event.target).hasClass('ui-button-text')) {
+                    window.open('/4DACTION/wbienvenidos#compras/content_factoring.shtml?id=' + $(this).data('id'));
+                }
+            });
+
+            fetchCompras();
+        });
+    </script>
+</head>
+<body>
+    <section class="sheet-list-compras sheet">
+		<!--4DINCLUDE infogeneral.shtml-->
+        <section style="height: 25px; padding:3px">
+            <label style="float:left;">
+                Estado
+                <select class="by-status" style="border:1px solid gray;margin:2px">
+                    <option value="">Todos</option>
+                    <option value="EMITIDA">Emitida</option>
+                    <option value="PAGADA">Pagada</option>
+                    <option value="CERRADA">Cerrada</option>
+                    <option value="ANULADA">Anulada</option>
+                </select>
+                <span><input class="show-hide-null" type="checkbox" value="ANULADA"> Anuladas</span>
+            </label>
+        </section>
+        <table class="gastos default-ub">
+            <thead>
+                <tr>
+                    <th>Número</th>
+                    <th>Emisor</th>
+                    <th>Emisión</th>
+                    <th>Doc.</th>
+                    <th>Cedente</th>
+                    <th>Referencia</th>
+                    <th>Estado</th>
+                    <th>Gasto real</th>
+                    <th>Total Docs. Ventas</th>
+                    <th>Total Docs. Compras</th>
+                    <th>Total Pagos</th>
+                    <th>Total Ingresos</th>
+                    <th>Total Saldo</th>
+                </tr>
+            </thead>
+            <tbody class="ui-selectable"></tbody>
+            <tfoot></tfoot>
+        </table>
+    </section>
+</body>
+</html>

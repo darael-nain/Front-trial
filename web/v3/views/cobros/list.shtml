@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_serverInfo-->
+<html>
+	<head>
+		<title>Ingresos</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="/v3/views/compras/lista.css?54656gg4gdfdfs">
+		<script>
+
+			$(document).ready(function() {
+				document.title = nombreEmpresa + ' / Ingresos';
+				unaBase.toolbox.init();
+
+				// Inicializamos un buscador
+				var params = {
+					searchOff: true,
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/_V3_get_OrdenCobro2' },
+					entity: 'Ingreso',
+					callback: function(data) {
+
+						// Totales
+						$('.especial .totales').find('span[data-total]').text(data.totales.total);
+
+						// Fijar header y footer
+						$('#viewport .fht-table-init').fixedHeaderTable('destroy');
+						$('#viewport table.fixed').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false });
+
+					},
+					row: {
+						html: function(i, rows) {
+							var htmlData = '';
+							if (rows[i].folio != ''){
+
+								let totalCobro = rows[i].total_raw;
+								let symbol = currency.symbol;
+								if (rows[i].tipo_moneda == "USD" && currency.code == "PEN") {
+									totalCobro = (rows[i].total_raw/rows[i].valor_cambio);
+									symbol = "USD";
+								}
+
+								htmlData = '<tr data-id="' + rows[i].id + '" data-origen="' + rows[i].origen + '" data-idorigen="' + rows[i].id_factura_fxr + '" >' +
+									
+									'<td ' +((rows[i].version == "V2") ? 'title="Cobro creado en la versión anterior"' : '')+ ' >' + ((rows[i].version == "V2") ? '*' : '') +' '+ rows[i].folio + '</td>' +
+									'<td ">' + ((rows[i].conciliado) ? "SI" : "NO") + '</td>' +
+									
+									'<td>' + ((rows[i].origen == "gastos") ? ((rows[i].id_factura_fxr > 0) ? 'FXR' : 'FXR') : ((rows[i].id_factura_fxr > 0) ? 'DTV' : 'DTV') ) + '</td>' +
+									'<td>' + rows[i].fecha_emision + '</td>' +
+									'<td>' +  rows[i].fecha_vencimiento + '</td>' +
+									'<td>' + rows[i].emisor + '</td>' +
+									'<td>' + rows[i].estado + '</td>' +
+									'<td class="left">' + rows[i].nombre_cliente + '</td>' +
+									'<td class="left">' + rows[i].referencia + '</td>' +
+									'<td>' + ((rows[i].tipo_cobro != "") ? rows[i].tipo_cobro : "----------")  + '</td>' +
+									'<td>' + ((rows[i].numero_cobro != "") ? rows[i].numero_cobro : "----------")  + '</td>' +
+									'<td>' + ((rows[i].fecha_cobro != "") ? rows[i].fecha_cobro : "----------")  + '</td>' +
+									//'<td class="currency">' + totalCobro + '</td>' +
+									'<td style="text-align:right;">' + symbol + ' ' + $.number(totalCobro, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</td>' +
+								'</tr>';
+								return htmlData;
+							}
+						}
+					},
+					detail: {
+						// Función que genera una URL de detalle, dado el id (identificador de item)
+						url: function(id) { 
+							unaBase.id_ingreso = id
+							if (id) 
+								return '/v3/views/ingresos/dialog/ingreso.shtml?id=' + id;
+							else 
+								return undefined 
+						},
+						iframe: false,
+						dialog: true,
+						size: 'x-large'
+					},
+					// Inflexiones
+					inflection: {
+						singular: 'ingresos',
+						plural: 'ingresos',
+						none: 'ningún'
+					},
+					// Filtros
+					filters: [
+						//{ name: 'created_at', type: 'month', caption: 'Fecha de creación', range: true, currentMonth: true },
+						{ name: 'expires_at', type: 'month', caption: 'Fecha de ingreso', range: true, currentMonth: true},
+						// { name: 'ejecutivo_responsable', type: 'autocomplete', caption: 'Creado por', dataSource: 'getUsuario' },
+						// { name: 'cuenta_cte', type: 'autocomplete', caption: 'Cuenta Corriente', dataSource: 'getCuentaCorriente' },
+						{ name: 'ejecutivo_responsable', type: 'new_select', caption: 'Creado por', dataSource: 'getUsuario' },
+						{ name: 'cuenta_cte', type: 'new_select', caption: 'Cuenta Corriente', dataSource: 'getCuentaCorriente' },
+
+						{ name: 'estado', type: 'checkbox', caption: 'Estado del ingreso', options: [
+							{ caption: 'Emitida', name: 'estado_en_proceso', value: true },
+							{ caption: 'Anulada', name: 'estado_nulo', value: false },
+							{ caption: 'Pagada', name: 'estado_pagado', value: false }
+						] },
+					
+
+
+						{ name: 'tipo_pago', type: 'autocomplete', caption: 'Tipo de Pago', dataObject: [
+							{ id: 'CHEQUE', text: 'CHEQUE' },
+							{ id: 'TRANSFERENCIA', text: 'TRANSFERENCIA' },
+							{ id: 'DEPOSITO', text: 'DEPOSITO' }
+						]},
+
+						{ name: 'tiene_pago', type: 'autocomplete', caption: '¿Tiene Ingreso?', dataObject: [
+							{ id: 'true', text: 'CON INGRESO' },
+							{ id: 'false', text: 'SIN INGRESO' }
+						]},
+
+
+
+					]
+				};
+
+				unaBase.toolbox.search.init(params);
+
+				unaBase.toolbox.menu.init({
+					entity: 'Cobro',
+					buttons: [ 'searchOff' ,'export_list' ]
+				});
+
+
+				// ir a detalle
+				/*$('table.padre tbody').on('click', 'tr > td[data-goto="true"]', function(event) {
+					var origen = $(this).closest("tr").data("origen");
+					var idorigen = $(this).closest("tr").data("idorigen");
+					if(origen == "gastos"){
+					  	unaBase.loadInto.viewport('/v3/views/compras/content.shtml?id=' + idorigen);					
+					}else{
+						unaBase.loadInto.viewport('/v3/views/compras/content.shtml?id=' + idorigen);	
+					}
+				});*/
+
+			});
+		</script>
+	</head>
+	<body>
+		<table class="padre results especial fixed listingresos">
+			<thead>
+				<tr>
+					<th width="5%" data-sort-by="folio" data-sort-default="desc">Número</th>
+					<th width="5%" data-sort-by="folio" data-sort-default="desc">Conciliado</th>
+					<th width="5%" data-sort-by="folio" data-sort-default="desc">Origen</th>
+					<th width="5%" data-sort-by="folio" data-sort-default="desc">Fecha creación</th>
+					<th width="5%" data-sort-by="folio" data-sort-default="desc">Fecha de ingreso</th>
+					<th width="5%" data-sort-by="folio" data-sort-default="desc">Emisor</th>
+					<th width="5%" data-sort-by="folio" data-sort-default="desc">Estado</th>
+					<th width="20%" data-sort-by="folio" data-sort-default="desc">Cliente</th>
+					<th width="25%" data-sort-by="folio" data-sort-default="desc">Referencia</th>
+					<th width="5%" data-sort-by="folio" data-sort-default="desc">tipo de Cobro</th>
+					<th width="5%" data-sort-by="folio" data-sort-default="desc">N° Cobro doc.</th>
+					<th width="5%" data-sort-by="folio" data-sort-default="desc">Fecha cobro doc.</th>
+					<th width="10%" data-sort-by="folio" data-sort-default="desc">Total Cobrado</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+			<tfoot class="totales">
+				<tr>
+					<th width="5%"></th>
+					<th width="5%"></th>
+					<th width="5%"></th>
+					<th width="5%"></th>
+		            <th width="5%"></th>
+		           	<th width="5%"></th>
+		           	<th width="20%"></th>
+		            <th width="25%"></th>
+					<th width="5%"></th>
+					<th width="5%"></th>
+		            <th width="5%"></th>
+		           	<th width="10%" class="center"><span data-total="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+		        </tr>
+			</tfoot>
+		</table>
+	</body>
+
+</html>

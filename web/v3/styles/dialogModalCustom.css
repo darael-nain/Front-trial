@@ -1,0 +1,460 @@
+/* Contenedor del modal
+#modalCustom {
+  display: none;
+  justify-content: center; 
+  align-items: flex-start; 
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding-top: 20px; 
+}
+
+#modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  min-width: 40%;
+  width: 80vw;
+  height: 90vh;
+  max-height: 600px;
+  max-width: 1140px;
+  overflow: hidden;
+  position: relative; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+}
+
+#modal-body {
+  padding: 20px;
+  height: 55vh; 
+  overflow-y: auto;
+} */
+
+/* Estilos base para el contenedor del modal */
+#modalCustom {
+  display: none;
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto; 
+  background-color: rgba(0, 0, 0, 0.4); 
+  overflow-y: hidden;
+}
+
+/* Estilos base para el contenido del modal */
+#modal-content {
+  background-color: white;
+  margin: 14% auto; 
+  border-radius: 10px;
+  position: relative;
+  min-width: 30%; /* Ancho mínimo */
+  max-width: 30%; /* Ancho máximo */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); 
+}
+
+/* Estilos para el cuerpo interno del modal, en caso de ser necesario */
+#modal-body {
+  padding: 5px;
+}
+
+
+
+#modal-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+
+#modal-close-btn {
+  background-color: transparent;
+  border: none;
+  color: #aaa;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+#modal-close-btn:hover {
+  color: black;
+}
+
+#modal-body {
+  position: relative;
+}
+
+
+
+#modal-btn {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#modalCustom input[type="file"] {
+  display: block;
+  margin: 20px auto;
+}
+
+#modalCustom button#modal-custom-accept[type="submit"] {
+  background-color: #31AE92;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  margin: 20px auto;
+  cursor: pointer;
+}
+
+#modalCustom button#modal-custom-cancel {
+  background-color: white;
+  color: #4CAF50;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  margin: 20px auto;
+  cursor: pointer;
+  border: 1px solid #31AE92;
+}
+
+#modalCustom button#modal-custom-accept {
+  background-color: white;
+  color: #98A1B2;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  margin: 20px auto;
+  cursor: pointer;
+  border: 1px solid #98A1B2;
+  border-radius: 20px;
+}
+
+
+button#modal-custom-cancel.hoverBtn:hover {
+  background-color: #F6F7F8 !important;
+}
+
+button#modal-custom-accept.hoverBtn:hover {
+  background-color: #3AC7A5 !important;
+}
+
+#green-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  /* Nuevo valor */
+  background-color: #31AE92;
+  font-size: 10px;
+  /* Nuevo valor */
+  line-height: 20px;
+  /* Nuevo valor */
+  color: white;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+#gray-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  /* Nuevo valor */
+  background-color: #FAFAFB;
+  font-size: 12px;
+  /* Nuevo valor */
+  font-weight: bold;
+  line-height: 20px;
+  /* Nuevo valor */
+  color: #98B4D6;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+button#modal-custom-accept {
+  border-radius: 20px;
+  /* Nueva propiedad */
+}
+
+button#modal-custom-cancel {
+  border-radius: 20px;
+  /* Nueva propiedad */
+  background-color: white;
+  border-color: 2px solid #31AE92;
+}
+
+
+.file-input {
+  position: relative;
+  display: inline-block;
+}
+
+.file-input__input {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.file-input__label {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #1e88e5;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.file-input__label:hover {
+  background-color: #1565c0;
+}
+
+.fa-cloud-upload-alt {
+  margin-right: 8px;
+}
+
+/* Opcional: Estilo para el nombre del archivo seleccionado */
+.file-input__input:valid+.file-input__label:after {
+  content: attr(data-file-name);
+  margin-left: 8px;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+
+#modalCustom, label.custom-label  {
+  font-size: 12px;
+  font-weight: 700;
+  color: #98A2B3;
+}
+
+/*Estilos para el modal dentro de #modalImportadorPagos*/
+#modalImportadorPagos {
+  display: none;
+  position: fixed;
+  z-index: 60;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  transition: opacity 0.5s ease;
+}
+
+#modalImportadorPagos #modal-content {
+  background-color: white;
+  margin: 14% auto;
+  padding: 20px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 600px;
+  position: relative;
+  max-height: 360px;
+}
+
+#modalImportadorPagos #modal-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+#modalImportadorPagos #modal-close-btn {
+  background-color: transparent;
+  border: none;
+  color: #aaa;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+#modalImportadorPagos #modal-close-btn:hover {
+  color: black;
+}
+
+#modalImportadorPagos #modal-body {
+  position: relative;
+}
+
+#modalImportadorPagos #modal-btn {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#modalImportadorPagos input[type="file"] {
+  display: block;
+  margin: 20px auto;
+}
+
+#modalImportadorPagos button#upload-btn[type="submit"] {
+  background-color: #31AE92;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  margin: 20px auto;
+  cursor: pointer;
+}
+
+#modalImportadorPagos button#cancel-btn {
+  background-color: white;
+  color: #4CAF50;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  margin: 20px auto;
+  cursor: pointer;
+  border: 1px solid #31AE92;
+}
+
+#modalImportadorPagos button#download-template-btn {
+  background-color: white;
+  color: #98A1B2;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  margin: 20px auto;
+  cursor: pointer;
+  border: 1px solid #98A1B2;
+  border-radius: 20px;
+}
+
+#modalImportadorPagos button.hoverBtn:hover {
+  background-color: #F6F7F8 !important;
+}
+
+#modalImportadorPagos #green-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  background-color: #31AE92;
+  font-size: 10px;
+  line-height: 20px;
+  color: white;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+#modalImportadorPagos #gray-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  background-color: #FAFAFB;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 20px;
+  color: #98B4D6;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+#modalImportadorPagos button#upload-btn {
+  border-radius: 20px;
+}
+
+#modalImportadorPagos button#cancel-btn {
+  border-radius: 20px;
+  background-color: white;
+  border-color: 2px solid #31AE92;
+}
+
+#modalImportadorPagos .file-input {
+  position: relative;
+  display: inline-block;
+}
+
+#modalImportadorPagos .file-input__input {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+#modalImportadorPagos .file-input__label {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #1e88e5;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#modalImportadorPagos .file-input__label:hover {
+  background-color: #1565c0;
+}
+
+#modalImportadorPagos .fa-cloud-upload-alt {
+  margin-right: 8px;
+}
+
+#modalImportadorPagos .file-input__input:valid + .file-input__label:after {
+  content: attr(data-file-name);
+  margin-left: 8px;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+#modalImportadorPagos .button-modal {
+  display: flex;
+  justify-content: flex-end;
+}
+
+#modalImportadorPagos #warning-modal {
+  overflow-y: auto;
+  max-height: 100px;
+}
+
+.badge-error {
+  display: block;
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 6px 10px;
+  margin-bottom: 5px;
+  border-radius: 4px;
+}
+
+.badge-error i {
+  margin-right: 6px;
+}
+
+#modalImportadorPagos.visible {
+  display: block;
+  opacity: 1;
+}

@@ -1,0 +1,149 @@
+@charset "utf-8";
+article, footer, header, nav, section{display:block;}
+a{text-decoration:none;}
+body{font-family:"Helvetica",sans-serif;text-align:center;font-weight:normal;background-color:#222324;}
+table{
+	/*border:1px solid red;	*/
+	text-transform:uppercase;
+	font-size:12px;
+	margin-top:2px;
+	height:50px;
+}
+
+tfoot .back-average{background-color:#585858;color:white;}
+tfoot .back-no-average{background-color:#222324;}
+th{padding:5px;color:#E6E6E6;background-color:#585858;}
+td{padding:5px;background-color:#424242;color:#81F7F3;font-weight:bold;}
+h1{font-size:15px;margin:0;text-align:left;}
+h2{font-size:13px;font-style:italic;margin:0;text-align:left;}
+
+.align-left{
+	text-align: left;
+	padding-left:5px;
+}
+
+.align-center{
+	text-align: center;
+}
+
+.align-right{
+	text-align:right;
+}
+
+#box{	
+	background-color:#222324;
+	text-align:center;
+}
+
+.box-filters{
+	text-align:right;
+	margin:5px 5px 0px 0;
+}
+
+.combos{
+	font-weight:bold;
+	border:1px solid #A4A4A4;
+	display: inline-block;
+	width:210px;
+	height:17px;
+	border-radius:3px;
+	-webkit-border-radius:3px;
+	-moz-border-radius:3px;
+	-o-border-radius:3px;
+	-ms-border-radius:3px;
+	font-size:11px;	
+}
+
+.combos-medium{
+	font-weight:bold;
+	border:1px solid #A4A4A4;
+	display: inline-block;
+	width:100px;
+	height:17px;
+	border-radius:3px;
+	-webkit-border-radius:3px;
+	-moz-border-radius:3px;
+	-o-border-radius:3px;
+	-ms-border-radius:3px;
+	font-size:11px;
+	text-transform:uppercase;
+}
+
+.color-red{
+	color:red;
+}
+
+.color-normal{
+	color:#81F7F3;
+}
+
+.dates{
+	color:yellow;
+	margin-right:5px;	
+	text-align:right;
+	font-size:15px;
+	font-weight:bold;	
+}
+
+.dates span{	
+	margin-left:10px;
+}
+
+.header{
+	color:#E6E6E6;
+	float:left;	
+}
+
+.info{
+	float:left;
+	color:white;
+	margin:0;	
+	text-align:left;
+}
+	.info span{
+		margin:2px;
+		font-size:13px;
+		font-weight:bold;
+	}
+
+.search-by-number{
+	float:right;
+	margin:2px;
+}
+	.search-by-number input{
+		width:300px;
+		padding:1px;
+	}
+	.search-by-number label{
+		color:white;
+		font-size:12px;
+	}
+
+.labels{
+	color:white;
+	font-size:12px;
+}
+
+.letter-cerradas{
+	color:green;
+}
+
+.letter-pendientes{
+	color:yellow;
+}
+
+.letter-atrasada{
+	color:red;
+}
+
+.letter-anuladas{
+	color:orange;
+}
+
+.reg{
+	cursor:pointer;
+}
+
+tbody .reg:hover{
+	background:#FA5858;
+}

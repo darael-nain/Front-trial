@@ -1,0 +1,171 @@
+<!--#4DINCLUDE head.shtml-->
+<body>
+<!--#4DINCLUDE mensajes.shtml-->
+<!--#4DINCLUDE menuSuperior.shtml-->
+    <div id="dialog-modal_notify_oc" title="Mensaje de notificaci&#243;n">
+        <form id="send-notify-oc" class="send-notificacion">
+            <input id="idoc" name="idoc" type="hidden" value="<!--#4DVAR vidoc-->" />           
+            <input id="emailFrom" name="emailFrom" type="hidden" value="<!--#4DVAR vEmail-->" />
+            <input id="loginFrom" name="loginFrom" type="hidden" value="<!--#4DVAR vLogin-->" />
+            <div class="box_">
+                <label>De:</label>
+                <input disabled id="from" name="from" value="<!--#4DVAR vNomUsr--> ( <!--#4DVAR vEmail--> )">
+            </div>
+            <div class="box_">
+                <label>Para:</label>
+                <input id="to" name="to" value="<!--#4DVAR vEmailProveedor-->">
+            </div>
+            <!--<div class="box_">
+                <label>Mensaje:</label>
+                <textarea id="message" placeholder="Escribe un comentario..." name="message"></textarea>
+            </div>     -->              
+           <div class="box_btn">
+                <button id="btn-send-notify-oc" title="Enviar notificacion" class="button-bkn" type="button">Enviar</button>
+           </div>
+        </form>
+    </div>
+
+    <section>
+    	<h1>Orden de Compra #<!--#4DVAR vfolioOc--></h1>
+         <article>
+                 <form name="frmnuevooc" id="frmnuevooc" action="/4DACTION/W_ACTUALIZA_OC_" method="post">
+           		   		<input id="accion" name="accion" type="hidden" value="ACTUALIZAR" />
+                        <input id="idmotivoanulacion" name="idmotivoanulacion" type="hidden" value="" />                       
+                        <input name="id_oc" type="hidden" value="<!--#4DVAR vidoc-->" />
+                        
+                        <input name="llaveDetalleoc" type="hidden" value="<!--#4DVAR vllaveDetalleoc-->" />
+                                                
+			<fieldset>
+					<legend>DATOS DE LA EMPRESA PROVEEDORA</legend>
+					<div><span>Razon social :</span><span><!--#4DVAR v_razon--></span></div>
+					<div><span>Giro :</span><span><!--#4DVAR v_giro--></span></div>
+					<div><span>Rut :</span><span><!--#4DVAR v_rut--></span></div>
+					<div>
+					<label>Contactos : </label>
+						<!--#4DIF vcant_contactos>0-->
+							<select id="cboContacto" name="cboContacto" disabled>
+								<option selected="selected" value="<!--#4DVAR v_id_contacto_sel-->"><!--#4DVAR v_nombre_contacto_sel--></option>
+								<!--#4DLOOP w_a_id_relacionado-->
+									<!--#4DIF v_id_contacto_sel#w_a_id_relacionado{w_a_id_relacionado}-->
+											<option value="<!--#4DVAR w_a_id_relacionado{w_a_id_relacionado}-->">
+											<!--#4DVAR w_a_nom_relacionado{w_a_id_relacionado}-->
+											</option>
+									<!--#4DENDIF-->
+								<!--#4DENDLOOP-->       
+							</select>
+						<!--#4DELSE-->
+							<input id="idcontactos" name="idcontactos" type="hidden" value="0" />
+							<span>No se encontraron contactos asociados!</span>
+					   <!--#4DENDIF-->
+					</div>                     
+			</fieldset>
+                        		
+			<fieldset>                              
+					<legend>DATOS DEL NEGOCIO</legend>
+					 <div><span>Id Negocio :</span><span><!--#4DVAR vidNeg--></span></div>                               
+					 <div><span>Referencia :</span><span><!--#4DVAR vrefNeg--></span></div>
+					 <div><span>Item Asociado :</span><span><!--#4DVAR vItemsAsociado--></span></div>                        
+			</fieldset>
+					
+			<fieldset>                              
+					<legend><label for="referencia">REFERENCIA</label></legend>
+					 <p>
+						<input class="referencias" id="referencia" name="referencia" type="text" value="<!--#4DVAR vReferencia-->" readonly/>
+					</p>                               
+			</fieldset>               
+                        
+			<fieldset>                              
+					<legend>ITEMS ORDEN DE COMPRA</legend>
+					 <p>
+						<label for="tipodocto">Tipo Doc.Proveedor : </label>
+						<select class="style-cbo" name="tipodocto" id="tipodocto" onChange="calculaTotalesOC()" disabled >
+						 <option value="<!--#4DVAR vIdTipoDoc-->" selected="selected"><!--#4DVAR vDesTipoDoc--></option>
+						  <!--#4DLOOP aIDTipoDoc_OC2-->
+							  <!--#4DIF vIdTipoDoc#aIDTipoDoc_OC2{aIDTipoDoc_OC2}-->
+								  <option value="<!--#4DVAR aIDTipoDoc_OC2{aIDTipoDoc_OC2}-->"><!--#4DVAR aTipoDoc_OC2{aIDTipoDoc_OC2}--></option>
+							  <!--#4DENDIF-->
+						  <!--#4DENDLOOP-->            
+					  </select>
+					</p>
+					 <div style= "overflow:auto; height:400px;"><!--#4DINCLUDE item_oc.shtml--></div>                       
+			</fieldset>
+			<!--#4DINCLUDE totales_oc.shtml--> 
+                        
+			<fieldset>
+				<legend>CONDICIONES</legend>
+				<p>
+				 <label>Formas de Pago:</label>
+				 <select name="formaspago" id="formaspago" disabled>
+					 <option value="<!--#4DVAR vformapago-->" selected="selected"><!--#4DVAR vnomformapago--></option>
+				  <!--#4DLOOP aidformapagos-->
+					  <!--#4DIF vformapago#aidformapagos{aidformapagos}-->
+						  <option value="<!--#4DVAR aidformapagos{aidformapagos}-->"><!--#4DVAR anformapagos{aidformapagos}--></option>
+					  <!--#4DENDIF-->
+				  <!--#4DENDLOOP-->                
+				 </select>
+				</p>
+				
+				<p>
+					<div><label>Observaciones : </label></div>
+					 <textarea class="notas" name="observacion" readonly ><!--#4DVAR vobservaciones1--></textarea>
+				</p>
+				<table class="tabla-condiciones" border="0" cellpadding="0" cellspacing="0">
+			        <tr bgcolor="#CCCCCC">
+			          <td class="condiciones">Imagenes</td>
+			        </tr>
+			        <tr>
+			          <td style="text-align:center"><!--#4DINCLUDE oc_img_comp.shtml--></td>
+			        </tr>
+		      	</table>
+			</fieldset>
+                        
+			 <div class="motivos-anulacion">
+				 <label>Motivos de la Anulaci&#243;n : </label>
+				 <select class="combos-big" name="motivoanulacion" id="motivoanulacion"  onChange="confirmAnular()">
+					  <option value="<!--#4DVAR vformapago-->" selected="selected">[ Seleccionar]</option>
+					  <!--#4DLOOP aIdMotivoAnulacion-->                              
+					  <option value="<!--#4DVAR aIdMotivoAnulacion{aIdMotivoAnulacion}-->">
+								<!--#4DVAR aDesMotivoAnulacion{aIdMotivoAnulacion}-->
+					  </option>                             
+					  <!--#4DENDLOOP-->                
+				 </select>                                             
+			</div>
+			
+			<p>                         
+                <button title="GUARDAR" class="button-inf" onClick="validar_nueva_oc();" type="button"  style="display:none">
+                            <img src="/imagenes/disk.png" border="0" />
+                            <span>Guardar</span>
+                </button> 
+                <button title="LIMPIAR" class="button-inf" type="reset"  style="display:none">
+                	<img src="/imagenes/arrow_undo.png" border="0" />
+                	<span>Deshacer</span>
+                </button>
+                
+                <!--#4dif vPermisoAnularOC-->
+	 				<button title="ANULAR OC" class="button-inf" type="button" onClick="motivoAnulacionOc()">
+	                	<img src="/imagenes/delete.png" border="0" />
+	                	<span>Anular</span>
+	                </button>
+	                <input id="vAnularoc" name="vAnularoc" type="hidden" value="<!--#4DVAR vAnularoc-->">     	
+              	<!--#4dendif-->             
+               
+                             
+                <!--#4dif vOcValidada="SI"-->
+                <button title="IMPRIMIR" class="button-inf" type="button" onClick="window.open('/4DACTION/outEmailOrd/<!--#4DVAR vidoc-->/<!--#4DVAR vLogin-->');">
+                	<img src="/imagenes/printer.png" border="0" />
+                	<span>Imprimir</span>
+                </button>
+                <!--#4dendif-->
+                
+                <!--#4dif vOcValidada="SI"-->
+                <button title="Enviar notificacion" class="button-inf" onClick="fn_dialog_notificar_oc()" type="button">
+                    <img src="/imagenes/email.png" border="0" />                   
+                    <span>Notificar</span>
+                </button>
+                <!--#4dendif-->
+		   </p>                        
+           </form>                          
+         </article>              
+    </section>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <!--Import Google Icon Font-->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+        <!-- Compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+        <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+        <script>
+
+			document.addEventListener('DOMContentLoaded', function() {
+				var elems = document.querySelectorAll('.autocomplete');
+				var instances = M.Autocomplete.init(elems, options);
+			});
+
+        	var  cancelarEmail = function(){
+            	$.ajax({
+					url: '/4DACTION/_V3_cancelar_email_cobranza',
+					data: {
+						id: 0
+					},
+					dataType: 'json',
+					success: function(data) {
+						alert();
+						//buttonClose.trigger('click');
+					}
+				});
+            }
+
+            var  cancelarEmail = function(){
+            	$.ajax({
+					url: '/4DACTION/_V3_cancelar_email_cobranza',
+					data: {
+						id: 0
+					},
+					dataType: 'json',
+					success: function(data) {
+						alert();
+						//buttonClose.trigger('click');
+					}
+				});
+            }
+
+        	$(window).on("beforeunload", function() { 
+			    return icancelarEmail(); 
+			})
+
+            $(document).ready(function(){
+                $(".dropdown-trigger").dropdown();
+
+                $('input.autocomplete').autocomplete({
+			      data: {
+			        "Jorge Jofre (jorge@unabase.com)": null,
+			       	"Victor Espinoza (victor@unabase.com)": null,
+			        "Gin Flores (gin@unabase.com)": null
+			      },
+			    });
+
+               /* window.close(function(){
+                	alert("aja!");
+                });*/
+
+               
+
+                /*$('.send-email').click(function(){
+					$.ajax({
+						url: '/4DACTION/_V3_cancelar_email_cobranza',
+						data: {
+							id: 0
+						},
+						dataType: 'json',
+						success: function(data) {
+							alert();
+							//buttonClose.trigger('click');
+						}
+					});
+					//buttonClose.trigger('click');
+                });*/
+
+            });
+        </script>
+    </head>
+<body style="font-size:13px;">
+
+<div class="container">
+    <div id="inicio" class="row">
+        <form class="col">
+        	<div class="section">
+				<button class="btn waves-effect waves-light btn-small send-email" type="submit" name="action">Enviar
+			   		<i class="material-icons right">send</i>
+			  	</button>
+			  	<a class="btn-flat" onclick="window.close();"><i class="material-icons">delete_forever</i></a>
+			</div>
+			<div class="section card-panel">
+
+				<div class="row">
+					<div class="input-field col s6">
+					  <input id="autocomplete-input-email" type="text" class="validate autocomplete" value="ginfloresr@gmail.com">
+					  <label for="autocomplete-input-email">Para</label>
+					</div>
+					<div class="input-field col s6">
+					  <input id="proyecto" type="text" class="validate" value="DEUDA PENDIENTE UNABASE S.A.C. / DIC-2018">
+					  <label for="proyecto">Asunto</label>
+					</div>
+				</div>
+
+				<label for="#">Mensaje cobranza</label>
+				<p>
+					<h6><strong>Aviso cobro de servicios.</strong></h6>
+					<p>
+						<div><strong>Estimado cliente</strong>, COMERCIAL UNA SISTEMAS LTDA</div>
+						<div>Informamos que mantiene una deuda pendiente de <strong>S/ 803,250.00</strong></div>
+					</p>
+					<p>
+						<table class="centered light-green lighten-5" style="font-size:12px;">
+							<thead>
+							  <tr>
+							      <th>Factura</th>
+							      <th>Referencia</th>
+							      <th>F. Emision</th>
+							      <th>F. Vcto</th>
+							      <th>Atraso</th>
+							      <th>Saldo</th>
+							      <th>Descargar</th>
+							  </tr>
+							</thead>
+							<tbody>
+							  <tr>
+							    <td>E001-6</td>
+							    <td>SERVICIO MENSUAL SHARKBTL - DIC 2018</td>
+							    <td>07-01-2019</td>
+							    <td>17-01-2019</td>
+							    <td>12 días</td>
+							    <td>S/ 1,062.00	</td>
+							    <td>Sin registro</td>
+							  </tr>
+							  <tr>
+							    <td>E001-7</td>
+							    <td>SERVICIO MENSUAL SHARKBTL - DIC 2018</td>
+							    <td>07-01-2019</td>
+							    <td>17-01-2019</td>
+							    <td>12 días</td>
+							    <td>S/ 1,062.00	</td>
+							    <td>Sin registro</td>
+							  </tr>
+							</tbody>
+						</table>
+					</p>
+					<p>Para regularizar esta deuda agradecemos informar fecha al siguiente email <strong style="text-decoration:underline;">gin@unabase.com</strong> o realizar deposito o transferencia en nuestra cuenta corriente.</p>
+					<p>
+						<div><strong>CTA. CTE (soles): 0011-0713-0100020625-58</strong></div>
+						<div><strong>CCI (soles): 011-713-000100020625-58</strong></div>
+						<div><strong>BANCO BBVA</strong></div>
+						<div><strong>RUC: 2060385234</strong></div>
+					</p>
+					<p>Si al momento de recibir esta información Ud. ha regularizado la deuda, solicitamos omitir este correo.</p>
+					<p>
+						<div>
+							<div>Atentamente,</div>
+							<div>Administración DESARROLLO - UNABASE.</div>
+						</div>
+					</p>
+				</p>
+			</div>
+        </form>
+    </div>
+</div>
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
+
+
+        

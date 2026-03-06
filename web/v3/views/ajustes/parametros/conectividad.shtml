@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Conectividad</title>
+	<meta charset="utf-8">
+	<script type="text/javascript">
+		let urlWeb = '';
+		let ipServer = '';
+		let webPort = '';
+		let ipAlt1 = '';
+		let ipAlt2 = '';
+		let nodePort = '';
+		unaBase.ready(()=>{
+
+			// REAPER --- DEPRECATED METODO 4D NO EXISTE
+
+			// fetch(`/4DACTION/_aParamGetConect`)
+			// .then((response)=>{
+			// 	return response.json();
+			// })
+			// .then((response)=>{
+			// 	for(const key in response){
+			// 		document.querySelector(`input[name="${key}"]`).value = response[key];
+			// 	}
+			// })
+		});
+
+		document.getElementById('saveConnect').addEventListener('click', function(){
+			const data = {
+				urlWeb: document.querySelector('input[name="urlWeb"]').value,
+				ipServer: document.querySelector('input[name="ipServer"]').value,
+				webPort: document.querySelector('input[name="webPort"]').value,
+				ipAlt1: document.querySelector('input[name="ipAlt1"]').value,
+				ipAlt2: document.querySelector('input[name="ipAlt2"]').value,
+				nodePort: document.querySelector('input[name="nodePort"]').value
+			}
+			// fetch(`/4DACTION/_aParamSetConect`,{ 
+			// 	method: "POST",
+			// 	body: JSON.stringify(data),
+			// 	headers: {
+			// 		'Content-Type': 'application/json'
+			// 		}
+			// 	} )
+			// .then(response=>{
+			// 	response.json().then(json =>{
+			// 		console.log(json)
+			// 	});
+			// })
+			$.ajax({
+				url: `/4DACTION/_aParamSetConect`,
+				data,
+				dataType: 'json',
+				type: 'post',
+				success: (data) =>{
+					console.log(data)
+					toastr.success('Datos guardados');
+					axios(`${nodeUrl}/restart`).then(res => {
+
+					}).catch(err => {
+						console.error(err);
+					});
+				},
+				error: (error, text, response) => {
+					console.log(text);
+				}
+			})
+		});
+	</script>
+</head>
+<body>
+	<section class="sheet">
+		<footer>
+			<article>
+				<h1>Conectividad</h1>
+				<ul class="editable">
+					<li>
+						<input type="text" name="urlWeb" placeholder="url del sistema">
+						<input type="text" name="ipServer" placeholder="ip del servidor">
+						<input type="text" name="webPort" placeholder="puerto web">
+						<input type="text" name="ipAlt1" placeholder="ip alt nodejs">
+						<input type="text" name="ipAlt2" placeholder="ip alt2 nodejs">
+						<input type="text" name="nodePort" placeholder="puerto nodejs">
+						
+					</li>
+					
+				</ul>
+
+				<button id="saveConnect" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" id="cacheClear4d">
+					<span class="ui-button-text">
+						Guardar	
+					</span>
+				</button>
+			</article>
+			
+		</footer>
+	</section>
+</body>
+</html>

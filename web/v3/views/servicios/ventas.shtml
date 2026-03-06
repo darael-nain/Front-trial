@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getDetalleServicios-->
+		<meta charset="utf-8">
+		<title>Servicios - compras</title>
+		<script>
+		$(document).ready(function() {
+			var container = $('.sheet.ventas-servicios');
+			var tbody = container.find('table > tbody');
+			//var fecha = $('#search').find('input[name="fecha"]').val();
+
+			var fecha_from = $('#search').find('input[name="fecha_from"]').val();
+			var fecha_to = $('#search').find('input[name="fecha_to"]').val();
+
+			var sumatotal = 0;
+			unaBase.ui.block();
+			$.ajax({
+				url: '/4DACTION/_V3_proxy_getDetalleServicios2',
+				data : {
+					'id' : <!--#4DTEXT id-->,
+					'ventas' : true,
+					//'fecha' : fecha
+					'fecha_from' : fecha_from,
+					'fecha_to' : fecha_to
+				},
+				dataType: 'json',
+				success: function(data){
+					var rows = '';
+					$.each(data.ventas, function(key, item){
+						rows = rows + '<tr data-id="'+item.id+'">';
+						rows = rows + '<td>'+ item.folio +'</td>';
+						rows = rows + '<td>'+ item.fecha +'</td>';
+						rows = rows + '<td class="left">'+ item.cliente +'</td>';
+						rows = rows + '<td class="left">'+ item.referencia +'</td>';
+						rows = rows + '<td class="right numeric currency">'+ currency.symbol +' <span class="report-service">'+ item.total +'</span></td>';
+						rows = rows + '</tr>';
+						sumatotal += item.total;
+					});
+					tbody.html(rows);
+					tbody.find('tr').click(function(){
+						window.open('/4DACTION/wbienvenidos#negocios/content.shtml?id=' + $(this).data('id'));
+					});
+					$('.sumatotal > span.total-report-service').text(sumatotal).number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+					$('.numeric.currency span.report-service').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+					unaBase.ui.unblock();
+				}
+			});
+		});
+		</script>
+		<style type="text/css">
+			.ventas-servicios > table > tbody > tr:hover{
+				cursor: pointer;
+			}
+		</style>
+	</head>
+	<body>
+		<section class="sheet ventas-servicios" data-id="<!--#4DTEXT id-->">
+			<div style="margin:5px; font-size:12px" class="sumatotal right">Total suma <!--#4DTEXT _V3_defaultCurrencySymbol--> <span class="total-report-service" style="font-weight:bold">0</span></div>
+			<table>
+				<thead>
+					<tr>					
+						<th width="10%">Número</th>
+						<th width="10%">F. Asignación</th>				
+						<th width="30%" class="center">Cliente</th>
+						<th width="35%" class="center">Referencia</th>
+						<th width="15%" class="right">Venta total</th>						
+					</tr>		
+				</thead>				
+				<tbody></tbody>
+			  	<tfoot></tfoot>
+			</table>
+		</section>
+	</body>
+</html>

@@ -1,0 +1,13 @@
+{
+	"row": [
+	<!--#4DLOOP aAdicionalImpId -->
+			{
+				"id": "<!--#4DHTML aAdicionalImpId{aAdicionalImpId}-->",
+				"nombre": "<!--#4DHTML aAdicionalImpName{aAdicionalImpId}-->",
+				"tipo": "<!--#4DHTML aAdicionalImpTipo{aAdicionalImpId}-->",
+				"estado": "<!--#4DHTML aAdicionalImpEstado{aAdicionalImpId}-->",
+				"valor": "<!--#4DHTML aValor{aAdicionalImpId}-->"
+			}<!--#4DIF NOT(aAdicionalImpId{aAdicionalImpId} = aAdicionalImpId{Size of array(aAdicionalImpId)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

@@ -1,0 +1,12 @@
+{
+	"rows": [
+<!--#4DLOOP aProyectoId -->
+		{
+			"id": <!--#4DHTML aProyectoId{aProyectoId}-->,
+			"text": "<!--#4DHTML _V3_escapeString(aProyectoNombre{aProyectoId})-->",
+			"username": "<!--#4DHTML aProyectoUsuario{aProyectoId}-->",
+			"created_at": "<!--#4DHTML Substring(String(aProyectoCreacionFecha{aProyectoId};8);1;10)-->T<!--#4DHTML aProyectoCreacionHora{aProyectoId}-->-04:00"
+		}<!--#4DIF NOT(aProyectoId{aProyectoId} = aProyectoId{Size of array(aProyectoId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

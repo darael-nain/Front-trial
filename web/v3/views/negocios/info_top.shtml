@@ -1,0 +1,29 @@
+<article>
+	<div>
+		<label>Emisión:</label>
+		<span> <!--#4DTEXT vFechaEmision--></span>
+	</div>
+	<div>
+		<label>Últ. Modificación:</label>
+		<span> <!--#4DTEXT vFechaUltMod--></span>
+	</div>
+	<div>
+		<label>Emisor:</label>
+		<span> <!--#4DTEXT vEmisor--></span>
+	</div>
+	<div>
+		<label>Versión:</label>
+		<span> <!--#4DTEXT vVersion--></span>
+	</div>
+</article>
+<article>
+	<div class="cerrado-compras">
+		<span><!--#4DTEXT vCerradoCompras--></span>
+	</div>
+</article>
+<article class="derecho">
+	<h4>Nº <!--#4DTEXT vNro--></h4>
+	<h3><!--#4DTEXT vEstado--></h3>
+	<h2><!--#4DTEXT Uppercase([Nota_de_venta]Referencia;*)--></h2>
+</article>
+

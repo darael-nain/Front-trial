@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Accesos</title>
+		<meta charset="utf-8">
+		<script>
+
+			$(document).ready(function() {
+
+				unaBase.toolbox.init();
+
+				// Inicializamos un buscador
+				var params = {
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/_V3_getAccesos' },
+					entity: 'Accesos',
+					// Función que genera cada fila de la tabla, dado el valor de i (índice de posición)
+					// y el valor de rows (array con todos los resultados)
+					// El contenido de rows corresponde al objeto de mismo nombre generado mediante la llamada
+					// a la api JSON. Ver /v3/json/xxxxx.shtml para conocer el formato.
+					row: {
+						html: function(i, rows) {
+							return '<tr data-id="' + rows[i].id + '">' +
+								'<td class="left">' + rows[i].des + '</td>' +
+								'<td>' + rows[i].estado + '</td>' +
+								'<td></td>' +
+							'</tr>'
+						}
+					},
+					detail: {
+						//url: function(id) { return '/v3/views/compras/content.shtml?id=' + id },
+						iframe: false
+					},
+					// Inflexiones
+					inflection: {
+						singular: 'Acceso',
+						plural: 'Accesos',
+						none: 'ninguna'
+					},
+					// Filtros
+					filters: [
+						/*{ name: 'created_at', type: 'month', caption: 'Fecha de creación', range: true },
+						//{ name: 'updated_at', type: 'month', caption: 'Fecha últ. modificación', range: true },
+						// Pendiente: agregar datasource remoto y convertir a checkbox
+						// con jquery ui autocomplete
+						{ name: 'area_negocio', type: 'autocomplete', caption: 'Área de negocio', dataSource: 'getAreaNegocio' },
+						{ name: 'ejecutivo_responsable', type: 'autocomplete', caption: 'Ejecutivo responsable', dataSource: 'getUsuario' },
+						{ name: 'estado', type: 'checkbox', caption: 'Estado de la cotización', options: [
+							{ caption: 'En proceso', name: 'estado_en_proceso', value: true },
+							{ caption: 'Anulada', name: 'estado_nulo', value: false }
+						] }*/
+					]
+				};
+
+				unaBase.toolbox.search.init(params);
+				unaBase.toolbox.menu.init({
+					entity: 'Accesos',
+					buttons: []
+				});
+
+
+			});
+		</script>
+	</head>
+	<body>
+		<!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->
+		<table class="results">
+			<thead>
+				<tr>
+					<th>Descripción</th>
+					<th>Asignado</th>
+					<th>Acciones</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+			<tfoot></tfoot>
+		</table>
+	</body>
+</html>

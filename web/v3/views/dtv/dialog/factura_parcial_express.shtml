@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getFacturaParcial-->
+		<title>Factura parcial</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/script/datepicker_es.js?<!--#4DTEXT _V3_version-->"></script>
+		<script>
+			var payout = {
+				"container" : $('#dtvporfacturar'),
+				menu: function(){
+					unaBase.toolbox.menu.init({
+						entity: 'dtc_pagos',
+						buttons: ["update_invoice"]
+					});
+				},
+				dtc: {
+					get: function(){
+						$.ajax({
+					    	'url':'/4DACTION/_V3_get_dtv_to_create',
+						    data: {
+						    	negocios: '<!--#4DVAR negocios-->'
+						    },
+					   		dataType:'json',
+						    success:function(data){
+								var containerTableStep1 = payout.container.find('table.step-1 > tbody');
+								var htmlObject;
+								containerTableStep1.find("*").remove();
+								if (data.rows.length > 0) {
+									$.each(data.rows, function(key, item){
+									    htmlObject = $('<tr data-id="'+ item.id +'" data-idpro="'+ item.idproveedor +'" data-cliente="' + item.proveedor + '" data-saldo="' + item.saldo + '" data-neto-negocio="' + item.neto_negocio + '" data-rut-cliente="' + item.rut + '" data-monto="' + item.saldo + '">' +
+									      '<td>' + item.numero + '</td>' +
+									      '<td>' + item.vencimiento + '</td>' +
+									      '<td>' + item.proveedor + '</td>' +
+									      '<td class="left">' + item.referencia + '</td>' +
+									      '<td class="numeric currency">' + currency.symbol + ' <input class="fill1" name="monto" type="text" value="' + item.saldo + '"> <!--<button class="reset">Reset</button>--></td>' +
+									      '<td class="numeric percent">' + ' <input class="fill2" type="text" name="porcentaje" value="' + ((item.saldo/item.neto_negocio) * 100.00).toFixed(2).replace('.', ',') + '" data-porcentaje="' + ((item.saldo/item.neto_negocio) * 100.00000000).toFixed(8).replace('.', ',') + '"> % <!--<button class="reset">Reset</button>--></td>' +
+									       // '<td class="numeric currency right">' + currency.symbol + ' <span style="font-weight:bold;padding:5px">0</span></td>' +
+									       '<td class="numeric currency">' + currency.symbol + ' <input style="width: 80px; background-color: transparent !important;" readonly class="fill1" type="text" name="saldo" value="' + 0 + '"> <!--<button class="reset">Reset</button>--></td>' +
+									    '</tr>');
+									    htmlObject.dblclick(function(event){
+									    	if (event.target.nodeName == "TD") {
+									    		window.open('/4DACTION/wbienvenidos#dtc/content.shtml?id=' + item.id);
+									     	// unaBase.loadInto.viewport('/v3/views/dtc/content.shtml?id=' + item.id);
+									    	}
+									    });
+
+									    containerTableStep1.append(htmlObject);
+
+									    htmlObject.find('input[name="monto"]').blur(function(event) {
+									    	var tr = $(event.target).closest('tr');
+
+									    	var monto = $(this).val();
+									    	var saldo = tr.data('saldo');
+									    	var neto_negocio = tr.data('neto-negocio');
+
+									    	if (saldo < monto) {
+									    		toastr.warning('El monto de facturación no puede exceder el saldo.');
+									    		$(this).val(saldo);
+									    		tr.find('input[name="porcentaje"]').val((saldo/neto_negocio) * 100.00);
+												tr.find('input[name="porcentaje"]').data('porcentaje', (saldo/neto_negocio) * 100.00000000);
+									    		tr.find('input[name="saldo"]').val(0);
+									    	} else {
+									    		tr.find('input[name="porcentaje"]').val((monto/neto_negocio) * 100.00);
+												tr.find('input[name="porcentaje"]').data('porcentaje', (monto/neto_negocio) * 100.00000000);
+									    		tr.find('input[name="saldo"]').val(saldo - monto);
+									    	}
+									    	tr.data('monto', $(this).val());
+									    });
+
+										htmlObject.find('input[name="porcentaje"]').focus(function(event) {
+											var porcentaje = $(event.target).data('porcentaje');
+											$(event.target).number(true, 8, ',', '.');
+											$(event.target).val(porcentaje);
+										});
+
+									    htmlObject.find('input[name="porcentaje"]').blur(function(event) {
+											var porcentaje = parseFloat($(event.target).val());
+											$(event.target).data('porcentaje', porcentaje);
+											$(event.target).number(true, 2, ',', '.');
+
+									    	var tr = $(event.target).closest('tr');
+
+									    	var porcentaje = parseFloat($(this).data('porcentaje'));
+									    	var saldo = tr.data('saldo');
+									    	var neto_negocio = tr.data('neto-negocio');
+
+									    	var porcentaje_maximo = parseFloat(((saldo/neto_negocio) * 100.00000000).toFixed(8));
+
+									    	if (porcentaje > porcentaje_maximo) {
+									    		toastr.warning('El porcentaje de facturación no puede ser mayor a ' + porcentaje_maximo.toFixed(8) + '%');
+									    		$(this).val(porcentaje_maximo.toFixed(8));
+									    		tr.find('input[name="monto"]').val(saldo);
+									    		tr.find('input[name="saldo"]').val(0);
+									    	} else {
+									    		tr.find('input[name="monto"]').val(porcentaje * neto_negocio / 100.00000000);
+									    		tr.find('input[name="saldo"]').val(saldo - (porcentaje * neto_negocio / 100.00000000));
+									    	}
+									    	tr.data('monto', tr.find('input[name="monto"]').val());
+									    });
+
+									});
+								}else{
+									htmlObject = $('<tr><td colspan="7">Hubo un problema al cargar la lista.</td></tr>');
+									containerTableStep1.append(htmlObject);
+								}
+
+
+								$('.numeric.currency input').number(true, 0, ',', '.');
+								$('.numeric.percent input').number(true, 2, ',', '.');
+								// $('button.reset').button({icons: { primary: 'ui-icon-circle-close'}, text: false });
+						    }
+					  	});
+					}
+				},
+				payments: {
+					preview: function(agrupado){
+						// var selected = $('#dtvporfacturar > table > tbody > tr > td > input:checked');
+						var rows = $('table.step-1 > tbody > tr');
+						/*var objFinal = {};
+
+						rows.each(function(key, item){
+							//if (item.find('td > input[type="checkbox"]').is(':checked')) {
+								var id = $(this).closest("tr").data('id');
+								//var idpro = $(this).closest("tr").data('idpro');
+								//if (jQuery.inArray(idpro, aIdProveedor) == -1) {
+									eval("obj = { 'id': " + id + " }");
+									$.extend(objFinal, objFinal, obj);
+								//}
+							//}
+						});*/
+
+						var containerTableStep2 = payout.container.find('table.step-2 > tbody');
+						var htmlObject2;
+						containerTableStep2.find("*").remove();
+						if (rows.length > 0) {
+							$.each(rows, function(key, item){
+								if (containerTableStep2.find('tr[data-rut-cliente="' + $(item).data('rut-cliente') + '"]').length == 0 || !agrupado) {
+								    htmlObject2 = $('<tr data-rut-cliente="' + $(item).data('rut-cliente') + '" data-id-negocios="' + $(item).data('id') + '" data-montos="' + $(item).data('monto') + '" data-id-cliente="' + $(item).data('idpro') + '" data-cliente="' + $(item).data('cliente') + '">' +
+								      '<td>S/N</td>' +
+								      '<td class="left">' + $(item).data('cliente') + '</td>' +
+								      '<td><input class="datepicker fill2" placeholder="dd-mm-aaaa" type="text" name="fecha" value="'+ payout.currentdate() +'"></td>' +
+								      '<td class="numeric currency right">' + currency.symbol + ' <span style="font-weight:bold;padding:5px" class="monto">' + $(item).find('input[name="monto"]').val() + '</span></td>' +
+								    '</tr>');
+
+								    /*htmlObject2.dblclick(function(event){
+								    	if (event.target.nodeName == "TD") {
+								    		window.open('/4DACTION/wbienvenidos#dtv/content.shtml?id=' + $(item).data('id'));
+								    	}
+								    });*/
+
+									htmlObject2.click(function(event){
+								    	if (event.target.nodeName == "TD") {
+								    		console.log($(event.target).closest('tr').data('id-negocios'));
+								    	}
+								    });
+
+								} else {
+									htmlObject2 = containerTableStep2.find('tr[data-rut-cliente="' + $(item).data('rut-cliente') + '"]');
+									var monto_anterior = parseFloat(htmlObject2.find('td span.monto').text().replace('.', ''));
+									var monto_actual = parseFloat($(item).find('input[name="monto"]').val());
+									htmlObject2.find('td span.monto').text(monto_anterior + monto_actual);
+
+									var id_negocios_anterior = htmlObject2.data('id-negocios');
+									var id_negocios_actual = $(item).data('id');
+									htmlObject2.data('id-negocios', id_negocios_anterior + '|' + id_negocios_actual);
+
+									var montos_anterior = htmlObject2.data('montos');
+									var montos_actual = $(item).data('monto');
+
+									htmlObject2.data('montos', montos_anterior + '|' + montos_actual);
+								}
+
+							    containerTableStep2.append(htmlObject2);
+							});
+
+							var cant = $('table.step-2 > tbody > tr').length;
+							if (cant == 1) {
+								$('#dtvporfacturar').find('.steps-text').text("SE GENERARÁ "+ cant +" FACTURA");
+							}else{
+								if (cant > 1) {
+									$('#dtvporfacturar').find('.steps-text').text("SE GENERARÁN "+ cant +" FACTURAS");
+								}
+							}
+
+						}else{
+							htmlObject2 = $('<tr><td colspan="7">Hubo un problema al cargar la lista.</td></tr>');
+							containerTableStep2.append(htmlObject2);
+						}
+						$('.numeric.currency span').number(true, 0, ',', '.');
+						$(".datepicker" ).datepicker();
+					}
+				},
+				next: function(agrupado){
+					payout.container.find('table.step-1').hide();
+					payout.container.find('table.step-2').show();
+					$('#dialog-menu ul').find('li[data-name="invoice_previous_step"]').hide();
+					$('#dialog-menu ul').find('li[data-name="invoice_next_step"]').hide();
+					$('#dialog-menu ul').find('li[data-name="pay_previous_step"]').show();
+					$('#dialog-menu ul').find('li[data-name="generate_invoices"]').show().find('button').addClass('ui-state-hover').find('.ui-button-text').addClass('bold');
+					$('#dtvporfacturar').find('.steps-labels').text("Paso 2 de 2");
+					payout.payments.preview(agrupado);
+
+				},
+				previous: function(){
+					payout.container.find('table.step-1').show();
+					payout.container.find('table.step-2').hide();
+					$('#dialog-menu ul').find('li[data-name="invoice_previous_step"]').show();
+					$('#dialog-menu ul').find('li[data-name="invoice_next_step"]').show();
+					$('#dialog-menu ul').find('li[data-name="pay_previous_step"]').hide();
+					$('#dialog-menu ul').find('li[data-name="generate_invoices"]').hide();
+					payout.container.find('.steps-labels').text("Paso 1 de 2");
+					$('#dtvporfacturar').find('.steps-text').text("CONFIRMACIÓN DE MONTO");
+				},
+				display: {
+					init: function(){
+						$('#dialog-menu ul').find('li[data-name="pay_previous_step"]').hide();
+						$('#dialog-menu ul').find('li[data-name="generate_payments"]').hide();
+						$('#dialog-menu ul').find('li[data-name="generate_invoices"]').hide();
+						payout.container.find('table.step-2').hide();
+					}
+				},
+				currentdate: function(){
+					var today = new Date();
+					var dd = today.getDate();
+					var mm = today.getMonth()+1; //January is 0!
+					var yyyy = today.getFullYear();
+					if(dd < 10){
+				        dd ='0'+ dd;
+				    }
+				    if(mm < 10){
+				        mm ='0'+ mm;
+				    }
+					return dd +'/'+ mm +'/'+ yyyy;
+				}
+			}
+			$(document).ready(function() {
+				payout.menu();
+				payout.dtc.get();
+				payout.display.init();
+			});
+		</script>
+		<style type="text/css">
+			.fill1{
+				background:#f2fe8a;
+				text-align: right;
+				padding:5px;
+			}
+			.fill2{
+				background:#f2fe8a;
+				text-align: center;
+				padding:5px;
+			}
+			.fill3{
+				background:#f2fe8a;
+				text-align:left;
+				padding:5px;
+				width:90%;
+				text-transform: uppercase;
+			}
+			.dialog header{
+				text-align:right!important;
+			}
+			.reset{
+				zoom:80%;
+				width:15px;
+				height:15px;
+				padding:0px;
+				margin:0px;
+			}
+			.steps-labels{
+				font-weight:bold;
+				padding:5px;
+				float: right;
+			}
+			.steps-text{
+				font-size:12px;
+				font-weight:bold;
+				padding:5px;
+				float: left;
+			}
+			.bold{
+				font-weight:bold!important;
+				border-radius:5px;
+				zoom:100%;
+			}
+		</style>
+	</head>
+	<body>
+		<section id="dtvporfacturar" class="sheet" style="width: calc(100% - 10px);">
+			<h2><div class="steps-text">CONFIRMACIÓN DE MONTO</div><div class="steps-labels">Paso 1 de 2</div></h2>
+			<table class="step-1" style="width: calc(100% - 20px);">
+				<thead>
+					<tr>
+						<th width="10%" class="center">Número</th>
+						<th width="10%" class="center">Fecha asignación</th>
+						<th width="15%" class="center">Cliente</th>
+						<th width="20%" class="left">Referencia</th>
+						<th width="15%" class="right">Total a facturar [$]</th>
+						<th width="15%" class="right">%</th>
+						<th width="15%">Saldo [$]</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+				<tfoot></tfoot>
+			</table>
+			<table class="step-2">
+				<thead>
+					<tr>
+						<th width="15%" class="center">Número</th>
+						<th width="30%" class="left">Cliente</th>
+						<th width="5%" class="center">Fecha emisión</th>
+						<th width="20%" class="right">Monto factura [$]</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+				<tfoot></tfoot>
+			</table>
+		</section>
+	</body>
+</html>

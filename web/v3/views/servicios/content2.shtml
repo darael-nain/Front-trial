@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_proxy_getDetalleServicios3-->
+<html>
+	<head>
+		<title>Items</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="/v3/design/temporal.css?<!--#4DTEXT random-->">
+		<script>
+			$(document).ready(function() {
+				var container = $('#form-detalle-servicios');
+				$(".tabs_servicios").tabs();
+			
+				container.find('a[href="#tabs-1"]').click(function() {
+					unaBase.interval.clearAll();
+					container.find("#tabs-1").parentTo('section').find('article').empty();
+					container.find("#tabs-1").load('/v3/views/servicios/general.shtml', 'id=<!--#4DTEXT id-->');
+				});
+
+				<!--4DIF tipo_="ventas"-->
+				container.find('a[href="#tabs-2"]').click(function() {
+					unaBase.interval.clearAll();
+					container.find("#tabs-2").parentTo('section').find('article').empty();
+					container.find("#tabs-2").load('/v3/views/servicios/ventas.shtml', 'id=<!--#4DTEXT id-->');
+				}).trigger('click');
+				<!--4DENDIF-->
+				
+				<!--4DIF tipo_="compras"-->
+				container.find('a[href="#tabs-3"]').click(function() {
+					unaBase.interval.clearAll();
+					container.find("#tabs-3").parentTo('section').find('article').empty();
+					container.find("#tabs-3").load('/v3/views/servicios/compras2.shtml', 'id=<!--#4DTEXT id-->');
+				}).trigger('click');
+
+				container.find('a[href="#tabs-4"]').click(function() {
+					unaBase.interval.clearAll();
+					container.find("#tabs-4").parentTo('section').find('article').empty();
+					container.find("#tabs-4").load('/v3/views/servicios/fxr2.shtml', 'id=<!--#4DTEXT id-->');
+				});
+				<!--4DENDIF-->
+
+				/*container.find('a[href="#tabs-5"]').click(function() {
+					unaBase.interval.clearAll();
+					container.find("#tabs-5").parentTo('section').find('article').empty();
+					container.find("#tabs-5").load('/v3/views/servicios/ots.shtml', 'id=<!--#4DTEXT id-->');
+				});	*/
+
+			});
+		</script>
+		<script>
+		
+		</script>
+		<style>
+			.ui-tabs .ui-tabs-panel {
+				padding: 0 !important;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		<!--<button onClick="exportar_gastos()">Exportar gastos</button>-->
+		<div id="form-detalle-servicios" class="form-popup" data-llave="<!--#4DTEXT [Detalle_NV]Llave_NV-->">
+			<input type="hidden" name="id" value="<!--#4DTEXT id-->">
+			<div style="font-weight:bold;margin:5px"><!--#4DTEXT Uppercase([Servicio]Codigo_Servicio;*)--> <!--#4DTEXT Uppercase([Servicio]Nombre_Servicio;*)--></div>
+			<section class="tabs_servicios">
+				<ul class="infinite-tabs">
+					<li><a href="#tabs-1">General</a></li>
+					<!--4DIF tipo_="ventas"--><li class="load-gastos" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-2">Ventas</a></li><!--4DENDIF-->
+					<!--4DIF tipo_="compras"--><li class="load-gastos" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-3">Órdenes de compra</a></li>
+					<li class="load-rendiciones" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-4">Rendiciones</a></li><!--4DENDIF-->
+					<!--<li class="load-ots" data-id="<!- -#4DTEXT [Nota_de_venta]ID_NV- ->"><a href="#tabs-5">Órdenes de trabajo</a></li>-->
+				</ul>
+				<article id="tabs-1"></article>
+				<article id="tabs-2"></article>
+				<article id="tabs-3"></article>
+				<article id="tabs-4"></article>
+				<article id="tabs-5"></article>
+			</section>
+		</div>
+	</body>
+</html>

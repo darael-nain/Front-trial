@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Crear cotización desde una plantilla</title>
+		<meta charset="utf-8">
+		<script>
+			$(document).ready(function() {
+
+				unaBase.toolbox.init();
+				unaBase.toolbox.menu.init({
+					buttons: ['new_without_template']
+				});
+
+				$.ajax({
+					url: '/4DACTION/_V3_getCotizacion',
+					data: {
+						q: '',
+						template: true
+					},
+					dataType: 'json',
+					success: function(data) {
+						var htmlObject;
+						$.each(data.rows, function(key, item) {
+							if (access._530)
+								htmlObject = $('<tr data-id="' + item.id + '" data-username="' + item.username + '"' + ((item.current)? ' class="ui-selected"': '') + '>' +
+									'<td>' + ((item.updated_at !== undefined)? '<time datetime="' + new Date(item.updated_at).toISOString() + '">' + $.datepicker.formatDate('dd-mm-yy', new Date(item.updated_at)) + ' <span>' + new Date(item.updated_at).toTimeString().match( /^([0-9]{2}:[0-9]{2}:[0-9]{2})/ )[0].substring(0, 5) +  '</span></time>' : 'N/A' ) + '</td>' +
+									'<td>' + item.username + '</td>' +
+									'<td>' + item.text + '</td>' +
+									'<td class="options">' +
+									'<button class="fork" title="Usar plantilla"></button>' +
+
+									'<button class="edit" title="Modificar"></button>' +
+									'<button class="delete" title="Eliminar"></button>' +
+									'</td>' +
+								'</tr>');
+							else
+								htmlObject = $('<tr data-id="' + item.id + '" data-username="' + item.username + '"' + ((item.current)? ' class="ui-selected"': '') + '>' +
+									'<td>' + ((item.updated_at !== undefined)? '<time datetime="' + new Date(item.updated_at).toISOString() + '">' + $.datepicker.formatDate('dd-mm-yy', new Date(item.updated_at)) + ' <span>' + new Date(item.updated_at).toTimeString().match( /^([0-9]{2}:[0-9]{2}:[0-9]{2})/ )[0].substring(0, 5) +  '</span></time>' : 'N/A' ) + '</td>' +
+									'<td>' + item.username + '</td>' +
+									'<td>' + item.text + '</td>' +
+									'<td class="options">' +
+									'<button class="fork" title="Usar plantilla"></button>' +
+									'</td>' +
+								'</tr>');
+
+							var id = item.id;
+
+							htmlObject.find('button.fork').button({
+								caption: 'Usar plantilla',
+								icons: {
+									primary: 'ui-icon-copy'
+								},
+								text: false
+							}).click(function() {
+								var element = this;
+								
+								$.ajax({
+									url: '/4DACTION/_V3_cloneCotizacion',
+									data: {
+										id: id
+									},
+									dataType: 'json',
+									type: 'POST'
+								}).done(function(data) {
+									// TODO: manejador de errores de registro tomado y de error de server
+									$(element).parentTo('.ui-dialog-content').dialog('close');
+									unaBase.loadInto.viewport('/v3/views/cotizaciones/content.shtml?id=' + data.id + '&template=true');
+								});
+
+							});
+
+							htmlObject.find('button.edit').button({
+								caption: 'Modificar',
+								icons: {
+									primary: 'ui-icon-pencil'
+								},
+								text: false
+							}).click(function() {
+								var element = this;
+								var id = $(element).parentTo('tr').data('id');
+								
+								$(element).parentTo('.ui-dialog-content').dialog('close');
+								unaBase.loadInto.viewport('/v3/views/cotizaciones/content.shtml?id=' + id);
+							});
+
+							htmlObject.find('button.delete').button({
+								caption: 'Eliminar',
+								icons: {
+									primary: 'ui-icon-trash'
+								},
+								text: false
+							}).click(function() {
+								var element = this;
+								var id = $(element).parentTo('tr').data('id');
+								
+								prompt('¿Realmente desea eliminar la plantilla? Esta acción no se puede deshacer.').done(function(data) {
+									
+									
+									if (data !== false)
+										$.ajax({
+											url: '/4DACTION/_V3_removeCotizacion',
+											data: {
+												id: id
+											}
+										}).done(function(data) {
+											// TODO: manejador de errores de registro tomado y de error de server
+											$(element).parentTo('tr').remove();
+										});	
+								});
+								
+							});
+
+							$('.ui-dialog table > tbody').append(htmlObject);
+						});
+
+						formatCurrency();
+
+						/*
+						setTimeout(function() {
+							enjoyhint_instance.trigger('custom_template');
+						}, 5000);
+						*/
+					}
+				});
+				
+			});
+		</script>
+	</head>
+	<body>
+		<p>
+		<table>
+			<thead>
+				<tr>
+					<th>Fecha</th>
+					<th>Creada por</th>
+					<th>Título</th>
+					<th>Acción</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</body>
+</html>

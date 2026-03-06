@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html>
+	<head>
+
+		<title>Factura parcial</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/script/datepicker_es.js?<!--#4DTEXT _V3_version-->"></script>
+		<script>
+
+
+			var payout = {
+				"container" : $('#dtvporfacturar'),
+			
+				dtc: {
+					get: function(){
+						$.ajax({
+					    	'url':'/4DACTION/_V3_get_dtv_to_create',
+						    data: {
+						    	negocios: '<!--#4DVAR negocios-->'
+						    },
+					   		dataType:'json',
+						    success:function(data){
+
+								var updateSuma = function(event) {
+
+									if (typeof event == 'undefined') {
+										var list = $('table.step-1 > tbody').find('tr');
+									} else {
+										var list = $(event.target).closest('tbody').find('tr');
+									}
+
+									var suma = 0;
+									list.each(function(key, item) {
+										//suma += parseFloat($(item).find('input[name="monto"]').val());
+										suma += parseFloat($(item).data('monto'));
+									});
+
+									if (textExchangeLabel !='') {
+										suma = $.number(suma, 2, ',', '.');
+									}else{
+										suma = $.number(suma, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+										$('.valor-cambio').hide();
+
+									}
+
+									$('.total-facturar').text(suma);
+
+									if (textExchangeLabel !='') {
+										$('.exchange-label').text(textExchangeLabel);
+									}
+								};
+
+								var textExchangeLabel = '';
+								var rateExchangeGlobal = 0;
+
+								var containerTableStep1 = payout.container.find('table.step-1 > tbody');
+								var htmlObject;
+								containerTableStep1.find("*").remove();
+								if (data.rows.length > 0) {
+									$.each(data.rows, function(key, item){
+
+										if (textExchangeLabel == '') {
+											textExchangeLabel = item.exchange_type;
+											rateExchangeGlobal = item.exchange_rate;
+										}
+
+										var saldoAux = item.saldo;
+										if (item.exchange_type != "") {
+								    		var saldoAux = item.saldoExchange;
+								    	}
+
+									    htmlObject = $('<tr data-id="'+ item.id +'" data-idpro="'+ item.idproveedor +'" data-cliente="' + item.proveedor + '" data-saldo="' + saldoAux + '" data-neto-negocio="' + item.neto_negocio + '" data-rut-cliente="' + item.rut + '" data-monto="' + saldoAux + '" data-exchangetype="' + item.exchange_type + '" data-exchangerate="' + item.exchange_rate + '">' +
+									      '<td>' + item.numero + '</td>' +
+									      '<td>' + item.vencimiento + '</td>' +
+									      '<td>' + item.proveedor + '</td>' +
+									      '<td class="left">' + item.referencia +'</td>' +
+									      //'<td class="numeric currency">' + currency.symbol + ' <input style="width:80px!important;" class="fill1" name="exchange_rate" type="text" value="' + (item.exchange_rate) + '"></td>' +
+
+											(
+												(item.exchange_type != "")?
+													'<td>' + item.exchange_type + ' <input style="font-weight:bold;width:100px;" data-value="'+ saldoAux +'" class="fill1" name="monto" type="text" value="' + (saldoAux).numberFormat(2, ',', '.') + '"></td>'
+												:
+													'<td class="numeric currency">' + currency.symbol + ' <input style="font-weight:bold" data-value="'+ item.saldo +'" class="fill1" name="monto" type="text" value="' + $.number(item.saldo, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '"></td>' 
+											) +
+
+									      '<td class="numeric percent">' + ' <input style="width:50px;" class="fill2" type="text" name="porcentaje" value="100" data-porcentaje="100"> % </td>' +
+									       '<td class="numeric currency"><label class="exchange-label">' + currency.symbol + '</label> <input style="width: 80px; background-color: transparent !important;" readonly class="fill1" type="text" data-value="' + 0 + '" name="saldo" value="' + 0 + '"></td>' +
+									    '</tr>');
+
+									    containerTableStep1.append(htmlObject);
+
+										htmlObject.find('input[name="monto"]').on("focus", function(event){
+											let decimals = currency.decimals + 2;
+											$(event.target).number(true, decimals, currency.decimals_sep, currency.thousands_sep);
+											$(event.target).val($(event.target).data('value'));
+										});
+
+									    htmlObject.find('input[name="monto"]').on("blur", function(event){
+									    	var tr = $(event.target).closest('tr');
+											let montoRaw = toNumberJS($(event.target).val(), currency.decimals_sep);
+											let saldoRaw = toNumberJS(tr.data('saldo'), currency.decimals_sep);
+											var monto = montoRaw;
+											var saldo = saldoRaw;
+											if (monto > 0) {
+												var neto_negocio = tr.data('neto-negocio');
+												var exchange_type = tr.data('exchangetype');
+												var exchange_rate = tr.data('exchangerate');
+												let dif = 0;
+												if (!emitir_facturas_mayor_negocio) {
+													if (saldo < monto) {
+											    		toastr.warning('El monto de facturación no puede exceder el saldo.');
+											    		let percentage = 1 * 100.00;
+											    		tr.find('input[name="porcentaje"]').val(percentage);
+														tr.find('input[name="porcentaje"]').data('porcentaje', percentage);
+														$(event.target).data('value', saldo).val(saldo).number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+														dif = 0;
+											    	} else {
+											    		let percentage = (monto/saldo) * 100.00;
+											    		tr.find('input[name="porcentaje"]').val($.number(percentage, 2, ',', '.'));
+														tr.find('input[name="porcentaje"]').data('porcentaje', percentage);
+														dif = (saldo - monto);
+														tr.find('input[name="saldo"]').val($.number(dif, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+														$(event.target).data('value', monto);
+														$(event.target).val(monto);
+														tr.data('monto', montoRaw);
+														updateSuma(event);	
+											    	}
+												}else{
+													let percentage = (monto/saldo) * 100.00;
+													tr.find('input[name="porcentaje"]').val($.number(percentage, 2, ',', '.'));
+													tr.find('input[name="porcentaje"]').data('porcentaje', percentage);
+													dif = (saldo - monto);
+													tr.find('input[name="saldo"]').val($.number(dif, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+													updateSuma(event);
+												}
+											}else{
+												$(event.target).data('value', saldo).val(saldo).number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+											}
+
+											$(event.target).unbind(".format");
+											$(event.target).number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+									    });
+
+										htmlObject.find('input[name="porcentaje"]').focus(function(event) {
+											var porcentaje = $(event.target).data('porcentaje');
+											$(event.target).number(true, 4, ',', '.');
+											$(event.target).val(porcentaje);
+										});
+
+									    htmlObject.find('input[name="porcentaje"]').blur(function(event) {
+									    	var porcentajeRaw = toNumberJS($(event.target).val(), ",");
+									    	var porcentaje = porcentajeRaw;
+									    	
+									    	if (porcentaje > 0 && porcentaje < 101) {
+									    		var tr = $(event.target).closest('tr');
+
+									    		$(event.target).data('value', porcentaje);
+									    		$(event.target).data('porcentaje', porcentaje);
+												$(event.target).number(true, 2, ',', '.');
+
+										    	var exchange_type = tr.data('exchangetype');
+										    	var exchange_rate = parseFloat(tr.data('exchangerate'));
+										    	var saldoActual = toNumberJS(tr.data('saldo'), currency.decimals_sep);
+
+										    	let factor = porcentaje/100;
+									    		let monto = saldoActual * factor;
+									    		let saldoFinal = saldoActual - monto;
+
+									    		if (exchange_type != "") {
+									    			tr.find('input[name="monto"]').data('value', monto).val($.number(monto, 2, ',', '.'));
+									    			tr.find('input[name="saldo"]').val($.number(saldoFinal, 2, ',', '.'));
+									    		}else{
+									    			tr.find('input[name="monto"]').data('value', monto).val($.number(monto, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+									    			tr.find('input[name="saldo"]').data('value', saldoFinal).val($.number(monto, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+									    		}
+
+										    	tr.data('monto', monto);
+												updateSuma(event);
+
+									    	}else{
+
+									    		let porcentaje = parseFloat($(event.target).data('porcentaje'));
+
+									    		// set value
+									    		$(event.target).val(porcentaje);
+
+									    		// set format
+									    		$(event.target).number(true, 2, ',', '.');
+												
+									    	}
+									    });
+									});
+									updateSuma();
+								}else{
+									htmlObject = $('<tr><td colspan="7">Hubo un problema al cargar la lista.</td></tr>');
+									containerTableStep1.append(htmlObject);
+								}								
+
+								if (textExchangeLabel !='') {
+									$('.global-exchange-rate').show();
+									$('.exchange-label').text(textExchangeLabel);
+									$('input[name="exchange_rate_global"]').data('value', rateExchangeGlobal);
+									$('input[name="exchange_rate_global"]').val($.number(rateExchangeGlobal, 4, currency.decimals_sep, currency.thousands_sep));
+								}
+
+						    }
+					  	});
+					}
+				},
+				payments: {
+					preview: function(agrupado){
+						var rows = $('table.step-1 > tbody > tr');
+						var containerTableStep2 = payout.container.find('table.step-2 > tbody');
+						var htmlObject2;
+						containerTableStep2.find("*").remove();
+						if (rows.length > 0) {
+							$.each(rows, function(key, item){
+								if (containerTableStep2.find('tr[data-rut-cliente="' + $(item).data('rut-cliente') + '"]').length == 0 || !agrupado) {
+
+									var exchange_type = $(item).data('exchangetype');
+									var exchange_rate = $(item).data('exchangerate');
+
+								    htmlObject2 = $('<tr data-rut-cliente="' + $(item).data('rut-cliente') + '" data-id-negocios="' + $(item).data('id') + '" data-montos="' + $(item).data('monto') + '" data-id-cliente="' + $(item).data('idpro') + '" data-cliente="' + $(item).data('cliente') + '" data-exchangetype="' + exchange_type + '" data-exchangerate="' + exchange_rate + '">' +
+								      '<td>S/N</td>' +
+								      '<td class="left">' + $(item).data('cliente') + '</td>' +
+								      '<td><input class="datepicker fill2" placeholder="dd-mm-aaaa" type="text" name="fecha" value="'+ payout.currentdate() +'"></td>' +
+
+								       	((exchange_type != "")? '<td class="right">' + ((exchange_type != "")? exchange_type : currency.symbol ) + ' <span style="font-weight:bold;padding:5px" class="monto">' + $(item).find('input[name="monto"]').val() + '</span></td>' : 
+
+								      	 '<td class="right">' + currency.symbol + ' <span style="font-weight:bold;padding:5px" class="monto">' + $.number($(item).find('input[name="monto"]').data('value'), currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</span></td>'
+								      	) + 
+
+
+								     /* '<td class="right">' + ((exchange_type != "")? exchange_type : currency.symbol ) + ' <span style="font-weight:bold;padding:5px" class="monto">' + parseFloat($(item).find('input[name="monto"]').val()).toString().replace('.', ',') + '</span></td>' +*/
+
+								    '</tr>');
+
+									htmlObject2.click(function(event){
+								    	if (event.target.nodeName == "TD") {
+								    		console.log($(event.target).closest('tr').data('id-negocios'));
+								    	}
+								    });
+
+								} else {
+
+									htmlObject2 = containerTableStep2.find('tr[data-rut-cliente="' + $(item).data('rut-cliente') + '"]');
+									if (currency.thousands_sep == ",") {
+										var monto_anterior = parseFloat(htmlObject2.find('td span.monto').text().replace(currency.thousands_sep, '.'));
+										var monto_actual = parseFloat($(item).find('input[name="monto"]').val().replace(currency.thousands_sep, '.'));
+									}else{
+										var monto_anterior = parseFloat(htmlObject2.find('td span.monto').text().replace(currency.thousands_sep, ''));
+										var monto_actual = parseFloat($(item).find('input[name="monto"]').val());
+									}
+									htmlObject2.find('td span.monto').text((monto_anterior + monto_actual).toString().replace('.', ','));
+
+									var id_negocios_anterior = htmlObject2.data('id-negocios');
+									var id_negocios_actual = $(item).data('id');
+									htmlObject2.data('id-negocios', id_negocios_anterior + '|' + id_negocios_actual);
+
+									var montos_anterior = htmlObject2.data('montos');
+									var montos_actual = $(item).data('monto');
+									htmlObject2.data('montos', montos_anterior + '|' + montos_actual);
+
+								}
+
+							    containerTableStep2.append(htmlObject2);
+							});
+
+							var cant = $('table.step-2 > tbody > tr').length;
+							if (cant == 1) {
+								$('#dtvporfacturar').find('.steps-text').text("SE GENERARÁ "+ cant +" FACTURA");
+							}else{
+								if (cant > 1) {
+									$('#dtvporfacturar').find('.steps-text').text("SE GENERARÁN "+ cant +" FACTURAS");
+								}
+							}
+
+						}else{
+							htmlObject2 = $('<tr><td colspan="7">Hubo un problema al cargar la lista.</td></tr>');
+							containerTableStep2.append(htmlObject2);
+						}
+						$('.numeric.currency span').number(true, currency.decimals, ',', '.');
+						$(".datepicker" ).datepicker();
+					}
+				},
+
+
+			}
+
+			// var toNumberJS = function(value, decimals_sep){
+			// 	//
+			// 	/*CL-UF/*-DOLAR-%
+			// 	separador miles = "."
+			// 	separador decimal = ","
+			// 	text = "500.000,00"
+			// 	text.replace(/\./g, '');
+			// 	js = 500000,00
+
+			// 	PE
+			// 	separador miles = ","
+			// 	separador decimal = "."
+			// 	text = "500,000.00"
+			// 	text = text.replace(/\,/g, '');
+			// 	text = "500000.00"
+			// 	text = text.replace(/\./g, ',');
+			// 	js = 500000,00*/
+
+			// 	// otros caso = "179918.5"
+			// 	// 1.es texto
+			// 	// 2.no tiene coma
+
+
+			// 	let number = 0;
+			// 	if (typeof value === 'string') {
+			// 		/*if (decimals_sep == ',') {
+			// 			number = parseFloat(value.replace(/\./g, ''));
+			// 		}else if(decimals_sep == '.'){
+			// 			value = value.replace(/\,/g, '');
+			// 			value = value.replace(/\./g, ',');
+			// 			number = parseFloat(value);
+			// 		}*/
+			// 		number = parseFloat(value.replace(/\,/g, ''));
+			// 	}else if(typeof value === 'number'){
+			// 		number = value;
+			// 	}
+			// 	return number;		
+			// }
+		
+			$(document).ready(function() {
+
+				var symbolAux = currency.symbol;
+				if(dtc.data.moneda.code == "USD"){
+					symbolAux = dtc.data.moneda.code;
+				}
+
+        		let montoPorDescontar = dtc.data.montos.neto - dtc.data.montos.descuento_nc_netos;
+        		let montoPorDescontarFormat = $.number(montoPorDescontar, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+        		$('table.step-1 tbody td.amount').append(symbolAux + ' <input style="font-weight:bold" data-value="'+ montoPorDescontar +'" class="fill1" name="amount" type="text" value="' + $.number(montoPorDescontar, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '">');
+
+        		$('table.step-1 tbody td.percentage').append('<input style="width:50px;" class="fill2" type="number" name="percentage" min="0" max="100" value="100" data-porcentaje="100"> % ');
+
+        		$('table.step-1 tbody td.saldo').append(symbolAux + ' <input readonly style="font-weight:bold;text-align:center;" data-value="'+ 0 +'" class="" name="saldo" type="text" value="' + $.number(0, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '">');
+
+        		$('#ncAmount h2 div span').append(montoPorDescontarFormat);
+
+
+
+               $('input[name="percentage"]').blur(function(){
+               		if(this.value > 100)
+               			this.value = 100;
+               });
+			
+               $('input[name="amount"]').blur(function(){
+               		let amount = parseFloat(this.value.replace(currency.thousands_sep, ''));
+               		let saldo = montoPorDescontar-amount;
+               		let percentage = amount / (montoPorDescontar/100);
+               		
+               		if(percentage < 101){
+	               		$('input[name="saldo"]').val($.number(saldo, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+	               		$('input[name="percentage"]').val(percentage);   
+	               		this.value = $.number(amount, currency.decimals, currency.decimals_sep, currency.thousands_sep);            			
+               		}else{
+               			this.value = montoPorDescontarFormat;
+               			toastr.warning(`No puedes descontar mas de ${montoPorDescontarFormat}`);
+               		}
+               });
+               // $('input[name="amount"]').on('blur', function(){
+               // 		let amount = parseFloat(this.value.replace(currency.thousands_sep, ''));
+               // 		this.value = $.number(amount, currency.decimals, currency.decimals_sep, currency.thousands_sep)
+               // });
+               $('input[name="percentage"]').blur(function(){
+
+               		let percentage = parseFloat(this.value);
+               		let newAmount = (montoPorDescontar/100) * percentage;
+
+               		
+               		if(percentage < 101){
+	               		$('input[name="amount"]').val($.number(newAmount, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+	               		$('input[name="saldo"]').val($.number(montoPorDescontar-newAmount, currency.decimals, currency.decimals_sep, currency.thousands_sep)); 
+               		}else{
+               			toastr.warning(`No puedes descontar mas de ${montoPorDescontarFormat}`);
+               		}
+               		// $('input[name="amount"]').val($.number(montoPorDescontar-amount, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+               });
+				$('#addNcAmount').click(function(){
+               		let percentage = $('input[name="percentage"]').val();
+               		$(this).closest('.ui-dialog-content').dialog('close'); 
+               		// $('.ui-dialog').remove();
+        			dtc.notasCredito.add('amount',percentage);
+				});
+				// payout.dtc.get();
+
+				// let counter = $('<span class="counter global-exchange-rate" style="margin-right: 20px; font-weight: bold; font-size: 12px; margin-top: 5px; color: #222;"><span class="symbol valor-cambio">Valor de cambio: <label><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input style="width:80px!important;" class="fill1" name="exchange_rate_global" type="text" value=""></span></span><span class="counter" style="margin-right: 20px; font-weight: bold; font-size: 12px; margin-top: 5px; color: #222;"><span class="symbol">Total a facturar: <label class="exchange-label"><!--#4DVAR _V3_defaultCurrencySymbol--></label> </span><span class="value total-facturar">0</span></span>');
+				// $('#dialog-menu').prepend(counter);
+
+				// let htmlObjectRateGlobal = counter.find('input[name="exchange_rate_global"]');
+
+				// htmlObjectRateGlobal.focus(function(event) {
+				// 	$(this).val($(this).data('value'));
+				// });
+
+				// htmlObjectRateGlobal.blur(function(event) {
+				// 	let currentValue = $(this).data('value');
+				// 	let newValue = parseFloat($(this).val());
+				// 	if (newValue > 0) {
+				// 		$(this).data('value', newValue);
+				// 		$(this).val($.number(newValue, 4, currency.decimals_sep, currency.thousands_sep));
+				// 	}else{
+				// 		$(this).data('value', currentValue);
+				// 		$(this).val($.number(currentValue, 4, currency.decimals_sep, currency.thousands_sep));
+				// 	}
+				// });
+
+			});
+
+		</script>
+		<style type="text/css">
+			.fill1{
+				background:#f2fe8a;
+				text-align: right;
+				padding:5px;
+			}
+			.fill2{
+				background:#f2fe8a;
+				text-align: center;
+				padding:5px;
+			}
+			.fill3{
+				background:#f2fe8a;
+				text-align:left;
+				padding:5px;
+				width:90%;
+				text-transform: uppercase;
+			}
+			.dialog header{
+				text-align:right!important;
+			}
+			.reset{
+				zoom:80%;
+				width:15px;
+				height:15px;
+				padding:0px;
+				margin:0px;
+			}
+			.steps-labels{
+				font-weight:bold;
+				padding:5px;
+				float: right;
+			}
+			.steps-text{
+				font-size:12px;
+				font-weight:bold;
+				padding:5px;
+				float: left;
+			}
+			.bold{
+				font-weight:bold!important;
+				border-radius:5px;
+				zoom:100%;
+			}
+
+		</style>
+	</head>
+	<body>
+		<section id="ncAmount" class="sheet" style="width: calc(100% - 10px);">
+			<div>
+				<h2><div class="steps-text">Monto por descontar: <span></span></div></h2>
+
+				<button  style="float:right;margin:5px 20px 5px 5px;" id="addNcAmount" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+					<span class="ui-button-text" style="font-weight:bold;">
+					Crear nota de crédito
+					</span>
+				</button>
+				
+			</div>
+			<table class="step-1" style="width: calc(100% - 20px);">
+				<thead>
+					<tr>
+						<th width="35%" class="center">Monto a descontar</th>
+						<th width="20%" class="center">%</th>
+						<th width="40%" class="center">Saldo</th>
+
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td width="35%" class="center amount" ></td>
+						<td width="20%" class="center percentage"></td>
+						<td width="40%" class="center saldo"></td>
+					</tr></tbody>
+				<tfoot></tfoot>
+			</table>
+
+		</section>
+	</body>
+</html>

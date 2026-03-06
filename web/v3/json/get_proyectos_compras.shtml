@@ -1,0 +1,30 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML $total - 1-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP [Nota_de_venta] -->
+		{
+			"id_nv": <!--#4DHTML [Nota_de_venta]ID_NV-->,
+			"nro": "<!--#4DHTML [Nota_de_venta]Id_Negocio-->",
+			"emision": "<!--#4DHTML [Nota_de_venta]Fecha_emision-->",
+			"cliente": "<!--#4DHTML _V3_escapeString([Nota_de_venta]Razon_cliente)-->",
+			"referencia": "<!--#4DHTML _V3_escapeString([Nota_de_venta]Referencia)-->",
+			"neto": "<!--#4DHTML [Nota_de_venta]Total_Neto-->",
+			"neto_raw": <!--#4DHTML String([Nota_de_venta]Total_Neto;"&xml")-->,
+			"isBudget": <!--#4DIF [Nota_de_venta]v3_presupuesto-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"gasto_p": "<!--#4DHTML [Nota_de_venta]TotalGastoPresupuestado-->",
+			"exchange": {
+				"type": "<!--#4DHTML [Nota_de_venta]working_currency-->",
+				"rate": <!--#4DIF [Nota_de_venta]working_currency#"CLP"--><!--#4DHTML String([Nota_de_venta]working_exchange_rate;"&xml")--><!--#4DELSE-->1<!--#4DENDIF-->
+			}
+		}<!--#4DIF Selected record number([Nota_de_venta])<Records in selection([Nota_de_venta])-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

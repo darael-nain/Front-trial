@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getDtcContent2-->
+		<title>Documentos de compra</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/views/dtc/script/dtc.js"></script>
+		<script type="text/javascript" src="/v3/views/dtc/script/content2.js"></script>
+		<script type="text/javascript" src="/v3/script/datepicker_es.js"></script>
+		<link rel="stylesheet" href="/v3/design/gray_and_white.css?<!--#4DTEXT random-->">
+	</head>
+	<body>
+		<section id="sheet-dtc" class="sheet sheet-gastos" data-id="<!--#4DHTML [Doc_Tributario_Compra]ID_DOC-->">
+			<footer>
+				<header>
+					<ul class="botton">
+						<li class="bold" name="resumen[dtc][estado]"></li>
+						<li>Creada por <label data-name="emisor"></label> el <label data-name="fregistro"></label> a las <label data-name="hregistro"></label> hrs.</li>
+						<li class="bold">Desde {from}</li>
+						<li class="warning-color max">Monto máximo a justificar: {maximo_a_justificar}</li>
+					</ul>
+				</header>
+				<article class="info-general">
+					<h1><strong>Información generaltest</strong></h1>
+					<button class="expand active"></button>
+					<h2><strong title="TIPO DE DOCUMENTO" name="resumen[dtc][documento]"></strong> <span title="NÚMERO DEL DOCUMENTO" name="resumen[dtc][folio]"></span> <strong title="FECHA DE EMISIÓN DEL DOCUMENTO" name="resumen[dtc][emision]"></strong> <span title="REFERENCIA DEL DOCUMENTO" name="resumen[dtc][referencia]"></span></h2>
+					<section class="expandable">
+						<ul>
+							<li>
+								<label class="fixed"><span class="objoc">Referencia:</span><span class="objfxr">Concepto:</span></label>
+								<input required class="large infogeneral full" name="dtc[referencia]" placeholder="Ingresar aquí concepto o referencia para el documento" value="{referencia}" type="text">
+							</li>
+						</ul>
+						<ul class="inline">
+							<li>
+								<label class="fixed">Tipo documento:</label>
+									<input class="full medium" readonly name="tipo_doc[descripcion]" placeholder="Seleccionar tipo documento" type="search" value="{descripcion_tipo}">
+									<button type="button" class="show dtc full">ver tipos de documentos</button>
+									<input name="tipo_doc[id]" type="hidden" value="{tipo_doc}">
+							</li>
+							<li>
+								<label>Nro. documento:</label>
+								<input required class="nro infogeneral small full" placeholder="S/N" type="text" name="dtc[nro_folio]" value="{folio}">
+							</li>
+							<li>
+								<label>Fecha de emisión:</label>
+								<input id="femision" class="datepicker2 infogeneral small full" placeholder="dd-mm-aaaa" type="text" name="dtc[fecha_emision]" value="{fecha_emision}">
+							</li>
+						</ul>
+					</section>
+				</article>
+				<article class="info-proveedor">
+					<h1><strong>Información del proveedor</strong></h1>
+					<button class="expand"></button>
+					<h2><strong title="ALIAS DEL PROVEEDOR" name="resumen[contacto][alias]">{alias}</strong> <span title="RAZÓN SOCIAL DEL PROVEEDOR" name="resumen[contacto][razon]">{razon}</span></h2>
+					<section class="expandable">
+						<ul>
+							<li>
+								<label name="text[alias]" class="fixed">Buscar:</label>
+								<input required class="medium full" name="contacto[info][alias]" required id="empresa" type="search" data-id="{id_contacto}" placeholder="Buscar por alias, rut, razón social" value="{alias}" type="text"><button class="profile2 empresa">Perfil</button><input name="contacto[info][id]" type="hidden" value="{id_contacto}">
+							</li>
+							<li>
+								<label class="fixed">Razón social:</label>
+								<input class="medium" readonly required type="text" name="contacto[info][razon_social]" placeholder="" value="{razon}">
+							</li>
+							<li>
+								<label class="fixed">Rut:</label>
+								<input class="medium" readonly required type="text" name="contacto[info][rut]" value="{rut}">
+							</li>
+							<li>
+								<label class="fixed">Giro:</label>
+								<input class="medium" readonly required type="text" name="contacto[info][giro]" placeholder="" value="{giro}">
+							</li>
+						</ul>
+						<ul>
+							<li>
+								<label class="fixed">Forma de pago:</label>
+								<select required name="forma_pago[id]">
+									<option value="{id_forma_pago}" selected>{des_forma_pago}</option>
+									<option value="" selected>[ Seleccionar ]</option>
+								</select>
+							</li>
+						</ul>
+					</section>
+				</article>
+				<article class="totales-finales">
+					<h1><strong>Montos totales</strong></h1>
+					<button class="expand"></button>
+					<h2><strong name="resumen[dtc][total]">Total <span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span name="resumen[dtc][total_valor]"></span></span></strong></h2>
+					<section class="expandable">
+						<h1>Montos totales del documento</h1>
+						<ul class="inline">
+							<li>
+								<label class="fixed">Subtotal <!--#4DVAR _V3_defaultCurrencySymbol-->:</label>
+								<span class="numeric currency"><input required class="money full" type="text" name="dtc[sub_total]" value="{sub_total}"></span>
+							</li>
+							<li>
+								<label class="fixed">Descuento <!--#4DVAR _V3_defaultCurrencySymbol-->:</label>
+								<span class="numeric currency"><input class="money dscto full" type="text" name="dtc[descuento]" value="{descuento}"></span>
+							</li>
+							<li>
+								<label class="fixed">Exento <!--#4DVAR _V3_defaultCurrencySymbol-->:</label>
+								<span class="numeric currency"><input class="money full" type="text" name="dtc[total_exento]" value="{exento}"></span>
+							</li>
+							<li>
+								<label name="label-neto-hono" class="fixed">Neto <!--#4DVAR _V3_defaultCurrencySymbol-->:</label>
+								<span class="numeric currency"><input class="money" readonly type="text" name="dtc[total_neto]" value="{neto}"></span>
+							</li>
+							<li>
+								<label name="label-iva-ret" class="fixed">Iva <!--#4DVAR _V3_defaultCurrencySymbol-->:</label>
+								<span class="numeric currency"><input class="money" readonly type="text" name="dtc[total_iva]" value="{iva}"></span>
+							</li>
+							<li>
+								<label class="fixed">Adicional <!--#4DVAR _V3_defaultCurrencySymbol-->:</label>
+								<span class="numeric currency"><input class="money full" type="text" name="dtc[total_adicional]" value="{adicional}"></span>
+							</li>
+							<li>
+								<label class="fixed">Total <!--#4DVAR _V3_defaultCurrencySymbol-->:</label>
+								<span class="numeric currency"><input class="money" readonly type="text" name="dtc[total]" value="{total}"></span>
+							</li>
+						</ul>
+						<h1 class="montos-justificados">Montos totales justificados</h1>
+						<ul class="inline montos-justificados">
+							<li>
+								<label class="fixed">Por justificar <!--#4DVAR _V3_defaultCurrencySymbol-->:</label>
+								<span class="numeric currency"><input required class="money" readonly type="text" name="dtc[total_justificar]" value="<!--#4DTEXT [Doc_Tributario_Compra]SALDO_JUSTIFICAR-->"></span>
+							</li>
+							<li>
+								<label class="fixed">Justificado <!--#4DVAR _V3_defaultCurrencySymbol-->:</label>
+								<span class="numeric currency"><input class="money" readonly class="dscto" type="text" name="dtc[total_justificado]" value="<!--#4DTEXT [Doc_Tributario_Compra]JUSTIFICADO-->"></span>
+							</li>
+						</ul>
+						<h1 style="display:none" class="montos-pagados">Montos totales pagados</h1>
+						<ul style="display:none" class="inline montos-pagados">
+							<li>
+								<label class="fixed">Por pagar <!--#4DVAR _V3_defaultCurrencySymbol-->:</label>
+								<span class="numeric currency"><input required class="money" readonly type="text" name="dtc[total_pagar]" value="{saldo}"></span>
+							</li>
+							<li>
+								<label class="fixed">Pagado <!--#4DVAR _V3_defaultCurrencySymbol-->:</label>
+								<span class="numeric currency"><input class="money" readonly class="dscto" type="text" name="dtc[total_pagado]" value="{abono}"></span>
+							</li>
+						</ul>
+
+						<input type="hidden" readonly name="dtc[descuento_nc]" value="0">
+					</section>
+				</article>
+				<table class="items">
+					<thead>
+						<tr>
+							<th style="background-color:<!--#4DVAR vColorCorporativoCSS--> !important;"></th>
+							<th>Ítem</th>
+							<th>Descripción</th>
+							<th>Gasto</th>
+							<th>Impuesto</th>
+							<th>Cant.</th>
+							<th>P.U.[<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+							<th>Subtotal [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+							<th>Dscto [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+							<th>Total [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+					<tfoot class="totales-suma-items">
+						<tr><th colspan="10"></th></tr>
+						<tr>
+							<th colspan="5"></th>
+							<th></th>
+							<th></th>
+							<th class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span><input class="small" type="text" readonly name="dtc[suma_subtotal]" value=""></span></th>
+							<th class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span><input class="small" type="text" readonly name="dtc[suma_dscto]" value=""></span></th>
+							<th class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span><input class="small" type="text" readonly name="dtc[suma_total]" value=""></span></th>
+						</tr>
+					</tfoot>
+				</table>
+				<article id="scrollocs">
+					<h1>Órdenes de compra (<span>0</span>)</h1>
+					<table class="ocs" width="99%">
+						<thead>
+							<tr>
+								<th width="5%">Número</th>
+								<th width="20%">Documento</th>
+								<th width="20%" class="left">Proveedor</th>
+								<th width="20%" class="left">Referencia</th>
+								<th width="10%">Emisión</th>
+								<th width="10%">Estado</th>
+								<th width="10%">Justificado [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody class="ui-selectable"></tbody>
+						<tfoot>
+							<tr>
+								<th colspan="6"></th>
+								<th class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--><input style="width:100px!important" readonly name="dtc[suma_justificado]" type="text" value=""></th>
+							</tr>
+						</tfoot>
+					</table>
+				</article>
+				<article>
+					<h1><strong>Información adicional</strong></h1>
+					<section>
+						<ul>
+							<li>
+								<label>Observación:</label>
+								<textarea name="dtc[observacion]">{observaciones}</textarea>
+							</li>
+						<ul>
+					</section>
+				</article>
+				<article id="scrollncnd" class="bg">
+					<h1>Notas de crédito (<span>0</span>)</h1>
+					<div style="margin:2px;"><button class="add dtc">Agregar</button></div>
+					<table class="nc" width="99%">
+						<thead>
+							<tr>
+								<th width="5%">Número</th>
+								<th width="20%">Documento</th>
+								<th width="20%">Proveedor</th>
+								<th width="20%">Referencia</th>
+								<th width="10%">Emisión</th>
+								<th width="10%">Estado</th>
+								<th width="10%">Monto [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+							</tr>
+						</thead>
+						<tbody class="ui-selectable"></tbody>
+						<tfoot>
+							<tr>
+								<th colspan="6"></th>
+								<th class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--><input style="width:200px!important;text-align:right" readonly name="dtc[suma_nc]" type="text" value="0"></th>
+							</tr>
+						</tfoot>
+					</table>
+				</article>
+			</footer>
+		</section>
+	</body>
+</html>

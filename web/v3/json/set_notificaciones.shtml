@@ -1,0 +1,7 @@
+{
+	"id": <!--#4DIF Not(Undefined(id))--><!--#4DIF Type(id)=Is Text-->"<!--#4DVAR id-->"<!--#4DELSE--><!--#4DVAR id--><!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"success": <!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF-->,		
+	"readonly": <!--#4DIF Not(Undefined(readonly))--><!--#4DIF readonly-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,	
+	"general_percent": "<!--#4DHTML vGeneralPercent-->%",
+	"modulo_percent": "<!--#4DHTML vModuloPercent-->%"
+}

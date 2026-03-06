@@ -1,0 +1,62 @@
+{
+	"success": <!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF-->,		
+	"rows":[
+	<!--#4DLOOP aIdTask -->
+		{
+			"id":  <!--#4DIF Not(Undefined(aIdTask))--><!--#4DHTML aIdTask{aIdTask}--><!--#4DELSE-->0<!--#4DENDIF-->,
+			"project":{
+				"id":<!--#4DIF Not(Undefined(aIdNv))--><!--#4DHTML String(aIdNv{aIdTask})--><!--#4DELSE-->0<!--#4DENDIF-->,
+				"name": <!--#4DIF Not(Undefined(aNameNv))-->"<!--#4DHTML _V3_escapeString(aNameNv{aIdTask})-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+				"folio": <!--#4DIF Not(Undefined(aFolioNv))-->"<!--#4DHTML String(aFolioNv{aIdTask})-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+				"estado":   <!--#4DIF Not(Undefined(aEstadoNv))--><!--#4DHTML String(aEstadoNv{aIdTask})--><!--#4DELSE-->0<!--#4DENDIF-->
+			},
+			"folio":   <!--#4DIF Not(Undefined(aFolio))-->"<!--#4DHTML String(aFolio{aIdTask})-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+			"fecha":{
+				"inicio":   <!--#4DIF Not(Undefined(aStartDate))-->"<!--#4DHTML aStartDate{aIdTask}-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+				"entrega":   <!--#4DIF Not(Undefined(aDeadlineDate))-->"<!--#4DHTML aDeadlineDate{aIdTask}-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+				"cierre":   <!--#4DIF Not(Undefined(aClosingDate))-->"<!--#4DHTML aClosingDate{aIdTask}-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+				"creacion":   <!--#4DIF Not(Undefined(aCreationDate))-->"<!--#4DHTML aCreationDate{aIdTask}-->"<!--#4DELSE-->""<!--#4DENDIF-->
+			},
+			"detail_key":   <!--#4DIF Not(Undefined(aDetailKey))-->"<!--#4DHTML _V3_escapeString(aDetailKey{aIdTask})-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+			"name": <!--#4DIF Not(Undefined(aName))-->"<!--#4DHTML _V3_escapeString(aName{aIdTask})-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+			"descripcion":   <!--#4DIF Not(Undefined(aDes))-->"<!--#4DHTML _V3_escapeString(aDes{aIdTask})-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+			"responsable":   <!--#4DIF Not(Undefined(aResponsable))-->"<!--#4DHTML _V3_escapeString(aResponsable{aIdTask})-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+			"responsable_name":   <!--#4DIF Not(Undefined(aResponsableName))-->"<!--#4DHTML _V3_escapeString(aResponsableName{aIdTask})-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+			"responsable_email":   <!--#4DIF Not(Undefined(aResponsableEmail))-->"<!--#4DHTML _V3_escapeString(aResponsableEmail{aIdTask})-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+			"status":   <!--#4DIF Not(Undefined(aStatus))-->"<!--#4DHTML String(aStatus{aIdTask})-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+			"proy" : <!--#4DIF aProy{aIdTask}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"visible": true,
+			"vencida": <!--#4DIF Not(Undefined(aVencida))--><!--#4DHTML aVencida{aIdTask}--><!--#4DELSE-->0<!--#4DENDIF-->,
+			"count_archives": <!--#4DHTML aCountArchives{aIdTask}-->,
+			"count_comments": <!--#4DHTML aCountComments{aIdTask}-->,
+			"participantes": [
+			
+			
+			],
+			"comentarios": [
+				
+			],
+			"archivos": [
+				
+			],
+			"img": [
+				
+			],
+			"info": {
+				"cliente":{
+				  "id": <!--#4DHTML aClienteId{aIdTask}-->,
+				  "name": "<!--#4DHTML aClienteName{aIdTask}-->",
+				  "razon": "<!--#4DHTML aClienteRazon{aIdTask}-->",
+				  "rut": "<!--#4DHTML aClienteRut{aIdTask}-->"
+				},
+				"contacto":{
+				  "id": <!--#4DHTML aContactoId{aIdTask}-->,
+				  "name":  "<!--#4DHTML aContactoName{aIdTask}-->",
+				  "cargo": "<!--#4DHTML aCargo{aIdTask}-->",
+				  "email": "<!--#4DHTML aEmail{aIdTask}-->"
+				}
+			}
+		}<!--#4DIF NOT(aIdTask{aIdTask} = aIdTask{Size of array(aIdTask)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

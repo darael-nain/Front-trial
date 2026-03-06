@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Detalle item compra</title>
+		<meta charset="utf-8">
+	</head>
+	<body>
+		<section class="item-info" data-llave-detalle-oc="<!--#4DTEXT llave-->" data-id-oc="<!--#4DTEXT idOc-->" data-id-nv="<!--#4DTEXT idNv-->" data-llave-nv="<!--#4DTEXT llaveItemDetalleNv-->">
+			<fieldset>
+			<legend><strong>Información del ítem del negocio</strong></legend>
+				<article>
+					<div>
+						<label>Negocio:</label>
+						<input style="background-color: white; padding-right: 13px; position: relative; left: -5px; width: 334px !important; background-position-x: 320px; border-radius: 3px;" name="id_nv" type="search" data-id="<!--#4DTEXT idNv-->" value="[<!--#4DTEXT nroNv-->] <!--#4DTEXT Uppercase(refNv;*)-->">
+						<button style="width: 19px; height: 19px;" class="show negocios ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title="Ver negocios"><span class="ui-button-icon-primary ui-icon ui-icon-carat-1-s"></span><span class="ui-button-text">Ver negocios</span></button>
+					</div>
+					<div>
+						<label>Servicio:</label>
+						<select name="llave_nv" style="width: 360px;">
+							<option selected value="<!--#4DTEXT llaveItemDetalleNv-->"><!--#4DIF (codItemDetalleNv#"")-->[<!--#4DTEXT codItemDetalleNv-->] <!--#4DENDIF--><!--#4DTEXT Uppercase(nomItemDetalleNv;*)--></option>
+						</select>
+					</div>
+					<button class="save-item-change" style="float: right; height: 24px;"></button>
+	            </article>
+			</fieldset>
+			<fieldset>
+				<legend><strong>Información del ítem de la compra</strong></legend>
+				<article>
+					<div><label>Descripción:</label><input readonly value="<!--#4DTEXT Uppercase([Detalle_OC]Nombre_Producto;*)-->"></div>
+					<div><label>Descripción larga:</label><textarea style="height:150px" name="detail[descripcion_larga]" placeholder="Escribir una descripción..."><!--#4DTEXT vDetalleItem--></textarea></div>
+				</article>
+			</fieldset>
+		</section>
+		<script>
+			function uuidv4() {
+				return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+					var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+					return v.toString(16);
+				});
+			}
+
+			$(document).ready(function() {
+				$('[name="detail[descripcion_larga]"]').froalaEditor({
+					language: 'es',
+					quickInsertTags: null,
+					width: 732,
+					height: 220,
+					imageMaxSize: 1024 * 1024 * 0.25,
+					imagePasteProcess: true,
+					imageUploadUrl: '/4DACTION/_V3_setUpload',
+					imageUploadParams: {
+						index: 'Embed|' + uuidv4(),
+						filename: uuidv4()
+					},
+					placeholderText: 'Ingresar texto aquí...',
+					toolbarButtons: [ 'bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', '|' , 'fontSize', 'align', 'insertTable', '|', 'undo', 'redo' ] 
+				}).on('froalaEditor.image.beforePasteUpload', function (e, editor, files) {
+					if (files.length) {
+						var reader = new FileReader();
+						reader.onload = function (e) {
+							var result = e.target.result;
+							editor.image.insert(result, null, null, editor.image.get());
+						};
+						reader.readAsDataURL(files[0]);
+					}
+					return false;
+				});
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,12 @@
+
+	
+<!--#4DLOOP aIdImp -->
+		{
+			"id": <!--#4DTEXT aIdImp{aIdImp}-->,
+			"valor": <!--#4DTEXT aValorImp{aIdImp}-->,
+			"tipo": "<!--#4DHTML _V3_escapeString(aTipoImp{aIdImp})-->",
+			"descripcion": "<!--#4DHTML _V3_escapeString(aDesImp{aIdImp})-->",
+			"estado": <!--#4DIF aEstadoImp{aIdImp}-->true<!--#4DELSE -->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aIdImp{aIdImp} = aIdImp{Size of array(aIdImp)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+

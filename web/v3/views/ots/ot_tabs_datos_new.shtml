@@ -1,0 +1,124 @@
+<div id="tab-1-datos-ot">
+    <div class="top-block">
+        <article>
+            <div>        
+                <label>Referencia:</label>
+                <input name="ot[referencia]" type="text" value=""/>
+            </div>   
+        </article>
+    </div>
+    <div class="middle-block">
+        <article>
+            <div>    
+                <label>Tipo:</label>
+                <select name="ot[tipo]">
+                    <option selected value="">NEGOCIO</option>
+                    <option value="">GENERAL</option>           
+                </select>
+            </div>       
+            <div class="tipo-negocio"> 
+                <label>Negocio:</label>
+                <input placeholder="buscar por referencia, razon" name="ot[tipo][negocio]" type="text" value=""/>
+            </div>
+            <div class="tipo-negocio-origen">
+                <label>Origen:</label>
+                <select name="ot[tipo][negocio][origen]">
+                    <option selected value=""></option>
+                    <option value=""></option>    
+                </select>
+            </div>
+           <div class="tipo-negocio-item">
+                <label>Item:</label>
+                <select name="ot[tipo][negocio][item]">
+                    <option selected value=""></option>
+                    <option value=""></option>           
+                </select>
+            </div>
+            <div class="tipo-general">
+                <label>Cliente:</label>
+                <input name="ot[cliente]" type="text" value=""/>
+            </div>
+            <div>
+                <label>Fecha vcto:</label>
+                <input name="ot[fecha_vcto]" type="text" value=""/>
+            </div>
+            <div>
+                <label>Hora vcto:</label>
+                <select name="ot[hora_vcto]">
+                    <option selected value=""></option>
+                    <option value=""></option>           
+                </select>
+            </div>                  
+        </article>       
+    </div>
+    <div class="middle-block">
+        <article>
+            <div>
+                <label>Importancia:</label>
+                <select name="ot[importancia]">
+                    <option selected value=""></option>
+                    <option value=""></option>           
+                </select>
+            </div>
+            <div>
+                <label>Área de trabajo:</label>
+                <select name="ot[area_trabajo]">
+                    <option selected value=""></option>
+                    <option value=""></option>           
+                </select>
+            </div>
+            <div>
+                <label>Responsable:</label>
+                <select name="ot[responsable]">
+                    <option selected value=""></option>
+                    <option value=""></option>           
+                </select>
+            </div>
+            <div>
+                <label>Copiados:</label>
+                
+            </div>
+        </article>
+    </div>
+    <div class="bottom-block">
+        <article>
+            <div class="group">
+                <label>Cant. Hrs.:</label>
+                <input name="ot[horas][cantidad]" type="text" value=""/>
+                <label>Disponibles:</label>
+                <input name="ot[horas][disponibles]" type="text" value=""/>
+                <label>Total:</label>
+                <input name="ot[horas][total]" type="text" value=""/>
+                <label>Restantes:</label>
+                <input name="ot[horas][restantes]" type="text" value=""/>
+            </div>
+            <div>
+                <label>Descripción:</label>
+                <textarea name="ot[descripcion]"></textarea>            
+            </div>
+            <div>
+                <label>Archivos:</label>
+                <button>Adjuntar</button>
+                <div class="file-container">Aún no se han subido archivos.</div>         
+            </div>
+            <div class="comentarios">
+                <label>Comentarios:</label>
+                <textarea class="comment" placeholder="Escribe un comentario..."></textarea>
+                <button name="comment">Comentar</button>
+                <div class="comment-container">Aún no se existen comentarios.</div> 
+            </div>
+        </article>
+    </div>
+    <footer>
+        <article>
+            <div>
+                <button name="ot[button][save]" type="button">Guardar</button>
+                <button name="ot[button][notify]" type="button">Notificar</button>
+                <button name="ot[button][duplicate]" type="button">Duplicar</button>
+                <button name="ot[button][cancel]" type="button">Anular</button>               
+                <button name="ot[button][close]" type="button">Cerrar</button>
+                <button name="ot[button][open]" type="button">Abrir</button>
+            </div>           
+        </article>               
+    </footer>
+</div>

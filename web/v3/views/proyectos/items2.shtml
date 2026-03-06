@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_get_ItemsProyCompras-->
+		<title>Items del presupuesto</title>
+		<meta charset="utf-8">
+		<script>
+
+		var permiso_excede_presupuestado = <!--#4DIF vPermisoExcedePresupuestado-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+		var menus = function(){
+			unaBase.toolbox.init();
+			unaBase.toolbox.menu.init({
+				entity: 'Presupuestos_compras',
+				buttons: ['itemsoc_volver_presupuestos2','itemsoc_agregar_items2', 'itemsoc_otros_gastos2'],
+				data: function(){
+				  return $('.ui-dialog section.sheet').serializeAnything();
+				},
+				validate:function(){
+				  return true;
+				}
+			});
+		};
+		var getItemsGastos = function(){
+			var container = $('#sheet-items_proyect-select table.items tbody');
+			var itemsGastos = $('#items-gastos tbody tr[data-tipo="ITEM"]');
+			var cant = 0;
+			// Calcual diferencias en gasto por item, entre lo agregado en la OC y lo que está en el popup
+			itemsGastos.each(function(key,item){
+				var llave = $(this).find('input[name="oc[detalle_item][llave_nv]"]').val();
+				var monto = parseFloat($(this).find('input[name="oc[detalle_item][total]"]').val());
+				var tr = container.find('tr[data-llave="'+llave+'"]');
+				if (tr.length>0) {
+					var start = parseFloat(tr.find('input[data-diferencia]').val());
+					var end = start - monto;
+					tr.find('input[data-diferencia]').val(end);
+					tr.find('input[type="checkbox"]').attr('disabled', !(end > 0 || access._486));
+				}
+			});
+
+		}
+		$(document).ready(function() {
+			menus();
+
+			if ($('.ui-dialog section.sheet').data('permiso')) {
+				$('.ui-dialog header nav ul li[data-name="itemsoc_otros_gastos2"]').show();
+			}else{
+				$('.ui-dialog header nav ul li[data-name="itemsoc_otros_gastos2"]').hide();
+			}
+
+			// Formato números
+			$('.ui-dialog .numeric.currency input').number(true, currency.decimals, ',', '.');
+			$('.ui-dialog .percent input').number(true, 2, ',', '.');
+
+			// Expandir y contraer títulos
+			$('.ui-dialog section.sheet table > thead button.toggle.all').click(function() {
+				if ($(this).hasClass('ui-icon-folder-open')) {
+					$(this).removeClass('ui-icon-folder-open');
+					$(this).addClass('ui-icon-folder-collapsed');
+					$(this).attr('title', 'Contraer todo');
+					$('.ui-dialog section.sheet table > tbody > tr.title button.toggle.categoria.ui-icon-folder-open').each(function() {
+						$(this).trigger('click');
+					});
+				} else {
+					$(this).removeClass('ui-icon-folder-collapsed');
+					$(this).addClass('ui-icon-folder-open');
+					$(this).attr('title', 'Expandir todo');
+					$('.ui-dialog section.sheet table > tbody > tr.title button.toggle.categoria.ui-icon-folder-collapsed').each(function() {
+						$(this).trigger('click');
+					});
+				}
+			});
+
+			// $('.ui-dialog section.sheet table > tbody button.toggle.categoria').click(function() {
+			$('.ui-dialog section.sheet table tbody').on('click', 'button.toggle.categoria', function() {
+				var target = $(this);
+
+				var collapsed = target.hasClass('ui-icon-folder-collapsed');
+
+				if (collapsed) {
+					target.removeClass('ui-icon-folder-collapsed').addClass('ui-icon-folder-open');
+					var title = target.closest('tr');
+					var tbody = $('.ui-dialog section.sheet table tbody');
+					if (title.data('loaded') !== true) {
+						unaBase.ui.block();
+						$.ajax({
+							url: '/4DACTION/_V3_proxy_get_ItemsProyCompras',
+							data: {
+								'oc[negocio][id]': <!--#4DVAR idNv-->,
+								'oc[id]': <!--#4DVAR idOc-->,
+								from: '<!--#4DVAR from-->',
+								title: title.data('id')
+							},
+							dataType: 'json',
+							success: function(data) {
+								var htmlString = '';
+								var subtotal_costo_real = 0;
+								var diferencia = 0;
+								$.each(data.rows, function(key, item) {
+									var tooltip = (item.observacion != '' || item.comentario != '')? htmlspecialchars('\
+										<ul>																												\
+											<li data-name="observaciones">																					\
+												<strong style="font-weight: bold; display: inline-block; width: 220px;">Descripción larga</strong>			\
+												<pre style="font-size: 11px;">' + ((item.observacion != '')? item.observacion : '-') + '</pre>				\
+											</li>																											\
+											<li data-name="comentarios">																					\
+												<strong style="font-weight: bold; display: inline-block; width: 220px;">Observación</strong>				\
+												<pre style="font-size: 11px;">' + ((item.comentario != '')? item.comentario : '-') + '</pre>				\
+											</li>																											\
+										</ul>																												\
+									') : '';
+									htmlString+= '\
+										<tr data-llave="' + item.id + '" data-id="' + item.id + '" data-parent="' + item.parent + '" data-class="collapsed"				\
+											data-observacion="' + item.observacion + '" data-comentario="' + item.comentario + '">										\
+											<td></td>																													\
+									 		<td class="numeric code"><input readonly name="item[][codigo]" value="' + item.codigo + '"></td>							\
+									 		<td>																														\
+									 			<input readonly name="item[][nombre]" value="' + item.nombre + '"														\
+									 			style="width: 190px;"><button 																							\
+									 				class="ui-icon ui-icon-notice detail item" title="' + tooltip + '"													\
+									 				' + ((item.observacion == '' && item.comentario == '')? ' style="display: none;"' : '') + '>						\
+									 				Ver detalle del ítem</button>																						\
+									 		</td>																														\
+									 		<td class="center">																											\
+									 			<input readonly name="item[][cant]" value="' + item.cantidad + '">														\
+									 		</td>																														\
+									 		<td class="numeric currency costo presupuestado adquisicion">' + currency.symbol + ' <span>														\
+									 			<input readonly name="item[][subtotal_costo]" value="' + item.subtotal_costo + '"></span>								\
+									 		</td>																														\
+									 		<td class="numeric currency costo real adquisicion">' + currency.symbol + ' <span>																\
+									 			<input readonly name="item[][subtotal_costo_real]" value="' + item.subtotal_costo_real.toString().replace('.', ',') + '"></span>						\
+									 			<button class="ui-icon ui-icon-document" onclick="unaBase.loadInto.dialog(\'/v3/views/items/content.shtml?id=' + item.id + '\', undefined, undefined, undefined, \'/v3/views/negocios/items2.shtml?oc[negocio][id]=<!--#4DTEXT idNv-->&oc[id]=<!--#4DTEXT idOc-->&from=<!--#4DTEXT from-->\');">Ver gastos</button> \
+									 		</td>																														\
+									 		<td class="numeric currency adquisicion">' + currency.symbol + ' <span>																			\
+									 			<input data-diferencia="xxxx" readonly name="item[][diferencia]' + item.id + '" value="' + ((item.diferencia > 0)? item.diferencia : 0).toString().replace('.', ',') + '"></span>	\
+									 		</td>																														\
+											<td>																														\
+												<input data-llavetit="' + item.parent + '" name="detalle[check_item][' + item.id + ']" value="' + item.id + '"			\
+													type="checkbox"' + ((item.diferencia <= 0 && !permiso_excede_presupuestado)? ' disabled' : '') + '>					\
+											</td>																														\
+										</tr>																															\
+									';
+									subtotal_costo_real+= item.subtotal_costo_real;
+									diferencia+= item.diferencia;
+
+								});
+
+								$(htmlString).insertAfter(title);
+								title.find('[name="item[][subtotal_costo_real]"]').val(subtotal_costo_real);
+								title.find('[name="item[][diferencia]"]').val(diferencia);
+								$('.ui-dialog section.sheet table > tbody').find('.numeric.currency input').number(true, currency.decimals, ',', '.');
+								title.data('loaded', true);
+
+								title.nextUntil('tr.title').find('button.detail.item').tooltipster({
+									delay: 0,
+									interactiveAutoClose: false,
+									contentAsHTML: true
+								}).bind('hover', function(event) {
+									$(this).tooltipster('show');
+								}).bind('mouseout', function(event) {
+									$(this).tooltipster('hide');
+								});
+
+								tbody.find('[data-parent="' + title.data('id') + '"]').removeClass('collapsed');
+
+								// Se actualiza el gasto real respecto a los ìtems que ya están presentes en la OC, con este método
+								getItemsGastos();
+
+								unaBase.ui.unblock();
+							}
+						});
+					}
+				} else {
+					target.removeClass('ui-icon-folder-open').addClass('ui-icon-folder-collapsed');
+				}
+
+				var titles = target.parentTo('tr').nextUntil('.title');
+
+				if (collapsed) {
+					titles.removeClass('collapsed');
+					target.parentTo('tr').find('.info').html('');
+
+				} else {
+					titles.addClass('collapsed');
+					target.parentTo('tr').find('.info').html(titles.length + ' ítem' + ((titles.length > 1)? 's' : ''));
+				}
+			});
+
+			// Mostrar datos del negocio en el título del popup
+
+			/*var titulo = $('.ui-dialog-title').text();
+
+			$('.ui-dialog-title').text('Ítems del negocio Nº <!--#4DTEXT negocio_index--> : <!--#4DTEXT negocio_text--> <!--#4DTEXT negocio_cliente-->');
+
+			$('#dialog-menu button').click(function() {
+				$('.ui-dialog-title').text(titulo);
+			});*/
+
+			$('li[data-name="itemsoc_agregar_items2"] button').addClass('new-position-button');
+
+		});
+
+		</script>
+		<style>
+
+			#dialog-viewport table.items > tbody {
+				counter-reset: item;
+			}
+
+			#dialog-viewport table.items > tbody > tr:not(.title) > td:nth-of-type(2):before {
+				counter-increment: item;
+				content: counter(item);
+				font-weight: bold;
+			}
+
+			#dialog-viewport table.items > * > * > * span[name] {
+				display: block;
+				color: black;
+			}
+
+/*			/ * Segunda cantidad * /
+			<!--#4DIF NOT(vUsarsegunda_cantidad)-->
+			.segunda-cantidad {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/ * 451	Ver sección totales * /
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;451))-->
+			.block-totales {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/ * 453	Ver utilidad presupuestada en ítems * /
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;453))-->
+			table .utilidad.presupuestado {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/ * 453	Ver utilidad real en ítems * /
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;454))-->
+			table .utilidad.real {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/ * 455	Ver gasto presupuestado en ítems * /
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;455))-->
+			table .costo.presupuestado {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/ * 456	Ver gasto real en ítems * /
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;456))-->
+			table .costo.real {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/ * 457	Ver márgenes en ítems * /
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;457))-->
+			table .margen {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/ * Márgenes según parámetro * /
+
+			<!--#4DIF _V3_param_showMargenDesdeCompra-->
+			table .margen-desde-venta {
+				display: none;
+			}
+			<!--#4DELSE-->
+			table .margen-desde-compra {
+				display: none;
+			}
+			<!--#4DENDIF-->
+*/
+
+			#dialog-viewport section.sheet table .collapsed {
+				display: none;
+			}
+
+			#dialog-viewport table .moving-src, table .moving-dst {
+				outline: 1px dashed black;
+				opacity: .3;
+			}
+
+			#dialog-viewport section.sheet table th:last-of-type {
+				width: 28px;
+			}
+
+			/* Nuevo */
+
+			#dialog-viewport section.sheet > footer > article {
+				position: relative;
+			}
+
+			#dialog-viewport section.sheet > footer > article > button.expand {
+				position: absolute;
+				right: 23px;
+				top: 23px;
+				display: inline-block;
+				margin: 0 !important;
+				padding: 0 !important;
+				width: 18px !important;
+				height: 18px !important;
+			}
+
+			#dialog-viewport .costo > span > span[name] {
+				color: #AF6D44;
+			}
+
+			#dialog-viewport .utilidad > span > span[name] {
+				color: #44AF6D;
+			}
+
+			#dialog-viewport .numeric.percent > span > span[name] {
+				display: inline;
+			}
+
+			#dialog-viewport .detalle {
+				display: none;
+			}
+
+			/*
+			Solución quick&dirty para poder mostrar correctamente los valores con decimales
+			se usa input en vez de span, y se cambia la apariencia del input en línea
+			*/
+
+			#dialog-viewport table.items input:not([type="checkbox"]) {
+				background: none !important;
+				border: none !important;
+				cursor: default !important;
+				margin: 0 !important;
+				padding: 0 !important;
+				display: inline !important;
+				font: inherit !important;
+			}
+
+			#dialog-viewport table.items .costo > span > input[name] {
+				color: #AF6D44;
+			}
+
+			#dialog-viewport table.items .utilidad > span > input[name] {
+				color: #44AF6D;
+			}
+
+			#dialog-viewport table.items .numeric.percent > span > input[name] {
+				display: inline;
+			}
+
+			.new-position-button{
+				position:absolute;
+				right:20px;
+				top:15px!important
+			}
+
+			/* permiso de ver precio de venta en negocios*/
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;452))-->
+			table .pventa{
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+		</style>
+
+		<script>
+			$(document).ready(function() {
+				unaBase.ui.block();
+				$.ajax({
+					url: '/4DACTION/_V3_proxy_get_ItemsProyCompras',
+					data: {
+						'oc[negocio][id]': <!--#4DVAR idNv-->,
+						'oc[id]': <!--#4DVAR idOc-->,
+						from: '<!--#4DVAR from-->',
+						only_titles: true
+					},
+					dataType: 'json',
+					success: function(data) {
+						var target = $('#sheet-items_proyect-select table.items tbody');
+						$.each(data.rows, function(key, item) {
+							var htmlObject = $('\
+								<tr class="title" data-id="' + item.id + '">																			\
+									<th></th>																											\
+							 		<th>																												\
+							 			<button class="ui-icon toggle categoria ui-icon-folder-collapsed" title="Contraer o expandir título"></button>	\
+							 		</th>																												\
+									<th>																												\
+										<input readonly name="item[][nombre]" value="' + item.nombre + '">												\
+									</th>																												\
+									<th></th>																											\
+									<th class="numeric currency costo presupuestado adquisicion">' + currency.symbol + ' <span>												\
+										<input name="item[][subtotal_costo]" value="' + item.subtotal_costo + '"></span>								\
+									</th>																												\
+									<th class="numeric currency costo real adquisicion">' + currency.symbol + ' <span>														\
+										<input readonly name="item[][subtotal_costo_real2]" value="' + item.subtotal_costo_real.toString().replace('.', ',') + '"></span>											\
+									</th>																												\
+									<th class="numeric currency adquisicion"><!--$--> <span>																	\
+										<input style="visibility: hidden;" readonly name="item[][diferencia2]" value="-">-</span>														\
+									</th>																												\
+									<th></th>																											\
+								</tr>																													\
+							');
+							target.append(htmlObject);
+						});
+						$('.ui-dialog section.sheet table > tbody').find('.numeric.currency input').number(true, currency.decimals, ',', '.');
+						unaBase.ui.unblock();
+					},
+					fail: function(a, b, c) {
+						console.log(a,b,c);
+					}
+				});
+			});
+		</script>
+
+	</head>
+	<body>
+		<section id="sheet-items_proyect-select" class="sheet" data-idnv="<!--#4DTEXT idNv-->" data-permiso="<!--#4DTEXT vPermisoOtrosGastos-->" data-from="<!--#4DTEXT from-->">
+			<table class="items">
+				<thead>
+					<tr>
+						<th style="background-color: <!--#4DVAR vColorCorporativoCSS--> !important; width: 1px !important;"></th>
+						<th style="width: 70px; text-align: left;"><button style="-webkit-filter: invert(100%);" class="ui-icon ui-icon-folder-collapsed toggle all" title="Contraer todo"></button> Código</th>
+						<th >Nombre</th>
+						<th>Cant.</th>
+						<th class="costo presupuestado adquisicion">Gasto P.</th>
+						<th class="costo real adquisicion">Gasto R.</th>
+						<th class="adquisicion">Por gastar</th>
+						<th><button class="dropdown-button actions items"></button></th>
+					</tr>
+				</thead>
+
+				<tbody>
+
+				</tbody>
+			</table>
+		</section>
+	</body>
+</html>

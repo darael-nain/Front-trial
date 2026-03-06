@@ -1,0 +1,12 @@
+{
+	"exists": true,
+	"row": [
+	<!--#4DLOOP aIdPeriodo -->
+			{
+				"id": "<!--#4DHTML aIdPeriodo{aIdPeriodo}-->",
+				"mes": "<!--#4DHTML aMes{aIdPeriodo}-->",
+				"estado": "<!--#4DHTML aEstado{aIdPeriodo}-->"
+			}<!--#4DIF NOT(aIdPeriodo{aIdPeriodo} = aIdPeriodo{Size of array(aIdPeriodo)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

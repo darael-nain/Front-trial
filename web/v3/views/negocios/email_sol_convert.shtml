@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<!--#4DSCRIPT/_V3_proxy_getParametros-->
+	<head>
+		<title>Autorización para modificar negocio</title>
+	</head>
+	<body style="font-family: sans-serif;">
+		<header style="position: relative; height: 110px; border-bottom: 3px solid lightgrey;">
+			<h1 style="position: absolute; left: 0; top: 0; max-width: 141px; max-height: 141px;"><img style="max-width: 141px; max-height: 141px;" alt="UNA Base" src="cid:empresa.jpg"></h1>
+		</header>
+		<section>
+			<p>Estimado(s), </p>
+			<!--<p data-default>Solicito acceso a "<strong></strong>" en <span style="text-transform: capitalize;"></span></p>-->
+			<p data-comment></p>								
+			<p>Atentamente,</p>
+			<address data-from-name style="text-transform: capitalize;"></address>
+		</section>
+		<footer>
+			<p>
+				<small style="display: block;">
+					<span style="display: inline-block; margin-top: 20px;">Email generado mediante <a href="http://www.unabase.cl/">UnaBase</a> - Software de Gestión V3.</span>
+					<img style="height: 40px;" src="cid:logo.png" alt="UNA Base" height="40">
+				</small>
+			</p>
+		</footer>
+	</body>
+</html>

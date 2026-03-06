@@ -1,0 +1,2802 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getComprasContent-->
+		<title>Compras</title>
+		<meta charset="utf-8">
+
+		<link rel="stylesheet" type="text/css" href="/css/fontawesome5.11.2/css/all.min.css">
+
+		<link rel="stylesheet" type="text/css" href="/v3/views/compras/design/tooltips.css">
+		
+		<script>
+			var crear_oc_validada;
+			var cierreContable=false;
+			var origenOc = "<!--#4DVAR origenOc-->";
+			var negocio_tipo_presupuesto = <!--#4DIF negocio_tipo_presupuesto -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+			var habilitarOpcionIGVIVAFXR = <!--#4DIF habilitarOpcionIGVIVAFXR -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			var habilitarCorrelativoNegEnGASTOS = <!--#4DIF habilitarCorrelativoNegEnGASTOS -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+			var bloqueo_para_pagar = <!--#4DIF bloqueo_para_pagar -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			
+			var mostrar_columna_dias = <!--#4DTEXT mostrar_columna_dias-->;
+			var no_crear_fxr_tiene_pendientes = <!--#4DIF no_crear_fxr_tiene_pendientes -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+			var fxr_dias_vencimiento_default = <!--#4DTEXT fxr_dias_vencimiento_default-->;
+
+			if (!mostrar_columna_dias) {
+				$(".columna-dias").hide();
+			}
+			
+
+			
+			<!--#4DIF _V3_verifica_permisos_web(_V3_data_username;486)-->
+			var gastar_sobre_presupuestado = true;
+			<!--#4DELSE-->
+			var gastar_sobre_presupuestado = false;
+
+			<!--#4DENDIF-->
+
+			<!--#4DIF validarDatosBancarios-->
+			var validar_datos_bancarios = true;
+			<!--#4DELSE-->
+			var validar_datos_bancarios = false;
+			<!--#4DENDIF-->
+
+			<!--#4DIF ocultar_antes_despues_emailoc-->
+				var ocultar_antes_despues_email_oc = true;
+			<!--#4DELSE-->
+				var ocultar_antes_despues_email_oc = false;
+			<!--#4DENDIF-->
+
+			<!--#4DIF v3_tipo_pago_obligatorio-->
+				var v3_tipo_pago_obligatorio = true;
+			<!--#4DELSE-->
+				var v3_tipo_pago_obligatorio = false;
+			<!--#4DENDIF-->
+
+			var imp_multiple2 = imp_multiple;
+			<!--#4DIF imp_multiple-->
+				var imp_multiple = true;
+			<!--#4DELSE-->
+				var imp_multiple = false;
+			<!--#4DENDIF-->
+
+			<!--#4DIF blockEmailObligatorio-->
+				var blockEmailObligatorio = true;
+			<!--#4DELSE-->
+				var blockEmailObligatorio = false;
+			<!--#4DENDIF-->
+
+			var exchange_code =  "<!--#4DTEXT exchange_code-->";
+			var exchange_value = unaBase.utilities.transformNumber("<!--#4DTEXT exchange_value-->");
+			
+			var retName = "<!--#4DTEXT _V3_RETName-->";
+			var retRate = parseFloat("<!--#4DTEXT _V3_RETRate-->");
+
+			var ivaName = "<!--#4DTEXT _V3_IVAName-->";
+			var ivaRate = parseFloat("<!--#4DTEXT _V3_IVARate-->");
+
+		</script>
+
+		<script type="text/javascript" src="/v3/views/compras/script/formatby3.js?<!--#4DTEXT _V3_version-->"></script>
+		<script type="text/javascript" src="/v3/views/compras/script/compras.js?<!--#4DTEXT _V3_version-->"></script>
+		<script type="text/javascript">
+			
+			
+			
+				<!--#4DIF [parametros]v3_new_account_system-->
+					 compras.newAccountingSystem=true;
+					<!--#4DELSE--> 
+					 compras.newAccountingSystem=false;
+				<!--#4DENDIF-->
+					
+		
+				</script>
+		<script type="text/javascript" src="/v3/views/compras/script/validate.js?<!--#4DTEXT _V3_version-->"></script>
+		<script type="text/javascript" src="/v3/views/compras/library/content.js?<!--#4DTEXT _V3_version-->"></script>
+		<script type="text/javascript" src="/v3/views/compras/script/content.js?<!--#4DTEXT _V3_version-->"></script>
+		<script type="text/javascript" src="/v3/views/compras/script/proveedor.js?<!--#4DTEXT _V3_version-->"></script>
+		<script type="text/javascript" src="/v3/views/compras/script/active_menu.js?<!--#4DTEXT _V3_version-->"></script>
+		<link rel="stylesheet" href="/v3/views/compras/design/main.css?<!--#4DTEXT _V3_version-->">
+		<!--BEGIN Edit: Jorge Guitard Torres <jguitard@una.cl> (2014-04-11)-->
+
+		<!--begin added by gin 11-03-15-->
+		<link rel="stylesheet" href="/v3/design/grays.css?<!--#4DTEXT _V3_version-->">
+		<!--end added by gin 11-03-15-->
+
+		<script type="text/javascript" src="/v3/script/datepicker_es.js"></script>
+
+		<script>
+
+			<!--#4DIF mostrar_pdf_negocio_email_val-->
+				compras.mostrar_pdf_negocio = true;
+			<!--#4DENDIF-->
+		
+			
+
+
+			$(document).ready(function() {	
+
+
+
+			compras.moneda.decimals = parseFloat("<!--#4DTEXT modeda_decimals-->") 
+			
+			$('a.load.xml').each(function() {
+				$(this).click(function(event) {
+					unaBase.loadInto.dialog($(this).attr('href'), $(this).text(), $(this).data('size'));
+					$(this).parentTo('ul').hide();
+					event.preventDefault();
+				});
+			});
+
+			
+            if (accountingMode) {
+
+				
+		            $.ajax({
+		              url: "/4DACTION/_V3_get_estadoPeriodoContable",
+		              data: {
+		                periodo: '<!--#4DTEXT [Orden_de_compra]Fecha-->',
+		                origen: "ext modulos"
+		              },
+		              dataType: "json",
+		              async: false,
+		              success: function (subdata) {
+		                
+		                if (subdata.exists==1) {
+		                  if (subdata.closed==1) {
+		                  	cierreContable=true;
+		                  	$('#menu [data-name="save"]').remove();
+		                  	
+		                  	$('#menu [data-name="new_payment"]').remove();
+		                  	$('#menu [data-name="discard"]').remove();
+		                  	$('#menu [data-name="preview_oc"]').remove();
+		                  //	$('#menu [data-name="duplicate_gastos"]').remove();
+		                  	$('#menu [data-name="justificar_masivo"]').remove();
+		                  	$('#menu [data-name="validate_request"]').remove();
+		                  	$('#menu [data-name="close_admin_oc"]').remove();
+		                  	$('#menu [data-name="close_admin_fxr"]').remove();
+		                  	$('#menu [data-name="open_admin_fxr"]').remove();
+		                  	$('#menu [data-name="payment_request"]').remove();
+		                  	$('#menu [data-name="ultimate_val"]').remove();
+		                  	
+							let all = $("#main-container");
+
+		                  	all.find("input").prop("readonly", true);
+		                  	all.find("input").prop("disabled", true);
+				    		all.find("button.detail.item").hide();
+				    		all.find("button.profile.item").hide();
+				    		all.find(`input[type="checkbox"]`).prop("disabled", true);
+				    		all.find(`input[type="text"]`).prop("disabled", true);
+				    		all.find(`input[type="search"].datepicker`).prop("disabled", true);
+				    		all.find(`select`).prop("disabled", true);
+							all.find(`button[type="button"]`).prop("disabled", true);		
+							all.find("button").prop("disabled", true);	
+							all.find("button").remove();	    		
+
+		                  	// $('#menu [data-name="new_payment"]').remove();
+		                  	// $('#menu [data-name="discard"]').remove();
+		                  	
+		                    toastr.warning(
+		                      "El periodo seleccionado  se encuentra cerrado por tanto no puede modificar este gasto."
+		                    );
+
+
+		                  }
+		                  
+		                } else {
+		                  toastr.warning(
+		                    "El periodo contable para este gasto no está creado.");
+		                    }
+		              }
+		            });
+
+          	}
+          		
+
+
+				$('#menu [data-name="new_payment"]').hide();
+          		// $('[name="oc[tipo_moneda]"]').change(function(){
+          		// 	compras.oc_tipo_moneda = $(this).val();
+          		// 	if (compras.oc_tipo_moneda != "PESOS") {
+          		// 		$('.block-cambio').show();
+          		// 		if (compras.oc_tipo_moneda == 'DOLAR') {
+          		// 			$('input[name="oc[valor_cambio]"]').val($(this).data('dolar'));
+          		// 			$('input[name="oc[valor_cambio]"]').prop('readonly', false);
+          		// 		}
+          		// 		if (compras.oc_tipo_moneda == 'EURO') {
+          		// 			$('input[name="oc[valor_cambio]"]').val($(this).data('euro'));
+          		// 			$('input[name="oc[valor_cambio]"]').prop('readonly', false);
+          		// 		}
+          		// 		if (compras.oc_tipo_moneda == 'UF') {
+          		// 			$('input[name="oc[valor_cambio]"]').val($(this).data('uf'));
+          		// 			$('input[name="oc[valor_cambio]"]').prop('readonly', false);
+          		// 		}
+          		// 	}else{
+          		// 		$('input[name="oc[valor_cambio]"]').val("0");
+          		// 		$('.block-cambio').hide();
+          		// 	}
+          		// });
+          		$('.block-cambio').hide();
+
+          		// Agrega referencia OC/FXR cuando ésta viene con ítems y sin referencia (caso crear OC/FXR desde ítem de negocio)
+				if ($('[name="oc[referencia]"]').val() == '' && $('#items-gastos tbody tr').length > 0) {
+					set_referencia_oc();
+				}
+
+				$('input[name="oc[referencia]"]').on('keyup', function() {
+					// Tomar el valor actual del input
+					let value = $(this).val();
+
+					// Permitir letras (incluyendo ñ y Ñ), números, espacios, guiones (-), puntos (.), comas (,) y paréntesis ((), ))
+					value = value.replace(/[^a-zA-Z0-9\s\u00F1\u00D1.,\-()]/g, '');
+
+					$(this).val(value);
+				});
+
+
+
+
+
+			});
+		</script>
+
+		<script>
+			var refreshLogValidacion = function() {
+				$.ajax({
+					url: '/4DACTION/_V3_getLogValidacionByIndex',
+					data: {
+						id: $('section.sheet').data('id'),
+						index: 'Orden_de_compra|' + $('section.sheet').data('id'),
+						tablita: 'Orden_de_compra'
+					},
+					dataType: 'json',
+					success: function(data) {
+						// console.log(data)
+						if(data.adminValidate && data.isAdminValidate){
+							const target = $('section.sheet ul.steps');
+							target.empty()
+							let lineHtml = ""
+							let time = new Date(data.dateValidate)
+							data.rows.forEach( line => {
+								let lineHtml = `<li><ul class="approved"><li style="text-align: left;"><div style="display: inline-block;"><div class="motivo" style="display: inline-block; font-style: italic; width: 450px;">${line.motivo}</div> <span class="name" style="text-transform: capitalize; display: inline-block; width: 200px;">${data.validateBy}</span></div><span class="indicator ui-icon ui-icon-check"></span><small class="action" style="margin-left: 10px;font-size: 10px;">Validación administrativa. <time data-time="${data.dateValidate}"></time>${dateString(time).txt}</small></li></ul></li>`
+								target.append(lineHtml)
+							})
+							
+							$('#menu [data-name="validate_send"]').hide();
+								ongoingValidation(false);
+
+							// const valContainer = document.getElementById('scrollval');
+							// let adminMsg = `<li style="font-style:italic;background-color: rgb(232, 247, 232);    padding: 5px;border: 1px solid rgb(220,220,220);
+							// 			    border-radius: 3px;
+							// 			    font-size: 14px;">Validado por administración: ${data.validateBy}</li>`
+							// target.append(adminMsg)
+						}else{
+
+							if (data.rows.length == 0) {
+								$('section.sheet ul.steps').hide();
+								$('section.sheet ul.steps').parentTo('article').hide();
+								$('#menu [data-name^="validate_"]').hide();
+
+								$('#menu [data-name="validate_send"]').show();
+								$('#menu [data-name="validate_request"]').hide();
+								ongoingValidation(false);
+								return false;
+							}else{
+								ongoingValidation(true);
+
+							}
+
+							var populate = function(target) {
+								$('#menu [data-name^="validate_"]').hide();
+								target.empty();
+
+								var max_jerarquia = 0;
+								var max_priority = 0;
+
+								for (var i = 0; i < data.rows.length; i++)
+									max_jerarquia = (data.rows[i].jerarquia > max_jerarquia)? data.rows[i].jerarquia : max_jerarquia;
+
+								for (var i = 0; i < data.rows.length; i++)
+									max_priority = (data.rows[i].priority > max_priority)? data.rows[i].priority : max_priority;
+
+								// BEGIN: for TEST
+
+								var valid_rules = 0;
+								var approved_rules = 0;
+								var rejected_rules = 0;
+
+								for(var z = 0; z <= max_priority; z++) {
+
+									for (var i = 1; i <= max_jerarquia; i++) {
+										var htmlObject = $('<li><ul></ul></li>');
+										
+										var results = [];
+										for (var k = 0; k < data.rows.length; k++) {
+											if (data.rows[k].jerarquia == i && data.rows[k].priority == z) {
+												results.push(data.rows[k]);
+											}
+										}
+
+										if (results.length > 0) {
+
+											var current = results[0];
+											if (current.required)
+												htmlObject.find('ul').addClass('and');
+											else
+												htmlObject.find('ul').addClass('or');
+
+											var required = false;
+											var local_valid_steps = 0;
+											var local_passed_steps = 0;
+											var local_approved_steps = 0;
+											var local_rejected_steps = 0;
+
+											if (data.rows.length > 0)
+												$('section.sheet ul.steps').parentTo('article').show();
+
+											// for (var j = 0; j < data.rows.length; j++) { TEST
+											for (var j = 0; j < results.length; j++) {
+												//var current = data.rows[j]; TEST
+												var current = results[j];
+												if (current.jerarquia === i) {
+													local_valid_steps++;
+
+													subHtmlObject = $('<li style="text-align: left;"><div style="display: inline-block;"><div class="motivo" style="display: inline-block; font-style: italic; width: 450px;"></div> <span class="name" style="text-transform: capitalize; display: inline-block; width: 200px;"></span></div><span class="indicator ui-icon"></span><button class="approve" style="vertical-align middle; width: auto; font-size: 10px !important; height: 24px !important;">Validar</button><button class="reject" style="width: auto; font-size: 10px !important; height: 24px !important; vertical-align: middle;">Rechazar</button><small class="action" style="margin-left: 10px;font-size: 10px;"></small></li>');
+													subHtmlObject.data('id', current.id);
+													subHtmlObject.data('username', current.username);
+													subHtmlObject.data('email', current.email);
+													subHtmlObject.data('full_name', current.full_name);
+													subHtmlObject.data('observacion', current.observacion);
+													subHtmlObject.data('updated-at', current.updated_at);
+													subHtmlObject.find('span.name').text(current.full_name);
+													subHtmlObject.find('div.motivo').text(current.motivo);												
+
+													if (current.approved === true) {
+														subHtmlObject.find('span.indicator').addClass('ui-icon-check');
+														local_passed_steps++;
+														local_approved_steps++;
+													} if (current.updated_at === null) {
+														subHtmlObject.find('span.indicator').addClass('ui-icon-help');
+													} if (current.approved === false && current.updated_at !== null) {
+														subHtmlObject.find('span.indicator').addClass('ui-icon-closethick');
+														local_passed_steps++;
+														local_rejected_steps++;
+													}
+													if (current.username.toLowerCase() == $('html > body > aside > div > div > h1').data('username').toLowerCase()) {
+
+														subHtmlObject.find('button.reject').button({
+															icons: {
+																primary: 'ui-icon-closethick'
+															}
+														}).click(function(event) {
+															var that = event.target;
+															// Acciones al rechazar validación
+															var htmlObject = $('<section> \
+																<span>Ingrese motivo de rechazo</span> \
+																<textarea name="response" required placeholder="Requerido..."></textarea> \
+															</section>');
+															htmlObject.find('textarea').on('blur change', function() {
+																htmlObject.data('response', $(this).val());
+															});
+															prompt(htmlObject).done(function(data) {
+																var promptData = data;
+																console.log('promptData', promptData);
+																if (promptData !== false)
+																	$.ajax({
+																		url: '/4DACTION/_V3_setLogValidacion',
+																		data: {
+																			id: $(that).parentTo('li').data('id'),
+																			approved: false,
+																			observacion: promptData
+																		},
+																		dataType: 'json',
+																		success: function(data) {
+																			if (data.success) {
+																				toastr.success(NOTIFY.get('SUCCESS_VALIDACION_REJECT'));
+																				$('#menu > ul > li[data-name^="validate_"]').hide();
+																				// Enviar correo validación rechazada
+																				var username = $('section.sheet').data('username');
+																				var email = $('section.sheet').data('email');
+																				var full_name = $('section.sheet').data('full_name');
+																				var current_username = $('html > body.menu.home > aside > div > div > h1').data('username');
+																				//var record_name = $('input[name="oc[tipo_gastos][des]"]').val();
+																				var record_name = 'Gasto';
+																				var index = $('section.sheet').data('index');
+																				var text = '[' + $(that).parentTo('li').find('div.motivo').text().substring(9) + '] / ' + $('input[name="oc[referencia]"]').val();
+
+																				var usernames = [];
+
+																				// if ($('section.sheet').data('username') != current_username)
+																				//	usernames.push($('section.sheet').data('username'));
+																				// FIX: correos dobles
+																				usernames.push(username);
+
+																				/* $('ul.steps > li > ul > li').each(function() {
+																					if ($(this).data('username') != current_username) {
+																						var username = $(this).data('username');
+																						if (usernames.indexOf(username) == -1)
+																							usernames.push(username);
+																					}
+																				}); */
+
+																				for (k in usernames) {
+
+																					if (compras.tipoGasto == "OC") {
+																						record_name = "Orden de Compra"
+																					}else{
+																						record_name = "Rendición de fondos"
+																					}
+
+																					promptData = "Motivo: "+ promptData;
+																					unaBase.email.notify(
+																						usernames[k],
+																						'validation_rejected',
+																						record_name, 
+																						index,
+																						text, 
+																						promptData,
+																						'compras/content.shtml',
+																						$('section.sheet').data('id')
+																						);
+
+
+																					unaBase.inbox.send({
+																						to: usernames[k],
+																						subject: 'Rechazó validar ' + record_name + ' Nº ' + index + ' / ' + text,
+																						into: 'viewport',
+																						href: '/v3/views/compras/content.shtml?id=' + $('section.sheet').data('id'),
+																						tag: 'avisos'
+																					});
+
+																					compras.saveLogsFromWeb({
+																						'id' : compras.id,
+																						'folio' : index,
+																						'descripcion' : 'Ha rechazado validar el gasto',
+																						'modulo' :  'gastos',
+																						'descripcion_larga' : ''
+																					});
+
+																				}
+
+																				refreshLogValidacion(true);
+
+																			} else
+																				toastr.error(NOTIFY.get('ERROR_RECORD_READONLY'));
+																		}
+																	});
+															});
+														});
+
+													} else {
+														subHtmlObject.find('button.approve').remove();
+														subHtmlObject.find('button.reject').remove();
+														
+														if (subHtmlObject.find('span.indicator').hasClass('ui-icon-help'))
+															subHtmlObject.find('small.action').text('Esperando acción del usuario');
+													}
+
+													htmlObject.find('ul').append(subHtmlObject);
+
+													if (current.required)
+														required|= current.required;
+												}
+											}
+
+											if (required) {
+												if (local_valid_steps == local_approved_steps)
+													htmlObject.find('ul').addClass('approved');
+												if (local_valid_steps == local_rejected_steps)
+													htmlObject.find('ul').addClass('rejected');
+											} else {
+												if (local_passed_steps > 0)
+													htmlObject.find('ul').addClass('approved');
+												if (local_rejected_steps > 0)
+													htmlObject.find('ul').addClass('rejected');
+											}
+
+											if (htmlObject.find('ul').hasClass('approved') || htmlObject.find('ul').hasClass('rejected')) {
+												htmlObject.find('ul > li').each(function() {
+													var updated_at = $(this).data('updated-at');
+													//if ($(this).find('span.indicator').length > 0) {
+														if ($(this).find('span.indicator').hasClass('ui-icon-help'))
+															$(this).find('small.action').text('No se requiere acción del usuario');
+														if ($(this).find('span.indicator').hasClass('ui-icon-check')) {
+															if (updated_at != null){
+
+																$(this).find('small.action').html('El usuario aprobó validar el <time datetime="' + updated_at + '">' + Date.parse(updated_at).getDate() + '-' + (Date.parse(updated_at).getMonth() + 1) + '-' + Date.parse(updated_at).getFullYear() + ' a las ' + Date.parse(updated_at).getHours() + ':' + sprintf("%02d", Date.parse(updated_at).getMinutes()) + '</time>');
+															}else{
+																if(data.adminValidate){
+																	$(this).find('small.action').html('Validado por administración.');
+																}else{
+																	$(this).find('small.action').html('El usuario aprobó validar desde V2');
+																}
+															}
+														}
+														if ($(this).find('span.indicator').hasClass('ui-icon-closethick')) {
+															if ($(this).data('observacion') != '')
+																$(this).find('small.action').html('El usuario rechazó validar el <time datetime="' + updated_at + '">' + Date.parse(updated_at).getDate() + '-' + (Date.parse(updated_at).getMonth() + 1) + '-' + Date.parse(updated_at).getFullYear() + ' a las ' + Date.parse(updated_at).getHours() + ':' + sprintf("%02d", Date.parse(updated_at).getMinutes()) + '</time> por:<br>&quot;<strong style="font-weight: bold;">' + $(this).data('observacion') + '</strong>&quot;');
+															else
+																$(this).find('small.action').text('El usuario rechazó validar');
+														}
+													//}
+												});
+												htmlObject.find('button.approve').remove();
+												htmlObject.find('button.reject').remove();
+											}
+
+
+											target.append(htmlObject);
+										}
+									}
+
+									var valid_steps = target.find('> li').length;
+									var approved_steps = target.find('> li').has('ul.approved').length;
+									var rejected_steps = target.find('> li').has('ul.rejected').length;								
+
+									valid_rules++;
+
+
+
+									if (valid_steps == approved_steps || valid_steps == rejected_steps) {
+										if (valid_steps == approved_steps) {
+											approved_rules++;
+										}
+										if (valid_steps == rejected_steps) {
+											rejected_rules++;
+										}
+									}
+								}
+
+								// END: for TEST
+
+								// BEGIN Test2
+
+								if (valid_rules == approved_rules || valid_rules == rejected_rules) {
+									if (valid_rules == approved_rules) {
+										$('section.sheet ul.steps').prevTo('h2').find('span:last-of-type').text('Aprobado');
+										if (rejected_steps == 0 && !$('section.sheet').data('approved'))
+											$.ajax({
+												url: '/4DACTION/_V3_setCompras',
+												data: {
+													id: $('section.sheet').data('id'),
+													'oc[approved]': true
+												},
+												dataType: 'json',
+												success: function(data) {
+													if (data.success) {
+														
+														compras.validado = 1;
+														toastr.success('La orden de compra ha pasado el proceso de validación.');
+
+														$('section.sheet').data('approved', true);
+														$('section.sheet').data('validado', true);
+														$('span.validation-status').text('Validada').attr('style','color:black!important').removeClass('false').addClass('true');
+
+
+														//Enviar oc al portal de proveedores
+														compras.sendToPortalProveedores()
+
+
+														// Notificar usuarios
+
+														// Enviar correo validación aceptada
+														var username = $('section.sheet').data('username');
+														var email = $('section.sheet').data('email');
+														var full_name = $('section.sheet').data('full_name');
+														var current_username = $('html > body.menu.home > aside > div > div > h1').data('username');
+														var record_name = 'Gasto';
+														var index = $('section.sheet').data('index');
+														var text = $('input[name="oc[referencia]"]').val();
+														var motivo="";
+														var usernames = [];
+														var emailContacto="";
+														const email2 = import("../../script/unabase/email.js?14343436767674");
+														emailContacto= $('input[name="contacto[info][email]"]').val();
+
+
+
+
+
+
+														usernames.push(username);
+
+														
+														
+
+														
+														for (k in usernames) {
+
+															if (compras.tipoGasto == "OC") {
+																record_name = "Orden de Compra"
+															}else{
+																record_name = "Rendición de fondos"
+															}
+
+														
+
+													    $.ajax({
+													      url: "/4DACTION/_V3_getUsuario",
+													      data: {
+													        id: usernames[k]
+													      },
+													      dataType: "json",
+													      async: false,
+													      success: function(data) {
+
+													      	
+													        let current = data.rows[0];
+													        let toName = (
+													          current.nombres.trim() +
+													          " " +
+													          current.ap_pat.trim()
+													        ).trim();
+													        let toEmail = current.email;
+
+
+													        if(current.allow_email){
+													        	
+
+																var paramsData;
+															 	var  paramsData2;
+													        	paramsData = {
+																	to: usernames[k],
+																	toName: toName,
+																	userValidator: "",
+																	nameValidator: "",
+																	emailValidator: "",
+																	toEmail: toEmail,
+																	template: 'validation_accepted',
+																	document: record_name,
+																	index: index,
+																	title: text,
+																	motivo: motivo,
+																	extra: undefined,
+																	detail_uri: 'compras/content.shtml',
+																	id_item: $('section.sheet').data('id') || compras.id,
+																	attach: true,
+																	moduleName: 'compras'
+																}
+
+
+																if (envioCorreoAutomatico)  {
+
+
+																paramsData = {
+																	to: usernames[k],
+																	toName: toName,
+																	userValidator: "",
+																	nameValidator: "",
+																	emailValidator: "",
+																	toEmail: toEmail,
+																	template: 'validation_accepted',
+																	document: record_name,
+																	index: index,
+																	title: text + "/          Ha sido enviada al correo de proveedor : " + emailContacto,
+																	motivo: motivo,
+																	extra: undefined,
+																	detail_uri: 'compras/content.shtml',
+																	id_item: $('section.sheet').data('id') || compras.id,
+																	attach: true,
+																	moduleName: 'compras'
+																}
+
+																
+																	// Correo automatico al contacto al validar
+																paramsData2 = {
+																	to: emailContacto,
+																	toName: "",
+																	userValidator: "",
+																	nameValidator: "",
+																	emailValidator: "",
+																	toEmail: emailContacto,
+																	nameContacto:"",
+																	emailContacto:emailContacto,
+																	template: 'envio_gasto',
+																	document: record_name,
+																	index: index,
+																	title: text,
+																	motivo: motivo,
+																	extra: undefined,
+																	detail_uri: 'compras/content.shtml',
+																	id_item: $('section.sheet').data('id') || compras.id,
+																	attach: true,
+																	moduleName: 'compras'
+																}
+												       
+												        		
+
+												        		
+
+															}
+													
+
+
+												         
+												        email2.then(functions => {
+												        	functions.notifyRequestValidationOC(paramsData);
+												        	if (envioCorreoAutomatico) {
+												        		
+
+												        		functions.notifyRequestValidationOC(paramsData2);	
+												        		compras.saveLogsFromWeb({
+													                id: $('section.sheet').data('id') || compras.id,
+													                folio: index,
+													                descripcion:
+													                  "Ha compartido el gasto vía email a la dirección: " +
+													                  emailContacto,
+													                modulo: "gastos",
+													                descripcion_larga: ""
+													              });
+												        		
+												        		 toastr.success(
+												                	sprintf(NOTIFY.get("SUCCESS_EMAIL_SEND"), emailContacto)
+												              	);
+												          		
+												        	}
+												        	
+												        });
+
+																		// let paramsData = {
+																		// 	to: usernames[k],
+																		// 	toName,
+																		// 	toEmail,
+																		//   template: 'validation_accepted',
+																		//   document: record_name,
+																		//   index,
+																		//   title: text,
+																		//   // extra: email_link + comentarioEmisor,
+																		//   detail_uri: 'compras/content.shtml',
+																		//   id_item: $('section.sheet').data('id') || compras.id,
+																		//   attach: true,
+																		//   id_usuario_notificacion: true
+																
+													        			//}
+													        		}
+													      }
+													    });
+
+								
+
+															unaBase.inbox.send({
+																to: usernames[k],
+																subject: 'Aceptó validar ' + record_name + ' Nº ' + index + ' / ' + text,
+																into: 'viewport',
+																href: '/v3/views/compras/content.shtml?id=' + $('section.sheet').data('id'),
+																tag: 'avisos'
+															});
+
+															/*compras.saveLogsFromWeb({
+																'id' : compras.id,
+																'folio' : index,
+																'descripcion' : 'Ha aprobado validar el gasto',
+																'modulo' :  'gastos',
+																'descripcion_larga' : ''
+															});*/
+
+														}
+
+														oc_validate_fields();
+													}
+												}
+											});
+									}
+									if (valid_rules == rejected_rules) {
+										$('section.sheet ul.steps').prevTo('h2').find('span:last-of-type').text('Rechazado');
+										oc_validate_fields();
+									}
+								} else {
+									$('section.sheet ul.steps').prevTo('h2').find('span:last-of-type').text('En espera');
+									oc_validate_fields();
+								}
+
+								// END Test2
+								 // reiniciar validación: debe quedar acá para poder mostar el botón en caso que existan reglas
+								if (access._529)
+									$('#menu [data-name="validate_request"]').show();
+							
+								target.show();
+
+								
+								if (!access._645 || $('section.sheet').data('validado') || $('ul.steps li').length == 0) {
+									$('#menu [data-name="ultimate_val"]').hide();
+									// $('#menu [data-name="validate_send"]').hide();
+								}else{
+									$('#menu [data-name="ultimate_val"]').show();
+								}
+							};
+
+							var calcProgress = function(source) {
+								var max_jerarquia = 0;
+
+								for (var i = 0; i < source.length; i++)
+									max_jerarquia = (source[i].jerarquia > max_jerarquia)? source[i].jerarquia : max_jerarquia;
+
+								var current;
+								var valid_steps = 0;
+								var passed_steps = 0;
+
+								for (var i = 1; i <= max_jerarquia; i++) {
+									var local_valid_steps = 0;
+									var local_passed_steps = 0;
+									var local_required_steps = false;
+									for (var j = 0; j < source.length; j++) {
+										current = source[j];
+										if (current.jerarquia === i) {
+											local_required_steps|= current.required;
+											local_valid_steps++;
+											if (current.updated_at !== null)
+												local_passed_steps++;
+										}
+									}
+									if (local_required_steps) {
+										valid_steps+= local_valid_steps;
+										passed_steps+= local_passed_steps;
+									} else {
+										valid_steps++;
+										passed_steps+= (local_passed_steps > 0)? 1 : 0;
+									}
+								}
+
+								return passed_steps / valid_steps;
+							};
+
+							populate($('section.sheet ul.steps'));
+
+							let progreso = calcProgress(data.rows);
+							$('section.sheet ul.steps').prevTo('h2').find('span:first-of-type').text(Math.round( progreso * 100, 0) + '% completado');
+
+							// agregado para verificar si validacione esta al 100% cuando el emisor queda en pantalla esperando que sea validado, 10-09-18, gin
+							/*if (progreso == 1) {
+								$('section.sheet').data('approved', true);
+								$('section.sheet').data('validado', true);
+								$('span.validation-status').text('Validada').attr('style','color:black!important').removeClass('false').addClass('true');
+								oc_validate_fields();
+							}*/
+
+						}
+
+					}
+				});
+
+			};
+			var ongoingValidation = state => {
+				console.log("check ongoingValidation-------->");
+				// const notValid = $("span.validation-status").hasClass("false");
+				setTimeout(() => {
+					
+					if (state && !compras.validado) {
+					console.warn("-------------------------------****");
+					console.warn("no validada y validación en curso");
+					sendEmails(null, 'Pro favor validar gasto.', false)
+					compras.setReadOnly(true);
+					} else {
+						console.warn("-------------------------------****");
+						console.warn("NO TIENE Validación en curso");
+						
+						if (access._450 && compras.validado && compras.estado != 'CERRADA') {
+							console.warn("TIENE permiso para modificar validada");
+							if (!cierreContable) {
+								compras.setReadOnly(false); // false == abierto
+							}
+
+						} else if (compras.validado && compras.estado != 'CERRADA') {
+							compras.setReadOnly(true);
+							console.warn("NO TIENE permiso para modificar validada");
+						} else if (compras.validado && compras.estado == 'CERRADA') {
+							compras.setReadOnly(true);
+							console.warn("NO TIENE permiso para modificar validada");
+						} else {
+							console.warn("NO TIENE permiso para modificar validada y no esta validada");
+							if (!cierreContable) {
+								compras.setReadOnly(false); // false == abierto
+							}
+						}
+					}
+
+				}, 1000);
+			}
+
+			
+			var generate_link_email_validacion = function(data, loginValidator, table) {
+									
+									if (table != "") {
+										var htmlObject_link = $('<section> \
+											<div> \
+											<p style="font-weight:bold;background-color:#f0f0f0;padding:5px!important;margin:0!important;border:1px solid #f0f0f0;box-sizing:border-box;">Motivo:</p> \
+											<ul style="list-style-type: none; list-style-position: outside;padding:0px!important;"></ul> \
+											<div style="margin-bottom: 10px;"><a style="margin-left:10px; font-size: 16px;background-color: lightblue;color: black;padding: 5px; border-radius: 5px;" href="'+nodeUrl+'/expenses/tovalidate">Bandeja de validación</a><span> acá puedes entrar a un listado de gastos por validar.</span></div> \
+											<div class="table"><p style="font-weight:bold;background-color:#f0f0f0;padding:5px!important;margin:0!important;border:1px solid #f0f0f0;box-sizing:border-box;">Estatus de gasto del ítem en el negocio:</p><div></div></div> \
+											</div> \
+											<!--<span>Ingrese algún comentario. Se notificará cuando el gasto sea autorizado o rechazado.</span> \
+											<textarea required name="comentario"></textarea>--> \
+										</section>');
+									}else{
+										var htmlObject_link = $('<section> \
+											<div> \
+											<p style="font-weight:bold;background-color:#f0f0f0;padding:5px!important;margin:0!important;border:1px solid #f0f0f0;box-sizing:border-box;">Motivo:</p> \
+											<ul style="list-style-type: none; list-style-position: outside;padding:0px!important;"></ul> \
+										</section>');
+									}
+
+									var criteria_list_link = $('<ul>');
+
+										let randomNum  = Math.floor(1000 + Math.random() * 9000);
+									$.each(data.rows, function(i, item) {
+										if (criteria_list_link.find('li[data-motivo="' + item.motivo + '"]').length == 0) {
+											var li = '<li data-motivo="' + item.motivo + '"><div style="font-size: inherit !important;">' + item.motivo + '</div>';
+											li += '<ul style="list-style-type:none!important;margin:0px!important;padding:0px!important;">';
+											$.each(data.rows, function(k, user) {
+												if ($(li).find('li[data-user="' + user.username + '"]').length == 0 && item.motivo == user.motivo) {
+													if (user.username == loginValidator) {
+
+														li += '<li style="margin:10px!important;" data-user="' + user.username + '"><span><a style="font-size: inherit !important; display: inline-block !important; padding: 10px!important; background-color: #34CC02 !important; border: 1px solid rgb(67,175,124) !important; border-radius: 3px !important; margin: 5px 10px 5px 0px!important; color:black; text-decoration: underline" href="https://' + window.location.hostname + '/v3/views/email/express_validation_accepted.shtml?i=' + user.id + '&v='+randomNum+'">Validar</a><a style="font-size: inherit !important; display: inline-block !important; padding: 10px!important; background-color: #FC4903 !important; border: 1px solid rgb(204,51,0) !important; border-radius: 3px !important; margin: 5px 10px 5px 10px!important; color:black; text-decoration: underline" href="https://' + window.location.hostname + '/v3/views/email/express_validation_rejected.shtml?i=' + user.id + '">Rechazar</a></span></li>';
+
+														/*li += '<li data-user="' + user.username + '"><span style="font-size: inherit !important; display: inline-block !important; padding: 3px; background-color: rgb(240,240,240) !important; border: 1px solid rgb(220,220,220) !important; border-radius: 3px !important; margin: 3px;text-transform:capitalize!important;">' + user.full_name.toLowerCase() + '</span></li>';*/
+
+													} else{
+														li += '<li data-user="' + user.username + '"><span style="font-size: inherit !important; display: inline-block !important; padding: 3px; background-color: rgb(240,240,240) !important; border: 1px solid rgb(220,220,220) !important; border-radius: 3px !important; margin: 3px;text-transform:capitalize!important;">Debe validar ' + user.full_name.toLowerCase() + '</span></li>';
+													}
+												}
+											});
+											li += "</ul>";
+											li += "</li>";
+											criteria_list_link.append(li);
+										}
+									});
+
+									htmlObject_link.find('ul').append(criteria_list_link.html());
+									if (table != "") {
+										htmlObject_link.find('div.table > div').append(table[0].outerHTML);
+									}
+									email_link = htmlObject_link.find('div')[0].outerHTML;
+									return email_link;
+					};
+
+					var sendEmails = (data,msg,back) =>{
+						//get_items($('section.sheet').data('id'));
+						
+									$.ajax({
+										url: '/4DACTION/_V3_getLogValidacionByIndex',
+										data: {
+		
+											id: $('section.sheet').data('id'),
+											index: 'Orden_de_compra|' + $('section.sheet').data('id'),
+											tablita: 'Orden_de_compra'
+										},
+										dataType: 'json',
+										success: function(subdata) {
+											//var record_name = $('input[name="oc[tipo_gastos][des]"]').val();
+											
+											var record_name = 'Gasto';
+											
+											var userlink = {};
+
+											$.each(subdata.rows, function(key, entry) {
+
+												if(entry.jerarquia_email){
+														userlink[entry.username] = {
+															id_rule:entry.id,
+															record: entry.record,
+															username: entry.username,
+															name: entry.full_name,
+															email: entry.email,
+															block_email: entry.block_email
+													};
+												}
+												
+											});
+
+											// Construye tabla con valores del item en el negocio despues de haber creado la oc
+											if (subdata.origen_gasto == "PROYECTO" || subdata.origen_gasto == "PRESUPUESTO"){
+
+													if (!ocultar_antes_despues_email_oc) {
+														var table = $('<table border="0" width="100%" style="display:table;border-collapse:separate;border-spacing:0;margin:0 0 20px 0">\
+														<thead>\
+															<tr style="font-family:Open Sans,sans-serif !important;background-color:rgb(189,189,192);font-weight:bold;text-align:center;">\
+																<th style="font-size:10px;color:white;vertical-align:bottom;padding:5px;border:1px solid lightgray;" rowspan="2">NEGOCIO</th>\
+																<th style="font-size:10px;color:white;vertical-align:bottom;padding:5px;padding:5px;border:1px solid lightgray;" rowspan="2">CÓDIGO</th>\
+																<th style="font-size:10px;color:white;vertical-align:bottom;padding:5px;border:1px solid lightgray;" rowspan="2">NOMBRE</th>\
+																<th style="font-size:10px;color:white;vertical-align:bottom;padding:5px;border:1px solid lightgray;" rowspan="2">VENTA</th>\
+																<th style="font-size:10px;color:white;vertical-align:bottom;padding:5px;border:1px solid lightgray;" rowspan="2">PRESUP.</th>\
+																<th style="font-size:10px;color:white;vertical-align:bottom;padding:5px;border:1px solid lightgray;" rowspan="2">GASTO ACTUAL</th>\
+																<th style="font-size:10px;color:white;padding:5px;border:1px solid lightgray;" colspan="2">ANTES</th>\
+																<th style="font-size:10px;color:white;padding:5px;border:1px solid lightgray;" colspan="2">DESPUÉS</th>\
+															</tr>\
+															<tr style="font-family:Open Sans,sans-serif !important;background-color:rgb(189,189,192);color:white;font-size:10px;font-weight:bold;text-align:center;">\
+																<th style="font-size:10px;color:white;font-size:10px;color:white;padding:5px;border:1px solid lightgray;">G. REAL</th>\
+																<th style="font-size:10px;color:white;padding:5px;border:1px solid lightgray;">DIFERENCIA</th>\
+																<th style="font-size:10px;color:white;padding:5px;border:1px solid lightgray;">G. REAL</th>\
+																<th style="font-size:10px;color:white;padding:5px;border:1px solid lightgray;">DIFERENCIA</th>\
+															</tr>\
+														</thead>\
+														<tbody></tbody>\
+													</table>');
+													}else{
+														var table = $('<table border="0" width="100%" style="display:table;border-collapse:separate;border-spacing:0;margin:0 0 20px 0">\
+															<thead>\
+																<tr style="font-family:Open Sans,sans-serif !important;background-color:rgb(189,189,192);font-weight:bold;text-align:center;">\
+																	<th style="font-size:10px;color:white;vertical-align:bottom;padding:5px;border:1px solid lightgray;" rowspan="2">NEGOCIO</th>\
+																	<th style="font-size:10px;color:white;vertical-align:bottom;padding:5px;padding:5px;border:1px solid lightgray;" rowspan="2">CÓDIGO</th>\
+																	<th style="font-size:10px;color:white;vertical-align:bottom;padding:5px;border:1px solid lightgray;" rowspan="2">NOMBRE</th>\
+																	<th style="font-size:10px;color:white;vertical-align:bottom;padding:5px;border:1px solid lightgray;" rowspan="2">VENTA</th>\
+																	<th style="font-size:10px;color:white;vertical-align:bottom;padding:5px;border:1px solid lightgray;" rowspan="2">PRESUPUESTO</th>\
+																	<th style="font-size:10px;color:white;vertical-align:bottom;padding:5px;border:1px solid lightgray;" rowspan="2">GASTO ACTUAL</th>\
+																</tr>\
+															</thead>\
+															<tbody></tbody>\
+														</table>');
+													}
+
+													$.each(subdata.items, function(key, item) {
+														var rowsItem = '';
+
+														rowsItem += '<tr style="font-family:Open Sans,sans-serif !important;">';
+
+														rowsItem += '<td style="color:rgb(103,103,103);font-size:11px;text-align:left;padding:5px;border:1px solid lightgray;">'+ item.infoNeg +'</td>';
+
+														rowsItem += '<td style="color:rgb(103,103,103);font-size:10px;text-align:center;padding:5px;border:1px solid lightgray;">'+ item.codigo +'</td>';
+
+														rowsItem += '<td style="color:rgb(103,103,103);font-size:10px;text-align:left;padding:5px;border:1px solid lightgray;">'+ item.nombre +'</td>';
+
+														rowsItem += '<td style="color:rgb(103,103,103);font-size:10px;text-align:left;padding:5px;border:1px solid lightgray;">'+ item.venta +'</td>';
+
+														rowsItem += '<td style="color:rgb(103,103,103);font-size:11px;text-align:right;padding:5px;border:1px solid lightgray;">'+ item.presupuestado +'</td>';
+
+														rowsItem += '<td style="color:black;font-weight:bold;font-size:11px;text-align:right;padding:5px;border:1px solid lightgray;">'+ item.gasto +'</td>';
+
+														if (!ocultar_antes_despues_email_oc) {
+
+															rowsItem += '<td style="color:rgb(103,103,103);font-size:11px;text-align:right;padding:5px;border:1px solid lightgray;">'+ item.realAntes +'</td>';
+
+															if (item.porGastarAntes_ < 0 ) {
+																rowsItem += '<td style="color:red;font-size:11px;text-align:right;padding:5px;border:1px solid lightgray;">'+ item.porGastarAntes +'</td>';
+															}else{
+																rowsItem += '<td style="color:rgb(103,103,103);font-size:11px;text-align:right;padding:5px;border:1px solid lightgray;">'+ item.porGastarAntes +'</td>';
+															}
+
+
+															rowsItem += '<td style="color:rgb(103,103,103);font-size:11px;text-align:right;padding:5px;border:1px solid lightgray;">'+ item.realDespues +'</td>';
+
+															if (item.porGastarDespues_ < 0 ) {
+																rowsItem += '<td style="color:red;font-size:11px;text-align:right;padding:5px;border:1px solid lightgray;">'+ item.porGastarDespues +'</td>';
+															}else{
+																rowsItem += '<td style="color:rgb(103,103,103);font-size:11px;text-align:right;padding:5px;border:1px solid lightgray;">'+ item.porGastarDespues +'</td>';
+															}
+
+														}
+
+
+														rowsItem += '</tr>';
+														table.find('tbody').append(rowsItem);
+													});
+
+											}else{
+												var table = "";
+											}
+											if(Object.keys(userlink).length !== 0){
+												$.each(userlink, function(key, entry) {
+												var email_link = generate_link_email_validacion(subdata, entry.username, table);
+												
+												var comentarioEmisor = '<p style="font-weight:bold;background-color:#f0f0f0;padding:5px!important;margin:0!important;border:1px solid #f0f0f0;box-sizing:border-box;">Mensaje del emisor ('+ $('html > body.menu.home > aside > div > div > h1').text() +'):</p><div style="margin:0 5px 0 5px!important"><strong>&laquo;' + msg  + '&raquo;</strong></div>';
+
+												if (compras.tipoGasto == "OC") {
+													record_name = "Orden de Compra";
+												}else{
+													record_name = "Rendición de fondos";
+												}
+
+												if (!entry.block_email){
+													
+														let paramsData = {
+															to: entry.username,
+															toName: entry.name,
+															toEmail: entry.email,
+															template: 'validation_request',
+															document: record_name,
+															index: entry.record.index,
+															title: entry.record.text,
+															extra: email_link + comentarioEmisor,
+															detail_uri: 'compras/content.shtml',
+															id_item: entry.record.id,
+															attach: true,
+															moduleName: 'compras'
+														}
+													const email = import("../../script/unabase/email.js?13443346776");
+													email.then(functions => {	
+														functions.notifyRequestValidationOC(paramsData);
+													})
+													.then(res=>{
+														
+														$.ajax({
+															url: '/4DACTION/_V3_setLogValidacionJerarquia',
+															data: {
+																id: entry.id_rule,
+																table: 'Orden_de_compra',
+																id_record: $('section.sheet').data('id'),
+																index_record: $('section.sheet').data('index'),
+																ref_record: $('section.sheet').find('[name="oc[referencia]"]').val(),
+																sended: true
+																
+															},
+															dataType: 'json',
+															async: false,
+															success: function(data) {
+																console.log('correo enviado')
+
+															}
+														});
+
+													}).then(res =>{
+														if(back) 
+														unaBase.history.back();
+													});
+													
+
+												}
+
+												// unaBase.inbox.send({
+												// 	to: entry.username,
+												// 	subject: 'Solicita validar ' + record_name + ' Nº ' + entry.record.index + ' / ' + entry.record.text,
+												// 	into: 'viewport',
+												// 	href: '/v3/views/compras/content.shtml?id=' + entry.record.id,
+												// 	tag: 'solicitudes',
+												// 	text: htmlObject.find('div')[0].outerHTML + msg 
+												// });
+
+
+											
+
+											});
+											refreshLogValidacion();
+											//unaBase.interval.set(refreshLogValidacion, 15000);
+											// unaBase.ui.unblock();
+											}
+											
+
+
+
+										}
+									});
+									
+									
+					};
+					
+
+			var initLogValidacion = function(showRequestRightNow) {		
+					
+				$.ajax({
+					url: '/4DACTION/_V3_getLogValidacionByIndex',
+					data: {
+						id: $('section.sheet').data('id'),
+						index: 'Orden_de_compra|' + $('section.sheet').data('id'),
+						tablita: 'Orden_de_compra'
+					},
+					dataType: 'json',
+					success: function(data) {
+						if (typeof showRequestRightNow == "undefined"){
+							if (notRequestRightNow) {
+								showRequestRightNow = false;
+							}else{
+								showRequestRightNow = true;
+							}
+						}
+
+
+						
+						if (data.rows.length == 0 && showRequestRightNow) {
+
+							$('#menu [data-name="validate_request"]').hide();
+
+							var htmlObject = $('<section> \
+								<div> \
+								<p>El gasto ' + $('span#index').text() + ' debe ser autorizado por los siguientes criterios:</p> \
+								<ul style="list-style-type: none; list-style-position: outside; margin-left:10px;"></ul> \
+								</div> \
+								<span>Ingrese algún comentario. Se notificará cuando el gasto sea autorizado o rechazado.</span> \
+								<textarea name="comentario">Por favor validar.</textarea> \
+							</section>');
+
+							var has_rules = true;
+
+							//unaBase.ui.block();
+
+							$.ajax({
+								url: '/4DACTION/_V3_setLogValidacion',
+								data: {
+									table: 'Orden_de_compra',
+									id_record: $('section.sheet').data('id'),
+									index_record: $('section.sheet').data('index'),
+									ref_record: $('section.sheet').find('[name="oc[referencia]"]').val(),
+									test: true
+								},
+								dataType: 'json',
+								async: false,
+								success: function(data) {
+									has_rules = (data.rows.length > 0);
+									
+									// Se recorren los criterios indicados
+									// para cada criterio se apilan los nombres de usuario encargados de validar
+									// se quitan los nombres de usuario duplicados para cada criterio
+
+									var validaciones = [];
+									$.each(data.rows, function(i, item) {
+										if (typeof validaciones[data.rows[i].text] == 'undefined')
+											validaciones[data.rows[i].text] = [];
+										var temp = [];
+										$.each(data.rows, function(j, jtem) {
+											if (jtem.text == item.text)
+												temp.push(data.rows[j].username);
+										});
+										validaciones[data.rows[i].text]['usernames'] = temp.filter(
+											function(a){return !this[a] ? this[a] = true : false;}, {}
+										);
+									});
+
+									// Se recorren los criterios disponibles y se asignan los detalles
+									$.each(data.rows, function(i, item) {
+										var details = data.rows[i].detail.split("\n");
+										var temp = [];
+										$.each(data.rows, function(j, jtem) {
+											$.each(details, function(k, ktem) {
+												if (details[k] != '')
+													temp.push(details[k]);
+											});
+										});
+										validaciones[data.rows[i].text]['detail'] = temp.filter(
+											function(a){return !this[a] ? this[a] = true : false;}, {}
+										);
+									});
+
+									var criteria_list = $('<ul>');
+									for (i in validaciones) {
+									//$.each(validaciones, function(i, item) {
+										
+										
+										if(typeof validaciones[i] == 'object'){
+											
+											var rand_class = 'rand_' + Math.floor((Math.random() * 100000) + 1);
+											var criteria = criteria_list.append('<li class="' + rand_class + '" style="font-size: 90% !important; display: list-item !important; margin: 10px 0 !important;">' + '<span style="font-weight: 600 !important; font-size: inherit !important; display: block;">' + i + '</span>' + '</li>').find('li.' + rand_class);
+											if (typeof validaciones[i]['detail'] != 'undefined' && validaciones[i]['detail'].length > 0) {
+												var detail_list = criteria.append('<ul style="list-style-type: disc; list-style-position: inside; font-size: 12px !important; color: red !important;"></ul>').find('ul');
+												$.each(validaciones[i]['detail'], function(j, jtem) {
+													detail_list.append('<li style="font-size: inherit !important; display: list-item !important; margin: 5px !important;">' + jtem + '</li>');
+												});
+
+											}
+											var subrand_class = 'subrand_' + Math.floor((Math.random() * 100000) + 1);
+											let validacionUsernames = validaciones[i]['usernames'];
+											var username_list = criteria.append('<p style="font: inherit !important; display: inline-block !important; margin: 5px 0 !important;">Debe' + (typeof validacionUsernames != 'undefined' && (validaciones[i]['usernames'].length > 1)? 'n' : '') + ' autorizar: </p> <ul class="usernames ' + subrand_class + '" style="display: inline-block !important; list-style-type: none !important; font-size: inherit !important;"></ul>').find('ul.usernames.' + subrand_class);
+											if(typeof validacionUsernames != 'undefined'){
+												$.each(validaciones[i]['usernames'], function(j, jtem) {
+													username_list.append('<li style="font-size: inherit !important; display: inline-block !important; padding: 3px; background-color: rgb(240,240,240) !important; border: 1px solid rgb(220,220,220) !important; border-radius: 3px !important; margin: 3px;">' + jtem + '</li>');
+												});
+												
+											}
+										}
+									//});
+									}
+
+									htmlObject.find('ul').append(criteria_list.html());
+
+									//unaBase.ui.block();
+
+								}
+							});
+
+							htmlObject.find('textarea').change(function() {
+								htmlObject.data('response', $(this).val());
+							});
+
+							//unaBase.ui.unblock();
+							
+							
+							if (has_rules){
+								
+								// prompt(htmlObject, undefined, undefined, true).done(function(msg) {
+								prompt(htmlObject, undefined, undefined, undefined, function() {
+									// unaBase.history.back();
+								}).done(function(msg) {
+									
+									// unaBase.ui.block();
+									if(typeof msg == 'undefined') msg = 'Por favor validar.'
+									$.ajax({
+										url: '/4DACTION/_V3_setLogValidacion',
+										data: {
+											table: 'Orden_de_compra',
+											id_record: $('section.sheet').data('id'),
+											index_record: $('section.sheet').data('index'),
+											ref_record: $('section.sheet').find('[name="oc[referencia]"]').val(),
+											mensaje: msg
+										},
+										dataType: 'json',
+										success: function(data) {
+										sendEmails(data,msg,true);
+										},
+										error: function(err) {
+											console.error("error from _V3_setLogValidacion");
+											console.error(err);	
+
+											unaBase.history.back();
+										}
+									});
+
+								});
+							}
+								
+							else {
+								// si no hay reglas, se valida automáticamente
+								// unaBase.ui.block();
+								$.ajax({
+									url: '/4DACTION/_V3_setCompras',
+									data: {
+										id: $('section.sheet').data('id'),
+										'oc[approved]': true,
+										'auto': true
+									},
+									dataType: 'json',
+									success: function(data) {
+										if (data.success) {
+											
+											ongoingValidation(false);
+											compras.validado = 1;
+											//toastr.success('La orden de compra ha pasado el proceso de validación.');
+											
+											// ini - modificado el 20-10-17 por gin / estaba validando cuando no debe, se garego opción para que regargue la pagina cuando haga una accion de validar y se refresquen los datos desde la base de datos.
+
+											/*unaBase.loadInto.viewport('/v3/views/compras/content.shtml?id=' + $('section.sheet').data('id'), undefined, undefined, true);*/
+
+											/*$('section.sheet').data('approved', true);
+											$('section.sheet').data('validado', true);
+											$('span.validation-status').text('Validada').attr('style','color:black!important').removeClass('false').addClass('true');*/
+
+											// fin - modificado el 20-10-17 por gin / estaba validando cuando no debe
+
+											/*$('section.sheet button.add.dtc').visible();
+											$('section.sheet button.add.orden-pago').visible();
+											$('section.sheet button.add.cobro').visible();*/
+
+											//$('#scrollPagos').show();
+											// método que controla los botones
+
+											// oc_validate_fields();
+
+										}
+										// unaBase.ui.unblock();
+									}
+								});
+							}
+						}else if (data.rows.some( e => e.jerarquia_email == true)) {
+							
+							sendEmails(null,'Por favor validar gasto.',false)
+
+						} else {
+							refreshLogValidacion();
+							//unaBase.interval.set(refreshLogValidacion, 15000);
+
+							$('#menu [data-name="validate_request"]').show();
+
+						}
+					}
+				});
+
+			};
+		</script>
+
+		<!--#4DIF ((([Orden_de_compra]dedonde_validacion#"AUTO") & ([Orden_de_compra]version="v3") & ([Orden_de_compra]Estado_OC#"ANULADA")) | ([Orden_de_compra]Folio_OC="") | (Not(Undefined(edit))))-->
+
+			<!--#4DIF (Not(_V3_verifica_permisos_web ([Orden_de_compra]Login_responsable;439)))-->
+				<script>
+					//alert("linea 1023");
+					var crear_oc_validada = false;
+					$(document).ready(function() {
+						unaBase.interval.set(refreshLogValidacion, 15000);
+						<!--#4DIF Undefined(edit)-->
+						// alert('edit viene con valor undefined');
+						if ($('section.sheet').data('index') != '')
+							initLogValidacion();
+						else {
+							$('section.sheet ul.steps').parentTo('article').hide();
+							$('#menu [data-name^="validate_"]').hide();
+						}
+						<!--#4DELSE-->
+						// alert('edit viene con valor true');
+						$('section.sheet ul.steps').parentTo('article').hide();
+						$('#menu [data-name^="validate_"]').hide();
+						$('#menu [data-name^="validate_send"]').show();
+						<!--#4DENDIF-->
+					});
+
+				</script>
+			<!--#4DELSE-->
+				<script>
+					//alert("linea 1045");
+					var crear_oc_validada = true;
+					$(document).ready(function() {
+						unaBase.interval.set(refreshLogValidacion, 15000);
+						<!--#4DIF Undefined(edit)-->
+
+						// alert('edit viene con valor undefined');
+
+						$.ajax({
+							url: '/4DACTION/_V3_getLogValidacionByIndex',
+							data: {
+								id: $('section.sheet').data('id'),
+								index: 'Orden_de_compra|' + $('section.sheet').data('id'),
+								tablita: 'Orden_de_compra'
+							},
+							dataType: 'json',
+							success: function(data) {
+								if (data.rows.length > 0) {
+									$('#menu [data-name^="validate_"]').hide();
+									initLogValidacion();
+									
+								} else {
+									
+									ongoingValidation(false);
+									$('section.sheet ul.steps').parentTo('article').hide();
+								}
+							}
+						});
+						<!--#4DELSE-->
+						// alert('edit viene con valor true');
+						<!--#4DENDIF-->
+						$('#menu [data-name^="validate_"]').hide();
+					});
+				</script>
+			<!--#4DENDIF-->
+		<!--#4DELSE-->
+
+			<script>
+				//alert("linea 1077");
+				var crear_oc_validada = true;
+				
+				$(document).ready(function() {
+					ongoingValidation(false);
+					$('section.sheet ul.steps').parentTo('article').hide();
+					$('#menu [data-name^="validate_"]').hide();
+				});
+			</script>
+
+		<!--#4DENDIF-->
+
+		<!--#4DIF ([Orden_de_compra]validacion_oc=False) & ([Orden_de_compra]version#"V3") & (_V2_valida_oc)-->
+			<script>
+				$('#menu [data-name="validate_v2"]').show();
+			</script>
+		<!--#4DELSE-->
+			<script>
+				$('#menu [data-name="validate_v2"]').hide();
+			</script>
+		<!--#4DENDIF-->
+
+
+		<style>
+			section.sheet article > ul.steps {
+			}
+			section.sheet article > ul.steps > li {
+				display: inline-block;
+				/*width: 400px;*/
+				width: 980px;
+				vertical-align: middle;
+			}
+
+			section.sheet article > ul.steps > li:not(:last-of-type) {
+				margin: 0 auto;
+				padding-right: 26px;
+				background-image: url('/v3/design/_misc/ul.steps-li.png');
+				background-repeat: no-repeat;
+				background-position: right center;
+
+			}
+
+			section.sheet article > ul.steps > li:not(:first-of-type) {
+				padding-left: 10px;
+			}
+
+			section.sheet article > ul.steps > li > ul {
+				padding: 5px;
+				background-color: rgb(240,240,240);
+				border: 1px solid rgb(220,220,220);
+				border-radius: 3px;
+				font-size: 14px;
+			}
+
+			section.sheet article > ul.steps > li > ul.approved {
+				/*background-color: rgb(192,240,192);*/
+				background-color: rgb(232, 247, 232);
+			}
+
+			section.sheet article > ul.steps > li > ul.rejected {
+				background-color: rgb(240,192,192);
+			}
+
+			section.sheet article > ul.steps > li > ul > li {
+				text-align: center;
+			}
+
+			section.sheet article > ul.steps > li > ul > li:not(:last-of-type) {
+				padding-bottom: 20px;
+				background-repeat: no-repeat;
+				background-position: center bottom;
+			}
+
+			section.sheet article > ul.steps > li > ul > li:not(:first-of-type) {
+				padding-top: 2px;
+			}
+
+			section.sheet article > ul.steps > li > ul.and > li:not(:last-of-type) {
+				background-image: url('/v3/design/_misc/ul.steps-li-ul.and-li.png');
+			}
+
+			section.sheet article > ul.steps > li > ul.or > li:not(:last-of-type) {
+				background-image: url('/v3/design/_misc/ul.steps-li-ul.or-li.png');
+			}
+
+			section.sheet article > ul.steps > li > ul > li > span {
+				 display: inline-block;
+				 vertical-align: middle;
+			}
+			.temp{
+				margin:auto!important;
+				width:350px!important;
+				/*border:1px solid red;*/
+			}
+			.temp_style_tipo{
+				width:200px!important;
+				color:rgb(67,175,124)!important;
+			}
+			.temp_style_transparent{
+				background:transparent!important;
+			}
+			.temp_style_clas{
+				width:150px!important;
+				text-align:center;
+				/*margin-left:10px;*/
+			}
+
+			/* cambia color letras validar y rechazar */
+			button.approve {
+				color: green !important;
+				border-color: green !important;
+			}
+
+			button.reject {
+				color: red !important;
+				border-color: red !important;
+			}
+
+			#menu > ul > li[data-name="validate_request"] button {
+				color: blue;
+				border-color: blue;
+			}
+
+			/* ajustes diseño */
+			.labels > span{
+				display: inline-block;
+				border: 1px solid rgb(220,220,220);
+				/*background-color: #C9DECB;*/
+				background-color:rgb(232, 247, 232);
+				padding:3px;
+				border-radius:3px;
+				font-size:10px!important;
+				font-weight: bold;
+				text-transform: uppercase;
+				margin:2px;
+			}
+			.labels > span.link{
+				text-decoration: underline;
+				cursor: pointer;
+			}
+			.labels > span.false{
+				color:red!important
+			}
+			.labels > span.important{
+				color:red!important
+			}
+			select.combos{
+				border:1px solid lightgray!important;
+				padding:3px!important;
+				font-size: 12px!important;
+			}
+
+			.valor-moneda {
+				border:1px solid gray;
+				background-color:white;
+				border-radius: 2px;
+				padding:2px;
+				margin:2px;
+				width:100px!important;
+			}
+			.notices{
+				font-weight:normal!important;
+    			background-color:#F9994D!important;
+    			border-radius:2px;
+    			border-color: #F9994D!important;
+    			padding:1px!important;
+    		}
+    		.items tbody tr td{
+    			background-color: white;
+    		}
+	    		.items tbody tr td input{
+	    			background-color: white;
+	    		}
+
+	    	.bg-white{
+	    		background: white!important;
+	    	}
+
+	    	/* ini -- options dtc */
+	    	.chk{
+				display: inline-block;
+				width: 20px;
+				height: 20px;
+				margin:0px;
+				vertical-align: middle;
+				cursor:pointer;
+			}
+			.container-options{
+				height:30px;
+				margin:5px 0 0 0;
+				padding: 3px;
+				border-color: red;
+			}
+				.container-options > div{
+					display: inline-block;
+				}
+				/*.container-options > div[data-options="mas"]{
+					float: right;
+				}*/
+			#selectdtc{
+				height:24px;
+				width:70px;
+				background-color:#e6e6e6;
+			}
+			/* fin -- options dtc */
+
+			/* ocultar por defecto opciones para tipo pago transferencia */
+			.transferencia {
+				display: none !important;
+			}
+
+			.tituloh3{
+				margin:10px;
+				text-transform:uppercase;
+				font-size:10px;
+				font-weight: bold;
+
+
+			}
+			
+			/* mejora egresos opciones de pago */
+			.u-option-mas{
+				display: block;
+				position: absolute;
+				left: 0px;
+			    top: 45px;
+			    z-index: 1000;
+			    text-align: left;
+			}
+				.u-option-mas > li > a{
+					color: black!important;
+					font-size: 10px!important;
+				}
+
+			.css-color-blue-imp{
+				color:blue!important;
+			}
+
+			.container-symbol-new{
+				margin:2px;
+				/*font-size:8px;*/
+			}
+
+				.create{
+					content: "Agregar nueva...";
+				}	
+
+			/* Estilo especial para el botón de IA */
+			button.dtc-load-doc {
+				background: linear-gradient(135deg, #2eaa8f 0%, #37a18e 50%, #1d9278 100%) !important;
+				background-size: 200% 200% !important;
+				color: white !important;
+				font-weight: 600 !important;
+				border: 2px solid rgba(255, 255, 255, 0.3) !important;
+				box-shadow: 0 2px 8px rgba(46, 170, 143, 0.3) !important;
+				animation: gradient-shift-ia 4s ease infinite !important;
+				position: relative !important;
+				overflow: hidden !important;
+				height: 25px;
+			}
+
+			/* Animación del gradiente */
+			@keyframes gradient-shift-ia {
+				0% {
+					background-position: 0% 50%;
+				}
+				50% {
+					background-position: 100% 50%;
+				}
+				100% {
+					background-position: 0% 50%;
+				}
+			}
+
+			/* Icono con animación de pulso */
+			button.dtc-load-doc::before {
+				content: "✨" !important;
+				font-size: 14px !important;
+				animation: pulse-ai-icon 2s ease-in-out infinite !important;
+				margin-right: 6px !important;
+			}
+
+			@keyframes pulse-ai-icon {
+				0%, 100% {
+					opacity: 1;
+					transform: scale(1);
+				}
+				50% {
+					opacity: 0.8;
+					transform: scale(1.1);
+				}
+			}
+
+			/* Efecto de brillo que se mueve */
+			button.dtc-load-doc::after {
+				content: "" !important;
+				position: absolute !important;
+				top: -50% !important;
+				left: -50% !important;
+				width: 200% !important;
+				height: 200% !important;
+				background: linear-gradient(
+					45deg,
+					transparent 30%,
+					rgba(255, 255, 255, 0.2) 50%,
+					transparent 70%
+				) !important;
+				animation: shine-ia-effect 3s infinite !important;
+				pointer-events: none !important;
+			}
+
+			@keyframes shine-ia-effect {
+				0% {
+					transform: translateX(-100%) translateY(-100%) rotate(45deg);
+				}
+				100% {
+					transform: translateX(100%) translateY(100%) rotate(45deg);
+				}
+			}
+
+			/* Efecto hover */
+			button.dtc-load-doc:hover {
+				box-shadow: 0 4px 12px rgba(46, 170, 143, 0.5) !important;
+				transform: translateY(-2px) !important;
+				border-color: rgba(255, 255, 255, 0.5) !important;
+				transition: all 0.2s ease !important;
+			}
+
+			button.dtc-load-doc:active {
+				transform: translateY(0) !important;
+			}
+		</style>
+		<!--END Edit-->
+
+		<script type="text/javascript">
+			$(document).ready(function() {
+
+				if (!$('html > body.menu > aside > div > div > ul > li[data-name="rendiciones"]').hasClass('active')) {
+					$('section#tabs-compras li.load-staff').hide();
+					$('section#tabs-compras article#tabs-2').hide();
+				}
+
+				// -- ini -- options egresos
+				var ul = $('<ul class="dropdown-menu-egresos u-option-mas">');
+				$.ajax({
+					url: '/4DACTION/_V3_getTiposEgresos',
+					data: {},
+					dataType: 'json',
+					success: function(data) {
+
+						ul.append('<li><a href="#" data-options="PROGRAMAR" style="color:orange!important;font-weight:bold"><i class="fa fa-calendar-check-o" aria-hidden="true" style="font-size:12px;color:orange;font-weight:bold;margin-left:-15px"></i>&nbsp;&nbsp;PROGRAMAR PAGO</a></li>');
+
+						$.each(data.rows, function(key, item){
+							ul.append('<li><a href="#" data-options="'+ item.text +'"><span class="ui-icon ui-icon-circle-plus"></span>'+ item.text +'</a></li>');
+						});
+						ul.appendTo('.options-egresos').menu().hide();
+					}
+				});
+				$('.options-egresos > button').button({
+					icons: {
+						primary: 'ui-icon ui-icon-triangle-1-s'
+					},
+					text: true
+				}).click(function() {
+					$('.dropdown-menu-egresos').toggle();
+				});
+
+
+				$('#sheet-compras').on("click", ".dropdown-menu-egresos > li > a", function(){
+					var selectedOption = $(this).data('options');
+					$.ajax({
+						url: '/4DACTION/_V3_setPago',
+						dataType: 'json',
+						type: 'POST',
+						data: {
+							"id_origen" : compras.id,
+							"origen" : compras.tipoGasto,
+							"options_create" : selectedOption
+						}
+					}).done(function(data) {
+						unaBase.loadInto.viewport('/v3/views/pagos/content2.shtml?id=' + data.id);
+					});
+				});
+				// -- fin -- options egresos
+				// permiso validar administrativo
+	
+								if (!access._645 || $('section.sheet').data('validado') || $('ul.steps li').length == 0) {
+									$('#menu [data-name="ultimate_val"]').hide();
+								}else{
+									$('#menu [data-name="ultimate_val"]').show();
+								}
+
+								
+				// $('button.expand.active span.ui-icon').removeClass('ui-icon-triangle-1-s').addClass('ui-icon-pencil');
+				
+				
+			});
+
+			if (compras.tipoGasto == "FXR") {
+				document.title = 'FXR Nº <!--#4DTEXT [Orden_de_compra]Folio_OC--> / ' + nombreEmpresa;
+			}else{
+				document.title = 'OC Nº <!--#4DTEXT [Orden_de_compra]Folio_OC--> / ' + nombreEmpresa;
+			}
+
+
+			// opcion detraccion, gin, 5-3-19, caso peru
+			if ($('input[name="oc[detraccion_aplica]"]').prop('checked')) {
+				$('.obj-detraccion').show();
+				$('input[name="oc[detraccion_aplica_estado]"]').val('true');
+			}else{
+				$('.obj-detraccion').hide();
+				$('input[name="oc[detraccion_aplica_estado]"]').val('false');
+			}
+			$('input[name="oc[detraccion_aplica]"]').change(function(){
+				if ($(this).prop('checked')) {
+					$('.obj-detraccion').show();
+					$('input[name="oc[detraccion_aplica_estado]"]').val('true');
+				}else{
+					$('.obj-detraccion').hide();
+					$('input[name="oc[detraccion_aplica_estado]"]').val('false');
+				}
+			});
+			$('input[name="oc[detraccion_porcentaje]"]').change(function(){
+				let porcentaje = parseFloat($(this).val());
+				let caluloMonto = (porcentaje / 100) * compras.total_oc;
+				$('input[name="oc[detraccion_monto]"]').val($.number(caluloMonto, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+			});
+
+			// agreagdo para calcular porcentaje servicio, cliente shark
+			$('input[name="oc[porcentaje_servicio]"]').change(function(){
+				update_subtotal_items();
+				$('table.items tbody').find('tr[data-tipo="ITEM"]').each(function() {
+					calcula_por_filas($(this));
+				});
+			});
+
+			// by gin, 8-10-10
+			
+			$('input[name="oc[moneda][valor_cambio]"]').number(true, 4, unaBase.sepDecimal, '.');
+				
+			if($('#items-gastos tr').length > 2){
+                $('#items-gastos').addClass('table-responsive')
+            }else{
+                $('#items-gastos').removeClass('table-responsive')
+            }
+
+			var tablecompras = () => {
+				
+				if($('#items-gastos tbody tr').length > 0){
+					$('#items-gastos').addClass('table-responsive')
+				}else{
+					$('#items-gastos').removeClass('table-responsive')
+				}
+			}
+
+
+			var module = $(".sidebar li.active").data("name");
+			if(module === 'rendiciones'){
+				document.querySelector('.info-comprobantes').remove();
+
+			}
+
+			if(module === 'gastos'){
+				document.querySelector('.info-comprobantes-detalle').remove();
+
+			}
+
+
+			
+
+		</script>
+
+
+		<script>
+			generateCurrencyModalHTML(compras.id, "_force_getGeneral_params_oc", "_set_currency_by_oc", "oc", "right")
+		</script>
+
+		<style>
+			#openModalButton {
+				background-color: var(--bg-primary);
+				color: var(--white);
+				font-weight: 500;
+				height: 30px;
+				padding-right: 20px;
+				border-radius: 10px;
+				font-size: 11px !important;
+				transition: .3s;
+				overflow: hidden;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			#openModalButton svg {
+				transform: scale(0.4);
+			}
+			#openModalButton:hover {
+				filter: brightness(120%);
+				transition: .3s;
+			}
+
+			#deaccount{
+				display: inline-flex;
+				gap: 5px;
+				padding: 5px;
+				font-weight: 600;
+			}
+
+			.ts-control {
+			overflow: hidden!important;  
+			white-space: nowrap!important;  
+			text-overflow: ellipsis!important;  
+			width: 100%!important; 
+			box-sizing: border-box!important;  
+			border: none!important;    
+			padding: 0!important;       
+			box-shadow: none!important;
+			}
+		</style>
+
+	</head>
+	<body>
+		<section id="sheet-compras" data-module="compras" data-solicitamanual="<!--#4DTEXT solicitar_validacion_manual-->" data-tipogasto="<!--#4DTEXT [Orden_de_compra]id_tipo_gasto-->" class="sheet sheet-gastos css-grays" data-record-name="Gasto" data-entity="Orden_de_compra" data-from="<!--#4DTEXT from-->" data-modulo="compras" data-id="<!--#4DTEXT [Orden_de_compra]Id_OCompra-->" data-index="<!--#4DTEXT [Orden_de_compra]Folio_OC-->" data-username="<!--#4DTEXT [Orden_de_compra]Login_responsable-->" data-folio="<!--#4DTEXT [Orden_de_compra]Folio_OC-->"  data-origen="<!--#4DTEXT [Orden_de_compra]Origen_OC-->" data-tipoorigen="<!--#4DTEXT vTipoOC_-->" data-validado="<!--#4DTEXT [Orden_de_compra]validacion_oc-->" data-justificado="" data-approved="<!--#4DIF [Orden_de_compra]validacion_oc-->true<!--#4DELSE-->false<!--#4DENDIF-->" data-currentdate="<!--#4DTEXT Current date(*)-->" data-estado="<!--#4DTEXT [Orden_de_compra]Estado_OC-->" data-total="<!--#4DTEXT vTotalOC_-->" data-emailpagos="<!--#4DTEXT [Parametros]email_not_pago_v3-->" data-validadatoscomerciales="<!--#4DTEXT paramValidaDatosComerciales-->" data-blockEmailObligatorio="<!--#4DTEXT blockEmailObligatorio-->" data-cierreadmin="<!--#4DTEXT [Orden_de_compra]estado_cierre_admin_fxr-->" data-cierreproduccion="<!--#4DTEXT [Orden_de_compra]estado_cierre_produccion-->" data-exceso="<!--#4DVAR String([Orden_de_compra]exceso;"&xml")-->" data-excedida="<!--#4DIF [Orden_de_compra]excedida=True-->true<!--#4DELSE-->false<!--#4DENDIF-->" data-factoring="<!--#4DTEXT [Orden_de_compra]v3_factoring-->">
+
+			<input type="hidden" name="id" value="<!--#4DTEXT [Orden_de_compra]Id_OCompra-->">
+			<input type="hidden" name="folio" value="<!--#4DTEXT [Orden_de_compra]Folio_OC-->">
+			<input type="hidden" name="oc[id]" value="<!--#4DTEXT [Orden_de_compra]Id_OCompra-->">
+			<input type="hidden" name="oc[negocio][id]" value="<!--#4DTEXT [Orden_de_compra]Id_NV-->">
+			<input type="hidden" name="oc[validado]" value="<!--#4DTEXT [Orden_de_compra]validacion_oc-->">
+
+			<footer>
+				<article id="scrollval">
+					<h1>Validaciones</h1>
+					<h2><strong>Estado</strong> <span></span> <span></span></h2>
+					<ul class="steps"></ul>
+					<a class="css-link" href="#" onclick="javascript:unaBase.loadInto.dialog('/v3/views/comentarios/content.shtml?id=<!--#4DTEXT [Orden_de_compra]Id_OCompra-->&mod=compras', 'Mensajes registrados', 'small');">Ver mensajes de validación</a>
+				</article>
+				<article>
+					<h1>Información general</h1>
+					<h2>
+						<span>
+							<input class="temp_style_tipo" readonly name="oc[tipo_gastos][des]" placeholder="Seleccionar tipo" type="search" value="<!--#4DTEXT [Orden_de_compra]des_tipo_gasto-->">
+							<button type="button" class="show tiposg">ver tipos</button>
+						</span>
+						<span id="index"><!--#4DIF [Orden_de_compra]Folio_OC=""-->S/N<!--#4DELSE-->Nº <!--#4DTEXT [Orden_de_compra]Folio_OC--><!--#4DENDIF--></span>
+						<span><input class="sc-full filltext" placeholder="Ingresar una referencia del gasto" data-text type="text" name="oc[referencia]" value="<!--#4DTEXT [Orden_de_compra]Referencia-->"></span>
+					</h2>
+
+					<p class="labels">
+						
+						<!--#4DIF [Orden_de_compra]estado_cierre_admin_fxr--><span class="notices"><label style="background-color:#F9994D!important;cursor:pointer;width:15px;height:15px;vertical-align:bottom!important;display:inline-block;border-radius:5px;" title="No es posible realizar cambios. La rendición se encuentra cerrada administrativamente." class="ui-icon ui-icon-locked"></label></span><!--#4DENDIF-->
+
+						<span data-name="estado" <!--#4DIF [Orden_de_compra]Estado_OC="ANULADA"-->class="false"<!--#4DENDIF-->><!--#4DTEXT [Orden_de_compra]Estado_OC--></span>
+
+						<span>Creada por <!--#4DTEXT Uppercase([Orden_de_compra]Login_responsable;*)--> el <!--#4DTEXT [Orden_de_compra]fecha_registro--> a las <!--#4DTEXT [Orden_de_compra]Hora--> hrs.</span>
+
+						<!--#4DIF [Orden_de_compra]validacion_oc--><span class="validation-status">Validada</span><!--#4DELSE--><span class="validation-status false">No validada</span><!--#4DENDIF-->
+					</p>
+
+					<p><label style="font-weight:bold">Fecha emisión : </label>&nbsp;&nbsp;<span><input style="width:90px" class="datepicker" placeholder="dd-mm-aaaa" type="text" name="oc[fecha_emision]"  value="<!--#4DTEXT [Orden_de_compra]Fecha-->"></span></p>
+					<span id="deaccount">Descontabilizar <input type="checkbox"></span>
+					<input name="oc[origen][clas][id]" type="hidden" value="<!--#4DTEXT [Orden_de_compra]id_cgg-->">
+					<input name="oc[tipo_gastos][id]" type="hidden" value="<!--#4DTEXT [Orden_de_compra]id_tipo_gasto-->">
+				</article>
+				<article>
+					<h1>Información del <label class="objoc">Proveedor</label><label class="objfxr">Solicitante</label></h1>
+					<button class="expand active"></button>
+					<h2><strong name="resumen[oc][alias]"><!--#4DTEXT Uppercase(v_alias;*)--></strong> <span name="resumen[oc][razon]"><!--#4DTEXT Lowercase(v_razon;*)--></span> <span name="resumen[oc][contacto]"><!--#4DTEXT Lowercase(vNombreContacto;*)--></span> <span class="objoc" name="resumen[oc][dtc]"><!--#4DTEXT Lowercase([Orden_de_compra]FacturaTipo;*)--></span></h2>
+					<ul class="expandable editable lineal ul-custom-one">
+						<li class="custom-flex-container">
+							<span class="custom-label">Buscar</span>
+							<input id="searchCont" class="custom-input-text sc-full filltext" data-help="Acá buscas o creas al proveedor, por ejemplo: &laquo;UNA SISTEMAS&raquo;" required type="search" name="contacto[info][alias]" data-id="<!--#4DTEXT [Orden_de_compra]Id_Empresa-->" value="<!--#4DVAR v_alias-->" placeholder="Buscar por nombre, alias, <!--#4DTEXT documentoIde -->, razón social...">
+							<button class="profile2 empresa">Perfil</button>
+							<input name="contacto[info][id]" type="hidden" value="<!--#4DTEXT [Orden_de_compra]Id_Empresa-->">
+						</li>
+						
+						<li class="custom-flex-container">
+						<span class="custom-label">Razón social / Nombre</span>
+						<input class="custom-input-text inputCustom" required type="text" name="contacto[info][razon_social]" value="<!--#4DTEXT v_razon-->" readonly>
+						</li>
+						
+						<li class="custom-flex-container">
+						<span class="custom-label"><!--#4DTEXT nameRUT--></span>
+						<input class="custom-input-text inputCustom" required type="text" name="contacto[info][rut]" value="<!--#4DTEXT vRut-->" readonly>
+						<input readonly required type="text" name="contacto[info][tipo]" value="<!--#4DTEXT vTipoContacto-->" hidden>
+						</li>
+						
+						<li class="custom-flex-container objoc">
+						<span class="custom-label">Giro</span>
+						<input class="custom-input-text inputCustom" required type="text" name="contacto[info][giro]" value="<!--#4DTEXT v_giro-->" readonly>
+						</li>
+						
+						<li class="custom-flex-container">
+						<span class="custom-label">Email</span>
+						<input readonly class="custom-input-text inputCustom" required type="text" name="contacto[info][email]" value="<!--#4DTEXT v_email-->">
+						</li>
+						<li class="objfxr custom-flex-container">
+							<span class="custom-label">Fecha estimada de cierre</span>
+							<input class="date datepicker sc-full filltext inputCustom" placeholder="dd-mm-aaaa" type="text" name="oc[fecha_vcto_fxr]" value="<!--#4DTEXT [Orden_de_compra]fxr_fecha_estimada_cierre-->">
+						</li>
+						  
+						  
+					</ul>
+					<ul class="expandable editable lineal ul-custom-one">
+						<li class="objoc">
+							<span>Para</span> <span><input class="sc-full filltext" required data-help="Acá ingresas a quien enviarás la cotización, por ejemplo: &laquo;JUAN PÉREZ&raquo;" id="contacto" type="search" name="relacionado[info][nombre]" data-id="<!--#4DTEXT vIdContactoAsociado-->" value="<!--#4DTEXT vNombreContacto-->" placeholder="Buscar por Alias, Nombre o Apellidos..."></span><button class="show contacto">Ver todos los contactos</button><button class="unlock contacto">Modificar datos de contacto</button><button class="profile contacto">Perfil</button>
+							<input name="relacionado[info][id]" type="hidden" value="<!--#4DTEXT vIdContactoAsociado-->">
+						</li>
+						<li class="objoc"><span>Cargo</span> <span><input class="inputCustom" type="text" name="relacionado[info][cargo]" value="<!--#4DVAR vcargocontacto-->" readonly></span></li>
+						<li class="objoc"><span>E-mail</span> <span><input class="inputCustom" type="email" name="relacionado[info][email]" value="<!--#4DVAR vemailcontacto-->" readonly></span><button class="edit save contacto">Guardar cambios a datos de contacto</button><button class="edit discard contacto">Descartar cambios a datos de contacto</button></li>
+					</ul>
+					<ul class="expandable editable lineal ul-custom-one" style="margin-top:10px;">
+						<li class="custom-flex-container objoc">
+							<span class="custom-label">Documento</span>
+							<input class="custom-input-text sc-full" readonly name="tipo_doc[descripcion]" placeholder="Seleccionar documento" type="search" value="<!--#4DTEXT [Orden_de_compra]FacturaTipo-->">
+							<button type="button" class="show dtc">ver tipos de documentos</button>
+							<input name="tipo_doc[id]" type="hidden" value="<!--#4DTEXT [Orden_de_compra]ID_TipoDocumento-->">
+						</li>
+						
+						<li class="custom-flex-container objoc objfxr">
+							<span class="custom-label">Forma de pago</span>
+							<select class="custom-input-text" id="formas_pagos" name="forma_pago[descripcion]"></select>
+							<button type="button" class="show formas_pago"></button>
+							<input name="forma_pago[id]" id="forma_pago[id]" type="hidden" value="<!--#4DTEXT [Formas_Pago]ID_forma-->">
+						</li>
+						  
+						<!--#4DIF _V3_verifica_permisos_web(_V3_data_username;700)-->
+						<script>
+							var boton = document.getElementById('btnVerFormasDePago');
+							boton.disabled = true;
+							boton.style.display = 'none'; 
+							var observer = new MutationObserver(function(mutations) {
+								mutations.forEach(function(mutation) {
+									if (!boton.disabled) {
+										boton.disabled = true;
+									}
+									boton.style.display = 'none';
+								});
+							});
+							observer.observe(boton, { attributes: true, attributeFilter: ['disabled'] });
+						</script>
+						<!--#4DENDIF-->
+						<!--#4DIF [Formas_Pago]ID_Forma="-1"-->
+						<script>
+							$(document).ready(function() {
+								$('.forma-pago-custom').visible();
+							});
+						</script>
+						<!--#4DENDIF-->
+						<li class="objoc forma-pago-custom">
+							<span>Ingresar forma de pago</span>
+							<span><input name="oc[forma_pago_personalizada]" type="text" value="<!--#4DTEXT [Orden_de_compra]forma_pago_personalizada-->"></span>
+						</li>
+						<li class="custom-flex-container objoc objfxr">
+							<span class="custom-label">Tipo de pago</span>
+							<input class="custom-input-text sc-full" readonly name="tipo_pago[descripcion]" placeholder="Seleccionar tipo de pago" type="search" value="<!--#4DTEXT [Orden_de_compra]Tipo_Pago-->">
+							<button type="button" class="nas show tipopago">ver tipos de pago</button>
+						</li>
+						  
+						
+						<!--#4DIF [parametros]v3_new_account_system-->
+							
+								<li class="objoc objfxr<!--#4DIF Not([Orden_de_compra]Tipo_Pago="TRANSFERENCIA")--> transferencia<!--#4DENDIF-->">
+
+									<span>Cuenta de pago:</span>
+						          
+						            <span><input class="sc-full"   name="contact[cuenta]num" placeholder="Seleccionar cuenta..." type="search" value="Cuenta <!--#4DTEXT [Orden_de_compra]contact_account_number-->"></span>
+									<button type="button" class="show cuentas">ver cuentas</button><button id="add_cuenta"  style="margin-left: 20px; position:absolute;" type="button"><i style="" class="fas fa-plus-square fa-2x"></i></button>
+
+						            
+						            <br>
+						        </li>
+						      
+						        
+						        <br> <br>
+
+
+						<!--4DENDIF-->
+
+						
+						<li class="custom-flex-container input_banco objoc objfxr <!--#4DTEXT tipo_pago-->">
+							<span class="custom-label">Banco</span>
+							<input readonly name="tipo_pago[transferencia][nombre_banco]" class="custom-input-text" placeholder="Seleccionar banco" type="search" value="<!--#4DTEXT [Orden_de_compra]Nombre_Banco-->">
+							<button type="button" class="nas show banco">ver bancos</button>
+							<input name="tipo_pago[transferencia][id_banco]" type="hidden" value="<!--#4DTEXT [Orden_de_compra]ID_Banco-->">
+						</li>
+						<li class="custom-flex-container input_tipo_cuenta objoc objfxr <!--#4DTEXT tipo_pago-->">
+							<span class="custom-label">Tipo de cuenta</span>
+							<input readonly name="tipo_pago[transferencia][tipo_cuenta]" class="custom-input-text" placeholder="Seleccionar tipo de cuenta" type="search" value="<!--#4DTEXT [Orden_de_compra]Tipo_Cuenta-->">
+							<button type="button" class="nas show tipocuenta">ver tipos de cuenta</button>
+						</li>
+						<li class="custom-flex-container input_nro_cuenta objoc objfxr  <!--#4DTEXT tipo_pago-->">
+							<span class="custom-label">Nro. cuenta</span>
+							<input class="custom-input-text" name="tipo_pago[transferencia][nro_cuenta]" placeholder="Seleccionar nro. cuenta" type="text" value="<!--#4DTEXT [Orden_de_compra]Nro_Cuenta-->">
+						</li>
+						  
+
+						<!--4DIF [Parametros]v3_modo_mx-->
+						<li class="custom-flex-container input_clabe objoc objfxr <!--#4DTEXT tipo_pago-->">
+							<span class="custom-label">Clabe Interbancaria:</span>
+							<input class="custom-input-text inputCustom" name="tipo_pago[transferencia][mx_clabe]" placeholder="ingresar Clabe Interbancaria" type="text" value="<!--#4DTEXT [Orden_de_compra]mx_clabe-->">
+						</li>
+						  
+						<!--4DENDIF-->
+						<li class="custom-flex-container">
+							<span class="custom-label">Vencimiento pago:</span>
+							<input class="inputCustom custom-date-input" placeholder="dd-mm-aaaa" type="date" id="fecha_vcto">
+							<span id="percentDateOne" class="custom-percent-span"></span>
+							<input type="hidden" name="oc[fecha_vcto]" value="<!--#4DTEXT [Orden_de_compra]Fecha_Venc_Pago-->">
+						</li>
+						  
+						  
+
+						<li class="custom-flex-container">
+							<span class="custom-label">Vencimiento pago 2:</span>
+							<input class="inputCustom custom-date-input" placeholder="dd-mm-aaaa" type="date" id="fecha_vcto2">
+							<span id="percentDateTwo" class="custom-percent-span"></span>
+							<input type="hidden" name="oc[fecha_vcto2]" value="<!--#4DTEXT [Orden_de_compra]Fecha_Venc_Pago2-->">
+						</li>
+						  
+
+						<li class="custom-flex-container">
+							<span class="custom-label">Vencimiento pago 3:</span>
+							<input class="inputCustom custom-date-input" placeholder="dd-mm-aaaa" type="date" id="fecha_vcto3">
+							<span id="percentDateThree" class="custom-percent-span"></span>
+							<input type="hidden" name="oc[fecha_vcto3]" value="<!--#4DTEXT [Orden_de_compra]Fecha_Venc_Pago3-->">
+						</li>
+						  
+
+						<!--4DIF [Parametros]v3_fxr_considerar_neto_gr-->
+						<br><br>
+						<li class="objfxr" style="background-color:#e8f7e8;padding:3px;width:600px">
+							<span>Considerar inicialmente valor Neto en gasto real (Factura)</span>
+							<!--4DIF [Orden_de_compra]v3_fxr_inicial_neto_en_real-->
+							<input type="checkbox" style="width:30px;height:30px;" name="oc[fxr_considerar_neto_gasto_real]" checked>
+							<!--4DELSE-->
+							<input type="checkbox" style="width:30px;height:30px;" name="oc[fxr_considerar_neto_gasto_real]">
+							<!--4DENDIF-->
+						</li>
+						<!--4DENDIF-->
+
+					</ul>
+
+					<ul class="expandable editable lineal ul-custom datos-extras">
+						<li class="objoc">
+							<span style="width: 200px; padding-bottom: 5px;">Banco Intermediario:</span>
+						</li>
+						<li class="objoc"><span style="width: 160px">No. ABA:</span> <span><input type="text" name="contacto[info][no_aba_bic]" value="<!--#4DVAR v_no_aba_bic-->" class="inputCustom"></span></li>
+						<li class="objoc"><span style="width: 160px">No. Swift (BIC):</span> <span><input type="text" name="contacto[info][no_swift_bic]" value="<!--#4DVAR v_no_swift_bic-->" class="inputCustom"></span></li>
+						<li class="objoc"><span style="width: 160px">Dirección:</span> <span><input type="text" name="contacto[info][direccion_bic]" value="<!--#4DVAR v_direccion_bic-->" class="inputCustom"></span></li>
+						<li class="objoc"><span style="width: 160px">Iban:</span> <span><input type="text" name="contacto[info][iban_banco_intermediario]" value="<!--#4DVAR v_iban_banco_int-->" class="inputCustom"></span></li>
+						<li class="objoc"><span style="width: 160px">Codigo postal:</span> <span><input type="text" name="contacto[info][code_postal_banco_intermediario]" value="<!--#4DVAR v_code_postal_banco_int-->" class="inputCustom"></span></li>
+					
+						<li class="objoc">
+						</li>
+						<li class="objoc">
+
+							<span style="width: 200px; padding-bottom: 5px;">Datos Banco Nacional del Proveedor:</span>
+						</li>
+
+						<li class="objoc"><span style="width: 160px">Nombre del Banco Beneficiario:</span> <span><input type="text" name="contacto[info][beneficiario_bn]" value="<!--#4DVAR v_beneficiario_bn-->" class="inputCustom"></span></li>
+						<li class="objoc"><span style="width: 160px">Código Swift (BIC):</span> <span><input type="text" name="contacto[info][codigo_swift_bn]" value="<!--#4DVAR v_codigo_swift_bn-->" class="inputCustom"></span></li>
+						<li class="objoc"><span style="width: 160px">Dirección de Beneficiario:</span> <span><input type="text" name="contacto[info][direccion_bn]" value="<!--#4DVAR v_direccion_bn-->" class="inputCustom"></span></li>
+						<li class="objoc"><span style="width: 160px">Iban:</span> <span><input type="text" name="contacto[info][iban_banco_nacional]" value="<!--#4DVAR v_iban_banco_nacional-->" class="inputCustom"></span></li>
+						<li class="objoc"><span style="width: 160px">Codigo postal:</span> <span><input type="text" name="contacto[info][code_postal_banco_nacional]" value="<!--#4DVAR v_code_postal_banco_nacional-->" class="inputCustom"></span></li>
+					</ul>
+				</article>
+
+				<article>
+					<h1><strong>Ítems del documento</strong></h1>
+
+					<p style="margin:10px"><span class="search-clas"><label style="font-weight:bold">Clasificación del gasto: </label>&nbsp;&nbsp;<input class="sc-full" style="width:200px" readonly name="oc[origen][clas][des]" title="<!--#4DTEXT [Orden_de_compra]descripcion_cgg-->" placeholder="[Clasificación]" type="search" value="<!--#4DTEXT [Orden_de_compra]descripcion_cgg-->"><button type="button" class="show clasif">ver clasificaciones</button></span></p>
+
+					<div style="padding:5px;">
+						<div>
+							<button id="openModalButton" onclick="upModal()">
+								<svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 35 35" fill="none">
+								  <g>
+								  <path fill-rule="evenodd" clip-rule="evenodd" d="M22.1494 24.0236C22.7646 22.7379 23.1295 22.1196 24.3095 21.4672C25.4055 20.8609 27.0014 20.7306 28.2344 21.2444C28.8073 21.483 29.3047 21.8829 28.9292 22.6252C28.5299 23.4143 27.7782 22.7922 27.1952 22.6446C25.8808 22.3123 24.2955 23.1462 24.0487 24.0252C24.899 24.0217 26.9607 23.7139 26.551 25.0753C26.2799 25.9767 24.5289 25.5137 23.5592 25.6466L23.5573 26.1019C24.5052 26.2334 26.3594 25.7425 26.5685 26.7336C26.8541 28.0865 24.9878 27.676 24.0167 27.7389C24.3045 28.2992 24.5278 28.5599 25.1759 28.8543C27.4049 29.8672 28.3035 27.9578 28.9316 29.1115C29.7773 30.6648 26.2861 31.3432 24.2996 30.2786C23.0292 29.5977 22.8166 29.0689 22.1308 27.7249C21.4109 27.7279 20.7062 27.7473 20.6786 26.9604C20.6674 26.6412 20.8188 26.3769 21.0667 26.2471C21.4969 26.0213 21.802 26.317 21.8862 25.9614C22.0163 25.4129 21.5224 25.7373 21.0656 25.4982C20.7571 25.3366 19.8977 24.0263 22.1494 24.0238V24.0236ZM34.8614 26.7811C35.4373 21.4499 31.3784 17.217 26.6631 16.705C21.3004 16.1229 16.9975 20.1429 16.5039 24.8692C15.9375 30.2928 19.9762 34.5416 24.7304 35.0268C30.1654 35.5814 34.3459 31.5523 34.8614 26.7811Z" fill="white"/>
+								  <path fill-rule="evenodd" clip-rule="evenodd" d="M9.829 8.28638C10.7575 8.75923 12.7511 8.8661 12.8402 11.0262C12.9307 13.2191 11.1989 13.5509 9.90745 13.9002C9.78992 14.9014 9.98835 15.5675 8.80896 15.164C8.65262 14.6726 8.68077 14.4529 8.67312 13.8381C5.51048 13.5255 4.86188 11.6723 5.95081 11.3823C6.83856 11.1459 7.14906 12.2862 8.73188 12.3841L8.73024 9.7227C7.68368 9.19272 5.84066 9.08914 5.76276 7.0034C5.72914 6.10143 6.04702 5.51897 6.57016 5.00868C7.08647 4.50467 7.8105 4.27234 8.67339 4.1898C8.6835 3.68059 8.76851 3.28783 9.30012 3.3045C9.85798 3.32227 9.77926 3.77079 9.94107 4.18488C10.7364 4.39014 12.4466 4.73481 12.4406 5.64224C12.4305 7.12995 10.6375 5.87347 9.85606 5.67367L9.82873 8.28693L9.829 8.28638ZM8.44817 0.122457C3.5953 0.529983 -0.452637 4.65035 -0.0574102 9.98045C0.302011 14.8265 4.51695 18.8886 9.8536 18.4819C14.6961 18.1129 18.7771 13.9182 18.3469 8.5567C17.9615 3.75712 13.7026 -0.318962 8.44817 0.122184V0.122457Z" fill="white"/>
+								  <path fill-rule="evenodd" clip-rule="evenodd" d="M5.31144 23.6683C6.64035 26.3444 8.64354 28.1379 11.0554 29.7637L11.3235 29.97C10.957 30.3281 10.2611 30.3617 10.4043 31.2273C10.5043 31.8327 11.1076 32.064 11.7357 31.7658C14.9644 30.2321 14.7272 30.0534 13.9512 28.6023C13.3065 27.3961 12.9566 26.1774 11.9461 26.595C11.2937 26.8645 11.4632 27.468 11.6698 28.0855C10.1804 27.3051 8.36748 25.3514 7.47426 23.9645C6.07292 21.7889 6.04368 20.0049 5.35107 19.7898C4.72735 19.5963 4.20858 20.0035 4.19983 20.5857C4.18808 21.3611 5.00641 23.0544 5.31117 23.6683H5.31144Z" fill="white"/>
+								  <path fill-rule="evenodd" clip-rule="evenodd" d="M23.153 7.09033C24.436 7.6542 26.5524 9.93673 27.3458 11.1984C27.8517 12.0025 28.356 12.9222 28.6876 13.9568C28.8674 14.5176 28.9215 15.149 29.4001 15.3475C30.0515 15.6175 30.6159 15.2078 30.6263 14.5729C30.6386 13.8029 29.8481 12.2026 29.5392 11.5603C28.5361 9.47454 27.913 9.12796 26.9301 7.97316C26.7133 7.71843 26.6792 7.69355 26.4223 7.4738C25.7474 6.89654 25.8373 6.82438 24.6948 6.01261C24.2925 5.72671 23.885 5.50969 23.4643 5.21013C23.8522 4.87312 24.4464 4.84688 24.4363 4.09688C24.4278 3.48081 23.8694 3.09952 23.2183 3.33786C22.8187 3.48409 20.6636 4.70803 20.5154 4.92314C20.1065 5.51735 21.1135 7.07639 21.5634 7.87258C21.8427 8.36675 22.0674 8.83359 22.8209 8.5958C23.5236 8.37413 23.3758 7.70613 23.1527 7.0906L23.153 7.09033Z" fill="white"/>
+								  <path fill-rule="evenodd" clip-rule="evenodd" d="M9.82764 10.382L9.82791 11.8396V12.1129L9.83884 12.465C11.6909 12.2493 11.6985 10.3842 9.82873 9.97745L9.82764 10.382Z" fill="white"/>
+								  <path fill-rule="evenodd" clip-rule="evenodd" d="M8.73381 7.9931L8.73107 5.59195C7.00066 5.64743 6.87794 7.71021 8.73381 7.9931Z" fill="white"/>
+								  </g>
+								</svg>
+								Moneda
+							</button>
+						</div>
+						<div class="section-moneda-valor-cambio">
+							<span style="vertical-align:middle;font-weight:bold;">Valor cambio: </span><span class="full-width">
+							<span><input name="oc[moneda][valor_cambio]" onchange="compras.changesMoneda();" class="filltext" data-moneda="<!--#4DTEXT V3_MONEDA-->" data-valorcambio="<!--#4DHTML String([Orden_de_compra]v3_valor_cambio;"&xml")-->" type="text" value="<!--#4DHTML [Orden_de_compra]v3_valor_cambio-->" style="width:50px;text-align:right;"></span>
+						</div>
+					</div>
+
+					<table id="items-gastos" class="items itemsoc" data-impuesto="<!--#4DTEXT [Parametros]Iva-->" style="min-height: 200px;min-width: 1000px !important;">
+						<thead>
+							<tr>
+								<th class="container-menu-origen" style="background-color:<!--#4DVAR vColorCorporativoCSS--> !important;">
+									<button style="zoom: 140%" class="ui-icon ui-icon-plus add items dropdown-button"></button>
+									<ul id="dropdown_menu_" class="menu-origen dropdown-menu">
+										<!--#4DIF _V3_verifica_permisos_web(_V3_data_username;442)-->
+										<li><a style="color:black!important" data-origen="GASTO GENERAL" href="#">Gasto general</a></li>
+										<!--#4DENDIF-->
+										<!--#4DIF _V3_verifica_permisos_web(_V3_data_username;440)-->
+										<li><a style="color:black!important" data-origen="PROYECTO" href="#"><!--#4DTEXT _V3_capitalizeString(etiqueta_negocio)--></a></li>
+										<!--#4DENDIF-->
+										<li><a style="color:black!important" data-origen="PRESUPUESTO" href="#">Presup. de Gastos</a></li>
+										<!--#4DENDIF-->
+									</ul>
+									<input required readonly type="hidden" name="oc[origen]" value="<!--#4DTEXT [Orden_de_compra]Origen_OC-->">
+								</th>
+								<th>Ítem</th>
+								<th>Cuenta</th>	
+								<th>Código</th>
+								<th>Nombre</th>
+								<th>Origen</th>
+								<th class="objoc">Imp.</th>
+								<th>Cant.</th>
+								<th class="columna-dias">Días</th>
+								<th>P.U.</th>
+								<th>Subtotal</th>
+								<th>Dscto</th>
+								<th>Total</th>
+								<th>Justificado</th>
+								<th style="display: none;" class="objfxr COL-IVA-IGV"><!--#4DVAR _V3_IVAName--></th>
+								<th width="10px"><button class="dropdown-button actions items"></button></th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+						<tfoot style="display:none">
+							<tr>
+								<th colspan="6"></th>
+								<th></th>
+								<th></th>
+								<th class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span><input type="text" readonly name="oc[suma_subtotal]" value=""></span></th>
+								<th class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span><input type="text" readonly name="oc[suma_dscto]" value=""></span></th>
+								<th class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span><input type="text" readonly name="oc[suma_total]" value=""></span></th>
+								<th class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span><input type="text" readonly name="oc[suma_justificado]" value=""></span></th>
+								<th></th>
+							</tr>
+						</tfoot>
+					</table>
+
+				</article>
+
+				<article class="right" style="position:relative">
+					<h1>Totales</h1>
+					<section class="totales-post-save">
+						<ul class="css-boxtotales section-nc">
+							<li><span><button class="info" title="Monto neto"></button>Descuento nc</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input class="" readonly type="text" name="oc[total_neto_nc]" value="<!--#4DTEXT [Orden_de_compra]Total_NC_x-->"></span></li>
+						</ul>
+						<ul class="objfxr css-boxtotales">
+							<li class="section-solicitado"><span><strong>(+)</strong> Solicitado</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input readonly type="text" name="oc[total]" value="<!--#4DTEXT [Orden_de_compra]Total_OC-->"></span></li>
+							<li class="section-pagado"><span>Pagado</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input readonly type="text" name="oc[total_pagado]" value="<!--#4DTEXT [Orden_de_compra]Total_Abonos-->"></span></li>
+							<li><span><button class="info" title="Monto con impuesto"></button><strong>(-)</strong> Rendido</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input class="" readonly type="text" name="oc[total_justificado]" value="<!--#4DTEXT [Orden_de_compra]Total_justificado-->"></span></li>
+							<li><span ><strong>(-)</strong> Total devuelto</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input style="border-bottom:2px solid gray!important;font-weight:bold" readonly type="text" name="oc[total_cobros]" value="<!--#4DTEXT [Orden_de_compra]fxr_total_ingresos-->"></span></li>
+							<li><span><button class="info" title="saldo = (solicitado o pagado) - rendido - devuelto"></button>Saldo</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input class="" readonly type="text" name="oc[saldo_total_fxr]" value="<!--#4DTEXT [Orden_de_compra]fxr_saldo_total-->"></span></li>
+							<li style="display:none"><span><button class="info" title="Monto descontado notas de crédito en el caso que exista"></button><strong>(+)</strong> Rendido (neto)</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input style="border-bottom:2px  solid gray!important;font-weight:bold" readonly type="text" name="oc[netos_dtc]" value="<!--#4DTEXT [Orden_de_compra]total_gasto_real-->"></span></li>
+						</ul>
+						<ul class="objoc css-boxtotales">
+							<li><span>Saldo por justificar</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input class="" readonly type="text" name="oc[total_por_justificar]" value="<!--#4DTEXT [Orden_de_compra]Saldo_Consolidar-->"></span></li>
+							<li><span>Justificado</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input class="" readonly type="text" name="oc[total_justificado]" value="<!--#4DTEXT [Orden_de_compra]Total_justificado-->"></span></li><br>
+							<li><span>Saldo por pagar</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input class="" readonly type="text" name="oc[total_por_pagar]" value="<!--#4DTEXT [Orden_de_compra]Saldo-->"></span></li>
+							<li><span>Pagado</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input class="" readonly type="text" name="oc[total_pagado]" value="<!--#4DTEXT [Orden_de_compra]Total_Abonos-->"></span></li>
+						</ul>
+						<ul class="css-boxtotales section-gasto-real">
+							<li><span><button class="info" title="Total gasto real = saldo + rendido valor neto"></button> Total gasto real</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input readonly type="text" name="oc[total_gasto_real]" value="<!--#4DTEXT [Orden_de_compra]total_gasto_real-->"></span></li>
+						</ul>
+					</section>
+					<section>
+						<ul class="objoc css-boxtotales">
+							<li><span>Subtotal</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input class="" type="text" readonly name="oc[sub_total]" value=""></span></li>
+
+							<li><span>Descuento</span><span class="numeric percent"><input readonly class="dscto" type="text" name="oc[porcentaje_descuento]" value="<!--#4DVAR Replace string(String([Orden_de_compra]Porcentaje_Desc;"&xml");".";",")-->"> %</span> <span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input class="" readonly class="dscto" type="text" name="oc[descuento]" value=""></span></li>
+
+							<li><span>Exento</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input class="" type="text" readonly name="oc[total_exento]" value=""></span></li>
+							<li><span name="label-neto-hono">Neto</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input class="" readonly type="text" name="oc[neto]" value=""></span></li>
+
+							<li id="ivali">
+								<span name="label-iva-ret"><!--#4DTEXT _V3_IVAName--></span>
+								<span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input readonly type="text" name="oc[impuesto]" value=""></span>
+							</li>
+
+						
+							<!--#4DLOOP aAdicionalImpId-->
+								<li class="extra" id="<!--#4DTEXT aAdicionalImpIdName{aAdicionalImpId}-->" data-impvalue="<!--#4DTEXT aAdicionalImpValue{aAdicionalImpId}-->" data-impname="<!--#4DTEXT aAdicionalImpName{aAdicionalImpId}-->" data-impid="<!--#4DTEXT aAdicionalImpId{aAdicionalImpId}-->" data-imptipo="<!--#4DTEXT aAdicionalImpTipo{aAdicionalImpId}-->" >
+
+									<span ><!--#4DTEXT aAdicionalImpName{aAdicionalImpId}--></span>
+									
+									<input onclick="update_impuesto_multiple(this)" impid="<!--#4DTEXT aAdicionalImpId{aAdicionalImpId}-->" impvalue="<!--#4DTEXT aAdicionalImpValue{aAdicionalImpId}-->" class="check" name="oc[check_auto_impuesto_<!--#4DTEXT aAdicionalImpIdName{aAdicionalImpId}-->]" type="checkbox" auto="1"  <!--#4DIF aAdicionalImpCheck{aAdicionalImpId}-->checked<!--#4DENDIF--> >
+								
+									<span class="numeric percent"><input tipo="porc" class=" multiple <!--#4DTEXT aAdicionalImpAuto{aAdicionalImpId}--> porc" type="text" onchange="update_impuesto_multiple(this)" impid="<!--#4DTEXT aAdicionalImpId{aAdicionalImpId}-->" name="oc[check_impuesto_<!--#4DTEXT aAdicionalImpIdName{aAdicionalImpId}-->]" auto="<!--#4DTEXT aAdicionalImpAuto{aAdicionalImpId}-->" value="<!--#4DTEXT aAdicionalImpMPorc{aAdicionalImpId}-->"> %</span>
+									
+									
+									<span class="numeric currency "><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input tipo="total" class="multiple   <!--#4DTEXT aAdicionalImpAuto{aAdicionalImpId}-->" impid="<!--#4DTEXT aAdicionalImpId{aAdicionalImpId}-->"  type="text" name="oc[impuesto_<!--#4DTEXT aAdicionalImpIdName{aAdicionalImpId}-->]" value="<!--#4DTEXT aAdicionalImpMValor{aAdicionalImpId}-->" <!--#4DIF NOT( aAdicionalImpAuto{aAdicionalImpId})--> onchange="update_impuesto_multiple(this)"<!--#4DENDIF--> auto="<!--#4DTEXT aAdicionalImpAuto{aAdicionalImpId}-->"> </span>
+								</li>
+							<!--#4DENDLOOP-->
+
+
+							<input class="ajuste_imp" type="hidden" name="oc[total_ajuste_impuesto]">
+							
+
+
+
+							<!--#4DIF mostrarOpcionServicio--><li style="position:absolute;right:180px;"><span>Servicio</span> <span class="numeric percent"><input class="porcentaje_servicio filltext" type="text" name="oc[porcentaje_servicio]" value="<!--#4DVAR Replace string(String([Orden_de_compra]pe_porcentaje_servicio;"&xml");".";",")-->"></span>%</li><!--#4DENDIF-->
+
+							<li><span>Adicional</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input class="" readonly type="text" name="oc[total_adicional]" value=""></span></li>
+							
+							<li><span>Ajuste (manual)</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input readonly type="text" name="oc[total_ajuste_pre]" value=""></span></li>
+							<input type="hidden" name="oc[total_ajuste]">
+
+							<li><span>Total</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input class="" readonly type="text" name="oc[total]" value=""></span></li>
+						</ul>
+
+						<ul class="objfxr css-boxtotales">
+							<!--<li><span>Ajuste (manual)</span><span class="numeric currency"><!- -#4DVAR _V3_defaultCurrencySymbol- -> <input readonly type="text" name="oc[total_ajuste_pre]" value=""></span></li>
+							<input type="hidden" name="oc[total_ajuste]">-->
+							<li><span>Total</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input class="" readonly type="text" name="oc[total]" value="<!--#4DTEXT [Orden_de_compra]Total_OC-->"></span></li>
+
+						</ul>
+
+						
+						<div style="margin-right:10px; display: none;" class="u-section-button-ajustes-impuesto objoc">
+							<span style=" display: none;">Ajustar monto impuesto (<!--#4DTEXT _V3_IVAName-->)</span>
+							<button style="transform:scale(0.8);display: none;" class="u-redondear-restar-impuesto">-</button><button style=";transform:scale(0.8);display: none;" class="u-redondear-sumar-impuesto">+</button>
+						</div>
+
+						<div style="margin-right:10px" class="u-section-button-ajustes">
+							<span>(Ajustar monto total)</span>
+							<button class="u-redondear-restar">-</button>
+							<button class="u-redondear-sumar">+</button>
+						</div>
+
+					</section>
+				</article>
+
+				<article>
+					<h1>Información adicional</h1>
+					<section>
+						<ul>
+							<!--#4DIF mostrarOpcionDetraccion-->
+							<li style="margin:5px 0 5px 0">
+								<span style="vertical-align:top">Aplica Detracción <strong></strong></span>
+								<input type="checkbox" name="oc[detraccion_aplica]" <!--#4DIF [Orden_de_compra]pe_aplica_detraccion-->checked<!--#4DENDIF-->>
+								<input placeholder="Porcentaje" class="filltext obj-detraccion" style="width:50px;" type="number" max="100" min="0" name="oc[detraccion_porcentaje]" value="<!--#4DTEXT [Orden_de_compra]pe_porcentaje_detraccion-->"><label class="obj-detraccion">%</label>
+								<input class="obj-detraccion" style="margin-left:2px;width:100px;" type="text" name="oc[detraccion_monto]" value="0">
+								<input placeholder="Ingresar código" class="filltext obj-detraccion" style="margin-left:2px;width:100px;" type="text" name="oc[detraccion_codigo]" value="<!--#4DTEXT [Orden_de_compra]pe_cod_detraccion-->">
+								<input type="hidden" name="oc[detraccion_aplica_estado]" value="false">
+							</li>
+							<!--#4DENDIF-->
+							<li class="block-cambio">
+								<span style="vertical-align:top">Confirmar valor cambio <strong></strong></span><span class="full-width">
+								<input type="text" name="oc[valor_cambio]" class="valor-moneda" value="0">
+							</li>
+
+							<li class="objoc"><span style="vertical-align:top">Observaciones (proveedor)</span> <span class="full-width"><textarea class="filltext" style="height:80px" name="oc[comentarios]"><!--#4DTEXT [Orden_de_compra]comentarios--></textarea></span></li>
+
+							<li class="objoc"><span style="vertical-align:top">Observaciones internas (No se muestran al proveedor)</span> <span class="full-width"><textarea class="filltext" style="height:80px" name="oc[comentarios_internos]"><!--#4DTEXT [Orden_de_compra]v3_notas_internas_oc--></textarea></span></li>
+							
+							<li class="objfxr"><span style="vertical-align:top">Observaciones</span> <span class="full-width"><textarea class="filltext" style="height:80px" name="oc[comentarios_fxr]"><!--#4DTEXT [Orden_de_compra]v3_comentario_rxf--></textarea></span></li>
+						</ul>
+					</section>
+				</article>
+
+				<!--4DIF [Parametros]OC_Muestra_HE-->
+				<article>
+					<h1>Contrato</h1>
+					<section>
+						<ul>
+							<li><span>Fecha inicio</span><span><input class="date datepicker filltext" type="text" name="contrato[f_inicio]" value="<!--#4DTEXT [Orden_de_compra]PRM_date1-->"></span></li>
+							<li><span>Fecha termino</span><span><input class="date datepicker filltext" type="text" name="contrato[f_termino]" value="<!--#4DTEXT [Orden_de_compra]PRM_date2-->"></span></li>
+							<li><span>Cantidad HE</span><span><input class="filltext" type="text" name="contrato[cantidad_he]" value="<!--#4DTEXT [Orden_de_compra]PRM_numero1-->"></span></li>
+							<li><span>Valor HE</span><span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input type="text" class="filltext" name="contrato[valor_he]" value="<!--#4DTEXT [Orden_de_compra]v3_contrato_valor_he-->"></span></li>
+							<li><span>Sindicato</span><span><!--#4DIF [Orden_de_compra]PRM_boleano1--><input type="checkbox" name="chk[sindicato]" checked><input name="contrato[sindicato]" type="hidden" value="true"><!--#4DELSE--><input type="checkbox" name="chk[sindicato]"><input name="contrato[sindicato]" type="hidden" value="false"><!--#4DENDIF--></span></li>
+						</ul>
+					</section>
+				</article>
+				<!--4DENDIF-->
+
+				<article id="scrollPagos" class="bg-white">
+					<!--<h1>Pagos directos (<span>0</span>)</h1>-->
+					<h1>Pagos directos (<span id="total_pagos">0</span>)</h1>
+					
+					<!--<div style="margin-bottom:5px"><button class="add orden-pago">Crear</button></div>-->
+
+					<div class="options-egresos">
+						<button class="dropdown-button actions egresos">Crear</button>
+					</div>
+
+					<h3 class="tituloh3"></h3>
+					<table class="pagos" width="99%">
+						<thead>
+							<tr>
+								<th width="12%">Número</th>
+								<th width="12%">Emisión</th>
+								<th width="12%">Fecha de pago</th>
+								<th width="20%">Pagado a</th>
+								<th width="12%">Tipo</th>
+								<th width="10%">Ch/Tr</th>
+								<th width="10%">Estado</th>
+								<th width="10%" class="right">Total OP</th>
+								<th width="2%"></th>
+							</tr>
+						</thead>
+						<tbody class="ui-selectable bg-white"></tbody>
+						<tfoot>
+							<tr>
+								<th class="bg-white" colspan="7"></th>
+								<th class="right"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <span class="op_total_oc"></span></th>
+								<th class="bg-white"></th>
+							</tr>
+						</tfoot>
+					</table>
+				</article>
+
+				<article id="scrolldtc" class="bg-white">
+					<h1><label>Documentos de compra</label> (<span class="counts-dtc">0</span>)</h1>
+					<div class="container-options">
+						<div data-options="add">
+							<button class="add dtc" id="addPago">Crear</button>
+							<!-- <button style="margin-left:5px" class="addexist dtc">Agregar existente</button> -->
+						</div>
+						
+						<div >
+							<button class="export dtc">Exportar</button>
+						</div>
+						<!--4DIF [Parametros]v3_accounting-->
+							<div >
+								<button class="search dtc-pend">Asociar pendientes</button>
+							</div>
+						<!--4DENDIF-->
+						<!--4DIF [Parametros]v3_modo_mx-->
+						<div>
+							
+							<button class="add xml"><a href="/v3/views/compras/dialog/xml_load.shtml" data-size="xm-small" class="load xml">Cargar xml</a></button>
+							
+						</div>
+						<!--4DENDIF-->
+
+						<!--<div data-options="mas">
+							<button class="options dtc">Más</button>
+						</div>-->
+
+						<div >
+							<button class="btn btn-danger delete-dtc-manual" >Eliminar</button>
+						</div>
+
+						<div>
+							<button class="dtc-load-doc">Cargar via IA</button>
+						</div>
+					</div>
+					<table class="dtcs" width="99%">
+						<thead>
+							<tr>
+								<th width="10%">Número</th>
+								<th width="5%">Emisión</th>
+								<th width="7%">Recepción</th>
+								<th width="5%">Documento</th>
+								<th width="13%">Proveedor</th>
+								<th width="15%"><span class="objoc">Referencia</span><span class="objfxr">Concepto</span></th>
+								<th width="5%">Estado</th>
+								<th class="right" width="10%">Neto</th>
+								<th class="right" width="9%">Exento</th>
+								<th class="right" width="8%">Impuesto</th>
+								<th class="right" width="8%">Adicional</th>
+								<th class="center" width="10%">Total</th>
+								<th> <input type="checkbox" class="all_dtc_docs"> </th>
+								<th width="1%" title="Acción"></th>
+							</tr>
+						</thead>
+						<tbody class="ui-selectable bg-white"></tbody>
+						<tfoot>
+							<tr>
+								<td class="bg-white" colspan="7"></td>
+								<td class="right bg-white"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <span class="numeric currency" name="suma_dtc_netos">0</span></td>
+								<td class="right bg-white"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <span class="numeric currency" name="suma_dtc_exentos">0</span></td>
+								<td class="right bg-white"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <span class="numeric currency" name="suma_dtc_impuestos">0</span></td>
+								<td class="right bg-white"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <span class="numeric currency" name="suma_dtc_adicional">0</span></td>
+								<td class="right bg-white"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <span class="numeric currency" name="suma_dtc_total">0</span></td>
+							</tr>
+						</tfoot>
+					</table>
+				</article>
+
+				<article id="scrollPagos-dtc" class="bg-white">
+					<h1>Pagos realizados desde los documentos (<span>0</span>)</h1>
+					<table class="pagos-dtc" width="99%">
+						<thead>
+							<tr>
+								<th width="7%">Número</th>
+								<th width="7%">Emisión</th>
+								<th width="12%">Fecha de pago</th>
+								<th width="20%">Pagado a</th>
+								<th width="12%">Tipo</th>
+								<th width="10%">Ch/Tr</th>
+								<th width="10%">Estado</th>
+								<th width="10%" class="right">Abono</th>
+								<th width="10%" class="right">Total</th>
+								<th width="2%"></th>
+							</tr>
+						</thead>
+						<tbody class="ui-selectable bg-white"></tbody>
+						<tfoot>
+							<tr>
+								<td class="bg-white" colspan="7"></td>
+								<td class="right"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <span class="op_abono_dtc"></span></td>
+								<td class="right"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <span class="op_total_dtc"></span></td>
+								<td class="bg-white"></td>
+							</tr>
+						</tfoot>
+					</table>
+				</article>
+
+				<article id="scrollnc" class="bg-white">
+					<h1><label>Notas de crédito</label> (<span>0</span>)</h1>
+					<table class="dtcsnc" width="99%">
+						<thead>
+							<tr>
+								<th width="auto">Folio NC</th>
+								<th width="auto">Emisión</th>
+								<th width="auto">Folio doc origen</th>
+								<th width="auto">Descripcion</th>
+								<th width="auto">Tipo</th>
+								<th width="auto">Neto</th>
+								<th width="auto">Exento</th>
+								<th width="auto" class="right">Impuesto</th>
+								<th width="auto" class="right">Adicional</th>
+								<th width="auto" class="right">Total</th>
+								<th width="2%"></th>
+							</tr>
+						</thead>
+						<tbody class="ui-selectable bg-white"></tbody>
+						<tfoot>
+							<tr>
+								<td class="bg-white" colspan="5"></td>
+								<td class="right bg-white"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <span class="numeric currency" name="suma_dtc_nc_netos">0</span></td>
+								<td class="right bg-white"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <span class="numeric currency" name="suma_dtc_nc_exentos">0</span></td>
+								<td class="right bg-white"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <span class="numeric currency" name="suma_dtc_nc_impuestos">0</span></td>
+								<td class="right bg-white"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <span class="numeric currency" name="suma_dtc_nc_adicional">0</span></td>
+								<td class="right bg-white"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <span class="numeric currency" name="suma_dtc_nc_total">0</span></td>
+							</tr>
+						</tfoot>
+					</table>
+				</article>
+
+				<article id="scrolldtv" class="bg-white">
+					<h1><label>Documentos de venta</label> (<span>0</span>)</h1>
+					<div class="container-options">
+						<div data-options="add"><button class="add dtv">Crear</button><button style="margin-left:5px" class="addexist dtv">Agregar existente</button></div>
+						<!--<div data-options="mas"><button class="options dtc">Más</button></div>-->
+					</div>
+					<table class="dtvs" width="99%">
+						<thead>
+							<tr>
+								<th width="10%">Número</th>
+								<th width="5%">Emisión</th>
+								<th width="5%">Documento</th>
+								<th width="13%">Proveedor</th>
+								<th width="15%"><span class="objoc">Referencia</span><span class="objfxr">Concepto</span></th>
+								<th width="5%">Estado</th>
+								<th class="right" width="10%">Neto</th>
+								<th class="right" width="9%">Exento</th>
+								<th class="right" width="8%">Impuesto</th>
+								<th class="right" width="8%">Adicional</th>
+								<th class="right" width="10%">Total</th>
+								<th width="1%" title="El documento cuenta con una nota de crédito">Nc</th>
+								<th width="1%" title="Acción"></th>
+							</tr>
+						</thead>
+						<tbody class="ui-selectable bg-white"></tbody>
+						<tfoot>
+							<tr>
+								<th class="bg-white" colspan="6"></th>
+								<th class="right bg-white"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <span class="numeric currency" name="suma_dtc_netos">0</span></th>
+								<th class="right bg-white"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <span class="numeric currency" name="suma_dtc_exentos">0</span></th>
+								<th class="right bg-white"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <span class="numeric currency" name="suma_dtc_impuestos">0</span></th>
+								<th class="right bg-white"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <span class="numeric currency" name="suma_dtc_adicional">0</span></th>
+								<th class="right bg-white"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <span class="numeric currency" name="suma_dtc_total">0</span></th>
+							</tr>
+						</tfoot>
+					</table>
+				</article>
+
+				<article id="scrollCobros" class="bg-white">
+					<h1>Depósitos (<span>0</span>)</h1>
+					<div style="margin-bottom:5px"><button class="add cobro">Crear</button></div>
+					<table class="cobros" width="99%">
+						<thead>
+							<tr>
+								<th width="5%">Número</th>
+								<th width="20%">Emisión</th>
+								<th width="20%">Cta. Cte</th>
+								<th width="20%">Tipo</th>
+								<th width="10%">Estado</th>
+								<th width="25%">Monto</th>
+							</tr>
+						</thead>
+						<tbody class="ui-selectable bg-white"></tbody>
+						<tfoot>
+							<tr>
+								<th class="bg-white" colspan="5"></th>
+								<th class="numeric currency bg-white"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input class="decinot" style="width:200px!important" readonly name="oc[suma_cobros]" type="text" value="<!--#4DTEXT [Orden_de_compra]fxr_total_ingresos-->"></th>
+							</tr>
+						</tfoot>
+					</table>
+				</article>
+
+				<article class="info-comprobantes bg-white">
+					<h1>Comprobantes (<span>0</span>)</h1>
+					<table class="comprobantes" width="99%">
+						<thead>
+							<tr>
+								<th width="5%">Numero</th>
+								<th width="35%">Descripcion</th>
+								<th width="30%">fecha Registro</th>
+								<th width="30%">Tipo documento</th>
+							</tr>
+						</thead>
+						<tbody class="ui-selectable">
+							
+						</tbody>
+						<tfoot>						
+						</tfoot>
+					</table>
+				</article>
+
+
+				<article class="info-comprobantes-detalle bg-white">
+					<h1>Detalle de comprobantes</h1>
+					<table id="detail"  class="results" style="display: table;" >
+						<thead>
+						<tr>
+							<th >Nro</th>
+							<th >Tipo</th>
+							<th >Numero doc</th>
+							<th >Código</th>
+							<th >Cuenta contable</th>
+							<th >Debe</th>
+							<th >Haber</th>
+							<th ></th>
+						</tr>
+						</thead>
+						<tbody name="detail" class="ui-selectable">
+						
+						</tbody>  
+					</table>
+				</article>
+
+			</footer>
+		</section>
+
+
+		<!-- Modal -->
+		<div class="atm-import-backdrop" id="importOverlayCore">
+			<div class="atm-import-container">
+				<!-- Modal Header -->
+				<div class="atm-import-header">
+					<h2 class="atm-import-heading">Importar Documento</h2>
+					<p class="atm-import-description">Sube un archivo PDF o imagen para procesarlo</p>
+					<button class="atm-dismiss-trigger" id="dismissTriggerBtn">
+						<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<line x1="18" y1="6" x2="6" y2="18"></line>
+							<line x1="6" y1="6" x2="18" y2="18"></line>
+						</svg>
+					</button>
+				</div>
+
+				<!-- Modal Body - Upload -->
+				<div class="atm-import-content" id="uploadZoneCore">
+					<div class="atm-dropzone-surface" id="dropSurfaceCore">
+						<div class="atm-dropzone-emblem">📄</div>
+						<div class="atm-dropzone-label">Arrastra tu archivo aquí</div>
+						<div class="atm-dropzone-sublabel">o haz clic para seleccionar</div>
+						<div class="atm-format-chips">
+							<span class="atm-format-chip">.PDF</span>
+							<span class="atm-format-chip">.JPG</span>
+							<span class="atm-format-chip">.PNG</span>
+						</div>
+						<input type="file" id="fileInputCore" class="atm-file-selector" accept=".pdf,.jpg,.jpeg,.png">
+					</div>
+
+					<!-- Selected File Display -->
+					<div class="atm-selected-preview" id="filePreviewCore">
+						<div class="atm-preview-layout">
+							<div class="atm-preview-emblem" id="fileEmblemCore">📄</div>
+							<div class="atm-preview-metadata">
+								<div class="atm-preview-filename" id="fileNameCore">archivo.pdf</div>
+								<div class="atm-preview-filesize" id="fileSizeCore">2.4 MB</div>
+							</div>
+							<button class="atm-remove-trigger" id="removeFileTrigger">
+								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+									<line x1="18" y1="6" x2="6" y2="18"></line>
+									<line x1="6" y1="6" x2="18" y2="18"></line>
+								</svg>
+							</button>
+						</div>
+					</div>
+
+					<!-- Item Selector Section - UPDATED -->
+					<div class="atm-item-selector" id="itemSelectorCore">
+						<div class="atm-selector-header">
+							<span class="atm-selector-label">Seleccionar ítem a justificar</span>
+							<button class="atm-select-all-btn" id="selectAllBtn" style="display: none;">
+								Seleccionar todos
+							</button>
+						</div>
+						<div class="atm-selector-loading" id="itemsLoadingCore">
+							<div class="atm-mini-spinner"></div>
+							<span>Cargando ítems...</span>
+						</div>
+						<div class="atm-selector-list" id="itemsListCore"></div>
+						<div class="atm-selector-error" id="itemsErrorCore">
+							<span>❌ Error al cargar los ítems</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Modal Body - Loading -->
+				<div class="atm-processing-view" id="processingViewCore">
+					<div class="atm-spinner-frame">
+						<div class="atm-spinner-aura"></div>
+						<div class="atm-spinner-ring"></div>
+					</div>
+					<div class="atm-processing-label">Procesando documento...</div>
+					<div class="atm-processing-sublabel">Estamos analizando tu archivo con IA</div>
+					<div class="atm-progress-track">
+						<div class="atm-progress-indicator"></div>
+					</div>
+				</div>
+
+				<!-- Modal Footer -->
+				<div class="atm-import-actions" id="importActionsCore">
+					<button class="atm-action-btn atm-action-cancel" id="cancelActionBtn">
+						Cancelar
+					</button>
+					<button class="atm-action-btn atm-action-confirm" id="confirmBtnCore" disabled>
+						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+							<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+							<polyline points="7 10 12 15 17 10"></polyline>
+							<line x1="12" y1="15" x2="12" y2="3"></line>
+						</svg>
+						Importar
+					</button>
+				</div>
+			</div>
+		</div>
+
+	
+	</body>
+</html>

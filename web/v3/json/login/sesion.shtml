@@ -1,0 +1,12 @@
+{
+	"login": <!--#4DIF Not(Undefined(login))-->"<!--#4DHTML login-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"isLogin": <!--#4DIF isLogin-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"nodeUrl": <!--#4DIF Not(Undefined(nodeUrl))-->"<!--#4DHTML nodeUrl-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"nodejs_public_ipaddr": <!--#4DIF Not(Undefined(nodejs_public_ipaddr))-->"<!--#4DHTML nodejs_public_ipaddr-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"nodejs_port": <!--#4DIF Not(Undefined(nodejs_port))-->"<!--#4DHTML nodejs_port-->"<!--#4DELSE-->null<!--#4DENDIF-->
+
+}
+
+
+
+

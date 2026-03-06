@@ -1,0 +1,37 @@
+<table id="grilla" class="list-grilla" border="0" cellpadding="0" cellspacing="0" hspace="0" vspace="0">
+	<thead>
+		<tr bgcolor="#CCCCCC">
+			<th>Tipo</th>
+			<th>Cat / Tit</th>
+			<th>Items / Serv.</th>
+			<th>Folio</th>
+			<th>Tipo Doc.</th>
+			<th>Fecha Emi.</th>
+			<th>Proveedor</th>
+			<th>Referencia</th>
+			<th>Códigos</th>
+			<th>Neto</th>
+			<th>Total</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		<!--#4DLOOP tipoRendDTC-->
+		<tr bgcolor="#F5ECCE">
+			<td class="center color-verde"><!--#4DVAR tipoRendDTC{tipoRendDTC}--></td>
+			<td class="center color-verde"><!--#4DVAR CatRendDTC{tipoRendDTC}--></td>
+			<td class="center color-verde"><!--#4DVAR ItemsRendDTC{tipoRendDTC}--></td>
+			<td class="center"><!--#4DVAR folioRendDTC{tipoRendDTC}--></td>
+			<td class="center"><!--#4DVAR tipoDocRendDTC{tipoRendDTC}--></td>
+			<td class="center"><!--#4DVAR fechaRendDTC{tipoRendDTC}--></td>	
+			<td class="left"><!--#4DVAR provRendDTC{tipoRendDTC}--></td>
+			<td class="left"><!--#4DVAR refRendDTC{tipoRendDTC}--></td>
+			<td class="left"><!--#4DVAR codRendDTC{tipoRendDTC}--></td>
+			<td class="right"><!--#4DVAR totalNetoRendDTC{tipoRendDTC}--></td>
+			<td class="right"><!--#4DVAR totalRendDTC{tipoRendDTC}--></td>
+			<td class="center"><a rel="<!--#4DVAR idDocRendDTC{tipoRendDTC}-->" class="delete-dtc-rend" href="#">Eliminar</a>
+			</td>
+		</tr>
+		<!--#4DENDLOOP-->
+	</tbody>
+</table>

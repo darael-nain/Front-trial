@@ -1,0 +1,34 @@
+<fieldset>
+	<legend>Condiciones generales</legend>
+
+	<article>
+	    <div>
+	    	<label>De pago:</label>	    	
+	    	<input readonly name="negocio[forma_pago]" placeholder="Seleccionar forma de pago" type="search" value="<!--#4DTEXT [Formas_Pago]Desc_forma_pago-->">
+	    	<button type="button" class="show forma-pago">ver formas de pagos</button>    	
+	    	<input name="negocio[idforma_pago]" type="hidden" value="<!--#4DTEXT [Formas_Pago]ID_forma-->">
+	    </div>
+	</article>
+
+	<article>
+		<div>
+	    	<label>Validez de cotización:</label>	    	
+	    	<input readonly name="negocio[validez]" placeholder="Seleccionar periodo validez" type="search" value="<!--#4DTEXT [Nota_de_venta]Validez-->">
+	    	<button type="button" class="show validez">Ver períodos de validez</button>
+	    </div>	
+	</article>
+
+	<article>
+		<div>
+	    	<label>Fecha de realización:</label>
+	    	<input placeholder="DD-MM-AAAA" name="negocio[fecha_realizacion]" type="date" value="<!--#4DTEXT Substring(String([Nota_de_venta]Fecha_Vencimiento;ISO Date);1;10)-->">
+	    </div>
+	</article>
+
+	<article>
+		<div>
+	    	<label class="label-textarea">Observaciones:</label>
+	    	<textarea class="textarea-big" name="negocio[observacion]"><!--#4DTEXT Uppercase([Nota_de_venta]Notas;*)--></textarea>    	
+	    </div>
+	</article>  
+</fieldset>

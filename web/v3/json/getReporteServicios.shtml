@@ -1,0 +1,56 @@
+{
+	"categorias" : [
+	<!--#4DLOOP aIdcategoria -->
+		{
+			"id": <!--#4DHTML aIdcategoria{aIdcategoria}-->,
+			"descripcion": "<!--#4DHTML _V3_escapeString(aNomcategoria{aIdcategoria})-->"
+		}<!--#4DIF NOT(aIdcategoria{aIdcategoria} = aIdcategoria{Size of array(aIdcategoria)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	],
+	"servicios": [
+	<!--#4DLOOP aIdServicio_rep-->
+		{
+			"id": <!--#4DHTML aIdServicio_rep{aIdServicio_rep}-->,
+			"descripcion": "<!--#4DHTML _V3_escapeString(aNomServicio_rep{aIdServicio_rep})-->",
+			"codigo": "<!--#4DHTML aCodServicio_rep{aIdServicio_rep}-->",
+			"cuenta": "<!--#4DHTML _V3_escapeString(aCuentaServicio_rep{aIdServicio_rep})-->",
+			"ventas": <!--#4DHTML String(aVentaServicio_rep{aIdServicio_rep};"&xml")-->,
+			"compras": <!--#4DHTML String(aCompraServicio_rep{aIdServicio_rep};"&xml")-->,
+			"utilidad": <!--#4DHTML String(aUtilidadServicio_rep{aIdServicio_rep};"&xml")-->,
+			"id_categoria": <!--#4DHTML aIdcategoria_rep{aIdServicio_rep}-->,
+			"nombre_categoria": "<!--#4DHTML  _V3_escapeString(aNombreCategoria{aIdServicio_rep})-->"
+		}<!--#4DIF NOT(aIdServicio_rep{aIdServicio_rep} = aIdServicio_rep{Size of array(aIdServicio_rep)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	],
+	"totales" : {
+		"comision_venta": <!--#4DHTML String(totalComisionVenta;"&xml")-->,
+		"descuento_venta": <!--#4DHTML String(totalDescuentoVenta;"&xml")-->,
+		"descuento_compra": <!--#4DHTML String(totalDescuentoCompra;"&xml")-->,
+		"diferencia_venta": <!--#4DHTML String(totalAjusteVenta;"&xml")-->,
+		"comision1": <!--#4DHTML String(TotalComision1;"&xml")-->,
+		"comision2": <!--#4DHTML String(TotalComision2;"&xml")-->,
+		"comision3": <!--#4DHTML String(TotalComision3;"&xml")-->,
+		"comision4": <!--#4DHTML String(TotalComision4;"&xml")-->,
+		"comision5": <!--#4DHTML String(TotalComision5;"&xml")-->,
+		"nombre_comision1": "<!--#4DHTML _V3_escapeString(nombreComision1)-->",
+		"nombre_comision2": "<!--#4DHTML _V3_escapeString(nombreComision2)-->",
+		"nombre_comision3": "<!--#4DHTML _V3_escapeString(nombreComision3)-->",
+		"nombre_comision4": "<!--#4DHTML _V3_escapeString(nombreComision4)-->",
+		"nombre_comision5": "<!--#4DHTML _V3_escapeString(nombreComision5)-->",
+		"check_comision1": <!--#4DHTML check_comision1-->,
+		"check_comision2": <!--#4DHTML check_comision2-->,
+		"check_comision3": <!--#4DHTML check_comision3-->,
+		"check_comision4y5": <!--#4DHTML check_comision4y5-->
+	},
+		"currency" : {
+		"code" : "<!--#4DTEXT _V3_defaultCurrencyCode-->",
+		"name" : "<!--#4DTEXT _V3_defaultCurrencyName-->",
+		"symbol" : "<!--#4DTEXT _V3_defaultCurrencySymbol-->",
+		"right" : <!--#4DIF _V3_defaultCurrencyRight-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+		"decimal": <!--#4DTEXT _V3_defaultCurrencyDecimals-->,
+		"decimal_sep": "<!--#4DTEXT _V3_defaultCurrencyDecimalSep-->",
+		"thousand_sep" : "<!--#4DTEXT _V3_defaultCurrencyThousandSep-->",
+		"decimal_text_excel" : "<!--#4DTEXT _V3_defaultCurrencyDecimalsText-->",
+		"format_code_excel" : "<!--#4DTEXT _V3_defaultCurrencyFormatCode-->"
+	}
+}

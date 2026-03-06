@@ -1,0 +1,24 @@
+{
+	"ventas": [
+		<!--#4DLOOP ameses-->["<!--#4DHTML _V3_escapeString(ameses{ameses})-->",<!--#4DHTML String(aventa{ameses};"&xml")-->]<!--#4DIF NOT(ameses{ameses} = ameses{Size of array(ameses)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	],
+	"ventas1": [
+		<!--#4DLOOP ameses-->["<!--#4DHTML _V3_escapeString(ameses{ameses})-->",<!--#4DHTML String(aventa1{ameses};"&xml")-->]<!--#4DIF NOT(ameses{ameses} = ameses{Size of array(ameses)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	],
+	"ventas2": [
+	<!--#4DLOOP ameses-->["<!--#4DHTML _V3_escapeString(ameses{ameses})-->",<!--#4DHTML String(aventa2{ameses};"&xml")-->]<!--#4DIF NOT(ameses{ameses} = ameses{Size of array(ameses)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	],
+	"ventas3": [
+		<!--#4DLOOP ameses-->["<!--#4DHTML _V3_escapeString(ameses{ameses})-->",<!--#4DHTML String(aventa3{ameses};"&xml")-->]<!--#4DIF NOT(ameses{ameses} = ameses{Size of array(ameses)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	],
+	"ventas4": [
+		<!--#4DLOOP ameses-->["<!--#4DHTML _V3_escapeString(ameses{ameses})-->",<!--#4DHTML String(aventa4{ameses};"&xml")-->]<!--#4DIF NOT(ameses{ameses} = ameses{Size of array(ameses)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	]
+
+
+}

@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <script src="/v3/script/jquery/jquery.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/print.css">
+
+    <title>Invoice</title>
+
+    <script>
+        // fecha actual formateada
+        function currentDate() {
+            var date = new Date();
+            var formattedDate = date.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' })
+                .replace(/\b(\d)\b/g, '0$1');
+            document.getElementById('date').innerHTML = formattedDate;
+        }
+
+        // formateador de los montos 000,000,000.00
+        function formatNumber(number) {
+            var str = number.toString();
+            var parts = str.split('.');
+            var intPart = parts[0];
+            var decimalPart = parts[1] || '';
+
+            var formattedIntPart = '';
+            while (intPart.length > 3) {
+                formattedIntPart = '.' + intPart.slice(-3) + formattedIntPart;
+                intPart = intPart.slice(0, intPart.length - 3);
+            }
+            if (intPart) {
+                formattedIntPart = intPart + formattedIntPart;
+            }
+
+            var decimalPartFormatted = '';
+            if (decimalPart.length > 0) {
+                decimalPartFormatted = decimalPart[2] >= 5 ? decimalPart = String(parseFloat(decimalPart.slice(0,2)) + 1) : decimalPart.slice(0,2)
+                return formattedIntPart + ',' + decimalPartFormatted;
+            }else
+            	return formattedIntPart
+
+
+        }
+
+
+        // function transformNumber(n, mode) {
+        //     
+        //     var resp;
+        //     var sepDec;
+        //     var end = false
+        //     var defecto = false
+        //     if (!defecto)
+        //         sepDec = ",";
+        //     else
+        //         sepDec = ',';
+
+
+        //     if (n == "") {
+        //         resp = "0"
+        //     } else {
+        //         if (mode == "int") {
+        //             //Dato tipo number a string formateado
+        //             if (sepDec == ",")
+        //                 resp = String(new Intl.NumberFormat("de-DE", {
+        //                     maximumFractionDigits: 4,
+        //                 }).format(n))
+        //             else
+        //                 resp = String(new Intl.NumberFormat().format(n))
+
+
+        //         } else if (mode == "view") {
+        //             //Dato tipo string a string formateado
+
+
+        //             if (sepDec == ",") {
+        //                 if (n.slice(-1) != "," || end) {
+        //                     // if (n.includes(sepDec) == false || end) {
+        //                     if (n.slice(-1) != "0" || end) {
+
+        //                         n = n.replaceAll(".", "");
+        //                         n = n.replaceAll(",", ".");
+        //                         resp = String(new Intl.NumberFormat('de-DE', {
+        //                             maximumFractionDigits: 4,
+        //                         }).format(n))
+        //                     } else
+        //                         resp = n
+
+        //                 } else
+        //                     resp = n
+
+        //             } else {
+        //                 if (n.slice(-1) != "." || end) {
+        //                     n = n.replaceAll(",", "");
+        //                     n = n.replaceAll(".", ",");
+        //                     resp = String(new Intl.NumberFormat('de-DE', {
+        //                         maximumFractionDigits: 4,
+        //                     }).format(n))
+        //                 } else
+        //                     resp = n
+        //             }
+
+
+
+
+        //             if (resp == "NaN")
+        //                 resp = "0"
+
+        //         } else if (mode == "format-end") {
+        //             //CULAQUIER TIPO A STRING
+        //             //PARA MANDAR 4D
+        //             n = String(n).replaceAll(".", "");
+        //             resp = n
+        //         } else {
+        //             //Dato tipo string a number para calculo
+        //             if (typeof n === 'string') {
+        //                 if (sepDec == ",") {
+
+        //                     n = n.replaceAll(".", "");
+        //                     n = n.replaceAll(",", ".");
+        //                     resp = parseFloat(n)
+        //                 } else {
+
+        //                     n = n.replaceAll(",", "");
+        //                     n = n.replaceAll(".", ",");
+        //                     resp = parseFloat(n)
+        //                 }
+        //             } else {
+        //                 resp = n;
+        //             }
+
+
+        //         }
+        //     }
+
+        //     return resp;
+
+        // }
+
+        // url base
+        function urlBase() {
+            var protocol = location.protocol;
+            var host = location.host;
+            return protocol + '//' + host;
+        }
+
+        // url del logo de la empresa
+        function urlLogo() {
+            var protocol = location.protocol;
+            var host = location.host;
+            return urlBase() + '/4DACTION/logo_empresa_web';
+        }
+
+        // url del logo de unabase
+        function urlLogoUnabase() {
+            var protocol = location.protocol;
+            var host = location.host;
+            return urlBase() + '/v3/design/sidebar/logoperfil.png';
+        }
+
+        // informacion basica -> logos y titulo
+        function basicInfo(data) {
+            document.querySelector('.unabaseLogo').setAttribute('src', urlLogoUnabase());
+            document.querySelector('.project_logo').setAttribute('src', urlLogo());
+            document.getElementById('projectName').textContent = data.emisor.razon;
+        }
+
+        // id del documento de compra
+        function getId() {
+            return converToJson(location.search).id;
+        }
+
+        // obtener los parameros de la url
+        function converToJson(url) {
+            const params = {}
+            var array = url.split("&")
+            for (var index = 0; index < array.length; index++) {
+                var vars = array[index].split("=")
+                var key = vars[0].replace('?', '')
+                var value = vars[1]
+                params[key] = value
+
+            }
+            return params
+        }
+
+        //get data
+        function getData(id) {
+            $.ajax({
+                'url': '/4DACTION/_V3_proxy_getDtvContent',
+                data: {
+                    "id": id,
+                    "api": true
+                },
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    fillInDataFromTable1(data, id)
+                    fillInDataFromTable2(data)
+                    fillInDataFromTable3(data)
+                    basicInfo(data)
+                }
+            });
+        }
+
+        //get data
+        function getClients(id) {
+            var clientes = []
+            $.ajax({
+                'url': '/4DACTION/_V3_get_oc_clientes',
+                data: {
+                    "id": id,
+                    "api": true
+                },
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    clientes = data.rows
+                }
+            });
+            return clientes
+        }
+
+        // pintar los datos en el template
+        function uploadData() {
+            const id = getId()
+            currentDate();
+            getData(id)
+        }
+
+        // Relleno de la tabla 1
+        function fillInDataFromTable1(data, id) {
+            var clientes = getClients(id)
+            var temp =[]
+            
+
+            document.getElementById('client').textContent = data.cliente.nombre_completo.toUpperCase()
+            document.getElementById('contact').textContent = data.relacionado.nombre.toUpperCase()
+            document.getElementById('email').textContent = data.relacionado.email.toUpperCase()
+            document.getElementById('billingAddress').textContent = data.cliente.direccion.toUpperCase()
+
+            temp =  data.fecha_emision.split('-')
+            document.getElementById('dateOfInvoice').textContent = temp[1]+'-'+temp[0]+'-'+temp[2]
+            temp =  data.fecha_vencimiento.split('-')
+            document.getElementById('deliveryDate').textContent = temp[1]+'-'+temp[0]+'-'+temp[2]
+            document.getElementById('company').textContent = data.emisor.razon.toUpperCase()
+            document.getElementById('taxIdNumber').textContent = data.emisor.id_emisor
+            document.getElementById('address').textContent = data.emisor.direccion.toUpperCase()
+            document.getElementById('clientPO').textContent = getClientPO(clientes)
+            document.getElementById('invoiceNumber').textContent = data.folio_factura
+            console.log("-----------", data)
+        }
+        // Relleno de la tabla 2 - Descripcion
+        function fillInDataFromTable2(data) {
+            var symbol = getSymbol(data.codigoByPrint)
+            document.getElementById('total').textContent = formatNumber(parseFloat((data.montos.total / (data.exchange.default === data.codigoByPrint || data.valueByPrint === '0' ? 1 : parseFloat(data.valueByPrint.replace(',', '.')))).toFixed(2)))
+            var elements = document.querySelectorAll('.money');
+            for (var i = 0; i < elements.length; i++) {
+                var elemento = elements[i];
+                elemento.textContent = symbol;
+            }
+
+            var table = document.getElementById("tableDescription");
+
+            for (var i = 0; i < data.items.length; i++) {
+                var item = data.items[i];
+
+                var newRow = document.createElement("tr");
+                newRow.classList.add("description_container");
+
+                var descriptionCell = document.createElement("td");
+                descriptionCell.classList.add("description_cell_text");
+                var descriptionText = document.createElement("p");
+                descriptionText.classList.add("description_cell_text_normal");
+                descriptionText.textContent = item.det_descripcion;
+                descriptionCell.appendChild(descriptionText);
+                if (item.det_descripcion_larga !== '') {
+                    var descriptionTextLarge = document.createElement("p");
+                    descriptionTextLarge.classList.add("description_cell_text_large");
+                    descriptionTextLarge.innerHTML = formatText(item.det_descripcion_larga);
+                    descriptionCell.appendChild(descriptionTextLarge);
+                }
+                var priceCell1 = document.createElement("td");
+                priceCell1.classList.add("description_cell_price");
+                priceCell1.classList.add("description_cell_price_first");
+
+                var priceCell2 = document.createElement("td");
+                priceCell2.classList.add("description_cell_price");
+                var moneyDiv = document.createElement("div");
+                moneyDiv.classList.add("money");
+                moneyDiv.textContent = symbol;
+                var priceDiv = document.createElement("div");
+                priceDiv.classList.add("price");
+                priceDiv.textContent = formatNumber(parseFloat((item.det_precio / (data.exchange.default === data.codigoByPrint || data.valueByPrint === '0' ? 1 : parseFloat(data.valueByPrint.replace(',', '.')))).toFixed(2)))
+                priceCell2.appendChild(moneyDiv);
+                priceCell2.appendChild(priceDiv);
+
+                newRow.appendChild(descriptionCell);
+                newRow.appendChild(priceCell1);
+                newRow.appendChild(priceCell2);
+
+                table.appendChild(newRow);
+            }
+        }
+
+        // Relleno de la tabla 3
+        function fillInDataFromTable3(data) {
+            //document.getElementById('tagNumber').textContent = data.des_forma_pago75% Upfront and 25% 30 days after shoot(s) day(s)
+            document.getElementById('tagNumber').textContent ="75% Upfront and 25% 30 days after shoot(s) day(s)".toUpperCase()
+            document.getElementById('currency').textContent = data.codigoByPrint == '' ? data.exchange.default : data.codigoByPrint
+            document.getElementById('country').textContent = data.emisor.pais
+            document.getElementById('accountName').textContent = data.emisor.razon
+            // Account Number (por confirmar )
+            document.getElementById('accountNumber').textContent = data.emisor.cuenta_cte
+            // Bank Name
+            document.getElementById('bankName').textContent = data.emisor.bank_name
+            // Routing Number
+            document.getElementById('routingNumber').textContent = data.emisor.routing_number
+            document.getElementById('swift_code').textContent = data.emisor.cuenta_swift_code
+            document.getElementById('description').textContent = data.observacion
+            document.getElementById('addressInfo').textContent = data.emisor.bank_address
+        }
+
+        // Simbolo de la moneda
+        function getSymbol(typeMoney) {
+            if (typeMoney === 'EUR') return '€'
+            return '$'
+        }
+
+        // Obtener Client PO
+        function getClientPO(clientes) {
+            var ids = [];
+
+            for (var i = 0; i < clientes.length; i++) {
+                ids.push(clientes[i].numero);
+            }
+
+            return ids.join('-');
+        }
+
+        function formatText(text) {
+            var lines = text.split("\n");
+            var formattedText = "";
+
+            for (var i = 0; i < lines.length; i++) {
+                formattedText += "<span>" + lines[i] + "</span><br>";
+            }
+
+            return formattedText;
+        }
+
+
+    </script>
+
+    <style>
+        :root {
+            --gray: #999999;
+            --bg-primary: #989FA7;
+            --bg-secondary: #BFBFC3;
+            --bg-tertiary: #D0D1D2;
+            --black: #000;
+            --white: #fff;
+        }
+
+        @media page {
+
+            .info,
+            .total,
+            .description_container,
+            .description_cell_text,
+            .description_cell_text_normal,
+            .description_cell_text_large,
+            .description_cell_price,
+            .description_cell_price_first,
+            .description {
+                page-break-inside: avoid !important;
+                page-break-before: auto !important;
+                page-break-after: avoid !important;
+            }
+
+            .total_container,
+            .total_main .total_label,
+            .description,
+            .description_text,
+            .description tr td,
+            .description_cell_price_first {
+                page-break-inside: auto !important;
+                page-break-before: avoid;
+                page-break-after: auto !important;
+            }
+
+            .total_main .total_value {
+                page-break-inside: auto !important;
+                page-break-before: avoid;
+                page-break-after: auto !important;
+            }
+
+            .total_main .total_label {
+                page-break-inside: auto;
+            }
+
+            .total_main .total_value {
+                page-break-inside: auto;
+            }
+        }
+
+        body {
+            font-family: 'Poppins';
+            color: #1e1b32;
+        }
+
+        .header {
+            width: 271mm;
+            display: table;
+            table-layout: fixed;
+        }
+
+        .footer_logo {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: left;
+            color: #999999;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        #date {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: right;
+            color: #999999;
+        }
+
+        .footer_logo img {
+            height: 5mm;
+            margin-right: 3mm;
+        }
+
+        .footer {
+            padding-top: 10mm;
+        }
+
+        .project {
+            display: table;
+            width: 100%;
+            padding-top: 10mm;
+            padding-bottom: 20mm;
+            height: 70mm;
+            position: relative;
+        }
+
+        .project_snippet {
+            display: table-cell;
+            vertical-align: bottom;
+        }
+
+        .project_snippet_name {
+            text-transform: uppercase;
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 2rem;
+            margin: 0;
+        }
+
+        .project_logo {
+            max-height: 40mm;
+            max-width: 60mm;
+            height: auto;
+            width: auto;
+            display: inline-block;
+            vertical-align: bottom;
+            right: 0mm;
+            bottom: 20mm;
+            position: absolute;
+        }
+
+        .headerTable {
+            height: 15mm;
+            background-color: #D0D1D2;
+            border: 2px solid #000;
+            border-radius: 2mm 2mm 0 0;
+            font-size: 1.5rem;
+            padding-left: 3mm;
+            font-weight: bold;
+        }
+
+        p {
+            padding: 0px;
+        }
+
+        .snippet {
+            width: 270mm;
+            border: 2px solid #000;
+            border-radius: 2mm;
+        }
+
+        .snippet_header {
+            background-color: #D0D1D2;
+            height: 15mm;
+        }
+
+        .snippet_header__cell {
+            padding-left: 3mm;
+            font-weight: 600;
+            font-size: 1.2rem;
+            border-bottom: 2px solid #000;
+        }
+
+        .snippet_header__cell_one {
+            border-radius: 1.5mm 0 0 0 !important;
+        }
+
+        .snippet_header__cell_two {
+            border-left: 2px solid #000;
+            border-radius: 0 1.5mm 0 0 !important;
+        }
+
+        .snippet_label {
+            height: 8mm;
+            padding-left: 3mm;
+            font-size: 0.8rem;
+            font-weight: 500;
+            background-color: #D0D1D2;
+            border-right: 2px solid #000;
+            border-bottom: 2px solid #000;
+        }
+
+        .snippet_value {
+            height: 8mm;
+            padding-left: 3mm;
+            padding-right: 3mm;
+            font-size: 0.8rem;
+            border-bottom: 2px solid #000;
+        }
+
+        .snippet_label_second {
+            border-left: 2px solid #000;
+        }
+
+        .snippet_footer_label {
+            background-color: #989FA7;
+            color: #000;
+            padding-left: 3mm;
+            border-right: 2px solid #000;
+            font-size: 0.9rem;
+            font-weight: 500;
+            height: 8mm;
+        }
+
+        .snippet_footer_value {
+            background-color: #989FA7;
+            color: #000;
+            text-align: start;
+            padding-left: 3mm;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .snippet_large {
+            height: 14mm;
+            padding-top: 3mm;
+            padding-bottom: 3mm;
+        }
+
+        .description {
+            width: 270mm;
+            border: 2px solid #000;
+            border-radius: 2mm 2mm 0 2mm;
+        }
+
+        .total {
+            width: 270mm;
+        }
+
+        .total_label {
+            background-color: #D0D1D2;
+            border: 2px solid #000;
+            border-top: none;
+            border-bottom: none;
+            text-transform: uppercase;
+            color: #000;
+            font-weight: 500;
+            font-size: 1rem;
+            padding-left: 3mm;
+            padding-top: 1mm;
+            height: 8mm;
+        }
+
+        .total_value {
+            background-color: #D0D1D2;
+            border-right: 2px solid #000;
+            color: #000;
+            font-weight: 500;
+            font-size: 1rem;
+            padding-top: 0.5mm;
+            position: relative;
+            width: 100%;
+            vertical-align: top;
+        }
+
+        .total_main .total_label {
+            background-color: #D0D1D2;
+            border-radius: 0 0 0 2mm;
+            border: 2px solid #000;
+            font-size: 1.2rem;
+            font-weight: 700;
+            height: 10mm;
+            padding-top: 1.5mm;
+        }
+
+        .total_main .total_value {
+            background-color: #D0D1D2;
+            border-radius: 0 0 2mm 0;
+            border: 2px solid #000;
+            border-left: none;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .total .total_value .money {
+            left: 3mm;
+            padding-top: 1mm;
+            position: absolute;
+        }
+
+        .total .total_value .price {
+            right: 3mm;
+            padding-top: 1mm;
+            position: absolute;
+        }
+
+        .total_main .total_value .price,
+        .total_main .total_value .money {
+            top: 1.4mm;
+        }
+
+        .description_text {
+            background-color: #989FA7;
+            color: #000;
+            padding-left: 3mm;
+            font-size: 1rem;
+            line-height: 1rem;
+            text-transform: uppercase;
+            border-bottom: 2px solid #000 !important;
+            height: 10mm;
+        }
+
+        .description_cell_text {
+            font-size: 0.8rem;
+            padding-left: 3mm;
+        }
+
+        .description_cell_text_normal {
+            padding-bottom: 0px;
+        }
+
+        .description_cell_text_large {
+            line-height: 1rem;
+            font-weight: 100;
+        }
+
+        .description tr td {
+            border-bottom: 2px solid #000;
+        }
+
+        .description tr:last-of-type td {
+            border-bottom: 2px solid transparent;
+        }
+
+        .description_cell_price {
+            display: table-cell;
+            position: relative;
+            font-size: 0.8rem;
+            font-weight: 500;
+            vertical-align: text-top;
+            padding-top: 3mm;
+        }
+
+        .description_cell_price_first {
+            border-left: 2px solid #000;
+        }
+
+        .description_cell_price .money,
+        .description_cell_price .price {
+            display: inline-block;
+        }
+
+        .description_cell_price .money {
+            width: auto;
+            position: absolute;
+            left: 3mm;
+            color: #000;
+        }
+
+        .description_cell_price .price {
+            width: 100%;
+            position: absolute;
+            right: 3mm;
+            text-align: right;
+        }
+
+        .info {
+            width: 270mm;
+            border: 2px solid #000;
+            border-radius: 2mm;
+        }
+
+        .info_header {
+            background-color: #BFBFC3;
+            height: 10mm;
+            border-radius: 1.5mm 1.5mm 0 0;
+            padding-left: 3mm;
+            font-weight: 700;
+            border-bottom: 2px solid #000;
+            font-size: 1rem;
+        }
+
+        .info_label {
+            font-size: 0.8rem;
+            padding-left: 3mm;
+            border-right: 2px solid #000;
+            border-bottom: 2px solid #000;
+            height: 8mm;
+            font-weight: 500;
+        }
+
+        .info_value {
+            font-size: 0.8rem;
+            padding-left: 3mm;
+            border-bottom: 2px solid #000;
+        }
+
+        .info_important .info_value {
+            height: 20mm;
+            padding: 3mm;
+        }
+    </style>
+</head>
+
+<body onload="uploadData()">
+    <div class="header">
+        <div></div>
+        <div id="date"></div>
+    </div>
+    <div class="project">
+        <div class="project_snippet">
+            <p id="projectName" class="project_snippet_name" style="width: 180mm;"></p>
+        </div>
+        <img class="project_logo" src="" alt="logo" />
+    </div>
+    <table class="snippet" border="0" cellpadding="0" cellspacing="0">
+        <colgroup>
+            <col style="width: 13.5%;">
+            <col style="width: 11.5%;">
+            <col style="width: 13.5%;">
+            <col style="width: 11.5%;">
+            <col style="width: 13.5%;">
+            <col style="width: 11.5%;">
+            <col style="width: 13.5%;">
+            <col style="width: 11.5%;">
+        </colgroup>
+        <tr class="snippet_header">
+            <td class="snippet_header__cell snippet_header__cell_one" colspan="4">Invoice</td>
+            <td class="snippet_header__cell snippet_header__cell_two" colspan="4">Number: <span
+                    id="invoiceNumber"></span></td>
+        </tr>
+        <tr>
+            <td class="snippet_label">Client</td>
+            <td id="client" class="snippet_value" colspan="3"></td>
+            <td class="snippet_label snippet_label_second">Date of invoice</td>
+            <td id="dateOfInvoice" class="snippet_value"></td>
+            <td class="snippet_label snippet_label_second">Due Date</td>
+            <td id="deliveryDate" class="snippet_value"></td>
+        </tr>
+        <tr>
+            <td class="snippet_label">Contact</td>
+            <td id="contact" class="snippet_value" colspan="3"></td>
+            <td class="snippet_label snippet_label_second">Company Name</td>
+            <td id="company" class="snippet_value" colspan="3"></td>
+        </tr>
+        <tr>
+            <td class="snippet_label">Email</td>
+            <td id="email" class="snippet_value" colspan="3"></td>
+            <td class="snippet_label snippet_label_second">Tax ID number</td>
+            <td id="taxIdNumber" class="snippet_value" colspan="3"></td>
+        </tr>
+        <tr>
+            <td class="snippet_label snippet_large">Billing Address</td>
+            <td id="billingAddress" class="snippet_value snippet_large" colspan="3"></td>
+            <td class="snippet_label snippet_label_second snippet_large">Address</td>
+            <td id="address" class="snippet_value snippet_large" colspan="3"></td>
+        </tr>
+        <tr>
+            <td class="snippet_footer_label">Client PO</td>
+            <td class="snippet_footer_value" style="border-radius: 0 0 1.8mm 0;" colspan="7">
+                <p id="clientPO" style="margin: 0;"></p>
+            </td>
+        </tr>
+    </table>
+    <br />
+    <br />
+    <table id="tableDescription" class="description" border="0" cellpadding="0" cellspacing="0">
+        <colgroup>
+            <col style="width: 68%;">
+            <col style="width: 12%;">
+            <col style="width: 20%;">
+        </colgroup>
+        <tr class="description_header">
+            <td class="description_text" style="border-radius: 1.8mm 0 0 0;">Description</td>
+            <td class="description_text" style="border-left: 2px solid #000; border-radius: 0 1.8mm 0 0;" colspan="2">
+                Price</td>
+        </tr>
+    </table>
+    <table class="total" border="0" cellpadding="0" cellspacing="0">
+        <colgroup>
+            <col style="width: 68%;">
+            <col style="width: 12%;">
+            <col style="width: 20%;">
+        </colgroup>
+        <tr class="total_container">
+            <td></td>
+            <td class="total_label" style="border-radius: 0 0 0 2mm; border: 2px solid #000; border-top: none;">Total</td>
+            <td class="total_value" style="border-radius: 0 0 2mm 0; border: 2px solid #000; border-left: none; border-top: none;">
+                <div>
+                    <div class="money"></div>
+                    <div id="total" class="price"></div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <br />
+    <br />
+    <div class="containerInfo">
+        <table class="info" border="0" cellpadding="0" cellspacing="0">
+            <colgroup>
+                <col style="width: 15%;">
+                <col style="width: 35%;">
+                <col style="width: 15%;">
+                <col style="width: 35%;">
+            </colgroup>
+            <tr>
+                <td class="info_header" colspan="4">Please include invoice number when sending a wire transfer</td>
+            <tr>
+            <tr>
+                <td id="idNumber" class="info_label">Terms of Payment</td>
+                <td id="tagNumber" class="info_label" style="border-right: none" colspan="3"></td>
+            </tr>
+            <tr>
+                <td class="info_header" style="border-radius: 0;" colspan="4">Bank details for transfer</td>
+            </tr>
+            <tr>
+                <td class="info_label">Currency</td>
+                <td id="currency" class="info_value"></td>
+                <td class="info_label" style="border-left: 2px solid #000">Country</td>
+                <td id="country" class="info_value"></td>
+            </tr>
+            <tr>
+                <td class="info_label">Account Name</td>
+                <td id="accountName" class="info_value"></td>
+                <td class="info_label" style="border-left: 2px solid #000">Account Number</td>
+                <td id="accountNumber" class="info_value"></td>
+            </tr>
+            <tr>
+                <td class="info_label">Bank Name</td>
+                <td id="bankName" class="info_value"></td>
+                <td class="info_label" style="border-left: 2px solid #000">Routing Number</td>
+                <td id="routingNumber" class="info_value"></td>
+            </tr>
+            <tr>
+                <td class="info_label">Swift Code</td>
+                <td  id="swift_code" colspan="3" class="info_value"></td>
+            </tr>
+            <tr>
+                <td class="info_label">Bank Address</td>
+                <td colspan="3" id="addressInfo" class="info_value"></td>
+            </tr>
+            <tr class="info_important">
+                <td class="info_label" style="border-bottom: none;">Comments</td>
+                <td id="description" class="info_value" style="border-bottom: none;" colspan="3"></td>
+            </tr>
+        </table>
+        <div class="footer">
+            <a class="footer_logo" href="https://unabase.com/" target="_blank"><img class="unabaseLogo" src="" />
+                Powered by <span style="color:#01a96c;">unabase.com</span>
+            </a>
+        </div>
+    </div>
+
+</body>
+
+</html>

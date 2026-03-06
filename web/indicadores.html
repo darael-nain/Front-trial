@@ -1,0 +1,66 @@
+<section class="ranking-contratistas">
+	<div>
+		<table>
+			<caption>DIAS DE ATRASOS<br><br>PROMEDIOS</caption>
+			<caption><br></caption>
+			<thead>
+				<tr>
+					<th colspan="">Num</th>
+					<th colspan="">T&eacutecnico</th>
+					<th colspan="">Media</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!--#4DLOOP a_rank1_Tec-->
+					<!--#4DIF a_rank1_Tec{a_rank1_Tec}=vLogin-->
+						<tr class="coloruser">
+							<td colspan="" rowspan="" headers=""><div class="coloruser"><!--#4DVAR a_rank1_pos{a_rank1_Tec}--></div></td>
+							<td colspan="" rowspan="" headers="" class="tecnico"><div class="coloruser"><!--#4DVAR a_rank1_Nombres{a_rank1_Tec}--> <!--#4DVAR a_rank1_Apellido{a_rank1_Tec}--></div></td>
+							<td colspan="" rowspan="" headers=""><div class="coloruser"><!--#4DVAR a_Media_Respuestas{a_rank1_Tec}--></div></td>
+						</tr>
+					<!--#4DELSE-->
+						<tr>
+							<td colspan="" rowspan="" headers=""><!--#4DVAR a_rank1_pos{a_rank1_Tec}--></td>
+							<td colspan="" rowspan="" headers="" class="tecnico"><!--#4DVAR a_rank1_Nombres{a_rank1_Tec}--> <!--#4DVAR a_rank1_Apellido{a_rank1_Tec}--></td>
+							<td colspan="" rowspan="" headers=""><!--#4DVAR a_Media_Respuestas{a_rank1_Tec}--></td>
+						</tr>
+					<!--#4DENDIF-->  	
+				<!--#4DENDLOOP-->
+			</tbody>
+		</table>
+	</div>
+	<div>
+		<table>
+			<caption>RANKING FACTURACI&OacuteN<br><br><br></caption>
+			<caption id="fecha">entre el <!--#4DVAR vFecha1--> y el <!--#4DVAR vFecha2--></caption>
+			<thead>
+				<tr>
+					<th colspan="">Num</th>
+					<th colspan="">T&eacutecnico</th>
+					<th colspan="">Facturaci&oacuten</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!--#4DLOOP a_rank2_Tec-->
+					<!--#4DIF a_rank2_Tec{a_rank2_Tec}=vLogin-->
+						<tr>
+							<td colspan="" rowspan="" headers=""><div class="coloruser"><!--#4DVAR a_rank2_pos{a_rank2_Tec}--></div></td>
+							<td colspan="" rowspan="" headers="" class="tecnico"><div class="coloruser">
+								<!--#4DVAR a_rank2_Nombres{a_rank2_Tec}--> <!--#4DVAR a_rank2_Apellido{a_rank2_Tec}-->
+							</div></td>
+							<td colspan="" rowspan="" headers=""><div class="coloruser"><!--#4DVAR string(a_rank2_TotalFact{a_rank2_Tec};"$ ###.###.###.##0")-->
+								
+							</div></td>
+						</tr>
+					<!--#4DELSE-->
+						<tr >
+							<td colspan="" rowspan="" headers=""><!--#4DVAR a_rank2_pos{a_rank2_Tec}--></td>
+							<td colspan="" rowspan="" headers="" class="tecnico"><!--#4DVAR a_rank2_Nombres{a_rank2_Tec}--> <!--#4DVAR a_rank2_Apellido{a_rank2_Tec}--></td>
+							<td colspan="" rowspan="" headers=""><!--#4DVAR string(a_rank2_TotalFact{a_rank2_Tec};"$ ###.###.###.##0")--></td>
+						</tr>
+					<!--#4DENDIF-->  	
+				<!--#4DENDLOOP-->
+			</tbody>
+		</table>
+	</div>
+</section>

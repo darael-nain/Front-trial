@@ -1,0 +1,12 @@
+<input id="globalSession" type="hidden" value="<!--#4DVAR vSesion-->">
+<input id="globalLogin" type="hidden" value="<!--#4DVAR vLogin-->">
+<input id="globalTypeUser" type="hidden" value="guest">
+
+<header id="header-superior">
+  <div class="logo-header"><img src="/imagenes_green/logo_una_base.png"></div>
+  <div class="logo-header">
+  	<img src="<!--#4DVAR vUrlImagenLogo-->" width="<!--#4DVAR vAnchoPicture-->" height="<!--#4DVAR vAltoPicture-->" border="0"/>
+  </div>  
+  <h1 id="titulo-principal"><!--#4DVAR titleHeader--></h1>
+</header>
+<br/><br/>

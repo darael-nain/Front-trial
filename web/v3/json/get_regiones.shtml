@@ -1,0 +1,10 @@
+{
+	"rows": [
+<!--#4DLOOP [Estado_Region]-->
+		{
+			"id": <!--#4DHTML [Estado_Region]Id_Region-->,
+			"text": "<!--#4DHTML _V3_escapeString([Estado_Region]Des_Region)-->"
+		}<!--#4DIF Selected record number([Estado_Region])<Records in selection([Estado_Region])-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

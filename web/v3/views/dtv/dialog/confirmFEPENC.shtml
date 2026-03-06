@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_ConfirmFEPENC-->
+		<title>Confirmar emisión electrónico</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/script/datepicker_es.js?<!--#4DTEXT _V3_version-->"></script>
+		<script>
+			$(document).ready(function(){
+				if (!notas.data.apiFE.tokenStatus) {
+					notas.getTokenAccess();
+				}
+				$('button.fepe.send').button({icons: { primary: 'ui-icon-arrowthickstop-1-n'}, text: true }).click(function(event) {
+					notas.data.fecha_emision_formato_FE = $('#datepicker-FEPE-emi').val();
+					notas.data.fecha_vencimiento_formato_FE = $('#datepicker-FEPE-fin').val();
+					notas.data.cliente.email_receptor_fe = $('input[name="email-FEPE"]').val();
+					notas.unidadMedidaItemFEPESelected = $('select[name="tipo-FEPE"]').val();
+
+					notas.data.referenciadoc.serie = "<!--#4DTEXT referenciaSerie-->";
+					notas.data.referenciadoc.nro = "<!--#4DTEXT referenciaNro-->";
+					notas.data.referenciadoc.fechaEmision = "<!--#4DTEXT referenciaFechaEmisionTEXT-->";
+					notas.data.referenciadoc.tipoDocumento = "<!--#4DTEXT referenciatipoDocumento-->";
+
+					var sent = notas.sendFEPE();
+					if (sent) {
+						$(event.target).parentTo('.ui-dialog-content').dialog('close');
+					}
+		        });
+		        $( "#datepicker-FEPE-emi").datepicker({
+		        		minDate: -2,
+		        		maxDate: "+0D",
+		        		dateFormat: "yy-mm-dd"
+		        	}
+		        );
+
+		        $( "#datepicker-FEPE-fin").datepicker({ 
+		        		minDate: 0,
+		        		dateFormat: "yy-mm-dd"
+		        	}
+		        );
+
+		        if (notas.data.exchange.type == "" || notas.data.exchange.type == "PEN") {
+		        	$('input[name="moneda-FEPE"]').val("SOLES");
+		        }else{
+		        	$('input[name="moneda-FEPE"]').val("DOLARES");
+		        }
+
+			});
+		</script>
+		<style type="text/css">
+			#fepe{
+				background-color:rgb(247,247,248);
+				border-radius:1px;
+			}
+			#fepe table{
+				border-spacing:0;
+				padding:0px;
+		      	margin:0px;
+		    }
+			#fepe table > tbody > tr > td{
+		      vertical-align: middle;
+		      border-spacing:0;
+		      padding:0px 0px 0px 5px;
+		      margin:0px 0px 0px 5px;
+		    }
+			#fepe table > tbody > tr{
+		      background-color:white!important;
+		    }
+				#fepe > table input{
+			      padding:3px;
+			      border:1px solid lightgray;
+			      border-radius:3px;
+			      background-color:white;
+			      font-weight:bold;
+			    }
+			    	#fepe > table input.small{
+				      width:70px;
+			    	}
+			    	#fepe > table input.medium{
+				      width:200px;
+			    	}
+			    	#fepe > table input.large{
+				      width:300px;
+			    	}
+			    	#fepe > table input.disabled{
+				      background-color:lightgray;
+				    }
+				#fepe > table select{
+			      padding:5px;
+			      border:1px solid lightgray;
+			      border-radius:3px;
+			      background-color:white;
+			      font-weight:bold;
+			    }
+			#fepe .titulo{
+				font-size:12px;
+				font-weight:bold;
+				text-decoration:underline;
+				margin-left: 10px;
+			}
+			#fepe button.fepe.send{
+				margin-top:10px;
+				border:1px solid gray;
+				vertical-align:top;
+				padding:3px;
+				background:#38cc03!important;
+			}
+				#fepe button.fepe.send > span{
+					font-weight:bold;
+					font-size:12px;
+					color:white;
+				}
+				#fepe button.fepe.send .ui-button-icon-primary{
+					color:white!important;
+				}
+			.uppercase{
+				text-transform:uppercase;
+			}
+		</style>
+	</head>
+	<body>
+		<section id="fepe" class="sheet">
+			<table>
+				<tbody>
+					<tr>
+						<td colspan="4" class="left"><h5 class="titulo">Datos del receptor</h5></td>
+					</tr>
+					<tr>
+						<td width="30%" class="right">RUC </td>
+						<td colspan="3" width="70%" class="left"><input class="small disabled" type="text" value="<!--#4DTEXT vrut-->" disabled></td>
+					</tr>
+					<tr>
+						<td width="30%" class="right">Razón Social </td>
+						<td colspan="3" width="70%" class="left"><input class="large disabled" type="text" value="<!--#4DTEXT vempresa-->" disabled></td>
+					</tr>
+					<tr>
+						<td width="30%" class="right">Dirección </td>
+						<td colspan="3" width="70%" class="left"><input class="large disabled" type="text" value="<!--#4DTEXT vdireccion-->" disabled></td>
+					</tr>
+					<tr>
+						<td width="30%" class="right">Email recepción </td>
+						<td colspan="3" width="70%" class="left"><input name="email-FEPE" class="large uppercase" type="text" value="<!--#4DTEXT emailReceptor-->"></td>
+					</tr>
+					<tr>
+						<td colspan="4" class="left"><h5 class="titulo">Datos doc. referencia</h5></td>
+					</tr>
+					<tr>
+						<td width="25%" class="right">Número </td>
+						<td width="25%" class="left"><input class="disabled" type="text" value="<!--#4DTEXT refenciaFolio-->" disabled></td>
+						<td colspan="2" width="10%" class="left">Fecha <input style="margin-left:17px;" class="disabled" type="text" value="<!--#4DTEXT referenciaFechaEmisionTEXT-->" disabled></td>
+					</tr>
+					<tr>
+						<td colspan="4" class="left"><h5 class="titulo">Datos del comprobante</h5></td>
+					</tr>
+					<tr>
+						<td width="25%" class="right">Número </td>
+						<td width="25%" class="left"><input class="disabled" type="text" value="<!--#4DTEXT serieCorrelativoNext-->" disabled></td>
+						<td width="10%" class="left">Moneda <input style="margin-left:5px;" name="moneda-FEPE" class="disabled" type="text" value="SOLES" readonly></td>
+					</tr>
+					<tr style="display:none;">
+						<td width="30%" class="right">Tipo </td>
+						<td colspan="3" width="70%" class="left">
+							<select name="tipo-FEPE" id="">
+								<option selected value="ZZ">SERVICIO</option>
+								<option value="NIU">BIEN</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td width="25%" class="right">Fecha de Emisión </td>
+						<td width="25%" class="left"><input type="text" id="datepicker-FEPE-emi" value="<!--#4DTEXT fechaEmisionFEPE-->" readonly></td>
+						<td width="20%" class="left">Motivo <input style="margin-left:10px;font-size:8px!important;width:130px;" class="disabled" type="text" value="<!--#4DTEXT sustento-->" disabled></td>
+						<td style="display:none;" width="20%" class="left"><label style="display:none;">Fecha de Vencimiento</label> </td>
+						<td style="display:none;" width="30%" class="left"><input style="display:none;" type="text" id="datepicker-FEPE-fin" value="<!--#4DTEXT fechaVctoFEPE-->"></td>
+					</tr>
+					<tr>
+						<td width="30%" class="right"></td>
+						<td colspan="3" width="70%" class="left" style="vertical-align:top;"><button class="fepe send"><span>ENVIAR</span></button></td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+	</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Timesheet</title>
+        <meta charset="utf-8">      
+        <script>
+
+            $(document).ready(function() {
+
+                unaBase.toolbox.init();
+
+                // Inicializamos un buscador
+                var params = {
+                    // Función que genera una URL de listado JSON
+                    url: function() { return '/4DACTION/_V3_getCompras' },
+                    entity: 'Compras',
+                    // Función que genera cada fila de la tabla, dado el valor de i (índice de posición)
+                    // y el valor de rows (array con todos los resultados)
+                    // El contenido de rows corresponde al objeto de mismo nombre generado mediante la llamada
+                    // a la api JSON. Ver /v3/json/xxxxx.shtml para conocer el formato.
+                    row: {
+                        html: function(i, rows) {
+                            return '<tr data-id="' + rows[i].id + '">' +
+                                '<td width="50px">' + rows[i].folio + '</td>' +
+                                '<td width="80px">' + rows[i].fecha + '</td>' +
+                                '<td width="80px">' + rows[i].tipo + '</td>' +
+                                '<td class="left">' + rows[i].referencia + '</td>' +                            
+                                '<td class="left">' + rows[i].proveedor + '</td>' +
+                                '<td class="left">' + rows[i].origen + '</td>' +
+                                '<td>' + rows[i].emisor + '</td>' +
+                                '<td width="100px" class="right">' + rows[i].total + '</td>' +
+                                '<td width="80px">' + rows[i].estado + '</td>' +
+                                '<td>' + rows[i].validado + '</td>' +                           
+                            '</tr>'
+                        }
+                    },
+                    detail: {
+                        url: function(id) { return '/v3/views/compras/content.shtml?id=' + id +'&from=self'},
+                        iframe: false
+                    },
+                    // Inflexiones
+                    inflection: {
+                        singular: 'compra',
+                        plural: 'compras',
+                        none: 'ninguna'
+                    },                                  
+                    filters: [
+                        { name: 'created_at', type: 'month', caption: 'Fecha de creación', range: true },           
+                        { name: 'prioridad', type: 'autocomplete', caption: 'Prioridad', dataSource: 'get_prioridad_ot'},
+                        { name: 'areas', type: 'autocomplete', caption: 'Area de trabajo', dataSource: 'get_prioridad_ot'}, 
+                        { name: 'responsables', type: 'autocomplete', caption: 'Responsables', dataSource: 'get_prioridad_ot'},                     
+                        { name: 'estado', type: 'checkbox', caption: 'Estado de la ot', options: [
+                            { caption: 'Pendiente', name: 'estado_pendiente', value: false },
+                            { caption: 'Atrasada', name: 'estado_atrasada', value: false },                         
+                            { caption: 'Cerrada', name: 'estado_cerrada', value: false },
+                            { caption: 'Anulada', name: 'estado_nulo', value: false }                   
+                        ]}
+                    ]
+                };
+
+                unaBase.toolbox.search.init(params);
+                unaBase.toolbox.menu.init({
+                    entity: 'Compras', // especifica entidad sobre la cual se almacenan los datos
+                                          // y nombre para referenciar los views
+                    /*buttons: [ 'new', 'clone', 'print' ]*/
+                    buttons: []
+                });
+
+
+            });
+        </script>
+    </head>
+    <body>
+        <!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Número</th>
+                    <th>Referencia</th>
+                    <th>Responsable</th>
+                    <th>HA.</th>
+                    <th>HR.</th>  
+                    <th>Origen</th>             
+                    <th>Emisor</th>
+                    <th>Total[$]</th>
+                    <th>Estado</th>
+                    <th>Validado</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot></tfoot>
+        </table>
+    </body>
+</html>

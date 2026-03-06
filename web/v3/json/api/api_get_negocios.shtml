@@ -1,0 +1,134 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT((totalRecords/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset--> ,
+		"to": <!--#4DHTML $offset+results-1--> ,
+		"total": <!--#4DHTML totalRecords-->
+	},
+	"data":{
+	
+		
+		<!--#4DIF totalRecords >0-->
+		"totales_generales": {
+			"subtotal": "<!--#4DHTML _V3_formatCurrency(totalesSubtotalVentasGlobales)-->",
+			"otros_gastos": "<!--#4DHTML _V3_formatCurrency(totalesOtrosGastosGlobales)-->",
+			"gasto_p": "<!--#4DHTML _V3_formatCurrency(totalesGastoPreGlobales)-->",
+			"gasto_r": "<!--#4DHTML _V3_formatCurrency(totalesGastoRealGlobales)-->",
+			"por_gastar": "<!--#4DHTML _V3_formatCurrency(totalesPorGastarGlobales)-->",
+			"utilidad_presupuestada": "<!--#4DHTML _V3_formatCurrency(totalesUtilidadPreGlobales)-->",
+			"utilidad_real": "<!--#4DHTML _V3_formatCurrency(totalesUtilidadRealGlobales)-->",
+			"utilidad_final": "<!--#4DHTML _V3_formatCurrency(totalesUtilidadFinalGlobales)-->",
+			"totales_saldo_por_facturar": "<!--#4DHTML _V3_formatCurrency(totalesPorFacturarGlobales)-->",
+			"totales_facturado": "<!--#4DHTML _V3_formatCurrency(totalesFacturadosGlobales)-->",
+			"totales_cobrado": "<!--#4DHTML _V3_formatCurrency(totalesCobradoGlobales)-->",
+			"totales_por_cobrar": "<!--#4DHTML _V3_formatCurrency(totalesPorCobrarGlobales)-->",
+			"totales_justificado": "<!--#4DHTML _V3_formatCurrency(totalesJustificadosGlobales)-->",
+			"totales_por_justificar": "<!--#4DHTML _V3_formatCurrency(totalesPorJustificarGlobales)-->",
+			"totales_pagado": "<!--#4DHTML _V3_formatCurrency(totalesPagadoGlobales)-->",
+			"totales_por_pagar": "<!--#4DHTML _V3_formatCurrency(totalesPorPagarGlobales)-->",
+			"totales_neto": "<!--#4DHTML _V3_formatCurrency(totalesNetoGlobales)-->",
+			"totales_iva": "<!--#4DHTML _V3_formatCurrency(totalesIvaGlobales)-->",
+			"totales_nv": "<!--#4DHTML _V3_formatCurrency(totalesNVGlobales)-->"
+		},
+		"totales": {
+			"subtotal": "<!--#4DHTML _V3_formatCurrency(totalesSubtotalVentas)-->",
+			"otros_gastos": "<!--#4DHTML _V3_formatCurrency(totalesOtrosGastos)-->",
+			"gasto_p": "<!--#4DHTML _V3_formatCurrency(totalesGastoPre)-->",
+			"gasto_r": "<!--#4DHTML _V3_formatCurrency(totalesGastoReal)-->",
+			"por_gastar": "<!--#4DHTML _V3_formatCurrency(totalesPorGastar)-->",
+			"utilidad_presupuestada": "<!--#4DHTML _V3_formatCurrency(totalesUtilidadPre)-->",
+			"utilidad_real": "<!--#4DHTML _V3_formatCurrency(totalesUtilidadReal)-->",
+			"utilidad_final": "<!--#4DHTML _V3_formatCurrency(totalesUtilidadFinal)-->",
+			"totales_saldo_por_facturar": "<!--#4DHTML _V3_formatCurrency(totalesPorFacturar)-->",
+			"totales_facturado": "<!--#4DHTML _V3_formatCurrency(totalesFacturados)-->",
+			"totales_cobrado": "<!--#4DHTML _V3_formatCurrency(totalesCobrado)-->",
+			"totales_por_cobrar": "<!--#4DHTML _V3_formatCurrency(totalesPorCobrar)-->",
+			"totales_justificado": "<!--#4DHTML _V3_formatCurrency(totalesJustificados)-->",
+			"totales_por_justificar": "<!--#4DHTML _V3_formatCurrency(totalesPorJustificar)-->",
+			"totales_pagado": "<!--#4DHTML _V3_formatCurrency(totalesPagado)-->",
+			"totales_por_pagar": "<!--#4DHTML _V3_formatCurrency(totalesPorPagar)-->",
+			"totales_neto": "<!--#4DHTML _V3_formatCurrency(totalesNeto)-->",
+			"totales_iva": "<!--#4DHTML _V3_formatCurrency(totalesIva)-->",
+			"totales_nv": "<!--#4DHTML _V3_formatCurrency(totalesNV)-->"
+		},
+		"parametros" : {
+				"param1Name": "<!--#4DHTML _V3_escapeString(param1Name)-->",
+				"param1Status": <!--#4DIF param1Status-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+				"param2Name": "<!--#4DHTML _V3_escapeString(param2Name)-->",
+				"param2Status": <!--#4DIF param2Status-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+				"param3Name": "<!--#4DHTML _V3_escapeString(param3Name)-->",
+				"param3Status": <!--#4DIF param3Status-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+				"param4Name": "<!--#4DHTML _V3_escapeString(param4Name)-->",
+				"param4Status": <!--#4DIF param4Status-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+				"param5Name": "<!--#4DHTML _V3_escapeString(param5Name)-->",
+				"param5Status": <!--#4DIF param5Status-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+				"param6Name": "<!--#4DHTML _V3_escapeString(param6Name)-->",
+				"param6Status": <!--#4DIF param6Status-->true<!--#4DELSE -->false<!--#4DENDIF-->
+		},
+		"rows": [
+			<!--#4DLOOP aProyectoId -->
+			{
+				"id": <!--#4DHTML aProyectoId{aProyectoId}-->,
+				"folio": <!--#4DHTML aFolio{aProyectoId}-->,
+				"fecha_realizacion": "<!--#4DHTML String(aFechaRealizacion{aProyectoId})-->",
+				"fecha_cierre_negocio": "<!--#4DHTML String(aFechaCierre{aProyectoId})-->",
+				"fecha_asignacion": "<!--#4DHTML String(aFechaAsignacion{aProyectoId})-->",
+				"updated_at":"<!--#4DHTML String(aFechaUpdateAt{aProyectoId})-->",
+				"referencia": "<!--#4DHTML _V3_escapeString(aReferencia{aProyectoId})-->",
+				"rut_cliente": "<!--#4DHTML String(aRutCliente{aProyectoId})-->",
+				"razon_cliente": "<!--#4DHTML _V3_escapeString(aRazonCliente{aProyectoId})-->",
+				"user_name": "<!--#4DHTML _V3_escapeString(aUserName{aProyectoId}-->",
+				"ejecutivo": "<!--#4DHTML _V3_escapeString(aEjecutivo{aProyectoId})-->",
+				"area_negocio": "<!--#4DHTML _V3_escapeString(aCentroCosto{aProyectoId})-->",
+				"exchange": {
+					"type": "<!--#4DHTML aExchange{aProyectoId}-->",
+					"rate": "<!--#4DHTML String(aExchangeRate{aProyectoId};"&xml")-->"
+				},
+				"costo": {
+					"presupuestado": "<!--#4DHTML aTotalGastoPre{aProyectoId}-->",
+					"real":  "<!--#4DHTML aTotalGastoReal{aProyectoId}-->",
+					"por_gastar": "<!--#4DHTML  aPorGastar{aProyectoId}-->",
+					"total_justificado": "<!--#4DHTML   aTotalJustificado{aProyectoId}-->",
+					"total_por_justificar": "<!--#4DHTML  aTotalPorJustificar{aProyectoId}-->",
+					"total_pagado": "<!--#4DHTML   aTotalPagado{aProyectoId}-->",
+					"total_por_pagar": "<!--#4DHTML aTotalPorPagar{aProyectoId}-->"
+				},
+				"utilidad": {
+					"presupuestado": "<!--#4DHTML aTotalUtilidadPre{aProyectoId}-->",
+					"real": "<!--#4DHTML  aTotalUtilidadReal{aProyectoId}-->",
+					"final": "<!--#4DHTML   aTotalUtilidadFinal{aProyectoId}-->"
+				},
+				"estadonv": "<!--#4DTEXT aEstadoNV{aProyectoId}-->",
+				"estado": "<!--#4DTEXT aEstado{aProyectoId}-->",
+				"closed_compras": <!--#4DIF aEstadoCompras{aProyectoId}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+				"closed_ventas": <!--#4DIF aEstadoVentas{aProyectoId}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+				"porcentaje_ca_adicional": "<!--#4DHTML _V3_escapeString(aPorcentajeCAAdicional{aProyectoId})-->",
+				"total_venta": "<!--#4DHTML  aTotalVentas{aProyectoId}-->",
+				"total_neto": "<!--#4DHTML aTotalNeto{aProyectoId}-->",
+				"total_nv": "<!--#4DHTML  aTotalNV{aProyectoId}-->",
+				"total_por_facturar": "<!--#4DHTML  aTotalPorFacturar{aProyectoId}-->",
+				"total_facturado": "<!--#4DHTML aTotalFacturado{aProyectoId}-->",
+				"total_cobrado": "<!--#4DHTML aTotalCobrado{aProyectoId}-->",
+				"total_por_cobrar": "<!--#4DHTML aTotalPorCobrar{aProyectoId}-->",
+				"nro_oc_cliente": "<!--#4DHTML _V3_escapeString(aNumOCCliente{aProyectoId})-->",
+				"total_oc_cliente": "<!--#4DHTML  aTotalOCCliente{aProyectoId}-->",
+				"fecha_emision_oc_cliente": "<!--#4DHTML aFechaEmisionOCCliente{aProyectoId}-->",
+				"param1_valor": "<!--#4DHTML _V3_escapeString(aParam1{aProyectoId})-->",
+				"param2_valor": "<!--#4DHTML _V3_escapeString(aParam2{aProyectoId})-->",
+				"param3_valor": "<!--#4DHTML _V3_escapeString(aParam3{aProyectoId})-->",
+				"param4_valor": "<!--#4DHTML _V3_escapeString(aParam4{aProyectoId})-->",
+				"param5_valor": "<!--#4DHTML _V3_escapeString(aParam5{aProyectoId})-->",
+				"param6_valor": "<!--#4DHTML _V3_escapeString(aParam6{aProyectoId})-->",
+				"dscto_porcentaje": <!--#4DHTML String(Round(aPorcentaje_Desc{aProyectoId};2);"&xml")-->
+			}<!--#4DIF NOT(aProyectoId{aProyectoId} = aProyectoId{Size of array(aProyectoId)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		]
+		<!--#4DENDIF-->
+	}
+}
+
+
+

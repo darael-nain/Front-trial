@@ -1,0 +1,21 @@
+{	
+	"ot":{
+		"asignadas": "<!--#4DHTML OtAsignadas-->",
+		"trabajadas": "<!--#4DHTML OtTrabajadas-->",
+		"pendientes": "<!--#4DHTML OtPendientes-->"
+	},
+	"rows": [
+<!--#4DLOOP aIndex-->
+		{
+			"id_planner": <!--#4DHTML aIdPlanner{aIndex}-->,
+			"id_ot": <!--#4DHTML aIdOtPlanner{aIndex}-->,
+			"day": "<!--#4DHTML aDiaPlanner{aIndex}-->",
+			"star_date": "<!--#4DHTML aFechaDesdePlanner{aIndex}-->",
+			"star_time": "<!--#4DHTML aHoraDesdePlanner{aIndex}-->",
+			"end_date": "<!--#4DHTML aFechaHastaPlanner{aIndex}-->",
+			"end_time": "<!--#4DHTML aHoraHastaPlanner{aIndex}-->",
+			"planned_time": "<!--#4DHTML aHoraPlannedPlanner{aIndex}-->"
+		}<!--#4DIF NOT(aIndex{aIndex} = aIndex{Size of array(aIndex)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

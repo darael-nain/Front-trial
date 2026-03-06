@@ -1,0 +1,20 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Acceso_web]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP aIdAcceso -->
+		{
+			"id": <!--#4DHTML aIdAcceso{aIdAcceso}-->,
+			"des": "<!--#4DHTML aDesAcceso{aIdAcceso}-->",
+			"estado": <!--#4DHTML aEstadoAcceso{aIdAcceso}-->		
+		}<!--#4DIF NOT(aIdAcceso{aIdAcceso} = aIdAcceso{Size of array(aIdAcceso)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

@@ -1,0 +1,19 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Maestra_centrocosto]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP aAreaNegocioId -->
+		{
+			"id": <!--#4DHTML aAreaNegocioId{aAreaNegocioId}-->,
+			"text": "<!--#4DHTML _V3_escapeString(aAreaNegocioNombre{aAreaNegocioId})-->"
+		}<!--#4DIF NOT(aAreaNegocioId{aAreaNegocioId} = aAreaNegocioId{Size of array(aAreaNegocioId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

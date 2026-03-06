@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getCobroContent-->
+		<title>Nueva orden de pago</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/script/datepicker_es.js"></script>
+		<script>
+			var contentCobros = $("#sheet-cobros");
+			var contentCompras = $("#sheet-compras");
+			
+			var cobro = {
+				'id': contentCobros.data('id'),
+				'estado': contentCobros.data('estado'),		
+				'cta_cte': contentCobros.find('[name="cobros[cta_cte]"]').val(),
+				'tipo': contentCobros.find('[name="cobros[tipo]"]').val(),
+				'fecha_deposito': contentCobros.find('[name="cobros[fecha_deposito]"]').val(),
+				'nro_deposito': contentCobros.find('[name="cobros[nro_deposito]"]').val(),
+				'abono': contentCobros.find('[name="cobros[abono]"]').val(),
+				'observacion': contentCobros.find('[name="cobros[observacion]"]').val(),
+				'saldo_real' :  typeof compras  !="undefined" ? compras.saldo : 0,				
+				'fk': contentCompras.data('id'),
+				'id': contentCobros.data('id'),
+				'from': $("body ul li.active").data("name"),
+				'bloquear_cambio': <!--#4DIF bloquear_cambio-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+				'habilitar_repartir_deposito': <!--#4DIF fxr_habilitar_repartir_deposito-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+				"vCambio": parseFloat($('input[name="oc[moneda][valor_cambio]"]').val()),
+				display: function(){
+
+					if(cobro.id == 0){
+						cobro.estado = "POR EMITIR";
+					}
+
+					switch(cobro.estado) {
+						case 'POR EMITIR':
+							$('#dialog-menu [data-name="discard"]').hide();
+							$('#dialog-menu [data-name="delete_cobro"]').hide();
+							contentCobros.find('.seccion-saldo').hide();
+							contentCobros.find('input[name="cobros[abono]"]').val(globales.cobros.all_saldos);
+							break;
+
+			    		case 'EMITIDA':
+			    			$('#dialog-menu [data-name="discard"]').show();
+			    			$('#dialog-menu [data-name="delete_cobro"]').show();
+			    			contentCobros.find('.seccion-saldo').hide();
+			    			contentCobros.find('input[name="cobros[abono]"]').val(cobro.abono);
+			    			break;
+
+			    		case 'ANULADO':
+			    			// $('#dialog-menu').hide();
+			    			$('#dialog-menu [data-name="discard"]').hide();
+			    			$('#dialog-menu [data-name="save"]').hide();
+			    			contentCobros.find('.seccion-saldo').hide();
+							$('select[name="cobros[cta_cte]"], select[name="cobros[tipo]"]').prop('disabled', true);
+							$('input[name="cobros[fecha_deposito]"], input[name="cobros[nro_deposito]"], input[name="cobros[saldo_real]"]').prop('disabled', true).css('background-color','transparent');
+							$('input[name="cobros[saldo_real]"], input[name="cobros[abono]"]').prop('disabled', true).css('background-color','transparent');
+							$('textarea[name="cobros[observacion]"]').prop('disabled', true);
+							contentCobros.find('input[name="cobros[abono]"]').val(cobro.abono);
+			    			break;
+
+			    		default:
+			    			$('#dialog-menu [data-name="discard"]').hide();
+			    			$('#dialog-menu [data-name="delete_cobro"]').hide();
+			    			contentCobros.find('input[name="cobros[abono]"]').val(cobro.abono);
+        					
+			    	}
+
+					// cobro bloqueado para cambios
+					$('.bloquear-cambio').hide();
+					if (cobro.bloquear_cambio) {
+						$('.bloquear-cambio').show();
+						$('#dialog-menu [data-name="discard"]').hide();
+						$('#dialog-menu').hide();
+						$('select[name="cobros[cta_cte]"], select[name="cobros[tipo]"]').prop('disabled', true);
+						$('input[name="cobros[fecha_deposito]"], input[name="cobros[nro_deposito]"], input[name="cobros[saldo_real]"]').prop('disabled', true).css('background-color','transparent');
+						$('input[name="cobros[saldo_real]"], input[name="cobros[abono]"]').prop('disabled', true).css('background-color','transparent');
+						$('textarea[name="cobros[observacion]"]').prop('disabled', true);
+					}
+				}
+			}
+
+			var setCobro = function(){
+				unaBase.ui.unblock()
+
+				
+				var items = $('#box-distribuir-devolucion > table.lista-distribucion-devolucion > tbody > tr');
+				var objItems = {};
+				
+				
+
+				items.each(function(key, item) {
+					var llave = $(this).data('id');
+					var monto = $(this).find('input').val();
+					eval("obj = {'items_"+ llave +"' : '" + monto + "'}");
+					$.extend(objItems, objItems, obj);
+				});
+
+
+				cobro.idss = globales.cobros.ids,
+				cobro.multi = true,
+				cobro.cta_cte = contentCobros.find('[name="cobros[cta_cte]"]').val(),
+				cobro.tipo = contentCobros.find('[name="cobros[tipo]"]').val(),
+				cobro.fecha_deposito = contentCobros.find('[name="cobros[fecha_deposito]"]').val(),
+				cobro.nro_deposito = contentCobros.find('[name="cobros[nro_deposito]"]').val(),
+				cobro.abono = contentCobros.find('[name="cobros[abono]"]').val(),
+				cobro.observacion = contentCobros.find('[name="cobros[observacion]"]').val()
+
+
+				cobro = $.extend({}, cobro, objItems);
+			}
+				
+			var getCtaCte = function(){
+
+				var optionsObject;
+		        var select = $('select[name="cobros[cta_cte]"]');
+		        $.ajax({
+		          url: '/4DACTION/_V3_getCtaCte',
+		          dataType: 'json',
+		          data:{},
+		          success: function(data) {
+		          	// if (cobro.cta_cte == 0 ) {
+		          	// 	select.find("*").remove();
+		          	// 	optionsObject = $('<option selected value="'+ data.defecto.id +'">'+ data.defecto.text +'</option>');
+		           //  	select.append(optionsObject);
+		          	// }
+		          	$.each(data.rows, function(key, item){
+		          		if (item.id != cobro.cta_cte) {
+		          			// optionsObject = $('<option value="'+ item.id +'">'+ item.text +'</option>');
+		          			optionsObject = $(`<option ${item.default ? "selected": ""} value="${item.id}">${item.text}</option>`);
+		      
+		              		select.append(optionsObject);
+		          		}		              
+		            });
+		          }
+		        });
+			}
+
+			var getItemsFxr = function(){
+		        $.ajax({
+		          url: '/4DACTION/_V3_get_items_compras',
+		          dataType: 'json',
+		          data:{
+		          	'id_oc' : contentCompras.data('id')
+		          },
+		          success: function(data) {
+		          	var container = $('#box-distribuir-devolucion > table.lista-distribucion-devolucion > tbody');
+				    var htmlObject;
+				    container.find("*").remove();
+				    let montoADevolverPorItem = (compras.saldo / data.cantidadItemsSinTitulos);
+		          	$.each(data.rows, function(key,item){
+		          		if (item.tipo != "TITULO") {
+
+		          			if (item.monto_devuelto > 0) {
+		          				montoADevolverPorItem = item.monto_devuelto;
+		          			}
+
+		          			htmlObject = $('<tr data-id="' + item.llave + '">' +
+				            	'<td><div style="text-align:left;padding:5px;color:black;">' + item.nombre + '</div><div style="text-align:left;padding:5px;;color:gray;">(Neg. '+ item.nro_nv+': item '+ item.correlativo_item_negocio +' / '+ item.nombre_item_negocio +')</div></td>' +
+				            	'<td><input style="background-color:yellow;padding:5px;text-align:right;" type="text" value="'+ $.number(montoADevolverPorItem, currency.decimals, currency.decimals_sep, currency.thousands_sep) +'"></td>' +
+			            	'</tr>');
+			             	container.append(htmlObject);
+		          		}
+			        });
+		          }
+		        });
+			}
+
+			$(document).ready(function() {
+				
+				// focus al entrar
+				// setTimeout(function(){
+		        contentCobros.find('input[name="cobros[nro_deposito]"]').focus();
+		            /*if (cobro.id > 0 && cobro.estado !="ANULADO") {
+						$('#dialog-menu [data-name="discard"]').show();
+					}else{
+						$('#dialog-menu [data-name="discard"]').hide();
+					}*/
+		        // }, 1);				
+
+				// $('.ui-dialog fieldset').find('.numeric.currency input').number(true, currency.decimals, ',', '.');
+
+			//	$('.ui-dialog fieldset').find('.numeric.currency input').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+				unaBase.toolbox.init();
+				unaBase.toolbox.menu.init({
+					entity: 'Cobro',
+					buttons: ['save', 'discard', 'delete_cobro'],
+					data: function() {
+						setCobro();
+						return cobro;
+					},
+					validate: function() {
+						var status = true;
+						var nro = $.trim($('input[name="cobros[nro_deposito]"]').val());
+						var monto_ingresado = parseFloat($('input[name="cobros[abono]"]').val());
+						var msgError = "";
+
+						if (nro == "") {
+							msgError = msgError + '- Falta ingresar Nº depósito.<br/>';
+						}
+
+						if (monto_ingresado == 0 || monto_ingresado < 0) {
+							msgError = msgError + '- El monto del depósito no es correcto.<br/>';
+						}
+
+						if (monto_ingresado > cobro.saldo_real*cobro.vCambio) {
+							msgError = msgError + '- El monto ingresado es mayor al saldo.<br/>';
+							$('input[name="cobros[abono]"]').val(cobro.saldo_real*cobro.vCambio);
+						}
+
+						// verifica estatus final
+				        if (msgError == ''){
+				          status = true;
+				        }else{
+				          toastr.error(msgError);
+				          status = false;
+				        }
+
+				        return status;
+
+					}
+				});
+
+				getCtaCte();
+
+				// setTimeout(function(){
+				cobro.display();
+				// }, 1000);
+				// alert(cobro.abono);
+
+				contentCobros.find('.estado-cobro').text(cobro.estado);
+
+
+					
+				// ajuste para no cobrar de más cuando es fxr
+				$('input[name="cobros[abono]"]').blur(function(){
+					if (cobro.from == "rendiciones") {
+						var monto_ingresado = parseFloat($('input[name="cobros[abono]"]').val());
+						if (monto_ingresado > cobro.saldo_real*cobro.vCambio) {
+							$('input[name="cobros[abono]"]').val(cobro.saldo_real*cobro.vCambio);
+						}
+					}
+				});
+
+				$('#box-distribuir-devolucion').hide();
+				if (cobro.habilitar_repartir_deposito) {
+					getItemsFxr();
+					$('#box-distribuir-devolucion').show();
+				}
+				
+			});				
+		</script>
+		<style>
+			.ui-dialog fieldset > label > span > input {
+				display: inline-block;
+				width: calc(100% - 30px) !important;
+			}
+
+			.ui-dialog select{
+			  border:1px solid lightgray!important;
+			  padding:10px!important;
+			  min-width:100px!important;
+			  width:200px;
+			}
+
+			.labels > li{
+				display: inline-block;
+				border: 1px solid rgb(220,220,220);
+				background-color:rgb(232, 247, 232);
+				padding:3px;
+				border-radius:3px;
+				font-size:10px!important;
+				font-weight: bold;
+				text-transform: uppercase;
+				margin:2px;
+			}
+
+		</style>
+	</head>
+	<body>
+		<fieldset id="sheet-cobros" data-id="<!--#4DTEXT [Cobros]Id_Cobro-->" data-estado="<!--#4DTEXT [Cobros]Estado-->">			
+
+			<!--<legend>Depósito <span><label class="nro-orden"><!-  -#4DIF Not(Undefined([Cobros]Id_Cobro))- ->Nº <!- -#4DTEXT [Cobros]Nro_Cobro- -><!- -#4DENDIF- -></label></span> para la <span></span> <span></span></legend>-->
+
+			<legend>Depósito <span><label class="nro-orden"><!--#4DIF Not(Undefined([Cobros]Id_Cobro))-->Nº <!--#4DTEXT [Cobros]Nro_Cobro--><!--#4DENDIF--></label></legend>
+
+			<ul class="labels">
+				<li style="background-color:#F9994D!important;cursor:pointer;border-radius:5px;" class="bloquear-cambio"><span title="No es posible realizar cambios. El cobro se encuentra cerrado administrativamente." class="ui-icon ui-icon-locked"></span></li>
+
+				<li class="estado-cobro">POR EMITIR</li>
+
+			</ul>
+
+			<label>
+				<span>Cuenta</span>
+				<select required name="cobros[cta_cte]">
+					<option selected="selected" value="<!--#4DTEXT [Cobros]id_cta_cte-->"><!--#4DTEXT [Prm_cta_cte]des_banco-->/<!--#4DTEXT [Prm_cta_cte]nro_cta_cte--></option>
+				</select>
+			</label>
+			<label>
+				<span>Tipo</span>
+				<select required name="cobros[tipo]">
+					<option selected="selected" value="DEPOSITO">Depósito</option>
+					<option value="TRANSFERENCIA">Transferencia</option> 
+					<option value="CHEQUE">Cheque</option> 
+					<option value="EFECTIVO">Efectivo</option> 
+					<option value="TRANSBANK">Transbank</option> 
+				</select>
+			</label>
+			<label>
+				<span>Fecha</span>
+				<input required type="text" class="datepicker" name="cobros[fecha_deposito]" value="<!--#4DTEXT vFechaDesposito-->">
+			</label>
+			<label>
+				<span>Nº depósito</span>
+				<span class="editable"><input required id="wwrerere" type="text" name="cobros[nro_deposito]" value="<!--#4DTEXT [Cobros]Nro_Cobro-->"></span>
+			</label>
+			<label class="seccion-saldo">
+				<span>Saldo</span>
+				<span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input readonly type="text" name="cobros[saldo_real]"></span>
+			</label>
+			<label class="numeric currency">
+				<span>Monto depósito</span>
+				<span class="numeric currency editable"><!--#4DVAR _V3_defaultCurrencySymbol--> <input required type="text" name="cobros[abono]" value=""></span>
+			</label>
+			<br>
+			<label class="full-width">
+				<span>Observación</span>
+				<textarea name="cobros[observacion]"><!--#4DHTML [Cobros]AnotacionesCobro--></textarea>
+			</label>		
+		</fieldset>
+
+		<div id="box-distribuir-devolucion" style="margin-top:5px;">
+			<div style="margin:3px 0 3px 0;"><a href="#" style="text-decoration:underline;color:black;font-weight:bold;">Distribución por ítems</a></div>
+			<table class="lista-distribucion-devolucion">
+				<thead>
+					<tr>
+						<th>Ítem</th>
+						<th>Monto a devolver [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="2">Cargando...</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+	</body>
+</html>

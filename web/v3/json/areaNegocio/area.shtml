@@ -1,0 +1,8 @@
+{
+	"id": <!--#4DHTML id-->,
+	"estado": <!--#4DIF estado-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"default": <!--#4DIF default-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"descripcion_centrocosto": "<!--#4DTEXT descripcion_centrocosto-->",
+	"cuenta_contable": "<!--#4DTEXT cuenta_contable-->",
+	"inicial": "<!--#4DTEXT inicial-->"
+}

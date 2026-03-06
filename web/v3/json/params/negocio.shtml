@@ -1,0 +1,17 @@
+{
+	"param4": "<!--#4DHTML _V3_escapeString(param4)-->",
+	"itemLoadByCategoria": <!--#4DHTML itemLoadByCategoria-->,
+	"noIncluyeCotizacion": "<!--#4DHTML _V3_escapeString(noIncluyeCotizacion)-->",
+	"condicion_negocio": "<!--#4DHTML _V3_escapeString(condicion_negocio)-->",
+	"paramc4": <!--#4DIF paramc4-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"calculoSubcategoria": <!--#4DIF calculoSubcategoria-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"v3_sobrecargos_cinemagica": <!--#4DIF v3_sobrecargos_cinemagica-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"v3_no_cambiar_ejecutivo_dup": <!--#4DIF v3_no_cambiar_ejecutivo_dup-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"v3_block_cot_neg": <!--#4DIF v3_block_cot_neg-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"v3_MostrarRut_Cotizacion": <!--#4DIF v3_MostrarRut_Cotizacion-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"v3_usar_siempre_modo_offline": <!--#4DIF v3_usar_siempre_modo_offline-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"sobrecargosPlantilla": <!--#4DIF sobrecargosPlantilla-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"v3_modo_offline_cantidad_items": <!--#4DHTML v3_modo_offline_cantidad_items-->,
+	"disBusquedaGastoFijo": <!--#4DIF disBusquedaGastoFijo-->true<!--#4DELSE-->false<!--#4DENDIF-->
+
+}

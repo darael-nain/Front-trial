@@ -1,0 +1,41 @@
+<!--#4DINCLUDE head.shtml-->
+<body>
+<!--#4DIF vSesion>0-->
+<!--#4DINCLUDE menuSuperior.shtml-->
+<!--#4DINCLUDE mensajes2.shtml-->
+    <section>     
+    	<h1>Seleccionar Proyecto : </h1>
+         <article>
+         <h3>Total Proyectos : <!--#4DVAR vcantneg--></h3>
+          <div class="buscar-negocios">
+                <form id="frmbuscadores" class="frmbuscadores"  action="/4DACTION/W_BUSCAR_NEG_DUP" method="post" >
+                    <label for="cbo-buscadores">Buscar x : </label>
+                    <select name="opcionbuscarneg" id="opcionbuscarneg" class="listas-especiales2">
+                            <option selected value="nro">Nro del Proyecto</option>
+                            <option value="cliente">Cliente</option>
+                            <option value="referencia">Referencia</option>                          
+                    </select>
+                    <input required autofocus class="txtbuscar" id="txtbuscar" name="txtbuscar" type="text"/>
+                    <button  id="buttonbuscar"class="buttonbuscar" type="submit">
+                            <img src="/imagenes/search.gif" border="0" /> Buscar
+                    </button>
+                </form>
+            </div>         	
+            <div class="lista-neg">
+                <form name="chknegdup" id="chknegdup"  action="/4DACTION/W_SELECCIONAR_NEG" method="post" >
+                    <input id="idnegseleccionadodup" name="idnegseleccionadodup" type="hidden" value="">                                     
+                    <div class="lista"><!--#4DINCLUDE lista_neg_dup_encontradas.shtml--></div>
+                    <p><!--#4DVAR vcantneg--> Negocios encontrados</p>           
+                </form>            
+            </div>        
+               						               
+         </article>
+    </section>
+<!--#4DELSE-->
+  <p>
+    	LA SESI&Oacute;N HA EXPIRADO...!!!
+		<a class="enlaces" href="index.shtml?t=<!--#4DVAR String(Milliseconds+Random(2))-->">VOLVER A INICIAR</a>
+    </p>
+<!--#4DENDIF-->       
+</body>
+</html>

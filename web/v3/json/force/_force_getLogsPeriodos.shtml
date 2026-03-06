@@ -1,0 +1,14 @@
+{
+	"rows": [
+	<!--#4DLOOP aId -->
+			{
+                "Id": "<!--#4DHTML aId{aId}-->",
+                "Event": "<!--#4DHTML aEvent{aId}-->",
+				"modulo": "<!--#4DHTML aModule{aId}-->",
+				"UserName": "<!--#4DHTML aUserName{aId}-->",
+                "Date": "<!--#4DHTML aDate{aId}-->",
+                "Hour": "<!--#4DHTML aHour{aId}-->"
+			}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

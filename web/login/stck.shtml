@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script type="text/javascript">
+		
+				let url = new URL(decodeURIComponent(window.location.href));
+				let fromUrl = url.searchParams.get("fromUrl");
+				// Legacy bridge: no cookie write here, only redirect.
+				let homeUrl = "/app/home";
+			
+			switch(fromUrl){
+				case "rendir":
+					homeUrl = "/rendir/index.shtml"
+					break;
+					case "validar":
+						homeUrl = "/app/home?fromUrl=validar"
+						break;
+					default:
+						homeUrl = "/app/home"
+						break;
+				}
+				window.location.href = homeUrl
+				// If (Undefined(fromUrl))
+
+				// $homeUrl:="/app/home"
+				// Else 
+
+				// Case of 
+				// : (fromUrl="rendir")
+
+				// $homeUrl:="http://dev1.unabase.cl/rendir/index.shtml"
+				// : (fromUrl="home")
+
+				// $homeUrl:="/app/home"
+				// : (fromUrl="validar")
+
+
+				// $homeUrl:="/app/home?fromUrl=validar"
+				// End case 
+
+			// End if 
+	</script>
+</head>
+<body>
+
+</body>
+</html>

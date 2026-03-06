@@ -1,0 +1,12 @@
+{
+	"rows": [
+		{
+		  	"id":"true",
+		  	"text":"CHEQUE"
+		},
+		{
+			"id":"false",
+			"text":"TRANSFERENCIA"
+		}
+	]
+}

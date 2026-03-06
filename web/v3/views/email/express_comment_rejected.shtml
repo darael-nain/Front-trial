@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_serverInfo-->
+		<!--#4DSCRIPT/_V3_proxy_getValidaExpressOK-->
+		<title>Validación rechazada</title>
+		<meta charset="utf-8">
+		<script src="/v3/script/jquery/jquery.js"></script>
+		<script src="/v3/script/jquery/plugins/jquery-ui/js/jquery-ui.js"></script>
+		<script src="/v3/script/jquery/plugins/jquery-cookie/jquery.cookie.js"></script>
+		<script src="/v3/script/unabase.js?<!--#4DTEXT _V3_version-->"></script>
+		<script src="/v3/script/home.js?<!--#4DTEXT _V3_version-->"></script>
+		<script src="/v3/script/jquery/plugins/bindWithDelay/bindWithDelay.js"></script>
+		<script src="/v3/script/jquery/plugins/tooltipster/js/jquery.tooltipster.js"></script>
+		<script type="text/javascript" src="//<!--#4DVAR _V3_nodejs_public_ipaddr-->:<!--#4DVAR _V3_nodejs_port-->/socket.io/socket.io.js"></script>
+		<script src="/v3/script/chat.js?<!--#4DTEXT _V3_version-->"></script>
+		<script src="/v3/script/help.js?<!--#4DTEXT _V3_version-->"></script>
+		<script src="/v3/script/jquery/plugins/toastr/toastr.js"></script>
+		<script>
+
+			window.onbeforeunload = undefined;
+
+			var hash = '<!--#4DHTML _V3_hash-->';
+			var nodejs_port = "<!--#4DHTML _V3_nodejs_port-->";
+			var nodejs_public_ipaddr = "<!--#4DHTML _V3_nodejs_public_ipaddr-->";
+			var promptData = "Mal ingresado";
+
+			var setLogValidacion = function(id){
+				$.ajax({
+					url: '/4DACTION/_V3_setLogValidacion',
+					data: {
+						id: id,
+						approved: false,
+						observacion: promptData
+					},
+					dataType: 'json',
+					success: function(data) {
+						if (data.success) {
+							$(".status").text("El documento ha sido rechazado.");
+							var username = data.valida_user_emisor;
+							var record_name = data.valida_record_name;
+							var id_tipo_gasto = data.id_tipo_gasto;
+							var index = data.valida_index; 
+							var text = data.valida_text;
+							var id = data.valida_id;
+							var usernameValidador = data.valida_user_validador;
+							var nameValidador = data.valida_name_validador;
+							var emailValidator = data.valida_email_validador;
+							if (record_name == "Gasto") {	
+
+								if (id_tipo_gasto == "OC") {
+									record_name = "Orden de Compra"
+								}else{
+									record_name = "Rendición de fondos"
+								}
+								
+								unaBase.email.notify(username, 'validation_rejected', record_name, index, text, null, 'compras/content.shtml', id, undefined, usernameValidador, nameValidador, emailValidator);
+								unaBase.inbox.send({
+									to: username,
+									subject: 'Rechazó validar ' + record_name + ' Nº ' + index + ' / ' + text,
+									into: 'viewport',
+									href: '/v3/views/compras/content.shtml?id=' + id,
+									tag: 'avisos'
+								});
+								unaBase.log.save('Ha rechazado validar el gasto', 'cotizaciones', index, id);
+							}else{
+								unaBase.email.notify(username, 'validation_rejected', record_name, index, text, null, 'cotizaciones/content.shtml', id, undefined, usernameValidador, nameValidador, emailValidator);
+								unaBase.inbox.send({
+									to: username,
+									subject: 'Rechazó validar ' + record_name + ' Nº ' + index + ' / ' + text,
+									into: 'viewport',
+									href: '/v3/views/cotizaciones/content.shtml?id=' + id,
+									tag: 'avisos'
+								});
+								unaBase.log.save('Ha rechazado validar la cotización', 'cotizaciones', index, id);
+							}
+
+						}else{
+							$(".status").text("No se pudo rechazar el documento. Por favor intentar nuevamente.");
+						}
+
+						setTimeout(function(){
+							window.close();
+						}, 4000);
+							
+					}
+				});
+			}
+			$(document).ready(function(){
+				setLogValidacion(<!--#4DTEXT id-->);
+			});
+		</script>
+		<style type="text/css">
+			body{
+				font-size:20pt!important;
+			}
+			div.status{
+				text-align:center;
+				color:red;
+				font-size: 1em;
+				font-weight:bold;
+			}
+			h1{
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<h1><img src="/v3/design/html/body.menu/nav/h1.png"></h1>
+		<div class="status"></div>
+		<div class="actions" style="display:none"><a style="font-size: inherit !important; display: inline-block !important; padding: 10px!important; background-color: rgb(67,175,124) !important; border: 1px solid rgb(67,175,124) !important; border-radius: 3px !important; margin: 5px 10px 5px 10px!important; color: white; text-decoration: none" href="http://' + window.location.hostname + ':' + window.location.port + '/v3/views/email/express_validation_accepted.shtml?i=' + validaciones[i]['ids'][j] + '">Validar</a><a style="font-size: inherit !important; display: inline-block !important; padding: 10px!important; background-color: rgb(204,51,0) !important; border: 1px solid rgb(204,51,0) !important; border-radius: 3px !important; margin: 5px 10px 5px 10px!important; color: white; text-decoration: none" href="http://' + window.location.hostname + ':' + window.location.port + '/v3/views/email/express_validation_rejected.shtml?i=' + validaciones[i]['ids'][j] + '">Rechazar</a></div>
+	</body>
+</html>
+
+
+/* Large desktop */
+@media (min-width: 1200px) { ... }
+
+/* Portrait tablet to landscape and desktop */
+@media (min-width: 768px) and (max-width: 979px) { ... }
+
+/* Landscape phone to portrait tablet */
+@media (max-width: 767px) { ... }
+
+/* Landscape phones and down */
+@media (max-width: 480px) { ... }
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) { }
+
+/* Smartphones (landscape) ----------- */
+@media only screen and (min-width : 321px) { }
+
+/* Smartphones (portrait) ----------- */
+@media only screen and (max-width : 320px) { }
+
+/* iPads (portrait and landscape) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) { }
+
+/* iPads (landscape) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) { }
+
+/* iPads (portrait) ----------- */
+@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) { }
+
+/* Desktops and laptops ----------- */
+@media only screen and (min-width : 1224px) { }
+
+/* Large screens ----------- */
+@media only screen and (min-width : 1824px) { }
+
+/* iPhone 4 and high pixel ratio devices ----------- */
+@media
+only screen and (-webkit-min-device-pixel-ratio : 1.5),
+only screen and (min-device-pixel-ratio : 1.5) { }
+
+
+
+

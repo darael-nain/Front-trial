@@ -1,0 +1,40 @@
+{
+	"records": {
+		"total_records": <!--#4DHTML totalRecords_-->
+	},
+	"data":{
+			<!--#4DIF totalRecords_ > 0-->
+
+		"rows": [
+			<!--#4DLOOP aIdMov-->
+			{
+				"id": <!--#4DHTML aIdMov{aIdMov}-->,
+				"folio": "<!--#4DHTML aFolio{aIdMov}-->",
+				"total": "<!--#4DHTML aTotal{aIdMov}-->",
+				"fecha": "<!--#4DHTML aFecha{aIdMov}-->",
+				"description": "<!--#4DHTML  _V3_escapeString(aDesc{aIdMov})-->",
+				"abono": <!--#4DIF Not(Undefined(aAbono))--><!--#4DIF  aAbono{aIdMov}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+				"banco": "<!--#4DHTML aBanco{aIdMov}-->",
+				"contraparte": "<!--#4DHTML aContraparte{aIdMov}-->",
+				"rut": "<!--#4DHTML aRut{aIdMov}-->",
+				"dv": "<!--#4DHTML aDv{aIdMov}-->",
+				"numero_cuenta": "<!--#4DHTML aNumeroCuenta{aIdMov}-->",
+				"status": "<!--#4DHTML aStatus{aIdMov}-->",
+				"conciliado": <!--#4DIF Not(Undefined(aConciliado))--><!--#4DIF  aConciliado{aIdMov}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+				"recordsMatchAbonos": <!--#4DHTML recordsMatchAbonos{aIdMov}-->,
+				"recordsMatchCargos": <!--#4DHTML recordsMatchCargos{aIdMov}-->
+			}<!--#4DIF NOT(aIdMov{aIdMov} = aIdMov{Size of array(aIdMov)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		]
+
+
+		<!--#4DENDIF-->
+
+	}
+	
+	
+}
+
+
+
+

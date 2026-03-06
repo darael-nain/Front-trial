@@ -1,0 +1,38 @@
+ <!--#4DINCLUDE head.shtml-->
+ <script>
+  $(document).ready(function() {
+    $("#tabs").tabs();
+  });
+  </script>
+<body style="font-size:62.5%;">
+<!--#4DIF vSesion>0-->
+<div id="tabs">
+    <ul>
+        <li><a href="#fragment-1"><span>One</span></a></li>
+        <li><a href="#fragment-2"><span>Two</span></a></li>
+        <li><a href="#fragment-3"><span>Three</span></a></li>
+    </ul>
+    <div id="fragment-1">
+        <p>First tab is active by default:</p>
+        <pre><code>$('#example').tabs();</code></pre>
+    </div>
+    <div id="fragment-2">
+        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+    </div>
+    <div id="fragment-3">
+        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+        Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+    </div>
+</div>
+
+<!--#4DELSE-->
+    <p>
+    LA SESI&Oacute;N HA EXPIRADO...!!!
+    <a class="enlaces" href="index.shtml?t=<!--#4DVAR String(Milliseconds+Random(2))-->">VOLVER A INICIAR</a>
+    </p>
+<!--#4DENDIF-->      
+
+</body>
+</html>

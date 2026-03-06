@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <!--#4DSCRIPT/_V3_serverInfo-->
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Centros de costos</title>
+
+  <!-- 🔒 GUARD: oculta todo y solo muestra si (1) iframe same-origin + (2) login OK -->
+  <style>
+    html.guard-hide body {
+      display: none !important;
+    }
+  </style>
+  <script>
+    (function guard() {
+      // Oculta todo por defecto (evita que se vea contenido antes del check)
+      document.documentElement.classList.add("guard-hide");
+
+      const deny = () => {
+        // “No aparece nada”: dejamos el body vacío + oculto
+        try { if (document.body) document.body.innerHTML = ""; } catch (_) { }
+        // mantenemos guard-hide activo
+      };
+
+      const allow = () => {
+        document.documentElement.classList.remove("guard-hide");
+      };
+
+      // 1) Debe estar embebido en iframe (si lo abres directo en pestaña => DENY)
+      let isInIFrame = false;
+      try {
+        isInIFrame = (window.self !== window.top);
+      } catch (e) {
+        // Si falla acceder a top, asumimos cross-origin => DENY abajo
+        isInIFrame = true;
+      }
+      if (!isInIFrame) return deny();
+
+      // 2) El parent debe ser same-origin (si no => DENY)
+      try {
+        if (window.top.location.origin !== window.location.origin) return deny();
+      } catch (e) {
+        return deny();
+      }
+
+      // 3) Debe estar logeado (reusa tu misma lógica)
+      const checkUrl =
+        `${window.origin}/4DACTION/_v3_checkLogin?nodeUrl=${encodeURIComponent("https://frank.unabase.com/node")}`;
+
+      fetch(checkUrl, { credentials: "include", cache: "no-store" })
+        .then(r => r.ok ? r.json() : Promise.reject(r))
+        .then(data => {
+          if (!data || !data.isLogin || data.login == null) return deny();
+          // OK: recién aquí mostramos
+          allow();
+        })
+        .catch(() => deny());
+    })();
+  </script>
+  <!-- 🔒 FIN GUARD -->
+
+  <!-- Para que se vean los íconos <i class="fas ..."> -->
+  <script defer src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.6.8/dist/axios.min.js"></script>
+  <script defer type="text/javascript" src="/configuracion/script/general_functions.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.css">
+  <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+
+  <style>
+    :root {
+      --brand: #20A789;
+      --brandHover: #1c9279;
+
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --soft: #f3f4f6;
+
+      --text: #111827;
+      --muted: #6b7280;
+
+      --border: rgba(17, 24, 39, .10);
+      --borderStrong: rgba(17, 24, 39, .14);
+
+      --danger: #dc3545;
+      --dangerBg: rgba(220, 53, 69, .10);
+
+      --radius: 12px;
+      --radiusSm: 10px;
+
+      --shadow: 0 10px 25px rgba(17, 24, 39, .06);
+      --shadowSm: 0 6px 16px rgba(17, 24, 39, .06);
+
+      --ring: 0 0 0 4px rgba(32, 167, 137, .18);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, Helvetica, sans-serif;
+      background: radial-gradient(1200px 500px at 20% 0%, rgba(32, 167, 137, .10), transparent 60%),
+        var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 22px auto;
+      padding: 0 16px;
+    }
+
+    .box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .boxHeader {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--border);
+      background:
+        linear-gradient(180deg, rgba(32, 167, 137, .08), transparent 70%),
+        #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(32, 167, 137, .12);
+      color: #0b5f4c;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 14px;
+      border: 1px solid rgba(32, 167, 137, .20);
+      letter-spacing: .2px;
+    }
+
+    .tag::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--brand);
+      box-shadow: 0 0 0 3px rgba(32, 167, 137, .18);
+    }
+
+    .topActions {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      background: #fff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    a.btn,
+    button.btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      text-decoration: none !important;
+      font-weight: 800;
+      font-size: 14px;
+      cursor: pointer;
+      user-select: none;
+      line-height: 1.1;
+      white-space: nowrap;
+      transition: transform .12s ease, box-shadow .12s ease, background-color .12s ease, border-color .12s ease;
+    }
+
+    .btn-success {
+      background: var(--brand) !important;
+      border-color: rgba(0, 0, 0, 0) !important;
+      color: #fff !important;
+      box-shadow: 0 10px 20px rgba(32, 167, 137, .18);
+    }
+
+    .btn-success:hover {
+      background: var(--brandHover) !important;
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px rgba(32, 167, 137, .22);
+    }
+
+    .btn-success:active {
+      transform: translateY(0);
+      box-shadow: 0 8px 16px rgba(32, 167, 137, .18);
+    }
+
+    .btn-labeled {
+      padding-left: 14px !important;
+    }
+
+    .btn-labeled .btn-label {
+      position: static !important;
+      width: auto !important;
+      background: transparent !important;
+      border-right: 0 !important;
+      border-radius: 0 !important;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 2px;
+    }
+
+    .btn-labeled strong {
+      background: transparent !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      display: inline !important;
+      color: #fff !important;
+    }
+
+    .btnLite {
+      border: 1px solid var(--borderStrong);
+      background: #fff;
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      white-space: nowrap;
+      transition: transform .12s ease, box-shadow .12s ease, background-color .12s ease, border-color .12s ease;
+    }
+
+    .btnLite:hover {
+      background: var(--soft);
+      transform: translateY(-1px);
+      box-shadow: var(--shadowSm);
+    }
+
+    .btnLite:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    .btnLite.disabled {
+      opacity: .55;
+      cursor: not-allowed;
+      pointer-events: none;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .content {
+      padding: 18px;
+      background: transparent;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .content {
+        padding: 14px;
+      }
+    }
+
+    .panel {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: var(--shadowSm);
+      overflow: hidden;
+      transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease;
+    }
+
+    .panel:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 28px rgba(17, 24, 39, .08);
+      border-color: rgba(32, 167, 137, .20);
+    }
+
+    .panelTitle {
+      padding: 14px 14px;
+      border-bottom: 1px solid var(--border);
+      background:
+        linear-gradient(90deg, rgba(32, 167, 137, .16), rgba(32, 167, 137, 0) 55%),
+        #fff;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .panelTitle span {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .panelTitle span::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      background: var(--brand);
+    }
+
+    .panelBody {
+      padding: 14px;
+    }
+
+    .field {
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: var(--text);
+      margin-bottom: 6px;
+      font-weight: 800;
+    }
+
+    select {
+      width: 100%;
+      border: 1px solid var(--borderStrong);
+      border-radius: 12px;
+      padding: 11px 12px;
+      background: #fff;
+      outline: none;
+      transition: box-shadow .12s ease, border-color .12s ease;
+    }
+
+    select:hover {
+      border-color: rgba(32, 167, 137, .30);
+    }
+
+    select:focus {
+      border-color: rgba(32, 167, 137, .55);
+      box-shadow: var(--ring);
+    }
+
+    .listWrap {
+      margin-top: 12px;
+      border-top: 1px dashed rgba(17, 24, 39, .12);
+      padding-top: 12px;
+    }
+
+    .listHeader {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 6px 0 10px;
+      font-weight: 900;
+    }
+
+    .count {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 800;
+      background: rgba(17, 24, 39, .04);
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(17, 24, 39, .06);
+    }
+
+    .rows {
+      border: 1px solid var(--border);
+      border-radius: var(--radiusSm);
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 12px;
+      border-top: 1px solid var(--border);
+      transition: background-color .12s ease;
+    }
+
+    .row:first-child {
+      border-top: none;
+    }
+
+    .row:hover {
+      background: rgba(32, 167, 137, .06);
+    }
+
+    .rowName {
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: .1px;
+      text-transform: none;
+      color: #111827;
+    }
+
+    .xbtn {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid rgba(220, 53, 69, .30);
+      background: var(--dangerBg);
+      color: var(--danger);
+      cursor: pointer;
+      font-weight: 900;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform .12s ease, background-color .12s ease, border-color .12s ease;
+    }
+
+    .xbtn:hover {
+      background: rgba(220, 53, 69, .16);
+      border-color: rgba(220, 53, 69, .55);
+      transform: translateY(-1px);
+    }
+
+    .xbtn:active {
+      transform: translateY(0);
+    }
+
+    .empty {
+      padding: 14px;
+      color: var(--muted);
+      font-size: 13px;
+      background: rgba(17, 24, 39, .03);
+    }
+
+    /* Accesibilidad: focus visible */
+    a.btn:focus-visible,
+    button:focus-visible,
+    select:focus-visible {
+      outline: none;
+      box-shadow: var(--ring);
+    }
+
+    /* TomSelect look & feel */
+    .ts-wrapper {
+      width: 100%;
+    }
+
+    .ts-control {
+      border: 1px solid var(--borderStrong) !important;
+      border-radius: 12px !important;
+      padding: 6px 10px !important;
+      min-height: 44px !important;
+      box-shadow: none !important;
+    }
+
+    .ts-control:hover {
+      border-color: rgba(32, 167, 137, .30) !important;
+    }
+
+    .ts-wrapper.focus .ts-control {
+      border-color: rgba(32, 167, 137, .55) !important;
+      box-shadow: var(--ring) !important;
+    }
+
+    .ts-dropdown {
+      border: 1px solid var(--borderStrong) !important;
+      border-radius: 12px !important;
+      overflow: hidden !important;
+    }
+
+    .ts-dropdown .active {
+      background: rgba(32, 167, 137, .10) !important;
+    }
+
+    .ts-dropdown .option_create {
+      font-weight: 800;
+    }
+
+    /* Spinner */
+    #loading-screen {
+      background-color: rgba(25, 25, 25, 0.7);
+      height: 100%;
+      width: 100%;
+      position: fixed;
+      z-index: 9999;
+      margin-top: 0;
+      top: 0;
+      text-align: center;
+    }
+
+    #loading-screen img {
+      width: 100px;
+      height: 100px;
+      position: relative;
+      margin-top: -50px;
+      margin-left: -50px;
+      top: 50%;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="loading-screen" style="display: none;">
+    <img src="/configuracion/script/img/spinning-circles.svg">
+  </div>
+  <div class="container">
+
+    <div class="box">
+      <div class="boxHeader">
+        <span class="tag">Centros de costos</span>
+      </div>
+
+      <div class="topActions">
+        <a class="btn btn-success btn-labeled" href="/configuracion/index.shtml" role="button">
+          <span class="btn-label"><i class="fas fa-arrow-circle-left" aria-hidden="true"></i></span>
+          <strong>Volver</strong>
+        </a>
+
+        <button id="btnReload" class="btnLite" type="button">
+          <i class="fas fa-sync-alt" aria-hidden="true"></i>
+          Recargar
+        </button>
+      </div>
+
+      <div class="content">
+        <div class="grid">
+          <section class="panel">
+            <div class="panelTitle"><span>Centro costo 1</span></div>
+            <div class="panelBody">
+              <div class="field">
+                <label for="select1">Agregar al Centro costo 1</label>
+                <select id="select1">
+                  <option value="">Cargando...</option>
+                </select>
+              </div>
+
+              <div class="listWrap">
+                <div class="listHeader">
+                  <span>Asignados a Centro costo 1</span>
+                  <span class="count"><span id="count1">0</span> asignado(s)</span>
+                </div>
+                <div class="rows" id="list1"></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panelTitle"><span>Centro costo 2</span></div>
+            <div class="panelBody">
+              <div class="field">
+                <label for="select2">Agregar al Centro costo 2</label>
+                <select id="select2">
+                  <option value="">Cargando...</option>
+                </select>
+              </div>
+
+              <div class="listWrap">
+                <div class="listHeader">
+                  <span>Asignados a Centro costo 2</span>
+                  <span class="count"><span id="count2">0</span> asignado(s)</span>
+                </div>
+                <div class="rows" id="list2"></div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    let __busyCount = 0;
+
+    function safeBlock() {
+      try { spinnerMain?.(true); } catch (_) { }
+    }
+
+    function safeUnblock() {
+      try { spinnerMain?.(false); } catch (_) { }
+    }
+    (function () {
+      function getBaseUrl() {
+        const p = new URLSearchParams(location.search);
+        const h = (p.get("hostname") || "").trim();
+        if (!h) return window.location.origin;
+        if (/^https?:\/\//i.test(h)) return h.replace(/\/+$/, '');
+        return ("https://" + h).replace(/\/+$/, '');
+      }
+      const baseUrl = getBaseUrl();
+
+      const el = {
+        btnReload: document.getElementById("btnReload"),
+        select1: document.getElementById("select1"),
+        select2: document.getElementById("select2"),
+        list1: document.getElementById("list1"),
+        list2: document.getElementById("list2"),
+        count1: document.getElementById("count1"),
+        count2: document.getElementById("count2"),
+      };
+
+      const state = {
+        options1: [],
+        options2: [],
+        assigned1: new Set(),
+        assigned2: new Set(),
+        ts1: null,
+        ts2: null,
+      };
+
+      function setBusy(on) {
+        if (on) {
+          __busyCount++;
+          if (__busyCount === 1) safeBlock(); // solo bloquea en la primera
+        } else {
+          __busyCount = Math.max(0, __busyCount - 1);
+          if (__busyCount === 0) safeUnblock(); // solo desbloquea al final real
+        }
+
+        // UI disable/enable (lo que ya tenías)
+        el.btnReload.classList.toggle("disabled", __busyCount > 0);
+        el.select1.disabled = __busyCount > 0;
+        el.select2.disabled = __busyCount > 0;
+
+        // si usas TomSelect:
+        if (state.ts1) (__busyCount > 0 ? state.ts1.disable() : state.ts1.enable());
+        if (state.ts2) (__busyCount > 0 ? state.ts2.disable() : state.ts2.enable());
+      }
+
+      async function fetchAny(url) {
+        const res = await fetch(url);
+        const raw = await res.text();
+
+        const tryParse = (txt) => {
+          const t = (txt || "").trim().replace(/^\uFEFF/, "");
+          if (!t) return null;
+          if (t[0] !== "{" && t[0] !== "[") return null;
+          try { return JSON.parse(t); } catch (_) { return null; }
+        };
+
+        if (!res.ok) throw new Error(`HTTP ${res.status} :: ${raw.slice(0, 300)}`);
+
+        const parsed = tryParse(raw);
+        return (parsed !== null) ? parsed : raw;
+      }
+
+      function escapeHtml(s) {
+        return String(s)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function uniqSorted(arr) {
+        return Array.from(new Set(arr))
+          .map(s => String(s).trim())
+          .filter(Boolean)
+          .sort((a, b) => a.localeCompare(b, "es", { sensitivity: "base" }));
+      }
+
+      function normalizeOptions(json) {
+        if (json && typeof json === "object" && Array.isArray(json.rows)) {
+          return json.rows
+            .map(r => {
+              if (!r || typeof r !== "object") return "";
+              if ("estado" in r && r.estado === false) return "";
+              return (
+                r.descripcion_centrocosto ??
+                r.text ??
+                r.Nombre ??
+                r.nombre ??
+                r.name ??
+                r.value ??
+                r.label ??
+                ""
+              ).toString();
+            })
+            .map(s => s.trim())
+            .filter(Boolean);
+        }
+
+        if (Array.isArray(json)) {
+          return json.map(x => {
+            if (typeof x === "string") return x;
+            if (x && typeof x === "object") {
+              return (x.descripcion_centrocosto ?? x.text ?? x.Nombre ?? x.nombre ?? x.name ?? x.value ?? "").toString();
+            }
+            return "";
+          }).map(s => s.trim()).filter(Boolean);
+        }
+
+        if (json && typeof json === "object") {
+          const arr = json.data || json.items || json.result || json.results;
+          if (Array.isArray(arr)) return normalizeOptions(arr);
+        }
+
+        return [];
+      }
+
+      function parseAsignaciones(json) {
+        const out = { cc1: [], cc2: [] };
+
+        if (json && typeof json === "object" && Array.isArray(json.rows)) {
+          json.rows.forEach(r => {
+            if (!r || typeof r !== "object") return;
+
+            const tipo = Number(r.Tipo ?? r.tipo ?? r.type);
+            const nombre = (
+              r.Nombre ??
+              r.nombre ??
+              r.descripcion_centrocosto ??
+              r.text ??
+              r.name ??
+              r.value ??
+              ""
+            ).toString().trim();
+
+            if (!nombre) return;
+            if (tipo === 1) out.cc1.push(nombre);
+            if (tipo === 2) out.cc2.push(nombre);
+          });
+          return out;
+        }
+
+        if (Array.isArray(json)) {
+          json.forEach(r => {
+            const tipo = Number(r.Tipo ?? r.tipo ?? r.type);
+            const nombre = (r.Nombre ?? r.nombre ?? r.text ?? r.value ?? "").toString().trim();
+            if (!nombre) return;
+            if (tipo === 1) out.cc1.push(nombre);
+            if (tipo === 2) out.cc2.push(nombre);
+          });
+        }
+
+        return out;
+      }
+
+      async function loadAsignaciones() {
+        const url = `${baseUrl}/4DACTION/_V3_getCentroCostos`;
+        const json = await fetchAny(url);
+        const parsed = parseAsignaciones(json);
+        state.assigned1 = new Set(uniqSorted(parsed.cc1).map(x => x.toUpperCase()));
+        state.assigned2 = new Set(uniqSorted(parsed.cc2).map(x => x.toUpperCase()));
+      }
+
+      async function loadOptions(tipo) {
+        const url = `${baseUrl}/4DACTION/${tipo === 1
+          ? "_V3_getAreasNegocio?page=1&results=5000&q=&q2=&activo=true"
+          : "_force_getItemsNv?unicos=true"
+          }`;
+
+        const json = await fetchAny(url);
+        const list = uniqSorted(normalizeOptions(json));
+
+        if (tipo === 1) state.options1 = list;
+        else state.options2 = list;
+      }
+
+      function buildSelect(tipo) {
+        const select = (tipo === 1) ? el.select1 : el.select2;
+        const full = (tipo === 1) ? state.options1 : state.options2;
+        const assignedUpper = (tipo === 1) ? state.assigned1 : state.assigned2;
+
+        const available = full.filter(n => !assignedUpper.has(String(n).toUpperCase()));
+
+        select.innerHTML = "";
+
+        available.forEach(n => {
+          const op = document.createElement("option");
+          op.value = n;
+          op.textContent = n;
+          select.appendChild(op);
+        });
+
+        select.value = "";
+      }
+
+      function rowHTML(nombre, tipo) {
+        const safe = escapeHtml(nombre);
+        const dataNombre = encodeURIComponent(nombre);
+        return `
+        <div class="row">
+          <div class="rowName" title="${safe}">${safe}</div>
+          <button class="xbtn" type="button" data-tipo="${tipo}" data-nombre="${dataNombre}" aria-label="Eliminar ${safe}">×</button>
+        </div>
+      `;
+      }
+
+      function renderLists() {
+        const cc1 = uniqSorted(Array.from(state.assigned1)).map(x => x); // están en upper, pero solo para conteo/lista lo recargamos desde backend
+        const cc2 = uniqSorted(Array.from(state.assigned2)).map(x => x);
+
+        // OJO: estos sets están en uppercase. Mostramos desde backend real:
+        // Para no inventar, la UI se alimenta realmente en reloadAll() vía parseAsignaciones.
+        // Aquí solo dejamos los contadores en 0 temporalmente, se setean abajo en reloadAll con datos reales.
+
+        // (Se sobreescribe en reloadAll)
+      }
+
+      async function updateCentroCosto({ tipo, nombre, accion }) {
+        const qs = new URLSearchParams({
+          tipo: String(tipo),
+          nombre: String(nombre),
+          accion: String(accion),
+        });
+        const url = `${baseUrl}/4DACTION/_V3_updateCentroCostos?${qs.toString()}`;
+        return fetchAny(url);
+      }
+
+      function destroyTomSelect() {
+        if (state.ts1) { state.ts1.destroy(); state.ts1 = null; }
+        if (state.ts2) { state.ts2.destroy(); state.ts2 = null; }
+        // Limpia referencia del plugin en el select, por si queda colgando
+        if (el.select1 && el.select1.tomselect) el.select1.tomselect = null;
+        if (el.select2 && el.select2.tomselect) el.select2.tomselect = null;
+      }
+
+      function initTomSelect(tipo) {
+        const select = (tipo === 1) ? el.select1 : el.select2;
+        const assignedUpper = (tipo === 1) ? state.assigned1 : state.assigned2;
+
+        // TomSelect encima del <select>
+        const ts = new TomSelect(select, {
+          maxItems: 1,
+          create: function (input, cb) {
+            const v = String(input || "").trim().toUpperCase();
+            if (!v) return cb();
+            cb({ value: v, text: v });
+          },
+
+          createOnBlur: true,
+          placeholder: "Escribe para buscar…",
+          persist: false,
+          allowEmptyOption: true,
+          valueField: "value",
+          labelField: "text",
+          searchField: ["text"],
+          sortField: [{ field: "text", direction: "asc" }],
+          plugins: ["remove_button"],
+          render: {
+            no_results: function () {
+              return `<div class="no-results">No se han encontrado resultados</div>`;
+            },
+          },
+          onChange: async function (value) {
+            const nombre = String(value || "").trim();
+            if (!nombre) return;
+
+            setBusy(true);
+            try {
+              await updateCentroCosto({ tipo, nombre, accion: "add" });
+              await reloadAll();
+            } catch (err) {
+              console.error(err);
+            } finally {
+              setBusy(false);
+            }
+          }
+        });
+
+        // Deja vacío al iniciar
+        ts.clear(true);
+        return ts;
+      }
+
+      async function reloadAll() {
+        setBusy(true);
+        try {
+          // 1) asignaciones (lista inferior)
+          const asigUrl = `${baseUrl}/4DACTION/_V3_getCentroCostos`;
+          const asigJson = await fetchAny(asigUrl);
+          const parsed = parseAsignaciones(asigJson);
+
+          // Sets uppercase para filtrar opciones
+          state.assigned1 = new Set(uniqSorted(parsed.cc1).map(x => x.toUpperCase()));
+          state.assigned2 = new Set(uniqSorted(parsed.cc2).map(x => x.toUpperCase()));
+
+          // 2) opciones base (lo que se puede agregar)
+          await Promise.all([loadOptions(1), loadOptions(2)]);
+
+          // 3) render listas con texto real (no uppercase)
+          const cc1Real = uniqSorted(parsed.cc1);
+          const cc2Real = uniqSorted(parsed.cc2);
+
+          el.count1.textContent = cc1Real.length;
+          el.count2.textContent = cc2Real.length;
+          el.list1.innerHTML = cc1Real.length ? cc1Real.map(n => rowHTML(n, 1)).join("") : `<div class="empty">Sin asignaciones.</div>`;
+          el.list2.innerHTML = cc2Real.length ? cc2Real.map(n => rowHTML(n, 2)).join("") : `<div class="empty">Sin asignaciones.</div>`;
+
+          // 4) reconstruye selects y reinicia TomSelect
+          destroyTomSelect();
+          buildSelect(1);
+          buildSelect(2);
+
+          state.ts1 = initTomSelect(1);
+          state.ts2 = initTomSelect(2);
+        } catch (err) {
+          console.error(err);
+        } finally {
+          setBusy(false);
+        }
+      }
+
+      el.btnReload.addEventListener("click", reloadAll);
+
+      document.addEventListener("click", async (e) => {
+        const btn = e.target.closest(".xbtn");
+        if (!btn) return;
+
+        const tipo = Number(btn.getAttribute("data-tipo"));
+        const nombre = decodeURIComponent(btn.getAttribute("data-nombre") || "");
+        if (!nombre || ![1, 2].includes(tipo)) return;
+
+        setBusy(true);
+        try {
+          await updateCentroCosto({ tipo, nombre, accion: "delete" });
+          await reloadAll();
+        } catch (err) {
+          console.error(err);
+        } finally {
+          setBusy(false);
+        }
+      });
+      safeBlock();
+      reloadAll();
+    })();
+  </script>
+</body>
+
+</html>

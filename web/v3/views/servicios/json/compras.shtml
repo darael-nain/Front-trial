@@ -1,0 +1,16 @@
+{
+	"compras" : [
+		<!--#4DLOOP aidOc -->
+		{
+			"id": <!--#4DHTML aidOc{aidOc}-->,
+			"folio": "<!--#4DHTML afolio{aidOc}-->",
+			"documento": "<!--#4DHTML _V3_escapeString(adocumento{aidOc})-->",
+			"emision": "<!--#4DHTML afecha_emision{aidOc}-->",
+			"estado": "<!--#4DHTML aestado{aidOc}-->",
+			"proveedor": "<!--#4DHTML _V3_escapeString(arazon{aidOc})-->",
+			"total" : <!--#4DHTML String(aGastoReal{aidOc};"&xml")-->,
+			"referencia": "<!--#4DHTML _V3_escapeString(areferencia{aidOc})-->"
+		}<!--#4DIF NOT(aidOc{aidOc} = aidOc{Size of array(aidOc)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	]	
+}

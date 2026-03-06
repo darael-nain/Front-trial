@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
+	<!-- JQUERY -->
+	<!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="				  crossorigin="anonymous"></script> -->
+	<!-- BOOTSTRAP POPPER -->
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script> -->
+	<!--  BOOTRAPS -->
+	<!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> -->
+
+	<script src="/v3/script/jquery/jquery.js"></script>
+	<script src="/v3/script/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/bootstrap-4.4.1-dist/css/bootstrap.min.css">
+	<script type="text/javascript" src="/script/popper.min.js"></script>
+	<script type="text/javascript" src="/css/bootstrap-4.4.1-dist/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/fontawesome5.11.2/css/all.min.css">
+	<!-- RENDIR.JS -->
+	<script type="text/javascript" src="rendir.js"></script>
+	<!-- JQUERY UI -->
+	<!-- <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E="	  crossorigin="anonymous"></script> -->
+	<!-- FORMAT NUMBERS -->
+	<script src="/v3/script/jquery/plugins/jquery-number/jquery.number.js"></script>
+	<!-- FORMAT CURRENCY -->
+	<script src="/v3/script/jquery/plugins/format-currency/jquery.formatCurrency.js"></script>
+	<link rel="stylesheet" href="css/index.css">
+	<link rel="stylesheet" href="css/colors.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN"
+	 crossorigin="anonymous">
+	<script type="text/javascript" src="js/loader.js"></script>
+	<script type="text/javascript" src="js/modal.js"></script>
+	<title>Rendiciones</title>
+	<script type="text/javascript">
+	
+		rendir.session.verify();
+		rendir.navigate.init();
+		rendir.navigate.current();
+		rendir.currency.update();
+
+		let calcTax = (total = 0, tax = 0) => {
+			return tax ? total + (total * (tax / 100)) : total;
+		}
+		let today = new Date();
+		$(document).ready(function () {
+			loading.start();
+
+			let container = document.querySelector(".content");
+			// rendir.get(container);
+
+			let url = new URL(window.location.href);
+			let id = url.searchParams.get("id");
+			console.warn(id);
+			document.querySelector(".container.dtc").dataset.id = id;
+			let date = document.querySelector("#docDate");
+			let fecha_recepcion = document.querySelector("#fecha_recepcion");
+			let fecha_registro = document.querySelector("#fecha_registro");
+			if (date.value === "") {
+				date.value = rendir.date.dash(today);
+			}
+
+			// get lines ------
+
+			rendir.dtc.getLines(id).then(res => {
+
+				// let titles = res.rows.filter(line => line.tipo === "TITULO");
+				let items = res.rows;
+				console.warn(items);
+				let linesContainer = document.querySelector("#linesList");
+				linesContainer.hidden = !res.rows.length;
+				
+				items.forEach(item => {
+
+					// ------------ crea linea con datos basicos y nombre
+					let line = document.createElement("li");
+					line.classList.add("list-group-item", "lines", "lineData");
+					line.classList.add(item.tipo === "TITULO" ? "title" : "item");
+					// ------------ crea div contenedor de las lineas
+					let div = document.createElement("div");
+					div.id = item.llave_det_dtc;
+					div.classList.add("lines", "collapse", "show");
+					// ******************* verificar datos item y titulo
+					line.dataset.id_det_dtc = item.id_det_dtc;
+					line.dataset.llave = item.llave_det_dtc;
+					line.dataset.llave_titulo = item.llave_titulo;
+					line.dataset.llave_det_oc = item.llave_det_oc;
+					line.dataset.llave_nv = item.llave_nv;
+					line.dataset.valor_imp = item.valor_imp;
+
+					line.dataset.des_lugar_origen = item.des_lugar_origen;
+					line.dataset.lugar_origen = item.lugar_origen;
+					line.dataset.origen = item.origen;
+					line.dataset.id_nv = item.id_nv;
+					line.dataset.id_oc = item.id_oc;
+					line.dataset.items = item.items;
+					line.dataset.tipo = item.tipo;
+					// line.id = item.llave_titulo;
+					// ******************** verificar datos item y titulo
+					// ---------------- lo llena de acuerdo si es item o titulo
+				
+
+
+					line.dataset.total = item.total;
+					line.dataset.subtotal = item.subtotal;
+					line.dataset.precio = item.precio;
+					line.dataset.descuento = item.descuento;
+					line.dataset.cantidad = item.cantidad;
+					line.dataset.nombre = item.nombre;
+					if (item.tipo === "TITULO") {
+						let children_quantity = items.filter(i => i.llave_titulo === item.llave_det_dtc).length;
+						let collapseString = `data-toggle="collapse" data-target=#${item.llave_det_dtc} role="button" aria-controls=${item.llave_det_dtc} aria-expanded="false"`;
+
+						line.classList.add("list-group-item-secondary", "d-flex", "justify-content-between", "align-items-center");
+						line.innerHTML = `<h6  ${collapseString} data-value=${item.subtotal} >${item.nombre}</h6>
+    					<span ${collapseString} class="badge badge-light badge-pill">${children_quantity} ${children_quantity === 1 ? "item" : "items"}</span>
+						`;
+
+						linesContainer.appendChild(line);
+						linesContainer.appendChild(div);
+					} else {
+						line.innerHTML = `<h6>${item.nombre}</h6>
+						<div class="children_inline numeric currency">
+								<input class="form-control form-control-sm w-15 text-right quantity" type="number" placeholder="cantidad" data-value=${item.cantidad} value=${item.cantidad}> x 
+								<input class="form-control uBgYellow currency form-control-sm w-30 text-right precio" type="text" placeholder="precio" data-value=${item.precio} value=${item.precio}> =
+								<input disabled readonly class="form-control currency form-control-sm w-35 text-right subtotal" type="text" placeholder="subtotal" data-value=${item.subtotal} value=${item.subtotal}>
+						</div>`;
+
+
+						line.querySelector(".quantity").addEventListener("blur", function () {
+
+							
+							let yy = line.querySelector(".quantity").value;
+							line.dataset.cantidad = String(yy);
+
+							rendir.dtc.updateItem(rendir.dtc.updateLine(this, "quantity"), line);
+							rendir.dtc.updateTotal();
+						});
+						line.querySelector(".precio").addEventListener("blur", function () {
+							
+
+
+							rendir.dtc.updateTitle(this, line.dataset.llave_titulo)
+							rendir.dtc.updateItem(rendir.dtc.updateLine(this, "precio"), line);
+							rendir.dtc.updateTotal();
+						});
+						linesContainer.querySelector(`div#${item.llave_titulo}`).appendChild(line);
+					}
+					rendir.currency.format("input.currency");
+					rendir.currency.format("span.totals");
+
+				});
+
+
+
+
+
+
+			}).catch(err => {
+				console.warn(err);
+			});
+
+
+			rendir.dtc.payment.check(rendir.dtc.doc().id);
+
+
+
+			// get dtc info ------
+			rendir.dtc.getOne(id).then(res => {
+				console.warn("doc data");
+				console.log(res);
+				date.value = rendir.date.format(res.fecha_emision);
+				fecha_recepcion.value = rendir.date.format(res.fecha_recepcion);
+				fecha_registro.value = rendir.date.format(res.fecha_registro);
+				document.querySelector("input#referencia").value = res.referencia;
+				document.querySelector("input#number").value = res.folio;
+				document.querySelector("#total_neto").innerHTML = res.montos.neto;
+				document.querySelector("#total_neto").dataset.value = res.montos.neto;
+				document.querySelector("#total").innerHTML = res.montos.total;
+				document.querySelector("#total").dataset.value = res.montos.total;
+				document.querySelector("input#emisor").value = res.emisor;
+				document.querySelector("input#id_forma_pago").value = res.id_forma_pago;
+				document.querySelector("input#des_forma_pago").value = res.des_forma_pago;
+				let proveedor = document.querySelector("input#proveedor");
+				rendir.dtc.saved = res.folio !== "";
+				if (res.contacto.id) {
+					proveedor.value = `${res.contacto.alias} - ${res.contacto.rut}`;
+					rendir.dtc.doc["contacto[id]"] = res.contacto.id,
+						rendir.dtc.doc["contacto[razon_social]"] = res.contacto.razon_social,
+						rendir.dtc.doc["contacto[giro]"] = res.contacto.giro,
+						rendir.dtc.doc["contacto[nombre_completo]"] = res.contacto.nombre_completo,
+						rendir.dtc.doc["contacto[alias]"] = res.contacto.alias,
+						rendir.dtc.doc["contacto[rut]"] = res.contacto.rut
+
+					proveedor.dataset.razon_social = res.contacto.razon_social;
+					proveedor.dataset.id = res.contacto.id;
+					proveedor.dataset.giro = res.contacto.giro;
+					proveedor.dataset.nombre_completo = res.contacto.nombre_completo;
+					proveedor.dataset.rut = res.contacto.rut;
+					proveedor.dataset.text = res.contacto.alias;
+
+				}
+				rendir.title.body(res.des_tipo_doc ? `${res.des_tipo_doc}  - Nro.: ${res.folio}` : "Documento");
+				// document.querySelector(".navbar-brand").innerHTML =  res.des_tipo_doc ? `${res.des_tipo_doc}  - Nro.: ${res.folio}` : "Documento";
+				let documento = document.querySelector("button#dt");
+				
+
+
+				documento.textContent = res.des_tipoDoc || "Seleccionar";
+				documento.dataset.id = res.id_tipo_doc;
+				documento.dataset.impuesto_desc = res.des_tipoDoc;
+				documento.dataset.impuesto_number = res.valor_imp_tipo_doc.replace(",",".");;
+				documento.dataset.des_tipo_doc = res.des_tipoDoc;
+				documento.dataset.tipo_imp = res.tipo_imp;
+				
+			
+
+				rendir.dtc.updateTotal();
+				rendir.currency.format();
+				loading.stop();
+			}).catch(err => {
+				console.warn(err);
+				loading.stop();
+			});
+
+
+
+			// get document types  ------
+			let docTypesContainer = document.getElementById("docTypesContainer");
+			let docTypesText = document.querySelector("button.select_text");
+			rendir.dt.get().then(res => {
+				res.rows.forEach(row => {
+
+
+					let line = document.createElement("a");
+					line.classList.add("dropdown-item");
+					line.dataset.id = row.id;
+					line.dataset.impuesto_id = row.id_imp;
+					line.dataset.impuesto_desc = row.des_imp;
+					line.dataset.impuesto_number = row.valor_imp.replace(",",".");
+					line.dataset.tipo_imp=row.tipo_imp;
+					line.href = "#";
+					line.textContent = row.text;
+					docTypesContainer.appendChild(line);
+
+
+
+					line.addEventListener("blur", function () {
+						
+
+						docTypesText.textContent = `${this.textContent}`
+						let tax = parseFloat(this.dataset.impuesto_number);
+						docTypesText.dataset.impuesto_number = tax;
+						docTypesText.dataset.id = this.dataset.id;
+						docTypesText.dataset.impuesto_desc = this.dataset.impuesto_desc;
+						docTypesText.dataset.des_tipo_doc = this.text;
+						docTypesText.dataset.tipo_imp =this.dataset.tipo_imp;
+						// docTypesText.dataset.impuesto_number = this.dataset.impuesto_number;
+						let total_neto = parseFloat(document.querySelector(`#total_neto`).dataset.value);
+						// document.querySelector("#total").value = calcTax(total_neto, tax);
+						rendir.dtc.updateTotal();
+					});
+				});
+			}).catch(err => {
+				console.log(err);
+			});
+
+			// // event listener
+			// document.querySelector(`input#total_neto`).addEventListener("keyup", function(){
+			// 	let value = parseFloat(this.value) || 0;
+			// 	let tax = document.querySelector("button.dt").dataset.impuesto_number || 0;
+			// 	let total = tax ? value + (value * (tax/100)) : value;
+			// 	// document.querySelector("#total").value = total;
+			// 	document.querySelector("#total").value = calcTax(value, tax);
+			// });
+
+			// event listener for attachment
+			document.querySelector("input#dtcAttachment").addEventListener("change", function () {
+			rendir.dtc.attachment.upload();
+				// window.location.href = `/rendir/rendicion.shtml?id=${rendir.doc().id}`
+			});
+
+			document.querySelector("input#number").addEventListener("change", function () {
+				rendir.dtc.number_validate(this);
+			});
+
+			let attachment_link = document.querySelector(".attachment.link");
+			rendir.dtc.attachment.exist(id)
+				.then(res => {
+					if (res.exists) {
+						// attachment_link.removeAttribute("disabled");
+						// attachment_link.classList.add("uBgGreen");
+						// attachment_link.classList.remove("btn-secondary");
+
+						modal.create("attach");
+
+						
+
+						modal.set({
+							id: "attach",
+							title: "Adjunto",
+							body: `<img style="-webkit-user-select: none;" src="${window.location.origin}/4DACTION/_V3_getUpload?index=Doc_Tributario_Compra|${id}">`,
+							footer: ``,
+							script: modal => {
+
+							}
+						});
+						document.querySelector(".attachment.btn.link").classList.remove("btn-secondary");
+						document.querySelector(".attachment.btn.link").classList.add("uBgGreen");
+
+						attachment_link.querySelector("i").classList.remove("fa-eye-slash");
+						attachment_link.querySelector("i").classList.add("fa-eye");
+
+						attachment_link.addEventListener("click", function (event) {
+
+							$("#attach").modal("show");
+						});
+					} else {
+
+						attachment_link.querySelector("i").classList.add("fa-eye-slash");
+						attachment_link.querySelector("i").classList.remove("fa-eye");
+						attachment_link.setAttribute("disabled");
+
+					}
+				})
+				.catch(err => {
+					console.log(err);
+				})
+			// attachment_link.addEventListener("click", function(){
+			// 	window.open(`${window.location.origin}/4DACTION/_V3_getUpload?index=Doc_Tributario_Compra|${rendir.dtc.doc().id}`,"_blank")
+			// });
+
+					
+
+			rendir.navbar.bottom.init(document.querySelector(".container.dtc"));
+
+
+			// back button
+			rendir.navbar.bottom.add({
+				action: () => {
+					loading.start();
+					// window.history.back();
+
+					if (!rendir.dtc.saved) rendir.dtc.delete(rendir.dtc.doc().id);
+
+					rendir.navigate.back();
+
+				},
+				classList: ["fas", "d-block", "fa-lg", "fa-arrow-left", "uGreen"],
+				label: "Volver"
+			});
+
+
+
+
+			// null button
+			rendir.navbar.bottom.add({
+				action: () => {
+					loading.start();
+					if (!rendir.dtc.payment.has) {
+						rendir.dtc.null(rendir.dtc.doc().id);
+					} else {
+						loading.stop();
+						rendir.toast.set("Unabase", "El documento tiene pagos asociados !");
+						rendir.toast.activate();
+					}
+				},
+				classList: ["fas", "d-block", "fa-lg", "fa-ban", "uGreen"],
+				label: "Anular"
+			})
+			// delete button
+			rendir.navbar.bottom.add({
+				action: () => {
+					// loading.start();
+					// if(!rendir.dtc.payment.has){
+					// 	rendir.dtc.delete(rendir.dtc.doc().id);	
+					// }else{
+					// 	loading.stop();
+					// 	rendir.toast.set("Unabase","El documento tiene pagos asociados !");
+					// 	rendir.toast.activate();
+					// }
+				},
+				classList: ["far", "d-block", "fa-lg", "fa-trash-alt", "uGreen"],
+				dataset: {
+					toggle: "modal",
+					target: "#deleteDtc"
+				},
+				label: "Eliminar",
+				callback: () => {
+
+					modal.create("deleteDtc");
+					modal.set({
+						id: "deleteDtc",
+						title: "¿ Estas seguro de eliminar el documento ?",
+						body: ``,
+						footer: `
+						        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+						        <button type="button" class="btn white-text uBgRed dtcDelete">Eliminar</button>`,
+						script: modal => {
+							modal.querySelector(".dtcDelete").addEventListener("click", function () {
+								$(modal).modal("hide");
+								loading.start();
+
+								if (!rendir.dtc.payment.has) {
+									fetch(`/4DACTION/_V3_setDtc?dtc[id]=${rendir.dtc.doc().id}&delete=true`)
+										.then(res => res.json())
+										.then(data => {
+											if (data.success) {
+												window.history.back();
+											}
+										})
+										.catch(err => console.log(err));
+								} else {
+									loading.stop();
+									rendir.toast.set("Unabase", "El documento tiene pagos asociados !");
+									rendir.toast.activate();
+								}
+
+
+							})
+						}
+					})
+
+				}
+			})
+
+
+			// save button
+			rendir.navbar.bottom.add({
+				action: () => {
+					if (rendir.dtc.validate()) {
+						loading.start();
+						console.log("---------- lineas");
+						console.log(rendir.dtc.lines());
+						console.log("---------- dtc data");
+						console.log(JSON.stringify(rendir.dtc.doc()));
+
+
+						$.ajax({
+							url: "/4DACTION/_V3_setDtc",
+							dataType: "json",
+							type: "POST",
+							data: rendir.dtc.doc()
+						}).done(function (data) {
+							console.warn(data);
+							if (data.success) {
+								console.log(data);
+								// rendir.toast.set("Unabase", "Documento guardado ! ");
+								// rendir.toast.activate();
+
+								// guarda items
+								
+
+								$.ajax({
+									url: "/4DACTION/_V3_setItemsDtc",
+									dataType: "json",
+									type: "POST",
+									data: rendir.dtc.lines()
+								}).done(function (data) {
+									console.warn(data);
+									if (data.success) {
+										rendir.dtc.saved = data.folio !== "";
+										rendir.title.body(rendir.dtc.doc().des_tipo_doc ? `${rendir.dtc.doc().des_tipo_doc}  - Nro.: ${data.folio}` : "Documento");
+										loading.stop(1000);
+										rendir.toast.set("Unabase", "Documento guardado ! ");
+										rendir.toast.activate();
+										rendir.navigate.back();
+
+
+
+									}
+								});
+
+
+							}
+						});
+					} else {
+						loading.stop();
+						rendir.toast.set("Unabase", "Recuerda llenar todos los datos !");
+						rendir.toast.activate();
+					}
+
+				},
+				classList: ["far", "d-block", "fa-lg", "fa-save", "uGreen"],
+				label: "Guardar"
+			})
+
+
+
+			// user button
+			rendir.navbar.top.add({
+				action: () => {
+
+				},
+				// classList: ["fas", "d-block", "fa-lg", "fa-arrow-left", "uGreen"],
+				classList: ["far", "fa-user", "fa-lg"],
+				dataset: {
+					toggle: "modal",
+					target: "#userProfile"
+				},
+				callback: () => {
+					let user = rendir.user.get();
+					modal.create("userProfile");
+					modal.set({
+						id: "userProfile",
+						title: `Perfil ${user.name}`,
+						body: `<ul class="list-group">
+									  <li class="btn btn-light list-group-item align-items-center"><a class="anchor-no-style" href="/4DACTION/W_CERRAR_SESION/${user.session}"><span>Cerrar sesión</span> <i class="fas fa-power-off float-right fa-lg"></i></a></li>
+									</ul>`,
+						footer: ``,
+						script: modal => {
+
+						}
+					})
+				}
+			});
+
+
+
+			// // event listener for goback button
+			// document.querySelector(".btnAction.back").addEventListener("click", function(){
+			// 	window.history.back();
+			// 	if(!rendir.dtc.saved) rendir.dtc.delete(rendir.dtc.doc().id);
+			// });
+			// // event listener for null button
+			// document.querySelector(".btnAction.null").addEventListener("click", function(){ rendir.dtc.null(rendir.dtc.doc().id);
+			// });
+			// // event listener for delete button
+			// document.querySelector(".btnAction.delete").addEventListener("click", function(){
+			// 	window.history.back();
+			// 	if(!rendir.dtc.saved) rendir.dtc.delete(rendir.dtc.doc().id);
+			// });
+			// event listener for SAVE button
+			// document.querySelector(".btnAction.save").addEventListener("click", function(){
+			// 	if(rendir.dtc.validate()){
+			// 		console.log("---------- lineas");
+			// 		console.log(rendir.dtc.lines());
+			// 		console.log("---------- dtc data");
+			// 		console.log(JSON.stringify(rendir.dtc.doc()));
+
+
+			$("#proveedor").autocomplete({
+				messages: {
+					noResults: null,
+					results: function (amount) {
+						return null
+					}
+				},
+				source: function (request, response) {
+					$.ajax({
+						url: "/4DACTION/_V3_getEmpresa",
+						dataType: "json",
+						data: {
+							q: request.term
+						},
+						success: function (data) {
+							response(data.rows.map(i => i));
+						}
+					});
+				},
+				minLength: 2,
+
+				select: function (event, ui) {
+					let item = ui.item;
+					console.log(item);
+					// rendir.dtc.doc = {
+					rendir.dtc.doc["contacto[id]"] = item.id,
+						rendir.dtc.doc["contacto[razon_social]"] = item.razon_social,
+						rendir.dtc.doc["contacto[giro]"] = item.giro,
+						rendir.dtc.doc["contacto[nombre_completo]"] = item.nombre_completo,
+						rendir.dtc.doc["contacto[alias]"] = item.text,
+						rendir.dtc.doc["contacto[rut]"] = item.rut
+					rendir.dtc.doc["contacto[rut]"] = item.rut
+					rendir.dtc.doc["contacto[rut]"] = item.rut
+					document.getElementById("id_forma_pago").value = item.id_forma_default;
+					document.getElementById("des_forma_pago").value = item.des_forma_default;
+					// }
+					let input = event.target;
+					// 
+					input.value = `${item.text} - ${item.rut}`;
+					input.dataset.razon_social = item.razon_social;
+					input.dataset.id = item.id;
+					input.dataset.giro = item.giro;
+					input.dataset.nombre_completo = item.nombre_completo;
+					input.dataset.rut = item.rut;
+					input.dataset.text = item.text;
+					return false;
+				}
+			}).data('ui-autocomplete')._renderItem = function (ul, item) {
+				return $('<li><a><strong class="highlight">' + ((item.text) ? item.text : '[Sin Alias]') + '</strong><em>' + item.rut + ' </em><span>' + item.razon_social + '</span></a></li>').appendTo(ul);
+			};
+
+
+
+		});
+	</script>
+	<style type="text/css">
+		#attach img {
+			width: 100%;
+		}
+
+		.attachment.link {}
+
+		input {
+			height: 2.5rem;
+		}
+
+		.dtc .list-group-item {
+			padding: 0.4rem;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container dtc" data-id="">
+		<div class="row">
+			<nav class="navbar sticky-top navbar-light bg-light topNavbar">
+				<a class="navbar-brand" href="#">Rendir</a>
+			</nav>
+
+		</div>
+		<div class="row">
+			<div class="content w-100">
+
+				<form class="dtc">
+
+					<div class="input-group w-98">
+						<!-- <div > -->
+						<!-- <label class="btn text-white uBgBlue w-90" for="dtcAttachment">Adjuntar archivo</label> -->
+						<label class="btn text-white uBgBlue w-85" for="dtcAttachment">Adjuntar archivo</label>
+						<span class="w-15 btn attachment link text-white btn-secondary">
+							<!-- <i class="fas fa-eye"></i> -->
+							<i class="fas fa-eye-slash" title="Ver Adjunto"></i>
+							<!-- <i class="fas fa-paperclip"></i> -->
+
+						</span>
+						<!-- </div> -->
+					</div>
+					<div class="form-group w-98">
+						<label for="proveedor" class="">Proveedor</label>
+						<input type="text" class="form-control" id="proveedor" placeholder="proveedor">
+						<input type="text" hidden="" class="form-control" id="id_forma_pago">
+						<input type="text" hidden="" class="form-control" id="des_forma_pago">
+
+						<!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+					</div>
+					<div class="form-group w-98">
+						<label for="referencia">Concepto</label>
+						<input type="text" class="form-control" id="referencia" placeholder="referencia">
+						<input type="text" hidden="" class="form-control" id="emisor" placeholder="referencia">
+
+						<!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+					</div>
+					<div class="form-group w-98">
+						<label for="number" class="w-49">Folio</label>
+						<label for="docDate" class="w-49">Fecha</label>
+						<input type="text" class="form-control w-49 inline" id="number" placeholder="Folio del documento">
+						<input type="date" class="form-control inline w-49" id="docDate" placeholder="Fecha del documento">
+						<input type="date" hidden="" class="form-control w-49 inline" id="fecha_registro" placeholder="Fecha registro">
+						<input type="date" hidden="" class="form-control w-49 inline" id="fecha_recepcion" placeholder="Fecha recepcion">
+					</div>
+					<div class="form-group">
+						<!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+					</div>
+
+					<div class="form-group w-98">
+						<label for="tipo_doc" class="">Tipo documento</label>
+						<!-- 	  <span class="btn-group dropright w-45">
+					    <button type="button" class="btn btn-secondary select_text dt" id="dt">Seleccionar</button>
+					    <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-reference="parent">
+					      <span class="sr-only">Toggle Dropdown</span>
+					    </button>
+					    <div class="dropdown-menu" id="docTypesContainer" aria-labelledby="dropdownMenuReference">
+					 
+					    </div>
+					  </span>		 -->
+
+						<span class="btn-group w-100 ">
+							<button type="button" class="btn btn-secondary select_text dt w-90" id="dt">Seleccionar</button>
+							<button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" id="dropdownMenuReference" data-toggle="dropdown"
+							 aria-haspopup="true" aria-expanded="false" data-reference="parent">
+								<span class="sr-only">Toggle Dropdown</span>
+							</button>
+							<div class="dropdown-menu" id="docTypesContainer" aria-labelledby="dropdownMenuReference">
+
+							</div>
+						</span>
+
+					</div>
+					<!-- 				<div class="form-group w-98">
+				    <label for="tipo_doc" class="col-5">Tipo documento</label>
+					  	
+					</div>
+				 -->
+
+					<input hidden="" type="file" class="" id="dtcAttachment" aria-describedby="inputGroupFileAddon04" placeholder="Adjuntar">
+
+
+					<div class="w-98">
+						<span>Items</span>
+						<!-- <div class="card-header lines " data-toggle="collapse" data-target="#linesList" role="button" aria-expanded="false" aria-controls="linesList">
+						    Items
+						</div> -->
+						<div class=" lines " id="linesList">
+							<!-- <div class="card collapse lines show" id="linesList"> -->
+
+						</div>
+
+					</div>
+					<br/>
+					<br/>
+					<div class="form-group numeric currency w-98">
+						<!--     <label for="total_neto" class="w-49">Total neto</label>
+				    <label for="total" class="w-49">Total</label>
+				    <input disabled="disabled"  type="text" class="form-control w-49 inline" id="total_neto"  placeholder="Total neto">
+				 
+				    <input disabled="disabled" type="text" class="form-control w-49 inline" id="total"  placeholder="Total"> -->
+						<!--  <span>Neto:<span  class="totals" id="total_neto"></span>Impuesto:<span  class="totals" id="total_impuesto">Total</span><span class="totals"  id="total"></span></span> -->
+						<ul class="list-group dtc">
+							<li class="list-group-item d-flex justify-content-between align-items-center">
+								Neto:
+								<span id="total_neto" class="totals badge uBgBlue text-white badge-pill"></span>
+							</li>
+							<li class="list-group-item d-flex justify-content-between align-items-center">
+								Impuesto:
+								<span id="total_impuesto" class="totals badge uBgBlue text-white badge-pill"></span>
+							</li>
+							<li class="list-group-item d-flex justify-content-between align-items-center">
+								Exento:
+								<span id="total_exento" class="totals badge uBgBlue text-white badge-pill"></span>
+							</li>
+							<li class="list-group-item d-flex justify-content-between align-items-center">
+								Total:
+								<span id="total" class="totals badge uBgBlue text-white badge-pill"></span>
+							</li>
+						</ul>
+
+
+					</div>
+				</form>
+			</div>
+		</div>
+		<br/>
+		<br/>
+
+
+	</div>
+	<!-- <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+		  <div class="toast-header">
+		    <strong class="mr-auto toast_titulo"></strong>
+		    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+		      <span aria-hidden="true">&times;</span>
+		    </button>
+		  </div>
+		  <div class="toast-body toast_mensaje">
+		  </div>
+		</div> -->
+</body>
+
+</html>

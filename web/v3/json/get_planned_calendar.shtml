@@ -1,0 +1,12 @@
+[
+	<!--#4DLOOP aIndex-->
+	{
+		"id":"<!--#4DHTML aIndex{aIndex}-->/<!--#4DHTML aFechaDesdePlanner{aIndex}-->/<!--#4DHTML aHoraDesdePlanner{aIndex}-->",
+		"title":"<!--#4DHTML aDatosOt{aIndex}-->",
+		"start":"<!--#4DHTML aFechaDesdePlanner{aIndex}--> <!--#4DHTML aHoraDesdePlanner{aIndex}-->",
+		"end":"<!--#4DHTML aFechaHastaPlanner{aIndex}--> <!--#4DHTML aHoraHastaPlanner{aIndex}-->",
+		"allDay":false,
+		"url": "/ot.shtml?i=<!--#4DHTML aIdOtPlanner{aIndex}-->"
+	}<!--#4DIF NOT(aIndex{aIndex} = aIndex{Size of array(aIndex)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+]

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_serverInfo-->
+<html>
+	<head>
+		<title>Documentos</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="/v3/views/compras/lista.css?54656gg4gdfdfs">
+		<script>
+
+			var mostrar_por_revisar = <!--#4DTEXT mostrar_por_revisar_dtc-->;
+
+			var elegidos = [];
+			var clase = "idem1";
+			
+			unaBase.ui.block();
+
+			$(document).ready(function() {
+
+				var selectedSum = function(){
+					var finalValue = 0;
+					var target = $("table.listpayout").find("input.selected:checked");
+					target.each(function(){					
+						var currentValue = parseFloat($(this).data("saldo"));
+						finalValue = finalValue + currentValue;
+					});
+					$('.totalseleccionado span').html(currency.symbol + " <strong>" + finalValue + "</strong>");
+					$('span.numeric.currency > strong').number(true, 0, ',', '.');
+				}
+
+				unaBase.toolbox.init();
+				var params = {
+					url: function() { return '/4DACTION/_V3_getDtc' },
+					entity: 'Dtc',
+					callback : function(data){
+
+						// Totales
+						$('.especial .totales .afecto').text(data.totales.afecto);
+						$('.especial .totales .exento').text(data.totales.exento);
+						$('.especial .totales .impuesto').text(data.totales.impuesto);
+						$('.especial .totales .total').text(data.totales.total);
+						$('.especial .totales .abono').text(data.totales.abono);
+						$('.especial .totales .saldo').text(data.totales.saldo);
+
+						// Fijar header y footer
+						$('#viewport .fht-table-init').fixedHeaderTable('destroy');
+						//$('#viewport table.fixed').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false });
+						// --ini-- corrección para ordenar
+						$('#viewport table.fixed').fixedHeaderTable({
+							footer: true,
+							cloneHeadToFoot: false,
+							fixedColumn: false,
+							create: function() {
+								$('[data-sort-by]').removeClass('sort-order-desc').removeClass('sort-order-asc').removeData('sort-order');
+								$('[data-sort-by="' + data.sort.by + '"]').addClass('sort-order-' + data.sort.order).data('sort-order', data.sort.order);
+							}
+						});
+						// --fin-- corrección para ordenar
+
+
+						unaBase.ui.unblock();
+
+					},
+					row: {
+						html: function(i, rows) {
+							var day = parseInt(rows[i].emision.substring(0, 2));
+							var month = parseInt(rows[i].emision.substring(3, 5));
+							var year = parseInt(rows[i].emision.substring(6, 10));
+
+							var dtc_date = new Date(year, month - 1, day);
+							var expiration_date = new Date();
+							expiration_date.setDate(expiration_date.getDate() - 90);
+
+							var color = "";
+							if (rows[i].estado == "NULO") {
+								var color = "red";
+							}/* else if (dtc_date <= expiration_date) {
+								var color = "orange";
+							}*/							
+
+							/*var anterior = i - 1;
+							if(anterior < 0){
+								anterior = 0;
+							}
+							var pos = jQuery.inArray(rows[i].foliooc , elegidos );
+							if(jQuery.inArray(rows[i].foliooc, elegidos) == -1){
+								if($('table.results > tbody > tr[data-oc="'+ rows[anterior].foliooc +'"]').length > 1){
+									elegidos.push(rows[i].foliooc);
+								}							
+							}							
+							if (i == (rows.length - 1)){
+								$.each(elegidos, function(key, folio) {
+									if (clase == "idem1") {										
+										clase =  "idem2";		
+									}else{										
+										clase =  "idem1";
+									}
+									$('table.results > tbody > tr[data-oc="'+ folio +'"]').addClass(clase);
+								});
+							}*/
+
+							return '<tr data-estado="' + rows[i].estado + '" data-oc="' + rows[i].foliooc + '" data-id="'+ rows[i].id+'"' + ((rows[i].contabilizado)? ' data-contabilizado="true"' : '') + ' data-tp="'+rows[i].pago_desde_oc+'" data-oc="'+rows[i].idoc+'" data-tgasto="'+rows[i].oc_tipogasto+'" data-ndoc="'+rows[i].doc+'" data-doc="'+rows[i].id_doc+'" data-idpro="'+rows[i].idproveedor+'" data-libro="'+rows[i].libro+'">' +
+								'<td data-goto="false" width="2%"><input class="selected" data-saldo="' + rows[i].saldo_ + '" type="checkbox" name="selected_one"></td>' +
+								'<td data-goto="true" width="2%" class="' + color + '">' + rows[i].numero + '</td>' +
+								'<td data-goto="true" width="3%" class="center ' + color + '" title="' + rows[i].doc + '">' + rows[i].doc_abrv + '</td>' +
+								'<td data-goto="true" width="3%" class="' + color + '">' + rows[i].formapago + '</td>' +					
+								'<td data-goto="true" width="5%" class="' + color + '">' + rows[i].foliooc + '</td>' +
+								'<td data-goto="true" width="5%" class="' + color + '">' + rows[i].emision + '</td>' +
+								'<td data-goto="true" width="5%" class="' + color + '">' + rows[i].recepcion + '</td>' +
+								'<td data-goto="true" width="5%" class="' + color + '" style="' + ((dtc_date <= expiration_date)? 'color: red !important;' : '') + '">' + rows[i].vencimiento + '</td>' +
+								'<td data-goto="true" width="5%" style="white-space: nowrap;" class="' + color + '">' + (rows[i].contable == '00-00-00'? 'N/A' : rows[i].contable) + '</td>' +
+								'<td data-goto="true" width="3%" class="' + color + '">' + (rows[i].contabilizado? 'Sí' : 'No') + '</td>' +
+								'<td data-goto="true" width="5%" class="' + color + '">' + rows[i].estado + '</td>' +								
+								'<td data-goto="true" width="10%" class="left ' + color + '">' + rows[i].proveedor + '</td>' +
+								'<td data-goto="true" width="5%" class="left ' + color + '">' + rows[i].rut + '</td>' +
+								'<td data-goto="true" width="7%" class="right ' + color + '">' + rows[i].afecto + '</td>' +
+								'<td data-goto="true" width="7%" class="right ' + color + '">' + rows[i].exento + '</td>' +
+								'<td data-goto="true" width="7%" class="right ' + color + '">' + rows[i].impuesto + '</td>' +
+								'<td data-goto="true" width="7%" class="right ' + color + '">' + rows[i].total + '</td>' +
+								'<td data-goto="true" width="7%" class="right ' + color + '">' + rows[i].abono + '</td>' +
+								'<td data-goto="true" width="7%" class="right ' + color + '">' + rows[i].saldo + '</td>' +
+							'</tr>';
+
+						}
+					},
+					/*detail: {
+						/*url: function(id, doc){
+							if (doc == "61" || doc == "56") {
+								return '/v3/views/dtc/contentnc.shtml?id=' + id;
+							}else{
+								return '/v3/views/dtc/content.shtml?id=' + id;
+							}
+						},
+						iframe: false
+					},*/
+					// Inflexiones
+					inflection: {
+						singular: 'Documento',
+						plural: 'Documentos',
+						none: 'ninguna'
+					},
+					// Filtros
+					filters: [
+						{ name: 'created_at', type: 'month', caption: 'Fecha de emisión', range: true, currentMonth: false },
+						{ name: 'received_at', type: 'month', caption: 'Fecha de recepción', range: true, currentMonth: false },
+						{ name: 'contabilizado_at', type: 'month', caption: 'Fecha de contabilización', range: true, currentMonth: false },
+						{ name: 'responsable', type: 'autocomplete', caption: 'Emisor', dataSource: 'getUsuario' },
+						{ name: 'tipo_doc', type: 'autocomplete', caption: 'Tipo Doc.', dataSource: 'getTiposDocDeCompras' },
+
+						{ name: 'formas_de_pago', type: 'autocomplete', caption: 'Forma de pago', dataSource: 'getFormaPagos' },
+						
+						{ name: 'tipo_libro', type: 'autocomplete', caption: 'Tipo de libros', dataSource: 'getTipoLibros' },
+						{ name: 'contabilizado', type: 'autocomplete', caption: '¿Contabilizado?', dataObject: [
+							{ id: false, text: 'Sin contabilizar' },
+							{ id: true, text: 'Contabilizado' },
+						] },
+						{ name: 'estado', type: 'checkbox', caption: 'Estado del documento', options: [
+							{ caption: 'Por revisar', name: 'estado_por_revisar', value: mostrar_por_revisar },
+							{ caption: 'Por pagar', name: 'estado_por_pagar', value: true },
+							{ caption: 'Pagado', name: 'estado_pagado', value: false },
+							{ caption: 'Nulo', name: 'estado_nulo', value: false }
+						] },
+
+					]
+				};
+
+				unaBase.toolbox.search.init(params);
+				unaBase.toolbox.menu.init({
+					entity: 'Dtc',
+					buttons: ["create_dtc", "views", "dtc_pay_selection", "export_list", "export_softland"]
+				});
+
+				if(!access._504) { // crear dtc
+					$('#menu ul').find('li[data-name="create_dtc"]').hide();
+    			}
+
+    			$('#menu ul').find('li[data-name="dtc_pay_selection"]').hide();
+				$('#menu ul').find('li[data-name="export_softland"]').hide();
+
+				$("body").on("click", "input.selected", function(){
+					var input = $(this);
+					var tp =  $(this).closest("tr").data("tp");
+					var idoc = $(this).closest("tr").data("oc");
+					var ndoc = $(this).closest("tr").data("ndoc");
+					var tipogasto =  $(this).closest("tr").data("tgasto");
+
+					if(tp && input.prop("checked")){
+						var msj = "El documento ("+ndoc+") cuenta con pago abonado desde la "+ tipogasto +".";
+						confirm(msj, "Ir a la "+ tipogasto).done(function(data) {
+							if (data) {
+								window.open('/4DACTION/wbienvenidos#compras/content.shtml?id=' + idoc);
+							}
+						});
+					}else{
+						if (input.attr('name') == "selected_all" ) {
+							if (input.prop("checked")) {
+								$('table tbody input[name="selected_one"]').prop("checked", true);
+								$('#menu ul').find('li[data-name="dtc_pay_selection"]').show();
+								$('#menu ul').find('li[data-name="export_softland"]').show();
+							}else{
+								$('table tbody input[name="selected_one"]').prop("checked", false);
+								$('#menu ul').find('li[data-name="dtc_pay_selection"]').hide();
+								$('#menu ul').find('li[data-name="export_softland"]').hide();
+							}
+						}else{
+							var cantSelect = $('table.listpayout > tbody > tr > td > input:checked').length;
+							if (input.prop("checked")) {
+								$('#menu ul').find('li[data-name="dtc_pay_selection"]').show();
+								$('#menu ul').find('li[data-name="export_softland"]').show();
+							}else{
+								if(cantSelect == 0){
+									$('#menu ul').find('li[data-name="dtc_pay_selection"]').hide();
+									$('#menu ul').find('li[data-name="export_softland"]').hide();
+								}								
+							}
+						}
+						selectedSum();
+					}
+				});
+
+				$('#menu ul').find('li[data-name="dtc_pay_selection"]').hide();
+				$('#menu ul').find('li[data-name="export_softland"]').hide();
+
+				// ir a detalle
+				$('.padre table tbody').on('click', 'tr > td[data-goto="true"]', function() {
+				  	var id = $(this).closest("tr").data("id");
+				  	var doc = $(this).closest("tr").data("doc");
+				  	if (doc == "61" || doc == "56") {
+				  		unaBase.loadInto.viewport('/v3/views/dtc/contentnc.shtml?id=' + id);
+					}else{
+						unaBase.loadInto.viewport('/v3/views/dtc/content.shtml?id=' + id);
+					}				  	
+				});
+
+			});
+		</script>
+		<style type="text/css">
+			.dropdown-button {
+				padding: 5px 5px;
+			}
+			.selected{
+				width:20px!important;
+				height:20px!important;
+				vertical-align:middle!important;
+			}
+			.idem1{
+				border-left:5px solid yellow!important;
+			}
+			.idem2{
+				border-left:5px solid orange!important;
+			}
+
+
+			.totales{
+				position: relative;
+			}
+			.totales tr th{
+				position: relative;
+			}
+				.totales div{
+					display: inline-block;
+				}
+				.totales .label2{
+					font-size:10px!important;
+				}
+				.totales div.totalseleccionado{
+					position: absolute;
+					left:0px;
+					top:7px;
+				}
+				.totales div.afecto{
+					right:0%;
+				}
+				.totales div.exento{
+					right:0%;
+				}
+				.totales div.impuesto{
+					right:0%;
+				}
+				.totales div.total{
+					right:0%;
+				}
+				.totales div.abono{
+					right:0%;
+				}
+				.totales div.saldo{
+					right:0%;
+				}
+		</style>
+	</head>
+	<body>
+		<div class="padre" style="width: 100%; height: calc(100% - 50px); overflow-x: scroll; overflow-y: scroll">
+			<table width="100%" class="results especial listpayout fixed">
+				<thead>
+					<tr>
+						<th class="center" width="2%"><div style="padding:2px">Todo</div><div><input class="selected" type="checkbox" name="selected_all"></div></th>
+						<th class="center" width="2%" data-sort-by="numero" data-sort-default="desc">Número</th>
+						<th class="center" width="3%" data-sort-by="doc" data-sort-default="asc">Doc.</th>
+						<th class="center" width="3%" data-sort-by="doc" data-sort-default="asc">F. Pago</th>				
+						<th class="center" width="5%" data-sort-by="oc" data-sort-default="desc">OC</th>
+						<th class="center" width="5%" data-sort-by="emision" data-sort-default="desc">F. Emisión</th>
+						<th class="center" width="5%" data-sort-by="recepcion" data-sort-default="desc">F. Recepción</th>
+						<th class="center" width="5%" data-sort-by="vencimiento" data-sort-default="desc">F. Vencimiento</th>
+						<th class="center" width="5%" data-sort-by="contable" data-sort-default="desc">F. Contable</th>
+						<th class="center" width="3%" data-sort-by="contabilizado" data-sort-default="desc">Contabiliz.</th>
+						<th class="center" width="5%" data-sort-by="estado" data-sort-default="asc">Estado</th>						
+						<th class="center" width="10%" data-sort-by="proveedor" data-sort-default="asc" class="left">Proveedor</th>
+						<th class="center" width="5%" data-sort-by="rut" data-sort-default="asc" class="left">rut</th>
+						<th class="center" width="7%" data-sort-by="afecto" data-sort-default="desc" class="right">Afecto [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th class="center" width="7%" data-sort-by="exento" data-sort-default="desc" class="right">Exento [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th class="center" width="7%" data-sort-by="impuesto" data-sort-default="desc" class="right">Impuesto [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th class="center" width="7%" data-sort-by="total" data-sort-default="desc" class="right">Total [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th class="center" width="7%" data-sort-by="abono" data-sort-default="desc" class="right">Pagado [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th class="center" width="7%"  data-sort-by="saldo" data-sort-default="desc" class="right">Por pagar [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+					</tr>
+				</thead>
+				<tfoot class="totales">
+					<tr>					
+						<th colspan="12" width="58%"><div class="totalseleccionado"><label>Total seleccionado </label><span class="numeric currency label2"><strong>0</strong></span></div>
+						</th>
+						<th width="7%"><div class="afecto label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</div></th>
+						<th width="7%"><div class="exento label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</div></th>
+						<th width="7%"><div class="impuesto label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</div></th>
+						<th width="7%"><div class="total label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</div></th>
+						<th width="7%"><div class="abono label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</div></th>
+						<th width="7%"><div class="saldo label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</div></th>
+					</tr>
+				</tfoot>
+				<tbody></tbody>
+			</table>
+	</body>
+</html>

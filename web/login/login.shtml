@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_serverInfo-->
+		<meta charset="utf-8">
+		<meta name="robots" content="noindex">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>UnaBase - Prueba</title>
+		<!-- <link rel="icon" href="/favicon.png"> -->
+		<link rel="icon" href="/faviconNew.png">	
+    	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    	<link rel="stylesheet" href="/login/bootstrap-4.3.1-dist/css/bootstrap.min.css" >
+		<script src="/v3/script/jquery/jquery.js"></script>
+
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+		<!-- <link rel="stylesheet" href="/v3/design/tooltip.css"> -->
+    	<script src="/login/script/login.js?<!--#4DTEXT _V3_version-->"></script>
+
+    	<script src="/v3/script/jquery/plugins/jquery-ui/js/jquery-ui.js"></script>
+    	<script src="/login/script/mobileCheck.js"></script>
+		<!-- <script defer src="/script/mobileCheck.js"></script> -->
+		<!-- <script defer src="/v3/script/jquery/plugins/jquery-ui/js/jquery-ui.js"></script> -->
+		<!-- <script defer src="/v3/script/hashref.js"></script> -->
+
+		<!-- <script defer src="/v3/script/jquery/plugins/toasty/toasty-min.js"></script> -->
+    	<!-- <script defer src="/v3/script/jquery/plugins/tooltipster/js/jquery.tooltipster.js"></script> -->
+
+    	<link rel="stylesheet" href="/v3/script/jquery/jquery-plugins.css">
+    	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous">
+
+    	<script src="/v3/script/jquery/plugins/toastr/toastr.js"></script>
+    	<script src="/script/metasMobile.js"></script>
+    	<script src="/rendir/js/modal.js"></script>
+
+    	<!-- <script src="/rendir/css/index.css"></script> -->
+
+    	<style type="text/css">
+	    	.hide{
+				  display: none !important;
+				}
+				.uGreen {
+					color: rgb(52,204,02);
+				}
+				.uRed{
+					color: rgb(252,73,03);
+				}
+				.uBgGreen {
+					background-color: rgb(52,204,02);
+				}
+				.uBorderGreen {
+					border-color: rgb(52,204,02);
+				}
+				.uBlue {
+					color: rgb(03,214,249);
+				}
+				.uBgBlue {
+					background-color: rgb(03,214,249);
+				}
+				.uBorderBlue {
+					border-color: rgb(03,214,249);
+				}
+				.uBgRed{
+					background-color: rgb(252,73,03);
+				}
+				.mobile-buttons{
+			    text-transform: uppercase;
+			    text-align: center;
+			    /*border: 1px solid green;*/
+			    border-radius: 1rem;
+			    width: 5rem;
+			    padding: 15px 5px 5px 5px;
+			    margin: auto;
+				}
+				.mobile-buttons *{
+					display: block;
+					/*padding: 0.3rem;*/
+				}
+				.mobile-btn-row{
+					justify-content: center;
+				}
+				
+				/* Estilos para el modal de verificación de código */
+				#verifyCodeModal .modal-content {
+					border-radius: 10px;
+				}
+				
+				#verifyCodeModal .modal-header {
+					background-color: rgb(03,214,249);
+					color: white;
+					border-top-left-radius: 10px;
+					border-top-right-radius: 10px;
+				}
+				
+				#verifyCodeModal .code-input {
+					letter-spacing: 10px;
+					font-size: 24px;
+					text-align: center;
+				}
+				
+				#verifyCodeModal .btn-verify {
+					background-color: rgb(03,214,249);
+					color: white;
+					border: none;
+					width: 100%;
+					padding: 10px;
+					border-radius: 5px;
+					font-weight: bold;
+				}
+				
+				#verifyCodeModal .btn-verify:hover {
+					background-color: rgb(2, 190, 221);
+				}
+    	</style>
+		
+		<style>
+			.verif-email-wrapper {
+			  background: #ffffff;
+			  padding: 40px 30px;
+			  border-radius: 20px;
+			  max-width: 480px;
+			  width: 90%;
+			  margin: 40px auto;
+			  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
+			  text-align: center;
+			}
+		
+			.verif-email-img {
+			  width: 100%;
+			  max-width: 320px;
+			  margin: 0 auto 25px;
+			  display: block;
+			}
+		
+			.verif-email-title {
+			  font-size: 22px;
+			  font-weight: bold;
+			  color: #2e2e2e;
+			  margin-bottom: 10px;
+			}
+		
+			.verif-email-text {
+			  font-size: 14px;
+			  color: #666666;
+			  margin-bottom: 30px;
+			}
+		
+			.verif-code-boxes {
+			  display: flex;
+			  justify-content: center;
+			  gap: 10px;
+			  margin-bottom: 30px;
+			}
+		
+			.verif-code-input {
+			  width: 45px;
+			  height: 45px;
+			  font-size: 20px;
+			  text-align: center;
+			  border-radius: 8px;
+			  border: 2px solid #ccc;
+			  outline: none;
+			  transition: border 0.3s ease;
+			}
+		
+			.verif-code-input:focus,
+			.verif-code-input:focus-visible {
+			  background-color: #fff !important;
+			  box-shadow: none !important;
+			  outline: none !important;
+			}
+		
+			/* Para Chrome/Edge/Safari */
+			.verif-code-input:-webkit-autofill,
+			.verif-code-input:-webkit-autofill:focus,
+			.verif-code-input:-webkit-autofill:active {
+			  background-color: #fff !important;
+			  box-shadow: 0 0 0 1000px #fff inset !important;
+			  -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
+			  outline: none !important;
+			}
+		
+			.verif-btn {
+			  background-color: #32d89c;
+			  color: #ffffff;
+			  border: none;
+			  padding: 12px 20px;
+			  border-radius: 12px;
+			  font-size: 16px;
+			  font-weight: bold;
+			  cursor: pointer;
+			  width: 100%;
+			}
+		
+			.verif-btn:hover {
+			  background-color: #2ec491;
+			}
+		</style>
+
+		<style>
+			.newpass-wrapper {
+			background-color: #ffffff;
+			padding: 40px 30px;
+			border-radius: 20px;
+			width: 100%;
+			max-width: 500px;
+			margin: 40px auto;
+			box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+			font-family: 'Arial', sans-serif;
+			}
+
+			.newpass-img {
+			display: block;
+			margin: 0 auto 25px;
+			max-width: 220px;
+			}
+
+			.newpass-title {
+			text-align: center;
+			font-size: 24px;
+			font-weight: bold;
+			color: #2e2e2e;
+			margin-bottom: 16px;
+			}
+
+			.newpass-text {
+			font-size: 14px;
+			color: #444;
+			margin-bottom: 20px;
+			}
+
+			.newpass-text ul {
+			margin-top: 10px;
+			margin-bottom: 20px;
+			padding-left: 20px;
+			}
+
+			.newpass-label {
+			font-weight: bold;
+			font-size: 14px;
+			display: block;
+			margin-bottom: 6px;
+			color: #333;
+			}
+
+			.newpass-input {
+			width: 100%;
+			padding: 12px;
+			font-size: 14px;
+			background-color: #f2f2f2;
+			border: 2px solid #ccc;
+			border-radius: 8px;
+			margin-bottom: 20px;
+			transition: border 0.3s ease-in-out;
+			}
+
+			.newpass-input:focus {
+			border-color: #2ecc71;
+			outline: none;
+			}
+
+			.newpass-button {
+			width: 100%;
+			background-color: #2ecc71;
+			color: #ffffff;
+			border: none;
+			padding: 12px;
+			font-size: 16px;
+			font-weight: bold;
+			border-radius: 10px;
+			cursor: pointer;
+			transition: background-color 0.3s ease-in-out;
+			}
+
+			.newpass-button:hover {
+			background-color: #27ae60;
+			}
+		</style>
+    	<link rel="stylesheet" type="text/css" href="/login/css/login.css">
+
+
+		<script>
+		var base_url = "<!--#4DTEXT _V3_base_url-->";
+
+		const urlParams = new URLSearchParams(window.location.search);
+		const fromLogout = urlParams.get('fromLogout');
+		console.warn(fromLogout);
+		if(fromLogout){
+			alert("Inicia sesión aca y podrás volver a trabajar en la pestaña anterior.");
+		}
+
+		let url = new URL(window.location.href);
+		// let state = url.searchParams.get("state");
+		let state = decodeURIComponent(url.searchParams.toString());
+		state = state.substring(6,state.length-1);
+
+		
+
+		let experimental = <!--#4DIF experimental -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			//const NODE_BASE = `dev5.unabase.com/node`;
+		
+		function resolveHomeUrl(fromUrl) {
+			switch (fromUrl) {
+				case "rendir": return "/rendir/index.shtml";
+				case "validar": return "/app/home?fromUrl=validar";
+				case "light": return "/light/index.shtml";
+				default: return "/app/home";
+			}
+		}
+
+				ready(function(){
+					const loginForm = document.getElementById("formLogin");
+					const returnBaseUrlInput = loginForm?.querySelector('input[name="returnBaseUrl"]');
+
+					if (loginForm && returnBaseUrlInput) {
+						returnBaseUrlInput.value = window.location.origin;
+						
+					}
+
+					if(mobileCheck()){
+						document.querySelector(".mobileBtn").hidden  = false;
+					document.querySelector(".showLogin.submit").hidden  = true;
+				}
+
+				window.addEventListener("resize", function(event) {
+				    console.log(document.body.clientWidth + ' wide by ' + document.body.clientHeight+' high');
+				    let width = document.body.clientWidth;
+				    if(mobileCheck()){
+						  document.querySelector(".mobileBtn").hidden  = false;
+							document.querySelector(".showLogin.submit").hidden  = true;
+				    }else{
+						  document.querySelector(".mobileBtn").hidden  = true;
+							document.querySelector(".showLogin.submit").hidden  = false;
+
+				    }
+				});
+		// 
+				let notifyContainer = document.querySelector(".card-body.notify");
+				switch(state){
+					case "validacion":
+						notifyContainer.parentNode.hidden = false;
+						notifyContainer.innerHTML = "Nombre de usuario y/o contraseña no válidos.\nPor favor, reintente."
+		        // toastr.warning("Nombre de usuario y/o contraseña no válidos.\nPor favor, reintente.");
+						break;
+					case "random":
+						notifyContainer.parentNode.hidden = false;
+						notifyContainer.innerHTML = "Su contraseña ha sido reinciada, verifique su correo electrónico o solicite una nueva en \"¿Olvidaste tu contraseña?\"."
+		        // toastr.warning("Su contraseña ha sido reinciada, verifique su correo electrónico o solicite una nueva en \"¿Olvidaste tu contraseña?\".");
+						break;
+					case "randomlate":
+						notifyContainer.parentNode.hidden = false;
+						notifyContainer.innerHTML = "Su contraseña ha sido reinciada hace mas de una hora, se ha enviado una nueva a su correo electrónico"
+		        // toastr.warning("Su contraseña ha sido reinciada hace mas de una hora, se ha enviado una nueva a su correo electrónico");
+						break;
+
+				}
+				var content = $('div.passwordRecovery');
+				$('.passwordLost').click(function(){
+					$('.recoverPass').toggleClass('hide');
+					$('.showLogin').toggleClass('hide');
+					$(this).toggleClass('hide');
+					$('.backToLogin').toggleClass('hide');
+
+				});
+				$('.backToLogin').click(function(){
+					$('.recoverPass').toggleClass('hide');
+					$('.showLogin').toggleClass('hide');
+					$(this).toggleClass('hide');
+					$('.passwordLost').toggleClass('hide');
+
+				});
+				$('.recoverPass').click(function(event){
+					event.preventDefault();
+					// Obtener el correo electrónico
+					const email = $('input[name="email"]').val();
+					if (email && email.length > 0) {
+						// Solicitar el código de recuperación
+						debugger
+						requestRecoveryCode();
+						// Mostrar el modal de verificación de código DESPUÉS de solicitar el código
+						// setTimeout(function() {
+						// 	$('#verifyCodeModal').modal('show');
+						// }, 1000); // Pequeño retraso para mejor experiencia de usuario
+						
+						
+					} else {
+						toastr.warning("Por favor ingrese su correo electrónico");
+					}
+				});
+				
+				// Manejar el botón de verificar código en el modal
+				$('#btnVerifyCodeModal').click(function() {
+					const code = $('#verificationCode').val();
+					if (code && code.length > 0) {
+						verifyCode(code);
+						$('#verifyCodeModal').modal('hide');
+					} else {
+						toastr.warning("Por favor ingrese el código de verificación");
+					}
+				});
+				
+				// Manejar el botón de verificar código original (ahora oculto)
+				$('.verifycode').click(function(event){
+					event.preventDefault();
+					verifyCode();
+				});
+					
+				document.querySelector("button.submit").addEventListener("click", function(){
+				document.getElementById("formLogin").requestSubmit();
+				});
+				document.querySelector(`input[name="password"]`).addEventListener("keypress", function(event){
+					// 
+					if(event.keyCode === 13){
+						if(mobileCheck()){
+							document.querySelector("button.mobileBtn").click();
+						}else{
+							document.getElementById("formLogin").requestSubmit();
+
+						}
+
+					}
+				});
+				// document.querySelector("button.renditBtn").addEventListener("click", function(){
+				// 	// document.getElementById("formLogin").action = "/4DACTION/W_INICIA_SESION?rendir=true";
+				// 	document.getElementById("fromUrl").value = "rendir";
+				// 	document.getElementById("formLogin").requestSubmit();
+				// });
+				modal.create("mobileBtn");
+					modal.set({
+						id: "mobileBtn",
+						title: "Unabase",
+						body: `
+						<div class="row mobile-btn-row">
+							<span class="web-btn btn btn-light mobile-buttons uGreen">
+								<i class="fas fa-2x fa-desktop"></i>
+								<label>Web</label>
+							</span>
+							<span class="rendir-btn btn btn-light mobile-buttons uRed">
+								<i class="fas fa-2x fa-file-invoice-dollar"></i>
+								<label>Rendir</label>
+							</span>
+							<span class="light-btn btn btn-light mobile-buttons uGreen">
+								<i class="fas fa-2x fa-file-invoice-dollar"></i>
+								<label>Light</label>
+							</span>
+							<span class="validar-btn btn btn-light mobile-buttons uBlue">
+								<i class="fas fa-2x fa-check-double"></i>
+								<label>Validar</label>
+							</span>						
+						</div>
+						`,
+						  // <button type="button" class="btn w-100 uBgGreen text-white rendir" >Rendir</button>
+						footer: ``,
+						script: modal => {
+							let isValid = () => {
+								let user = document.querySelector(`input[name="email"]`).value;
+								let password = document.querySelector(`input[name="password"]`).value;
+								return password !== "" && user !== "";
+							}
+							modal.querySelector(".rendir-btn").addEventListener("click", function(){
+								if(isValid()){
+									
+									document.getElementById("fromUrl").value = "rendir";
+									document.getElementById("formLogin").requestSubmit();									
+								}else{
+									toastr.warning("Debes llenar el usuario y contraseña para ingresar al sistema");
+								}
+							});
+							modal.querySelector(".light-btn").addEventListener("click", function(){
+								
+								if(isValid()){
+									document.getElementById("fromUrl").value = "light";
+									document.getElementById("formLogin").requestSubmit();									
+								}else{
+									toastr.warning("Debes llenar el usuario y contraseña para ingresar al sistema");
+								}
+							});
+							modal.querySelector(".web-btn").addEventListener("click", function(){
+								if(isValid()){
+									document.getElementById("fromUrl").value = "home";
+									document.getElementById("formLogin").requestSubmit();									
+								}else{
+									toastr.warning("Debes llenar el usuario y contraseña para ingresar al sistema");
+								}
+							});
+							modal.querySelector(".validar-btn").addEventListener("click", function(){
+								if(isValid()){
+									document.getElementById("fromUrl").value = "validar";
+									document.getElementById("formLogin").requestSubmit();									
+								}else{
+									toastr.warning("Debes llenar el usuario y contraseña para ingresar al sistema");
+								}
+							});
+						}
+					});
+				// document.querySelector("button.mobileBtn").addEventListener("click", function(){
+				// 	// document.getElementById("fromUrl").value = "rendir";
+				// 	// document.getElementById("formLogin").requestSubmit();
+				// });
+
+			});
+
+
+
+
+		</script>
+
+	</head>
+
+	<body class="login">
+
+		<!--#4DSCRIPT/_V3_serverInfo-->
+		<!--#4DIF (_V3_demo)-->
+		<section>
+			<form class="demo" method="post" action="/4DACTION/W_INICIA_SESION">
+				<fieldset>
+					<legend><span>Bienvenido a Unabase</span></legend>
+					<label>
+						<span>Su nombre</span>
+						<input type="text" name="txtNombre" required>
+					</label>
+					<label>
+						<span>Su email</span>
+						<input type="email" name="txtEmail" required>
+					</label>
+					<label>
+						<span>Su empresa</span>
+						<input type="text" name="txtEmpresa" required>
+					</label>
+					<label>
+						<span>Rubro</span>
+						<select name="txtRubro" required>
+							<option value="">Seleccionar</option>
+							<option value="Administración y finanzas">Administración y finanzas</option>
+							<option value="Agencia de comunicación">Agencia de comunicación</option>
+							<option value="Agencia de publicidad y marketing">Agencia de publicidad y marketing</option>
+							<option value="Agencia Digital">Agencia Digital</option>
+							<option value="Asesorías">Asesorías</option>
+							<option value="Arquitectura">Arquitectura</option>
+							<option value="Audiovisual">Audiovisual</option>
+							<option value="Construcción">Construcción</option>
+							<option value="Consultoría">Consultoría</option>
+							<option value="Contabilidad">Contabilidad</option>
+							<option value="Diseño">Diseño</option>
+							<option value="Educación">Educación</option>
+							<option value="Fotografía">Fotografía</option>
+							<option value="Gobierno">Gobierno</option>
+							<option value="Informática y telecomunicaciones">Informática y telecomunicaciones</option>
+							<option value="Industrial">Industrial</option>
+							<option value="Ingeniería">Ingeniería</option>
+							<option value="Productora de cine y TV">Productora de cine y TV</option>
+							<option value="Productora de eventos y BTL">Productora de eventos y BTL</option>
+							<option value="Profesional Independiente">Profesional Independiente</option>
+							<option value="Salud">Salud</option>
+							<option value="Otros">Otros</option>
+						</select>
+					</label>
+					<button type="submit">Ingresar</button>
+				</fieldset>
+			</form>
+		</section>
+				
+		<footer itemscope itemtype="http://schema.org/Organization"><span itemprop="name">UNABASE. Todos los derechos reservados.</span> 
+	
+		</footer>
+
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+			ga('create', 'UA-58262854-1', 'auto');
+			ga('send', 'pageview');
+		</script>
+
+		<!--#4DELSE-->
+		<form id="formLogin" method="post" action="/node/auth/login">
+			<div class="card bg-danger text-white" hidden="">
+			  <div class="card-body notify">
+			    This is some text within a card body.
+			  </div>
+			</div>
+			<div class="card" >
+			  <div class="card-body">
+			  	<div>
+			  		<span id="background-unabase"></span>
+			  	</div>
+					<div class="input-group mb-3">
+					  <div class="input-group-prepend">
+					    <span class="input-group-text" id="basic-addon1">U</span>
+					  </div>
+					  <input type="text" class="form-control" name="email" placeholder="Usuario">
+					  <input type="hidden" name="fromUrl" id="fromUrl" value="home">
+					  <input type="hidden" name="mode" value="web">
+					  <input type="hidden" name="returnBaseUrl" value="">
+
+					</div>
+					<div class="input-group mb-3 showLogin">
+					  <div class="input-group-prepend">
+					    <span class="input-group-text" id="basic-addon1">#</span>
+					  </div>
+					  <input type="password"  name="password"  class="form-control" placeholder="Password" aria-label="Password" aria-describedby="basic-addon1">
+					</div>
+					<div class="input-group mb-3 recoverPass hide">
+					  <div class="input-group-prepend">
+					    <span class="input-group-text" id="basic-addon1">@</span>
+					  </div>
+					  <input type="mail" class="form-control" name="emailRecovery" placeholder="Correo Electronico">
+					</div>
+					<div class="input-group mb-3 buttons">
+					  <button type="button" name="enter" class="btn w-100 uBgGreen text-white showLogin submit" >Iniciar sesión</button>
+					  <button type="button" name="enter-mobile" hidden="" class="btn w-100 uBgGreen text-white showLogin mobileBtn" data-toggle="modal" data-target="#mobileBtn">Iniciar sesión.</button>
+					  <button type="button" class="btn w-100 uBgRed text-white passwordLost">¿Olvidaste tu contraseña?</button>
+					  <button type="button" class="btn w-100 uBgBlue text-white recoverPass hide">Recuperar contraseña</button>
+					  <button type="button" class="btn w-100 uBgBlue text-white verifycode hide">Verificar Codigo</button>
+					  <button type="button" class="btn w-100 uBgGreen text-white backToLogin hide ">Iniciar sesión</button>
+				  	
+				  </div>
+			  </div>
+			</div>
+			
+		</form>
+		
+		<!-- Modal para verificación de código -->
+		<div class="modal fade" id="verifyCodeModal" tabindex="-1" role="dialog" aria-labelledby="verifyCodeModalLabel" aria-hidden="true">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title" id="verifyCodeModalLabel">Verificar Código</h5>
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          <span aria-hidden="true">&times;</span>
+		        </button>
+		      </div>
+		      <div class="modal-body">
+		        <p>Ingrese el código de verificación que ha sido enviado a su correo electrónico:</p>
+		        <div class="form-group">
+					<input type="text" class="form-control code-input" id="verificationCode" name="code" placeholder="000000" maxlength="6">
+		        </div>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+		        <button type="button" class="btn btn-verify" id="btnVerifyCodeModal">Verificar</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+		
+		<nav class="navbar fixed-bottom navbar-light">
+		  <a class="navbar-brand" href="#">unabase.com Todos los derechos reservados.</a>
+		</nav>
+		<!--#4DENDIF-->
+
+
+
+
+		<div class="password-recovery-container" style="display: none;">
+			<div class="password-recovery-title">Recuperar Contraseña</div>
+			<div class="password-recovery-instructions">
+				Ingresa tu dirección de correo electrónico y recibirás un código para verificar que eres tú
+			</div>
+			<input type="email" class="password-recovery-email-input" placeholder="example@unabase.com" required>
+			<button type="submit" class="password-recovery-submit-button">Enviar</button>
+		</div>
+
+		<div class="verif-email-wrapper" style="display: none;">
+			<!-- <img src="" alt="Correo Ilustración" class="verif-email-img" /> -->
+			
+			<div class="verif-email-title">Verifica tu dirección de email</div>
+			
+			<div class="verif-email-text">
+			  Para continuar con el cambio de contraseña en Unabase ingresa el código que enviamos a tu correo
+			</div>
+		
+			<div class="verif-code-boxes">
+			  <input type="text" maxlength="1" class="verif-code-input" inputmode="numeric" pattern="[0-9]*">
+			  <input type="text" maxlength="1" class="verif-code-input" inputmode="numeric" pattern="[0-9]*">
+			  <input type="text" maxlength="1" class="verif-code-input" inputmode="numeric" pattern="[0-9]*">
+			  <input type="text" maxlength="1" class="verif-code-input" inputmode="numeric" pattern="[0-9]*">
+			</div>
+		
+			<button class="verif-btn">Continuar</button>
+		</div>
+
+
+		  <div class="newpass-wrapper" style="display: none;">
+			<img src="https://cdn-icons-png.flaticon.com/512/3062/3062634.png" alt="Seguridad" class="newpass-img" />
+		
+			<div class="newpass-title">Crear Contraseña</div>
+		
+			<div class="newpass-text">
+			  Para proteger su cuenta, asegúrese de que su contraseña:
+			  <ul>
+				<li>Tenga al menos 8 caracteres.</li>
+				<li>Contenga letras mayúsculas, minúsculas, números y símbolos.</li>
+				<li>Sea significativamente diferente de sus contraseñas anteriores.</li>
+			  </ul>
+			</div>
+		
+			<form id="newPasswordForm" autocomplete="off">
+				<!-- ... otros elementos ... -->
+				<label class="newpass-label">Nueva Contraseña</label>
+				<input type="password" class="newpass-input" placeholder="Mínimo 8 caracteres" name="newPassword" autocomplete="new-password" />
+			
+				<label class="newpass-label">Repetir Nueva Contraseña*</label>
+				<input type="password" class="newpass-input" placeholder="Mínimo 8 caracteres" name="repeatPassword" autocomplete="new-password" />
+			
+				<button type="submit" class="newpass-button">Enviar</button>
+			</form>
+			  
+		  </div>
+		</body>
+		<script src="/login/script/passwordRecovery.js"></script>
+		<script type="text/javascript">
+		// Función para verificar el código (puede ser modificada según tu implementación)
+		function verifyCode() {
+				const code = document.querySelector('input[name="code"]').value;
+				const user = document.querySelector('input[name="email"]').value;
+				debugger
+				toastr.success('Código verificado, redirigiendo...');
+				const link = document.createElement ('a')
+					const url = `${window.location.origin}/app/home#login/Recovery.shtml?token=${data.token || ''}`
+				link.setAttribute ('href',url)
+				link.click()
+
+				// fetch('https://devbase.unabase.com/node/verify-code', {
+				// 	method: 'POST',
+				// 	headers: { 'Content-Type': 'application/json' },
+				// 	body: JSON.stringify({ user, code })
+				// })
+				// 	.then(res => res.json())
+				// 	.then(data => {
+				// 		if (data.success) {
+				// 			toastr.success('Código verificado, redirigiendo...');
+				// 			const link = document.createElement ('a')
+					// 			const url = `${window.location.origin}/app/home#login/Recovery.shtml?token=${data.token || ''}`
+				// 			link.setAttribute ('href',url)
+				// 			link.click()
+				// 		} else {
+				// 			toastr.error(data.message || 'Código incorrecto o expirado');
+				// 		}
+				// 	});
+			}
+	</script>
+	<script>
+	document.querySelectorAll('.verif-code-input').forEach(input => {
+	  input.addEventListener('input', function() {
+	    this.value = this.value.replace(/[^0-9]/g, '');
+	  });
+	});
+	</script>
+</html>

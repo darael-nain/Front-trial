@@ -1,0 +1,57 @@
+.ui-tabs .ui-tabs-panel {
+  padding: 0 !important;
+  overflow: hidden;
+}
+.form-contact input{
+  border-bottom: 1px solid lightgray!important;
+}
+.form-contact fieldset{
+  background:white!important;
+}
+.form-contact select{
+  border:1px solid lightgray!important;
+  padding:10px!important;
+  min-width:100px;
+}
+.form-contact .inline{    
+  display:inline-block;
+  vertical-align:top;           
+  width:calc(50% - 5px);
+}
+#main-container .inline input{    
+  display:inline-block;
+  vertical-align:top;
+  width:100px!important;
+}
+.form-contact textarea{                     
+  height:40px!important;          
+}
+.form-contact ul.tags{                    
+  position: absolute;
+  top:40px;
+  right:10px;           
+}
+.form-contact ul.tags li{
+  color:gray;
+  display: inline-block;
+  font-weight:bold;
+  font-size:12px;
+  margin:5px;           
+}
+.form-contact ul.tags li:hover{
+  cursor:pointer;
+  text-decoration: line-through;      
+}       
+.form-contact .venta{
+  color:#59955C; 
+}
+.form-contact .compra{
+  color:#FF4848; 
+}
+.form-contact ul.activity{
+  padding:2px;
+}
+.form-contact ul.activity li{
+  margin-left:10px;
+  list-style-type:square;
+}       

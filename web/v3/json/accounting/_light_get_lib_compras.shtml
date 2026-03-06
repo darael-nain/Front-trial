@@ -1,0 +1,48 @@
+{
+	"success": <!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"errorMsg": "<!--#4DTEXT errorMsg-->",
+	"total": "<!--#4DTEXT total-->"
+	<!--#4DIF Not(Undefined(aCont))-->
+	,
+	"rows":[
+		<!--#4DLOOP aCont -->
+			{
+				"id_dtc": <!--#4DIF Not(Undefined(aId))-->"<!--#4DHTML aId{aCont}-->"<!--#4DELSE-->null<!--#4DENDIF-->, 
+				"cont":  <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML aCont{aCont}-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"codigo_sii":   <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aCodigoDocSii{aCont})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"tipo_doc":   <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aTipoDoc{aCont})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"tipo_compra":   <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aTipoCompra{aCont})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"folio":   <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aFolio{aCont})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"fecha_recepcion":   <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aFechaRecepcion{aCont})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"fecha_emision":   <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aFechaEmision{aCont})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"rut":   <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML aRut{aCont}-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"razon":   <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML _V3_escapeString(aRazon{aCont})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"item":   <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML _V3_escapeString(aItem{aCont})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"iva": <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aIva{aCont})-->"<!--#4DELSE-->0<!--#4DENDIF-->,
+				"iva2": <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aIva2{aCont})-->"<!--#4DELSE-->0<!--#4DENDIF-->,
+				"ivasup": <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aIvaSup{aCont})-->"<!--#4DELSE-->0<!--#4DENDIF-->,
+				"ila": <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aIvaIla{aCont})-->"<!--#4DELSE-->0<!--#4DENDIF-->,
+				"especifico": <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aImpEsp{aCont})-->"<!--#4DELSE-->0<!--#4DENDIF-->,
+				"fijo": <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aIvaFijo{aCont})-->"<!--#4DELSE-->0<!--#4DENDIF-->,
+				"exento": <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aExento{aCont})-->"<!--#4DELSE-->0<!--#4DENDIF-->,
+				"total": <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aTotal{aCont})-->"<!--#4DELSE-->0<!--#4DENDIF-->,
+				"neto": <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aNeto{aCont})-->"<!--#4DELSE-->0<!--#4DENDIF-->
+			}<!--#4DIF NOT(aCont{aCont} = aCont{Size of array(aCont)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+	<!--#4DENDIF-->
+
+	],
+	"impuestos_dtc": [
+		<!--#4DIF NOT(UNDEFINED(aAdicionalImpId))-->
+			<!--#4DLOOP aAdicionalImpId-->
+				{		
+					"id": <!--#4DHTML aAdicionalImpId{aAdicionalImpId}-->,
+					"id_dtc": "<!--#4DHTML aAdicionalImpIdDtc{aAdicionalImpId}-->",
+					"impuesto_valor": "<!--#4DHTML String(aAdicionalImpMValor{aAdicionalImpId};"&xml")-->",
+					"impuesto_porc": "<!--#4DHTML String(aAdicionalImpMPorc{aAdicionalImpId};"&xml")-->",
+					"impuesto_name": "<!--#4DHTML String(aAdicionalImpName{aAdicionalImpId};"&xml")-->"
+				}<!--#4DIF NOT(aAdicionalImpId{aAdicionalImpId} = aAdicionalImpId{Size of array(aAdicionalImpId)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		<!--#4DENDIF-->
+	]
+}

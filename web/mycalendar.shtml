@@ -1,0 +1,197 @@
+<!--#4DINCLUDE headgreen.shtml-->
+<body>
+<div id="loading-global">
+    <div class="cargasxxx">
+        <img src="/imagenes/cargando.gif" width="50px" height="50px" />
+        <p></p>
+    </div>
+</div>
+
+<!--#4DINCLUDE menu_superior_green.shtml-->
+<section id="main-container">
+    <div class="box-button">            
+            <!--#4DIF aCheckPermiso{19}=true-->
+            <a class="boton" href="/4DACTION/nueva_ot" target="_blank">Nueva OT</a>
+            <!--#4DENDIF-->             
+
+            <!--#4DIF aCheckPermiso{16}=true-->
+            <button id="btn-planner-ot" type="button">Planificador</button>          
+            <!--#4DENDIF-->
+
+            <!--#4DIF aCheckPermiso{25}=true-->
+            <button id="btn-mycalendar-ot" type="button">Mi Calendario</button>
+            <!--#4DENDIF-->  
+
+            <span class="label-view-weekly">( Vista semanal )</span>
+
+        </div>
+
+        <h2 class="sub-title">
+            <img class="img-title-calendar" src="/imagenes_green/img_calendar_time.png">
+            <!--#4DVAR subTitle-->            
+        </h2>        
+
+        <div class="planner-box-filters">
+            
+            <button id="btn-view-monthly" type="button" class="buttonBkn especial2">
+                Ir a vista mensual
+            </button>
+
+            <label>Responsables:</label>
+            <!--#4DIF size of array(aLoginAreaResp1)=1-->
+                <select style="width:150px" id="cal-filters-resp">
+                    <option selected="selected" value="<!--#4DVAR aLoginAreaResp1{1}-->">
+                        <!--#4DVAR aNombresAreaResp1{1}-->                        
+                    </option>        
+                </select>
+            <!--#4delse-->
+                <select style="width:150px" id="cal-filters-resp">
+                    <!--#4dif vLoginFilter="all"-->
+                        <option selected="selected" value="all">[ Seleccionar ]</option>
+                    <!--#4delse-->
+                        <option selected="selected" value="<!--#4DVAR vLoginFilter-->"><!--#4DVAR vLoginFilterName--></option>
+                    <!--#4dendif-->                    
+                    <!--#4DLOOP aLoginAreaResp1-->
+                        <!--#4dif aLoginAreaResp1{aLoginAreaResp1}#vLoginFilter-->
+                            <option value="<!--#4DVAR aLoginAreaResp1{aLoginAreaResp1}-->"><!--#4DVAR aNombresAreaResp1{aLoginAreaResp1}--></option>
+                        <!--#4dendif-->                 
+                    <!--#4DENDLOOP-->
+                    <option value="all">TODOS</option>
+                </select>
+            <!--#4dendif-->
+
+            <label>Prioridad:</label>
+            <select style="width:150px;text-transform:capitalize" id="cal-filter-priority">                
+                <!--#4dif vPriorityFilter="all"-->
+                    <option selected="selected" value="all">[ Seleccionar ]</option>
+                <!--#4delse-->
+                    <option selected="selected" value="<!--#4DVAR vPriorityFilter-->"><!--#4DVAR Lowercase(vPriorityFilter;*)--></option>
+                <!--#4dendif-->              
+                <!--#4dif vPriorityFilter#"alta"--><option value="ALTA">Alta</option><!--#4dendif-->
+                <!--#4dif vPriorityFilter#"media"--><option value="MEDIA">Media</option><!--#4dendif-->
+                <!--#4dif vPriorityFilter#"baja"--><option value="BAJA">Baja</option><!--#4dendif-->
+                <!--#4dif vPriorityFilter#"all"--><option value="all">Todos</option><!--#4dendif-->
+            </select>
+
+            <label>Proyectos:</label>
+            <select style="width:150px" id="cal-filter-proyect">
+                 <!--#4dif vNvFilter="all"-->
+                    <option selected="selected" value="all">[ Seleccionar ]</option>
+                <!--#4delse-->
+                    <option selected="selected" value="<!--#4DVAR vNvFilter-->"><!--#4DVAR vNvNameFilter--></option>
+                <!--#4dendif-->         
+                <!--#4DLOOP aIdNvSearch-->
+                    <!--4dif string(aIdNvSearch{aIdNvSearch})#vNvFilter-->    
+                    <option value="<!--#4DVAR aIdNvSearch{aIdNvSearch}-->">
+                        <!--#4DVAR aIdNegNvSearch{aIdNvSearch}--> / <!--#4DVAR aRefNvSearch{aIdNvSearch}-->
+                    </option>
+                    <!--4dendif-->                  
+                <!--#4DENDLOOP-->
+                <option value="all">TODOS</option>   
+            </select>           
+        </div>
+
+
+        <div id="container-all-calendar">
+            <!--<h3 class="currentDate">#4DVAR currentDate</h3>-->        
+            <div class="box-changes-week">
+                <a href="#" rel="<!--#4DVAR vDatePrevious-->" id="link-previous-week">
+                    <img class="img-title-calendar" src="/imagenes_green/arrows_prev.png">
+                    Anterior
+                </a>
+                <a href="#" rel="" id="link-current-week">              
+                    Actual
+                </a>
+                <a href="#"  rel="<!--#4DVAR vDateNext-->" id="link-next-week">                
+                    Pr&oacute;xima
+                    <img class="img-title-calendar" src="/imagenes_green/arrows_next.png">
+                </a>
+            </div>
+
+            <div id="content-list-ot" class="content"><!--begin contents-->
+                <table id="table-calendar" class="table-format-2" cellspacing="0" cellspadding="0">
+                    <thead>                                  
+                        <tr>
+                            <th width="<!--#4DVAR vMedUno-->%"><!--#4DVAR currentYear--></th>                                              
+                            <th width="<!--#4DVAR vMedResto-->%" class="<!--#4DVAR aHide{1}-->">
+                                <!--#4DVAR aWorkingDay{1}-->                              
+                            </th>
+                            <th width="<!--#4DVAR vMedResto-->%" class="<!--#4DVAR aHide{2}-->">
+                                <!--#4DVAR aWorkingDay{2}-->                               
+                            </th> 
+                            <th width="<!--#4DVAR vMedResto-->%" class="<!--#4DVAR aHide{3}-->">
+                                <!--#4DVAR aWorkingDay{3}-->                             
+                            </th> 
+                            <th width="<!--#4DVAR vMedResto-->%" class="<!--#4DVAR aHide{4}-->">
+                                <!--#4DVAR aWorkingDay{4}-->                               
+                            </th> 
+                            <th width="<!--#4DVAR vMedResto-->%" class="<!--#4DVAR aHide{5}-->">
+                                <!--#4DVAR aWorkingDay{5}-->                             
+                            </th> 
+                            <th width="<!--#4DVAR vMedResto-->%" class="<!--#4DVAR aHide{6}-->">
+                                <!--#4DVAR aWorkingDay{6}-->                             
+                            </th> 
+                            <th width="<!--#4DVAR vMedResto-->%" class="<!--#4DVAR aHide{7}-->">
+                                <!--#4DVAR aWorkingDay{7}-->                            
+                            </th>                                            
+                        </tr>        
+                    </thead>
+                    <tbody> 
+
+                    <!--#4DLOOP aWorkingTime-->       
+                    <tr>
+                        <td class="chronology"><!--#4DVAR aWorkingTime{aWorkingTime}--></td>                   
+                        
+                        <td class="<!--#4DVAR aHide{1}-->">
+                            <div class="hours-assigned" title="<!--#4DVAR aWorkingDayDate{1}-->:<!--#4DVAR aWorkingTime{aWorkingTime}-->">                                
+                            </div>
+
+                            <div class="hours-assigned-vcto" title="<!--#4DVAR aWorkingDayDate{1}-->:<!--#4DVAR aWorkingTime{aWorkingTime}-->">                                
+                            </div>
+                        </td>
+
+                        <td class="<!--#4DVAR aHide{2}-->">
+                            <div class="hours-assigned" title="<!--#4DVAR aWorkingDayDate{2}-->:<!--#4DVAR aWorkingTime{aWorkingTime}-->"></div>
+
+                            <div class="hours-assigned-vcto" title="<!--#4DVAR aWorkingDayDate{2}-->:<!--#4DVAR aWorkingTime{aWorkingTime}-->"></div>
+                        </td>
+
+                        <td class="<!--#4DVAR aHide{3}-->">
+                            <div class="hours-assigned" title="<!--#4DVAR aWorkingDayDate{3}-->:<!--#4DVAR aWorkingTime{aWorkingTime}-->"></div>
+                            
+                            <div class="hours-assigned-vcto" title="<!--#4DVAR aWorkingDayDate{3}-->:<!--#4DVAR aWorkingTime{aWorkingTime}-->"></div>
+                        </td>
+
+                        <td class="<!--#4DVAR aHide{4}-->">
+                            <div class="hours-assigned" title="<!--#4DVAR aWorkingDayDate{4}-->:<!--#4DVAR aWorkingTime{aWorkingTime}-->"></div>
+
+                            <div class="hours-assigned-vcto" title="<!--#4DVAR aWorkingDayDate{4}-->:<!--#4DVAR aWorkingTime{aWorkingTime}-->"></div>                            
+                        </td>
+
+                        <td class="<!--#4DVAR aHide{5}-->">
+                            <div class="hours-assigned" title="<!--#4DVAR aWorkingDayDate{5}-->:<!--#4DVAR aWorkingTime{aWorkingTime}-->"></div>
+
+                            <div class="hours-assigned-vcto" title="<!--#4DVAR aWorkingDayDate{5}-->:<!--#4DVAR aWorkingTime{aWorkingTime}-->"></div>                           
+                        </td>
+
+                        <td class="<!--#4DVAR aHide{6}-->">                            
+                            <div class="hours-assigned" title="<!--#4DVAR aWorkingDayDate{6}-->:<!--#4DVAR aWorkingTime{aWorkingTime}-->"></div>
+
+                            <div class="hours-assigned-vcto" title="<!--#4DVAR aWorkingDayDate{6}-->:<!--#4DVAR aWorkingTime{aWorkingTime}-->"></div>                             
+                        </td>
+
+                        <td class="<!--#4DVAR aHide{7}-->">
+                            <div class="hours-assigned" title="<!--#4DVAR aWorkingDayDate{7}-->:<!--#4DVAR aWorkingTime{aWorkingTime}-->"></div>
+
+                            <div class="hours-assigned-vcto" title="<!--#4DVAR aWorkingDayDate{7}-->:<!--#4DVAR aWorkingTime{aWorkingTime}-->"></div>                            
+                        </td>
+
+                    </tr>       
+                    <!--#4DENDLOOP-->                  
+                    </tbody> 
+                </table>
+            </div><!--end contents-->
+        </div>
+</section>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+	"rows": [
+<!--#4DLOOP [Moneda] -->
+		{
+			"id": "<!--#4DHTML [Moneda]codigo-->",
+			"text": "<!--#4DHTML _V3_escapeString([Moneda]nombre)--> (<!--#4DHTML [Moneda]codigo-->)",
+			"value": "<!--#4DHTML [Moneda]change_value-->"
+		}<!--#4DIF Selected record number([Moneda])<Records in selection([Moneda])-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

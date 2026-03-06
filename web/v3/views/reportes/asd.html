@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>reportes</title>
+		<meta charset="utf-8">	
+		
+		<script>
+			var ventasPorClientes = function(){				
+			    $.getJSON('/4DACTION/_V3_get_reportdata_vxcliente', function(data) {			    
+			    	$('#report-test1').highcharts({
+			    		chart: {
+			    			type:'pie',
+				            plotBackgroundColor: null,
+				            plotBorderWidth: 1,//null,
+				            plotShadow: false
+				        },					    
+					    title: {
+					        text: 'Ventas por clientes'
+					    },
+				        tooltip: {
+				            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+				        },
+				        plotOptions: {
+				            pie: {
+				                allowPointSelect: true,
+				                cursor: 'pointer',
+				                dataLabels: {
+				                    enabled: true,
+				                    //format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+				                    style: {
+				                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+				                    }
+				                }
+				            }
+				        },					
+					    series: [{
+					        name: 'Ventas',
+					        data: data,
+					        color: '#FF0000',
+					        negativeColor: '#0088FF'
+					    }]					
+					});
+			    });
+			}
+
+			var ventasPorServicio = function(){				
+			    $.getJSON('/4DACTION/_v3_get_reportdata_vxservicio', function(data2) {			    	
+			    	$('#report-test2').highcharts({
+			    		chart: {
+			    			type:'pie',
+				            plotBackgroundColor: null,
+				            plotBorderWidth: 1,//null,
+				            plotShadow: false
+				        },					    
+					    title: {
+					        text: 'Ventas por servicios, 2014'
+					    },
+				        tooltip: {
+				            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+				        },
+				        plotOptions: {
+				            pie: {
+				                allowPointSelect: true,
+				                cursor: 'pointer',
+				                dataLabels: {
+				                    enabled: true,
+				                    //format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+				                    style: {
+				                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+				                    }
+				                }
+				            }
+				        },					
+					    series: [{
+					        name: 'Ventas',
+					        data: data2,
+					        color: '#FF0000',
+					        negativeColor: '#0088FF'
+					    }]					
+					});
+			    });
+			}
+
+			var ventasPorMes = function(){				
+			    $.getJSON('/4DACTION/_V3_get_reportdata_vxmes', function(data3) {			    
+			    	$('#report-test3').highcharts({
+			    		chart: {
+				            type: 'column',
+				            margin: 75,
+				            options3d: {
+				                enabled: true,
+				                alpha: 10,
+				                beta: 25,
+				                depth: 70
+				            },
+				            frame: {					            
+					            back: {					              
+					                color: 'black'
+					            }
+					       }
+				        },					    
+					    title: {
+					        text: 'Ventas por mes, 2014'
+					    },
+				        plotOptions: {
+				            column: {
+				                depth: 25
+				            }
+				        },				    
+				        xAxis: {
+				            categories: Highcharts.getOptions().lang.shortMonths
+				        },
+				        yAxis: {
+				            opposite: true
+				        },
+					    series: [{
+					        name: 'Ventas',
+					        data: data3,
+					        color: '#FF0000',
+					        negativeColor: '#0088FF'
+					    }]		
+					});
+			    });
+			}			
+
+			$(document).ready(function() {
+				ventasPorClientes();
+				ventasPorServicio();
+				ventasPorMes();
+			});
+
+		</script>
+		<style type="text/css">
+			.charts{
+				display: inline-block!important;
+				/*width:calc(50%-5px)!important;*/
+				width:100%;
+				height:400px;
+			}
+		</style>
+	</head>
+	<body>		
+		<div id="report-test1" class="charts"></div>
+		<div id="report-test2" class="charts"></div>
+		<div id="report-test3" class="charts"></div>		
+	</body>
+</html>

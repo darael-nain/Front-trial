@@ -1,0 +1,148 @@
+<!--#4DINCLUDE head.shtml-->
+<body>
+<!--#4DINCLUDE menuSuperior.shtml-->
+<!--#4DINCLUDE mensajes2.shtml-->
+    <section id="crear-contacto">
+    	<div class="box-aviso-existe-rut">
+        		<a href="javascript:cerrar_aviso_rut()">cerrar x</a>
+        		<p class="title">El Rut ingresado ya se encuentra registrado, pertenece a:</p>
+                <p class="p2"><!--#4DVAR vRazonEncontrado--></p>
+                <p class="p2"><!--#4DVAR waDatosIngresados{4}-->-<!--#4DVAR waDatosIngresados{5}--></p>
+                
+            <form id="frmbuscadoresxxx" class="frmbuscadoresxxx"  action="/4DACTION/W_BUSCAR_CONTACTOS2" method="post">
+                <input name="idcontacto" type="hidden" value="<!--#4DVAR vIdempresaEncontrado-->"/>
+                <button type="submit">Ocupar este contacto</button>  	
+            </form>                             
+        </div>
+    	<h1>Nuevo contacto</h1>
+         <article>
+                 <form id="frm-contacto" action="/4DACTION/W_NUEVO_CONTACTO" method="post">
+                        <fieldset>
+                        		<legend>Datos generales :</legend>
+                        		<p>
+                                    <label for="tipo">Tipo : </label>                                         
+                                    <select name="tipo" id="tipo">
+                                        <!--#4DIF  waDatosIngresados{2}="PROVEEDOR"-->
+                                        <option selected value="PROVEEDOR">PROVEEDOR</option> 
+                                        <option value="CLIENTE">CLIENTE</option>     
+                                        <!--#4DELSE-->
+                                        <option  value="PROVEEDOR">PROVEEDOR</option> 
+                                        <option selected value="CLIENTE">CLIENTE</option>                                            
+                                        <!--#4DENDIF-->                                  		                                        
+                                    </select>
+                                </p>
+                                <p>
+                                    <label for="alias">Alias : </label>                                         
+                                    <input class="required" autofocus name="alias" type="text" id="alias" value="<!--#4DVAR waDatosIngresados{3}-->" /><span>*</span>
+                                    <label for="rut">Rut : </label> 
+                                    <input class="required" name="rut" type="text" id="rut" value="<!--#4DVAR waDatosIngresados{4}-->"  />-
+                                    <input class="chk-validar-rut" name="dv" type="text" id="dv" value="<!--#4DVAR waDatosIngresados{5}-->"  /><span>*</span>
+                                    <!--#4DIF  waDatosIngresados{24}="si"-->
+                                    	<input name="validarut" type="checkbox" id="validarut" checked  />validar
+                                    <!--#4DELSE-->
+                                    	<input name="validarut" type="checkbox" id="validarut" />validar
+                                    <!--#4DENDIF-->                                    
+                                </p>
+                                <p>
+                                    <label for="razon">Razon : </label> 
+                                    <input class="txt-razon-cont" name="razon" type="text" id="razon" value="<!--#4DVAR waDatosIngresados{7}-->" /><span>*</span>
+                                </p>
+                               <p>
+                                    <label for="giro">Giro : </label> 
+                                    <input class="txt-giro-cont" name="giro" type="text" id="giro" value="<!--#4DVAR waDatosIngresados{8}-->"/><span>*</span>
+                                </p>
+                        </fieldset>
+                        		
+                        <fieldset>                              
+                        		<legend>Direcci&#243;n :</legend>
+                                <p>
+                                    <label for="direccion">Direcci&#243;n : </label> 
+                                    <input class="txt-fondo-cont txt-dir-cont" name="direccion" type="text" id="direccion" value="<!--#4DVAR waDatosIngresados{9}-->"/>
+                                    <label for="nro">#</label> 
+                                    <input class="txt-fondo-cont txt-nro-cont" name="nro" type="text" id="nro" value="<!--#4DVAR waDatosIngresados{10}-->"/>
+                                    <label for="depto">Depto : </label> 
+                                    <input class="txt-fondo-cont txt-depto-cont" name="depto" type="text" id="depto" value="<!--#4DVAR waDatosIngresados{11}-->"/>
+                                </p>
+                                <p>                                	
+                                <label for="piso">Piso : </label> 
+                                <input class="txt-fondo-cont txt-piso-cont" name="piso" type="text" id="piso" value="<!--#4DVAR waDatosIngresados{12}-->"/>
+                                <label for="ciudad">Ciudad : </label> 
+                                <input class="txt-fondo-cont txt-ciudad-cont" name="ciudad" type="text" id="ciudad" value="<!--#4DVAR waDatosIngresados{13}-->"/>
+                                    
+                                <label for="comuna">Comuna : </label>                                 
+                                <select class="cbo-comuna-cont" name="comuna" id="comuna">
+                                <option selected value="<!--#4DVAR waDatosIngresados{14}-->"><!--#4DVAR vNombreComuna--></option>                          		
+                                <!--#4DLOOP w_a_id_comuna-->
+                                <!--#4DIF string(w_a_id_comuna{w_a_id_comuna})#waDatosIngresados{14}-->
+                                 <option value="<!--#4DVAR w_a_id_comuna{w_a_id_comuna}-->"><!--#4DVAR w_a_des_comuna{w_a_id_comuna}--></option> 
+                                <!--#4DENDIF-->
+                                <!--#4DENDLOOP--> 		                                          
+                                </select>                      
+                                </p>
+                                <p></p>
+                        </fieldset>
+                        		
+                        <fieldset>                              
+                        		<legend>Contacto :</legend>
+                                 <p>
+                                    <label for="fono1">Telefono 1 : </label> 
+                                    <input class="txt-fondo-cont txt-cjs-cont" name="fono1" type="text" id="fono1" value="<!--#4DVAR waDatosIngresados{15}-->"/>
+                                    <label for="fax">Fax : </label> 
+                                    <input class="txt-fondo-cont txt-cjs-cont" name="fax" type="text" id="fax" value="<!--#4DVAR waDatosIngresados{16}-->"/>
+                                </p>
+                                <p>
+                                	<label for="fono2">Telefono 2 : </label> 
+                                    <input class="txt-fondo-cont txt-cjs-cont" name="fono2" type="text" id="fono2" value="<!--#4DVAR waDatosIngresados{17}-->"/>                                  
+                                    <label for="celular">Celular : </label> 
+                                    <input class="txt-fondo-cont txt-cjs-cont" name="celular" type="text" id="celular" value="<!--#4DVAR waDatosIngresados{18}-->"/>
+                                </p>
+                                <p>
+                                	<label for="email">Email : </label> 
+                                    <input class="txt-fondo-cont txt-cjs-cont" name="email" type="text" id="email" value="<!--#4DVAR waDatosIngresados{19}-->"/>                                  
+                                    <label for="sitio">Sitio : </label> 
+                                    <input class="txt-fondo-cont txt-cjs-cont" name="sitio" type="text" id="sitio" value="<!--#4DVAR waDatosIngresados{20}-->"/>
+                                </p>
+                        </fieldset>
+                        <fieldset>                              
+                        		<legend>Bancarios :</legend>
+                                 <p>
+                                 	<label for="ctacte">Tipo Cuenta : </label> 
+                                    <select class="cbo-comuna-cont" name="ctacte" id="ctacte">
+                                        <option selected value="<!--#4DVAR waDatosIngresados{21}-->"><!--#4DVAR waDatosIngresados{21}--></option>
+                                    	<!--#4DLOOP waTCuentai-->
+                                        <!--#4DIF waTCuentai{waTCuentai}#waDatosIngresados{21}-->
+                                         <option value="<!--#4DVAR waTCuentai{waTCuentai}-->"><!--#4DVAR waTCuentai{waTCuentai}--></option>                                     
+                                        <!--#4DENDIF-->                                       
+                                        <!--#4DENDLOOP-->                                                                    		                                          
+                                    </select>
+                           <label for="nrocuenta">Nro Cuenta : </label> 
+                           <input class="txt-fondo-cont txt-cjs-cont" name="nrocuenta" type="text" id="nrocuenta" value="<!--#4DVAR waDatosIngresados{22}-->"/>    
+                                </p>
+                                <p>
+                                <label for="banco">Banco : </label>
+                                <select class="cbo-comuna-cont" name="banco" id="banco">
+                                    <option selected value="<!--#4DVAR waDatosIngresados{23}-->"><!--#4DVAR vNombreBanco--></option>                          		
+                                    <!--#4DLOOP waIdbancosi-->
+                                    <!--#4DIF waTCuentai{waTCuentai}#waDatosIngresados{23}-->
+                                     <option value="<!--#4DVAR waIdbancosi{waIdbancosi}-->"><!--#4DVAR waBancosi{waIdbancosi}--></option> 
+                                    <!--#4DENDIF-->
+                                    <!--#4DENDLOOP--> 		                                          
+                                </select>
+                                </p>                               
+                        </fieldset>
+                        <p>
+                        	<input id="rutvalidahidden" name="rutvalidahidden" type="hidden" value="<!--#4DVAR waDatosIngresados{24}-->" />
+                            <button title="Guardar" class="button-inf" onClick="validate_send_contacto()" type="button">
+                                <img src="/imagenes/disk.png" border="0" />
+                                <span>Guardar</span>
+                            </button>
+                            <button title="Deshacer" class="button-inf" type="reset">
+                                <img src="/imagenes/arrow_undo.png" border="0" />
+                                <span>Deshacer</span>
+                            </button>
+                        </p>
+                </form>                          
+         </article>         
+    </section>
+</body>
+</html>

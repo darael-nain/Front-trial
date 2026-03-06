@@ -1,0 +1,58 @@
+<select id="filter-proyecto-rend" class="listas-especiales2" name="comboNegocios" id="comboNegocios">
+    <option value="-1" selected="selected">[ Seleccionar proyecto ]</option> 
+    <!--#4DLOOP aIdNegocio-->    
+    <option value="<!--#4DVAR aIdNv{aIdNegocio}-->"><!--#4DVAR aReferencia{aIdNegocio}--></option>     
+    <!--#4DENDLOOP-->
+</select>
+
+<table width="100%" border="1" cellpadding="0" cellspacing="0" hspace="0" vspace="0">
+    <tr bgcolor="#CCCCCC" >
+        <td class="center">NRO</td>
+        <td class="center">EMITIDO POR</td>       
+        <td class="center">RESPONSABLE</td>
+			<td class="center">REFERENCIA</td>
+        <td class="center">PROYECTO</td>
+        <td class="center">SALDO</td>
+			<td class="center">ESTADO</td>
+        <td class="center">FECHA VCTO</td>
+        <td class="center">DIAS</td>
+			<td class="center">VALIDADO</td>              
+        <td class="center">ACCION</td>             
+    </tr>      
+  <!--#4DLOOP w_a_id_sf-->
+  <!--#4Dif w_a_ref_tipo_sf{w_a_id_sf}#"OTROS GASTOS DEL PROYECTO"-->  
+  <tr bgcolor="">
+		<td class="center-rojo-maraco"><!--#4DVAR w_a_nro_sf{w_a_id_sf}--></td>
+		<td class="center"><!--#4DVAR w_a_emisor_sf{w_a_id_sf}--></td>     
+		<td class="left"><!--#4DVAR w_a_resp_sf{w_a_id_sf}--></td>    
+		<td class="left"><!--#4DVAR w_a_ref_sf{w_a_id_sf}--></td>
+		<td class="left"><!--#4DVAR w_a_proy_sf{w_a_id_sf}--></td>
+		<td class="right"><!--#4DVAR String(w_a_saldo_sf{w_a_id_sf};"$###.###.###.###")--></td>
+		<td class="center"><!--#4DVAR w_a_estado_sf{w_a_id_sf}--></td>    
+		<td class="center"><!--#4DVAR w_a_fecha_sf{w_a_id_sf}--></td>
+		<td class="center-rojo"><!--#4DVAR w_a_dias_vcto_sf{w_a_id_sf}--></td>
+		<td class="center"><!--#4DVAR w_a_validado_sf{w_a_id_sf}--></td>
+	
+    <td>
+		<div align="center">
+            <a class="link-crear-lista" title="Entrar a rendicion" href="/4DACTION/W_EDITAR_RENDICION/<!--#4DVAR w_a_id_sf{w_a_id_sf}-->" >
+                <p>
+                    <img src="/imagenes/page_white_edit.png" border="0" />
+                    <span>Editar</span>
+                </p>                        
+            </a>
+
+            <!--#4dif (w_a_validado_sf{w_a_id_sf}="NO") & (vPermisoParaValidarFXR)-->         
+                <a class="link-crear-lista2" title="Validar" target="_blank" href="/4DACTION/outEmailSolVal/<!--#4DVAR w_a_id_sf{w_a_id_sf}-->/<!--#4DVAR w_a_emisor_sf{w_a_id_sf}-->/<!--#4DVAR vLogin-->" >
+                    <p><span>Validar FXR</span></p>                        
+                </a>         
+            <!--#4dendif-->
+
+		</div>	
+    </td>
+	
+  </tr>
+  <!--#4Dendif-->
+<!--#4DENDLOOP-->
+
+</table>

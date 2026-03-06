@@ -1,0 +1,49 @@
+<!--#4dloop aIdArchivo-->
+    <!--#4dif (aFrom{aIdArchivo}="OT") | (aFrom{aIdArchivo}="COMPONENTE")-->
+    <div id="id<!--#4dvar aIdArchivo{aIdArchivo}-->" class="box-items-files">
+        <!--#4dif aDesFormatoArchivo{aIdArchivo}="IMAGEN"-->
+            <!--#4dif aFrom{aIdArchivo}="OT"--> 
+                 <img alt="<!--#4dvar aAncho{aIdArchivo}-->-<!--#4dvar aAlto{aIdArchivo}-->" id="<!--#4dvar aIdArchivo{aIdArchivo}-->" class="img-popup" src="/uploads/<!--#4dvar aIdArchivo{aIdArchivo}-->.<!--#4dvar aFormatoArchivo{aIdArchivo}-->">
+            <!--#4delse--> 
+                 <img alt="<!--#4dvar aAncho{aIdArchivo}-->-<!--#4dvar aAlto{aIdArchivo}-->" id="<!--#4dvar aIdArchivo{aIdArchivo}-->" class="img-popup" src="/uploads_componentes_tarea/<!--#4dvar aNombreArchivo{aIdArchivo}-->">
+            <!--#4dendif-->                           
+        <!--#4delse-->
+            <!--#4dif aDesFormatoArchivo{aIdArchivo}="AUDIO"-->
+                <!--#4dif aFrom{aIdArchivo}="OT"--> 
+                    <a target="_black" href="/uploads/<!--#4dvar aIdArchivo{aIdArchivo}-->.<!--#4dvar aFormatoArchivo{aIdArchivo}-->">
+                    <audio controls="controls">                 
+                        <source src="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->" type="audio/mpeg" />
+                        Tu navegador no soporta el elemento de audio, actualize a uno mas moderno, :)!    
+                    </audio>
+                    </a>
+                <!--#4delse--> 
+                    <a target="_black" href="/uploads_componentes_tarea/<!--#4dvar aNombreArchivo{aIdArchivo}-->">
+                    <audio controls="controls">                 
+                        <source src="/uploads_componentes_tarea/<!--#4dvar aNombreArchivo{aIdArchivo}-->" type="audio/mpeg" />
+                        Tu navegador no soporta el elemento de audio, actualize a uno mas moderno, :)!    
+                    </audio>
+                </a>
+                <!--#4dendif-->                                
+            <!--#4delse-->
+                <!--#4dif aFrom{aIdArchivo}="OT"--> 
+                    <a target="_black" href="/uploads/<!--#4dvar aIdArchivo{aIdArchivo}-->.<!--#4dvar aFormatoArchivo{aIdArchivo}-->">
+                     <img src="/extensiones/PNG/<!--#4dvar aFormatoArchivo{aIdArchivo}-->.png">
+                    </a> 
+                <!--#4delse--> 
+                    <a target="_black" href="/uploads_componentes_tarea/<!--#4dvar aNombreArchivo{aIdArchivo}-->">
+                     <img src="/extensiones/PNG/<!--#4dvar aFormatoArchivo{aIdArchivo}-->.png">
+                    </a> 
+                <!--#4dendif-->                                                          
+            <!--#4dendif-->                
+        <!--#4dendif-->
+        <span class="des-file"><!--#4dvar aDesArchivo{aIdArchivo}--></span>
+
+        <!--#4dif aFrom{aIdArchivo}="COMPONENTE"-->
+            <a rel="<!--#4dvar aIdArchivo{aIdArchivo}-->" class="delete-file-comp" style="cursor:pointer">x</a>
+        <!--#4delse-->
+            <a rel="<!--#4dvar aIdArchivo{aIdArchivo}-->" class="delete-file-normal" style="cursor:pointer">x</a>
+        <!--#4dendif-->        
+        <a rel="<!--#4dvar aNombreArchivo{aIdArchivo}-->" class="send-file" style="cursor:pointer" title="Enviar archivo por email">@</a>                 
+    </div>
+    <!--#4dendif-->
+<!--#4dendloop-->

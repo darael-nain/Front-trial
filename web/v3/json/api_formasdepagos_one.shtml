@@ -1,0 +1,15 @@
+{
+	"create": <!--#4DIF create-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"creado": <!--#4DIF creado-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"id": "<!--#4DTEXT id-->",
+	"descripcion": "<!--#4DTEXT descripcion-->",
+	"observaciones": "<!--#4DTEXT observaciones-->",
+	"estado": <!--#4DIF estado-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"compra": <!--#4DIF compra-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"venta": <!--#4DIF venta-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"id_empresa": "<!--#4DTEXT id_empresa-->",
+	"suma_dias1": "<!--#4DTEXT suma_dias1-->",
+	"suma_dias2": "<!--#4DTEXT suma_dias2-->",
+	"suma_dias3": "<!--#4DTEXT suma_dias3-->",
+	"personalizado": <!--#4DIF personalizado-->true<!--#4DELSE-->false<!--#4DENDIF-->
+}

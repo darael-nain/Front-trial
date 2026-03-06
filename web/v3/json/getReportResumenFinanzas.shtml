@@ -1,0 +1,25 @@
+{
+	"ventas": {
+		"negocios_por_aprobar": <!--#4DHTML String(v_negociosPorAprobar;"&xml")-->,
+		"ventas_aprobadas" : <!--#4DHTML String(v_ventasAprobadas;"&xml")-->,
+		"total_facturado_neto" : <!--#4DHTML String(v_totalFacturadoNeto;"&xml")-->,
+		"total_facturado_mas_imp" : <!--#4DHTML String(v_totalFacturadoMasImpuesto;"&xml")-->,
+		"total_por_facturar_neto" : <!--#4DHTML String(v_totalPorFacturar;"&xml")-->,
+		"total_por_facturar_mas_imp" : <!--#4DHTML String(v_totalPorFacturarMasImpuesto;"&xml")-->,
+		"total_cobrado" : <!--#4DHTML String(v_totalCobrado;"&xml")-->,
+		"total_por_cobrar" : <!--#4DHTML String(v_totalPorCobrar;"&xml")-->
+	},
+	"compras": {
+		"compras_por_aprobar": <!--#4DHTML String(c_comprasPorAprobar;"&xml")-->,
+		"compras_aprobadas" : <!--#4DHTML String(c_comprasAprobadas;"&xml")-->,
+		"total_facturado_neto" : <!--#4DHTML String(c_totalFacturadoNeto;"&xml")-->,
+		"total_facturado_mas_imp" : <!--#4DHTML String(c_totalFacturadoMasImpuesto;"&xml")-->,
+		"total_por_facturar_neto" : <!--#4DHTML String(c_totalPorFacturar;"&xml")-->,
+		"total_por_facturar_mas_imp" : <!--#4DHTML String(c_totalPorFacturarMasImpuesto;"&xml")-->,
+		"total_pagado" : <!--#4DHTML String(c_totalPagado;"&xml")-->,
+		"total_por_pagar" : <!--#4DHTML String(c_totalPorPagar;"&xml")-->
+	},
+	"bancos": {
+		"total_saldo_banco": <!--#4DHTML String(saldoTotalBanco;"&xml")-->
+	}
+}

@@ -1,0 +1,20 @@
+{	
+	"rows": [
+<!--#4DLOOP $aid-->
+		{
+			"id": <!--#4DHTML $aid{$aid}-->,			
+			"folio": "<!--#4DHTML $afolio{$aid}-->",
+			"emision": "<!--#4DHTML $aemison{$aid}-->",
+			"idtipodoc": "<!--#4DHTML _V3_escapeString($aidtipodoc{$aid})-->",	
+			"tipodoc": "<!--#4DHTML _V3_escapeString($atipodoc{$aid})-->",
+			"cliente": "<!--#4DHTML _V3_escapeString($acliente{$aid})-->",
+			"referencia": "<!--#4DHTML _V3_escapeString($areferencia{$aid})-->",
+			"estado": "<!--#4DHTML $aestado{$aid}-->",
+			"neto": <!--#4DHTML String($aneto{$aid};"&xml")-->,
+			"total": <!--#4DHTML String($atotal{$aid};"&xml")-->,
+			"cobrado": <!--#4DHTML String($acobrado{$aid};"&xml")-->,
+			"porcobrar": <!--#4DHTML String($aporcobrar{$aid};"&xml")-->
+		}<!--#4DIF NOT($aid{$aid} = $aid{Size of array($aid)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

@@ -1,0 +1,31 @@
+{
+	"rows": [
+<!--#4DLOOP aDocPagoId -->
+		{
+			"id": <!--#4DHTML aDocPagoId{aDocPagoId}-->,
+			"index": "<!--#4DHTML _V3_escapeString(aDocPagoIndex{aDocPagoId})-->",
+			"tipo": "<!--#4DHTML aDocPagoTipo{aDocPagoId}-->",
+			"total": <!--#4DHTML String(aDocPagoTotal{aDocPagoId};"&xml")-->,
+			"username": "<!--#4DHTML aDocPagoUsername{aDocPagoId}-->",
+			"created_at": "<!--#4DHTML Substring(String(aDocPagoFecha{aDocPagoId};8);1;10)-->T<!--#4DHTML aDocPagoHora{aDocPagoId}-->-04:00",
+			"created_emision": "<!--#4DHTML String(aDocPagoFechaPropuesta{aDocPagoId})-->",
+			"estado": "<!--#4DHTML aDocPagoEstadoAux{aDocPagoId}-->",
+			"cruzado": "<!--#4DHTML aDocPagoCruzado{aDocPagoId}-->",
+			"glosa_banco" : "<!--#4DHTML _V3_escapeString(aGlosaBanco{aDocPagoId})-->",
+			"monedaTipo": "<!--#4DHTML aMonedaTipoDOC{aDocPagoId}-->",
+			"monedaValorCambio": <!--#4DHTML  String(aMonedaValorCambioDOC{aDocPagoId};"&xml")-->,
+			"cuenta": {
+				"id": <!--#4DHTML aDocPagoCuentaId{aDocPagoId}-->,
+				"index": "<!--#4DHTML _V3_escapeString(aDocPagoCuentaIndex{aDocPagoId})-->",
+				"banco": "<!--#4DHTML _V3_escapeString(aDocPagoCuentaNombre{aDocPagoId})-->",
+				"forma": "<!--#4DHTML _V3_escapeString(aDocPagoForma{aDocPagoId})-->"
+			},
+			"status": <!--#4DIF aDocPagoEstado{aDocPagoId}-->true<!--#4DELSE -->false<!--#4DENDIF--><!--#4DIF aDocPagoPagado{aDocPagoId}-->,	
+			"pagado": {
+				"username": "<!--#4DHTML aDocPagoPagadoUsername{aDocPagoId}-->",
+				"at": "<!--#4DHTML Substring(String(aDocPagoPagadoFecha{aDocPagoId};8);1;10)-->T<!--#4DHTML aDocPagoPagadoHora{aDocPagoId}-->-04:00"
+			}<!--#4DENDIF-->
+		}<!--#4DIF NOT(aDocPagoId{aDocPagoId} = aDocPagoId{Size of array(aDocPagoId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

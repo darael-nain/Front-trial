@@ -1,0 +1,399 @@
+/* --- project --- */
+
+.hidden{display:none}
+
+.loading{
+	background-color:#daea91;
+	border:1px solid green;
+	border-radius:3px;
+	color:black;
+	font-weight:normal;
+	font-size:17px;
+	position:fixed;
+	padding:3px;
+	top:5px;
+	right:5px;
+	z-index:1;
+	display:none;
+}
+
+.por-defecto{
+	text-align:left;	
+}
+	.por-defecto .por-establecer{		
+		border:1px solid gray;
+		font-weight:normal;
+	}
+	.por-defecto .por-establecer:hover{		
+		border:1px solid green;		
+	}
+
+	.por-defecto .establecido{		
+		border:1px solid green;
+		background-color:#daea91;
+		color:black;
+		font-weight:normal;
+	}
+	.por-defecto .establecido:hover{		
+		border:1px solid black;		
+	}
+
+#frm-proyect{
+	text-align:left
+}
+	#frm-proyect .nuevo-cliente{
+		margin-bottom:10px;
+	}
+
+	#frm-proyect a{
+		font-size:15px;
+		color:blue;
+		cursor:pointer;
+		margin:5px
+	}
+		#frm-proyect table tr td:nth-child(1){
+			text-align:right;
+			width:20%
+		}
+		#frm-proyect table tr td:nth-child(2){
+			text-align:left;
+			width:80%
+		}
+		#frm-proyect input{
+			width:400px;
+			text-transform:uppercase;
+			padding:2px
+		}
+		#frm-proyect fieldset{
+			background:#cfe9f8;
+		}
+
+	#frm-proyect #block-datos{
+		padding:20px
+	}
+
+	#frm-proyect #block-datos .box-autocompletar .lista{
+		margin:0 0 0 0px;
+		width:405px;
+	}
+		#frm-proyect #block-datos .box-autocompletar .lista a{
+			font-size:11px;
+		}
+		#frm-proyect #block-datos div{
+			display:inline-block;
+		}
+
+		#frm-proyect #block-datos .nuevo-cliente{			
+			margin:0;
+			padding:0;
+			text-align:right;
+		}		
+
+		#frm-proyect #block-datos div input{
+			width:350px;
+			margin-top:5px;
+		}
+
+		#frm-proyect #block-datos .datos-extra{
+			width:300px;
+			margin-top:5px;
+			font-size:12px;
+		}
+
+		#frm-proyect #block-datos .datos-extra-rut{
+			width:100px;
+			margin-top:5px;
+			font-size:12px;
+		}
+
+		
+
+	#frm-proyect #block-antecedentes .accion{
+		text-align:right;
+	}
+
+	#frm-proyect #block-antecedentes .label-ant:hover{
+		background:yellow;
+		cursor:pointer;
+	}
+
+	
+		#frm-proyect #block-antecedentes .content-ant{
+			text-align:left;
+		}
+		#frm-proyect #block-antecedentes .content-ant input{
+			width:200px
+		}
+		#frm-proyect #block-antecedentes .content-ant span{
+			margin:5px;
+			display:inline-block;
+		}
+
+		#frm-proyect #block-antecedentes .content-ant .delete-antecedente{font-size:12px;color:#848484}
+		#frm-proyect #block-antecedentes .content-ant .delete-antecedente:hover{color:blue}
+
+	#frm-proyect #block-etapas fieldset{
+		margin:10px;
+		background:#b5dff5;
+	}
+		#frm-proyect #block-etapas .actions{
+			text-align:right;
+		}
+		#frm-proyect #block-etapas fieldset .actions{
+			text-align:right;
+		}
+		#frm-proyect #block-etapas textarea{
+			height:200px;
+			width:90%;
+			overflow:auto;
+		}
+		#frm-proyect #block-etapas .single-etapa{max-width:1030px;border:2px solid gray;border-radius:3px;margin:5px}
+		#frm-proyect #block-etapas .single-etapa .contraer-expandir{font-size:20px;font-weight:bold;text-decoration:none}
+		#frm-proyect #block-etapas .single-etapa .title{background:white;padding:2px;
+		font-size:15px;font-weight:bold;position:relative}
+		#frm-proyect #block-etapas .single-etapa .title .porcentaje{margin-left:10px}
+		#frm-proyect #block-etapas .single-etapa .title .actions{position:absolute;top:5px;right:10px}
+		#frm-proyect #block-etapas .single-etapa .title .actions a{margin:10px;font-weight:normal}
+		#frm-proyect #block-etapas .single-etapa .content-tareas{margin:20px;display:none}
+		#frm-proyect #block-etapas .single-etapa .content{margin:20px;display:none}
+
+	#frm-proyect #block-etapas .cant-t{margin-left:-10px;color:#A4A4A4;font-size:12px}
+	#frm-proyect #block-etapas .cant-c{color:#A4A4A4;font-size:12px}
+
+	#frm-proyect #block-etapas .single-tarea{border:2px solid #5882FA;margin:5px;border-radius:3px;text-align:left}
+	#frm-proyect #block-etapas .single-tarea .title{background-color:#daea91}
+	#frm-proyect #block-etapas .single-tarea .title .contraer-expandir-tarea{
+		font-size:20px;
+		font-weight:bold;
+		text-decoration:none;
+	}
+	#frm-proyect #block-etapas .single-tarea .title .nombre{
+		color:#424242;
+		display:inline-block;
+		font-size:14px;
+		font-weight:bold;
+		margin:0;		
+		text-transform:uppercase;	
+		min-width:600px;
+	}
+
+	#frm-proyect #block-etapas .ver-mas-etapa{
+		font-weight:normal;
+		margin-left:-10px;
+	}
+
+
+
+
+#frm-proyect #block-etapas .single-tarea .title .actions{position:absolute;top:5px;right:10px}
+#frm-proyect #block-etapas .single-tarea .box-content-tarea{margin:5px;text-align:center;display:none}
+#frm-proyect #block-etapas .single-tarea .box-content-tarea .primera{margin:auto}
+#frm-proyect #block-etapas .single-tarea .box-content-tarea .primera input,select{width:120px;font-size:12px;font-weight:bold}
+
+#frm-proyect #block-etapas .single-tarea .box-content-tarea .segunda{margin:center}
+#frm-proyect #block-etapas .single-tarea .box-content-tarea .segunda label{display:block;text-align:left;margin:5px 0 0 45px}
+#frm-proyect #block-etapas .single-tarea .box-content-tarea .segunda textarea{display:block;margin:auto}
+
+#frm-proyect #block-etapas .single-tarea .block-blue{background:white}
+#frm-proyect #block-etapas .single-tarea .block-blue{margin:20px 30px 0 30px;border:1px solid gray;border-radius:3px}
+#frm-proyect #block-etapas .single-tarea .block-blue .title{background:blue;padding:2px;font-size:15px;font-weight:bold;position:relative;height:20px}
+#frm-proyect #block-etapas .single-tarea .block-blue .title a{color:white}
+#frm-proyect #block-etapas .single-tarea .block-blue .title .contraer-expandir-comp{font-size:15px;font-weight:bold;text-decoration:none;float:left;margin-top:0px}
+#frm-proyect #block-etapas .single-tarea .block-blue .title .actions{color:white;float:right;top:2px;right:10px}
+
+#frm-proyect #block-etapas .single-tarea .block-blue .content{padding:0;margin:0}
+#frm-proyect #block-etapas .single-tarea .block-blue .add-componente{border-bottom:1px solid gray;background:white;display:none;padding:5px}
+#frm-proyect #block-etapas .single-tarea .block-blue .add-componente input,select{width:120px}
+
+#frm-proyect #block-etapas .single-tarea .block-blue .list-componente{margin:20px;background:white;padding:5px}
+#frm-proyect #block-etapas .single-tarea .block-blue .list-componente div{margin:2px;text-align:left}
+#frm-proyect #block-etapas .single-tarea .block-blue .list-componente div .radio{width:20px;vertical-align:middle}
+#frm-proyect #block-etapas .single-tarea .block-blue .list-componente div span{margin-left:10px;font-weight:bold;color:#848484}
+
+#frm-proyect #block-etapas .single-tarea .block-blue .list-componente .delete-comp{font-size:12px;color:#848484}
+#frm-proyect #block-etapas .single-tarea .block-blue .list-componente .delete-comp:hover{color:blue}
+
+/*#frm-proyect #block-etapas .single-tarea .content-componente{display:none}*/
+
+
+#frm-proyect #block-etapas .single-tarea .block-blue .list-componente .label-comp:hover{
+		background:yellow;
+		cursor:pointer;
+	}
+
+#frm-proyect .block-blue .content-p{
+	text-align:left;
+}
+
+#frm-proyect .block-blue .content-p h2{
+	font-size:15px;
+	text-align:left;
+	margin:5px;
+}
+
+#frm-proyect .block-blue .content-p div{
+	display: inline-block;
+	color:white;
+	font-size:13px;
+	font-weight: bold;
+	padding:2px;
+	margin:5px;
+	text-transform:capitalize;
+	border:1px solid orange;
+	border-radius:3px;
+	background:#FF4000;
+}
+
+#frm-proyect .block-blue .content-p div a{
+	font-size:10px;
+	color:white;
+}
+
+#frm-proyect #block-datos{
+		
+}
+
+#frm-proyect #block-datos .ref{
+	width:600px;	
+}
+
+#frm-proyect #block-datos .bloque-cliente{
+	display:inline-block;
+	vertical-align:top;
+	width:47%;
+	margin:5px 0 0 0;
+}
+	#frm-proyect #block-datos .bloque-cliente nav{
+		text-align:right;		
+	}
+
+
+#frm-proyect #block-datos .bloque-solicitante{
+	display:inline-block;
+	vertical-align:top;
+	width:47%;
+	margin:5px 0 0 7px;
+}
+	#frm-proyect #block-datos .bloque-solicitante nav{
+		text-align:right;	
+	}
+	#frm-proyect #block-datos .bloque-solicitante select{
+		width:300px;	
+	}
+	#frm-proyect #block-datos .bloque-solicitante .fono{
+		width:150px;	
+	}
+	#frm-proyect #block-datos .bloque-solicitante .cargo{
+		width:250px;	
+	}
+	#frm-proyect #block-datos .bloque-solicitante .email{
+		width:250px;	
+	}
+
+.set-botones-proyectos{
+	margin:20px 0 0 0;text-align:left
+}
+.set-botones-proyectos button{
+	margin:0px;
+	font-weight:normal;	
+}
+
+/* lightbox */
+.lightbox{text-align:left}
+	.lightbox h2{
+		font-size:20px;
+		text-align:left;
+		text-decoration:underline;
+		margin-bottom:2px;
+	}
+	.lightbox textarea{
+		width:99%;
+		margin:auto;
+	}
+	.lightbox .botones{
+		margin:5px;
+	}
+	.lightbox .obligatorio{
+		color:red;
+	}
+	.lightbox .obligatorio-down{		
+		text-align:right;	
+	}
+	.lightbox fieldset div input{
+		margin:2px;
+	}
+
+#box-new-componente input{width:300px}
+#mas-datos-etapa textarea{min-height:400px;border:2px solid gray}
+
+
+/* crear contacto */
+#crear-contacto{text-align:left}
+	#crear-contacto h1{
+		font-size:23px;
+		text-align:left;
+		text-decoration:underline;
+		margin-bottom:2px;
+	}
+	#crear-contacto fieldset div{
+		text-align:left;
+	}
+		#crear-contacto span{
+			color:red;
+		}
+		#crear-contacto fieldset div input{
+			margin:2px;
+		}
+		#crear-contacto fieldset div #dv-global{
+			text-align:center;
+			width:20px;
+		}
+		#crear-contacto fieldset div .nombres{			
+			width:300px;			
+		}
+	#crear-contacto .botones{
+		margin:5px;
+		text-align:left;
+	}
+	
+
+/* popup participantes */
+	.popup-participantes nav{
+		text-align:left;
+		margin-top:5px;		
+	}
+		.popup-participantes nav a{
+			color:black;
+			font-size:15px;		
+		}
+
+	.popup-participantes article{
+		margin:10px;
+		text-align:left;
+	}
+	.popup-participantes article span{
+		margin:7px;		
+	}
+	.popup-participantes article span input{
+		vertical-align:middle;
+	}
+	.popup-participantes article span label{
+		color:orange;
+		font-size:15px;
+		vertical-align:middle;
+	}
+
+	.popup-participantes footer{
+		text-align:left;
+	}
+
+.p-plantilla{
+	color:red;
+	font-weight:bold;
+	vertical-align:top;
+	display:inline-block;
+}
+
+#dialog-cerrar-proyecto{
+	display:none;
+}

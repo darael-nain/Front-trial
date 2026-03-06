@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Preview cobros</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/script/datepicker_es.js?<!--#4DTEXT _V3_version-->"></script>
+		<script>
+			var income = {
+				"container" : $('#dtvporcobrar'),
+				"sumatotal" : 0,
+				"moneda" : "",
+				menu: function(){
+					unaBase.toolbox.menu.init({
+						entity: 'dtv_cobros',
+						buttons: ["receive_next_step", "receive_previous_step", "generate_installments"]
+					});
+				},
+				dtv: {
+					get: function(){
+						var selected = $('table.listincome > tbody > tr > td > input:checked');
+						var objFinal = {};
+						selected.each(function(key, item){
+							var id = $(this).closest("tr").data('id');
+							eval("obj = { 'id_dtv_"+ id +"': '" + id + "' }");
+							$.extend(objFinal, objFinal, obj);
+						});
+						$.ajax({
+				    	'url':'/4DACTION/_V3_get_dtv_to_receive',
+					    data: objFinal,
+				   		dataType:'json',
+					    success: function(data) {
+								var containerTableStep1 = income.container.find('table.step-1 > tbody');
+								var htmlObject;
+								containerTableStep1.find("*").remove();
+								if (data.rows.length > 0) {
+									$.each(data.rows, function(key, item){
+
+										let saldo = item.saldo;
+										let symbol = currency.symbol;
+										let moneda = "";
+										let valorCambio = 0;
+										
+										if (item.tipo_moneda != currency.code) {
+											saldo = (item.saldo/item.valor_cambio);
+											symbol = item.tipo_moneda;
+											income.moneda = item.tipo_moneda;
+											moneda = item.tipo_moneda;
+											valorCambio = item.valor_cambio;
+										}
+
+									    htmlObject = $('<tr data-id="'+ item.id +'" data-idcli="'+ item.idcliente +'" data-saldoporcobrar="' + saldo + '" data-moneda="'+ moneda +'" data-valorcambio="'+ valorCambio +'">' +
+									      '<td>' + item.numero + '</td>' +
+									      '<td class="left">' + item.cliente + '</td>' +
+									      '<td class="center">' + item.fecha_factura + '</td>' +
+
+									      '<td class="numeric currency right">' + symbol + ' <span style="font-weight:bold;padding:5px">' + saldo + '</span></td>' +
+
+									      '<td class="numeric percent modoperu">' + ' <input style="width:30px;" class="fill2" type="text" name="porcentaje" value="100" data-porcentaje="100"> % </td>' +
+
+
+									      '<td class="numeric currency">' + symbol + ' <input class="fill1" name="monto" data-saldoactual="' + saldo + '" type="text" value="' + saldo + '"></td>' +
+
+									      
+									      '<td class="numeric currency right">' + symbol + ' <span data-saldofinal style="font-weight:bold;padding:5px">0</span></td>' +
+									    '</tr>');
+
+									    containerTableStep1.append(htmlObject);
+
+									    if (currency.code == "CLP" || currency.code == "") {
+											$('.modoperu').hide();
+										}
+
+									    htmlObject.find('input[name="monto"]').blur(function(){
+									    	var montoIngresado = parseFloat($(this).val());
+									    	var saldoActual = parseFloat($(this).data("saldoactual"));
+									    	var saldoFinal = saldoActual - montoIngresado;
+									    	$(this).closest('tr').find("span[data-saldofinal]").text($.number(saldoFinal, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+									    	$(this).data('saldoactual', montoIngresado);
+
+									    	if (saldoFinal < 0) {
+									    		alert("Ha excedido monto por cobrar. Por favor reingrese monto.");
+									    		$(this).closest('tr').find("data-saldofinal", 0);
+									    		$(this).val(saldoActual).focus();
+									    	}else{
+									    		// $('.numeric.currency span').number(true, 0, ',', '.');
+
+									    		$('.numeric.currency span').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+									    	}
+
+									    	income.updateSuma();
+
+									    });
+
+									    htmlObject.find('input[name="porcentaje"]').blur(function() {
+									    	let target = $(this).closest('tr');
+									    	let percent = parseFloat($(this).val());
+									    	if (percent > 0 && percent <= 100) {
+									    		let saldoPorCobrar = parseFloat(target.data("saldoporcobrar"));
+									    		let factor = percent/100;
+									    		let montoIngresado = factor * saldoPorCobrar;
+									    		var saldoFinal = saldoPorCobrar - montoIngresado;
+									    		target.find('input[name="monto"]').val(montoIngresado);
+									    		target.find('input[name="monto"]').data('saldoactual', montoIngresado);
+									    		target.find("span[data-saldofinal]").text($.number(saldoFinal, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+									    		income.updateSuma();
+
+									    	}else{
+									    		$(this).val('100');
+									    	}
+									    });
+
+									});
+
+									income.updateSuma();
+
+								}else{
+									htmlObject = $('<tr><td colspan="7">Hubo un problema al cargar la lista.</td></tr>');
+									containerTableStep1.append(htmlObject);
+								}
+
+								$('.numeric.currency input').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+								$('.numeric.currency span').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+						    }
+					  	});
+					}
+				},
+				installments: {
+					preview: function(){
+						var selected = $('#dtvporcobrar > table.step-1 > tbody > tr');
+						var objFinal = {
+							"agrupado" : false
+						};
+						var repetidos = 0;
+						var aIdcliente = [];
+						selected.each(function(key, item){
+							var id = $(this).data('id');
+							var idcli = $(this).data('idcli');
+							var monto = $(this).find('input[name="monto"]').val();
+							var moneda = $(this).data('moneda');
+							var valorcambio = $(this).data('valorcambio');
+
+							var info = id+"/"+idcli+"/"+monto+"/"+moneda+"/"+valorcambio;
+							eval("obj = { 'dtv_"+ id +"': '" + info + "' }");
+							$.extend(objFinal, objFinal, obj);
+							var index = jQuery.inArray(idcli, aIdcliente);
+							if (index != -1) {
+								repetidos++;
+							}
+							aIdcliente.push(idcli);
+						});
+						if (repetidos > 0) {
+							confirm("Existen documentos del mismo cliente. ¿Desea crearlos como cobro agrupado?").done(function(data) {
+								if (data) {
+									objFinal.agrupado = true;
+									income.installments.showcobros(objFinal);
+									income.next.show();
+								}else{
+									income.installments.showcobros(objFinal);
+									income.next.show();
+								}
+							});
+						}else{
+							income.installments.showcobros(objFinal);
+							income.next.show();
+						}
+					},
+					showcobros: function(dtvs){
+						if (dtvs) {
+							$.ajax({
+						    	'url':'/4DACTION/_V3_get_preview_cobros',
+							    data: dtvs,
+						   		dataType:'json',
+							    success:function(data){
+									var containerTableStep2 = income.container.find('table.step-2 > tbody');
+									var htmlObject2;
+									containerTableStep2.find("*").remove();
+									if (data.rows.length > 0) {
+										$.each(data.rows, function(key, item){
+
+											let symbol = currency.symbol;
+											if (item.tipo_moneda == "USD") {
+												symbol = item.tipo_moneda;
+											}
+
+										    htmlObject2 = $('<tr data-show="' + item.show + '" data-id="' + item.id + '" data-dtv="' + item.dtv + '" data-group="' + item.group + '" data-monto="' + item.monto + '" data-total="' + item.total + '" data-cli="'+ item.idcli +'" data-moneda="' + item.tipo_moneda + '" data-valorcambio="' + item.valor_cambio + '">' +
+										      '<td>S/N</td>' +
+										      '<td class="left">' + item.ncli + '</td>' +
+										      '<td class="left"><input class="fill3" type="text" name="cobrara" value="' + item.ncli + '"></td>' +
+										      '<td><input class="datepicker fill2" placeholder="dd-mm-aaaa" type="text" name="fecha" value="'+ income.currentdate() +'"></td>' +
+										      '<td class="numeric currency right">' + symbol + ' <span style="font-weight:bold;padding:5px">' + item.total + '</span></td>' +
+										    '</tr>');
+										    containerTableStep2.append(htmlObject2);
+										});
+										var cant = $('table.step-2 > tbody > tr[data-show="True"]').length;
+										if (cant == 1) {
+											$('#dtvporcobrar').find('.steps-text').text("SE GENERARÁ "+ cant +" ORDEN DE INGRESO");
+										}else{
+											if (cant > 1) {
+												$('#dtvporcobrar').find('.steps-text').text("SE GENERARÁN "+ cant +" ÓRDENES DE INGRESO");
+											}
+										}
+										containerTableStep2.find('tr[data-show="False"]').hide();
+									}else{
+										htmlObject2 = $('<tr><td colspan="7">Hubo un problema al cargar la lista.</td></tr>');
+										containerTableStep2.append(htmlObject2);
+									}
+
+									$('.numeric.currency span').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+									// $('.numeric.currency span').number(true, 0, ',', '.');
+									$(".datepicker" ).datepicker();
+							    }
+						  	});
+						}else{
+							alert("Ocurrió un error al cargar la información. Por favor intente nuevamente.");
+						}
+					},
+					setCobros: function(){
+						var selected = $('#dtvporcobrar > table.step-2 > tbody > tr');
+						var cobros = {};
+						var cont = 0;
+						selected.each(function(key, item){
+							cont++;
+							var cli = $(this).data('cli');
+							var dtv = $(this).data('dtv');
+							var group = $(this).data('group');
+							var monto = $(this).data('monto');
+							var fecha = $(this).find('input[name="fecha"]').val();
+							var cobrara = $(this).find('input[name="cobrara"]').val();
+							var original = $(this).data('show');
+							var moneda = $(this).data('moneda');
+							var valorcambio = $(this).data('valorcambio');
+							var info = cli+"&"+dtv+"&"+group+"&"+monto+"&"+fecha+"&"+cobrara+"&"+original+"&"+moneda+"&"+valorcambio;
+							eval("obj = { 'cobro_"+ cont +"': '" + info + "' }");
+							$.extend(cobros, cobros, obj);
+						});
+						if (cobros) {
+							unaBase.ui.block();
+							$.ajax({
+								url: '/4DACTION/_V3_setOcobrosAgrupados',
+								dataType: 'json',
+								type: 'POST',
+								data: cobros,
+								success: function(data) {
+									if (data.success) {
+										toastr.success('Cobros generados con éxito.');
+										if (data.ocbs.length == 1){
+											// unaBase.loadInto.viewport('/v3/views/cobros/content.shtml?id=' + data.ocbs[0]);
+											unaBase.ui.unblock();
+											$('.ui-dialog button[title="close"]').trigger('click');
+											unaBase.loadInto.dialog('/v3/views/ingresos/dialog/ingreso.shtml?id=' + data.ocbs[0].id, 'Orden de ingreso', 'x-large');
+										}else{
+											income.installments.showcobrosCreados(data.ocbs);
+											unaBase.ui.unblock();
+										}
+										$('#search [name="q"]').data("manual", true).trigger('keydown');
+										$('#search [name="q"]').data("manual", true).trigger('keyup');
+									}
+								},
+								error: function(e) {
+									unaBase.ui.unblock();
+									toastr.error('Ha ocurrido un error interno. Por favor comunicarse con soporte.');
+									console.log(e);
+								}
+							});
+						}else{
+							alert("Ocurrió un error al cargar la información. Por favor intente nuevamente.");
+						}
+					},
+					showcobrosCreados: function(cobros){
+						income.container.find('table.step-1').hide();
+						income.container.find('table.step-2').hide();
+						income.container.find('table.step-3').show();
+						$('#dtvporcobrar').find('.steps-labels').text("");
+						$('.dialog header').hide();
+
+						if (cobros) {
+							var containerTableStep3 = income.container.find('table.step-3 > tbody');
+							var htmlObject3;
+							containerTableStep3.find("*").remove();
+							if (cobros.length > 0) {
+								$.each(cobros, function(key, item){
+								    htmlObject3 = $('<tr data-id="' + item.id + '">' +
+								      '<td>' + item.folio + '</td>' +
+								      '<td class="left">' + item.cli + '</td>' +
+								       '<td class="left">' + item.referencia + '</td>' +
+								      '<td class="numeric currency right">' + currency.symbol + ' <span style="font-weight:bold;padding:5px">' + item.monto + '</span></td>' +
+								      // '<td><button>+ Doc.</button></td>' +
+								    '</tr>');
+								    containerTableStep3.append(htmlObject3);
+								});
+								var cant = $('table.step-3 > tbody > tr').length;
+								$('#dtvporcobrar').find('.steps-text').text(cant +" ÓRDENES DE cobros CREADAS");
+							}else{
+								htmlObject3 = $('<tr><td colspan="4">Hubo un problema al cargar la lista.</td></tr>');
+								containerTableStep3.append(htmlObject3);
+							}
+
+							$('.numeric.currency span').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+							// $('.numeric.currency span').number(true, 0, ',', '.');
+							$(".datepicker" ).datepicker();
+						}else{
+							alert("Ocurrió un error al cargar la información. Por favor intente nuevamente.");
+						}
+
+					},
+				},
+				next:{
+					ini: function(){
+						income.installments.preview();
+					},
+					show:function(){
+						income.container.find('table.step-1').hide();
+						income.container.find('table.step-2').show();
+						$('#dialog-menu ul').find('li[data-name="receive_next_step"]').hide();
+						$('#dialog-menu ul').find('li[data-name="receive_previous_step"]').show();
+						$('#dialog-menu ul').find('li[data-name="generate_installments"]').show().find('button').addClass('ui-state-hover').find('.ui-button-text').addClass('bold');
+						$('#dtvporcobrar').find('.steps-labels').text("Paso 2 de 2");
+					}
+				},
+				previous: function(){
+					income.container.find('table.step-1').show();
+					income.container.find('table.step-2').hide();
+					$('#dialog-menu ul').find('li[data-name="receive_next_step"]').show();
+					$('#dialog-menu ul').find('li[data-name="receive_previous_step"]').hide();
+					$('#dialog-menu ul').find('li[data-name="generate_installments"]').hide();
+					income.container.find('.steps-labels').text("Paso 1 de 2");
+					$('#dtvporcobrar').find('.steps-text').text("CONFIRMACIÓN DE MONTO");
+				},
+				display: {
+					init: function(){
+						$('#dialog-menu ul').find('li[data-name="receive_previous_step"]').hide();
+						$('#dialog-menu ul').find('li[data-name="generate_installments"]').hide();
+						income.container.find('table.step-2').hide();
+						income.container.find('table.step-3').hide();
+					}
+				},
+				currentdate: function(){
+					var today = new Date();
+					var dd = today.getDate();
+					var mm = today.getMonth()+1; //January is 0!
+					var yyyy = today.getFullYear();
+					if(dd < 10){
+				        dd ='0'+ dd;
+				    }
+				    if(mm < 10){
+				        mm ='0'+ mm;
+				    }
+					return dd +'/'+ mm +'/'+ yyyy;
+				},
+				updateSuma: function(){
+					income.sumatotal = 0;
+					income.container.find('table.step-1 > tbody').find('tr').each(function(key, item){
+						let target = $(this); 
+						income.sumatotal = income.sumatotal + parseFloat(target.find('input[name="monto"]').data('saldoactual'));
+					});
+
+					var symbol = currency.symbol;
+					if (income.moneda == "USD") {
+						symbol = "USD";
+					}
+
+					$('.income-suma > span').text(symbol + " " + $.number(income.sumatotal, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+				}
+			}
+			$(document).ready(function() {
+				income.menu();
+				income.dtv.get();
+				income.display.init();
+
+				if (currency.code == "CLP" || currency.code == "") {
+					$('.modoperu').hide();
+				}
+
+				$('input[name="percentallcobro"]').blur(function(){
+					let percent = parseFloat($(this).val());
+					if (percent > 0 && percent <= 100) {
+			    		const containerTableStep1 = income.container.find('table.step-1 > tbody');
+						containerTableStep1.find('input[name="porcentaje"]').data('porcentaje', percent).val(percent);
+
+						income.sumatotal = 0;
+						containerTableStep1.find('tr').each(function(key, item){
+							let target = $(this);
+							let saldoPorCobrar = parseFloat(target.data("saldoporcobrar"));
+				    		let factor = percent/100;
+				    		let montoIngresado = factor * saldoPorCobrar;
+				    		var saldoFinal = saldoPorCobrar - montoIngresado;
+				    		target.find('input[name="monto"]').val(montoIngresado);
+				    		target.find('input[name="monto"]').data('saldoactual', montoIngresado);
+				    		target.find("span[data-saldofinal]").text($.number(saldoFinal, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+						});
+
+						income.updateSuma();
+
+
+			    	}else{
+			    		$(this).val('100');
+			    	}
+				});
+
+			});
+		</script>
+		<style type="text/css">
+			.fill1{
+				background:#f2fe8a;
+				text-align: right;
+				padding:5px;
+			}
+			.fill2{
+				background:#f2fe8a;
+				text-align: center;
+				padding:5px;
+			}
+			.fill3{
+				background:#f2fe8a;
+				text-align:left;
+				padding:5px;
+				width:90%;
+				text-transform: uppercase;
+			}
+			.dialog header{
+				text-align:right!important;
+			}
+			.reset{
+				zoom:80%;
+				width:15px;
+				height:15px;
+				padding:0px;
+				margin:0px;
+			}
+			.steps-labels{
+				font-weight:bold;
+				padding:5px;
+				float: right;
+			}
+			.steps-text{
+				font-size:12px;
+				font-weight:bold;
+				padding:5px;
+				float: left;
+			}
+			.bold{
+				font-weight:bold!important;
+				border-radius:5px;
+				zoom:100%;
+			}
+		</style>
+	</head>
+	<body>
+		<section id="dtvporcobrar" class="sheet">
+			<div style="position:absolute;right:0px;margin-right:100px;top:55px;font-weight:bold;font-size:12px;" class="income-suma modoperu">
+				<label>Suma total: </label>
+				
+			</div>
+			<h2><div class="steps-text">CONFIRMACIÓN DE MONTO</div><div class="steps-labels">Paso 1 de 2</div></h2>
+			<br><br><br>
+			<div class="currency-code">
+				<span style="font-weight: 22px;">Cambiar moneda: </span>
+				<select id="currency-code">
+					<option id="0">Default</option>
+				</select>
+			</div>
+			<table class="step-1">
+				<thead>
+					<tr>
+						<th width="10%" class="center">Número</th>
+						<th width="20%" class="center">Cliente</th>
+						<th width="30%" class="center">Fecha factura</th>
+						<th width="10%" class="center">Por cobrar</th>
+						<th width="10%" class="center modoperu"><input type="text" style="width:30px;background-color:yellow;padding:2px;text-align:center;" name="percentallcobro" value="100">%</th>
+						<th width="10%" class="center">Monto ingreso</th>
+						<th width="10%" class="center">Saldo [$]</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+				<tfoot></tfoot>
+			</table>
+			<table class="step-2">
+				<thead>
+					<tr>
+						<th width="15%" class="center">Número</th>
+						<th width="30%" class="left">cliente</th>
+						<th width="30%" class="left">cobrar a</th>
+						<th width="5%" class="center">Fecha de ingreso</th>
+						<th width="20%" class="right">Monto ingreso</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+				<tfoot></tfoot>
+			</table>
+			<table class="step-3">
+				<thead>
+					<tr>
+						<th width="10%" class="center">Número</th>
+						<th width="30%" class="left">Cliente</th>
+						<th width="40%" class="left">Referencia</th>
+						<th width="15%" class="right">Total pagado</th>
+						<!--<th width="5%" class="right">Acción</th>-->
+					</tr>
+				</thead>
+				<tbody></tbody>
+				<tfoot></tfoot>
+			</table>
+		</section>
+
+
+
+		<script type="text/javascript">
+
+
+			// LLENA EL SELECTOR DE MONEDAS
+			$.ajax({
+		    	'url':'/4DACTION/_V3_getCurrency',
+		   		dataType:'json',
+			    success: function(data) {
+						var selectContent = $('#currency-code');
+						var htmlObject;
+						
+						if (data.rows.length > 0) {
+							$.each(data.rows, function(key, item){		
+								
+							    htmlObject = `<option id="${item.id}">${item.text}</option>`;
+
+							    selectContent.append(htmlObject);
+
+							   
+
+							});
+
+						
+						}else{
+							alert('Hubo un problema al cargar la lista de monedas disponibles, favor comunicarse con soporte!!!');
+							
+						}
+			    }
+		  	});
+
+
+				//  if (currency.code == "CLP" || currency.code == "") {
+				// 	$('.modoperu').hide();
+				// }
+
+
+							  
+			    // htmlObject.find('input[name="porcentaje"]').blur(function() {
+			    // 	let target = $(this).closest('tr');
+			    // 	let percent = parseFloat($(this).val());
+			    // 	if (percent > 0 && percent <= 100) {
+			    // 		let saldoPorCobrar = parseFloat(target.data("saldoporcobrar"));
+			    // 		let factor = percent/100;
+			    // 		let montoIngresado = factor * saldoPorCobrar;
+			    // 		var saldoFinal = saldoPorCobrar - montoIngresado;
+			    // 		target.find('input[name="monto"]').val(montoIngresado);
+			    // 		target.find('input[name="monto"]').data('saldoactual', montoIngresado);
+			    // 		target.find("span[data-saldofinal]").text($.number(saldoFinal, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+			    // 		income.updateSuma();
+
+			    // 	}else{
+			    // 		$(this).val('100');
+			    // 	}
+			    // });
+
+		</script>
+	</body>
+</html>

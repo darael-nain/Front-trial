@@ -1,0 +1,28 @@
+{
+	"page": 1,
+	"total": <!--#4DVAR -INT((Size of array(aProyectoId)/8)* -1)-->,
+	"records": <!--#4DVAR Size of array(aProyectoId)-->,
+	"rows": [
+<!--#4DIF newProyecto-->
+		{
+			"text": "<!--#4DVAR q-->"
+		}<!--#4DIF Size of array(aProyectoId) > 0-->,<!--#4DENDIF-->
+<!--#4DENDIF-->
+<!--#4DLOOP aProyectoId -->
+		{
+			"id": <!--#4DVAR aProyectoId{aProyectoId}-->,
+			<!--#4DIF NOT(aProyectoFolio{aProyectoId} = 0)-->"folio": <!--#4DVAR aProyectoFolio{aProyectoId}-->,<!--#4DENDIF-->
+			"text": "<!--#4DVAR aProyectoNombre{aProyectoId}-->",
+			"username": "<!--#4DVAR aProyectoUsuario{aProyectoId}-->",
+			"empresa": {
+				"id": <!--#4DVAR aProyectoEmpresaId{aProyectoId}-->,
+				"alias": "<!--#4DVAR aProyectoEmpresaAlias{aProyectoId}-->",
+				"razon_social": "<!--#4DVAR aProyectoEmpresaRazonSocial{aProyectoId}-->"
+			},
+			"total_neto": <!--#4DVAR Round(aProyectoTotalNeto{aProyectoId};0)-->,
+			"ultima_modificacion": "<!--#4DVAR Substring(String(aProyectoModificacionFecha{aProyectoId};8);1;10)--> <!--#4DVAR aProyectoModificacionHora{aProyectoId}-->",
+			"negocio": <!--#4DIF (aProyectoEstado{aProyectoId}="NOTA DE VENTA")-->true<!--#4DELSE-->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aProyectoId{aProyectoId} = aProyectoId{Size of array(aProyectoId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

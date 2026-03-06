@@ -1,0 +1,10 @@
+{
+	"row": [
+	<!--#4DLOOP aAdicionalImpIdCompra -->
+			{
+				"id": "<!--#4DHTML aAdicionalImpIdCompra{aAdicionalImpIdCompra}-->",
+				"nombre": "<!--#4DHTML aAdicionalImpName{aAdicionalImpIdCompra}-->"
+			}<!--#4DIF NOT(aAdicionalImpIdCompra{aAdicionalImpIdCompra} = aAdicionalImpIdCompra{Size of array(aAdicionalImpIdCompra)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

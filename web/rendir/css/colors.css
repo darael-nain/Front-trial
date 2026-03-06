@@ -1,0 +1,28 @@
+
+.uGreen {
+	color: rgb(52,204,02);
+}
+.uRed{
+	color: rgb(252,73,03);
+}
+.uBgGreen {
+	background-color: rgb(52,204,02);
+}
+.uBorderGreen {
+	border-color: : rgb(52,204,02);
+}
+.uBlue {
+	color: rgb(03,214,249);
+}
+.uBgBlue {
+	background-color: rgb(03,214,249);
+}
+.uBorderBlue {
+	border-color: : rgb(03,214,249);
+}
+.uBgRed{
+	background-color: rgb(252,73,03);
+}
+.uBgYellow{
+	background-color: yellow;
+}

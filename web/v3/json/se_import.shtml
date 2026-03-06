@@ -1,0 +1,8 @@
+{
+	"id": <!--#4DIF Not(Undefined(id))--><!--#4DIF Type(id)=Is Text-->"<!--#4DVAR id-->"<!--#4DELSE--><!--#4DVAR id--><!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"index": <!--#4DIF Not(Undefined(index))-->"<!--#4DHTML index-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"text": <!--#4DIF Not(Undefined(text))-->"<!--#4DHTML text-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"folio": <!--#4DIF Not(Undefined(folio))-->"<!--#4DHTML folio-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"success": <!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"errorMsg": "<!--#4DTEXT errorMsg-->"
+}

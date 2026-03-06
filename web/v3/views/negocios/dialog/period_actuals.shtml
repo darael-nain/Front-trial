@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Period actuals</title>
+    <script>
+      var options = {
+        dateFormat: 'yy-mm-dd'
+      };
+      $('.dialog [name="from"]').datepicker(options);
+      $('.dialog [name="to"]').datepicker(options);
+      $('.dialog button').button({
+        icons: {
+          primary: 'ui-icon-circle-arrow-s'
+        },
+        caption: 'Obtener reporte'
+      }).click(function() {
+        var from = $('.dialog [name="from"]').val();
+        var to = $('.dialog [name="to"]').val();
+        var sid = '';
+        $.each($.cookie(),function(clave,valor) { if (clave == hash && valor.match(/UNABASE/g)) sid = valor; });
+        var url = nodeUrl + '/export-actuals/?download=true&entity=cotizaciones&id=' + $('section.sheet').data('id') + '&folio=' + (($('#main-container').data('index') > 0)? $('#main-container').data('index') : 'S/N')+ '&sid=' + encodeURIComponent(sid) + '&preview=false&nullified=' + $('section.sheet').data('readonly') + '&from=' + from + "&to=" + to;
+        
+        
+        url = url + '&hostname=' + window.location.origin;
+        var download = window.open(url).blur();
+        window.focus();
+        download.close();
+      });
+    </script>
+  </head>
+  <body>
+    <fieldset>
+      <legend>Seleccione rango de fechas</legend>
+      <label>
+        <span>Desde</span>
+        <input type="text" name="from" required>
+      </label>
+      <label>
+        <span>Hasta</span>
+        <input type="text" name="to" required>
+      </label>
+      <button type="button">Obtener reporte</button>
+    </fieldset>
+  </body>
+</html>

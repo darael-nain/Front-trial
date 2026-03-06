@@ -1,0 +1,18 @@
+{
+	"total": <!--#4DHTML $total-->,
+	"cheque":{
+		"numero": <!--#4DHTML checkNumber-->
+	},
+	"rows": [
+<!--#4DLOOP id_tipopago -->
+		{
+			"id": <!--#4DHTML id_tipopago{id_tipopago}-->,
+			"text": "<!--#4DHTML descripcion_tipopago{id_tipopago}-->",
+			"codigo_tipopago": "<!--#4DHTML codigo_tipopago{id_tipopago}-->",
+			"egreso": <!--#4DIF egreso{id_tipopago}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"ingreso": <!--#4DIF ingreso{id_tipopago}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"estado": <!--#4DIF estado_tipopago{id_tipopago}-->true<!--#4DELSE-->false<!--#4DENDIF-->	
+		}<!--#4DIF NOT(id_tipopago{id_tipopago} = id_tipopago{Size of array(id_tipopago)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

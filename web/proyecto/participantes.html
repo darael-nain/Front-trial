@@ -1,0 +1,28 @@
+<input id="idTareaParticipantesxxx" type="hidden" value="<!--#4dvar vIdTareaxx-->">
+<div id="container-popup" class="popup-participantes">
+    <!--#4dif size of array(aLoginArea)>0-->
+    <nav>
+        <a class="select-all" onClick="selecccionar_todos_participantes(this);">Seleccionar todo</a>
+        <a class="invitado" onClick="agregar_invitado(this);">Agregar invitado</a>
+    </nav>
+    <!--#4dendif-->
+    <article>
+        <!--#4dif size of array(aLoginArea)>0-->
+            <!--#4dloop aIdAreaTrabajo_part-->
+                 <fieldset class="count-participantes">
+                    <legend><!--#4dvar Lowercase(aNomAreaTrabajo_part{aIdAreaTrabajo_part})--></legend>
+                    <!--#4dloop aLoginArea-->
+                        <!--#4dif aIdAreaTrabajo_part{aIdAreaTrabajo_part}=aIdArea_area{aLoginArea}-->
+                            <span style="width: auto !important;">
+                                <input name="" class="participantes-chk" type="checkbox" value="<!--#4dvar aLoginArea{aLoginArea}-->">
+                                <label><!--#4dvar aNombresArea{aLoginArea}--></label>
+                            </span>
+                        <!--#4dendif-->
+                    <!--#4dendloop-->
+                </fieldset>
+            <!--#4dendloop-->
+        <!--#4delse-->
+            <h4 style="color:blue;font-weight:normal">Ya fueron agregados todos los participantes del área.</h4>
+        <!--#4dendif-->
+    </article>
+</div>

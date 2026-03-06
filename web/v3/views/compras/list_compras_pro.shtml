@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_serverInfo-->
+<html>
+	<head>
+		<title>Compras</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="/v3/views/compras/lista.css">
+
+		<!-- begin edit - gin 18.11.15 / testing nuevo formato tablas -->
+		<script src="/v3/script/jquery/plugins/data_tables_pro_1.10.10/media/js/jquery.dataTables.min.js"></script>
+		<link rel="stylesheet" href="/v3/script/jquery/plugins/data_tables_pro_1.10.10/media/css/jquery.dataTables.min.css">
+		<!-- end edit -->
+		<script type="text/javascript" src="/v3/views/compras/script/active_menu.js"></script>
+
+		<script>
+
+			$(document).ready(function() {
+
+				unaBase.toolbox.init();
+
+				// Inicializamos un buscador
+				var params = {
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/_V3_getGastosNew' },
+					entity: 'Compras',
+					data: {
+						'tipo_gasto' : "OC"					
+					},
+					callback : function(data){		
+						$('.especial .totales').find('span[data-neto]').text(data.totales.neto);
+						$('.especial .totales').find('span[data-exento]').text(data.totales.exento);
+						$('.especial .totales').find('span[data-total]').text(data.totales.total);						
+						$('.especial .totales').find('span[data-pagado]').text(data.totales.pagado);
+						$('.especial .totales').find('span[data-porpagar]').text(data.totales.porpagar);
+						$('.especial .totales').find('span[data-justificado]').text(data.totales.justificado);
+						$('.especial .totales').find('span[data-porjustificar]').text(data.totales.porjustificar);						
+						/*if ($('.fht-table-wrapper').length==0) {
+							$('.especial').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false });
+						}*/
+
+						//$('#viewport .fht-table-init').fixedHeaderTable('destroy');
+						//$('#viewport > table').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false });
+
+						if ($(".dataTable").length == 0) {
+							$('#example').DataTable({
+								"scrollY": "400vh",
+						        "scrollCollapse": true,
+						       	"paging": false,
+						        "searching": false,
+						        fixedHeader: {
+							        header: true,
+							        footer: false
+							    }
+							});
+						}
+						
+						
+					},
+					row: {
+						html: function(i, rows) {
+							var v2 = "";
+							var title = "";
+							if (rows[i].version=="") {
+								//v2 = '<strong style="font-size:8px!important;font-weight:bold">V2</strong>';
+								v2 = '<strong title="oc creada en versión antigua" style="font-size:11px!important;font-weight:bold">*</strong>';
+								title = "Orden de compra creada en versión antigua";
+							}
+							return '<tr title="'+ title +'" data-id="' + rows[i].id + '">' +											
+								'<td width="5%">' + v2 + ' ' + rows[i].folio + '</td>' +								
+								'<td class="center" width="5%">' + rows[i].doc + '</td>' +
+								'<td width="5%">' + rows[i].fecha + '</td>' +
+								'<td width="5%">' + rows[i].vencimiento + '</td>' +
+								'<td width="5%">' + rows[i].estado + '</td>' +
+								'<td class="left" width="15%">' + rows[i].proveedor + '</td>' +						
+								'<td class="left" width="25%">' + rows[i].referencia + '</td>' +														
+								'<td class="neto_c right" width="5%">' + rows[i].neto + '</td>' +
+								'<td class="neto_c right" width="5%">' + rows[i].exento + '</td>' +
+								'<td class="total_c right" width="5%">' + rows[i].total + '</td>' +
+								'<td class="total_c right" width="5%">' + rows[i].pago + '</td>' +
+								'<td class="total_c right" width="5%">' + rows[i].saldo_a_pagar + '</td>' +
+								'<td class="justificado_c right" width="5%">' + rows[i].justificado + '</td>' +
+								'<td class="justificado_c right" width="5%">' + rows[i].saldo_a_justificar + '</td>' +								
+								'<td class="basico center" width="5%">' + rows[i].validado + '</td>' +								
+							'</tr>'
+						}
+					},
+					detail: {
+						url: function(id) { return '/v3/views/compras/content.shtml?id=' + id +'&from=self'},
+						iframe: false
+					},
+					// Inflexiones
+					inflection: {
+						singular: 'gasto',
+						plural: 'gastos',
+						none: 'ningún'
+					},									
+					filters: [
+						{ name: 'created_at', type: 'month', caption: 'Fecha de creación', range: true, currentMonth: true },			
+						//{ name: 'tipo_gasto', type: 'autocomplete', caption: 'Tipo de gastos', dataSource: 'get_tipo_gasto' },
+						{ name: 'validacion_gasto', type: 'autocomplete', caption: 'Según validación', dataSource: 'get_validacion' },
+						{ name: 'estado', type: 'checkbox', caption: 'Estado de la compra', options: [
+							{ caption: 'Emitida', name: 'estado_emitida', value: true },
+							{ caption: 'Pagada', name: 'estado_pagada', value: false },							
+							{ caption: 'Cerrada', name: 'estado_cerrada', value: false },
+							{ caption: 'Anulada', name: 'estado_nulo', value: false }					
+						]}
+					]
+				};
+
+				unaBase.toolbox.search.init(params);
+				unaBase.toolbox.menu.init({
+					entity: 'Compras',
+					buttons: ["create_gasto_from_oc", "export_list"]
+				});
+
+				/*setTimeout(function(){
+					$('.especial').fixedHeaderTable({ footer: false, cloneHeadToFoot: false, fixedColumn: false });
+				}, 100);*/
+
+				if(!access._437) { // crear compra
+					$('#menu ul').find('li[data-name="create_gasto_from_oc"]').hide();
+    			}
+
+
+			});
+		</script>
+	</head>
+	<body style="min-width: 900px !important;">
+		<!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->
+		<!--<table id="example" style="min-width: 900px !important; width: 100% !important;" data-tipogasto="OC" class="especial">-->
+		<table id="example" class="especial" cellspacing="0" width="100%">
+				<thead>
+					<tr>
+						<th>Número</th>
+						<th>Documento</th>
+						<th>Emisión</th>
+						<th>Vencimiento</th>
+						<th>Estado</th>
+						<th>Proveedor</th>
+						<th>Referencia</th>							
+						<th>Afecto [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th>Exento [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>				
+						<th>Total [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th>Pagado [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th>Por pagar [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th>Justificado [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th>Por Justificar [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th>Validado</th>
+					</tr>
+				</thead>
+				<tfoot class="totales">
+					<tr>
+						<th></th>
+			            <th></th>
+			           	<th></th>
+			           	<th></th>
+			            <th></th>   
+			            <th></th>
+			            <th></th>
+			            <th class="right"><span data-neto="" class="label neto_b"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+			            <th class="right"><span data-exento="" class="label neto_b"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+			          	<th class="right"><span data-total="" class="label total_b"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+			           	<th class="right"><span data-pagado="" class="label pagado_b"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+			            <th class="right"><span data-porpagar="" class="label porpagar_b"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+			            <th class="right"><span data-justificado="" class="label justificado_b"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>			
+						<th class="right"><span data-porjustificar="" class="label porjustificar_b"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+			            <th></th>
+			        </tr> 
+				</tfoot>
+				<tbody></tbody>			
+			</table>
+	</body>
+</html>

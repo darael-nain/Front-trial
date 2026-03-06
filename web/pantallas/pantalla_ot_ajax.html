@@ -1,0 +1,43 @@
+<table class="tables" width="100%">
+<thead>	
+<tr>
+	<th width="3%">Folio</th>
+	<th width="3%">Creación</th>
+	<th width="3%">Vencimiento</th>
+	<th width="3%">Cliente</th>
+	<th width="3%">Origen</th>
+	<th width="3%">Referencia</th>
+	<th width="3%">Emisor</th>
+	<th width="3%">Responsable</th>	
+	<th width="3%">Estado</th>
+</tr>
+</thead>
+<tbody>
+<!--#4DLOOP aIdOT-->
+<tr class="reg">
+	<td><!--#4DVAR aFolioOT{aIdOT}--></td>
+	<td><!--#4DVAR aFechaEmiOT{aIdOT}--></td>
+	<td><!--#4DVAR aFechaVctoOT{aIdOT}--></td>
+	<td class="left"><!--#4DVAR aClienteProvOT{aIdOT}--></td>
+	<td class="left"><!--#4DVAR aRefProyOT{aIdOT}--></td>
+	<td class="left"><!--#4DVAR aReferenciaOT{aIdOT}--></td>
+	<td><!--#4DVAR aEmitidoPorOT{aIdOT}--></td>
+	<td class="negrita"><!--#4DVAR aResponsableOT{aIdOT}--></td>
+	<td class="negrita"><div class="<!--#4DVAR Lowercase(aEstadoOT{aIdOT};*)-->"><!--#4DVAR aEstadoOT{aIdOT}--></div></td>
+</tr>
+<!--#4DENDLOOP-->	
+</tbody>
+<!--<tfoot>
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>		
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+</tfoot>-->
+</table>		

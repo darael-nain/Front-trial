@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Cambios UNABASE V3</title>
+		<meta charset="utf-8">
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700' rel='stylesheet' type='text/css'>
+		<script src="/v3/script/jquery/jquery.js"></script>
+		<style type="text/css">
+			body{
+				font-family: 'Open Sans', sans-serif !important;
+				font-size: 12px;
+			}
+			section, article{
+				display: block;
+			}
+			ul > li{
+				list-style-type:decimal;
+				font-size:14px;
+			}
+			#sheet-version > h1{
+				text-decoration: underline;
+			}
+			#sheet-version > .versiones > section > h2{
+				background-color: lightgray;
+				padding:3px;				
+			}
+		</style>
+		<script type="text/javascript">
+			$(document).ready(function(){				
+				$.ajax({
+					url:'/v3/views/versiones/json/version.shtml',					
+					async:false,
+					dataType:'json',
+					success:function(data){						
+						$('#sheet-version > h1').text(data.info.title);
+						var content = $('#sheet-version > .versiones');     
+      					content.find("*").remove();
+						var HtmlVersiones;						
+						$.each(data.version, function(key,item){
+							
+							HtmlVersiones = $('<section><h2>Versión <span>'+item.number+'</span> / <span>'+item.date+'</span></h2><article class="improve"><h3>Mejoras:</h3><ul></ul></article><article class="bug"><h3>Correcciones:</h3><ul></ul></article></section>');
+							content.append(HtmlVersiones);
+
+							var HtmlImprove;
+							if (item.improve.length>0) {
+								$.each(item.improve, function(key2, item2){
+									var new_ = "";
+									if (item2.new) {
+										new_ = " <strong style='font-size:10px'>*Nuevo</strong>";
+									}
+									HtmlImprove = $('<li><strong>'+item2.title+';</strong> '+item2.notes+new_+'</li>');
+									HtmlVersiones.find('article.improve > ul').append(HtmlImprove);
+						        });
+							}else{
+								HtmlImprove = $('<li>Ninguna</li>');
+								HtmlVersiones.find('article.bug > ul').append(HtmlImprove);
+							}						
+
+					        var HtmlBug;
+					        if (item.bug.length>0) {
+					        	$.each(item.bug, function(key3, item3){
+									HtmlBug = $('<li><strong>'+item3.title+';</strong> '+item3.notes+'</li>');
+									HtmlVersiones.find('article.bug > ul').append(HtmlBug);
+						        });
+					        }else{
+					        	HtmlBug = $('<li>Ninguna</li>');
+								HtmlVersiones.find('article.bug > ul').append(HtmlBug);
+					        }			
+
+				        });				       
+					}
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div id="sheet-version">		
+			<h1></h1>
+			<section class="versiones"></section>			
+		</div>
+	</body>
+</html>

@@ -1,0 +1,246 @@
+ <!--#4DINCLUDE head.shtml-->
+<body>
+<!--#4DIF vSesion>0-->
+<!--#4DINCLUDE menu_contratistas.shtml-->
+<!--#4DINCLUDE mensajes2.shtml-->
+<!-- <section>
+   <!#4DINCLUDE info_usuario.shtml>
+   <div class="welcome-contratistas">Bienvenido a la Intranet de <!#4DVAR vNombreEmpresa2> </div>
+   <p><img src="<!#4DVAR vUrlImagenLogo>" width="<!#4DVAR vAnchoPictureBienv>" height="<!#4DVAR vAltoPictureBienv>" border="0"/></p>
+
+</section> -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script src="/script/chart/js/highcharts.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var chart;
+    $(document).ready(function() {
+        /*chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'containergraph',
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            title: {
+                text: 'Ranking contratistas'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+                percentageDecimals: 1
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        color: '#000000',
+                        connectorColor: '#000000',
+                        formatter: function() {
+                            return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                        }
+                    }
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Browser share',
+                data: [
+                    ['Firefox',   45.0],
+                    ['IE',       26.8],
+                    {
+                        name: 'Chrome',
+                        y: 12.8,
+                        sliced: true,
+                        selected: true
+                    },
+                    ['Safari',    8.5],
+                    ['Opera',     6.2],
+                    ['Others',   0.7]
+                ]
+            }]
+        });*/
+
+		$('.buscadorx').change(function(){
+			var mes = $('#b-mes').val();
+			var ano = $('#b-ano').val();
+			var user = $('#b-user').val();
+			$.post("/002buscador",{mes:mes,ano:ano,user:user},function(data){
+				$('#indicadores').fadeOut(function(){
+					$(this).fadeIn().html(data);
+				});
+			});
+		});
+
+    });
+
+
+ 
+</script>
+<style type="text/css">
+	.coloruser{
+		background-color:#F5ECCE;
+		color:black;
+		font-weight:bold;
+		height:30px;
+		paddin:2px 0;
+	}
+</style>
+<section class="lista-ot-contratista top">
+	
+   <div>
+   		<table>
+   			<thead>
+   				<th colspan="16">Visitas T&eacutecnicas <!--#4DVAR vNomUsr--></th>
+   			</thead>
+   			<input colspan="16" id="b-user" value="<!--#4DVAR vLogin-->" type="hidden">
+   			<thead>
+   				<!-- <th colspan="" rowspan="" headers="" class="th2">TECNICO</th> -->
+   				<th colspan="" rowspan="" headers="" class="th2">VT</th>
+   				<th colspan="" rowspan="" headers="" class="th2">FECHA EMISION</th>
+				<th colspan="" rowspan="" headers="" class="th2">D-VT</th>
+				<!-- <th colspan="" rowspan="" headers="" class="th2">COT</th>
+				<th colspan="" rowspan="" headers="" class="th2">D-COT</th>
+				<th colspan="" rowspan="" headers="" class="th2">OC</th>
+				<th colspan="" rowspan="" headers="" class="th2">D-OC</th>
+				<th colspan="" rowspan="" headers="" class="th2">FACT</th>
+				<th colspan="" rowspan="" headers="" class="th2">D-F</th>
+				<th colspan="" rowspan="" headers="" class="th2">PAGO</th>
+				<th colspan="" rowspan="" headers="" class="th2">D-P</th> -->
+				<th colspan="" rowspan="" headers="" class="th2">ALIAS</th>
+				<th colspan="" rowspan="" headers="" class="th2">CONTACTO</th>
+				<th colspan="" rowspan="" headers="" class="th2">FONO</th>
+				<th colspan="" rowspan="" headers="" class="th2">REFERENCIA</th>
+				<th colspan="" rowspan="" headers="" class="th2">EMISOR</th>
+				<th colspan="" rowspan="" headers="" class="th2">ESTADO</th>
+				<!-- <th colspan="" rowspan="" headers="" class="th2">EDITAR</th> -->
+   			</thead>
+   			<tbody>
+				<!--#4DLOOP a_OT_FOLIO-->
+				<tr class="reg" id="<!--#4DVAR aIdOT{a_OT_FOLIO}-->">
+				<!-- 	<td class="align-center <!#4DVAR a_style_color{a_OT_FOLIO}>"><!#4DVAR aAliasTecnico{a_OT_FOLIO}></td> -->
+					<td class="align-center <!--#4DVAR a_style_color{a_OT_FOLIO}-->"><!--#4DVAR num(a_OT_FOLIO{a_OT_FOLIO})--></td>
+					<td class="align-left"><!--#4DVAR a_OT_EMISION{a_OT_FOLIO}--></td>
+					<td class="align-center"><!--#4DVAR aDiasVisita{a_OT_FOLIO}--></td>
+					<!-- <td class="align-center <!#4DVAR a_color_cot{a_OT_FOLIO}>"><!#4DVAR aIDNegocio{a_OT_FOLIO}></td>
+					<td class="align-center"><!#4DVAR aDiasCotizacion{a_OT_FOLIO}></td>
+					<td class="align-center <!#4DVAR a_color_oc{a_OT_FOLIO}>"><!#4DVAR aFolioOC{a_OT_FOLIO}></td>
+					<td class="align-center"><!#4DVAR aDiasOC{a_OT_FOLIO}></td>
+					<td class="align-center <!#4DVAR a_color_fact{a_OT_FOLIO}>"><!#4DVAR aFolioFact{a_OT_FOLIO}></td>
+					<td class="align-center"><!#4DVAR aDiasFact{a_OT_FOLIO}></td>
+
+					<td class="align-center <!#4DVAR a_color_Cobro{a_OT_FOLIO}>"><!#4DVAR aFolioCobro{a_OT_FOLIO}></td>
+					<td class="align-center"><!#4DVAR aDiasCobro{a_OT_FOLIO}></td>	 -->
+
+					<td class="align-left"><!--#4DVAR aAliasCliente{a_OT_FOLIO}--></td>
+					<td class="align-left"><!--#4DVAR aContacto{a_OT_FOLIO}--></td>	
+					<td class="align-center"><!--#4DVAR aFonoContacto{a_OT_FOLIO}--></td>	
+					<td class="align-left"><!--#4DVAR a_OT_REF{a_OT_FOLIO}--></td>
+					<td class="align-center"><!--#4DVAR aAliasEmisor{a_OT_FOLIO}--></td>
+					<td class="align-center"><!--#4DVAR a_OT_ESTADO{a_OT_FOLIO}--></td>
+					<!-- 	<td class="align-center">Editar</td> -->
+				</tr>
+				<!--#4DENDLOOP-->	
+   			</tbody>			
+   		</table>	
+   </div>
+</section>
+
+<section style="text-align:left">
+	<label>Mes:</label>
+	<select id="b-mes" class="buscadorx" name="meses">
+		<option selected value="<!--#4DVAR vMes-->"><!--#4DVAR vMes--></option>
+		<!--#4DLOOP aG_Meses-->
+			<option value="<!--#4DVAR aG_Meses{aG_Meses}-->"><!--#4DVAR aG_Meses{aG_Meses}--></option>
+		<!--#4DENDLOOP-->
+	</select>
+	<label>Año:</label>
+	<select id="b-ano" class="buscadorx" name="anos">
+		<option selected value="<!--#4DVAR vAñox-->"><!--#4DVAR vAñox--></option>
+		<!--#4DLOOP aG_Anios-->
+			<option value="<!--#4DVAR aG_Anios{aG_Anios}-->"><!--#4DVAR aG_Anios{aG_Anios}--></option>
+		<!--#4DENDLOOP-->
+	</select>
+</section>
+
+
+<div id="indicadores">
+	<section class="ranking-contratistas">
+		<div>
+			<table>
+				<caption>DIAS DE ATRASOS<br><br>PROMEDIOS</caption>
+				<caption><br></caption>
+				<thead>
+					<tr>
+						<th colspan="">Num</th>
+						<th colspan="">T&eacutecnico</th>
+						<th colspan="">Media</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!--#4DLOOP a_rank1_Tec-->
+						<!--#4DIF a_rank1_Tec{a_rank1_Tec}=vLogin-->
+							<tr class="coloruser">
+								<td colspan="" rowspan="" headers=""><div class="coloruser"><!--#4DVAR a_rank1_pos{a_rank1_Tec}--></div></td>
+								<td colspan="" rowspan="" headers="" class="tecnico"><div class="coloruser"><!--#4DVAR a_rank1_Nombres{a_rank1_Tec}--> <!--#4DVAR a_rank1_Apellido{a_rank1_Tec}--></div></td>
+								<td colspan="" rowspan="" headers=""><div class="coloruser"><!--#4DVAR a_Media_Respuestas{a_rank1_Tec}--></div></td>
+							</tr>
+						<!--#4DELSE-->
+							<tr>
+								<td colspan="" rowspan="" headers=""><!--#4DVAR a_rank1_pos{a_rank1_Tec}--></td>
+								<td colspan="" rowspan="" headers="" class="tecnico"><!--#4DVAR a_rank1_Nombres{a_rank1_Tec}--> <!--#4DVAR a_rank1_Apellido{a_rank1_Tec}--></td>
+								<td colspan="" rowspan="" headers=""><!--#4DVAR a_Media_Respuestas{a_rank1_Tec}--></td>
+							</tr>
+						<!--#4DENDIF-->  	
+					<!--#4DENDLOOP-->
+				</tbody>
+			</table>
+		</div>
+		<div>
+			<table>
+				<caption>RANKING FACTURACI&OacuteN<br><br><br></caption>
+				<caption id="fecha">entre el <!--#4DVAR vFecha1--> y el <!--#4DVAR vFecha2--></caption>
+				<thead>
+					<tr>
+						<th colspan="">Num</th>
+						<th colspan="">T&eacutecnico</th>
+						<th colspan="">Facturaci&oacuten</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!--#4DLOOP a_rank2_Tec-->
+						<!--#4DIF a_rank2_Tec{a_rank2_Tec}=vLogin-->
+							<tr>
+								<td colspan="" rowspan="" headers=""><div class="coloruser"><!--#4DVAR a_rank2_pos{a_rank2_Tec}--></div></td>
+								<td colspan="" rowspan="" headers="" class="tecnico"><div class="coloruser">
+									<!--#4DVAR a_rank2_Nombres{a_rank2_Tec}--> <!--#4DVAR a_rank2_Apellido{a_rank2_Tec}-->
+								</div></td>
+								<td colspan="" rowspan="" headers=""><div class="coloruser"><!--#4DVAR string(a_rank2_TotalFact{a_rank2_Tec};"$ ###.###.###.##0")-->
+									
+								</div></td>
+							</tr>
+						<!--#4DELSE-->
+							<tr >
+								<td colspan="" rowspan="" headers=""><!--#4DVAR a_rank2_pos{a_rank2_Tec}--></td>
+								<td colspan="" rowspan="" headers="" class="tecnico"><!--#4DVAR a_rank2_Nombres{a_rank2_Tec}--> <!--#4DVAR a_rank2_Apellido{a_rank2_Tec}--></td>
+								<td colspan="" rowspan="" headers=""><!--#4DVAR string(a_rank2_TotalFact{a_rank2_Tec};"$ ###.###.###.##0")--></td>
+							</tr>
+						<!--#4DENDIF-->  	
+					<!--#4DENDLOOP-->
+				</tbody>
+			</table>
+		</div>
+	</section>
+	<br><br><br>
+</div>
+	<!-- <div id="containergraph" style="width: 100%; height: 400px"></div> -->
+
+<!--#4DELSE-->
+    <p>
+    LA SESI&Oacute;N HA EXPIRADO...!!!
+    <a class="enlaces" href="index.shtml?t=<!--#4DVAR String(Milliseconds+Random(2))-->">VOLVER A INICIAR</a>
+    </p>
+<!--#4DENDIF-->      
+
+</body>
+</html>

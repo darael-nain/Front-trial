@@ -1,0 +1,30 @@
+<!--#4dscript/web_responsables_areas-->
+<div class="cerrar-popup-">
+    <a id="close-pop-planner-ot" href="#">Cerrar</a>    
+</div>
+
+<h2 style="text-decoration:underline;">Planificador</h2>
+<h3 class="sub-selct-hor-fec">"Seleccione d&iacute;a y hora de vencimiento presionando el bot&oacute;n de la hora."</h3>
+<div class="planner-box-filters">
+	<label>Responsable: </label>
+    
+    <select style="width=300px" class="planner-cbo" id="filters-resp-planner2">
+
+        <!--4dif vLoginFilter = "TODOS" -->
+            <option selected="selected" value="TODOS">TODOS</option>
+        <!--4delse-->
+            <option selected="selected" value="<!--#4DVAR vLoginFilter-->"><!--#4DVAR NameResp--></option>
+        <!--4dendif-->
+
+        <!--#4DLOOP aLoginAreaResp1-->
+            <!--4dif aLoginAreaResp1{aLoginAreaResp1}#vLoginFilter-->
+            <option value="<!--#4DVAR aLoginAreaResp1{aLoginAreaResp1}-->">
+                <!--#4DVAR aNombresAreaResp1{aLoginAreaResp1}-->
+            </option>
+            <!--4dendif-->
+        <!--#4DENDLOOP-->
+
+        <option value="TODOS">TODOS</option>
+    </select>
+</div>
+<div id="ot_container-all-planner"></div>

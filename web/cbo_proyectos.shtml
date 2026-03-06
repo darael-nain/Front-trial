@@ -1,0 +1,9 @@
+<!--<label for="comboNegocios">Seleccionar proyecto: </label>-->
+<select class="listas-especiales2" name="comboNegocios" id="comboNegocios">
+	<option value="-1" selected="selected">[ Seleccionar proyecto ]</option> 
+	<!--#4DLOOP aIdNegocio-->    
+	<option value="<!--#4DVAR aIdNv{aIdNegocio}-->">
+		<!--#4DVAR aIdNegocio{aIdNegocio}--> / <!--#4DVAR aReferencia{aIdNegocio}-->
+	</option>     
+	<!--#4DENDLOOP-->
+</select>

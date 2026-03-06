@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Miscelaneos</title>
+		<script type="text/javascript" src="/v3/views/ajustes/parametros/misc/index.js"></script>
+
+    	<link href="/css/form1.css" rel="stylesheet">
+    	<link href="/v3/views/ajustes/parametros/css/params.css" rel="stylesheet">
+</head>
+<script type="text/javascript">
+	$(document).ready(function(){
+
+	  	unaBase.ui.block();    
+	  	ParamMisc.menu();
+	  	ParamMisc.init();
+	  	unaBase.ui.unblock();
+	  	unaBase.ui.expandable.init();
+	});
+
+</script>
+<body>
+	<section class="sheet" id="ParamMisc">
+		<footer>
+	<!-- 		<article>
+				<h1>Miscelaneos</h1>
+				<ul>
+					<li>
+						<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary">
+							<span class="ui-button-text">
+								<a href='#' id='cacheClearUrl' target="_blank">Limpiar cache Web</a>	
+							</span>
+						</button>
+						<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" id="cacheClear4d">
+							<span class="ui-button-text">
+								Limpiar cache 4D	
+							</span>
+						</button>
+						<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" id="checkBlockEmails">
+							<span class="ui-button-text">
+								Checkear block-email usuarios últimos 30 días
+							</span>
+						</button>
+							
+					</li>
+
+					<li>						
+						<h3>notificar creación de usuarios(separar con coma)</h3>
+						<input class="item"  type="text" name="notifyUsers" placeholder="email de notificación  de creación de usuarios">	
+					</li>
+
+					<li>
+						<h3><label for="pdfMicroservice">Activar Microservicio Pdf</label></h3>
+
+						<input class="item"  type="checkbox" name="pdfMicroservice" id="pdfMicroservice">
+					</li>
+
+
+					<li>
+						<h3><label for="emailMs">Activar Microservicio Email</label></h3>
+
+						<input class="item"  type="checkbox" name="emailMs" id="emailMs">
+					</li>
+
+					<li>						
+						<h3><label for="urlEmailMs">Url Microservicio Email</label></h3>
+						<input class="item"  type="text" name="urlEmailMs" id="urlEmailMs" >	
+					</li>
+
+					
+
+
+
+
+
+				</ul>
+			</article>
+			<article>
+				<h1>Unidad de fomento</h1>
+		
+					<label>
+						Url
+						<input class="item"  type="text" name="ufUrl">
+					</label>
+					<button id="updateUf" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" \>
+						<span class="ui-button-text">
+							Actualizar Uf	
+						</span>
+					</button>
+			</article>
+			
+ -->
+
+				<article class="article-half">
+				<h1>Miscelaneos</h1>
+					<ul class="editable">
+						<li>						
+							<label for="notifyUsers">Notificar creación de usuarios</label>
+							<input class="item"  type="text" name="notifyUsers" id="notifyUsers" placeholder="email de notificación  de creación de usuarios">	
+						</li>
+						<li>		
+							<label for="ufUrl" >Url Actualizar Uf</label>
+								<input class="item"  type="text" name="ufUrl" id="ufUrl">
+							
+						</li>
+
+
+						<li>						
+							<label for="urlEmailMs">Url Microservicio Email</label>
+							<input class="item"  type="text" name="urlEmailMs" id="urlEmailMs" >	
+						</li>
+						<li>						
+							<label for="emailMsApiKey">ApiKey Microservicio Email</label>
+							<input class="item"  type="text" name="emailMsApiKey" id="emailMsApiKey" >	
+						</li>
+						<li>						
+							<label for="supportLogs">Ocultar Logs Soporte</label>
+							<input class="item"  type="checkbox" name="supportLogs" id="supportLogs" >	
+						</li>
+						<li>						
+							<label for="notAskChangePass">No pedir cambio de contraseña</label>
+							<input class="item"  type="checkbox" name="notAskChangePass" id="notAskChangePass" >	
+						</li>
+						<li>						
+							<label for="experimental">Experimental</label>
+							<input class="item"  type="checkbox" name="experimental" id="experimental" >	
+						</li>
+						<li>						
+							<label for="nativePrint">Imprimir nativo</label>
+							<input class="item"  type="checkbox" name="nativePrint" id="nativePrint" >	
+						</li>
+			
+						
+					</ul>
+					<ul class="editable">
+						<li>	
+							<button id="updateUf" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" \>
+								<span class="ui-button-text">
+									Actualizar Uf	
+								</span>
+							</button>	
+						</li>
+						<li>
+							<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary">
+								<span class="ui-button-text">
+									<a href='#' id='cacheClearUrl' target="_blank">Limpiar cache Web</a>	
+								</span>
+							</button>
+						</li>
+						<li>
+							<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" id="cacheClear4d">
+								<span class="ui-button-text">
+								Limpiar cache 4D	
+							</span>
+						</button>
+						</li>
+						<li>							
+							<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" id="checkBlockEmails">
+								<span class="ui-button-text">
+									Checkear block-email usuarios últimos 30 días
+								</span>
+							</button>
+						</li>
+						<li>
+							<h3><label for="pdfMicroservice">Activar Microservicio Pdf</label></h3>
+
+							<input class="item"  type="checkbox" name="pdfMicroservice" id="pdfMicroservice">
+						</li>
+
+
+						<li>
+							<h3><label for="emailMs">Activar Microservicio Email</label></h3>
+
+							<input class="item"  type="checkbox" name="emailMs" id="emailMs">
+						</li>
+						<li>
+							<h3><label for="chatOnline">Activar chat Online</label></h3>
+
+							<input class="item"  type="checkbox" name="chatOnline" id="chatOnline">
+						</li>
+					
+						<li>
+							<h3><label for="unableSocket">Activar conexiones socket.io</label></h3>
+
+							<input class="item"  type="checkbox" name="unableSocket" id="unableSocket">
+						</li>
+					
+					</ul>
+				</article>
+
+		</footer>
+		
+	</section>
+</body>
+</html>

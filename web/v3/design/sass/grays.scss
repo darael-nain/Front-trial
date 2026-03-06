@@ -1,0 +1,129 @@
+
+// nomenclatura --> css-size-text-tiny
+
+$melon : rgb(247,247,221);
+$yellow : rgb(242, 254, 138);
+$verde-link-labels: rgb(67,175,124);
+$verde-claro:rgb(232, 247, 232);
+
+@mixin fn-color($color) {
+	background-color:$color;
+}
+@mixin text-color($color) {
+	color:$color !important;
+}
+@mixin size-w($size) {
+	width:$size !important;
+}
+@mixin size-h($size) {
+	height:$size !important;
+}
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+     -moz-border-radius: $radius;
+      -ms-border-radius: $radius;
+          border-radius: $radius;
+}
+@mixin border($border) {
+  -webkit-border: $border;
+     -moz-border: $border;
+      -ms-border: $border;
+          border: $border;
+}
+.css-grays{
+	.warning-color {
+		font-weight:bold!important;
+		background-color:#F9994D!important;;
+		border-color:#F9994D!important;;
+		padding:5px!important;;
+	}
+	a{
+		@include text-color($verde-link-labels);
+		font-size:12px!important;
+		font-weight:bold;
+		text-decoration: underline;		
+	}
+	article{
+		@include fn-color(white);
+	}
+	.css-boxtotales{
+		padding: 5px;
+		//@include fn-color($melon);
+		@include fn-color($verde-claro);
+		@include border-radius(3px);
+		border: 1px solid rgb(220,220,220);
+		text-align:right;
+		display: inline-block;
+		input{
+			@include text-color(#AF6D44);
+			font-weight:bold!important;
+		}
+	}
+	.css-fn-melon{
+		@include fn-color($melon);
+	}
+	.css-fn-yellow{
+		@include fn-color($yellow);
+	}
+	.css-size-tiny-w{
+		@include size-w(80px);
+	}
+	.css-size-small-w{
+		@include size-w(100px);
+	}
+	.css-size-medium-w{
+		@include size-w(300px);
+	}
+	.css-size-large-w{
+		@include size-w(620px);
+	}
+	.css-fxr-fecha-cierre{
+		padding:3px;
+		//@include fn-color($melon);
+		@include fn-color($verde-claro);
+		@include border-radius(3px);
+		border: 1px solid rgb(220,220,220);
+		@include size-w(520px);
+		> input {
+			@include size-w(100px);
+		}
+		> textarea {
+			@include size-w(300px);
+		}
+	}	
+	.css-section-comments{
+		ul{	
+			margin:0px;
+			padding:0px;
+			li{
+				padding:5px;
+				margin:2px;
+				@include border-radius(3px);
+				border: 1px solid rgb(220,220,220);
+				@include fn-color($verde-claro);
+				div{
+					> a{
+						color:black!important;
+						font-weight:bold;
+						text-decoration:none;
+						text-transform:capitalize;
+					}
+					> time{
+						@include text-color(gray);
+						float:right;
+						font-weight:bold;
+						margin-right:10px;
+					}
+				}
+				>p{
+					font-size:12px!important;
+				}
+				> strong{
+					display: block;
+					color:gray;
+					margin-top:5px;
+				}
+			}
+		}
+	}
+}

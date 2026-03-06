@@ -1,0 +1,22 @@
+<!--#4DINCLUDE head.shtml-->
+<!--#4DINCLUDE mensajes2.shtml-->
+<body>
+    <section>
+    <div id="login" align="center">
+        <article class="article-login">
+          <h1>Login</h1>
+          <hr/>
+          <p class="descripcion">Escriba su nombre de usuario y contrase&ntilde;a, para iniciar.</p> 
+          <form id="frm_login" class="frm_login" name="frm_login" method="post" action="/4DACTION/W_INICIA_SESION_Contratistas">
+              <label class="login"  for="txtUsuario">Login : </label>
+              <input class="login" id="txtUsuario"  name="txtUsuario" type="text" >
+              <label  class="clave" for="txtPassword">Password : </label>
+              <input class="clave" id="txtPassword"name="txtPassword" type="password" >
+              <p class="button"><button id="bn-login" type="submit">Entrar</button> </p>         
+          </form>       
+        </article>
+        <!--#4DINCLUDE footer.shtml-->  
+    </div>	
+    </section>     
+</body>
+</html>

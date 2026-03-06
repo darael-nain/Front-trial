@@ -1,0 +1,11 @@
+{
+	"id" : <!--#4DHTML idCobro-->,
+	"tipo" : "<!--#4DHTML tipoCobro-->",
+	"idctacte" : "<!--#4DHTML ctaCteIdCobro-->",
+	"textctate" : "<!--#4DHTML ctaCteTextCobro-->",
+	"nro" : "<!--#4DHTML nroCobro-->",
+	"glosa" : "<!--#4DHTML _V3_escapeString(glosaCobro)-->",
+	"fecha" : "<!--#4DHTML String(fechaCobro)-->",
+	"cruzado" : <!--#4DIF chkcruzado-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"estado" : "<!--#4DHTML estado-->"
+}

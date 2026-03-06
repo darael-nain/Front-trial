@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Áreas de Negocio</title>
+
+  <!-- 🔒 GUARD: oculta todo y solo muestra si (1) iframe same-origin + (2) login OK -->
+  <style>
+    html.guard-hide body {
+      display: none !important;
+    }
+  </style>
+  <script>
+    (function guard() {
+      document.documentElement.classList.add("guard-hide");
+      const deny = () => { try { document.body && (document.body.innerHTML = ""); } catch (_) { } };
+      const allow = () => document.documentElement.classList.remove("guard-hide");
+
+      let isInIFrame = false;
+      try { isInIFrame = (window.self !== window.top); } catch (e) { isInIFrame = true; }
+      if (!isInIFrame) return deny();
+
+      try {
+        if (window.top.location.origin !== window.location.origin) return deny();
+      } catch (e) { return deny(); }
+
+      const checkUrl = `${window.origin}/4DACTION/_v3_checkLogin?nodeUrl=${encodeURIComponent("https://frank.unabase.com/node")}`;
+      fetch(checkUrl, { credentials: "include", cache: "no-store" })
+        .then(r => r.ok ? r.json() : Promise.reject(r))
+        .then(data => {
+          if (!data || !data.isLogin || data.login == null) return deny();
+          allow();
+        })
+        .catch(() => deny());
+    })();
+  </script>
+  <!-- 🔒 FIN GUARD -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;0,9..40,900&family=DM+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root {
+      --brand: #20A789;
+      --brand-dark: #178a72;
+      --brand-light: rgba(32, 167, 137, .12);
+      --brand-glow: rgba(32, 167, 137, .22);
+
+      --bg: #f0f2f5;
+      --card: #ffffff;
+      --surface: #f8f9fb;
+      --border: rgba(17, 24, 39, .09);
+      --border-md: rgba(17, 24, 39, .14);
+
+      --text: #0f172a;
+      --text-2: #374151;
+      --muted: #6b7280;
+
+      --danger: #e63946;
+      --danger-bg: rgba(230, 57, 70, .09);
+      --danger-border: rgba(230, 57, 70, .28);
+
+      --radius-sm: 10px;
+      --radius: 14px;
+      --radius-lg: 20px;
+
+      --shadow-xs: 0 1px 3px rgba(0, 0, 0, .05);
+      --shadow-sm: 0 4px 12px rgba(17, 24, 39, .07);
+      --shadow-md: 0 8px 24px rgba(17, 24, 39, .09);
+      --shadow-lg: 0 16px 40px rgba(17, 24, 39, .11);
+      --ring: 0 0 0 4px rgba(32, 167, 137, .18);
+
+      --font: 'DM Sans', system-ui, sans-serif;
+      --font-mono: 'DM Mono', monospace;
+
+      --transition: .16s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      font-family: var(--font);
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+      /* evita “cortes” laterales */
+    }
+
+    /* Layout centrado + responsive */
+    .page {
+      min-height: 100dvh;
+      padding:
+        max(14px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) max(14px, env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .shell {
+      width: min(1100px, 100%);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+    }
+
+    /* Header: ahora no se corta, se adapta y hace wrap */
+    .card-header {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      background:
+        radial-gradient(ellipse 60% 100% at 0% 50%, var(--brand-light), transparent),
+        var(--card);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 220px;
+      flex: 1 1 320px;
+    }
+
+    .header-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      background: var(--brand-light);
+      border: 1px solid rgba(32, 167, 137, .22);
+      display: grid;
+      place-items: center;
+      color: var(--brand);
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .header-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -.2px;
+    }
+
+    .header-title small {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .header-actions {
+      margin-left: auto;
+      display: flex;
+      gap: 10px;
+      flex: 0 1 auto;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+      text-decoration: none;
+      transition: var(--transition);
+      transition-property: transform, box-shadow, background, border-color, opacity;
+    }
+
+    .btn-primary {
+      background: var(--brand);
+      color: #fff;
+      box-shadow: 0 4px 14px var(--brand-glow);
+    }
+
+    .btn-primary:hover {
+      background: var(--brand-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-ghost {
+      background: var(--card);
+      color: var(--text-2);
+      border-color: var(--border-md);
+      box-shadow: var(--shadow-xs);
+    }
+
+    .btn-ghost:hover {
+      background: var(--surface);
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+
+    .btn:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+      pointer-events: none;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .btn-icon-sm {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--danger-border);
+      background: var(--danger-bg);
+      color: var(--danger);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 13px;
+      transition: var(--transition);
+      transition-property: transform, background, border-color;
+      flex-shrink: 0;
+    }
+
+    .btn-icon-sm:hover {
+      background: rgba(230, 57, 70, .16);
+      border-color: rgba(230, 57, 70, .5);
+      transform: translateY(-1px);
+    }
+
+    .btn-icon-sm:active {
+      transform: translateY(0);
+    }
+
+    /* Form: pasa a grid para que JAMÁS se corte */
+    .add-form {
+      padding: 18px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: end;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .form-label {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--text-2);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .form-input {
+      height: 44px;
+      padding: 0 14px;
+      border: 1px solid var(--border-md);
+      border-radius: var(--radius-sm);
+      background: var(--card);
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      transition: var(--transition);
+      transition-property: border-color, box-shadow;
+      min-width: 0;
+    }
+
+    .form-input::placeholder {
+      color: var(--muted);
+    }
+
+    .form-input:focus {
+      border-color: rgba(32, 167, 137, .6);
+      box-shadow: var(--ring);
+    }
+
+    /* Search + header de lista */
+    .list-top {
+      padding: 14px 18px 0;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .search-wrap {
+      position: relative;
+      min-width: 0;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+      font-size: 13px;
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      height: 40px;
+      padding: 0 12px 0 34px;
+      border: 1px solid var(--border-md);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      font-family: var(--font);
+      font-size: 13px;
+      color: var(--text);
+      outline: none;
+      transition: var(--transition);
+      transition-property: border-color, box-shadow, background;
+      min-width: 0;
+    }
+
+    .search-input:focus {
+      border-color: rgba(32, 167, 137, .55);
+      box-shadow: var(--ring);
+      background: var(--card);
+    }
+
+    .list-meta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      white-space: nowrap;
+    }
+
+    .list-title {
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--text-2);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .badge {
+      font-size: 11px;
+      font-weight: 900;
+      font-family: var(--font-mono);
+      background: var(--brand-light);
+      color: var(--brand-dark);
+      border: 1px solid rgba(32, 167, 137, .18);
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    /* Lista */
+    .list-wrap {
+      padding: 14px 18px 18px;
+    }
+
+    .list-table {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--card);
+    }
+
+    .list-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-top: 1px solid var(--border);
+      transition: background var(--transition);
+      min-width: 0;
+    }
+
+    .list-row:first-child {
+      border-top: none;
+    }
+
+    .list-row:hover {
+      background: rgba(32, 167, 137, .04);
+    }
+
+    .row-index {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .row-name {
+      flex: 1;
+      min-width: 0;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .list-empty {
+      padding: 38px 18px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .list-empty i {
+      font-size: 28px;
+      display: block;
+      margin-bottom: 10px;
+      opacity: .35;
+    }
+
+    /* Toast */
+    #toast-container {
+      position: fixed;
+      bottom: 18px;
+      right: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 9999;
+      max-width: min(360px, calc(100vw - 36px));
+    }
+
+    .toast {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      background: var(--text);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      animation: slideUp .22s ease forwards;
+      word-break: break-word;
+    }
+
+    .toast.success {
+      background: #0f5132;
+      border: 1px solid #198754;
+    }
+
+    .toast.error {
+      background: #58151c;
+      border: 1px solid var(--danger);
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Overlay */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, .45);
+      backdrop-filter: blur(2px);
+      display: grid;
+      place-items: center;
+      z-index: 9000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease;
+    }
+
+    .overlay.visible {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .spinner {
+      width: 44px;
+      height: 44px;
+      border: 3px solid rgba(255, 255, 255, .2);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Responsive duro (donde más se te cortaba) */
+    @media (max-width: 720px) {
+      .add-form {
+        grid-template-columns: 1fr;
+      }
+
+      .btn {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .list-top {
+        grid-template-columns: 1fr;
+      }
+
+      .list-meta {
+        justify-content: space-between;
+      }
+
+      .header-actions {
+        width: 100%;
+        justify-content: stretch;
+      }
+
+      .header-actions .btn {
+        flex: 1;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <div class="spinner" aria-label="Cargando"></div>
+  </div>
+
+  <div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+  <div class="page">
+    <div class="shell">
+      <div class="card">
+
+        <div class="card-header">
+          <div class="header-left">
+            <div class="header-icon"><i class="fas fa-briefcase"></i></div>
+            <div class="header-title">
+              Áreas de Negocio
+              <small>Gestión y mantenimiento de áreas</small>
+            </div>
+          </div>
+
+          <div class="header-actions">
+            <a class="btn btn-ghost" href="/configuracion/index.shtml">
+              <i class="fas fa-arrow-left"></i>
+              <span>Volver</span>
+            </a>
+            <button class="btn btn-ghost" id="btnReload" type="button">
+              <i class="fas fa-rotate-right"></i>
+              <span>Recargar</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="add-form">
+          <div class="form-group">
+            <label class="form-label" for="inputNombre">
+              <i class="fas fa-plus" style="color:var(--brand)"></i>
+              Nueva Área de Negocio
+            </label>
+
+            <!-- ✅ OJO: aquí estaba tu bug: NO metas comentarios HTML dentro de atributos -->
+            <input class="form-input" id="inputNombre" type="text" placeholder="Nombre del área de negocio…"
+              autocomplete="off" maxlength="120" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="inputAbbr">
+              <i class="fas fa-tag" style="color:var(--brand)"></i>
+              Abreviación
+            </label>
+            <input class="form-input" id="inputAbbr" type="text" placeholder="Ej: ADM, VENT, COM…" autocomplete="off"
+              maxlength="16" />
+          </div>
+
+          <button class="btn btn-primary" id="btnAgregar" type="button">
+            <i class="fas fa-plus"></i>
+            Agregar
+          </button>
+        </div>
+
+        <div class="list-top">
+          <div class="search-wrap">
+            <i class="fas fa-magnifying-glass search-icon"></i>
+            <input class="search-input" id="inputSearch" type="text" placeholder="Filtrar…" autocomplete="off" />
+          </div>
+
+          <div class="list-meta">
+            <span class="list-title">Registros</span>
+            <span class="badge" id="badge">0</span>
+          </div>
+        </div>
+
+        <div class="list-wrap">
+          <div class="list-table" id="listTable"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* =========================
+       CONFIG
+    ========================= */
+    const CONFIG = {
+      endpoints: {
+        list: "https://devbase.unabase.com/node/businessArea/getByOrganization",
+        create: "https://devbase.unabase.com/node/businessArea/create",
+        delete: "https://devbase.unabase.com/node/businessArea/delete",
+      },
+      methods: {
+        list: "GET",
+        create: "POST",
+        delete: "DELETE", // cambia a "POST" si tu backend lo exige
+      },
+      fields: {
+        listArrayKey: null,
+        itemNameKey: "name",
+        itemIdKey: "id",
+        createBody: (nombre, abbr) => ({
+          name: nombre,
+          abbreviation: abbr,
+          description: "",
+          default: false,
+          customDocument: false,
+          isActive: true,
+          country: "ALL",
+        }),
+        deleteBody: (item) => ({ id: item._itemIdValue }),
+      },
+      fetchOptions: {
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      },
+      labels: {
+        addSuccess: "Área agregada correctamente",
+        addError: "Error al agregar el área",
+        delSuccess: "Área eliminada correctamente",
+        delError: "Error al eliminar el área",
+        empty: "No hay áreas de negocio registradas",
+        invalidName: "El nombre no puede estar vacío",
+      },
+    };
+
+    /* =========================
+       HELPERS
+    ========================= */
+    const $ = (id) => document.getElementById(id);
+
+    const overlay = $("overlay");
+    let busyCount = 0;
+
+    function setBusy(on) {
+      busyCount = Math.max(0, busyCount + (on ? 1 : -1));
+      overlay.classList.toggle("visible", busyCount > 0);
+
+      $("btnAgregar").disabled = busyCount > 0;
+      $("btnReload").disabled = busyCount > 0;
+      $("inputNombre").disabled = busyCount > 0;
+    }
+
+    function escHtml(s) {
+      return String(s ?? "")
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+    function toast(msg, type = "success") {
+      const el = document.createElement("div");
+      el.className = `toast ${type}`;
+      el.innerHTML = `<i class="fas fa-${type === "success" ? "circle-check" : "circle-xmark"}"></i> ${escHtml(msg)}`;
+      $("toast-container").appendChild(el);
+      setTimeout(() => el.remove(), 3200);
+    }
+
+    function debounce(fn, ms) {
+      let t = null;
+      return (...args) => {
+        clearTimeout(t);
+        t = setTimeout(() => fn(...args), ms);
+      };
+    }
+
+    /* =========================
+       STATE
+    ========================= */
+    let allItems = [];
+    let filterText = "";
+
+    // Para no meter JSON en data-attributes (más liviano y seguro)
+    const itemsById = new Map();
+
+    /* =========================
+       API
+    ========================= */
+    async function api(endpointKey, bodyData = null) {
+      const url = CONFIG.endpoints[endpointKey];
+      const method = CONFIG.methods[endpointKey];
+
+      const opts = {
+        method,
+        credentials: CONFIG.fetchOptions.credentials,
+        headers: { ...CONFIG.fetchOptions.headers },
+      };
+
+      if (bodyData !== null && method !== "GET") {
+        opts.body = JSON.stringify(bodyData);
+      }
+
+      const res = await fetch(url, opts);
+      const text = await res.text();
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}: ${text.slice(0, 240)}`);
+
+      const trimmed = text.trim().replace(/^\uFEFF/, "");
+      if (!trimmed) return null;
+
+      if (trimmed[0] === "{" || trimmed[0] === "[") {
+        try { return JSON.parse(trimmed); } catch (_) { return trimmed; }
+      }
+      return trimmed;
+    }
+
+    function extractList(json) {
+      if (!json) return [];
+      const key = CONFIG.fields.listArrayKey;
+
+      const raw = key
+        ? (json[key] ?? json)
+        : (Array.isArray(json) ? json : (json.data ?? json.items ?? json.rows ?? json.result ?? []));
+
+      if (!Array.isArray(raw)) return [];
+
+      return raw
+        .filter(r => r != null)
+        .map(r => ({ ...r, _itemIdValue: r[CONFIG.fields.itemIdKey] }))
+        .filter(r => r[CONFIG.fields.itemNameKey] != null);
+    }
+
+    function sortedFiltered() {
+      const q = filterText.toLowerCase().trim();
+      return allItems
+        .filter(r => !q || String(r[CONFIG.fields.itemNameKey]).toLowerCase().includes(q))
+        .sort((a, b) => String(a[CONFIG.fields.itemNameKey]).localeCompare(
+          String(b[CONFIG.fields.itemNameKey]), "es", { sensitivity: "base" }
+        ));
+    }
+
+    /* =========================
+       RENDER (DOM real, no innerHTML gigante)
+    ========================= */
+    function renderList() {
+      const table = $("listTable");
+      const rows = sortedFiltered();
+
+      // badge: muestra "filtrados / total" para que sea más útil
+      const total = allItems.length;
+      const shown = rows.length;
+      $("badge").textContent = filterText.trim() ? `${shown}/${total}` : `${total}`;
+
+      table.replaceChildren();
+
+      if (!rows.length) {
+        const empty = document.createElement("div");
+        empty.className = "list-empty";
+        empty.innerHTML = `<i class="fas fa-inbox"></i>${escHtml(
+          filterText ? `Sin resultados para "${filterText}"` : CONFIG.labels.empty
+        )}`;
+        table.appendChild(empty);
+        return;
+      }
+
+      itemsById.clear();
+
+      rows.forEach((item, i) => {
+        const id = String(item._itemIdValue ?? "");
+        itemsById.set(id, item);
+
+        const row = document.createElement("div");
+        row.className = "list-row";
+
+        const idx = document.createElement("span");
+        idx.className = "row-index";
+        idx.textContent = String(i + 1).padStart(2, "0");
+
+        const name = document.createElement("span");
+        name.className = "row-name";
+        const label = String(item[CONFIG.fields.itemNameKey] ?? "");
+        name.textContent = label;
+        name.title = label;
+
+        const del = document.createElement("button");
+        del.className = "btn-icon-sm";
+        del.type = "button";
+        del.setAttribute("aria-label", `Eliminar ${label}`);
+        del.dataset.id = id;
+        del.innerHTML = `<i class="fas fa-trash-can"></i>`;
+
+        row.appendChild(idx);
+        row.appendChild(name);
+        row.appendChild(del);
+        table.appendChild(row);
+      });
+    }
+
+    /* =========================
+       ACTIONS
+    ========================= */
+    async function loadList() {
+      setBusy(true);
+      try {
+        const json = await api("list");
+        allItems = extractList(json);
+        renderList();
+      } catch (err) {
+        console.error(err);
+        toast("Error al cargar la lista", "error");
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    async function handleAdd() {
+      const input = $("inputNombre");
+      const nombre = String(input.value || "").trim();
+      const abbr = String($("inputAbbr").value || "").trim().toUpperCase();
+
+      if (!nombre) { toast("El nombre no puede estar vacío", "error"); return; }
+      if (!abbr) { toast("La abreviación es obligatoria", "error"); return; }
+
+      // opcional: validar formato abreviación
+      if (!/^[A-Z0-9_-]{2,16}$/.test(abbr)) {
+        toast("Abreviación inválida (2-16, A-Z 0-9 _ -)", "error");
+        return;
+      }
+
+
+      const dup = allItems.some(r =>
+        String(r[CONFIG.fields.itemNameKey]).toLowerCase() === nombre.toLowerCase()
+      );
+      if (dup) {
+        toast("Ya existe un registro con ese nombre", "error");
+        input.focus();
+        return;
+      }
+
+      setBusy(true);
+      try {
+        await api("create", CONFIG.fields.createBody(nombre, abbr));
+        toast(CONFIG.labels.addSuccess, "success");
+        input.value = "";
+        await loadList();
+      } catch (err) {
+        console.error(err);
+        toast(CONFIG.labels.addError, "error");
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    async function handleDeleteById(id) {
+      const item = itemsById.get(String(id));
+      if (!item) return;
+
+      const name = String(item[CONFIG.fields.itemNameKey] ?? "");
+      const ok = confirm(`¿Eliminar "${name}"?`);
+      if (!ok) return;
+
+      setBusy(true);
+      try {
+        await api("delete", CONFIG.fields.deleteBody(item));
+        toast(CONFIG.labels.delSuccess, "success");
+        await loadList();
+      } catch (err) {
+        console.error(err);
+        toast(CONFIG.labels.delError, "error");
+      } finally {
+        setBusy(false);
+      }
+    }
+
+    /* =========================
+       EVENTS
+    ========================= */
+    $("btnReload").addEventListener("click", loadList);
+    $("btnAgregar").addEventListener("click", handleAdd);
+
+    $("inputNombre").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") handleAdd();
+    });
+
+    $("inputSearch").addEventListener("input", debounce((e) => {
+      filterText = e.target.value;
+      renderList();
+    }, 80));
+
+    $("listTable").addEventListener("click", (e) => {
+      const btn = e.target.closest("button[data-id]");
+      if (!btn) return;
+      handleDeleteById(btn.dataset.id);
+    });
+
+    /* =========================
+       INIT
+    ========================= */
+    loadList();
+  </script>
+</body>
+
+</html>

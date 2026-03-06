@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_serverInfo-->
+<html>
+	<head>
+		<title>Compras</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/views/compras/script/active_menu.js"></script>
+		<script>
+
+			$(document).ready(function() {
+
+				// current_tab = 0;
+				$('section.summary > section.user > h1 > span').text($('html > body > aside > div > div > h1').text());
+				$('section.summary > section.global > h1 > span').text($('html > body > aside > div > div > h1').data('organizacion'));
+
+				$(".live-tile, .flip-list").not(".exclude").liveTile();
+
+				$.ajax({
+					url: '/4DACTION/_V3_statsCompras',
+					dataType: 'json',
+				}).success(function(data) {
+
+					var writeTopStats = function(target, selector, source) {
+						var grand_total = source.total;
+						var current;
+						for (var i in source.detail) {
+							current = source.detail[i];
+							if (current.total == 0 || i > 4)
+								break;
+
+							if (typeof current.total != 'undefined') {
+								$('<li><span>' + Math.round(current.total/grand_total * 100, 0) +  '%</span> ' + current.text.charAt(0).toUpperCase() + current.text.slice(1).toLowerCase().substring(0,30) + ((current.text.length >= 32)? '...' : '') + '</li>').appendTo(target.find($(selector)));
+							}
+							
+						};
+					};
+
+					var target = $('section.summary');
+
+					target.find('.user .current.total').text(data.user.current.total);
+					target.find('.user .last.total').text(data.user.last.total);
+
+					writeTopStats(target, '.user .current.providers', data.user.current.providers);
+					writeTopStats(target, '.user .all.providers', data.user.all.providers);
+
+					writeTopStats(target, '.user .current.services', data.user.current.services);
+					writeTopStats(target, '.user .all.services', data.user.all.services);
+
+					writeTopStats(target, '.user .all.nullified', data.user.all.nullified);
+
+
+					// validacion
+					target.find('.global .no_validadas').text(data.validacion.no_validadas);
+					target.find('.global .solicitadas_sin_validar').text(data.validacion.solicitadas_sin_validar);
+					target.find('.global .no_solicitadas_sin_validar').text(data.validacion.no_solicitadas_sin_validar);
+					target.find('.global .rechazadas').text(data.validacion.rechazadas);
+
+					// compartido
+					target.find('.global .validados').text(data.compartido.validados);
+					target.find('.global .compartidos').text(data.compartido.compartidos);
+					target.find('.global .por_compartir').text(data.compartido.por_compartir);
+					unaBase.ui.unblock();
+
+				});
+
+				$('html > body.menu.home > section > header').hide();
+				$('#viewport').addClass('standalone');
+				
+				if(!access._437) { // crear compra
+					$('.create-compras').hide();
+    			}
+
+			});
+			var newCompras = function() {
+				$.ajax({
+					url: '/4DACTION/_V3_setCompras',
+					dataType: 'json',
+					type: 'POST',
+					data: {
+						'create_from' : 'OC'
+					}
+				}).done(function(data) {
+					unaBase.loadInto.viewport('/v3/views/compras/content.shtml?id=' + data.id);
+				});
+			};
+
+
+			document.title = 'OC - Inicio / ' + nombreEmpresa;
+
+
+			var providers = $('.current.providers').text();
+			if (providers == "") {
+				$('.current.providers').html('<span style="margin:5px;">Ninguna</span>');
+			}
+
+		</script>
+		<style>
+
+			section.summary {
+				position: relative;
+				top: 35px;
+			}
+
+			section.summary > section > h1 span {
+				text-transform: capitalize;
+			}
+
+			section.summary > section {
+				display: inline-block;
+				width: calc(50% - 125px);
+				min-width: 480px;
+				margin-left: 15px;
+				margin-right: 15px;
+				padding-left: 15px;
+				padding-right: 15px;
+				padding-top: 15px;
+				padding-bottom: 15px;
+				background-color: rgba(128,128,128,.3);
+				vertical-align: top;
+			}
+
+			section.summary > section > h1 {
+				margin-left: 5px;
+				margin-bottom: 15px;
+				color: rgb(103,103,103);
+				font-size: 24px;
+			}
+
+			.tiles > div > span {
+				display: block;
+				width: calc(100% - 5px);
+				margin-left: 5px;
+				margin-top: 5px;
+				font-size: 20px;
+			}
+
+			.tiles > div > div > span:not(.tile-title) {
+				display: block;
+				width: 100%;
+				margin-top: 52px;
+				font-size: 48px;
+				text-align: center;
+			}
+
+			.tiles > div > div > ul {
+				display: block;
+				width: 100%;
+				margin-top: 40px;
+				text-align: left;
+				list-style: none;
+			}
+
+			.tiles > div > div > ul > li {
+				margin: 0 5px 5px 5px;
+				font-size: 12px;
+				text-indent: -30px;
+				padding-left: 30px;
+			}
+
+			.tiles > div > div > ul > li > span {
+				display: inline-block;
+				width: 30px;
+				margin-left: 30px;
+				margin-right: -33px;
+				font-weight: bold;
+			}
+
+			.tiles > div > div > span.tile-title {
+				display: block;
+				width: calc(100% - 5px);
+				margin-right: 5px;
+				text-align: right;
+			}
+
+			.tiles > .live-tile.rectangle {
+				width: calc(150px * 1.5 + 5px);
+			}
+
+			.red {
+				background-color: rgba(160,15,15,.6);
+			}
+
+			.blue {
+				background-color: rgba(15,15,160,.6);
+			}
+
+			.green {
+				background-color: rgba(15,160,15,.6);
+			}
+
+			.yellow {
+				background-color: rgba(160,160,15,.6);
+			}
+
+			.orange {
+				background-color: rgba(160,80,15,.6);
+			}
+
+			button.list, button.new {
+				position: relative;
+				top: 40px;
+				left: 30px;
+			}
+
+		</style>
+	</head>
+	<body>		
+		<section data-tipogasto="OC" class="summary">
+
+			<a onclick="unaBase.loadInto.viewport('/v3/views/compras/list_compras.shtml', 'Compras');" style="display: block; text-align: left; font-size: 20px; top: -35px; left: 30px; cursor: pointer; position: absolute;">[Ir a las Compras]</a>
+
+			<a class="create-compras" onclick="newCompras();" style="display: block; text-align: left; font-size: 20px; top: -35px; left:220px; cursor: pointer; position: absolute;">[Nueva Orden de compra]</a>
+
+			<section class="user">
+				<h1>Mis compras: &laquo;<span></span>&raquo;</h1>				
+				<div class="tiles tile-group three-wide">
+
+				    <div class="live-tile blue rectangle" data-mode="carousel" data-direction="horizontal" data-delay="2500">
+				    	<span>Realizadas</span>
+				        <div>
+				            <span class="current total"></span>
+				            <span class="tile-title">semana actual</span>
+				        </div>
+				        <!--#4DIF Not(v3_noMostrarlastStats)-->
+				        <div>
+				            <span class="last total"></span>
+				            <span class="tile-title">semana anterior</span>
+				        </div>
+				        <!--#4DENDIF-->
+				    </div>
+
+				    <div class="live-tile red rectangle" data-mode="carousel" data-direction="horizontal" data-delay="2500">
+				    	<span>Top Proveedores</span>
+				    	<!--#4DIF Not(v3_noMostrarlastStats)-->
+				        <div>
+				            <ul class="current providers"></ul>
+				            <span class="tile-title">semana actual</span>
+				        </div>
+				        <!--#4DENDIF-->
+				        <div>
+				            <ul class="all providers"></ul>
+				            <span class="tile-title">a la fecha</span>
+				        </div>
+				    </div>
+
+				    <div class="live-tile orange rectangle" data-mode="carousel" data-direction="horizontal" data-delay="2500">
+				    	<span>Top Servicios</span>
+				    	<!--#4DIF Not(v3_noMostrarlastStats)-->
+				        <div>
+				            <ul class="current services"></ul>
+				            <span class="tile-title">semana actual</span>
+				        </div>
+				        <!--#4DENDIF-->
+				        <div>
+				            <ul class="all services"></ul>
+				            <span class="tile-title">a la fecha</span>
+				        </div>
+				    </div>
+
+				    <div class="live-tile yellow rectangle" data-mode="carousel" data-direction="horizontal" data-delay="2500">
+				    	<span>Anulaciones</span>
+				        <div>
+				            <ul class="all nullified"></ul>
+				            <span class="tile-title">a la fecha</span>
+				        </div>
+				    </div>
+
+				</div>
+
+
+			</section>
+
+
+			<section class="global">
+				<h1>Compras de &laquo;<span></span>&raquo;</h1>
+				<div class="tiles tile-group three-wide">
+
+				    <div class="live-tile blue rectangle" data-mode="carousel" data-direction="horizontal" data-delay="2500">
+				    	<span>Validación</span>
+				        <div>
+				            <ul>
+				            	<li style="font-size:12px;"><label class="no_validadas" style="font-weight:bold;">0</label> No validadas</li>
+				            	<li style="font-size:12px"><label class="solicitadas_sin_validar" style="font-weight:bold;margin-left:15px;">0</label> Solicitadas sin validar</li>
+				            	<li style="font-size:12px;"><label class="no_solicitadas_sin_validar" style="font-weight:bold;margin-left:15px;">0</label> No solicitadas</li><br>
+				            	<li style="font-size:12px;"><label class="rechazadas" style="font-weight:bold;">0</label> Rechazada(s)</li>
+				            </ul>
+				            <span class="tile-title">a la fecha</span>
+				        </div>
+				    </div>
+
+				     <div class="live-tile red rectangle" data-mode="carousel" data-direction="horizontal" data-delay="2500">
+				    	<span>Enviado a proveedor</span>
+				        <div>
+				            <ul>
+				            	<!--<li style="font-size:12px;"><label class="validados" style="font-weight:bold;">0</label> Validadas</li>-->
+				            	<li style="font-size:12px"><label class="compartidos" style="font-weight:bold;margin-left:15px;">0</label> Enviado(s)</li>
+				            	<li style="font-size:12px;"><label class="por_compartir" style="font-weight:bold;margin-left:15px;">0</label> Por enviar</li><br>
+				            </ul>
+				            <span class="tile-title">a la fecha</span>
+				        </div>
+				    </div>
+
+				</div>
+			</section>
+
+
+			
+		</section>
+	</body>
+</html>

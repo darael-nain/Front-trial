@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getListOtByProyecto-->
+		<meta charset="utf-8">
+		<title>Compras</title>
+		<link rel="stylesheet" href="/v3/views/compras/lista.css">
+		<script>
+		$(document).ready(function() {
+			$('tr.goto').click(function(){
+				if (g_uso_tareas_easy) {
+					window.open(nodeUrl + '/tasks/' + $(this).data("id"));
+				}else{
+					window.open('/ot.shtml?i=' + $(this).data("id"));
+				}
+			});
+		});
+		</script>
+	</head>
+	<body>
+		<section class="sheet-list-ots sheet" >
+
+			<table>
+				<thead>
+					<tr>
+						<th>Número</th>
+						<th>Tarea</th>
+						<th>Responsable</th>
+						<th>Estado</th>
+						<th>Costo Unit.</th>
+						<th>H. Asignadas</th>
+						<th>Costo presupuestado</th>
+						<th>H. Reales</th>
+						<th>Costo real</th>
+					</tr>
+				</thead>
+				<tbody class="ui-selectable">
+                    <!--#4DLOOP [OT]-->
+                    <tr data-id="<!--#4DVAR [OT]ID_OT-->" class="goto">
+						<td width="10%"><!--#4DTEXT [OT]Folio_OT--></td>
+						<td width="20%" class="left"><!--#4DTEXT [OT]Referencia--></td>
+						<td width="10%"><!--#4DTEXT [OT]responsable_tarea--></td>
+						<td width="10%"><!--#4DTEXT [OT]Estado--></td>
+						<td width="10%"><!--#4DTEXT _V3_formatCurrency([OT]costo_hh_unitario)--></td>
+						<td width="10%"><!--#4DTEXT [OT]horas_asignadas--></td>
+						<td width="10%"><!--#4DTEXT _V3_formatCurrency([OT]costo_hh_total_pres)--></td>
+						<td width="10%"><!--#4DTEXT [OT]horas_trabajadas--></td>
+						<td width="10%"><!--#4DTEXT _V3_formatCurrency([OT]costo_hh_total)--></td>
+                    </tr>
+                    <!--#4DENDLOOP-->
+                </tbody>
+			  	<tfoot></tfoot>
+			</table>
+		</section>
+	</body>
+</html>
+

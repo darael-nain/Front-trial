@@ -1,0 +1,155 @@
+<!--4DACTION/listaot-->
+<!--#4DINCLUDE headgreen.shtml-->
+<body>
+<div style="display:none" id="bg-preferences" class="bg-popup">
+    <div id="modal-preferences" class="modal-popup">       
+        <div class="box-lightBox">
+            <!--#4DINCLUDE pop_preferencias.shtml-->            
+        </div>           
+    </div>
+</div>
+
+<div id="main-container">
+	<div class="box-button">
+		<!--#4DIF aCheckPermiso{19}=true-->
+	    <a class="boton" href="/4DACTION/nueva_ot" target="_blank">Nueva OT</a>
+	    <!--#4DENDIF-->	    
+
+	    <!--#4DIF aCheckPermiso{30}=true-->
+	    <button id="btn-pend-ot" type="button">Pendientes</button>    
+	    <!--#4DENDIF-->
+
+	    <!--#4DIF aCheckPermiso{16}=true-->
+	    <button id="btn-planner-ot" type="button">Planificador</button>          
+	    <!--#4DENDIF-->
+
+	    <!--#4DIF aCheckPermiso{25}=true-->
+	    <button id="btn-mycalendar-ot" type="button">Mi Calendario</button>
+	    <!--#4DENDIF-->
+	    
+	    <!--#4DIF aCheckPermiso{27}=true-->
+	    <button id="btn-preferences-ot" type="button">Preferencias</button>
+	    <!--#4DENDIF-->
+	    		
+	    <a id="exportar-ot" class="boton" href="/4DACTION/exportar_ot/PA/<!--#4DVAR vLogin-->/all/all/all/all/all" target="black_">Exportar</a>
+	</div>   
+	
+	<form id="search-form-ots">
+	<div class="busquedas">
+		<label>Estado</label>
+		<select name="ots[estados]" id="search-estado" class="combinadas">
+			<option selected="selected" value="PENDIENTE/ATRASADA">Pendiente / Atrasada</option>
+			<option value="PENDIENTE">Pendiente</option>
+			<option value="ATRASADA">Atrasada</option>
+			<option value="CERRADA">Cerrada</option>
+			<option value="ANULADA">Anulada</option>			               
+			<option value="TODAS">Todas</option>
+		</select>
+
+		<br>
+
+		<label for="">Emision:</label>
+		<select name="ots[mes]" class="combinadas" id="mes-select-filters">
+			<option selected="selected" value="all">[ Mes ]</option>
+			<option value="1">Enero</option>
+			<option value="2">Febrero</option>
+			<option value="3">Marzo</option>
+			<option value="4">Abril</option>
+			<option value="5">Mayo</option>
+			<option value="6">Junio</option>
+			<option value="7">Julio</option>
+			<option value="8">Agosto</option>
+			<option value="9">Septiembre</option>
+			<option value="10">Octubre</option>
+			<option value="11">Noviembre</option>
+			<option value="12">Diciembre</option>
+		</select>		
+
+		<select name="ots[anos]" class="combinadas" id="ano-select-filters">
+			<option selected="selected" value="all">[ Año ]</option>
+			<!--#4dloop aYearSearch-->
+				<option value="<!--#4DVAR aYearSearch{aYearSearch}-->"><!--#4DVAR aYearSearch{aYearSearch}--></option>			
+			<!--#4dendloop-->
+		</select>		
+
+		<select name="ots[prioridades]" id="select-filters-prio" class="combinadas ">
+			<option selected="selected" value="all">[ Prioridad ]</option>
+			<option value="ALTA">Alta</option>
+			<option value="MEDIA">Media</option>
+			<option value="BAJA">Baja</option>
+		</select>
+
+		<!-- INICIO: Selector de Área -->
+
+		<!--#4DIF size of array(aIdAreasTrabajo1)=1-->
+			<select name="ots[areas]" id="select-filters-areas-ot" class="combinadas">
+				<option selected="selected" value="<!--#4DVAR aLoginAreaResp1{1}-->">
+					<!--#4DVAR aAreasTrabajo1{1}-->                        
+				</option>        
+			</select>
+		<!--#4delse-->
+			<select name="ots[areas]" id="select-filters-areas-ot" class="combinadas">
+				<option selected="selected" value="all">[ Área de trabajo ]</option>
+				<!--#4DLOOP aIdAreasTrabajo1--> 
+					<option value="<!--#4DVAR aIdAreasTrabajo1-->"><!--#4DVAR aAreasTrabajo1{aIdAreasTrabajo1}--></option>                   
+				<!--#4DENDLOOP-->
+				<option value="all">TODAS</option>
+			</select>
+		<!--#4dendif-->
+
+		<!-- FIN: Selector de Área -->
+		
+		<!--#4DIF size of array(aLoginAreaResp1)=1-->
+			<select name="ots[responsables]" style="height:100px" multiple="multiple" id="select-filters-resp-ot" class="combinadas">
+				<option selected="selected" value="<!--#4DVAR aLoginAreaResp1{1}-->">
+					<!--#4DVAR aNombresAreaResp1{1}-->                        
+				</option>        
+			</select>
+		<!--#4delse-->
+			<select  name="ots[responsables]" style="height:100px" multiple="multiple" id="select-filters-resp-ot" class="combinadas">
+				<option selected="selected" value="all">[ Responsables ]</option>
+				<!--#4DLOOP aLoginAreaResp1--> 
+					<option value="<!--#4DVAR aLoginAreaResp1{aLoginAreaResp1}-->"><!--#4DVAR aNombresAreaResp1{aLoginAreaResp1}--></option>                   
+				<!--#4DENDLOOP-->
+				<option value="all">TODOS</option>
+			</select>
+			<span style="display:block;font-size:12px">Seleccionar varios resp. con [Ctrl]</span>
+		<!--#4dendif-->
+
+		 <div class="search2">
+	    	<label>Buscar por</label>
+	    	<input name="ots[texto]" type="text" id="input-search-ot" class="combinadas" placeholder="Folio, Referencia, Negocio, Cliente" >
+	    </div>
+
+	    <!--#4DIF ((aCheckPermiso{22}=TRUE) & (aCheckPermiso{23}=FALSE))-->
+		   <div class="link-ots-copiados2">
+		   	<a href="lista_ot_de_participante.shtml?e=PA&r=<!--#4DVAR String(Milliseconds+Random)-->">Ver ot en las cuales estoy copiado(a)</a>
+		   </div>
+		<!--#4DENDIF-->
+
+	</div>
+	</form>
+
+	<!--<h2 class="sub-title2">
+        <img class="img-title-calendar" src="/imagenes_green/list_work.png">
+        Ordenes de Trabajo
+    </h2>-->
+
+	<div id="content-list-ot" class="lista-ot-002">
+        <!--#4DINCLUDE lista_ot_encontradas.shtml-->
+    </div>
+
+</div>
+</body>
+</html>
+
+
+
+<!--#4DIF aCheckPermiso{30}=true-->
+<a class="boton" href="/4DACTION/pend/0">Pendientes</a>		  
+<!--#4DENDIF-->
+
+
+ <!--#4DIF aCheckPermiso{27}=true-->
+<button id="btn-preferences-ot" type="button">Preferencias</button>
+<!--#4DENDIF-->

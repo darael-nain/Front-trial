@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Modificar mediante Excel</title>
+		<script>
+			$(document).ready(function() {
+
+				unaBase.toolbox.init();
+
+				$('.ui-dialog fieldset.export button').button({
+					icons: {
+						primary: 'ui-icon-circle-arrow-s'
+					},
+					text: true
+				}).click(function() {
+					var sid = '';
+					$.each($.cookie(),function(clave,valor) {sid+= (valor + ' '); });
+					//var url = 'http://desarrollo.unabase.cl:3000/download/?download=true&entity=cotizaciones&id=' + params.data().id + '&folio=' + ((typeof params.data().index != 'undefined')? params.data().index : 'S/N')+ '&sid=' + encodeURIComponent(sid) + '&preview=' + ((htmlObject.find('[name="draft"]').prop('checked'))? 'true' : 'false') + '&nullified=' + params.data().readonly;
+					var url = nodeUrl + '/export/?download=true&entity=cotizaciones&id=' + $('section.sheet').data('id') + '&folio=' + (($('section.sheet').data('index') > 0)? $('section.sheet').data('index') : 'S/N')+ '&sid=' + encodeURIComponent(sid) + '&preview=false&nullified=' + $('section.sheet').data('readonly');
+					var download = window.open(url).blur();
+					window.focus();
+					download.close();
+				});
+
+				$('.ui-dialog fieldset.import button').button({
+					icons: {
+						primary: 'ui-icon-circle-arrow-n'
+					},
+					text: true
+				}).click(function() {
+					unaBase.ui.block();
+					var element = this;
+					var sid ="";
+					$.each($.cookie(),function(clave,valor) {
+						sid = valor;
+					});
+
+					var data = new FormData();
+					data.append('upload[attachment]', $('.ui-dialog fieldset [name="upload[attachment]"]').get(0).files[0]);
+					
+					data.append('fk', $('section.sheet').data('id'));
+					data.append('sid', sid);
+					$.ajax({
+						url: nodeUrl + '/import?id=' + $('section.sheet').data('id'),
+						type: 'POST',
+						contentType: false,
+						data: data,
+						processData: false,
+						cache: false,
+						//crossDomain: true,
+						success: function(data) {
+							unaBase.ui.unblock();
+							toastr.success('Archivo cargado con éxito!');
+							$('section.sheet > table.items > tbody').find('*').remove();
+							getDetail();
+							updateIndexes();
+							$(element).parentTo('.ui-dialog-content').dialog('close');
+						}
+					});
+				});
+				
+			});
+		</script>
+	</head>
+	<body>
+		<fieldset class="export">
+			<legend>Exportar archivo Excel</legend>
+			<button>Descargar</button>
+		</fieldset>
+		<p>Una vez descargado el archivo Excel, puede modificarlo con los valores deseados.</p>
+		<p>Para reflejar los cambios en la cotización, vuelva aquí e importe el archivo Excel utilizando el siguiente formulario.</p>
+		<fieldset class="import">
+			<legend>Importar desde Excel</legend>
+			<label>
+				<span>Archivo XLSX</span>
+				<input type="file" name="upload[attachment]" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+			</label>
+			<button>Subir</button>
+		</fieldset>
+	</body>
+</html>

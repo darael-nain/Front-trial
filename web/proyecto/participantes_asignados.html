@@ -1,0 +1,18 @@
+<!--#4dif size of array(aLoginAsig)>0-->
+	<!--#4dloop aLoginAsig-->
+	<!--#4dif aTipoAsig{aLoginAsig}#"RESPONSABLE"-->
+		<!--#4dif aDefectoAsig{aLoginAsig}="no"-->
+			<div>
+				<span><!--#4dvar aNombreAsig{aLoginAsig}--></span>
+				<a id="<!--#4dvar aLoginAsig{aLoginAsig}-->" class="delete-part">x</a>
+			</div>
+		<!--#4delse-->
+			<div>
+				<span><!--#4dvar aNombreAsig{aLoginAsig}--></span>				
+			</div>
+		<!--#4dendif-->		  
+	<!--#4dendif-->					            
+	<!--#4dendloop-->
+<!--#4delse-->
+	<h2>Aún no se han agregado participantes.</h2>
+<!--#4dendif-->

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>UNA Base</title>
+    <!-- <link rel="icon" href="/favicon.png"> -->
+    <link rel="icon" href="/faviconNew.png">    <link rel="stylesheet" href="/v3/design/login.css">
+    <link rel="stylesheet" href="/v3/design/testing.css">
+    <script src="/v3/script/jquery/jquery.js"></script>
+    <script src="/v3/script/hashref.js"></script>
+
+    <script type="text/javascript">
+     /* function is_chrome(){
+        var is_chrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+        alert(is_chrome);
+      }*/
+    </script>
+
+  </head>
+  <body class="login">
+    <section>
+      <form method="post" action="/4DACTION/W_INICIA_SESION">
+        <input id="idOt"  name="idOt" type="hidden" value="<!--#4Dvar vIdOtAuth-->" >
+        <fieldset>
+          <legend><span>Bienvenido a UNABASE</span></legend>
+          <label>
+            <span>Nombre de usuario</span>
+            <input type="text" name="txtUsuario" required value="<!--#4Dvar vLoginEmailAuth-->">          
+          </label>
+          <label>
+            <span>Contraseña</span>
+            <input type="password" name="txtPassword" required>
+          </label>
+          <!--
+          <label>
+            <input type="checkbox" name="remember">
+            <span>Recordar contraseña</span>
+          </label>
+          -->
+          <button type="submit">Acceder</button>
+        </fieldset>
+        <!--<p><a href="#">¿Olvidaste tu contraseña?</a></p>-->
+      </form>
+    </section>
+    <footer
+      itemscope
+      itemtype="http://schema.org/Organization">
+      &copy; 2013 <span itemprop="name">UNA Sistemas Ltda.</span> Todos los derechos reservados.
+      <address style="vertical-align:top"
+        itemprop="address"
+        itemscope
+        itemtype="http://data-vocabulary.org/Address">
+        <span itemprop="street-address">Monseñor Eyzaguirre 660</span>,
+        <span itemprop="locality">Ñuñoa</span>,
+        <span itemprop="region">Santiago</span> -
+        <span itemprop="country">Chile</span>
+      </address>
+      <p itemprop="telephone">
+        <a href="tel:+56222398622">(56 - 2) 2239 8622</a>
+      </p>
+      <nav>
+        <ul>
+          <li class="skype"><a href="callto:soporte.unasistemas"><span>Skype</span></a></li>
+          <li class="email"><a href="mail:soporte@una.cl"><span>Email</span></a></li>
+        </ul>
+      </nav>
+    </footer>
+  </body>
+</html>

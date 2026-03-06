@@ -1,0 +1,23 @@
+{
+	
+	"rows": [
+		<!--#4DLOOP aIdItem-->
+		{
+			"id": <!--#4DHTML aIdItem{aIdItem}-->,
+			"cod": "<!--#4DHTML aCodigo{aIdItem}-->",
+			"llave": "<!--#4DHTML aLlaveItem{aIdItem}-->",
+			"llavesubcat": "<!--#4DHTML aItemParent{aIdItem}-->",
+			"llavecat": "<!--#4DHTML aLlaveTitulo{aIdItem}-->",
+			"categoria": "<!--#4DHTML  _V3_escapeString(aCategoria{aIdItem})-->",
+			"subcat": "<!--#4DHTML  _V3_escapeString(aSubCat{aIdItem})-->",
+			"num_item": "<!--#4DHTML aNumItem{aIdItem}-->",
+			"nombre": "<!--#4DHTML  _V3_escapeString(aNombreItem{aIdItem})-->",
+			"ruta": "<!--#4DHTML  _V3_escapeString(aRuta{aIdItem})-->"
+		}<!--#4DIF NOT(aIdItem{aIdItem} = aIdItem{Size of array(aIdItem)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	]
+	
+}
+
+
+

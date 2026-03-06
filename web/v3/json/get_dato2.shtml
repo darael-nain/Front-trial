@@ -1,0 +1,30 @@
+{
+	"rows": [
+<!--#4DLOOP aDatoId -->
+		{
+			"id": <!--#4DVAR aDatoId{aDatoId}-->,
+			"enabled": <!--#4DIF aDatoEnabled{aDatoId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"required": <!--#4DIF aDatoRequired{aDatoId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"unique": <!--#4DIF aDatoUnique{aDatoId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			<!--#4DIF (aDatoMaxlength{aDatoId}>0)-->"maxlength": <!--#4DVAR String(aDatoMaxlength{aDatoId};"&xml")-->,<!--#4DENDIF-->
+			"nombre": "<!--#4DHTML _V3_escapeString(aDatoNombre{aDatoId})-->",
+			"valor": "<!--#4DHTML _V3_escapeString(aDatoValor{aDatoId})-->",
+			"codigo": "<!--#4DHTML _V3_escapeString((aDatoCod{aDatoId})-->",
+			"correlativo": "<!--#4DHTML _V3_escapeString(aDatoCorrelativo{aDatoId})-->",
+			"isDate": <!--#4DIF aTipoFechaParam{aDatoId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"options": [
+				<!--#4DSCRIPT/_V3_proxy_getDatoOptions-->
+				<!--#4DLOOP aOptionsId-->
+				{
+					"id": <!--#4DVAR aOptionsId{aOptionsId}-->,
+					"enabled": <!--#4DIF aOptionsEnabled{aOptionsId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+					"text": "<!--#4DHTML _V3_escapeString(aOptionsText{aOptionsId})-->",
+					"cod": "<!--#4DHTML _V3_escapeString(aOptionsTextCod{aOptionsId})-->",
+					"correlativo_actual": "<!--#4DHTML _V3_escapeString(aOptionsCorrelativoActual{aOptionsId})-->"
+				}<!--#4DIF NOT(aOptionsId{aOptionsId} = aOptionsId{Size of array(aOptionsId)})-->,<!--#4DENDIF-->
+				<!--#4DENDLOOP-->
+			]
+		}<!--#4DIF NOT(aDatoId{aDatoId} = aDatoId{Size of array(aDatoId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

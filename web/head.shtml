@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js">
+	</script>
+	<![endif]-->
+	<title>INTRANET ::: UNA BASE</title>
+	<meta charset="utf-8"/>		
+	<script src="/script/jQuery_v1.7.2.js"></script>	
+	<script src="/script/jquery.validate.js"></script>
+	<script src="/script/script2.js"></script>	
+	<script src="/script/modalgin.js"></script>	
+	<link rel="stylesheet" href="/css/modal2.css"/>
+
+	<script src="/script/jquery-ui-1.8.16.custom/js/jquery-ui-1.8.16.custom.min.js"></script>
+	<!--<link rel="stylesheet" href="/script/jquery-ui-1.8.16.custom/css/ui-lightness/jquery-ui-1.8.16.custom.css"/>-->
+	<link rel="stylesheet" href="/script/jquery-ui-1.8.16.custom/css/pepper-grinder/jquery-ui-1.8.18.custom.css"/>
+
+	<script src="/script/ui.js"></script>
+	
+	<script src="/script/accounting.js"></script>
+	<script src="/script/grilla.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="/estilos.css"/>
+	<link rel="stylesheet" type="text/css" href="/estilos_ot.css"/>
+
+	<script src="/script/tabs/tabs.js"></script>
+	<link rel="stylesheet" href="/script/tabs/tabs.css"/>
+
+	<script src="/script/initialize.js"></script>
+	<script src="/script/ajax.js"></script>	
+
+	<script src="/script/jsoc.js"></script>
+	<script src="/script/jsrendicion.js"></script>	
+	
+	<script src="/script/modal_green.js"></script>
+	<link rel="stylesheet" href="/css/style_modal_green.css"/>
+	
+	
+	<script>
+		if(history.forward(1)){
+			history.replace(history.forward(1));
+		}	
+	</script>	
+
+</head> 

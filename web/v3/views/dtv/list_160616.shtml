@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Compras</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="/v3/views/compras/lista.css?r=<!--#4DTEXT Random-->">
+
+		<script>
+
+			$(document).ready(function() {
+
+				unaBase.toolbox.init();
+
+				// Inicializamos un buscador
+				var params = {
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/_V3_getDocumentoDeVenta' },
+					entity: 'dtv',
+
+					callback : function(data){		
+						$('tfoot.totales').find('span[data-neto]').text(data.totalesFacturas.neto);
+						$('tfoot.totales').find('span[data-impuesto]').text(data.totalesFacturas.impuesto);						
+						$('tfoot.totales').find('span[data-total]').text(data.totalesFacturas.total);
+						$('tfoot.totales').find('span[data-abono]').text(data.totalesFacturas.abono);
+						$('tfoot.totales').find('span[data-saldo]').text(data.totalesFacturas.saldo);
+
+						$('tfoot.totales').find('span[data-netonc]').text(data.totalesNotas.neto);
+						$('tfoot.totales').find('span[data-impuestonc]').text(data.totalesNotas.impuesto);						
+						$('tfoot.totales').find('span[data-totalnc]').text(data.totalesNotas.total);
+
+						$('tfoot.totales').find('span[data-netot]').text(data.totales.neto);
+						$('tfoot.totales').find('span[data-impuestot]').text(data.totales.impuesto);						
+						$('tfoot.totales').find('span[data-totalt]').text(data.totales.total);
+						
+						// Fijar header y footer									
+						$('#viewport .fht-table-init').fixedHeaderTable('destroy');
+						$('#viewport table.fixed').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false });
+
+						$('.cant-facturas').text("("+data.cantidades.facturas+")");
+						$('.cant-nc').text("("+data.cantidades.notas+")");
+						$('.cant-total').text("("+data.cantidades.total+")");
+
+					},	
+
+					row: {
+					
+						html: function(i, rows) {
+
+							var color = "";
+							var colorBlue = "color_blue";
+							var colorRed = "color_red";
+
+							if (rows[i].tipoDocumentoVenta == "NOTA DE CREDITO" || rows[i].tipoDocumentoVenta == "NOTA DE CREDITO ELECTRONICA") {
+								color = "color_red";
+								colorBlue = "color_red";
+								colorRed = "color_red";
+							}
+
+							return '<tr data-id="' + rows[i].id + '">' +								
+								'<td>' + rows[i].folio + '</td>' +
+								'<td class="center">' + rows[i].tipoDocumentoVenta + '</td>' +
+								'<td>' + rows[i].emisor + '</td>' +
+								'<td>' + rows[i].fechaEmision + '</td>' +
+								'<td>' + rows[i].fechaVencimiento + '</td>' +
+								'<td>' + rows[i].estado + '</td>' +
+								'<td>' + rows[i].areaNegocio + '</td>' +
+								'<td>' + rows[i].cliente + '</td>' +
+								'<td>' + rows[i].rutCliente + '</td>' +
+								'<td class="right '+colorBlue+'">' + rows[i].neto + '</td>' +
+								'<td class="right '+colorBlue+'">' + rows[i].impuesto + '</td>' +
+								'<td class="right '+colorBlue+'">' + rows[i].total + '</td>' +
+								'<td class="right '+colorBlue+'">' + rows[i].abono + '</td>' +
+								'<td class="right '+colorBlue+'">' + rows[i].saldo + '</td>' +
+								
+								
+							'</tr>'
+						}
+					},
+					detail: {
+						url: function(id) { return '/v3/views/dtv/content.shtml?id=' + id},	
+						iframe: false
+					},
+					// Inflexiones
+					inflection: {
+						singular: 'gasto',
+						plural: 'gastos',
+						none: 'ningún'
+					},									
+					filters: [
+						{ name: 'created_at', type: 'month', caption: 'Fecha de emisión', range: true, currentMonth: true},
+						{ name: 'responsable', type: 'autocomplete', caption: 'Responsable', dataSource: 'getUsuario' },
+						{ name: 'area_negocio', type: 'autocomplete', caption: 'Área de negocio', dataSource: 'getAreaNegocio' },
+						{ name: 'tipo_doc', type: 'autocomplete', caption: 'Tipo Doc.', dataSource: 'getTiposDocDeVentas' },
+						{ name: 'estado', type: 'checkbox', caption: 'Estado del documento', options: [
+							{ caption: 'Pagada', name: 'estado_pagado', value: true },
+							{ caption: 'Por emitir', name: 'estado_por_emitir', value: true },
+							{ caption: 'emitida', name: 'estado_emitida', value: true },
+							{ caption: 'nula', name: 'estado_anulada', value: true }
+						] }
+					]
+				};
+
+				unaBase.toolbox.search.init(params);
+				unaBase.toolbox.menu.init({
+					entity: 'dtv',
+					buttons: [ 'create_dtv', 'export_list' ]
+				});
+
+				
+
+			});
+		</script>
+
+		<style type="text/css">
+			.totales tr{
+				padding:0px!important;
+				margin:0px!important;
+				height:0px!important;
+			}
+			.totales tr th{
+				padding:0px!important;
+				margin:0px!important;
+				height:0px!important;
+			}
+			.totales tr th span{
+				margin:1px;
+			}
+			.gray{
+				color:gray;
+			}
+		</style>
+		
+	
+	</head>
+	<body style="min-width: 900px !important;">
+		<!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->
+		<table style="min-width: 900px !important; width: 100% !important;" class="especial fixed">
+				<thead>
+					<tr>
+						<th data-sort-by="folio" data-sort-default="desc">folio</th>
+						<th data-sort-by="tipoDocumentoVenta" data-sort-default="asc">Documento</th>
+						<th data-sort-by="emisor" data-sort-default="asc">emisor</th>
+						<th data-sort-by="fechaEmision" data-sort-default="desc">F.Emisión</th>
+						<th data-sort-by="fechaVencimiento" data-sort-default="desc">F.Vencimiento</th>
+						<th data-sort-by="estado" data-sort-default="asc">estado</th>
+						<th data-sort-by="areaNegocio" data-sort-default="asc">Area de Negocio</th>
+						<th data-sort-by="cliente" data-sort-default="asc">Cliente</th>
+						<th data-sort-by="rutCliente" data-sort-default="asc">Rut</th>
+						<th data-sort-by="neto" data-sort-default="desc">neto [$]</th>
+						<th data-sort-by="impuesto" data-sort-default="desc">impuesto [$]</th>
+						<th data-sort-by="total" data-sort-default="desc">total [$]</th>
+						<th data-sort-by="abono" data-sort-default="desc">abono [$]</th>
+						<th data-sort-by="saldo" data-sort-default="desc">saldo [$]</th>					
+					</tr>
+				</thead>
+				<tfoot class="totales">
+					<tr>
+						<th colspan="9" class="right gray"><label class="cant-facturas">(0)</label>&nbsp;Factura&nbsp;&nbsp;</th>
+			            <th class="right"><span data-neto="" class="label fn_blue">$0</span></th>
+			            <th class="right"><span data-impuesto="" class="label fn_blue">$0</span></th>
+			           	<th class="right"><span data-total="" class="label fn_blue">$0</span></th>
+			           	<th class="right"><span data-abono="" class="label fn_blue">$0</span></th>
+			           	<th class="right"><span data-saldo="" class="label fn_blue">$0</span></th>
+		           	</tr>
+		           	<tr>
+						<th colspan="9" class="right gray"><label class="cant-nc">(0)</label>&nbsp;Nota de crédito&nbsp;&nbsp;</th>
+			            <th class="right"><span data-netonc="" class="label fn_red">$0</span></th>
+			            <th class="right"><span data-impuestonc="" class="label fn_red">$0</span></th>
+			           	<th class="right"><span data-totalnc="" class="label fn_red">$0</span></th>
+			           	<th class="right"></th>
+			           	<th class="right"></th>
+		           	<!--</tr>
+		           		<tr>
+						<th colspan="9" class="right gray"><label class="cant-total">(0)</label>&nbsp;Factura exenta&nbsp;&nbsp;</th>
+			            <th class="right"><span data-netot="" class="label fn_blue">$0</span></th>
+			            <th class="right"><span data-impuestot="" class="label fn_blue">$0</span></th>
+			           	<th class="right"><span data-totalt="" class="label fn_blue">$0</span></th>
+			           	<th class="right"></th>
+			           	<th class="right"></th>
+		           	</tr>-->
+		           	<tr>
+						<th colspan="9" class="right gray"><label class="cant-total">(0)</label>&nbsp;Total&nbsp;&nbsp;</th>
+			            <th class="right"><span data-netot="" class="label fn_blue">$0</span></th>
+			            <th class="right"><span data-impuestot="" class="label fn_blue">$0</span></th>
+			           	<th class="right"><span data-totalt="" class="label fn_blue">$0</span></th>
+			           	<th class="right"></th>
+			           	<th class="right"></th>
+		           	</tr>
+				</tfoot>
+				<tbody></tbody>			
+			</table>
+	</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		
+		<title>Lineas adicionales al total</title>
+		<meta charset="utf-8">
+		
+
+
+		<style>
+			section#sheet-total-adicionales input{
+				
+
+				display: inline-block;
+			
+				width: calc(100% - 16px);
+				height: 18px;
+				padding-right: 11px;
+				text-align: inherit;
+				text-decoration: inherit;
+				text-transform: uppercase;
+				font-weight: inherit;
+				
+			}
+
+			section#sheet-total-adicionales input.edit{
+			
+				border-bottom: 1px ridge rgb(180,180,180);
+				
+			}	
+
+
+		</style>
+	</head>
+	
+	<body class="home">
+		
+		<section id="sheet-total-adicionales" class="sheet-adicionales" >
+			<fieldset class="button-fieldset">
+				<legend>Agregar shortcuts</legend>
+				<button class="add-line" id="add-line-button"  style="display: inline-block;">Agregar</button>
+			</fieldset>
+			
+			<table class="items" id="scuts">
+				<thead>
+					<tr style="margin-right: 10px;">
+						<th class="thleft">N°</th>
+						<th class="thleft" >Nombre</th>
+						<th class="thleft" >cantidad</th>
+						<th class="thleft" colspan="2"></th>
+					</tr>
+				</thead>
+				<tbody>
+				
+					
+				</tbody>
+				<tfoot>
+					<tr style="margin-right: 10px;">
+						
+					</tr>
+				</tfoot>
+			</table>
+		</section>
+
+
+		<script>
+			$(document).ready(function() {
+				unaBase.toolbox.init();
+				
+				utilities.shortcuts.getShortcuts();
+
+				
+
+
+				$('.ui-dialog fieldset.button-fieldset button').button({
+					icons: {
+						primary: 'ui-icon ui-icon-circle-plus'
+					},
+					text: true
+				}).click(function() {
+					
+					var sid = '';
+					$.each($.cookie(),function(clave,valor) {sid+= (valor + ' '); });
+
+
+
+					var target =document.getElementById('scuts').getElementsByTagName('tbody')[0];
+					let cont = target.getElementsByTagName('tr').length + 1;
+
+					let row =`
+						<tr style="margin-right: 10px;" id="0">
+							<th class="thleft" style="width: 50px;">
+								<input type="text" value="${cont}"  readonly />
+							</th>
+							<th class="thleft">
+								<input type="text" value="" class="edit" data-idad="0" placeholder="Ingrese un nombre" onchange="utilities.shortcuts.save(this)"></input>
+
+							</th>
+							<th class="thleft" >
+								<input type="text" class="edit" data-idad="0" value="0" onchange="utilities.shortcuts.save(this)" onkeyup="utilities.shortcuts.formater(this)"/>
+							</th>
+						
+							<th class="thleft" >
+								<button style="display: inline-block;" class="ui-icon ui-icon-minus" data-idad="0" onclick="utilities.shortcuts.delete(this)" title="Eliminar"></button>
+							</th>
+						</tr>`;
+
+					
+					
+
+						target = $('#scuts > tbody');
+						target.append(row);
+
+						this.disabled=true;
+
+				});
+	
+			});
+		</script>
+	</body>
+</html>

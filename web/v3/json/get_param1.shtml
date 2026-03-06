@@ -1,0 +1,19 @@
+	{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Orden_de_compra]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP anombre -->
+		{
+			"id": "<!--#4DHTML _V3_escapeString(anombre{anombre})-->"
+			
+		}<!--#4DIF NOT(anombre{anombre} = anombre{Size of array(anombre)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

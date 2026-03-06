@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js">
+	</script>
+	<![endif]-->
+	<title>VISITAS</title>
+	<meta charset="utf-8"/>		
+	<script src="/script/jquery.js"></script>	
+	<script src="/script/visitas.js"></script>	
+	<link rel="stylesheet" href="/visitas.css"/>
+</head>
+<body>
+
+	<div class="header">
+		<h1>VISITAS TECNICAS : </h1>
+		<h2 class="cant"></h2>
+	</div>
+
+	<div class="dates">
+		<span><!--#4DVAR vDate--></span>		
+		<span id="spanreloj"></span>
+	</div>
+
+	<div class="box-filters">
+		<label class="labels">Estado:</label>
+	    <select id="filters-state" class="combos filters-all">
+	    	<option selected="selected" value="all">TODOS</option>
+	    	<option value="PENDIENTE">PENDIENTE</option>
+	    	<option value="ATRASADA">ATRASADA</option>
+	    	<option value="ANULADA">ANULADA</option>
+	    	<option value="CERRADA">CERRADA</option>
+	    	<option value="all">TODOS</option>
+	    </select>
+
+	    <label class="labels">T&#233;cnico:</label>
+	    <select id="filters-tecnico" class="combos filters-all">
+    		<option selected="selected" value="all">TODOS</option>
+    		<!--#4DLOOP aLoginRespTecOT_-->
+				<option value="<!--#4DVAR aLoginRespTecOT_{aLoginRespTecOT_}-->">
+					<!--#4DVAR aNomRespTecOT_{aLoginRespTecOT_}-->
+				</option>
+    		<!--#4DENDLOOP-->	    	    	
+    		<option value="all">TODOS</option>
+	    </select>
+
+	    <label class="labels">Fecha Vcto:</label>
+	    <select id="filters-month" class="combos-medium filters-all">
+    		<option selected="selected" value="all">TODOS</option>    		
+    		<option value="01">Enero</option>
+    		<option value="02">Febrero</option>
+    		<option value="03">Marzo</option>
+    		<option value="04">Abril</option>
+    		<option value="05">Mayo</option>
+    		<option value="06">Junio</option>
+    		<option value="07">Julio</option>
+    		<option value="08">Agosto</option>
+    		<option value="09">Septiembre</option>
+    		<option value="10">Octubre</option>
+    		<option value="11">Noviembre</option>
+    		<option value="12">Diciembre</option>	
+    		<option value="all">TODOS</option>
+	    </select>
+	    <select id="filters-year" class="combos-medium filters-all"></select>
+	</div>
+
+	<div class="info">
+		<span class="letter-atrasada">Atrasada</span> /
+		<span class="letter-pendientes">Pendiente</span> /
+		<span class="letter-cerradas">Cerrada</span> /
+		<span class="letter-anuladas">Anulada</span>
+	</div>
+
+	<div class="search-by-number">
+		<label for="search-number-vt">Buscar por nro de VT : </label>
+		<input id="search-number-vt" placeholder="Ingrese nro de VT a buscar...">
+	</div>
+
+<div id="box">
+<table class="tables" width="100%">
+<thead>	
+<tr>
+	<th width="3%">Tec.</th>
+	<th width="3%">VT</th>
+	<th width="3%">D-VT</th>
+	<th width="3%">COT</th>
+	<th width="3%">D-CT</th>			
+	<th width="3%">OC</th>
+	<th width="3%">D-OC</th>					
+	<th width="3%">FACT</th>
+	<th width="3%">D-F</th>
+	<th width="3%">PAGO</th>
+	<th width="3%">D-P</th>	
+	<th>ALIAS</th>
+	<th>CONTACTO</th>
+	<th>FONO</th>
+	<th>REF</th>
+	<th>EMISOR</th>		
+</tr>
+</thead>
+<tbody>
+<!--#4DLOOP a_OT_FOLIO-->
+<tr class="reg" id="<!--#4DVAR aIdOT{a_OT_FOLIO}-->">
+<td class="align-center <!--#4DVAR a_style_color{a_OT_FOLIO}-->"><!--#4DVAR aAliasTecnico{a_OT_FOLIO}--></td>
+<td class="align-center <!--#4DVAR a_style_color{a_OT_FOLIO}-->"><!--#4DVAR num(a_OT_FOLIO{a_OT_FOLIO})--></td>
+<td class="align-center"><!--#4DVAR aDiasVisita{a_OT_FOLIO}--></td>
+<td class="align-center <!--#4DVAR a_color_cot{a_OT_FOLIO}-->"><!--#4DVAR aIDNegocio{a_OT_FOLIO}--></td>
+<td class="align-center"><!--#4DVAR aDiasCotizacion{a_OT_FOLIO}--></td>
+<td class="align-center <!--#4DVAR a_color_oc{a_OT_FOLIO}-->"><!--#4DVAR aFolioOC{a_OT_FOLIO}--></td>
+<td class="align-center"><!--#4DVAR aDiasOC{a_OT_FOLIO}--></td>
+<td class="align-center <!--#4DVAR a_color_fact{a_OT_FOLIO}-->"><!--#4DVAR aFolioFact{a_OT_FOLIO}--></td>
+<td class="align-center"><!--#4DVAR aDiasFact{a_OT_FOLIO}--></td>
+
+<td class="align-center <!--#4DVAR a_color_Cobro{a_OT_FOLIO}-->"><!--#4DVAR aFolioCobro{a_OT_FOLIO}--></td>
+<td class="align-center"><!--#4DVAR aDiasCobro{a_OT_FOLIO}--></td>	
+
+<td class="align-left"><!--#4DVAR aAliasCliente{a_OT_FOLIO}--></td>
+<td class="align-left"><!--#4DVAR aContacto{a_OT_FOLIO}--></td>	
+<td class="align-center"><!--#4DVAR aFonoContacto{a_OT_FOLIO}--></td>	
+<td class="align-left"><!--#4DVAR a_OT_REF{a_OT_FOLIO}--></td>
+<td class="align-center"><!--#4DVAR aAliasEmisor{a_OT_FOLIO}--></td>
+</tr>
+<!--#4DENDLOOP-->	
+</tbody>
+<tfoot>
+	<tr>
+		<td class="back-no-average" colspan="2"></td>
+		<td class="back-average"><!--#4DVAR vAverageDVT--></td>
+		<td class="back-no-average"></td>		
+		<td class="back-average"><!--#4DVAR vAverageDCT--></td>
+		<td class="back-no-average"></td>
+		<td class="back-average"><!--#4DVAR vAverageDOC--></td>
+		<td class="back-no-average"></td>
+		<td class="back-average"><!--#4DVAR vAverageDF--></td>
+		<td class="back-no-average"></td>
+		<td class="back-average"><!--#4DVAR vAverageDP--></td>
+		<td class="back-no-average" colspan="5"></td>
+	</tr>
+</tfoot>
+</table>		
+
+
+</div>
+</body>
+</html>

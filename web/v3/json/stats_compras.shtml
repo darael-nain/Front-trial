@@ -1,0 +1,79 @@
+{
+	"user": {
+		"current": {
+			"total": <!--#4DHTML $user_totalSemanaActual-->,
+			"providers": {
+				"total": <!--#4DHTML $user_proveedoresSAc-->,
+				"detail": [
+	<!--#4DLOOP $user_IdProveedoresSAc-->
+					{
+						"text": "<!--#4DHTML _V3_escapeString($user_AliasProveedoresSAc{$user_IdProveedoresSAc})-->",
+						"total": <!--#4DHTML $user_CantidadesProveedoresSAc{$user_IdProveedoresSAc}-->
+					}<!--#4DIF NOT($user_IdProveedoresSAc{$user_IdProveedoresSAc} = $user_IdProveedoresSAc{Size of array($user_IdProveedoresSAc)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+				]
+			},
+			"services": {
+				"total": <!--#4DHTML $user_serviciosSAc-->,
+				"detail": [
+	<!--#4DLOOP $user_IdServiciosSAc-->
+					{
+						"text": "<!--#4DHTML _V3_escapeString($user_AliasServiciosSAc{$user_IdServiciosSAc})-->",
+						"total": <!--#4DHTML $user_CantidadesServiciosSAc{$user_IdServiciosSAc}-->
+					}<!--#4DIF NOT($user_IdServiciosSAc{$user_IdServiciosSAc} = $user_IdServiciosSAc{Size of array($user_IdServiciosSAc)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+				]
+			}
+		},
+		"last": {
+			"total": <!--#4DHTML $user_totalSemanaAnterior-->
+		},
+		"all": {
+			"nullified": {
+				"total": <!--#4DHTML $user_anuladas-->,
+				"detail": [
+	<!--#4DLOOP $user_MotivosAnulacion-->
+					{
+						"text": "<!--#4DHTML _V3_escapeString($user_MotivosAnulacion{$user_MotivosAnulacion})-->",
+						"total": <!--#4DHTML $user_CantidadesAnulacion{$user_MotivosAnulacion}-->
+					}<!--#4DIF NOT($user_MotivosAnulacion{$user_MotivosAnulacion} = $user_MotivosAnulacion{Size of array($user_MotivosAnulacion)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+				]
+			},
+			"providers": {
+				"total": <!--#4DHTML $user_proveedores-->,
+				"detail": [
+	<!--#4DLOOP $user_IdProveedores-->
+					{
+						"text": "<!--#4DHTML _V3_escapeString($user_AliasProveedores{$user_IdProveedores})-->",
+						"total": <!--#4DHTML $user_CantidadesProveedores{$user_IdProveedores}-->
+					}<!--#4DIF NOT($user_IdProveedores{$user_IdProveedores} = $user_IdProveedores{Size of array($user_IdProveedores)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+				]
+			},
+			"services": {
+				"total": <!--#4DHTML $user_servicios-->,
+				"detail": [
+	<!--#4DLOOP $user_IdServicios-->
+					{
+						"text": "<!--#4DHTML _V3_escapeString($user_AliasServicios{$user_IdServicios})-->",
+						"total": <!--#4DHTML $user_CantidadesServicios{$user_IdServicios}-->
+					}<!--#4DIF NOT($user_IdServicios{$user_IdServicios} = $user_IdServicios{Size of array($user_IdServicios)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+				]
+			}
+		}
+	},
+	"global": {},
+	"validacion": {
+		"no_validadas": <!--#4DHTML $no_validados-->,
+		"solicitadas_sin_validar": <!--#4DHTML $solicitadas_sin_validar-->,
+		"no_solicitadas_sin_validar": <!--#4DHTML $no_solicitadas_sin_validar-->,
+		"rechazadas": <!--#4DHTML $rechazadas-->
+	},
+	"compartido": {
+		"validados": <!--#4DHTML $validados-->,
+		"compartidos": <!--#4DHTML $compartidos-->,
+		"por_compartir": <!--#4DHTML $por_compartir-->
+	}
+}

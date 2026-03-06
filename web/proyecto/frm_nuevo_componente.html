@@ -1,0 +1,37 @@
+<div class="lightbox" id="box-new-componente">       	
+<article>
+    <form id="form-new-componente">
+        <input type="hidden" name="idtarea" value="<!--#4DVAR vIdTarea-->">                           
+        <fieldset>
+    		<div>
+                <label>Tipo : </label>                                         
+                <select name="tipo">
+                    <option selected value="-1">[ Seleccionar ]</option>
+                    <option value="adjunto">Archivo Adjunto</option>
+                    <option value="campo">Campo Rellenable</option>
+                    <!--<option value="lista">Lista Selección</option>-->
+                    <option value="pregunta">Pregunta</option>              
+                </select>
+                <span class="obligatorio">*</span>
+            </div>
+            <div>
+                <label>Nombre : </label>
+                <input name="nombre" type="text">
+                <span class="obligatorio">*</span>    
+            </div>
+            <div>
+                <label>Obligatorio : </label>
+                <select name="obligatorio">
+                    <option selected value="SI">SI</option>
+                    <option value="NO">NO</option>          
+                </select>
+            </div>
+        </fieldset>
+        <div><span class="obligatorio">*</span> Datos obligatorios.</div>       
+        <!--<div class="botones">
+            <button class="guardar-componente" type="button">Guardar</button>
+            <button type="button" onClick="closeDialog();">Cancelar</button>
+        </div>-->
+    </form>                          
+</article>         
+</div>

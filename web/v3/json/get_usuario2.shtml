@@ -1,0 +1,31 @@
+	{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Prm_Usuario]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP aUsuario -->
+		{
+			"login": "<!--#4DHTML _V3_escapeString(aUsuario{aUsuario})-->",
+			"nombres": "<!--#4DHTML _V3_escapeString(aNombres{aUsuario})-->",
+			"ape_paterno": "<!--#4DHTML _V3_escapeString(aApellidos{aUsuario})-->",
+			"perfil_ejecutivo": "<!--#4DHTML _V3_escapeString(aPerfil{aUsuario})-->",
+			"cargo": "<!--#4DHTML _V3_escapeString(aCargo{aUsuario})-->",
+			"telefono": "<!--#4DHTML _V3_escapeString(aTelefono{aUsuario})-->",
+			"email": "<!--#4DHTML _V3_escapeString(aEmail{aUsuario})-->",			
+			"tipo_ultima_conex": "<!--#4DHTML _V3_escapeString(aUltimaConexion{aUsuario})-->",
+			"estado": "<!--#4DHTML aEstado{aUsuario}-->",
+			"blockEmail": <!--#4DIF aBlockEmail{aUsuario}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"valor_hh": "<!--#4DHTML String(aValorHH{aUsuario};"&xml")-->"
+		}<!--#4DIF NOT(aUsuario{aUsuario} = aUsuario{Size of array(aUsuario)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}
+
+
+

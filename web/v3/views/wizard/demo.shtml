@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Demo</title>
+		<script src="/v3/script/jquery/plugins/colorbox/jquery.colorbox-min.js"></script>
+		<script src="/v3/script/jquery/plugins/colorbox/i18n/jquery.colorbox-es.js"></script>
+		<link href="/v3/script/jquery/plugins/colorbox/colorbox.css" rel="stylesheet" type="text/css">
+		<script>
+			$('a[href*="youtube.com/embed/"]').colorbox({
+				iframe: true,
+				innerWidth: 720,
+				innerHeight: 440,
+				opacity: 0.5,
+				returnFocus: false,
+				fixed: true,
+				reposition: true
+			});
+		</script>
+		<style>
+			div#demo section#videos {
+				margin-top: -100px;
+				margin-bottom: 63px;
+				color: white;
+				font-size: 0;
+			}
+
+				div#demo section#videos > * {
+					font-size: 10pt;
+				}
+
+				div#demo section#videos > header {
+					box-sizing: border-box;
+					display: inline-block;
+					/* width: 500px; */
+					width: calc(100% - 800px);
+					height: 418px;
+					padding-left: 45px;
+					padding-right: 45px;
+					background-color: rgb(0, 171, 109);
+					background-image: url('/v3/views/wizard/demo/design/html/body/section[id=videos]/header.png');
+					background-position: center 21.5%;
+					background-repeat: no-repeat;
+					text-align: center;
+					vertical-align: top;
+				}
+
+					div#demo section#videos > header > h1 {
+						width: 220px;
+						margin-left: auto;
+						margin-right: auto;
+						margin-top: 170px;
+						text-transform: uppercase;
+						font-size: 38pt;
+						font-weight: lighter;
+						line-height: 57px;
+						text-align: center;
+					}
+
+					div#demo section#videos > header > p {
+						margin-top: 18px;
+						font-size: 10pt;
+						line-height: 21px;
+					}
+
+				div#demo section#videos > section {
+					display: inline-block;
+					width: 748px;
+					height: inherit;
+					vertical-align: top;
+					font-size: 0;
+				}
+
+					div#demo section#videos > section > article {
+						position: relative;
+						display: inline-block;
+						width: 374px;
+						height: 209px;
+						text-align: center;
+						font-size: 0;
+					}
+
+						div#demo section#videos > section > article > h1 {
+							margin-top: 160px;
+							text-transform: uppercase;
+							font-size: 14pt;
+							font-weight: lighter;
+						}
+
+						div#demo section#videos > section > article > p {
+							font-size: 10pt;
+						}
+
+						div#demo section#videos > section > article > a {
+							position: absolute;
+							left: 0;
+							top: 0;
+							width: inherit;
+							height: inherit;
+							background-image: url('/v3/views/wizard/demo/design/html/body/section[id=videos]/section/article/a.png');
+							background-repeat: no-repeat;
+							background-position: center 45%;
+						}
+
+						div#demo section#videos > section > article > a:hover {
+							background-image: url('/v3/views/wizard/demo/design/html/body/section[id=videos]/section/article/a!hover.png');
+						}
+
+							div#demo section#videos > section > article > a > img {
+								position: absolute;
+								left: 0;
+								top: 0;
+								width: inherit;
+								height: inherit;
+								z-index: -1;
+								-webkit-mask-image: url('/v3/views/wizard/demo/design/html/body/section[id=videos]/section/article/a/img.png');
+								-webkit-mask-repeat: repeat-x, repeat-y;
+								-webkit-filter: brightness(0.5) hue-rotate(40deg);
+							}
+
+				div#demo section#videos > a.more {
+					display: inline-block;
+					width: 52px;
+					height: 418px;
+					background-color: rgb(0, 171, 109);
+					background-image: url('/v3/views/wizard/demo/design/html/body/section[id=videos]/a[class=more].png');
+					background-position: center center;
+					background-repeat: no-repeat;
+					vertical-align: top;
+				}
+
+					div#demo section#videos > a.more > span {
+						display: none;
+					}
+		</style>
+	</head>
+	<body>
+		<section id="videos">
+			<header>
+				<h1>Conoce UNABASE</h1>
+				<!-- <p></p> -->
+			</header>
+			<section>
+				<article>
+					<h1>Creando una cotización</h1>
+					<a href="http://www.youtube.com/embed/jA4e8p1OK4g?list=UUcjVqIcTcM9wA1xnxyxojBA"><img src="/v3/views/wizard/demo/images/videos/01.jpg" alt="Video 01"></a>
+					<p>Aprende a crear una cotización en UNABASE</p>
+				</article>
+				<article>
+					<h1>Crear un gasto</h1>
+					<a href="http://www.youtube.com/embed/fkNpKTKWEJ0?list=UUcjVqIcTcM9wA1xnxyxojBA"><img src="/v3/views/wizard/demo/images/videos/03.jpg" alt="Video 03"></a>
+					<p>Como crear una orden de compra de negocio?</p>
+				</article>
+				<article>
+					<h1>Cotizar desde otra</h1>
+					<a href="http://www.youtube.com/embed/Wy_gQ6u4PqM?list=UUcjVqIcTcM9wA1xnxyxojBA"><img src="/v3/views/wizard/demo/images/videos/02.jpg" alt="Video 02"></a>
+					<p>Como duplicar una cotización y armar una nueva</p>
+				</article>
+				<article>
+					<h1>Cotización aprobada?</h1>
+					<a href="http://www.youtube.com/embed/8iZwLhx5mjY?list=UUcjVqIcTcM9wA1xnxyxojBA"><img src="/v3/views/wizard/demo/images/videos/04.jpg" alt="Video 04"></a>
+					<p>Pasala a negocio</p>
+				</article>
+			</section>
+			<a class="more" href="#"><span>Más</span></a>
+		</section>
+	</body>
+</html>

@@ -1,0 +1,191 @@
+<!--#4DSCRIPT/_V3_serverInfo-->
+<section>
+  <h2>Condiciones</h2>
+  <article>
+    <div><strong>Forma de pago:</strong><span><!--#4DIF [Formas_Pago]Id_Forma="-1"--><!--#4DTEXT [Orden_de_compra]forma_pago_personalizada--><!--#4DELSE--><!--#4DTEXT [Formas_Pago]Desc_forma_pago--><!--#4DENDIF--></span></div>     
+  </article>
+  <!--#4DIF [Orden_de_compra]Comentarios#""-->
+  <article>
+    <div><strong>Observaciones:</strong></div>
+    <p style="white-space:pre-wrap;page-break-inside: avoid"><!--#4DHTML Replace string(Replace string(Replace string(Replace string([Orden_de_compra]Comentarios;Char(13)+Char(10);Char(10));Char(13);Char(10));"\";"\\\"");Char(8232);Char(10))--></p>
+    <p style="color: red; font-weight: bold;">PRUEBA: <b>Esto es un texto en negrita usando HTML</b></p>
+  </article>
+  <!--#4DENDIF-->
+</section>
+
+<section>
+  <h2>Datos Facturación</h2>
+  <article>
+    <div><strong>Razon:</strong><span><!--#4DTEXT razonPropietaria--></span></div>
+    <div><strong><!--#4DTEXT nameRUT-->:</strong><span><!--#4DTEXT rutPropietaria--></span></div>
+    <div><strong>Giro:</strong><span><!--#4DTEXT giroPropietaria--></span></div>
+    <div><strong>Dirección:</strong><span><!--#4DTEXT direccionPropietaria--> - <!--#4DTEXT comunaPropietaria--> - <!--#4DTEXT ciudadPropietaria--></span></div>
+    <div><strong>Teléfono:</strong><span><!--#4DVAR telefonoPropietaria--></span></div>
+  </article>   
+</section>
+
+<!--#4DIF [Orden_de_compra]v3_moneda_print_temp#<>_V3_defaultCurrencyName-->
+<section>
+  <h2>Tipo de cambio</h2>
+  <article>
+    <div><strong>Moneda:</strong><span><!--#4DIF ([Orden_de_compra]v3_moneda#"")--> <!--#4DTEXT Uppercase([Orden_de_compra]v3_moneda;*)--> <!--#4DELSE--> <!--#4DTEXT Uppercase([Orden_de_compra]v3_moneda_print_temp;*)--> <!--#4DENDIF--></span></div>
+    <div><strong>Valor cambio:</strong><span><!--#4DIF (v3_valor_cambio#0)--> <!--#4DTEXT v3_valor_cambio--> <!--#4DELSE--> <!--#4DTEXT vValorCambioImpresion--> <!--#4DENDIF--></span></div>    
+  </article>   
+</section>
+<!--#4DENDIF-->
+
+<!-- agregado el 12.10.15 por gin solicitud hfimls (carlos robles)-->
+<!--#4DIF vCantDtc > 0-->
+<section>
+  <h2><!--#4DHTML vCantDtc--> Documento(s) de compra(s)</h2>
+  <article>
+    <table class="dtcs borders" width="99%">
+      <thead>
+        <tr>
+          <th width="1%" class="center">Número</th>
+          <th width="10%" class="center">Emisión</th>
+          <th width="10%" class="center">Documento</th>
+          <th width="15%" class="center">Proveedor</th>               
+          <th width="19%" class="center">Referencia</th>
+          <th width="12%" class="center">Código</th>                
+          <th width="12%" class="center">Neto[<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+          <th width="10%" class="center">Total[<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>    
+          <th width="11%" class="center">Gasto real[<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+        </tr>
+      </thead>
+      <tbody class="ui-selectable">
+        <!--#4DLOOP [Doc_Tributario_Compra]-->
+          <tr>
+            <td class="center">
+
+              <!--#4DIF usar_pdf_bandeja-->
+                <a href="<!--#4DTEXT nodeUrl-->/download-pdf-dtc/?hostname=<!--#4DTEXT _V3_base_url-->&download=true&entity=conexion_sii&folio=<!--#4DTEXT [Doc_Tributario_Compra]FOLIO_DOCUMENTO-->&iddtc=<!--#4DTEXT [Doc_Tributario_Compra]ID_DOC-->"><!--#4DHTML [Doc_Tributario_Compra]FOLIO_DOCUMENTO--></a>
+              <!--#4DELSE-->
+                <!--#4DIF [Doc_Tributario_Compra]has_attachment-->
+                  <a href="<!--#4DTEXT _V3_base_url-->/4DACTION/_V3_getUpload?index=Doc_Tributario_Compra|<!--#4DTEXT [Doc_Tributario_Compra]ID_DOC-->"><!--#4DHTML [Doc_Tributario_Compra]FOLIO_DOCUMENTO--></a>
+                <!--#4DELSE-->
+                  <!--#4DHTML [Doc_Tributario_Compra]FOLIO_DOCUMENTO-->
+                <!--#4DENDIF-->
+              <!--#4DENDIF-->
+
+
+              
+            </td>
+            <td class="center"><!--#4DHTML [Doc_Tributario_Compra]FECHA_EMISION--></td>
+            <td class="center"><!--#4DHTML [Doc_Tributario_Compra]des_tipo_doc--></td>
+            <td style="text-align:left!important"><!--#4DHTML [Doc_Tributario_Compra]RAZON_SOCIAL--></td>
+            <td style="text-align:left!important"><!--#4DHTML [Doc_Tributario_Compra]REFERENCIA_DOCUMENTO--></td>
+            <td class="center"><span style="display:inline-block!important"><!--#4DHTML [Doc_Tributario_Compra]RUT_EMISOR--></span><!--#4DIF vIncluirCodContable--><span style="display:inline-block!important;margin-left:5px!important;font-weight:bold"><!--#4DHTML [Doc_Tributario_Compra]v3_cod_contable--></span><!--#4DENDIF--></td>
+           <td class="right"><!--#4DHTML _V3_formatCurrency(round([Doc_Tributario_Compra]TOTAL_NETO;0))--></td>
+            <td class="right"><!--#4DHTML _V3_formatCurrency(round([Doc_Tributario_Compra]TOTAL_DOCUMENTO;0))--></td>
+             <td class="right"><!--#4DHTML _V3_formatCurrency(round([Doc_Tributario_Compra]GASTO_REAL;0))--></td>
+          </tr>
+        <!--#4DENDLOOP--> 
+      </tbody>
+      <tfoot>
+        <tr>
+          <th colspan="6" style="border:0px"></th>
+          <th class="right" style="border:0px"><!--#4DHTML _V3_formatCurrency(vSumaJustificadoNetoFxr)--></th>
+          <th class="right" style="border:0px"><!--#4DHTML _V3_formatCurrency(vSumaJustificadoTotalFxr)--></th> 
+          <th class="right" style="border:0px"><!--#4DHTML _V3_formatCurrency(vSumaGastoReal)--></th> 
+        </tr>                   
+      </tfoot>
+    </table>
+    </article>
+</section>
+<!--#4DENDIF-->
+
+<!--#4DIF Size of array(aid_dtc_nc) > 0-->
+<section>
+  <h2><!--#4DHTML Size of array(aid_dtc_nc)--> Notas(s) de crédito</h2>
+  <article>
+    <table class="dtcs borders" width="99%">
+      <thead>
+        <tr>
+          <th class="center" width="5%">Número</th>
+          <th class="center" width="5%">Emisión</th>
+          <th class="center" width="5%">Factura Ref.</th>
+          <th class="center" width="15%">Proveedor</th>
+          <th class="center" width="5%">Motivo</th>
+          <!--<th class="center" width="15%">Referencia</th>-->            
+          <th class="center" width="10%">Neto [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+          <!--<th class="right" width="10%">Exento [<!- -#4DVAR _V3_defaultCurrencySymbol- ->]</th>
+          <th class="right" width="10%">Impuesto [<!- -#4DVAR _V3_defaultCurrencySymbol- ->]</th>
+          <th class="right" width="10%">Adicional [<!- -#4DVAR _V3_defaultCurrencySymbol- ->]</th>-->
+          <th class="center" width="10%">Total [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>        
+        </tr>
+      </thead>
+      <tbody class="ui-selectable">
+        <!--#4DLOOP aid_dtc_nc-->
+          <tr>
+            <td class="center"><!--#4DHTML afolio_dtc_nc{aid_dtc_nc}--></td>
+            <td class="center"><!--#4DHTML afecha_dtc_nc{aid_dtc_nc}--></td>
+            <td class="center"><!--#4DHTML afolio_factura_dtc_nc{aid_dtc_nc}--></td>
+            <td class="center"><!--#4DHTML arazon_dtc_nc{aid_dtc_nc}--></td>         
+            <td class="center"><!--#4DHTML amotivo_factura_dtc_nc{aid_dtc_nc}--></td>
+            <!--<td class="center"><!- -#4DHTML aref_dtc_nc{aid_dtc_nc}- -></td>-->
+            <td class="right"><!--#4DHTML  _V3_formatCurrency(aneto_dtc_nc{aid_dtc_nc})--></td>
+            <!--<td class="right"><!- -#4DHTML aexento_dtc_nc{aid_dtc_nc}- -></td>
+            <td class="center"><!- -#4DHTML aimpuesto_dtc_nc{aid_dtc_nc}- -></td>
+            <td class="center"><!- -#4DHTML aadicional_dtc_nc{aid_dtc_nc}- -></td>-->
+            <td class="center"><!--#4DHTML  _V3_formatCurrency(atotal_dtc_nc{aid_dtc_nc})--></td>
+          </tr>
+        <!--#4DENDLOOP--> 
+      </tbody>
+      <tfoot style="display:none">
+        <tr>
+          <th colspan="6" style="border:0px"></th>
+          <th class="right" style="border:0px"><!--#4DHTML _V3_formatCurrency(0)--></th>
+          <th class="right" style="border:0px"><!--#4DHTML _V3_formatCurrency(0)--></th> 
+        </tr>                   
+      </tfoot>
+    </table>
+    </article>
+</section>
+<!--#4DENDIF--> 
+
+<section>
+<!--#4DIF vCantPagos > 0-->
+  <h2><!--#4DHTML vCantPagos--> Pago(s)</h2>
+  <article>
+      <table class="pagos borders" width="99%">
+      <thead>
+        <tr>
+          <th class="center">Número</th>
+          <th class="center">Emisión</th>
+          <th class="center">Fecha de pago</th>               
+          <th class="center">Tipo</th>
+          <th class="center">Ch/Tr</th>       
+          <th class="center">Estado</th>        
+          <th class="center">Conciliado</th>          
+          <th class="center">Monto</th>             
+        </tr>
+      </thead>
+      <tbody class="ui-selectable">
+        <!--#4DLOOP aOCOP_id-->
+          <tr>
+            <td class="center"><!--#4DHTML aOCOP_folio{aOCOP_id}--></td>
+            <td class="center"><!--#4DHTML aOCOP_fechaemision{aOCOP_id}--></td>
+            <td class="left"><!--#4DHTML aOCOP_fechavencimiento{aOCOP_id}--></td>
+            <td class="left"><!--#4DHTML aOCOP_tipo{aOCOP_id}--></td>         
+            <td class="center"><!--#4DHTML aOCOP_documento{aOCOP_id}--></td>
+            <td class="center"><!--#4DHTML aOCOP_estado{aOCOP_id}--></td>
+            <td class="center"><!--#4DIF aOCOP_conciliado{aOCOP_id}-->SI<!--#4DELSE-->NO<!--#4DENDIF--></td>
+            <td class="right"><!--#4DHTML _V3_formatCurrency(aOCOP_abono{aOCOP_id})--></td>
+          </tr>         
+        <!--#4DENDLOOP-->
+      </tbody>
+      <tfoot>
+        <tr>
+          <th colspan="7" style="border:0px"></th>              
+          <th class="right" style="border:0px"><!--#4DHTML _V3_formatCurrency(vPagosOPOC)--></th> 
+        </tr>             
+      </tfoot>      
+    </table>
+    </article>   
+<!--#4DELSE-->
+  <h2>No existen pagos asociados</h2>
+<!--#4DENDIF-->  
+</section>
+
+

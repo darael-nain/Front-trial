@@ -1,0 +1,7 @@
+{
+	"success": <!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"idnv": <!--#4DTEXT idnv-->,
+	"idneg": <!--#4DTEXT nronegocio-->,
+	"refneg": "<!--#4DHTML _V3_escapeString(refnegocio)-->",
+	"estadoneg": "<!--#4DTEXT estadoneg-->"
+}

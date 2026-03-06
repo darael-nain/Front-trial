@@ -1,0 +1,54 @@
+{
+	"rows": [
+<!--#4DLOOP aIdFXR -->
+		{
+			"id": <!--#4DHTML aIdFXR{aIdFXR}-->,
+			"llave_nv": "<!--#4DHTML _V3_escapeString(aLlaveNv{aIdFXR})-->",
+			"id_nv": <!--#4DHTML aIdNv{aIdFXR}-->,
+			"emisor": "<!--#4DHTML aEmisorFXR{aIdFXR}-->",
+			"version": "<!--#4DHTML aVersionFXR{aIdFXR}-->",
+			"folio": "<!--#4DHTML aNroFXR{aIdFXR}-->",
+			"fecha": "<!--#4DHTML String(aFechaFXR{aIdFXR};7)-->",
+			"fecha_pago": "<!--#4DHTML String(aFechaPago{aIdFXR};7)-->",
+			"estado": "<!--#4DHTML aEstadoFXR{aIdFXR}-->",
+			"proveedor": "<!--#4DHTML _V3_escapeString(aProveedorFXR{aIdFXR})-->",
+			"rut": "<!--#4DHTML _V3_escapeString(aProveedorRutFXR{aIdFXR})-->",
+			"referencia": "<!--#4DHTML _V3_escapeString(aReferenciaFXR{aIdFXR})-->",
+			"solicitado_": <!--#4DHTML String(aSolicitadoFXR{aIdFXR};"&xml")-->,
+			"pagado_": <!--#4DHTML String(aPagadoFXR{aIdFXR};"&xml")-->,
+			"rendido_": <!--#4DHTML String(aRendidoFXR{aIdFXR};"&xml")-->,
+			"deposito_": <!--#4DHTML String(aDepositoFXR{aIdFXR};"&xml")-->,
+			"saldo_": <!--#4DHTML String(aSaldoFXR{aIdFXR};"&xml")-->,
+			"iva_": <!--#4DHTML String(aIvaFXR{aIdFXR};"&xml")-->,
+			"retencion_": <!--#4DHTML String(aRetencionFXR{aIdFXR};"&xml")-->,
+			"costoempresa_": <!--#4DHTML String(aCostoEmpresaFXR{aIdFXR};"&xml")-->,
+			"costoreal_":  <!--#4DIF Not(Undefined(aCostoRealNegocio))-->"<!--#4DHTML String(aCostoRealNegocio{aIdFXR};"&xml")-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+			"solicitado": "<!--#4DHTML _V3_formatCurrency(aSolicitadoFXR{aIdFXR})-->",
+			"pagado": "<!--#4DHTML _V3_formatCurrency(aPagadoFXR{aIdFXR})-->",
+			"rendido": "<!--#4DHTML _V3_formatCurrency(aRendidoFXR{aIdFXR})-->",
+			"deposito": "<!--#4DHTML _V3_formatCurrency(aDepositoFXR{aIdFXR})-->",
+			"saldo": "<!--#4DHTML _V3_formatCurrency(aSaldoFXR{aIdFXR})-->",
+			"costoempresa": "<!--#4DHTML _V3_formatCurrency(aCostoEmpresaFXR{aIdFXR})-->",
+			"validado": "<!--#4DHTML aValidadoFXR{aIdFXR}-->",
+			"validado2": <!--#4DIF aValidadoFXR2{aIdFXR}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"vencimiento": "<!--#4DHTML String(aVencimientoFXR{aIdFXR};7)-->",
+			"dias_atrasados_fxr": "<!--#4DHTML aDiasAtrasadosFXR{aIdFXR}-->",
+			"excluir_gasto": <!--#4DHTML aFreeFXR{aIdFXR}-->,
+			"gato_real_linea_fxr": "<!--#4DHTML _V3_formatCurrency(aGastoRealLineaFXR{aIdFXR})-->",
+			"tipo": "<!--#4DHTML aTipoFXR{aIdFXR}-->"<!--#4DIF Not(Undefined(aLlaveNv{aIdFXR}))--><!--#4DIF (aLlaveNv{aIdFXR}#"")-->,
+			"item": {
+				"index": <!--#4DHTML aSecuenciaItem{aIdFXR}-->,
+				"codigo": "<!--#4DHTML _V3_escapeString(aCodigoItem{aIdFXR})-->",
+				"codigo_origen": "<!--#4DHTML _V3_escapeString(aCodigoOrigen{aIdFXR})-->",
+				"nombre": "<!--#4DHTML _V3_escapeString(aNombreItem{aIdFXR})-->",
+				"costo_empresa": <!--#4DHTML String(aCostoEmpresaFXR{aIdFXR};"&xml")-->,
+				"index_negocio": "<!--#4DHTML aNegocioIndex{aIdFXR}-->",
+				"text_negocio": "<!--#4DHTML _V3_escapeString(aNegocioText{aIdFXR})-->",
+				"tipo_documento": "<!--#4DHTML _V3_escapeString(aTipoDocumentoItem{aIdFXR})-->",
+				"impuesto": <!--#4DHTML String(aImpuestoItem{aIdFXR}*aCostoEmpresaFXR{aIdFXR};"&xml")-->,
+				"tipo_gasto": "<!--#4DTEXT aTipoGastoItem{aIdFXR}-->"
+			}<!--#4DENDIF--><!--#4DENDIF-->
+		}<!--#4DIF NOT(aIdFXR{aIdFXR} = aIdFXR{Size of array(aIdFXR)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

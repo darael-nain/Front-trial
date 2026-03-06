@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Test</title>
+	</head>
+	<body>
+		<form method="post" enctype="multipart/form-data" action="/4DACTION/_V3_setUpload">
+			<fieldset>
+				<legend>Upload</legend>
+				<label>
+					<span>ID</span>
+					<input type="text" name="id" disabled>
+				</label>
+				<label>
+					<span>filename</span>
+					<input type="text" name="filename">
+				</label>
+				<label>
+					<span>index</span>
+					<input type="text" name="index">
+				</label>
+				<label>
+					<span>File</span>
+					<input type="file" name="file">
+				</span>
+				<button type="submit">Upload!</button>
+			</fieldset>
+		</form>
+	</body>
+</html>

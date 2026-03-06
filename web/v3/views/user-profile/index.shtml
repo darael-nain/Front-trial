@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--<!- -#4DSCRIPT/_V3_proxy_getCotizacionContent- ->-->
+		<title>Perfil de Usuario</title>
+		<meta charset="utf-8">
+		<script>		
+var Usuario = {
+	init: function(id) {
+      		Usuario.data["perfil[nombres]"] = $('input[name="perfil[nombres]"]').val(),
+      		Usuario.data["perfil[vResults]"] = $('input[name="perfil[vResults]"]').val(),
+      		Usuario.data["perfil[apellido][paterno]"] = $('input[name="perfil[apellido][paterno]"]').val(),
+      		Usuario.data["perfil[apellido][materno]"] = $('input[name="perfil[apellido][materno]"]').val(),
+      		Usuario.data["perfil[email]"] = $('input[name="perfilperfil[email]"]').val(),
+      		Usuario.data["perfil[allow-email]"] = document.querySelector('input[name="perfil[allow-email]"]').checked,
+      		Usuario.data["perfil[searchOff]"] = document.querySelector('input[name="perfil[searchOff]"]').checked
+    
+	}
+}
+
+			$(document).ready(function() {
+					$('section.tabs').tabs();
+
+				unaBase.toolbox.init();
+				unaBase.toolbox.menu.init({
+					entity: 'Usuario',
+					buttons: [ 'saveUser'],
+					data: function() {
+
+						var set = $('.ui-dialog').serializeAnything().replace(/\%40/g, '@');
+						
+						return $.unserialize('id=' + $('body > aside > div > div > h1').data('username') + '&' + set);
+					},
+					validate: function() {
+			
+						return true;									
+					}
+				});
+
+			});
+		</script>
+		<style>
+			.ui-tabs .ui-tabs-panel {
+				padding: 0 !important;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		<section class="tabs">
+			<ul class="infinite-tabs">
+				<li><a href="/v3/views/user-profile/general.shtml">General</a></li>
+				<li><a href="/v3/views/user-profile/password.shtml">Contraseña</a></li>
+				<li><a href="/v3/views/user-profile/restartPassword.shtml">Olvidaste tu contraseña</a></li>
+			</ul>
+			<article></article>
+		</section>
+	</body>
+</html>

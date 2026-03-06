@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Carga XML</title>
+	<script type="text/javascript">
+
+		$(document).ready(function () {
+			var importLoad = function (append, element) {
+				unaBase.ui.block();
+				
+				var data = new FormData();
+				
+				var attachment = $('.ui-dialog fieldset [name="upload[attachment]"]').get(0).files[0];
+				
+				let name = attachment.name;
+				toastr.success('Se cargará el siguiente archivo CSV: ' + name);
+				var fk = $('section.sheet').data('id');
+				
+				Papa.parse(attachment, {
+					download: true,
+					header: true,
+					skipEmptyLines: true,
+					complete: function (results) {
+						console.log("NOMBRE ARCHIVO: ", name)
+						console.log(results)
+						let config = {
+							headers: {
+								'Accept': 'application/json',
+								'Content-Type': 'application/json'
+							},
+							method: 'post',
+							url: nodeUrl + "/import-nv-csv",
+							data: {
+								sid: unaBase.sid.encoded(),
+								data_csv: results,
+								name_file: name,
+								fk,
+								hostname: window.location.origin
+							},
+
+						};
+
+						axios(config)
+							.then(function (response) {
+								console.log("RESPONSE:",  response);
+								
+								if (response.data.success) {
+									
+									toastr.success('Archivo cargado con éxito! Espere unos segundos para su visualización..');
+									getDetail();
+
+									$(element).parentTo('.ui-dialog-content').dialog('close');
+									unaBase.ui.unblock();
+								}else{
+									toastr.warning('Error al cargar archivo csv');
+									unaBase.ui.unblock();
+								}
+
+							})
+							.catch(function (error) {
+								toastr.warning('Error al cargar archivo csv');
+									unaBase.ui.unblock();
+								console.log(error);
+							});
+
+
+					}
+				})
+
+
+
+
+
+
+
+
+
+			};
+			$('.ui-dialog fieldset.import button').button({
+				icons: {
+					primary: 'ui-icon-circle-arrow-n'
+				},
+				text: true
+			}).click(function () {
+				let element = this;
+
+
+
+
+				importLoad(false, element);
+
+
+
+			});
+
+
+		});
+	</script>
+</head>
+
+<body>
+
+	<fieldset class="import">
+		<legend>Importar desde CSV</legend>
+
+		<div>
+			<span>Archivo CSV</span>
+			<input type="file" name="upload[attachment]" accept="application/csv">
+		</div>
+
+		<div>
+			<br>
+			<button>CARGAR</button>
+		</div>
+
+	</fieldset>
+</body>
+
+</html>

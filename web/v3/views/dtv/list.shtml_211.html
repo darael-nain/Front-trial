@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Compras</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="/v3/views/compras/lista.css?564676767hhghjgj67">
+
+		<script>
+
+			$(document).ready(function() {
+
+				unaBase.toolbox.init();
+
+				// Inicializamos un buscador
+				var params = {
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/_V3_getDocumentoDeVenta' },
+					entity: 'dtv',
+
+					callback : function(data) {
+						$('tfoot.totales').find('span[data-neto]').text(data.totalesFacturas.neto);
+						$('tfoot.totales').find('span[data-impuesto]').text(data.totalesFacturas.impuesto);
+						$('tfoot.totales').find('span[data-adicional]').text(data.totalesFacturas.adicional);
+						$('tfoot.totales').find('span[data-total]').text(data.totalesFacturas.total);
+						$('tfoot.totales').find('span[data-abono]').text(data.totalesFacturas.abono);
+						$('tfoot.totales').find('span[data-saldo]').text(data.totalesFacturas.saldo);
+
+						$('tfoot.totales').find('span[data-netonc]').text(data.totalesNotas.neto);
+						$('tfoot.totales').find('span[data-impuestonc]').text(data.totalesNotas.impuesto);
+						$('tfoot.totales').find('span[data-totalnc]').text(data.totalesNotas.total);
+
+						$('tfoot.totales').find('span[data-netot]').text(data.totales.neto);
+						$('tfoot.totales').find('span[data-impuestot]').text(data.totales.impuesto);
+						$('tfoot.totales').find('span[data-adicionalt]').text(data.totales.adicional);
+						$('tfoot.totales').find('span[data-totalt]').text(data.totales.total);
+
+						// Fijar header y footer
+						$('#viewport .fht-table-init').fixedHeaderTable('destroy');
+						$('#viewport table.fixed').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false });
+
+						$('.cant-facturas').text("("+data.cantidades.facturas+")");
+						$('.cant-nc').text("("+data.cantidades.notas+")");
+						$('.cant-total').text("("+data.cantidades.total+")");
+
+					},
+
+					row: {
+
+						html: function(i, rows) {
+
+							var color = "";
+							if (rows[i].tipoDocumentoVenta == "NOTA DE CREDITO" || rows[i].tipoDocumentoVenta == "NOTA DE CREDITO ELECTRONICA") {
+								color = "color_red";
+							}
+
+							return '<tr data-id="' + rows[i].id + '"' + ((rows[i].contabilizado)? ' data-contabilizado="true"' : '') + ' data-libro="'+rows[i].libro+'" data-estado="' + rows[i].estado + '">' +
+								'<td width="5%"><input class="selected" data-saldo="' + rows[i].saldo + '" type="checkbox" name="selected_one"></td>' +
+								'<td width="5%" class=" '+color+'">' + rows[i].folio + '</td>' +
+								'<td width="2%" title="' + rows[i].tipoDocumentoVenta + '" class="center '+color+'">' + rows[i].tipoDocumentoVentaAbrev + '</td>' +
+								'<td width="4%" class=" '+color+'">' + rows[i].emisor + '</td>' +
+								'<td width="4%" class=" '+color+'">' + rows[i].fechaEmision + '</td>' +
+								'<td width="4%" class=" '+color+'">' + rows[i].fechaVencimiento + '</td>' +
+
+								'<td data-goto="true" width="5%" style="white-space: nowrap;" class="' + color + '">' + (rows[i].contable == '00-00-00'? 'N/A' : rows[i].contable) + '</td>' +
+								'<td data-goto="true" width="3%" class="' + color + '">' + (rows[i].contabilizado? 'Sí' : 'No') + '</td>' +
+
+								'<td width="6%" class=" '+color+'">' + rows[i].estado + '</td>' +
+								'<td width="6%" class="left '+color+'">' + rows[i].areaNegocio + '</td>' +
+								'<td width="10%" class="left '+color+'">' + rows[i].cliente + '</td>' +
+								'<td width="5%" class=" '+color+'">' + rows[i].rutCliente + '</td>' +
+								'<td width="7%" class="right '+color+'">' + rows[i].neto + '</td>' +
+								'<td width="7%" class="right '+color+'">' + rows[i].impuesto + '</td>' +
+								'<td width="7%" class="right '+color+'">' + rows[i].adicional + '</td>' +
+								'<td width="7%" class="right '+color+'">' + rows[i].total + '</td>' +
+								'<td width="7%" class="right '+color+'">' + rows[i].abono + '</td>' +
+								'<td width="7%" class="right '+color+'">' + rows[i].saldo + '</td>' +
+							'</tr>'
+						}
+					},
+					detail: {
+						url: function(id) { return '/v3/views/dtv/content.shtml?id=' + id},
+						iframe: false
+					},
+					// Inflexiones
+					inflection: {
+						singular: 'gasto',
+						plural: 'gastos',
+						none: 'ningún'
+					},
+					filters: [
+						{ name: 'created_at', type: 'month', caption: 'Fecha de emisión', range: true, currentMonth: true},
+						{ name: 'responsable', type: 'autocomplete', caption: 'Responsable', dataSource: 'getUsuario' },
+						{ name: 'area_negocio', type: 'autocomplete', caption: 'Área de negocio', dataSource: 'getAreaNegocio' },
+						{ name: 'tipo_doc', type: 'autocomplete', caption: 'Tipo Doc.', dataSource: 'getTiposDocDeVentas' },
+						{ name: 'contabilizado', type: 'autocomplete', caption: '¿Contabilizado?', dataObject: [
+							{ id: false, text: 'Sin contabilizar' },
+							{ id: true, text: 'Contabilizado' },
+						] },
+						{ name: 'estado', type: 'checkbox', caption: 'Estado del documento', options: [
+							{ caption: 'Pagada', name: 'estado_pagado', value: false },
+							{ caption: 'Por emitir', name: 'estado_por_emitir', value: true },
+							{ caption: 'Por cobrar', name: 'estado_emitida', value: true },
+							{ caption: 'nula', name: 'estado_anulada', value: false }
+						] },
+						{ name: 'tiene_pago', type: 'autocomplete', caption: '¿Tiene Ingreso?', dataObject: [
+							{ id: 'true', text: 'CON INGRESO' },
+							{ id: 'false', text: 'SIN INGRESO' }
+						]},
+					]
+				};
+
+				unaBase.toolbox.search.init(params);
+				unaBase.toolbox.menu.init({
+					entity: 'dtv',
+					buttons: [ 'create_dtv', 'dtv_charge_selection', 'export_list', 'export_softland' ]
+				});
+
+				$('#menu ul').find('li[data-name="dtv_charge_selection"]').hide();
+				$('#menu ul').find('li[data-name="export_softland"]').hide();
+
+
+				$("body").on("click", "input.selected", function(){
+					var input = $(this);
+					if (input.attr('name') == "selected_all" ) {
+						if (input.prop("checked")) {
+							$('table tbody input[name="selected_one"]').prop("checked", true);
+							$('#menu ul').find('li[data-name="dtv_charge_selection"]').show();
+							$('#menu ul').find('li[data-name="export_softland"]').show();
+						}else{
+							$('table tbody input[name="selected_one"]').prop("checked", false);
+							$('#menu ul').find('li[data-name="dtv_charge_selection"]').hide();
+							$('#menu ul').find('li[data-name="export_softland"]').hide();
+						}
+					}else{
+						if (input.prop("checked")) {
+							$('#menu ul').find('li[data-name="dtv_charge_selection"]').show();
+							$('#menu ul').find('li[data-name="export_softland"]').show();
+						}else{
+							$('#menu ul').find('li[data-name="dtv_charge_selection"]').hide();
+							$('#menu ul').find('li[data-name="export_softland"]').hide();
+						}
+					}
+				});
+
+
+
+			});
+		</script>
+
+		<style type="text/css">
+			.totales tr{
+				padding:0px!important;
+				margin:0px!important;
+				height:0px!important;
+			}
+			.totales tr th{
+				padding:0px!important;
+				margin:0px!important;
+				height:0px!important;
+			}
+			.totales tr th span{
+				margin:1px;
+			}
+			.gray{
+				color:gray;
+			}
+			.dropdown-button {
+				padding: 5px 5px;
+			}
+			.selected{
+				width:20px!important;
+				height:20px!important;
+				vertical-align:middle!important;
+			}
+		</style>
+
+
+	</head>
+	<body>
+		<div style="width: 100%; height: calc(100% - 10px); overflow-x: scroll; overflow-y: scroll">
+			<table width="100%" class="results especial listincome fixed">
+				<thead>
+					<tr>
+						<th class="center" width="5%"><div style="padding:2px">Todo</div><div><input class="selected" type="checkbox" name="selected_all"></div></th>
+						<th width="5%" class="center" data-sort-by="folio" data-sort-default="desc">Número</th>
+						<th width="2%" class="center" data-sort-by="tipoDocumentoVenta" data-sort-default="asc">Doc.</th>
+						<th width="4%" class="center" data-sort-by="emisor" data-sort-default="asc">emisor</th>
+						<th width="4%" class="center" data-sort-by="fechaEmision" data-sort-default="desc">F.Emisión</th>
+						<th width="4%" class="center" data-sort-by="fechaVencimiento" data-sort-default="desc">F.Vencimiento</th>
+						<th class="center" width="5%" data-sort-by="contable" data-sort-default="desc">F. Contable</th>
+						<th class="center" width="3%" data-sort-by="contabilizado" data-sort-default="desc">Contabiliz.</th>
+						<th width="6%" class="center" data-sort-by="estado" data-sort-default="asc">estado</th>
+						<th width="6%" class="center" data-sort-by="areaNegocio" data-sort-default="asc">Area de Negocio</th>
+						<th width="10%" class="center" data-sort-by="cliente" data-sort-default="asc">Cliente</th>
+						<th width="5%" class="center" data-sort-by="rutCliente" data-sort-default="asc">Rut</th>
+						<th width="7%" class="center" data-sort-by="neto" data-sort-default="desc">neto [$]</th>
+						<th width="7%" class="center" data-sort-by="impuesto" data-sort-default="desc">impuesto [$]</th>
+						<th width="7%" class="center" data-sort-by="adicional" data-sort-default="desc">Adicional [$]</th>
+						<th width="7%" class="center" data-sort-by="total" data-sort-default="desc">total [$]</th>
+						<th width="7%" class="center" data-sort-by="abono" data-sort-default="desc">abono [$]</th>
+						<th width="7%" class="center" data-sort-by="saldo" data-sort-default="desc">saldo [$]</th>
+					</tr>
+				</thead>
+				<tfoot class="totales">
+					<tr>
+						<th width="65%" colspan="12" class="right gray"><label class="cant-facturas">(0)</label>&nbsp;Factura&nbsp;&nbsp;</th>
+			            <th width="7%" class="right"><span data-neto="" class="label2">$0</span></th>
+			            <th width="7%" class="right"><span data-impuesto="" class="label2">$0</span></th>
+			            <th width="7%" class="right"><span data-adicional="" class="label2">$0</span></th>
+			           	<th width="7%" class="right"><span data-total="" class="label2">$0</span></th>
+			           	<th width="7%" class="right"><span data-abono="" class="label2">$0</span></th>
+			           	<th width="7%" class="right"><span data-saldo="" class="label2">$0</span></th>
+		           	</tr>
+		           	<tr>
+						<th width="65%" colspan="12" class="right red"><label class="cant-nc">(0)</label>&nbsp;Nota de crédito&nbsp;&nbsp;</th>
+			            <th width="7%" class="right"><span data-netonc="" class="label2">$0</span></th>
+			            <th width="7%" class="right"><span data-impuestonc="" class="label2">$0</span></th>
+			           	<th width="7%" class="right"><span data-totalnc="" class="label2">$0</span></th>
+			           	<th width="7%" class="right"></th>
+			           	<th width="7%" class="right"></th>
+		           	</tr>
+		           	<tr>
+						<th width="65%" colspan="12" class="right gray"><label class="cant-total">(0)</label>&nbsp;Total&nbsp;&nbsp;</th>
+			            <th width="7%" class="right"><span data-netot="" class="label2">$0</span></th>
+			            <th width="7%" class="right"><span data-impuestot="" class="label2">$0</span></th>
+			            <th width="7%" class="right"><span data-adicionalt="" class="label2">$0</span></th>
+			           	<th width="7%" class="right"><span data-totalt="" class="label2">$0</span></th>
+			           	<th width="7%" class="right"></th>
+			           	<th width="7%" class="right"></th>
+		           	</tr>
+				</tfoot>
+				<tbody></tbody>
+			</table>
+		</div>
+	</body>
+</html>

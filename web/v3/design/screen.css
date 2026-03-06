@@ -1,0 +1,384 @@
+li.u-instagram-img{
+	margin-left: 100px
+}
+li.u-instagram-text{
+	margin-left: 5px1
+}
+.u-icon-32{
+	width: 32px;
+	height: 32px;
+}
+input[type=search] {
+	-moz-appearance:none;
+	-webkit-appearance:none;
+}
+
+.ui-widget, .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
+	font-family: inherit !important;
+	font-size: inherit !important;
+}
+
+.ui-dialog textarea {
+	display: block;
+	width: calc(100% - 12px);
+	margin-top: 5px;
+}
+
+input, button {
+	font-family: inherit;
+	font-size: inherit;
+	background: none;
+	border: none;
+	outline: none;
+}
+
+input[type="radio"],
+input[type="checkbox"],
+input[type="checkbox"] + span,
+button {
+	cursor: pointer;
+}
+
+input[type="email"], input[type="url"] {
+	text-transform: lowercase !important;
+}
+
+input[type="number"],
+input.number {
+	text-align: right;
+}
+/* 
+input.number {
+	padding-right: 10px !important;
+} */
+
+input:focus, select:focus {
+	outline: none;
+}
+
+input, select {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+}
+
+[draggable] {
+	user-select: none;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+.a:hover, .a:focus{
+	color: white;
+}
+
+span.name {
+	text-transform: capitalize;
+}
+
+.ui-selectable-helper {
+	border: none !important;
+	outline: 1px dotted black;
+}
+
+.ui-autocomplete {
+	z-index: 1000 !important;
+	text-transform: uppercase;
+}
+
+.ui-menu-item:not(:last-of-type) {
+	border-bottom: 1px solid rgb(220,220,220);
+}
+
+.new {
+	background-color: rgba(255,255,0,.5) !important;
+	color: black;
+}
+
+.invalid {
+	background-color: rgba(255,0,0,.5) !important;
+	color: black !important;
+}
+
+.ui-autocomplete {
+	max-height: 200px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	
+}
+
+.ui-autocomplete > .ui-menu-item > a > strong {
+	display: inline-block;
+	width: calc(40% - 2px);
+	font-weight: bold;
+	font-size: 10px;
+	text-align: left;
+}
+
+.ui-autocomplete > .ui-menu-item > a > em {
+	display: inline-block;
+	width: calc(60% - 2px);
+	font-style: italic;
+	font-size: 10px;
+	text-align: right;
+}
+
+.ui-autocomplete > .ui-menu-item > a > span {
+	display: block;
+	font-size: 9px;
+}
+
+.ui-autocomplete > .ui-menu-item > a > .highlight {
+	color: navy;
+	text-decoration: underline;
+}
+
+::-webkit-search-cancel-button {
+	-webkit-appearance: none;
+}
+
+input.costo, tr > td.costo.presupuestado.subtotal input {
+	color: rgb(0, 0, 0);
+	background-color: #FFF6E6;
+	font-weight: bolder !important;
+}
+input.costo, tr > td.costo.real input {
+	background-color: rgb(246 199 118);
+	color: black;
+}
+
+input.utilidad, td.utilidad.real input {
+	background-color: #addb92;
+}
+
+input.utilidad, td.utilidad.presupuestado input {
+	background-color: #c6e4b5;
+}
+
+.ui-selectable > :hover:not(.ui-selected) {
+	background-color: rgba(169,188,245,.5) !important;
+	cursor: pointer!important;
+}
+
+.ui-selecting {
+	background-color: #FECA40!important;
+	opacity: .7!important;
+}
+
+.ui-selected {
+	background-color: #FECA40!important;
+}
+
+.toast-message {
+	font-size: 12px;
+}
+
+.negative {
+	color: red;
+}
+
+/* ocultar spinbox en campos type number */
+.asdf input::-webkit-outer-spin-button,
+.asdf input::-webkit-inner-spin-button {
+	/* display: none; <- Crashes Chrome on hover */
+	-webkit-appearance: none;
+	margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+.ui-menu { position: absolute; /* width: 100px; */ z-index: 1000; }
+
+html {
+	/*background-image: url('html.png');*/
+	background-attachment: fixed;
+}
+
+.ui-widget, html > body {
+	/*font-family: 'Lucida Sans', 'Bitstream Vera Sans', sans-serif;*/
+	font-family: 'Open Sans', sans-serif !important;
+	font-size: 10px;
+}
+
+.ui-dialog.confirm > .ui-dialog-content,
+.ui-dialog.alert > .ui-dialog-content,
+.ui-dialog.prompt > .ui-dialog-content {
+	min-width: 48px;
+	min-height: 48px !important;
+	padding-left: 64px;
+	background-position-x: 8px;
+	background-position-y: 8px;
+	background-repeat: no-repeat;
+}
+
+.ui-dialog.confirm > .ui-dialog-content {
+	background-image: url('icons/Question.png');
+}
+
+.ui-dialog.alert > .ui-dialog-content {
+	background-image: url('icons/Exclamation.png');
+}
+
+.ui-dialog.prompt > .ui-dialog-content {
+	background-image: url('icons/Dots.png');
+}
+
+.ui-dialog.prompt section > span:first-of-type {
+	padding-bottom: 10px !important;
+}
+
+.ui-dialog.prompt section > input[type="search"] {
+	display: inline-block;
+	width: calc(100% - 23px - 4px) !important;
+	font-size: 10px !important;
+	font-weight: normal !important;
+}
+
+.ui-dialog.prompt section > input[type="search"] + button {
+	display: inline-block;
+	width: calc(23px - 4px) !important;
+	height: 19px;
+}
+
+.ui-dialog-buttonpane button:first-of-type {
+	font-weight: bold;
+}
+
+
+span.movimiento {
+	color: #648DCF;
+}
+
+span.indicador {
+	color: #ADAD84;
+}
+
+span.costo {
+	color: #CF8D64;
+}
+
+span.utilidad {
+	color: #64CF8D;
+}
+
+#viewport:not(.standalone) span.total {
+	color: grey;
+}
+
+.summary span.numeric {
+	font-weight: bold;
+}
+
+.third-width h1 {
+	padding-left: 105px;
+}
+
+section#viewport article[role="tabpanel"] {
+	min-width: 1170px;
+	max-height: calc(100vh - 195px) !important;
+	overflow-y: auto;
+	overflow-x: auto;
+}
+
+
+html > body {
+	height: 100vh;
+	display: block;
+	/*background-image: url('html/body.png');*/
+	/*background-image: url('html/body.webp');
+	background-position: center center;
+	background-size: cover;
+	background-attachment: fixed;
+	overflow: hidden;*/
+	background-color: #f5faf9;
+}
+
+html > body > section {
+	margin: 0;
+	padding: 0;
+}
+
+html > body > footer {
+	/*position: relative;*/
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	margin-bottom: 0;
+	padding-right: 28px;
+	background-color: #ffff;
+	font-size: 11px;
+	float: left;
+	color: rgb(103,103,103);
+	left: 0;
+}
+
+html > body > footer > section,
+html > body > footer > section > address,
+html > body > footer > section > p,
+html > body > footer > nav,
+html > body > footer > nav > ul,
+html > body > footer > nav > ul > li,
+html > body > footer > span,
+html > body > footer > address,
+html > body > footer > p {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+html > body > footer > p:not(.users):before {
+	content: '/';
+}
+
+html > body > footer > nav > ul > li {
+	width: 32px;
+	height: 32px;
+	margin-left: 10px;
+}
+
+/*html > body > footer > nav > table> td.skype {
+	background-image: url('html/body/footer/nav/ul/li.skype.png');
+}
+
+html > body > footer > nav > td.email {
+	background-image: url('html/body/footer/nav/ul/li.email.png');
+	margin-left:50px;
+}
+
+html > body > footer > nav > td.wasap {
+	background-image: url('html/body/footer/nav/ul/li.wasap.png');
+}
+
+html > body > footer > nav > td.fono {
+	background-image: url('html/body/footer/nav/ul/li.fono.png');
+
+}*/
+/*
+html > body > footer > nav > table > td > a {
+	display: block;
+	width: 32px;
+	height: 32px;
+}*/
+
+html > body > footer table > td > a > span.none {
+	display: none;
+}
+
+html  body  footer    table  tr  td{
+	padding-right:10px !important;
+
+}
+
+html > body > footer > nav > div > table > td > a > span.wasap {
+	margin-left:100px;
+	color:blue!important;
+}
+
+section.sheet table.items.cotizacion tbody tr.item:hover i{
+	color: black !important;
+}

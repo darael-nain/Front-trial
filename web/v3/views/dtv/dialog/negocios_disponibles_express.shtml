@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Negocios disponibles</title>
+		<meta charset="utf-8">
+		<style type="text/css">
+			/*.ui-dialog-content button{
+				border:1px solid gray!important;
+			}*/
+		</style>
+		<script>
+			$(document).ready(function() {
+				var containerdtc = $('#sheet-dtc');
+
+				unaBase.toolbox.init();
+				// Inicializamos un buscador
+				var params = {
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/_V3_get_negocios_por_facturar' },
+					entity: 'dtv_negocios',
+					/*data: {
+						'idproveedor' : "<!--#4DTEXT idproveedor-->",
+						'tipodtc' : "<!--#4DTEXT tipodtc-->",
+						'totaljust': "<!--#4DTEXT totaljust-->"
+					},*/
+					row: {
+						html: function(i, rows) {
+							return '<tr data-id="' + rows[i].id + '" data-proveedor="' + rows[i].id_cliente + '" data-doc="' + rows[i].id_tipo_doc + '" data-rut="' + unaBase.data.rut.format(rows[i].rut_cliente) + '">' +
+								'<td>' + rows[i].folio + '</td>' +
+								'<td class="left">' + rows[i].cliente + '</td>' +
+								'<td class="left">' + rows[i].referencia + '</td>' +
+								'<td>' + ((rows[i].folio_oc_cliente)? rows[i].folio_oc_cliente : 'N/A')  + '</td>' +
+								'<td>' + rows[i].total + '</td>' +
+								'<td>' + rows[i].saldo_por_facturar + '</td>' +
+								'<td><input style="width:20px!important;height:20px!important" class="select" name="ocselect[id]'+rows[i].id+'" value="'+rows[i].id+'" type="checkbox"></td>' +
+							'</tr>'
+						}
+					},
+					inflection: {
+						singular: 'negocio',
+						plural: 'negocios',
+						none: 'ningún'
+					},
+					filters: [
+						/*{ name: 'tipo_doc', type: 'autocomplete', caption: 'Tipo Doc.', dataSource: 'getTiposDocDeCompras' }*/
+					]
+				};
+
+				unaBase.toolbox.search.init(params);
+
+				unaBase.toolbox.menu.init({
+					entity: 'dtv_negocios',
+					// buttons: ["create_dtv_parcial", "crear_dtc_asociado_oc"] // cambiar
+					buttons: ["add_nv_to_dtv"]
+				});
+
+				$('[data-name="add_nv_to_dtv"]').closest('ul').css('width', '960px').css('text-align', 'right');
+
+
+				// add selección
+		    	$('button.addseleccionoc').button({icons: {primary: 'ui-icon-document'},text: true}).click(function(){
+
+		    		var element = $(this);
+					var selectedoc = $('#negocios-por-facturar > table > tbody').find('input.select:checked');
+					var currentdtc = { "dtc[id]": '<!--#4DTEXT iddtc-->'};
+
+					var ocselect = {};
+					selectedoc.each(function(key, item) {
+						eval("obj = {'ocselect[id]"+ $(this).val() +"': '" + $(this).val() + "'}");
+						$.extend(ocselect, ocselect, obj );
+					});
+					var finalobj = $.extend({}, currentdtc, ocselect);
+					if (selectedoc.length > 0) {
+						$.ajax({
+							'url':'/4DACTION/_V3_getInfoComprasDtc',
+							data: finalobj,
+							dataType:'json',
+							success: function(data) {
+
+								containerdtc.find('input[name="dtc[referencia]"]').val(data.referencia);
+
+								// tipo doc
+								containerdtc.find('select[name="tipo_doc[id]"] > option[selected]').val(data.documento.id);
+								containerdtc.find('select[name="tipo_doc[id]"] > option[selected]').text(data.documento.text);
+								containerdtc.find('select[name="tipo_doc[id]"] > option[selected]').data('rut', data.proveedor.rut);
+								containerdtc.find('select[name="tipo_doc[id]"] > option[selected]').data('impuesto', data.documento.impuesto_valor);
+								containerdtc.find('select[name="tipo_doc[id]"] > option[selected]').data('tipo', data.documento.impuesto_tipo);
+								if (data.documento.especial) {
+									containerdtc.find('input[name="dtc[nro_folio]"]').val(data.documento.correlativo);
+								}
+								containerdtc.find('input[name="dtc[nro_folio]"]').focus();
+
+								// proveedor del doc
+								containerdtc.find('input[name="contacto[info][id]"]').val(data.proveedor.id);
+								containerdtc.find('input[name="contacto[info][alias]"]').val(data.proveedor.alias);
+								containerdtc.find('input[name="contacto[info][razon_social]"]').val(data.proveedor.razon);
+								containerdtc.find('input[name="contacto[info][giro]"]').val(data.proveedor.giro);
+								element.parentTo('.ui-dialog-content').dialog('close');
+
+								// forma pago del doc
+								containerdtc.find('select[name="forma_pago[id]"] > option[selected]').val(data.forma.id);
+								containerdtc.find('select[name="forma_pago[id]"] > option[selected]').text(data.forma.text);
+
+								// carga ocs asociadas
+								var containeroc = containerdtc.find('table.ocs > tbody');
+		      					var htmlObject;
+		  						containeroc.find("*").remove();
+								$.each(data.compras, function(key, item){
+									htmlObject = build_rows_compras(item);
+									htmlObject.click(function(event){
+										if (event.srcElement.localName != 'input' && event.srcElement.className != 'ui-button-text')
+											unaBase.loadInto.viewport('/v3/views/compras/content.shtml?id=' + item.id);
+										//event.preventDefault();
+										//event.stopPropagation();
+									});
+									containeroc.append(htmlObject);
+								});
+								$('button.remove.ocs').button({icons: {primary: 'ui-icon ui-icon-circle-minus'},text: true});
+
+								// carga items del doc
+								var current = containerdtc.find('table.items > tbody');
+								var currentTitulo;
+								current.find("*").remove();
+
+								if (data.detalle.length > 0) {
+									containerdtc.find('table.items').show();
+								}
+
+								$.each(data.detalle, function(key, item){
+									if (item.tipo=="TITULO"){
+									  currentTitulo = get_detail.titulo('prependTo', current, item);
+									}else{
+									  var currentItem = containerdtc.find('table.items > tbody > tr[data-llave="'+item.llave_titulo+'"]');
+									  if(item.llave_titulo == "") {
+									    get_detail.item('prependTo', current, item);
+									  }else{
+									    get_detail.item('insertAfter', currentItem, item);
+									  }
+									}
+								});
+								calcula_por_filas();
+								update_subtotal_items();
+
+								// otros ajustes
+								containerdtc.find('#scrollocs h1 span').text(data.compras.length);
+								containerdtc.find('.montos-justificados').hide();
+
+							},
+							error: function(data) {
+								toastr.error(NOTIFY.get('ERROR_INTERNAL'));
+							}
+						});
+					}else{
+						alert("Debe seleccionar al menos una Orden de compra.");
+					}
+				});
+
+
+			});
+		</script>
+	</head>
+	<body>
+		<section id="negocios-por-facturar" class="sheet">
+			<table class="results">
+				<thead>
+					<tr>
+						<th width="5%">Número</th>
+						<th width="20%">Cliente</th>
+						<th width="25%">Referencia</th>
+						<th width="10%">OC cliente</th>
+						<th width="10%">Total [$]</th>
+						<th width="10%">Saldo por facturar [$]</th>
+						<th width="3%">Seleccionar para facturar</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+				<tfoot></tfoot>
+			</table>
+		</section>
+	</body>
+</html>

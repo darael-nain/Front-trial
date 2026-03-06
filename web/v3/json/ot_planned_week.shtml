@@ -1,0 +1,24 @@
+{	
+	"hours_worked_week":"<!--#4DHTML hoursWorkedWeek-->",
+	"hours_worked_week_percent":"<!--#4DHTML hoursWorkedWeekPercent-->",
+	"hours_week":"<!--#4DHTML hoursWeek-->",
+	"hours_week_percent":"<!--#4DHTML hoursWeekPercent-->",
+	"hours_worked_month":"<!--#4DHTML hoursWorkedMonth-->",
+	"hours_worked_month_percent":"<!--#4DHTML hoursWorkedMonthPercent-->",
+	"hours_month":"<!--#4DHTML hoursMonth-->",
+	"hours_month_percent":"<!--#4DHTML hoursMonthPercent-->",
+	"rows": [
+<!--#4DLOOP aIndexOtPlanned-->
+		{
+			"id": <!--#4DHTML aIdDetPlanned{aIndexOtPlanned}-->,
+			"idot": <!--#4DHTML aIdOtPlanned{aIndexOtPlanned}-->,
+			"de": "<!--#4DHTML atimeFromPlanned{aIndexOtPlanned}-->",
+			"a": "<!--#4DHTML atimeUntilPlanned{aIndexOtPlanned}-->",
+			"fecha": "<!--#4DHTML aDatePlanned{aIndexOtPlanned}-->",
+			"prioridad": "<!--#4DHTML aPrioridadPlanned{aIndexOtPlanned}-->",
+			"total_hrs_plan": "<!--#4DHTML aTotalHrsPlanned{aIndexOtPlanned}-->",
+			"all_day": <!--#4DHTML aAllDayHrsPlanned{aIndexOtPlanned}-->
+		}<!--#4DIF NOT(aIndexOtPlanned{aIndexOtPlanned} = aIndexOtPlanned{Size of array(aIndexOtPlanned)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

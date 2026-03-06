@@ -1,0 +1,113 @@
+<!--#4dloop aIdArchivo-->
+    <div class="files" id="<!--#4dvar aIdArchivo{aIdArchivo}-->">
+
+        <div class="date">
+            <span><!--#4dvar String(aFechaArchivo{aIdArchivo};5)--></span>
+            <span><!--#4dvar aHoraArchivo{aIdArchivo}--> hrs.</span>
+        </div>
+
+        <!--#4dif aDesFormatoArchivo{aIdArchivo}="IMAGEN"-->           
+            <div class="imagenes">            
+                <!--#4dif aFrom{aIdArchivo}="COMPONENTE"--> 
+                    <img alt="<!--#4dvar aAncho{aIdArchivo}-->-<!--#4dvar aAlto{aIdArchivo}-->"
+                                id="<!--#4dvar aIdArchivo{aIdArchivo}-->" class="img-popup" src="/uploads_componentes_tarea/<!--#4dvar aNombreArchivo{aIdArchivo}-->">
+                <!--#4delse--> 
+                    <img alt="<!--#4dvar aAncho{aIdArchivo}-->-<!--#4dvar aAlto{aIdArchivo}-->"
+                                id="<!--#4dvar aIdArchivo{aIdArchivo}-->" class="img-popup" src="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->">
+                <!--#4dendif-->            
+            </div>
+            <div class="descripcion">
+                <span><!--#4dvar aDesArchivo{aIdArchivo}--></span>
+                <span class="subidopor">Subido por <!--#4dvar aNombreUserArchivo{aIdArchivo}--></span>
+                <span class="link"><a href="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->">Descargar</a></span>          
+            </div>
+        <!--#4dendif-->
+
+        <!--#4dif aDesFormatoArchivo{aIdArchivo}="VIDEO"-->
+    		<div class="archivo"><img src="/extensiones/PNG/<!--#4dvar aFormatoArchivo{aIdArchivo}-->.png"></div>       
+    		<div class="descripcion">
+    			<span><!--#4dvar aDesArchivo{aIdArchivo}--></span>
+    			<span class="subidopor">Subido por <!--#4dvar aNombreUserArchivo{aIdArchivo}--></span>
+                <!--#4dif aFrom{aIdArchivo}="COMPONENTE"--> 
+                    <span class="link"><a href="/uploads_componentes_tarea/<!--#4dvar aNombreArchivo{aIdArchivo}-->">Descargar</a></span>  
+                <!--#4delse--> 
+                    <span class="link"><a href="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->">Descargar</a></span>
+                <!--#4dendif-->   			     
+    		</div>
+        <!--#4dendif-->
+
+        <!--#4dif aDesFormatoArchivo{aIdArchivo}="AUDIO"-->
+		<div class="archivo"><img src="/extensiones/PNG/<!--#4dvar aFormatoArchivo{aIdArchivo}-->.png"></div>     
+		<div class="descripcion">
+			<span><!--#4dvar aDesArchivo{aIdArchivo}--></span>
+			<span class="subidopor">Subido por <!--#4dvar aNombreUserArchivo{aIdArchivo}--></span>
+
+            <!--#4dif aFrom{aIdArchivo}="COMPONENTE"--> 
+            <span class="link"><a target="_black" href="/uploads_componentes_tarea/<!--#4dvar aNombreArchivo{aIdArchivo}-->">Descargar</a></span>
+            <!--#4delse--> 
+            <span class="link"><a target="_black" href="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->">Descargar</a></span>
+            <!--#4dendif-->			
+
+			<span class="audio">
+				<audio controls="controls">                 
+					<source src="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->" type="audio/mpeg" />
+					Your browser does not support the audio element.
+				</audio>
+			</span>
+		</div>
+        <!--#4dendif-->
+
+        <!--#4dif aDesFormatoArchivo{aIdArchivo}="DOCUMENTO"-->
+        <div class="archivo"><img src="/extensiones/PNG/<!--#4dvar aFormatoArchivo{aIdArchivo}-->.png"></div> 
+        <div class="descripcion">
+            <span><!--#4dvar aDesArchivo{aIdArchivo}--></span>
+            <span class="subidopor">Subido por <!--#4dvar aNombreUserArchivo{aIdArchivo}--></span>
+
+            <!--#4dif aFrom{aIdArchivo}="COMPONENTE"-->
+                <span class="link"><a href="/uploads_componentes_tarea/<!--#4dvar aNombreArchivo{aIdArchivo}-->">Descargar</a></span>
+            <!--#4delse-->
+                <span class="link"><a href="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->">Descargar</a></span>
+            <!--#4dendif-->
+                               
+        </div>
+        <!--#4dendif-->
+
+        <!--#4dif aDesFormatoArchivo{aIdArchivo}="COMPRIMIDO"-->
+        <div class="archivo"><img src="/extensiones/PNG/<!--#4dvar aFormatoArchivo{aIdArchivo}-->.png"></div> 
+        <div class="descripcion">
+            <span><!--#4dvar aDesArchivo{aIdArchivo}--></span>
+            <span class="subidopor">Subido por <!--#4dvar aNombreUserArchivo{aIdArchivo}--></span>
+
+            <!--#4dif aFrom{aIdArchivo}="COMPONENTE"-->
+                <span class="link"><a href="/uploads_componentes_tarea/<!--#4dvar aNombreArchivo{aIdArchivo}-->">Descargar</a></span> 
+            <!--#4delse-->
+                <span class="link"><a href="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->">Descargar</a></span> 
+            <!--#4dendif-->
+
+        </div>
+        <!--#4dendif-->
+        
+        <!--#4dif aDesFormatoArchivo{aIdArchivo}="ARCHIVO"-->
+        <div class="archivo"><img src="/extensiones/PNG/<!--#4dvar aFormatoArchivo{aIdArchivo}-->.png"></div> 
+        <div class="descripcion">
+            <span><!--#4dvar aDesArchivo{aIdArchivo}--></span>
+            <span class="subidopor">Subido por <!--#4dvar aNombreUserArchivo{aIdArchivo}--></span>
+
+            <!--#4dif aFrom{aIdArchivo}="COMPONENTE"-->
+                <span class="link"><a href="/uploads_componentes_tarea/<!--#4dvar aNombreArchivo{aIdArchivo}-->">Descargar</a></span>
+            <!--#4delse-->
+                <span class="link"><a href="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->">Descargar</a></span>
+            <!--#4dendif-->            
+            
+        </div>
+        <!--#4dendif-->
+
+        <!--#4dif aFrom{aIdArchivo}="COMPONENTE"-->
+            <a class="delete-file-comp" style="cursor:pointer">x</a>
+        <!--#4delse-->
+            <a class="delete-file" style="cursor:pointer">x</a>           
+        <!--#4dendif-->
+
+    </div>
+<!--#4dendloop-->
+

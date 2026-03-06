@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_serverInfo-->
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Importar y crear remuneraciones</title>
+		<script>
+
+			var remunerations = {
+
+				"container" : $('#remSelector'),
+				"id_import" : "",
+				"id_nv"	: "",
+				"ContTotalReparto": $('section#dialog-viewport fieldset[class="reparto"] input[name="aDistribuir"]'),
+				"ContTotalRepartido": $('section#dialog-viewport fieldset[class="reparto"] input[name="distribuido"]')
+
+			}
+
+			async function businessChargeItems(id){
+				console.log("///////////////   BEGIN Business Items Charge    ////////////////");
+				unaBase.ui.block();
+				remunerations.container.find('fieldset.buttons').show();
+				remunerations.container.find('fieldset.reparto').show();
+
+				
+				let sid = '';	
+			 	$.each($.cookie(),function(clave,valor) {sid+= (valor + ' '); });
+			 	remunerations.id_nv=id;
+				
+				let config  =  {
+					url: nodeUrl + '/import-remunerations-business-items-charge',
+					method: 'post',
+					data:  {
+						id: id,
+						sid: sid,
+						only_titles: true,
+						only_used:true,
+						title: "",
+						id_import: remunerations.id_import
+					}
+				};
+				const charge  =  await axios(config);
+				
+
+				remunerations.ContTotalReparto.val(charge.data.repartir);
+
+				
+				remunerations.container.find('table.step-1').hide();
+				remunerations.container.find('table.step-2').show();
+
+
+				var exchangeType = charge.data.exchange.type;
+				var exchangeRate = charge.data.exchange.rate;
+				let tabla2Container = $('table[class="step-2 fixed2 items"] tbody');
+				
+				$.each(charge.data.rows, function(key, item){
+					let symbol = currency.symbol;
+					let subTotalVenta = item.subtotal_venta;
+					let subTotalCosto = item.subtotal_costo;
+					let subTotalCostoReal = item.subtotal_costo_real;
+					if (exchangeType != '' && currency.code == "PEN") {
+						symbol = exchangeType;
+						subTotalVenta = item.subtotal_venta/exchangeRate;
+						subTotalCosto = item.subtotal_costo/exchangeRate;
+						subTotalCostoReal = item.subtotal_costo_real/exchangeRate;
+					}
+					
+						//row+= JSON.stringify(item);
+						// selectTipoPagos += '<option value="'+ item.text +'">'+ item.text +'</option>';
+						// generalContainer.append('<option value="'+ item.text +'">'+ item.text +'</option>');
+					
+							let row='<tr class="title" data-id="' + item.id + '">	'+																		
+									'<th></th>	'+																									
+									'<th>'+																											
+										'<button class="ui-icon toggle categoria ui-icon-folder-collapsed"  title="Contraer o expandir título"></button>'+
+									'</th>'+																									
+									'<th>'+																											
+										'<input readonly name="item[][nombre]" value="' + item.nombre + '">	'+											
+									'</th>'+																												
+									'<th></th>'+																										
+									'<th class="numeric currency pventa adquisicion">' + symbol + ' <span>'+														
+										'<input name="item[][subtotal_venta]" value="' + subTotalVenta + '"></span>	'+							
+									'</th>'+																											
+									'<th class="numeric currency monto-gp costo presupuestado adquisicion">' + symbol + ' <span>'+												
+										'<input name="item[][subtotal_costo]" value="' + subTotalCosto + '"></span>'+								
+									'</th>'+																												
+									'<th class="numeric currency monto-gr costo real adquisicion">' + symbol + ' <span>'+													
+										'<input readonly name="item[][subtotal_costo_real2]" value="' + subTotalCostoReal.toString().replace('.', ',') + '"></span>'+											
+									'</th>'+																												
+									'<th class="numeric currency adquisicion"><!--$--> <span>'+																	
+										'<input style="visibility: hidden;" readonly name="item[][diferencia2]" value="-">-</span>'+														
+									'</th>'+																											
+									'<th><input data-llavetit="" type="checkbox" name="todoTitulocheck" onclick="todoTituloCheck(\''+item.parent+'\');"></th>'+																						
+									'</tr>';
+
+
+						tabla2Container.append(row);
+						
+						//$('.ui-dialog section.sheet table > tbody').find('.numeric.currency input').number(true, currency.decimals, ',', '.');
+							
+						
+					});
+			
+							// Formato números
+
+					$('.ui-dialog .numeric.currency input').number(true, currency.decimals, ',', '.');
+					$('.ui-dialog .percent input').number(true, 2, ',', '.');
+
+					// Expandir y contraer títulos
+					$('.ui-dialog section.sheet table.items > thead button.toggle.all').click(function() {
+						if ($(this).hasClass('ui-icon-folder-open')) {
+							$(this).removeClass('ui-icon-folder-open');
+							$(this).addClass('ui-icon-folder-collapsed');
+							$(this).attr('title', 'Contraer todo');
+							$('.ui-dialog section.sheet table > tbody > tr.title button.toggle.categoria.ui-icon-folder-open').each(function() {
+								$(this).trigger('click');
+							});
+							//simon itemparent
+							$('.ui-dialog section.sheet table > tbody > tr.itemParent button.toggle.categoria.ui-icon-folder-open').each(function() {
+								$(this).trigger('click');
+							});
+
+							
+						} else {
+							$(this).removeClass('ui-icon-folder-collapsed');
+							$(this).addClass('ui-icon-folder-open');
+							$(this).attr('title', 'Expandir todo');
+							$('.ui-dialog section.sheet table > tbody > tr.title button.toggle.categoria.ui-icon-folder-collapsed').each(function() {
+								$(this).trigger('click');
+							});
+							//simon itemparent
+							$('.ui-dialog section.sheet table > tbody > tr.itemParent button.toggle.categoria.ui-icon-folder-collapsed').each(function() {
+								$(this).trigger('click');
+							});
+						}
+					});
+
+
+				
+
+
+						//formato totales reparto
+					$('section#remSelector fieldset.info ').find('input.numeric.currency ').number(true, currency.decimals, ',', '.');
+	
+				unaBase.ui.unblock();
+				console.log("///////////////   END Business Items Charge     ////////////////");
+			}
+
+
+
+
+			async function businessCharge(toCharge){
+				console.log("///////////////   BEGIN Business Charge    ////////////////");
+				// let sid = '';	
+				// $.each($.cookie(),function(clave,valor) {sid+= (valor + ' '); });
+				//let data=new FormData();
+
+				unaBase.ui.block();
+					remunerations.container.find('fieldset.step-0').hide();
+
+
+					remunerations.container.find('fieldset.info').show();
+
+
+
+					remunerations.container.find('table.step-1').show();
+				
+				
+				let rowOld="";
+
+				let tabla1Container = $('table[class="step-1 fixed"]');
+
+				remunerations.id_import=toCharge.vrf.id_import;
+
+				$.each(toCharge.vrf.rows, function(key, item){
+					
+						//row+= JSON.stringify(item);
+						// selectTipoPagos += '<option value="'+ item.text +'">'+ item.text +'</option>';
+						// generalContainer.append('<option value="'+ item.text +'">'+ item.text +'</option>');
+						if (rowOld!==item.negocio) {
+							let row= '<tr data-id="' +item.negocio + '">' +
+										'<td>' + item.folio + '</td>' +
+										'<td>' + item.emision + '</td>' +
+										'<td class="left">' + item.cliente + '</td>' +
+										'<td class="left">' + item.referencia + '</td>' +
+										'<td class="numeric currency total_neto">$  <span><input readonly  value="' + item.total_neto + '" ></span></td>' + 
+									'</tr>';
+
+
+						tabla1Container.append(row);
+						}
+
+							
+						rowOld=item.negocio
+					});
+
+				
+				$('table[class="step-1 fixed"] tbody[class="ui-selectable"] tr').click(function() {
+					
+					console.log("/////////////   CLICK   ////////////////////")
+					let tr=this.dataset.id;
+					
+
+
+					businessChargeItems(tr);
+
+					});
+				unaBase.ui.unblock();
+				
+				$('section.sheet table.step-1 > tbody td.numeric.currency ').find('input').number(true, currency.decimals, ',', '.');
+				
+			 console.log("///////////////   END Business Charge     ////////////////");
+			}
+
+			
+			async function importarRemunerationsSelected(id_import,llaves,id_nv){
+
+
+				let sid = '';	
+				$.each($.cookie(),function(clave,valor) {sid+= (valor + ' '); });
+
+				
+
+				let config  =  {
+					url: nodeUrl + '/import-remunerations-selected',
+					method: 'post',
+					data:{
+						sid: sid,
+						id_import: id_import,
+						llaves: llaves,
+						id_nv :id_nv
+					}
+					
+				};
+				const res  =  await axios(config);
+
+				if (res.data.success) {
+					
+					$('table[class="step-1 fixed"] tbody[class="ui-selectable"] tr[data-id="'+remunerations.id_nv +'"').remove();
+					$('.ui-dialog fieldset.info fieldset.buttons button#toNegocios').trigger('click');
+
+
+
+					toastr.success('Seleccion cargada con exito!');
+					// setTimeout(function() {
+					// 	unaBase.toolbox.search.save();
+					// 	unaBase.toolbox.search.restore();
+					// }, 1000);
+					// $(element).parentTo('.ui-dialog-content').dialog('close');
+
+				}else{
+					
+						toastr.error('No fue posible cargar la información!');
+						let errorMsg = res.data.errorMsg.replace(/SL/g, '<br>');
+						alert("<span style='font-weight:bold;'>Falta información:</span><br><br>" + errorMsg + "<br><span style='font-weight:bold;'>Verfica tu excel y vuelve a intentar.</span>");
+
+				}
+
+			}
+
+
+			async function importarRemunerations(id_import){
+				console.log("//////////////////////////////////   Inicia proceso de importación    ////////////////");
+				unaBase.ui.block();
+				let sid = '';	
+				$.each($.cookie(),function(clave,valor) {sid+= (valor + ' '); });
+
+				
+
+				
+				let config  =  {
+					url: nodeUrl + '/import-remunerations',
+					method: 'post',
+					data:{
+						sid: sid,
+						id_import: id_import
+						
+					}
+					
+				};
+				const res  =  await axios(config);
+
+				if (res.data.success) {
+					
+
+					toastr.success('Archivo cargado con éxito!');
+					setTimeout(function() {
+						unaBase.toolbox.search.save();
+						unaBase.toolbox.search.restore();
+					}, 1000);
+					$('.ui-dialog-content').dialog('close');
+									unaBase.ui.unblock();
+
+
+				}else{
+					
+						toastr.error('No fue posible importar la información!');
+						let errorMsg = res.data.errorMsg.replace(/SL/g, '<br>');
+						alert("<span style='font-weight:bold;'>Falta información:</span><br><br>" + errorMsg + "<br><span style='font-weight:bold;'>Verfica tu excel y vuelve a intentar.</span>");
+										unaBase.ui.unblock();
+
+				}
+
+				console.log("//////////////////////////////////   Finaliza proceso de importación    ////////////////");
+			}
+
+
+
+			let modulo = $('html > body.menu.home > aside > div > div > ul > li.active').data('name').toUpperCase();
+
+			var importLoad = function(append, element) {		
+				console.log("//////////////////////////////////   Inicia verificacion de datos    ////////////////");	
+				
+				let sid = '';					
+				$.each($.cookie(),function(clave,valor) {sid+= (valor + ' '); });
+
+				let data = new FormData();
+				let attachment = $('.ui-dialog fieldset [name="upload[attachment]"]').get(0).files[0];
+				//let separate = $('input[name="separate"]').prop('checked');
+				data.append('upload[attachment]', attachment);
+				
+				data.append('sid', sid);
+
+				
+				if (attachment) {
+					unaBase.ui.block();
+
+					
+					$.ajax({
+						url: nodeUrl + '/import-remunerations-verify?hostname=' + window.location.origin + '&sid=' + encodeURIComponent(sid),
+						type: 'POST',
+						contentType: false,
+						data: data,
+						processData: false,
+						cache: false,
+						success: function(data) {
+							
+							unaBase.ui.unblock();
+
+							if (data.success) {
+								
+								console.log("//////////////////////////////////  Termina verificacion de datos   ////////////////");
+
+								if (data.vrf.verifyOk) {
+
+									importarRemunerations(data.vrf.id_import);
+								}else{
+
+								  	businessCharge(data);
+
+								}
+
+
+
+
+
+								// toastr.success('Archivo cargado con éxito!');
+								// setTimeout(function() {
+								// 	unaBase.toolbox.search.save();
+								// 	unaBase.toolbox.search.restore();
+								// }, 1000);
+								// $(element).parentTo('.ui-dialog-content').dialog('close');
+							} else {
+								
+								toastr.error('No fue posible importar la información!');
+								let errorMsg = data.errorMsg.replace(/SL/g, '<br>');
+								alert("<span style='font-weight:bold;'>Falta información:</span><br><br>" + errorMsg + "<br><span style='font-weight:bold;'>Verfica tu excel y vuelve a intentar.</span>");
+
+								
+								$('.ui-dialog fieldset [name="upload[attachment]"]').val("");
+							}
+						},
+						fail: function(e1,e2,e3) {
+							toastr.error('No fue posible realizar la cargar de los datos debido a un problema con el servidor, Por favor intente nuevamente. <p><small>Si el inconveniente persiste, por favor comuniquese con soporte@unabase.com.</small></p>');
+						}
+					});
+				}else{
+					
+					alert("Falta seleccionar archivo excel.");
+				}
+				
+			};
+
+			$(document).ready(function() {
+				remunerations.container.find('fieldset.info').hide();
+				remunerations.container.find('fieldset.reparto').hide();
+				remunerations.container.find('fieldset.buttons').hide();
+				remunerations.container.find('table.step-1').hide();
+				remunerations.container.find('table.step-2').hide();
+				remunerations.container.find('table.step-3').hide();
+				remunerations.container.find('table.step-4').hide();
+
+
+				let fileName = '';
+				let modulo = $('html > body.menu.home > aside > div > div > ul > li.active').data('name').toUpperCase();
+				if (modulo == 'COMPROBANTES') {
+					fileName = "carga_remuneraciones";
+					
+					$('.btn-create-remuneration').html('<label style="font-weight:bold;">Crear remuneraciones</label>');
+				}else{
+					fileName = "S_N";
+					
+				}
+
+				unaBase.toolbox.init();
+
+				$('.ui-dialog fieldset.export button').button({
+					icons: {
+						primary: 'ui-icon-circle-arrow-s'
+					},
+					text: true
+				}).click(function() {					
+					
+					let sid = '';					
+					$.each($.cookie(),function(clave,valor) {sid+= (valor + ' '); });
+
+					var url = nodeUrl + '/export-template-remunerations/?id=0&filename='+ fileName + '&sid=' + encodeURIComponent(sid) + '&modulo=' + modulo + '&hostname='+window.location.origin;
+					var download = window.open(url).blur();
+					window.focus();
+					download.close();
+				});
+
+				$('.ui-dialog fieldset.import button').button({
+					icons: {
+						primary: 'ui-icon-circle-arrow-n'
+					},
+					text: true
+				}).click(function() {
+					var element = this;
+					var items = $('section.sheet > table.items > tbody').find('tr');
+					if (items.length > 0) {
+						var itemsConGastos = false;
+						$('section.sheet > table.items > tbody').find('tr').each(function(key, item) {
+							if ($(item).find('td:first-of-type').find('button.remove.item').css('visibility') == 'hidden') {
+								itemsConGastos = true;
+							}
+						});
+						if (itemsConGastos) {
+							confirm("<!--#4DTEXT _V3_escapeString(etiqueta_cotizacion)--> actualmente tiene ítems agregados que cuentan con gastos asociados.\n\nSolamente es posible añadir ítems\n\n¿Desea continuar?").done(function(option) {
+								if (option) {
+									importLoad(true, element);
+								}
+							});
+						} else {
+							confirm("La cotización actualmente tiene ítems agregados.\n\n¿Desea reemplazar o agregar?", "Agregar", "Reemplazar").done(function(option) {
+								importLoad(option, element);
+							});
+						}
+					} else {
+						importLoad(false, element);
+					}
+				});
+
+				$('.ui-dialog fieldset.info fieldset.buttons button#toNegocios').button({
+					icons: {
+						primary: 'ui-icon-circle-arrow-n'
+					},
+					text: true
+				}).click(function() {
+					var element = this;
+					var items = $('section.sheet > table.step-1 > tbody').find('tr');
+					remunerations.ContTotalReparto.val(0);
+					remunerations.ContTotalRepartido.val(0);
+					tbody={};
+						remunerations.container.find('fieldset.reparto').hide();
+						remunerations.container.find('fieldset.buttons').hide();
+						$('section#remSelector table.items tbody tr').remove();
+						remunerations.container.find('table.step-2').hide();
+					if (items.length > 0) {
+						
+						
+						
+						remunerations.container.find('table.step-1').show();
+						
+					} else {
+						importarRemunerations(remunerations.id_import)
+						//remunerations.container.find('table.step-3').show();
+						//importLoad(false, element);
+
+
+					}
+				});
+
+				$('.ui-dialog fieldset.info fieldset.buttons button#confirmarReparto').button({
+					icons: {
+						primary: 'ui-icon-circle-arrow-n'
+					},
+					text: true
+				}).click(function() {
+					
+					let dis=0;
+					let cont=0;
+					
+
+					let totalRepartido=remunerations.ContTotalRepartido.val();
+					let totalReparto =remunerations.ContTotalReparto.val();
+
+					if (totalRepartido>=totalReparto) {
+
+	 					let llaves="";
+						let items =$('section#dialog-viewport td input[type="checkbox"]');
+
+						for (let x=0; x < items.length; x++) {
+							 if (items[x].checked) {
+							  cont = cont + 1;
+							 		
+							  let key =items[x].value;
+							  llaves=llaves+"/" +key;
+							  let repartir=parseInt($('section#dialog-viewport td input[name="item[][diferencia]'+key+'"]').val());
+
+							 }
+						}
+						importarRemunerationsSelected(remunerations.id_import,llaves,remunerations.id_nv);
+					}else{
+
+						alert("<span style='font-weight:bold;'>Reparto incompleto:</span><br><br><span style='font-weight:bold;'>Es necesario seleccionar mas items</span>");
+										
+
+
+					}
+
+						
+				      
+
+							 // if (element.checked) {
+							
+							 //  //dis = element.val();
+							
+
+							 //  cont.val(totalRepartido+repartir)
+
+							 // }else{
+
+
+							 // 	cont.val(totalRepartido-repartir)
+							 // }
+						
+
+					
+
+					
+				});
+
+					$('.ui-dialog section.sheet table.items tbody').on('click', 'button.toggle.categoria', async function() {
+							
+							unaBase.ui.block();
+							console.log('items2')
+							var target={}
+							target = $(this);
+
+							var collapsed = target.hasClass('ui-icon-folder-collapsed');
+							
+							if (collapsed) {
+								target.removeClass('ui-icon-folder-collapsed').addClass('ui-icon-folder-open');
+								var title={};
+								var tbody ={}
+								title = target.closest('tr');
+								tbody = $(' section.sheet table.items tbody');
+								if (title.data('loaded') !== true) {
+									unaBase.ui.block();
+
+
+
+									let sid = '';	
+								 	$.each($.cookie(),function(clave,valor) {sid+= (valor + ' '); });
+
+									
+									let config  =  {
+										url: nodeUrl + '/import-remunerations-business-items-charge',
+										method: 'post',
+										data:  {
+											id: remunerations.id_nv,
+											sid: sid,
+											only_titles: false,
+											only_used:true,
+											title: title.data('id'),
+											id_import:remunerations.id_import
+										}
+									};
+									let chargeItems ={};
+									 chargeItems  =  await axios(config);
+									
+
+
+											var exchangeType = chargeItems.data.exchange.type;
+											var exchangeRate = chargeItems.data.exchange.rate;
+									
+											
+											var htmlString = '';
+											var subtotal_costo_real = 0;
+											var diferencia = 0;
+											$.each(chargeItems.data.rows, function(key, item) {
+													
+												let symbol = currency.symbol;
+												let subTotalVenta = item.subtotal_venta;
+												let subTotalCosto = item.subtotal_costo;
+												let subTotalCostoReal = item.subtotal_costo_real;
+												let subTotalDiferencia = item.diferencia;
+												if (exchangeType != '' && currency.code == "PEN") {
+													symbol = exchangeType;
+													subTotalVenta = item.subtotal_venta/exchangeRate;
+													subTotalCosto = item.subtotal_costo/exchangeRate;
+													subTotalCostoReal = item.subtotal_costo_real/exchangeRate;
+													subTotalDiferencia = item.diferencia/exchangeRate;
+												}
+											
+												let parentClasses = `${item.isParent ? 'itemParent':''} ${item.itemParent !== ""? 'childItem':''}`;
+												var tooltip = (item.observacion != '' || item.comentario != '')? htmlspecialchars('\
+													<ul>																												\
+														<li data-name="observaciones">																					\
+															<strong style="font-weight: bold; display: inline-block; width: 220px;">Descripción larga</strong>			\
+															<pre style="font-size: 11px;">' + ((item.observacion != '')? item.observacion : '-') + '</pre>				\
+														</li>																											\
+														<li data-name="comentarios">																					\
+															<strong style="font-weight: bold; display: inline-block; width: 220px;">Observación</strong>				\
+															<pre style="font-size: 11px;">' + ((item.comentario != '')? item.comentario : '-') + '</pre>				\
+														</li>																											\
+													</ul>																												\
+												') : '';
+												htmlString+= '\
+													<tr data-llave="' + item.id + '" data-id="' + item.id + '" data-parent="' + item.parent + '" data-class="collapsed"				\
+														data-observacion="' + item.observacion + '" data-comentario="' + item.comentario + '" class="'+parentClasses+'">										\
+														<td></td>																													\
+												 		<td class="numeric code"><input style="width:70px;text-align:left" readonly name="item[][codigo]" value="' + item.codigo + '"></td>							\
+												 		<td>																														\
+												 			<input readonly name="item[][nombre]" value="' + item.nombre + '"														\
+												 			style="width: 190px;"><button 																							\
+												 				class="ui-icon ui-icon-notice detail item" title="' + tooltip + '"													\
+												 				' + ((item.observacion == '' && item.comentario == '')? ' style="display: none;"' : '') + '>						\
+												 				Ver detalle del ítem</button>																						\
+												 		</td>																														\
+												 		<td class="center">																											\
+												 			<input readonly name="item[][cant]" value="' + item.cantidad + '">														\
+												 		</td>																														\
+												 		<td class="numeric currency pventa adquisicion">' + symbol + ' <span>																	\
+												 			<input readonly name="item[][subtotal_venta]" value="' + subTotalVenta + '"></span>								\
+												 		</td>																														\
+												 		<td class="numeric currency monto-gp costo presupuestado adquisicion">' + symbol + ' <span>														\
+												 			<input readonly name="item[][subtotal_costo]" value="' + subTotalCosto + '"></span>								\
+												 		</td>																														\
+												 		<td class="numeric currency monto-gr costo real adquisicion">' + symbol + ' <span>																\
+												 			<input readonly name="item[][subtotal_costo_real]" value="' + subTotalCostoReal.toString().replace('.', ',') + '"></span>						\
+												 		</td>																														\
+												 		<td class="numeric currency adquisicion">' + symbol + ' <span>																			\
+												 			<input data-diferencia="xxxx" class="xgastar" readonly name="item[][diferencia]' + item.id + '" value="' + ((subTotalDiferencia > 0)? subTotalDiferencia : 0).toString().replace('.', ',') + '"></span>	\
+												 		</td>																														\
+														<td>																														\
+															<input  data-llavetit="' + item.parent + '" name="detalle[check_item][' + item.id + ']" value="' + item.id + '"			\
+																type="checkbox"' + ((subTotalDiferencia <= 0 ) || item.isParent? ' disabled' : '') + '>					\
+														</td>																														\
+													</tr>																															\
+												';
+
+												//subtotal_costo_real+= item.subtotal_costo_real;
+												//diferencia+= item.diferencia;
+
+												subtotal_costo_real+= subTotalCostoReal;
+												diferencia+= subTotalDiferencia;
+
+											});
+											
+											$(htmlString).insertAfter(title);
+												
+												
+											title.find('[name="item[][subtotal_costo_real]"]').val(subtotal_costo_real);
+											title.find('[name="item[][diferencia]"]').val(diferencia);
+											//$('section.sheet table.items > tbody').find('.numeric.currency input').number(true, currency.decimals, ',', '.');
+
+
+											title.data('loaded', true);
+
+											title.nextUntil('tr.title').find('button.detail.item').tooltipster({
+												delay: 0,
+												interactiveAutoClose: false,
+												contentAsHTML: true
+											}).bind('hover', function(event) {
+												$(this).tooltipster('show');
+											}).bind('mouseout', function(event) {
+												$(this).tooltipster('hide');
+											});
+
+											//simon itemparent start
+											title.nextUntil('tr.itemParent').find('button.detail.item').tooltipster({
+												delay: 0,
+												interactiveAutoClose: false,
+												contentAsHTML: true
+											}).bind('hover', function(event) {
+												$(this).tooltipster('show');
+											}).bind('mouseout', function(event) {
+												$(this).tooltipster('hide');
+											});
+
+											//simon itemparent end
+
+
+											tbody.find('[data-parent="' + title.data('id') + '"]').removeClass('collapsed');
+
+											// Se actualiza el gasto real respecto a los ìtems que ya están presentes en la OC, con este método
+											//getItemsGastos();
+											// if(!data.showTotals){
+											// 	hideTotals();								
+											// }
+											unaBase.ui.unblock();
+										
+									// contar checkbox   REAPER
+										$('section#dialog-viewport td input[type="checkbox"]').click(function() {
+											
+												var dis=0;
+												
+												var element = this;
+												var totalReparto=parseInt($('section#dialog-viewport fieldset[class="reparto"] input[name="aDistribuir"]').val());
+												var totalRepartido=parseInt($('section#dialog-viewport fieldset[class="reparto"] input[name="distribuido"]').val());
+												//`${nodeUrl}/expenses/tovalidate?sid=${unaBase.sid.encoded()}`; 
+
+												var llave=element.value;
+												var repartir=parseInt($('section#dialog-viewport td input[name="item[][diferencia]'+llave+'"]').val());
+										        var cont= $('section#dialog-viewport fieldset[class="reparto"] input[name="distribuido"]');
+
+													 if (element.checked) {
+													
+													  //dis = element.val();
+														
+														if (totalRepartido <totalReparto){
+
+															  cont.val(totalRepartido+repartir)
+
+														}else{
+															
+															element.checked=false;
+															alert("<span style='font-weight:bold;'>Reparto completo:</span><br><br><span style='font-weight:bold;'>Ya se repartió el monto necesario en este negocio, por favor confirme reparto.</span>");
+
+														}
+
+													
+
+
+													 }else{
+
+
+													 	cont.val(totalRepartido-repartir)
+													 }
+												
+
+												if (cont > 0) {
+													
+												} else {
+													//importLoad(false, element);
+
+
+												}
+																		
+																		
+										});
+									
+								}
+							} else {
+								target.removeClass('ui-icon-folder-open').addClass('ui-icon-folder-collapsed');
+							}
+
+
+							var titles = target.parentTo('tr').nextUntil('.title');
+							if (collapsed) {
+								titles.removeClass('collapsed');
+								target.parentTo('tr').find('.info').html('');
+
+							} else {
+								titles.addClass('collapsed');
+								target.parentTo('tr').find('.info').html(titles.length + ' ítem' + ((titles.length > 1)? 's' : ''));
+							}
+							unaBase.ui.unblock();
+					});
+
+
+			});
+		</script>
+		<link rel="stylesheet" type="text/css" href="/v3/design/negCotCommon/index.css">
+		<style>
+	      
+				
+			.itemParent{
+				background-color: #98db8c !important;
+			}
+			.itemParent input{
+				font-style: italic !important;
+				font-weight: 900 !important;
+			}
+			.childItem{
+				background-color: #ecfcea !important;
+			}
+			.childItem input{
+				font-style: italic !important;
+			}
+			/* simon itemparent end*/
+				#remSelector table.step-2 > tbody {
+					counter-reset: item;
+				}
+
+				#remSelector table.step-2 > tbody > tr:not(.title) > td:nth-of-type(2):before {
+					counter-increment: item;
+					content: counter(item);
+					font-weight: bold;
+				}
+
+				#remSelector table.step-2 > * > * > * span[name] {
+					display: block;
+					color: black;
+				}
+
+				#remSelector table.step-2 .collapsed {
+					display: none;
+				}
+
+				#remSelector table .moving-src, table.step-2 .moving-dst {
+					outline: 1px dashed black;
+					opacity: .3;
+				}
+
+				#remSelector  table.step-2 th:last-of-type {
+					width: 28px;
+				}
+
+				/* Nuevo */
+
+				#remSelector  table.step-2 > footer > article {
+					position: relative;
+				}
+
+				#remSelector   table.step-2 > footer > article > button.expand {
+					position: absolute;
+					right: 23px;
+					top: 23px;
+					display: inline-block;
+					margin: 0 !important;
+					padding: 0 !important;
+					width: 18px !important;
+					height: 18px !important;
+				}
+
+				#remSelector .costo > span > span[name] {
+					color: #AF6D44;
+				}
+
+				#remSelector .utilidad > span > span[name] {
+					color: #44AF6D;
+				}
+
+				#remSelector .numeric.percent > span > span[name] {
+					display: inline;
+				}
+
+				#remSelector .detalle {
+					display: none;
+				}
+
+				/*
+				Solución quick&dirty para poder mostrar correctamente los valores con decimales
+				se usa input en vez de span, y se cambia la apariencia del input en línea
+				*/
+
+				#remSelector table.step-2 input:not([type="checkbox"]) {
+					background: none !important;
+					border: none !important;
+					cursor: default !important;
+					margin: 0 !important;
+					padding: 0 !important;
+					display: inline !important;
+					font: inherit !important;
+				}
+
+				#remSelector table.step-2 .costo > span > input[name] {
+					color: #AF6D44;
+				}
+
+				#remSelector table.step-2 .utilidad > span > input[name] {
+					color: #44AF6D;
+				}
+
+				#remSelector table.step-2 .numeric.percent > span > input[name] {
+					display: inline;
+				}
+
+				.new-position-button{
+					position:absolute;
+					right:20px;
+					top:15px!important
+				}
+		</style>
+	</head>
+	<body>
+		<section id="remSelector" class="sheet">
+			<fieldset class="info">
+					<legend>Repartir montos en negocios</legend>
+					<fieldset id="buttons" class="buttons">
+						<button id="toNegocios" style="border:2px solid gray;" >Volver a los negocios</button>
+						<button id="confirmarReparto" style="border:2px solid gray;" >Confirmar reparto</button>
+					</fieldset>
+					
+						<p style="padding: 5px; font-weight: bold;">En esta seccion debes seleccionar los negocios e items en los cuales se debe repartir los montos, debido a que algunos items en la carga no estaban definidos o no tenian suficiente saldo para gastar en los negocios correspondientes </p>
+					<br><br>
+					<fieldset  class="reparto" >
+						
+						<p>TOTAL A DISTRIBUIR: </p>$<input class="numeric currency" style="font-weight: bold" type="text" name="aDistribuir" readonly disabled value="0"/>
+						<p>TOTAL DISTRIBUIDO: </p>$<input class="numeric currency" style="font-weight: bold" type="text" name="distribuido" readonly disabled value="0"/>
+
+					</fieldset>
+						
+					
+			</fieldset>
+			<fieldset class="step-0">
+				<fieldset class="export">
+					<legend>Paso 1 - Descargar plantilla Excel</legend>
+					<button>Descargar plantilla de ayuda</button>
+				</fieldset>
+				<p style="padding: 5px; font-weight: bold;">Una vez descargada la plantilla Excel, puede reemplazar los datos de prueba con los definitivos.</p>
+				<p style="padding: 5px; font-weight: bold;">Para cargar y crear remuneraciones, vuelva aquí y cargue el archivo Excel utilizando el siguiente formulario (paso 2).</p>
+				<fieldset class="import">
+					<legend>Paso 2 - Subir y crear desde Excel</legend>
+					<label>
+						<span style="width: 200px; margin-bottom: 5px;">Archivo XLSX</span>
+						<input style="width: 100% !important; display: block !important;" type="file" name="upload[attachment]" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+					</label><br><br>
+						
+					<button style="border:2px solid gray;" class="btn-create-remuneration">Crear remuneracion</button>
+				</fieldset>
+			</fieldset>
+
+			<table class="step-1 fixed">
+				<thead>
+					<tr>
+						<th width="20%" class="center">Folio</th>
+						<th width="20%" class="center">Fecha Emision</th>
+						<th width="20%" class="center">Cliente</th>
+						<th width="20%" class="center">Referencia</th>
+						<th width="20%" class="center">Total Neto</th>
+					</tr>
+				</thead>
+				<tbody class="ui-selectable"></tbody>
+				<tfoot>
+					<tr>
+						<th width="100%" colspan="7" class="right numeric currency">
+							<div class="porpagar label2"></div>
+							<div class="apagar label2"></div>
+							<div class="saldo label2"></div>
+						</th>
+					</tr>
+				</tfoot>
+			</table>
+			<table class="step-2 fixed2 items">
+				<thead>
+					<tr>
+						<th style=" width: 1px !important;"></th>
+						<!-- <th style="width: 70px; text-align: left;"><button onclick="noCheckNegativo()" style="-webkit-filter: invert(100%);" class="ui-icon ui-icon-folder-collapsed toggle all" title="Contraer todo"></button> Código</th> -->
+						<th style="width: 70px; text-align: left;"><button  style="-webkit-filter: invert(100%);" class="ui-icon ui-icon-folder-collapsed toggle all" title="Contraer todo"></button> Código</th>
+						<th >Nombre</th>
+						<th>Cant.</th>
+						<th class="pventa">Venta</th>
+						<th class="monto-gp costo presupuestado adquisicion">Gasto P.</th>
+						<th class="monto-gr costo real adquisicion">Gasto R.</th>
+						<th class="adquisicion">Por gastar</th>
+						<!-- <th><button class="dropdown-button actions items"></button></th> -->
+						<th>Todo<input type="checkbox" name="todocheck" onchange="todoCheck();"></th>
+					</tr>
+				</thead>
+				
+				<tbody></tbody>
+			</table>
+			<table class="step-3 fixed3">
+				<thead>
+					<tr>
+						<th width="10%" class="center">Número</th>
+						<th width="20%" class="left">Proveedor</th>
+						<th width="45%" class="left">Referencia</th>
+						<th width="10%" class="left">DTC</th>
+						<th width="15%" class="right">Total pagado [$]</th>
+					</tr>
+				</thead>
+				
+				<tbody></tbody>
+				<tfoot>
+					<tr>
+						<th width="100%" colspan="4" class="right numeric currency">	
+							<div class="total right " style="align-content: right; margin-right:5px;"></div>
+							<th width="85%" class="right"></th>
+						</th>
+					</tr>
+				</tfoot>
+			</table>
+			<table class="step-4 fixed4">
+				<thead>
+					<tr>
+						<th width="10%" class="center">Número</th>
+						<th width="20%" class="left">Proveedor</th>
+						<th width="45%" class="left">Referencia</th>
+						<th width="10%" class="left">DTC</th>
+						<th width="5%" class="left">N° Comp</th>
+						<th width="10%" class="right">Total pagado [$]</th>
+					</tr>
+				</thead>
+				
+				<tbody></tbody>
+				<tfoot>
+					<tr>
+						<th width="100%" colspan="4" class="right numeric currency">	
+							<div class="total right " style="align-content: right; margin-right:5px;"></div>
+							<th width="85%" class="right"></th>
+						</th>
+					</tr>
+				</tfoot>
+			</table>
+		</section>
+		
+	</body>
+</html>

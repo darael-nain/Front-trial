@@ -1,0 +1,28 @@
+{
+	"rows": [
+<!--#4DLOOP $idsDtc -->
+		{
+			"coditem":"<!--#4DHTML String(aItemCod{$idsDtc};"&xml")-->",
+			"id": <!--#4DTEXT $idsDtc{$idsDtc}-->,
+			"total": "<!--#4DHTML String(aTotal{$idsDtc};"&xml")-->",
+			"exento": "<!--#4DHTML String(aExento{$idsDtc};"&xml")-->",
+			"neto": "<!--#4DHTML String(aNeto{$idsDtc};"&xml")-->",
+			"adicional": "<!--#4DHTML String(aAdicional{$idsDtc};"&xml")-->",
+			"impuesto": "<!--#4DHTML String(aImpuesto{$idsDtc};"&xml")-->",
+			"folio": "<!--#4DVAR aFolio{$idsDtc}-->",
+			"fecha": "<!--#4DHTML aFecha{$idsDtc}-->",
+			"tipoDoc": "<!--#4DVAR aTipoDoc{$idsDtc}-->",
+			"proveedor": "<!--#4DVAR _V3_escapeString(aProveedor{$idsDtc})-->",
+			"referencia": "<!--#4DHTML _V3_escapeString(aReferencia{$idsDtc})-->",
+			"estado": "<!--#4DVAR aEstado{$idsDtc}-->",
+			"folioGasto": "<!--#4DVAR aFolioGasto{$idsDtc}-->",
+			"retiva": "<!--#4DHTML aImpMultipleRetIvaMx{$idsDtc}-->",
+			"retisr": "<!--#4DHTML aImpMultipleRetIsrMx{$idsDtc}-->",
+			"ivamx": "<!--#4DHTML aImpMultipleIvaMx{$idsDtc}-->",
+			"costomx": "<!--#4DHTML aImpMultipleCostoMx{$idsDtc}-->",
+			"tipoGasto": "<!--#4DVAR aTipoGasto{$idsDtc}-->",
+			"attachment": "<!--#4DVAR aUploadDoc{$idsDtc}-->"
+		}<!--#4DIF NOT($idsDtc{$idsDtc} = $idsDtc{Size of array($idsDtc)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

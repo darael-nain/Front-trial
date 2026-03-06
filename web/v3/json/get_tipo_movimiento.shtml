@@ -1,0 +1,10 @@
+{
+	"rows": [
+<!--#4DLOOP aIdTipoMov -->
+		{
+			"id": "<!--#4DTEXT aIdTipoMov{aIdTipoMov}-->",
+			"text": "<!--#4DHTML _V3_escapeString(aTextTipoMov{aIdTipoMov})-->"
+		}<!--#4DIF NOT(aIdTipoMov{aIdTipoMov} = aIdTipoMov{Size of array(aIdTipoMov)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

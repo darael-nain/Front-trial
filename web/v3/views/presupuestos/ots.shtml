@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getCotizacionContent-->
+		<!--#4DSCRIPT/_V3_proxy_getListGastos-->
+		<meta charset="utf-8">
+		<title>Compras</title>
+		<script>
+		$(document).ready(function() {
+			var container = $('section.sheet-list-ots');
+			var id = container.data('id');
+			var detail = container.data('detail');
+			var tbody = container.find('table > tbody');
+			var tfoot = container.find('table > tfoot');
+
+			var loadOtsNegocio = function(data) {
+
+				// Elimina todas las oc de la tabla
+				tbody.find("*").remove();
+
+				var htmlObject;
+				$.each(data.rows, function(key, item) {
+					htmlObject = $('<tr data-id="'+item.id+'">'+
+								'<td>'+item.folio+'</td>' +
+								'<td class="left">'+item.referencia+'</td>' +
+								'<td class="left">'+item.responsable+'</td>' +
+								'<td>'+item.estado+'</td>' +
+								'<td>'+item.costo_unit+'</td>' +
+								'<td>'+item.h_asignadas+'</td>' +
+								'<td>'+item.costo_pres+'</td>' +
+								'<td>'+item.h_reales+'</td>' +
+								'<td>'+item.total_real+'</td>' +
+								'</tr>');
+					tbody.append(htmlObject);
+				});
+
+				var htmlObject;
+				htmlObject = $('<tr>'+
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'<th>'+data.suma_h_asignadas+'h</th>' +
+							'<th>'+data.suma_total_pres+'</th>' +
+							'<th>'+data.suma_h_real+'h</th>' +
+							'<th>'+data.suma_total_real+'</th>' +
+							'</tr>');
+				tfoot.append(htmlObject);
+
+			};
+
+			$.ajax({
+				url: '/4DACTION/_V3_getOtsByNegocio',
+				dataType: 'json',
+				async: false, // para que no avance hasta que la llamada se complete
+				cache: false,
+				data: {
+					id: id,
+					detail: detail
+				},
+				success: loadOtsNegocio
+			}).fail(function(a, b, c) {
+				console.log(a, b, c);
+			});
+
+			formatCurrency();
+
+			//Ingresar a una ot, dando doble click
+		    tbody.find('tr').unbind('click').bind('click', function(event) {
+				window.open('/ot.shtml?i='+$(this).data('id'));
+			});
+
+		});
+		</script>
+	</head>
+	<body>
+		<section class="sheet-list-ots sheet" data-id="<!--#4DVAR id-->" data-detail="<!--#4DVAR detail-->">
+			<!--4DINCLUDE infogeneral.shtml-->
+			<table>
+				<thead>
+					<tr>
+						<th>Nro.</th>
+						<th>Referencia</th>
+						<th>Responsable</th>
+						<th>Estado</th>
+						<th>Costo Unit.</th>
+						<th>H. Asignadas</th>
+						<th>Total Presup.</th>
+						<th>H. Reales</th>
+						<th>Total Real</th>
+					</tr>
+				</thead>
+				<tbody class="ui-selectable"></tbody>
+			  	<tfoot></tfoot>
+			</table>
+		</section>
+	</body>
+</html>

@@ -1,0 +1,4 @@
+{
+	"today_hours": "<!--#4DTEXT $today_hours-->",
+	"weekly_hours": "<!--#4DTEXT $weekly_hours-->"
+}

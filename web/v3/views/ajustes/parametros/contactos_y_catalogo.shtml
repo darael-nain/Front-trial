@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+	<!--#4DSCRIPT/_V3_proxy_getCampoContent-->
+	<head>
+		<title>Contactos y catálogo</title>
+		<meta charset="utf-8">
+		<script>
+			$(document).ready(function() {
+				var tagContainer = $('input.values').masterblaster({
+					tagRules: {
+						unique: true
+					}
+				}).on('mb:error', function(e, tagName, errorMsg) {
+					toastr.warning('Los valores a ingresar no deben estar repetidos. Por favor, intente nuevamente.');
+				});
+
+
+				var refreshValues = function() {
+					while (tagContainer.masterblaster('getTags')[0].length > 0) {
+						tagContainer.masterblaster('pop');
+					}
+					$('input[name="campo[text]"]').data('id', undefined);
+					$('input[name="campo[text]"]').val(undefined);
+					$('input.values').val(undefined);
+
+					$.ajax({
+						url: '/4DACTION/_V3_getCampo',
+						data: {
+							all: true
+						},
+						dataType: 'json',
+						success: function(data) {
+							var tbody = $('table.fields > tbody');
+							tbody.empty();
+							$.each(data.rows, function(key, item) {
+								var htmlObject = $('\
+									<tr data-id="' + item.id + '">																\
+										<td>' + item.text + '</td>																\
+										<td>' + ( (item.selectable)? 'Lista de opciones' : 'Texto libre' ) + '</td>				\
+										<td>' + ( (item.enabled)? 'Activo' : 'Inactivo' ) + '</td>								\
+										<td>																					\
+											<button class="item edit"></button>													\
+											<button class="item ' + ( (!item.enabled)? 'enable' : 'disable' ) + '"></button>	\
+											<button class="item remove"></button>												\
+										</td>																					\
+									</tr>																						\
+								');
+								htmlObject.find('button.edit').button({
+									icons: {
+										primary: 'ui-icon-pencil'
+									},
+									text: false
+								}).click(function() {
+									$.ajax({
+										url: '/4DACTION/_V3_getCampo',
+										data: {
+											fk: htmlObject.data('id')
+										},
+										dataType: 'json',
+										success: function(data) {
+											refreshValues();
+											$('input[name="campo[text]"]').data('id', data.rows[0].id);
+											$('input[name="campo[text]"]').val(data.rows[0].text);
+											$.each(data.rows[0].options, function(key, item) {
+												tagContainer.masterblaster('push', item.text);
+											});
+										}
+									})
+								});
+
+								if (!item.enabled)
+									htmlObject.find('button.enable').button({
+										icons: {
+											primary: 'ui-icon-circle-check'
+										},
+										text: false
+									}).click(function() {
+										$.ajax({
+											url: '/4DACTION/_V3_setCampo',
+											data: {
+												id: $(htmlObject).data('id'),
+												enabled: true
+											},
+											dataType: 'json',
+											success: function(data) {
+												toastr.success('Campo activado!');
+												refreshValues();
+											}
+										});
+									});
+								else
+									htmlObject.find('button.disable').button({
+										icons: {
+											primary: 'ui-icon-circle-close'
+										},
+										text: false
+									}).click(function() {
+										$.ajax({
+											url: '/4DACTION/_V3_setCampo',
+											data: {
+												id: $(htmlObject).data('id'),
+												enabled: false
+											},
+											dataType: 'json',
+											success: function(data) {
+												toastr.success('Campo desactivado!');
+												refreshValues();
+											}
+										});
+									});
+
+								htmlObject.find('button.remove').button({
+									icons: {
+										primary: 'ui-icon-trash'
+									},
+									text: false
+								}).click(function() {
+									confirm('¿Está seguro que desea eliminar el campo?').done(function(accept) {
+										if (accept)
+											$.ajax({
+												url: '/4DACTION/_V3_removeCampo',
+												data: {
+													id: $(htmlObject).data('id')
+												},
+												dataType: 'json',
+												success: function(data) {
+													if (data.success)
+														toastr.success('Campo eliminado!');
+													else {
+														if (!data.readonly)
+															toastr.error('El campo no pudo eliminarse porque tiene datos asociados.\nEn vez de eliminarlo, desactívelo.');
+														else
+															toastr.error(NOTIFY.get('ERROR_RECORD_READONLY'));
+													}
+													refreshValues();
+												}
+											});
+									});
+								});
+
+								tbody.append(htmlObject);
+							});
+						}
+					});
+				};
+
+				refreshValues();
+
+				$('button.save-field').button({
+					icons: {
+						primary: 'ui-icon-disk'
+					}
+				}).click(function() {
+					var is_valid = true;
+					$('section.sheet input[required]').each(function() {
+						if ($(this).val() == '') {
+							is_valid = false;
+							return false;
+						}
+					});
+					if (is_valid) {
+						$.ajax({
+							url: '/4DACTION/_V3_setCampo',
+							data: {
+								id: $('input[name="campo[text]"]').data('id'),
+								text: $('input[name="campo[text]"]').val(),
+								options: tagContainer.masterblaster('getTags')[0]
+							},
+							dataType: 'json',
+							success: function(data) {
+								if (data.success) {
+									toastr.success(NOTIFY.get('SUCCESS_SAVE'));
+									refreshValues();
+								} else
+									toastr.error(NOTIFY.get('ERROR_RECORD_READONLY'));
+							}
+						});
+					} else {
+						toastr.error(NOTIFY.get('ERROR_DATA'));
+					}
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<section class="sheet">
+			<footer>
+				<article>
+					<h1>Nuevo campo</h1>
+					<ul class="editable">
+						<li>
+							<span>Nombre</span>
+							<span>
+								<input name="campo[text]" type="text" class="always-open" required>
+							</span>
+						</li>
+					</ul>
+					<ul class="editable">
+						<li>
+							<span>Lista de valores</span>
+							<span>
+								<input class="values always-open" maxlength="64">
+							</span>
+						</li>
+					</ul>
+					<button class="save-field">Guardar</button>
+				</article>
+				<article>
+					<h1>Campos adicionales</h1>
+					<table class="fields">
+						<thead>
+							<tr>
+								<th>Nombre</th>
+								<th>Tipo</th>
+								<th>Estado</th>
+								<th>Acciones</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</article>
+		</section>
+	</body>
+
+</html>

@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Expires" content="0">
+  <meta http-equiv="Last-Modified" content="0">
+  <meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+
+
+  <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous"> -->
+
+  <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <link href="../css/general.css" rel="stylesheet">
+  <link href="../css/list_pagos.css" rel="stylesheet">
+  <link rel="stylesheet" href="/v3/design/icons/fontawesome-free-6.6.0/css/all.min.css">
+  <script rel="stylesheet" href="/v3/design/icons/fontawesome-free-6.6.0/js/all.js"></script>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker3.min.css"
+    integrity="sha512-rxThY3LYIfYsVCWPCW9dB0k+e3RZB39f23ylUYTEuZMDrN/vRqLdaCBo/FbvVT6uC2r0ObfPzotsfKF9Qc5W5g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href='/css/tom-select.css?v=43534434335'>
+  <script type='text/Javascript' src='/script/tom-select.js?v=43534434335'></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js@1.11.1/src/toastify.min.css">
+  <title>Document</title>
+
+
+  <style>
+    .ts-control {
+      border: none;
+    }
+
+    a {
+      color: #4EC275;
+    }
+
+    .btn:hover {
+      background-color: #dce3de;
+
+    }
+
+    button.colorSelector {
+      padding: 0 !important;
+    }
+
+
+
+    .table-fixed tbody td,
+    .table-fixed tbody th,
+    .table-fixed thead>tr>th {
+      float: left;
+      position: relative;
+    }
+
+    .table-fixed tbody td::after,
+    .table-fixed tbody th::after,
+    .table-fixed thead>tr>th::after {
+      content: "";
+      clear: both;
+      display: block;
+    }
+
+    #tooltip {
+      width: 500px;
+      background-color: rgb(110, 108, 108);
+      color: white;
+      padding: 10px 50px;
+      border-radius: 10px;
+      font-size: 13px;
+    }
+
+    .imgRedonda {
+      width: 30px;
+      height: 30px;
+      border-radius: 20px;
+    }
+
+    .santander {
+      background: white url(../css/img/santander.png) no-repeat;
+      background-repeat: round;
+    }
+
+    .bchile {
+
+      background: white url(../css/img/chile_banconexion.png) no-repeat;
+      background-repeat: round;
+
+    }
+
+    .bci {
+
+      background: white url(../css/img/bci.png) no-repeat;
+      background-repeat: round;
+
+    }
+
+    .itau {
+
+      background: white url(../css/img/itau.jpg) no-repeat;
+      background-repeat: round;
+
+    }
+
+    i.blue,
+    span.blue {
+      color: #03D6F9;
+    }
+
+    i.purple,
+    span.purple {
+      color: #884d79;
+    }
+
+    i.red,
+    span.red {
+      color: #FC4903;
+    }
+
+    i.green,
+    span.green {
+      color: #34CC02;
+    }
+
+    .v-sep {
+      height: 5vh !important;
+      width: .3vw;
+      border-width: 0;
+      color: #000;
+      background-color: #000;
+    }
+
+    .btn-outline-warning:hover {
+      background-color: #ffc107 !important;
+      color: white;
+    }
+
+    .accordion-button {
+      border-radius: 30px !important;
+      color: black !important;
+    }
+
+    .accordion-item.mov.purple {
+      border-color: #884d79 !important;
+      border-radius: 30px;
+    }
+
+    .accordion-item.mov.red {
+      border-color: #FC4903 !important;
+      border-radius: 30px;
+    }
+
+    .accordion-item.mov.blue {
+      border-color: #03D6F9 !important;
+      border-radius: 30px;
+    }
+
+    button.conciliado {
+      opacity: 0.1 !important;
+    }
+
+    .card {
+      min-width: 200px !important;
+      border-radius: 15px;
+      box-shadow: 0 3px 3px rgb(0 0 0 / 0.2);
+      height: 110px !important;
+      margin: 20px;
+    }
+
+    .sup_icon {
+      width: 40px;
+      height: 40px
+    }
+
+    .col-filter {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+
+    .filter-by-movement {
+      display: block;
+      width: 100%;
+      padding: .375rem .75rem;
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.5;
+      color: #212529;
+      background-color: #fff;
+      background-clip: padding-box;
+      border: 1px solid #ced4da;
+      appearance: none;
+      border-radius: .375rem;
+      transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+      cursor: pointer;
+    }
+
+    .filter-by-movement:focus {
+      border-color: #86b7fe;
+      outline: 0;
+      box-shadow: 0 0 0 .25rem rgba(13, 110, 253, .25);
+    }
+
+
+    /* Barra principal */
+    .resume-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+
+    .resume-bar {
+      display: inline-flex;
+      width: fit-content;
+      margin: 0 auto;
+      max-width: 100%;
+      background: #fff;
+      border: 1px solid #e7ebf0;
+      border-radius: 18px;
+      padding: 18px 18px;
+    }
+
+    /* Cada bloque: Abonos / Cargos / Filtro */
+    .resume-col {
+      display: flex;
+      flex-direction: column;
+      padding: 0 18px;
+      min-width: 190px;
+    }
+
+    .resume-col--filter {
+      min-width: 200px;
+    }
+
+    .total-abono {
+      font-size: 18px !important;
+    }
+
+    .total-cargos {
+      font-size: 18px !important;
+    }
+
+    /* Texto superior tipo "Total Abonos:" */
+    .resume-label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #667085;
+      margin-bottom: 6px;
+    }
+
+    .resume-value {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+
+    .resume-value--abono {
+      color: #16a34a;
+    }
+
+    .resume-value--cargo {
+      color: #ef4444;
+    }
+
+    .resume-sep {
+      width: 1px;
+      align-self: stretch;
+      background: #e7ebf0;
+    }
+
+    /* Pastillas */
+    .pill-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      border: 1px solid #e7ebf0;
+      background: #fff;
+      color: #334155;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      min-width: 130px;
+      box-shadow: 0 6px 16px rgba(15, 23, 42, .06);
+      transition: transform .08s ease, box-shadow .08s ease, background .08s ease;
+      user-select: none;
+    }
+
+    .pill:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(15, 23, 42, .10);
+    }
+
+    .pill:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(11, 95, 255, .18);
+    }
+
+    /* Pastilla seleccionada */
+    .pill.is-active {
+      color: #fff;
+      border-color: transparent;
+    }
+
+    .pill.is-active[data-value="all"] {
+      background: #0b5fff;
+    }
+
+    .pill.is-active[data-value="cargo"] {
+      background: #ef4444;
+    }
+
+    .pill.is-active[data-value="abono"] {
+      background: #16a34a;
+    }
+
+    .pill-count {
+      margin-left: 10px;
+      padding: 2px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.2;
+      background: #eef2f7;
+      color: #64748b;
+    }
+
+    .pill.is-active .pill-count {
+      background: rgba(255, 255, 255, .22);
+      color: #fff;
+    }
+
+
+    /* En móvil: se apilan y se ocultan separadores */
+    @media (max-width: 768px) {
+      .resume-col {
+        padding: 0;
+        min-width: unset;
+        flex: 1 1 100%;
+      }
+
+      .resume-sep {
+        display: none;
+      }
+
+      .resume-col--filter {
+        min-width: unset;
+      }
+
+      .resume-bar {
+        width: 100%;
+        display: flex;
+      }
+    }
+
+    .container {
+      padding-top: 20px;
+    }
+
+    .hidden-by-mov {
+      display: none !important;
+    }
+
+    .estado-resumen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: depite;
+      font-size: 12px;
+      color: #667085;
+      white-space: nowrap;
+      margin-left: 0 !important;
+      flex-wrap: wrap;
+    }
+
+    /* separador vertical */
+    .estado-resumen .resume-sep {
+      width: 1px;
+      height: 14px;
+      background: #e7ebf0;
+      display: inline-block;
+    }
+
+    .resume-sep {
+      width: 1px;
+      height: 14px;
+      background: #e7ebf0;
+      display: inline-block;
+    }
+
+    .estado-resumen .abonos-res,
+    .estado-resumen .cargos-res {
+      display: inline-flex;
+      align-items: baseline;
+      white-space: nowrap; 
+      max-width: 100%;
+      font-weight: 700;
+      color: #111827;
+    }
+    .estado-resumen .resume-value--abono,
+    .estado-resumen .resume-value--cargo{
+      overflow-wrap: anywhere;
+    }
+  </style>
+
+
+
+</head>
+
+<body class="container-fluid mx-auto body-index" style="background:#FAFAFB">
+
+  <main class="row mb-3 mx-auto container" style="background: white ;">
+    <div class="container p-2">
+      <div class="fixed-bottom container-fluid mx-auto " id="alertas"></div>
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top  p-2 mb-5 bg-white rounded  mx-auto container"
+        style="padding: 40px !important;padding-top: 5px !important;">
+
+        <div class="row " style="width: 100%; height: 100%;">
+          <div class="col-12 container mx-auto">
+            <div class="row align-items-center mx-auto">
+              <div class="col-12 col-md-3" style="display: flex;">
+                <h5 class="">Movimientos bancarios</h5> <small style=" color: #a2a6a6; margin-left: 10px;"> <span
+                    id="doc_cont" class="badge rounded-pill"
+                    style="background-color:black; color: white;font-weight: bold;font-size: 12px;">
+                  </span></small>
+              </div>
+              <div class="col-2 col-md-2">
+                <input type="month" name="fecha" id="fecha" class="form-control" value="">
+              </div>
+              <div class="col-3 col-md-3">
+                <select class="form-control" id="sel_banco">
+                  <option disabled selected value="none">Seleccione un banco</option>
+                </select>
+              </div>
+              <div class="col-1 col-md-1">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                  id="open-modal-import" style="background: #34CC02;" title="Importar excel">
+                  <i class="fas fa-file-excel"></i>
+                </button>
+
+              </div>
+
+              <div class="col-1 col-md-1">
+                <button type="button" class="btn btn-success" id="informe-conciliacion" style="background: #BCE3FF;"
+                  title="Informe de conciliacion">
+                  <i class="fas fa-file-excel"></i>
+                </button>
+
+              </div>
+
+              <div class="col-1 col-md-1">
+                <button type="button" class="btn btn-success" id="export-cartola" style="background: #006bb8;"
+                  title="Exportar cartola">
+                  <i class="fas fa-file-excel"></i>
+                </button>
+
+              </div>
+
+
+              <div class="col-12 col-md-1 d-flex flex-row-reverse">
+                <button type="button" id="reload" class="btn float-right" style="cursor: pointer;"
+                  title="Consultar movimientos al sii manualmente"> <i style="color: #34CC02;"
+                    class="fas fa-sync fa-2x"></i></button>
+              </div>
+
+
+
+
+            </div>
+
+          </div>
+          <div class="col-sm-3">
+            <div class="card">
+              <div class="card-body  d-flex flex-column align-items-center">
+                <button type="button" class="btn colorSelector" value="cancel" title="Cancelar filtros">
+                  <img class="sup_icon" src="../css/img/Vector.png" alt="">
+                  <span class="a">Movimientos</span>
+                </button>
+                <div class="estado-resumen" data-res-key="all">
+                  <span class="abonos-res"><span class="resume-value--abono">$ 0</span></span>
+                  
+                  <span class="cargos-res"><span class="resume-value--cargo">$ 0</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="card">
+              <div class="card-body  d-flex flex-column align-items-center">
+                <button type="button" class="btn colorSelector" value="red"
+                  title="Filtrar los movimientos sin coincidencias">
+                  <img class="sup_icon" src="../css/img/Vector3.png" alt="">
+                  <span class="a">Sin coincidencias</span>
+                </button>
+                <div class="estado-resumen" data-res-key="sin">
+                  <span class="abonos-res"><span class="resume-value--abono">$ 0</span></span>
+                  
+                  <span class="cargos-res"><span class="resume-value--cargo">$ 0</span></span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="col-sm-3">
+            <div class="card">
+              <div class="card-body  d-flex flex-column align-items-center">
+                <button type="button" class="btn colorSelector" value="blue"
+                  title="Filtrar las coincidencias de un movimiento">
+                  <img class="sup_icon" src="../css/img/Vector2.png" alt="">
+                  <span class="a"></i>Coincidencias</span>
+                </button>
+                <div class="estado-resumen" data-res-key="coincidencia">
+                  <span class="abonos-res"><span class="resume-value--abono">$ 0</span></span>
+                  
+                  <span class="cargos-res"><span class="resume-value--cargo">$ 0</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="card">
+              <div class="card-body  d-flex flex-column align-items-center">
+                <button type="button" class="btn colorSelector" value="purple"
+                  title="Filtrar y seleccionar las coincidencias exactas">
+                  <img class="sup_icon" src="../css/img/Vector4.png" alt="">
+                  <span class="a">Conciliados</span>
+                </button>
+                <div class="estado-resumen" data-res-key="conciliado">
+                  <span class="abonos-res"><span class="resume-value--abono">$ 0</span></span>
+                  
+                  <span class="cargos-res"><span class="resume-value--cargo">$ 0</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div id="loading"></div>
+
+          </div>
+        </div>
+
+
+
+
+
+        <!-- <div class="card border-0" style="width: 100%;">
+          <div class="container mx-auto">
+            <h5 class="card-title t">Lista de movimientos bancarios</h5>
+           
+           
+           
+            <small style=" color: #a2a6a6;"> <span  id="doc_cont" class="badge rounded-pill" style="background-color:black; color: white;font-weight: bold;font-size: 12px;">   0
+            </span>  movimientos.</small>
+          </div>
+         
+          <div class="card-body">
+            
+            <div class="row align-items-center mx-auto">
+            
+              <div class="col-4 col-md-2">
+                <input type="month" name="fecha" id="fecha" class="form-control" value="">
+              </div>
+
+
+
+
+              <div class="col-4 col-md-2">
+                <select class="form-control" id="sel_banco">
+                  <option disabled selected value="none">Seleccione un banco</option>
+                </select>
+              </div>
+      
+             
+              <div class="col-2 col-md-2 d-flex justify-content-center">
+                <button type="button" class="btn colorSelector" value="blue" title="Filtrar las coincidencias de un movimiento">
+                  <span class="a"><i class="fas fa-square-full " style="color: #03D6F9"> </i>Coincidencias</span>
+                </button>
+              </div>
+              <div class="col-2 col-md-2 d-flex justify-content-center" style="border-right: black;">
+                <button type="button" class="btn colorSelector" value="red" title="Filtrar los movimientos sin coincidencias">
+                  <span class="a"><i class="fas fa-square-full " style="color: #FC4903"></i>Sin coincidencias</span>
+                </button>
+              </div>
+              <div class="col-3 col-md-1 d-flex justify-content-center">
+                <button type="button" class="btn colorSelector" value="purple" title="Filtrar y seleccionar las coincidencias exactas">
+                  <span class="a"><i class="fas fa-square-full " style="color: #884d79"></i>Conciliados</span>
+                </button>
+              </div>
+              <div class="col-2 col-md-1 d-flex flex-row-reverse">
+                <button type="button" class="btn colorSelector" value="cancel" title="Cancelar filtros">
+                  <i class="fas fa-ban"></i>
+                </button>
+              </div>
+
+              <div class="col-12 col-md-1 d-flex flex-row-reverse">
+                <button type="button" id="reload" class="btn float-right" style="cursor: pointer;" title="Consultar movimientos al sii manualmente"> <i
+                    style="color: #34CC02;" class="fas fa-sync fa-2x"></i></button>
+              </div>
+              <div class="col-md-12">
+                <br>
+              
+                <button type="button" class="btn float-right action green"
+                  style="width: 15em; background-color: #34CC02; color: white; display: none;cursor: pointer; font-weight: bold;"
+                  data-bs-toggle="modal" data-bs-target="#modalmatch">Conciliar</button>
+                <button type="button" class="btn float-right action blue"
+                  style="width: 15em; background-color: #03D6F9; color: black; display: none;cursor: pointer;font-weight: bold;"
+                  data-bs-toggle="modal" data-bs-target="#modalmatch">Seleccionar y Conciliar</button>
+               
+                <button type="button" class="btn btn-danger float-right action yellow"
+                  style="width: 15em; background-color: #FC4903; color: white; display: none;cursor: pointer;font-weight: bold;"
+                  title="Selecciona una pago a conciliar"  data-bs-toggle="modal" data-bs-target="#modalmatch">Concilacion manual</button>
+              
+              </div>
+
+            </div>
+            <div id="loading"></div>
+          </div>
+        </div>
+ -->
+
+
+      </nav>
+
+      <div class="pt-5" style="margin-top: 210px;">
+        <div class="resume-wrap">
+          <div class="resume-bar">
+
+            <div class="resume-col">
+              <div class="resume-label">Total Abonos:</div>
+              <div class="resume-value resume-value--abono">
+                <span class="total-abono">$ 0</span>
+              </div>
+            </div>
+
+            <div class="resume-sep"></div>
+
+            <div class="resume-col">
+              <div class="resume-label">Total Cargos:</div>
+              <div class="resume-value resume-value--cargo">
+                <span class="total-cargos">$ 0</span>
+              </div>
+            </div>
+
+            <div class="resume-sep"></div>
+
+            <div class="resume-col resume-col--filter">
+              <div class="resume-label">Filtrar por:</div>
+
+              <div id="mov_filter_pills" class="pill-group" role="group" aria-label="Filtrar por movimiento">
+                <button type="button" class="pill is-active" data-value="all">Todos <span class="pill-count"
+                    data-count="all">0</span></button>
+                <button type="button" class="pill" data-value="cargo">Cargos <span class="pill-count"
+                    data-count="cargo">0</span></button>
+                <button type="button" class="pill" data-value="abono">Abonos <span class="pill-count"
+                    data-count="abono">0</span></button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="container" id="list"></div>
+
+      </div>
+      <div id="msg"></div>
+    </div>
+
+    </div>
+
+    <div id="modal-oc-match">
+
+      <!-- Modal -->
+      <div class="modal fade" id="modalmatch" data-bs-keyboard="false" data-bs-backdrop="static" tabindex="-1"
+        role="dialog" aria-labelledby="modaltitle" aria-hidden="true">
+        <!--  <div class="modal fade show" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true" role="dialog" style="display: block;"> -->
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="fixed-bottom container mx-auto" id="alertas-modal"></div>
+
+            <div class="modal-header">
+              <div class="container-fluid">
+
+                <div id="item_list">
+                  <datalist id="il">
+                  </datalist>
+                </div>
+                <div class="row justify-content-start">
+                  <div class="col-md-12 col-lg-4">
+                    <h5 class="modaltitle" id="modaltitle">Posibles coincidencias:</h5>
+
+                    <div id="loading-modal"></div>
+                  </div>
+                  <div id="div-fecha-neg" class="col-4 justify-content-end " style="text-align: left; display: none;">
+                    <label for="fecha-neg" style="font-size: 0.8rem;">Filtrar negocios por año:</label>
+                    <select id="fecha-neg" class="form-control custom-select" style="max-width: 50%;"></select>
+                  </div>
+                  <div id="div-fecha-fxr" class="col-4 justify-content-end " style="text-align: left; display: none;">
+                    <label for="fecha-fxr" style="font-size: 0.8rem;">Filtrar gastos por año:</label>
+                    <select id="fecha-fxr" class="form-control custom-select" style="max-width: 50%;"></select>
+                  </div>
+                  <div class="col justify-content-end d-flex align-items-center" style="text-align: right;  ">
+                    <button type="button" class="btn float-right" id="justify-btn"
+                      style="width: 10em; background-color: #34CC02; color: white;cursor: pointer; font-weight: bold;">Conciliar</button>
+
+                  </div>
+                  <div class=" col-1 justify-content-end" style="text-align: right;  ">
+                    <button type="button" class="btn-close col-lg-1" data-bs-dismiss="modal" aria-label="Close"
+                      id="closemodal"></button>
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+            <div class="modal-body">
+              <input id="search-general" class="form-control mb-2" type="text" placeholder="Buscar..."
+                autocomplete="off">
+              <div>
+                <!-- <div class="row">
+                  <div class="col-6 d-flex justify-content-end align-items-center">
+                      <label class="form-check-label me-2" for="view-toggle">Ver por:</label>
+                      <div class="form-check form-switch">
+                          <input class="form-check-input view-matches" type="checkbox" id="view-nomina">
+                          <label class="form-check-label" for="view-toggle" id="view-label">Asientos</label>
+                      </div>
+                  </div>
+                </div> -->
+                <p style="font-weight: bolder;margin-right:4px;">Total seleccionado</p>
+                <div class="row">
+                  <div class="col-6">
+                    <span style="font-weight: bolder;margin-right:20px;" class="total"></span>
+                  </div>
+                </div>
+
+              </div>
+              <div id="modal-list"></div>
+            </div>
+            <div class="modal-footer">
+              <!--  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="confirm-modal">
+
+      <!-- Modal -->
+      <div class="modal fade" id="confirm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticConfirmLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticConfirmLabel">CONFIRMAR</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Se crearan los DTCs y pago de los movimientos seleccionados, favor confirmar.
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-success">Aceptar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Importar cartola</h5>
+            <button type="button" class="btn-close closeModal" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+
+
+              <div class="col-10 col-md-10 text-center">
+                <input class="form-control" type="file" id="formFile" style="max-width: 400px;"
+                  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                <span class="badge bg-warning text-dark mt-2" id="warning-modal" style="display: none;"></span>
+
+              </div>
+              <div class="col-2 col-md-2">
+                <button type="button" class="btn btn-success" id="import-excel" style="background: #34CC02;"
+                  title="Importar excel">
+                  <i class="fas fa-file-excel"></i>
+                </button>
+              </div>
+
+              <div class="col-12 mt-2">
+                <div id="loading-modal-2"></div>
+              </div>
+
+
+
+
+
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" id="import-excel-modal">Importar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js@1.11.1"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+    crossorigin="anonymous"></script>
+   -->
+  <script type="text/javascript" src="../bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+
+  <!-- Development version -->
+  <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
+
+  <!-- Production version -->
+  <script src="https://unpkg.com/@popperjs/core@2"></script>
+  <script src="https://unpkg.com/read-excel-file@5.x/bundle/read-excel-file.min.js"></script>
+
+  <script type="text/javascript" src="../../conexion_sii/js/controllers/c_general.js?v=1254234"></script>
+  <script type="text/javascript" src="../js/controllers/c_list_pagos.js?v=122121243242356"></script>
+  <script type="text/javascript" src="../../conexion_sii/js/general_functions.js?v=4324234"></script>
+  <script type="text/javascript" src="../js/templates.js?v=123423432432212213452"></script>
+  <script type="text/javascript" src="../../conexion_sii/js/classes.js?v=12121252545"></script>
+  <script type="text/javascript" src="../js/list_pagos.js?v=125333132357121345"></script>
+  <script type="text/javascript" defer src="../js/filtros.3f2a1c9.js"></script>
+
+</body>
+
+</html>

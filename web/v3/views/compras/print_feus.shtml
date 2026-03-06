@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <script src="/v3/script/jquery/jquery.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/print.css">
+
+    <title>Invoice</title>
+
+    <script>
+        // fecha actual formateada
+        function currentDate() {
+            var date = new Date();
+            var formattedDate = date.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' })
+                .replace(/\b(\d)\b/g, '0$1');
+            document.getElementById('date').innerHTML = formattedDate;
+        }
+
+        // formateador de los montos 000,000,000.00
+        function formatNumber(number) {
+            var str = number.toString();
+            var parts = str.split('.');
+            var intPart = parts[0];
+            var decimalPart = parts[1] || '';
+
+            var formattedIntPart = '';
+            while (intPart.length > 3) {
+                formattedIntPart = '.' + intPart.slice(-3) + formattedIntPart;
+                intPart = intPart.slice(0, intPart.length - 3);
+            }
+            if (intPart) {
+                formattedIntPart = intPart + formattedIntPart;
+            }
+
+            var decimalPartFormatted = '';
+            if (decimalPart.length > 0) {
+                decimalPartFormatted = decimalPart[2] >= 5 ? decimalPart = String(parseFloat(decimalPart.slice(0, 2)) + 1) : decimalPart.slice(0, 2)
+                return formattedIntPart + ',' + decimalPartFormatted;
+            } else
+                return formattedIntPart
+
+
+        }
+
+
+        // function transformNumber(n, mode) {
+        //     
+        //     var resp;
+        //     var sepDec;
+        //     var end = false
+        //     var defecto = false
+        //     if (!defecto)
+        //         sepDec = ",";
+        //     else
+        //         sepDec = ',';
+
+
+        //     if (n == "") {
+        //         resp = "0"
+        //     } else {
+        //         if (mode == "int") {
+        //             //Dato tipo number a string formateado
+        //             if (sepDec == ",")
+        //                 resp = String(new Intl.NumberFormat("de-DE", {
+        //                     maximumFractionDigits: 4,
+        //                 }).format(n))
+        //             else
+        //                 resp = String(new Intl.NumberFormat().format(n))
+
+
+        //         } else if (mode == "view") {
+        //             //Dato tipo string a string formateado
+
+
+        //             if (sepDec == ",") {
+        //                 if (n.slice(-1) != "," || end) {
+        //                     // if (n.includes(sepDec) == false || end) {
+        //                     if (n.slice(-1) != "0" || end) {
+
+        //                         n = n.replaceAll(".", "");
+        //                         n = n.replaceAll(",", ".");
+        //                         resp = String(new Intl.NumberFormat('de-DE', {
+        //                             maximumFractionDigits: 4,
+        //                         }).format(n))
+        //                     } else
+        //                         resp = n
+
+        //                 } else
+        //                     resp = n
+
+        //             } else {
+        //                 if (n.slice(-1) != "." || end) {
+        //                     n = n.replaceAll(",", "");
+        //                     n = n.replaceAll(".", ",");
+        //                     resp = String(new Intl.NumberFormat('de-DE', {
+        //                         maximumFractionDigits: 4,
+        //                     }).format(n))
+        //                 } else
+        //                     resp = n
+        //             }
+
+
+
+
+        //             if (resp == "NaN")
+        //                 resp = "0"
+
+        //         } else if (mode == "format-end") {
+        //             //CULAQUIER TIPO A STRING
+        //             //PARA MANDAR 4D
+        //             n = String(n).replaceAll(".", "");
+        //             resp = n
+        //         } else {
+        //             //Dato tipo string a number para calculo
+        //             if (typeof n === 'string') {
+        //                 if (sepDec == ",") {
+
+        //                     n = n.replaceAll(".", "");
+        //                     n = n.replaceAll(",", ".");
+        //                     resp = parseFloat(n)
+        //                 } else {
+
+        //                     n = n.replaceAll(",", "");
+        //                     n = n.replaceAll(".", ",");
+        //                     resp = parseFloat(n)
+        //                 }
+        //             } else {
+        //                 resp = n;
+        //             }
+
+
+        //         }
+        //     }
+
+        //     return resp;
+
+        // }
+
+        // url base
+        function urlBase() {
+            var protocol = location.protocol;
+            var host = location.host;
+            return protocol + '//' + host;
+        }
+
+        // url del logo de la empresa
+        function urlLogo() {
+            var protocol = location.protocol;
+            var host = location.host;
+            return urlBase() + '/4DACTION/logo_empresa_web';
+        }
+
+        // url del logo de unabase
+        function urlLogoUnabase() {
+            var protocol = location.protocol;
+            var host = location.host;
+            return urlBase() + '/v3/design/sidebar/logoperfil.png';
+        }
+
+        // informacion basica -> logos y titulo
+        function basicInfo(data) {
+            document.querySelector('.unabaseLogo').setAttribute('src', urlLogoUnabase());
+            document.querySelector('.project_logo').setAttribute('src', urlLogo());
+        }
+
+        // id del documento de compra
+        function getId() {
+            return converToJson(location.search).id;
+        }
+
+        // obtener los parameros de la url
+        function converToJson(url) {
+            const params = {}
+            var array = url.split("&")
+            for (var index = 0; index < array.length; index++) {
+                var vars = array[index].split("=")
+                var key = vars[0].replace('?', '')
+                var value = vars[1]
+                params[key] = value
+
+            }
+            return params
+        }
+
+        //get data
+        function getData(id) {
+            $.ajax({
+                'url': '/4DACTION/_V3_printInternational_compras',
+                data: {
+                    "id_oc": id,
+                    "api": true
+                },
+                dataType: 'json',
+                async: false,
+                success: function (res) {
+                    const data = res
+                    fillInDataFromTable1(data, id)
+                    fillInDataFromTable2(data)
+                    fillInDataFromTable3(data)
+                    basicInfo(data)
+                }
+            });
+        }
+
+        //get data
+        function getClients(id) {
+            var clientes = []
+            $.ajax({
+                'url': '/4DACTION/_V3_get_oc_clientes',
+                data: {
+                    "id": id,
+                    "api": true
+                },
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    clientes = data.rows
+                }
+            });
+            return clientes
+        }
+
+        // pintar los datos en el template
+        function uploadData() {
+            const id = getId()
+            currentDate();
+            getData(id)
+        }
+
+        // Relleno de la tabla 1
+        function fillInDataFromTable1(data, id) {
+            //var clientes = getClients(id)
+            document.getElementById('client').textContent = data.nombreEmisor
+            document.getElementById('clientEmail').textContent = data.emailEmisor
+            document.getElementById('vendor').textContent = data.razonEmp
+            document.getElementById('folio_oc').textContent = data.folioOc
+            document.getElementById('vendorEmail').textContent = data.emailEmp
+            document.getElementById('jobName').textContent = data.job_name
+            
+            var ff =  data.due_date.split('-')
+            document.getElementById('due_date').textContent = ff[1]+"-"+ff[0]+"-"+ff[2]
+        }
+
+        // Relleno de la tabla 2 - Descripcion
+        function fillInDataFromTable2(data) {
+            // var symbol = getSymbol(data.codigoByPrint)
+            document.getElementById('total').textContent = data.montos.total_formated
+            
+
+            var table = document.getElementById("tableDescription");
+
+            for (var i = 0; i < data.rows.length; i++) {
+                var item = data.rows[i];
+
+                var newRow = document.createElement("tr");
+                if (item.tipo === 'TITULO') {
+                    newRow.classList.add("description_container-parent");
+                } else {
+                    newRow.classList.add("description_container");
+                }
+
+                var itemCell = document.createElement("td");
+                itemCell.classList.add("description_cell_text");
+                var itemText = document.createElement("p");
+                itemText.classList.add("description_cell_text_normal");
+                itemText.textContent = item.tipo === 'TITULO' ? '' : item.items;
+                itemCell.appendChild(itemText);
+
+                var itemCodProdCell = document.createElement("td");
+                itemCodProdCell.classList.add("description_cell_text");
+                var itemCodProd = document.createElement("p");
+                itemCodProd.classList.add("description_cell_text_normal");
+                itemCodProd.textContent = item.tipo === 'TITULO' ? '' : item.cod_prod;
+                itemCodProdCell.appendChild(itemCodProd);
+
+                var descriptionCell = document.createElement("td");
+                descriptionCell.classList.add("description_cell_text");
+                var descriptionText = document.createElement("p");
+                descriptionText.classList.add("description_cell_text_normal");
+                descriptionText.textContent = item.nombre;
+                descriptionCell.appendChild(descriptionText);
+
+                var qtyCell = document.createElement("td");
+                qtyCell.classList.add("description_cell_text");
+                var qtyText = document.createElement("p");
+                qtyText.classList.add("description_cell_text_normal");
+                qtyText.textContent = item.tipo === 'TITULO' ? '' : item.cantidad_formated;
+                qtyCell.appendChild(qtyText);
+
+                var daysCell = document.createElement("td");
+                daysCell.classList.add("description_cell_text");
+                var daysText = document.createElement("p");
+                daysText.classList.add("description_cell_text_normal");
+                daysText.textContent = item.tipo === 'TITULO' ? '' : item.dias_formated;
+                daysCell.appendChild(daysText);
+
+                var priceCell = document.createElement("td");
+                priceCell.classList.add("description_cell_item_price");
+
+                var moneyDiv = document.createElement("span");
+                moneyDiv.textContent = item.tipo === 'TITULO' ? '' : '$';
+
+                var priceText = document.createElement("span");
+                priceText.classList.add("description_cell_text_normal");
+                priceText.textContent = item.tipo === 'TITULO' ? '' : item.precio_formated;
+
+                priceCell.appendChild(moneyDiv);
+                priceCell.appendChild(priceText);
+
+                var subtotalCell = document.createElement("td");
+                subtotalCell.classList.add("description_cell_item_price");
+
+                var moneyDiv2 = document.createElement("span");
+                moneyDiv2.textContent = item.tipo === 'TITULO' ? '' : '$';
+                
+                var subtotalText = document.createElement("span");
+                subtotalText.classList.add("description_cell_text_normal");
+                subtotalText.textContent = item.tipo === 'TITULO' ? '' : item.subtotal_formated;
+
+                subtotalCell.appendChild(moneyDiv2);
+                subtotalCell.appendChild(subtotalText);
+
+                newRow.appendChild(itemCell);
+                newRow.appendChild(itemCodProdCell);
+                newRow.appendChild(descriptionCell);
+                newRow.appendChild(qtyCell);
+                newRow.appendChild(daysCell);
+                newRow.appendChild(priceCell);
+                newRow.appendChild(subtotalCell);
+
+                table.appendChild(newRow);
+            }
+
+
+        }
+
+        // Relleno de la tabla 3
+        function fillInDataFromTable3(data) {
+            
+            document.getElementById('company_name').textContent = data.company.name;
+            document.getElementById('company_tax_id').textContent = data.company.tax_id;
+            document.getElementById('company_address').textContent = data.company.address;
+            document.getElementById('company_phone').textContent = data.company.phone;
+            document.getElementById('company_email').textContent = data.company.email;
+            //document.getElementById('description').textContent = data.comentarios
+            document.getElementById('obs').textContent = data.obs
+
+        }
+
+
+
+
+        // Simbolo de la moneda
+        function getSymbol(typeMoney) {
+            if (typeMoney === 'EUR') return '€'
+            return '$'
+        }
+
+        // Obtener Client PO
+        function getClientPO(clientes) {
+            var ids = [];
+
+            for (var i = 0; i < clientes.length; i++) {
+                ids.push(clientes[i].numero);
+            }
+
+            return ids.join('-');
+        }
+
+        function formatText(text) {
+            var lines = text.split("\n");
+            var formattedText = "";
+
+            for (var i = 0; i < lines.length; i++) {
+                formattedText += "<span>" + lines[i] + "</span><br>";
+            }
+
+            return formattedText;
+        }
+
+
+    </script>
+
+    <style>
+        :root {
+            --gray: #999999;
+            --bg-primary: #989FA7;
+            --bg-secondary: #C7E9E1;
+            --bg-tertiary: #C7E9E1;
+            --black: #000;
+            --white: #fff;
+        }
+
+        @media page {
+
+            .info,
+            .info-value,
+            #description,
+            .total,
+            .description_container,
+            .description_container-parent,
+            .description_cell_text,
+            .description_cell_text_normal,
+            .description_cell_text_large,
+            .description_cell_price,
+            .description_cell_price_first,
+            .description {
+                page-break-inside: auto !important;
+
+            }
+
+            .total_container,
+            .total_main .total_label,
+            .description,
+            .description_text,
+            .description tr td,
+            .description_cell_price_first {
+                page-break-inside: auto !important;
+            }
+
+            .total_main .total_value {
+                page-break-inside: auto !important;
+                page-break-before: avoid;
+                page-break-after: auto !important;
+            }
+
+            .total_main .total_label {
+                page-break-inside: auto;
+            }
+
+            .total_main .total_value {
+                page-break-inside: auto;
+            }
+        }
+
+        body {
+            font-family: 'Poppins';
+            color: #1e1b32;
+        }
+
+        /* Header */
+        .header__1 {
+            height: 50mm;
+            position: relative;
+            table-layout: fixed;
+            margin-bottom: 20mm;
+        }
+
+        .header__1 img {
+            max-height: 45mm;
+            max-width: 65mm;
+            height: auto;
+            width: auto;
+            position: absolute;
+            top: 10%;
+            transform: translateY(-50%);
+        }
+
+        .header__sup-col {
+            padding-top: 4mm;
+        }
+
+        .header__sup-col:nth-child(2) {
+            text-align: center;
+        }
+
+        .header__sup-col:nth-child(2) h1 {
+            margin: 0 0 2mm 0;
+            font-size: 6mm;
+            line-height: 6mm;
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+
+        .header__sup-col:nth-child(2) span {
+            font-size: 7mm;
+            line-height: 7mm;
+            font-weight: 600;
+        }
+
+        .header__sup-col:nth-child(3) {
+            padding-top: 0mm;
+            position: absolute;
+            top: 8mm;
+            right: 0;
+        }
+
+        .header__sup-col:nth-child(3) span {
+            font-size: 4.5mm;
+            line-height: 4.5mm;
+            font-weight: 600;
+        }
+
+        .footer_logo {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: left;
+            color: #999999;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        #date {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: right;
+            color: #999999;
+        }
+
+        .footer_logo img {
+            height: 5mm;
+            margin-right: 3mm;
+        }
+
+        .footer {
+            padding-top: 10mm;
+        }
+
+        .project {
+            display: table;
+            width: 100%;
+            padding-top: 10mm;
+            padding-bottom: 20mm;
+            height: 70mm;
+            position: relative;
+        }
+
+        .project_snippet {
+            display: table-cell;
+            vertical-align: bottom;
+        }
+
+        .project_snippet_name {
+            text-transform: uppercase;
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 2rem;
+            margin: 0;
+        }
+
+
+
+        p {
+            padding: 0px;
+        }
+
+        .description_container-parent {
+            background-color: #E4F4F0;
+        }
+
+        .description_container td:not(:nth-child(1)),
+        .description_container-parent td:not(:nth-child(1)) {
+            border-left: 2px solid #90D3C4;
+        }
+
+        .description_container td:nth-child(4) p,
+        .description_container td:nth-child(5) p {
+            text-align: center;
+        }
+
+        .description_container td:nth-child(6) p,
+        .description_container td:nth-child(7) p {
+            text-align: right;
+            padding-right: 3mm;
+        }
+
+
+        .snippet {
+            width: 270mm;
+            border: 2px solid #90D3C4;
+            border-radius: 2mm;
+        }
+
+        .snippet_header {
+            background-color: #C7E9E1;
+            height: 15mm;
+        }
+
+        .snippet_header__cell {
+            padding-left: 3mm;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .snippet_header__cell_one {
+            border-radius: 1.5mm 0 0 0 !important;
+        }
+
+        .snippet_label {
+            height: 8mm;
+            padding-left: 3mm;
+            font-size: 0.8rem;
+            font-weight: 500;
+            background-color: #C7E9E1;
+            border-right: 2px solid #90D3C4;
+            border-bottom: 2px solid #90D3C4;
+        }
+
+        .snippet_value {
+            height: 8mm;
+            padding-left: 3mm;
+            padding-right: 3mm;
+            font-size: 0.8rem;
+            border-bottom: 2px solid #90D3C4;
+        }
+
+        .snippet_header__cell-last .snippet_label,
+        .snippet_header__cell-last .snippet_value {
+            border-bottom: none;
+        }
+
+        .snippet_label_second {
+            border-left: 2px solid #90D3C4;
+        }
+
+        .snippet_footer_label {
+            background-color: #989FA7;
+            color: #000;
+            padding-left: 3mm;
+            border-right: 2px solid #90D3C4;
+            font-size: 0.9rem;
+            font-weight: 500;
+            height: 8mm;
+        }
+
+        .snippet_footer_value {
+            background-color: #989FA7;
+            color: #000;
+            text-align: start;
+            padding-left: 3mm;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .snippet_large {
+            height: 14mm;
+            padding-top: 3mm;
+            padding-bottom: 3mm;
+        }
+
+        .description {
+            width: 270mm;
+            border: 2px solid #90D3C4;
+            border-radius: 2mm 2mm 0 2mm;
+        }
+
+        .total {
+            width: 270mm;
+        }
+
+        .total_label {
+            background-color: #C7E9E1;
+            border: 2px solid #90D3C4;
+            border-top: none;
+            border-bottom: none;
+            color: #000;
+            font-weight: 700;
+            font-size: 1rem;
+            padding-right: 3mm;
+            padding-top: 1mm;
+            height: 8mm;
+            text-align: right;
+        }
+
+        .total_value {
+            background-color: #C7E9E1;
+            border-right: 2px solid #90D3C4;
+            color: #000;
+            font-weight: 700;
+            font-size: 1rem;
+            padding-top: 0.5mm;
+            padding-right: 3mm;
+            position: relative;
+            width: 100%;
+            vertical-align: top;
+            text-align: right;
+        }
+
+        .total_main .total_label {
+            background-color: #C7E9E1;
+            border-radius: 0 0 0 2mm;
+            border: 2px solid #90D3C4;
+            font-size: 1.2rem;
+            font-weight: 700;
+            height: 10mm;
+            padding-top: 1.5mm;
+        }
+
+        .total_main .total_value {
+            background-color: #C7E9E1;
+            border-radius: 0 0 2mm 0;
+            border: 2px solid #90D3C4;
+            border-left: none;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .total .total_value .money {
+            left: 3mm;
+            padding-top: 1mm;
+            position: absolute;
+        }
+
+        .total .total_value .price {
+            right: 3mm;
+            padding-top: 1mm;
+            position: absolute;
+        }
+
+        .total_main .total_value .price,
+        .total_main .total_value .money {
+            top: 1.4mm;
+        }
+
+        .description_text {
+            background-color: #C7E9E1;
+            color: #000;
+            padding-left: 3mm;
+            font-size: 1rem;
+            line-height: 1rem;
+            border-bottom: 2px solid #90D3C4 !important;
+            height: 10mm;
+        }
+
+        .description_text-center {
+            background-color: #C7E9E1;
+            color: #000;
+            font-size: 1rem;
+            line-height: 1rem;
+            text-align: center;
+            border-bottom: 2px solid #90D3C4 !important;
+            height: 10mm;
+            padding-right: 3mm;
+        }
+
+        .description_text-right {
+            background-color: #C7E9E1;
+            color: #000;
+            padding-right: 3mm;
+            font-size: 1rem;
+            line-height: 1rem;
+            text-align: right;
+            border-bottom: 2px solid #90D3C4 !important;
+            height: 10mm;
+        }
+
+        .description_cell_text {
+            font-size: 0.8rem;
+            padding-left: 3mm;
+        }
+
+        .description_cell_text_normal {
+            padding-bottom: 0px;
+        }
+
+        .description_cell_text_large {
+            line-height: 1rem;
+            font-weight: 100;
+        }
+
+        .description tr td {
+            border-bottom: 2px solid #90D3C4;
+        }
+
+        .description tr:last-of-type td {
+            border-bottom: 2px solid transparent;
+        }
+
+        .description_cell_price {
+            display: table-cell;
+            position: relative;
+            font-size: 0.8rem;
+            font-weight: 500;
+            vertical-align: text-top;
+            padding-top: 3mm;
+        }
+
+        .description_cell_price_first {
+            border-left: 2px solid #90D3C4;
+        }
+
+        .description_cell_price .money,
+        .description_cell_price .price {
+            display: inline-block;
+        }
+
+        .description_cell_price .money {
+            width: auto;
+            position: absolute;
+            left: 3mm;
+            color: #000;
+        }
+
+        .description_cell_price .price {
+            width: 100%;
+            position: absolute;
+            right: 3mm;
+            text-align: right;
+        }
+
+        .info {
+            width: 270mm;
+            border: 2px solid #90D3C4;
+            border-radius: 2mm;
+        }
+
+        .info_header {
+            background-color: #C7E9E1;
+            height: 10mm;
+            border-radius: 1.5mm 1.5mm 0 0;
+            padding-left: 3mm;
+            font-weight: 700;
+            border-bottom: 2px solid #90D3C4;
+            font-size: 1rem;
+        }
+
+        .info_label {
+            font-size: 0.8rem;
+            padding-left: 3mm;
+            border-right: 2px solid #90D3C4;
+            border-bottom: 2px solid #90D3C4;
+            height: 8mm;
+            font-weight: 500;
+        }
+
+        .info_value {
+            font-size: 0.8rem;
+            padding-left: 3mm;
+            border-bottom: 2px solid #90D3C4;
+        }
+
+        .info_important .info_value {
+            height: 20mm;
+            padding: 3mm;
+        }
+
+        
+
+
+        .description_cell_item_price{
+            position: relative;
+        }
+
+        .description_cell_item_price span:nth-child(1){
+            position: absolute;
+            left: 3mm;
+            top: 40%;
+            line-height: 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .description_cell_item_price span:nth-child(2){
+            position: absolute;
+            right: 3mm;
+            top: 40%;
+            line-height: 0.8rem;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+
+<body onload="uploadData()">
+    <!-- <div class="header">
+        <div></div>
+        <div id="date"></div>
+    </div> -->
+
+    <div class="header__1">
+        <div class="header__sup-col">
+            <img class="project_logo" src="" alt="logo" />
+        </div>
+        <div class="header__sup-col">
+            <h1>Purchase Order</h1>
+            <span id="folio_oc">#455543543534</span>
+        </div>
+        <div id="date" class="header__sup-col">
+        </div>
+    </div>
+
+    <table class="snippet" border="0" cellpadding="0" cellspacing="0">
+        <colgroup>
+            <col style="width: 20%;">
+            <col style="width: 30%;">
+            <col style="width: 20%;">
+            <col style="width: 30%;">
+        </colgroup>
+        <tr>
+            <td class="snippet_label" style="border-radius:  1.5mm 0 0 0;">From</td>
+            <td id="client" class="snippet_value"></td>
+            <td class="snippet_label snippet_label_second">Vendor</td>
+            <td id="vendor" class="snippet_value"></td>
+        </tr>
+        <tr>
+            <td class="snippet_label">Email</td>
+            <td id="clientEmail" class="snippet_value"></td>
+            <td class="snippet_label snippet_label_second"></td>
+            <td id="ssn" class="snippet_value"></td>
+        </tr>
+
+        <tr>
+            <td class="snippet_label">Job Number</td>
+            <td id="jobNumber" class="snippet_value"></td>
+            <td class="snippet_label snippet_label_second">Email</td>
+            <td id="vendorEmail" class="snippet_value"></td>
+        </tr>
+
+        <tr class="snippet_header__cell-last">
+            <td class="snippet_label" style="border-radius:  0 0 0 1.5mm;">Job Name</td>
+            <td id="jobName" class="snippet_value" colspan="3"></td>
+        </tr>
+    </table>
+
+    <br />
+    <br />
+    <table id="tableDescription" class="description" border="0" cellpadding="0" cellspacing="0">
+        <colgroup>
+            <col style="width: 8%;">
+            <col style="width: 8%;">
+            <col style="width: 28%;">
+            <col style="width: 8%;">
+            <col style="width: 8%;">
+            <col style="width: 20%;">
+            <col style="width: 20%;">
+        </colgroup>
+        <tr class="description_header">
+            <td class="description_text" style="border-radius: 1.8mm 0 0 0;">Item</td>
+            <td class="description_text" style="border-left: 2px solid #90D3C4;">Line N°</td>
+            <td class="description_text" style="border-left: 2px solid #90D3C4;">Description</td>
+            <td class="description_text description_text-center" style="border-left: 2px solid #90D3C4;">Qty</td>
+            <td class="description_text description_text-center" style="border-left: 2px solid #90D3C4;">Days</td>
+            <td class="description_text description_text-right" style="border-left: 2px solid #90D3C4;">
+                Price</td>
+            <td class="description_text description_text-right"
+                style="border-left: 2px solid #90D3C4; border-radius: 0 1.8mm 0 0;">
+                Amount</td>
+        </tr>
+    </table>
+    <table class="total" border="0" cellpadding="0" cellspacing="0">
+        <colgroup>
+            <col style="width: 60%;">
+            <col style="width: 20%;">
+            <col style="width: 20%;">
+        </colgroup>
+        <tr class="total_container">
+            <td></td>
+            <td class="total_label" style="border-radius: 0 0 0 2mm;border-top: none; border: 2px solid #90D3C4;">Total</td>
+            <td class="total_value" style="border-radius: 0 0 2mm 0;border-top: none; border: 2px solid #90D3C4; border-left: none; ">
+                <div>
+                    <div class="money">$</div>
+                    <div id="total" class="price"></div>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <br />
+    <br />
+    <div class="containerInfo">
+        <table class="info" border="0" cellpadding="0" cellspacing="0">
+            <colgroup>
+                <col style="width: 15%;">
+                <col style="width: 35%;">
+                <col style="width: 15%;">
+                <col style="width: 35%;">
+            </colgroup>
+            <tr>
+                <td class="info_header" colspan="4"></td>
+            <tr>
+            <tr>
+                <td id="idNumber" class="info_label">Due Date</td>
+                <td id="due_date" class="info_label" style="border-right: none" colspan="3"></td>
+            </tr>
+            <tr>
+                <td class="info_header" style="border-radius: 0;" colspan="4">Invoice to: </td>
+            </tr>
+            <tr>
+                <td class="info_label">Company</td>
+                <td id="company_name" colspan="3" class="info_value"></td>
+            </tr>
+            <tr>
+                <td class="info_label">Tax ID</td>
+                <td id="company_tax_id" class="info_value"></td>
+                <td class="info_label" style="border-left: 2px solid #90D3C4">address</td>
+                <td id="company_address" class="info_value"></td>
+            </tr>
+            <tr>
+                <td class="info_label">Email</td>
+                <td id="company_email" class="info_value"></td>
+                <td class="info_label" style="border-left: 2px solid #90D3C4">Phone</td>
+                <td id="company_phone" class="info_value"></td>
+            </tr>
+
+            <tr class="info_important">
+                <td class="info_label" style="border-bottom: none; vertical-align: text-top;padding-top:  10px;">Comments</td>
+                <td class="info_value" style="border-bottom: none;" colspan="3"><p id="obs" style="white-space:pre-wrap"></p></td>
+            </tr>
+            
+          
+        </table>
+        <div class="footer">
+            <a class="footer_logo" href="https://unabase.com/" target="_blank"><img class="unabaseLogo" src="" />
+                Powered by <span style="color:#01a96c;">unabase.com</span>
+            </a>
+        </div>
+    </div>
+
+</body>
+
+</html>

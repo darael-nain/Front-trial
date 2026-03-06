@@ -1,0 +1,145 @@
+<div class="box-changes-week">
+    <a href="#" rel="<!--#4DVAR previousDateTh-->" id="link-previous-week-planner">
+        <img class="img-title-calendar" src="/imagenes_green/arrows_prev.png">
+        Anterior
+    </a>
+    <a href="#" rel="<!--#4DVAR defaultDateTh-->" id="link-current-week-planner">    
+        Actual
+    </a>
+    <a href="#"  rel="<!--#4DVAR nextDateTh-->" id="link-next-week-planner">                
+        Pr&oacute;xima
+        <img class="img-title-calendar" src="/imagenes_green/arrows_next.png">
+    </a>
+</div>
+
+<div id="content-list-ot" class="content">
+<table class="table-format-1" cellspacing="0" cellspadding="0">
+                <thead>
+                    <tr>
+                        <th colspan="7">       
+                           <div style="text-align:left">
+                                <span class="alta">Alta</span>
+                                <span class="media">Media</span>
+                                <span class="baja">Baja</span>
+                            </div>                     
+                        </th>
+                        <th colspan="<!--#4DVAR cantidadColspan-->">
+                            <!--#4DVAR previousDay--> <!--#4DVAR previousDateTh-->
+                        </th>
+                        <th colspan="<!--#4DVAR cantidadColspan-->">
+                            <!--#4DVAR defaultDay--> <!--#4DVAR defaultDateTh-->
+                        </th>
+                        <th colspan="<!--#4DVAR cantidadColspan-->">
+                            <!--#4DVAR nextDay--> <!--#4DVAR nextDateTh-->
+                        </th>                       
+                    </tr>                 
+                    <tr>
+                        <th>#OT</th>                          
+                        <th>Referencia</th>
+                        <th title="Horas Asignadas">H.A.</th>
+                        <th title="Horas Pendientes">H.P.</th>
+                        <th title="Horas Trabajadas">H.T.</th>
+                        <th>F.Vcto.</th>
+                        <th>Resp.</th>
+                        <!--#4DLOOP aWorkingTime-->
+                            <!--#4dif aHorary{aWorkingTime}="AM"-->
+                                <th class="am gray-background"><!--#4DVAR aWorkingTime{aWorkingTime}--></th>
+                            <!--#4delse-->
+                                <th class="pm gray-background"><!--#4DVAR aWorkingTime{aWorkingTime}--></th>
+                            <!--#4dendif-->                            
+                        <!--#4DENDLOOP-->
+
+                        <!--#4DLOOP aWorkingTime-->
+                            <!--#4dif aHorary{aWorkingTime}="AM"-->
+                                <th class="am gray-background"><!--#4DVAR aWorkingTime{aWorkingTime}--></th>
+                            <!--#4delse-->
+                                <th class="pm gray-background"><!--#4DVAR aWorkingTime{aWorkingTime}--></th>
+                            <!--#4dendif-->                            
+                        <!--#4DENDLOOP-->
+
+                        <!--#4DLOOP aWorkingTime-->
+                            <!--#4dif aHorary{aWorkingTime}="AM"-->
+                                <th class="am gray-background"><!--#4DVAR aWorkingTime{aWorkingTime}--></th>
+                            <!--#4delse-->
+                                <th class="pm gray-background"><!--#4DVAR aWorkingTime{aWorkingTime}--></th>
+                            <!--#4dendif-->                            
+                        <!--#4DENDLOOP-->                          
+                    </tr>        
+                </thead>
+                <tbody>                
+                <!--#4DLOOP aIdOT-->                  
+                <tr>
+                    <td class="gray-background">                                     
+                        <a class="link-det-planner-ot" target="_black" href="/ot.shtml?i=<!--#4DVAR aIdOT{aIdOT}-->&r=<!--#4DVAR String(Milliseconds+Random)-->">
+                            <!--#4dif aPrioridadOT{aIdOT}="ALTA"-->
+                                <span class="alta"><!--#4DVAR aFolioOT{aIdOT}--></span>
+                            <!--#4dendif-->
+                            <!--#4dif aPrioridadOT{aIdOT}="MEDIA"-->
+                                <span class="media"><!--#4DVAR aFolioOT{aIdOT}--></span>
+                            <!--#4dendif-->
+                            <!--#4dif aPrioridadOT{aIdOT}="BAJA"-->
+                                <span class="baja"><!--#4DVAR aFolioOT{aIdOT}--></span>
+                            <!--#4dendif-->                            
+                        </a>
+                    </td>                       
+                    <td class="gray-background">
+                        <div class="planner-ref"><!--#4DVAR aReferenciaOT{aIdOT}--></div>
+                    </td>                    
+                    <td class="gray-background">
+                        <!--#4DVAR aHrsAsignadasOT{aIdOT}-->
+                    </td>
+                    <td class="gray-background remaining-<!--#4DVAR aIdOT{aIdOT}-->">
+                        <!--#4DVAR aRemaining{aIdOT}-->
+                    </td>
+                    <td class="gray-background registered-<!--#4DVAR aIdOT{aIdOT}-->">
+                        <!--#4DVAR aRegistered{aIdOT}-->
+                    </td>
+                    <td class="gray-background">
+                        <a rel="<!--#4DVAR aFechaVctoOT{aIdOT}-->" class="link-det-planner-ot2 link-previous-week-planner_vcto" 
+                        href="#"><!--#4DVAR aFechaVctoOT{aIdOT}--></a>
+                    </td>
+                    <td class="gray-background"><!--#4DVAR aResponsableOT{aIdOT}--></td>       
+            
+
+                    <!--#4DLOOP aWorkingTime-->
+                        <!--#4dif amuestraRojoPrev{aIdOT}#""-->
+                            <!--#4dif aWorkingTime{aWorkingTime}=aHoraVctoOT2{aIdOT}-->
+                                <td class="background-black"></td>
+                            <!--#4delse-->
+                                <td><div class="pointer" data-hora="<!--#4DVAR Num(aWorkingTime{aWorkingTime})-->" data-id-ot="<!--#4DVAR aIdOT{aIdOT}-->" data-fecha-vencimiento="<!--#4DVAR aFechaVctoOT{aIdOT}-->" data-fecha-actual="<!--#4DVAR previousDateTh-->" data-prioridad="<!--#4DVAR aPrioridadOT{aIdOT}-->" data-login-responsable="<!--#4DVAR aResponsableOT{aIdOT}-->" title="<!--#4DVAR aWorkingTime{aWorkingTime}-->:<!--#4DVAR aIdOT{aIdOT}-->:<!--#4DVAR aFechaVctoOT{aIdOT}-->:<!--#4DVAR previousDateTh-->:<!--#4DVAR aPrioridadOT{aIdOT}-->:<!--#4DVAR aResponsableOT{aIdOT}-->"></div></td>
+                            <!--#4dendif-->
+                        <!--#4delse-->
+                                <td><div class="pointer" data-hora="<!--#4DVAR Num(aWorkingTime{aWorkingTime})-->" data-id-ot="<!--#4DVAR aIdOT{aIdOT}-->" data-fecha-vencimiento="<!--#4DVAR aFechaVctoOT{aIdOT}-->" data-fecha-actual="<!--#4DVAR previousDateTh-->" data-prioridad="<!--#4DVAR aPrioridadOT{aIdOT}-->" data-login-responsable="<!--#4DVAR aResponsableOT{aIdOT}-->" title="<!--#4DVAR aWorkingTime{aWorkingTime}-->:<!--#4DVAR aIdOT{aIdOT}-->:<!--#4DVAR aFechaVctoOT{aIdOT}-->:<!--#4DVAR previousDateTh-->:<!--#4DVAR aPrioridadOT{aIdOT}-->:<!--#4DVAR aResponsableOT{aIdOT}-->"></div></td>
+                        <!--#4dendif-->               
+                    <!--#4DENDLOOP-->
+
+                    <!--#4DLOOP aWorkingTime-->
+                        <!--#4dif amuestraRojoCurr{aIdOT}#""-->
+                            <!--#4dif aWorkingTime{aWorkingTime}=aHoraVctoOT2{aIdOT}-->
+                                <td class="background-black"></td>
+                            <!--#4delse-->
+                                <td><div class="pointer" data-hora="<!--#4DVAR Num(aWorkingTime{aWorkingTime})-->" data-id-ot="<!--#4DVAR aIdOT{aIdOT}-->" data-fecha-vencimiento="<!--#4DVAR aFechaVctoOT{aIdOT}-->" data-fecha-actual="<!--#4DVAR defaultDateTh-->" data-prioridad="<!--#4DVAR aPrioridadOT{aIdOT}-->" data-login-responsable="<!--#4DVAR aResponsableOT{aIdOT}-->" title="<!--#4DVAR aWorkingTime{aWorkingTime}-->:<!--#4DVAR aIdOT{aIdOT}-->:<!--#4DVAR aFechaVctoOT{aIdOT}-->:<!--#4DVAR defaultDateTh-->:<!--#4DVAR aPrioridadOT{aIdOT}-->:<!--#4DVAR aResponsableOT{aIdOT}-->"></div></td>
+                            <!--#4dendif-->
+                        <!--#4delse-->
+                            <td><div class="pointer" data-hora="<!--#4DVAR Num(aWorkingTime{aWorkingTime})-->" data-id-ot="<!--#4DVAR aIdOT{aIdOT}-->" data-fecha-vencimiento="<!--#4DVAR aFechaVctoOT{aIdOT}-->" data-fecha-actual="<!--#4DVAR defaultDateTh-->" data-prioridad="<!--#4DVAR aPrioridadOT{aIdOT}-->" data-login-responsable="<!--#4DVAR aResponsableOT{aIdOT}-->" title="<!--#4DVAR aWorkingTime{aWorkingTime}-->:<!--#4DVAR aIdOT{aIdOT}-->:<!--#4DVAR aFechaVctoOT{aIdOT}-->:<!--#4DVAR defaultDateTh-->:<!--#4DVAR aPrioridadOT{aIdOT}-->:<!--#4DVAR aResponsableOT{aIdOT}-->"></div></td>
+                        <!--#4dendif-->
+                    <!--#4DENDLOOP-->
+
+                    <!--#4DLOOP aWorkingTime-->
+                        <!--#4dif amuestraRojoNext{aIdOT}#""-->
+                            <!--#4dif aWorkingTime{aWorkingTime}=aHoraVctoOT2{aIdOT}-->
+                                <td class="background-black"></td>
+                            <!--#4delse-->
+                                <td><div class="pointer" data-hora="<!--#4DVAR Num(aWorkingTime{aWorkingTime})-->" data-id-ot="<!--#4DVAR aIdOT{aIdOT}-->" data-fecha-vencimiento="<!--#4DVAR aFechaVctoOT{aIdOT}-->" data-fecha-actual="<!--#4DVAR nextDateTh-->" data-prioridad="<!--#4DVAR aPrioridadOT{aIdOT}-->" data-login-responsable="<!--#4DVAR aResponsableOT{aIdOT}-->" title="<!--#4DVAR aWorkingTime{aWorkingTime}-->:<!--#4DVAR aIdOT{aIdOT}-->:<!--#4DVAR aFechaVctoOT{aIdOT}-->:<!--#4DVAR nextDateTh-->:<!--#4DVAR aPrioridadOT{aIdOT}-->:<!--#4DVAR aResponsableOT{aIdOT}-->"></div></td>
+                            <!--#4dendif-->
+                        <!--#4delse-->
+                            <td><div class="pointer" data-hora="<!--#4DVAR Num(aWorkingTime{aWorkingTime})-->" data-id-ot="<!--#4DVAR aIdOT{aIdOT}-->" data-fecha-vencimiento="<!--#4DVAR aFechaVctoOT{aIdOT}-->" data-fecha-actual="<!--#4DVAR nextDateTh-->" data-prioridad="<!--#4DVAR aPrioridadOT{aIdOT}-->" data-login-responsable="<!--#4DVAR aResponsableOT{aIdOT}-->" title="<!--#4DVAR aWorkingTime{aWorkingTime}-->:<!--#4DVAR aIdOT{aIdOT}-->:<!--#4DVAR aFechaVctoOT{aIdOT}-->:<!--#4DVAR nextDateTh-->:<!--#4DVAR aPrioridadOT{aIdOT}-->:<!--#4DVAR aResponsableOT{aIdOT}-->"></div></td>
+                        <!--#4dendif-->
+                    <!--#4DENDLOOP-->      
+
+                           
+                </tr>       
+                <!--#4DENDLOOP-->                
+                </tbody> 
+            </table>
+</div>

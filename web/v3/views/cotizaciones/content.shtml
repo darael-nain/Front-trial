@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<!--#4DSCRIPT/_V3_proxy_getCotizacionContent/light-->
+	<title>Cotizaciones</title>
+	<meta charset="utf-8">
+	<meta http-equiv="Expires" content="0">
+ 
+    <meta http-equiv="Last-Modified" content="0">
+     
+    <meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+     
+    <meta http-equiv="Pragma" content="no-cache">
+	<script>
+		var v3_block_cot_neg = <!--#4DIF v3_block_cot_neg--> true <!--#4DELSE--> false <!--#4DENDIF-->;
+		var sobrecargosPlantilla = <!--#4DIF sobrecargosPlantilla--> true <!--#4DELSE--> false <!--#4DENDIF-->;
+		unaBase.doc.statusnv = <!--#4DIF aStatusNv--> true <!--#4DELSE--> false <!--#4DENDIF-->;  
+		unaBase.doc.currencyCode = "<!--#4DTEXT exchangeType-->";
+		unaBase.doc.view_decimals = "<!--#4DTEXT exchange_decimals-->";
+		unaBase.doc.currencyCodePrint = "<!--#4DTEXT exchangeTypePrint-->";
+		var exchange_rate_print = "<!--#4DTEXT exchangeRatePrint-->";
+		unaBase.doc.id = <!--#4DTEXT id-->;
+		unaBase.doc.type = "<!--#4DTEXT docType-->";
+		unaBase.doc.state = "<!--#4DTEXT vestado-->";
+		unaBase.doc.number = <!--#4DTEXT [Nota_de_venta]Id_Negocio-->;
+		unaBase.doc.blocked = <!--#4DIF block_by_use_one--> true <!--#4DELSE--> false <!--#4DENDIF-->;
+		unaBase.doc.vIDOrigen = <!--#4DTEXT vIDOrigen-->;
+		unaBase.doc.modoCine = <!--#4DIF formulario_cinemagica--> true <!--#4DELSE--> false <!--#4DENDIF-->;
+		unaBase.doc.isCurrentUserStaff = <!--#4DIF isCurrentUserStaff--> true <!--#4DELSE--> false <!--#4DENDIF-->;
+		unaBase.doc.budgetTag = "<!--#4DTEXT _V3_escapeString(etiqueta_cotizacion)-->";
+		unaBase.doc.emisor = "<!--#4DTEXT _V3_escapeString(vDeEmisor)-->";
+		unaBase.doc.fecha = "<!--#4DTEXT vFechaEmi1-->";
+		unaBase.doc.hora = "<!--#4DTEXT vHoraEmi1-->";
+		unaBase.doc.ref = "<!--#4DTEXT vreferencia-->";
+		unaBase.doc.comprasClosed = <!--#4DIF vCerradaCompras--> true <!--#4DELSE--> false <!--#4DENDIF-->;
+		unaBase.doc.reaperMode = <!--#4DIF nvInReaperMode--> true <!--#4DELSE--> false <!--#4DENDIF-->
+		unaBase.doc.separate_sc = <!--#4DIF separate_sc--> true <!--#4DELSE--> false <!--#4DENDIF-->
+
+		var idCotizacion = <!--#4DTEXT id-->;
+		var nvNumber = <!--#4DTEXT [Nota_de_venta]Id_Negocio-->;
+		var blocked = <!--#4DTEXT block_by_use_one-->;
+		var vIDOrigen = <!--#4DTEXT vIDOrigen-->;
+
+
+
+
+
+		var cotizacion_to_block = {
+			id: idCotizacion,
+			folio: nvNumber,
+			user: $('html > body.menu.home > aside > div > div > h1').data('username'),
+			doc_name: $('.titulofinal').val(),
+			total: $('input[name="cotizacion[ajuste]"]').val(),
+			name: $('html > body.menu.home > aside > div > div > h1').text(),
+			module: "cotizaciones",
+			block: false,
+			from: "onbeforeunload---"
+		}
+
+		var valida_fecha_realizacion = <!--#4DIF fecha_realizacion_obligatoria--> true <!--#4DELSE--> false <!--#4DENDIF-->;
+		var contacto_asociado_obligatorio = <!--#4DIF contacto_asociado_obligatorio--> true <!--#4DELSE--> false <!--#4DENDIF-->;
+		// var cinemagica_param = <!--#4DIF cinemagica_param-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+		var contentLoaded = false;
+		var contentChanged = false;
+		var contentReady = false;
+		var aplica_sobrecargo_items = <!--#4DIF aplica_sobrecargo_items--> true <!--#4DELSE--> false <!--#4DENDIF-->;
+		var fixedTotalCliente = <!--#4DIF _V3_param_totalClienteFijo--> true <!--#4DELSE--> false <!--#4DENDIF-->;
+		var totalNeto = <!--#4DTEXT String([Nota_de_venta]Total_Neto; "&xml")-->;
+		var deferReglaValidacion = <!--#4DIF _V3_param_diferirRV--> true <!--#4DELSE--> false <!--#4DENDIF-->;
+		var scDirectInput = <!--#4DIF _V3_param_scSinPorcentaje--> true <!--#4DELSE--> false <!--#4DENDIF-->;
+
+		var editCodigoItems = <!--#4DIF _V3_editCodigoItems--> true <!--#4DELSE--> false <!--#4DENDIF-->;
+		var showCodigoItems = <!--#4DIF mostrar_codigo_items--> true <!--#4DELSE--> false <!--#4DENDIF-->;
+
+		var v3_show_tipodoc_items = <!--#4DIF v3_show_tipodoc_items--> true <!--#4DELSE--> false <!--#4DENDIF-->;
+
+		var mostrar_compartir_carta_cliente = <!--#4DIF mostrar_compartir_carta_cliente--> true <!--#4DELSE--> false <!--#4DENDIF-->;
+
+		var texto_carta_cliente = "<!--#4DHTML _V3_escapeString(texto_carta_cliente)-->";
+		var texto_observaciones = "<!--#4DHTML _V3_escapeString(vNotas)-->";
+		// var texto_no_incluye = "<!--#4DHTML _V3_escapeString([Nota_de_venta]no_incluye)-->";
+		var texto_no_incluye = "<!--#4DHTML _V3_escapeString(vNoIncluye)-->";
+
+		var v3_sobrecargos_cinemagica = <!--#4DIF v3_sobrecargos_cinemagica--> true <!--#4DELSE--> false <!--#4DENDIF-->;
+		var v3_cot_cliente_como_agencia = <!--#4DIF v3_cot_cliente_como_agencia--> true <!--#4DELSE--> false <!--#4DENDIF-->;
+		var modifcar_campo4_personalizado = <!--#4DIF _V3_verifica_permisos_web(_V3_data_username; 644)--> true <!--#4DELSE--> false <!--#4DENDIF-->;
+
+		unaBase.doc.fromTemplate = false;
+			 <!--#4DIF Not(Undefined(template))-->
+			var fromTemplate = true;
+		unaBase.doc.fromTemplate = true;
+			 <!--#4DENDIF-->
+
+			var selected_currency = undefined;
+		/*var valor_usd = <!--#4DTEXT String(valor_usd;"&xml")-->;
+		var valor_clf = <!--#4DTEXT String(valor_clf;"&xml")-->;*/
+		var valor_usd = 0;
+		var valor_clf = 0;
+
+		var cantidad_item_negocio = "<!--#4DHTML _V3_escapeString(cantidad_item_negocio)-->";
+
+
+		let idnv = <!--#4DTEXT id-->
+		let default_money_value_by_nv = 0
+		unaBase.begin.getTipoDocumentoByNv(idnv) 
+
+
+		$.ajax({
+			url: '/4DACTION/_force_getTipoCambioByNv',
+			dataType: 'json',
+			data: {
+				id_nv: idnv
+			},
+			async: false,
+			success: function (data) {
+				unaBase.doc.moneda = data.row
+				let data_default = data.row.find(v => v.asignada)
+				default_money_value_by_nv = data_default != undefined ? parseInt(data_default.value) == 0 ? 1 : data_default.value : 1
+
+
+				let data_usd = data.row.find(v => v.codigo == 'USD')
+				if(data_usd)
+					valor_usd = parseFloat(data_usd.value)
+
+				let data_clf = data.row.find(v => v.codigo == 'CLF')
+				if(data_clf)
+					valor_clf = parseFloat(data_clf.value)
+				
+			},
+			error: function (err) {
+				console.log('ERROR'+err)
+			}
+		});
+
+
+		// $.ajax({
+		// 	url: '/4DACTION/_V3_getExchangeRate',
+		// 	data: {
+		// 		from: 'USD',
+		// 		to: '<!--#4DVAR <>_V3_defaultCurrencyCode-->'
+		// 	},
+		// 	async: false,
+		// 	dataType: 'json',
+		// 	success: function (data) {
+		// 		valor_usd = parseFloat(data.rate);
+		// 		if (valor_usd == 0)
+		// 			valor_usd = 1;
+		// 	}
+		// });
+
+		// $.ajax({
+		// 	url: '/4DACTION/_V3_getExchangeRate',
+		// 	data: {
+		// 		from: 'CLF',
+		// 		to: '<!--#4DVAR <>_V3_defaultCurrencyCode-->'
+		// 	},
+		// 	async: false,
+		// 	dataType: 'json',
+		// 	success: function (data) {
+		// 		valor_clf = parseFloat(data.rate);
+		// 		if (valor_clf == 0)
+		// 			valor_clf = 1;
+		// 	}
+		// });
+
+		if (valor_usd == 0)
+			valor_usd = 1;
+
+		if (valor_clf == 0)
+			valor_clf = 1;
+
+
+		
+		var valor_usd_cotizacion = <!--#4DTEXT String([Nota_de_venta]param_dolar;"&xml")-->;
+		var valor_clf_cotizacion = <!--#4DTEXT String([Nota_de_venta]UF_ValorCambio;"&xml")-->;
+
+
+		var _V3_defaultCurrencyCode='<!--#4DVAR <>_V3_defaultCurrencyCode-->'
+
+
+		var selected_currency = "<!--#4DTEXT String([Nota_de_venta]working_currency;"&xml")-->";
+
+		if(selected_currency=="")
+			selected_currency=_V3_defaultCurrencyCode;
+
+		var exchange_rate =   unaBase.utilities.transformNumber("<!--#4DVAR exchange_rate-->");
+
+		if (exchange_rate == 0)
+				exchange_rate = 1;
+
+		let selected_currency_decimals = <!--#4DVAR exchange_currency_decimals-->
+
+		var new_currency_system = true;
+
+
+
+		// agregados par alerta de cambio de área de negocio en el caso que exista integración
+		var confirmacionArea = false;
+		var integracion = false;
+
+		<!--#4DIF formulario_cinemagica-->
+		var formulario_cinemagica = true;
+		<!--#4DENDIF-->
+
+
+
+	</script>
+	<style>
+		.toggleTh {
+			width: 6%;
+
+		}
+
+		.client-mode thead th.heading-presupuestado,
+		.client-mode thead th:last-of-type,
+		.client-mode tbody tr.title th[colspan],
+		.client-mode th.costo,
+		.client-mode td.costo,
+		.client-mode th.utilidad,
+		.client-mode td.utilidad,
+		.client-mode th.margen,
+		.client-mode td.margen,
+		.client-mode th.aplica-sobrecargo,
+		.client-mode td.aplica-sobrecargo,
+		.client-mode th.costo-interno,
+		.client-mode td.costo-interno,
+		.client-mode th.ocultar-print,
+		.client-mode td.ocultar-print,
+		.client-mode div.totales,
+		.client-mode article.block-totales {
+			display: none !important;
+		}
+
+		iframe {
+		   border: none;
+		   position: absolute;
+		}
+	</style>
+	<style>
+		.ui-tabs .ui-tabs-panel {
+			padding: 0 !important;
+			overflow: hidden;
+		}
+
+		[data-name="offline_mode"].active button {
+			color: orange !important;
+			border: 1px solid orange !important;
+		}
+
+		
+
+		.crab {
+			position: absolute;
+			display: block;
+			width: 500px;
+			height: 500px;
+		}
+	</style>
+
+</head>
+
+<body>
+
+	
+	<span class="view-active view" style="display: none;">Cotizaciones > Detalle</span>
+	<span class="view-active time-version" style="font-size: 10px; background-color: #E8FBF5;"><i class="far fa-clock"></i>&nbsp;La última modificación se realizó: <span id="time-version-text"></span></span>
+	
+    
+	<div id="main-container" data-id="<!--#4DTEXT id-->" data-integracion="<!--#4DTEXT integracion-->"
+		data-titulofinal="<!--#4DVAR vreferencia-->" data-index="<!--#4DVAR vid_negocio-->" class="mt-2">
+		
+
+
+		<section id="tabs-negocio">
+			<ul class="infinite-tabs">
+				<li><a href="#tabs-1">General</a>
+				</li>
+				<li class="load-detalle" data-id="<!--#4DTEXT id-->"><a href="#tabs-2">Detalle</a>
+				</li>
+				<li class="load-staff" data-id="<!--#4DTEXT id-->"><a href="#tabs-3">Staff / Equipo</a>
+				</li>
+				<li class="load-occliente" data-id="<!--#4DTEXT id-->"><a href="#tabs-4">OC. Cliente</a>
+				</li>
+
+				<li class="load-compras" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-5">Órdenes de
+						compra</a>
+				</li>
+
+				<li class="load-fxr" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-6">Rendiciones</a>
+				</li>
+
+				<li class="load-dtv" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-7">Documentos de
+						venta</a>
+				</li>
+				<li class="load-task" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-71">Tareas</a></li>
+				<li class="load-ots" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-8">Órdenes de
+						trabajo</a></li>
+
+				<li class="load-historial" data-id="<!--#4DTEXT id-->"><a href="#tabs-9">Historial</a></li>
+				
+				<li class="load-archivos-adjuntos" data-id="<!--#4DTEXT id-->"><a href="#tabs-10">Url Enlazadas</a></li>
+
+				<li class="load-archivos-adjuntos" data-id="<!--#4DTEXT id-->"><a href="#tabs-11">Archivos adjuntos</a></li>
+
+				
+			</ul>
+			<article id="tabs-1"></article>
+			<article id="tabs-2"></article>
+			<article id="tabs-3"></article>
+			<article id="tabs-4"></article>
+			<article id="tabs-5"></article>
+			<article id="tabs-6"></article>
+			<article id="tabs-7"></article>
+			<article id="tabs-71"></article>
+			<article id="tabs-8"></article>
+			<article id="tabs-9"></article>
+			<article id="tabs-10"></article>
+			<article id="tabs-11"></article>
+		</section>
+	</div>
+	<input type="checkbox" id="block_by_use" checked="" hidden="">
+
+
+	<script type="text/javascript" src="/v3/script/negCotCommon/common.js?<!--#4DTEXT _V3_version-->"></script>
+
+	<script type="text/javascript" src="/v3/script/negCotCommon/totales.js?<!--#4DTEXT _V3_version-->"></script>
+	<script type="text/javascript" src="/v3/script/negCotCommon/utilities.js?<!--#4DTEXT _V3_version-->"></script>
+
+	<script type="text/javascript" src="/v3/script/negCotCommon/sobrecargos.js?<!--#4DTEXT _V3_version-->"></script>
+
+	<script defer src="/v3/script/block_by_use.js?<!--#4DTEXT _V3_version-->"></script>
+	<script defer src="/v3/script/unblock.js?<!--#4DTEXT _V3_version-->"></script>
+	<script defer src="/v3/script/requestUnblock.js?<!--#4DTEXT _V3_version-->"></script>
+
+	<script src="/v3/script/idle.js"></script>
+
+	<script type="text/javascript" src="/v3/script/negCotCommon/itemParent.js?<!--#4DTEXT _V3_version-->"></script>
+	<script type="text/javascript" src="/v3/script/negCotCommon/functionsCot.js?<!--#4DTEXT _V3_version-->"></script>
+	<script type="text/javascript" src="/v3/script/negCotCommon/hideItemUnused.js?<!--#4DTEXT _V3_version-->"></script>
+	<script type="text/javascript" src="/v3/script/negCotCommon/addInfoGeneral.js?<!--#4DTEXT _V3_version-->"></script>
+	<script>		 
+		
+    
+		$(document).ready(function(){
+			function initializeObject() {
+				return {
+					"rows": [
+						{
+							"id": 0,
+							"closed": false,
+							"closed_compras": false,
+							"utilidad_costo": {
+								"presupuestado": {
+									"utilidad": {
+										"value": 0,
+										"ratio": "0"
+									},
+									"costo": {
+										"value": 0,
+										"ratio": "0"
+									}
+								},
+								"real": {
+									"utilidad": {
+										"value": 0,
+										"ratio": "0"
+									},
+									"costo": {
+										"value": 0,
+										"ratio": "0"
+									}
+								},
+								"indicador": {
+									"total_neto": {
+										"value": 0
+									},
+									"diferencia_costos": {
+										"value": 0
+									},
+									"eficiencia": {
+										"ratio": 0
+									},
+									"utilidad_esperada": {
+										"value": 0
+									}
+								}
+							},
+							"resumen": {
+								"gasto_real": {
+									"directo": {
+										"value": "0"
+									},
+									"interno": {
+										"value": 0,
+										"enabled": false
+									},
+									"otros": {
+										"value": 0
+									},
+									"sobrecargos": {
+										"value": 0,
+										"enabled": false
+									}
+								},
+								"justificacion": {
+									"pending": {
+										"value": "0"
+									},
+									"done": {
+										"value": 0
+									}
+								},
+								"cobro": {
+									"pending": {
+										"value": 0
+									},
+									"done": {
+										"value": 0
+									}
+								},
+								"pago": {
+									"pending": {
+										"value": 0
+									},
+									"done": {
+										"value": 0
+									}
+								},
+								"impuesto": {
+									"iva": {
+										"value": 0
+									},
+									"retenciones": {
+										"value": 0
+									}
+								}
+							}
+						}
+					]
+				};
+			}
+
+			// Asegurarse de que totales y totales.summaryNegocioData estén definidos
+			if (!totales) {
+				totales = {};
+			}
+			if (!totales.summaryNegocioData) {
+				totales.summaryNegocioData = {};
+			}
+
+			totales.summaryNegocioData.rows = initializeObject().rows;
+
+			if(nvNumber > 0 && $('article.general-data h2 span').text() != "Borrador"){
+
+				var cotizacion_to_block2 = {
+					id: $('section.staff').attr('data-id'),
+					folio: Number($('article.general-data h2 span').text().replace('Nº ','')),
+					user: $('html > body.menu.home > aside > div > div > h1').data('username'),
+					doc_name: $('.titulofinal').val(),
+					total: $('input[name="cotizacion[ajuste]"]').val(),
+					name: $('html > body.menu.home > aside > div > div > h1').text(),
+					module: "cotizaciones",
+					block: false,
+					from: "onbeforeunload---"
+				}
+							// idleJs(get_cot_cata(), idleTime);
+				
+				setInitTotals();
+			}
+
+			$('input[name="toUnblock"]').prop('checked', false);
+			// block_by_use blockea al entrar
+			if(blocked && !v3_block_cot_neg && !superUsers.includes(currentUser.username)){
+				unaBase.history.back();
+			}
+
+			var blockUser = $('html > body.menu.home > aside > div > div > h1').data('username');
+			var folio = <!--#4DVAR [Nota_de_venta]ID_Negocio-->;
+			var blockName = $('.u-user-profile').text();
+
+			if(!v3_block_cot_neg){
+				var cotizacionBlock = {
+					id: idCotizacion,
+					 folio: folio,
+					 user: blockUser,
+					 name: blockName,
+					 block: true,
+					 module: "cotizaciones",
+					 from: "entra a una cot---",
+					user_email: $('html > body.menu.home > aside > div > div > h1').data('email'),
+					 doc_name: $('input[name="cotizacion[titulo][text]"]').val(),
+					 total: $('input[name="cotizacion[ajuste]"]').val(),
+					 exchange: $('select[name="cotizacion[currency][working]"]').val()
+
+				};
+				block_by_use(cotizacionBlock);
+	
+			}
+
+			$("#tabs-negocio").tabs();
+
+			//-- ini -- modificado el 07-11-17 - por gin para mostrar las pestañas oc, fxr, dtv cuando una cotizacion tiene asociado y tener claridad cuando se quiera anular   
+
+			if (typeof cotizacion != 'undefined'){
+				var info = cotizacion.verifyHasDocs('<!--#4DTEXT id-->');
+				if (info.invoices == 0)
+					$('section#tabs-negocio li.load-dtv').hide();
+
+				if (info.purchases_oc == 0)
+					$('section#tabs-negocio li.load-compras').hide();
+
+				if (info.purchases_fxr == 0)
+					$('section#tabs-negocio li.load-fxr').hide();
+
+			}else{
+				$('section#tabs-negocio li.load-dtv').hide();
+				$('section#tabs-negocio li.load-compras').hide();
+				$('section#tabs-negocio li.load-fxr').hide();
+			}
+
+
+			$("#tabs-1").load('/v3/views/cotizaciones/general.shtml', 'id=<!--#4DVAR id-->');
+
+			<!--#4DIF Not(Undefined(working_currency))-->
+			$("#tabs-2").load('/v3/views/cotizaciones/detalle<!--#4DIF formulario_cinemagica-->_cinemagica<!--#4DENDIF-->.shtml', 'id=<!--#4DVAR id-->&working_currency=<!--#4DVAR working_currency-->');
+			<!--#4DELSE-->
+			$("#tabs-2").load('/v3/views/cotizaciones/detalle<!--#4DIF formulario_cinemagica-->_cinemagica<!--#4DENDIF-->.shtml', 'id=<!--#4DVAR id-->');
+			<!--#4DENDIF-->
+
+			$("#tabs-3").load('/v3/views/cotizaciones/staff.shtml', 'id=<!--#4DVAR id-->');
+
+			$("#tabs-4").load('/v3/views/occlientes/list.shtml', 'id=<!--#4DVAR id-->');
+			// $("#tabs-6").load('/v3/views/historial/index.shtml', 'id=<!--#4DVAR id-->&mod=cotizaciones');
+
+			$('a[href="#tabs-1"]').click(function() {
+				unaBase.interval.clearAll();
+				//$("#tabs-1").parentTo('section').find('article').empty();
+				//$("#tabs-1").load('/v3/views/cotizaciones/general.shtml', 'id=<!--#4DVAR id-->');
+			});
+
+
+				// $('a[href="#tabs-2"]').click(function() {
+			integracion = $('#main-container').data('integracion');
+			$('a[href="#tabs-2"]').focusin(function() {
+				unaBase.interval.clearAll();
+				//$("#tabs-2").parentTo('section').find('article').empty();
+				//$("#tabs-2").load('/v3/views/cotizaciones/detalle.shtml', 'id=<!--#4DVAR id-->');
+
+					var area = $('#main-container').find('input[name="cotizacion[area_negocio]"]').val();
+					var folio = $('#main-container .sheet').data('index');
+					if (folio == "" || folio == "0" || folio == 0 || folio == undefined) {
+						 folio = 0;
+					}
+					 if (integracion && folio == 0 && !confirmacionArea) {
+						 confirm('¿Está correcto el área de negocio seleccionado? <span style="font-weight:bold;font-size:12px!">' + area + '</span></br></br><span style="font-size:12px!important;font-weight:normal">\"Los precios de los servicios varían de acuerdo al área de negocio seleccionado.\"</span>').done(function (data) {
+							 if (data) {
+								 $('a[href="#tabs-2"]').trigger('click');
+							 } else {
+								 $('a[href="#tabs-1"]').trigger('click');
+							 }
+							 confirmacionArea = true;
+						 });
+					} else {
+						$('a[href="#tabs-2"]').trigger('click');
+					}
+
+					 // iguala titulo final
+					 $(".titulofinal").text($("#main-container").data("titulofinal"));
+
+			});
+
+			$('a[href="#tabs-3"]').click(function() {
+				unaBase.interval.clearAll();
+				//$("#tabs-3").parentTo('section').find('article').empty();
+				//$("#tabs-3").load('/v3/views/cotizaciones/staff.shtml', 'id=<!--#4DVAR id-->');
+
+				// iguala titulo final
+				$(".titulofinal").text($("#main-container").data("titulofinal"));
+
+			});
+
+			$('a[href="#tabs-4"]').click(function() {
+				unaBase.interval.clearAll();
+				//$("#tabs-4").parentTo('section').find('article').empty();
+				$("#tabs-4").load('/v3/views/occlientes/list.shtml', 'id=<!--#4DVAR id-->');
+
+				// iguala titulo final
+				// $(".titulofinal").text($("#main-container").data("titulofinal"));
+
+			});
+
+					 // oc
+					 $('a[href="#tabs-5"]').click(function() {
+						 unaBase.interval.clearAll();
+					 $("#tabs-5").load('/v3/views/negocios/ocs.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+
+					 // iguala titulo final
+					 $(".titulofinal").text($("#main-container").data("titulofinal"));
+
+			});
+
+					 // fxr
+					 $('a[href="#tabs-6"]').click(function() {
+						 unaBase.interval.clearAll();
+					 $("#tabs-6").load('/v3/views/negocios/fxr.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+
+					 // iguala titulo final
+					 $(".titulofinal").text($("#main-container").data("titulofinal"));
+
+			});
+
+					 // dtv
+					 $('a[href="#tabs-7"]').click(function() {
+						 unaBase.interval.clearAll();
+					 $("#tabs-7").load('/v3/views/negocios/facturas.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+
+					 // iguala titulo final
+					 $(".titulofinal").text($("#main-container").data("titulofinal"));
+
+			});
+
+			$('a[href="#tabs-71"]').click(function() {
+				unaBase.interval.clearAll();
+				//$("#tabs-7").parentTo('section').find('article').empty();
+				$("#tabs-71").load('/v3/views/tasks/list.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+
+				// iguala titulo final
+				$(".titulofinal").text($("#main-container").data("titulofinal"));
+
+			});
+
+					 // OTS
+					 $('a[href="#tabs-8"]').click(function() {
+						 unaBase.interval.clearAll();
+					 $("#tabs-8").load('/v3/views/negocios/ots.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+					 $(".titulofinal").text($("#main-container").data("titulofinal"));
+			});
+
+					 // historial
+					 $('a[href="#tabs-9"]').click(function() {
+						 unaBase.interval.clearAll();
+					 $("#tabs-9").load('/v3/views/historial/index.shtml', 'id=<!--#4DVAR id-->&mod=cotizaciones');
+
+					 // iguala titulo final
+					 $(".titulofinal").text($("#main-container").data("titulofinal"));
+
+			});
+
+
+			// historial
+			$('a[href="#tabs-10"]').click(function() {
+						 unaBase.interval.clearAll();
+					 $("#tabs-10").load('/v3/views/url_enlazadas/index.shtml', 'id=<!--#4DVAR id-->&mod=cotizaciones');
+
+					 // iguala titulo final
+					 $(".titulofinal").text($("#main-container").data("titulofinal"));
+
+			});
+
+			$('a[href="#tabs-11"]').click(function() {
+						 unaBase.interval.clearAll();
+					 $("#tabs-11").load('/v3/views/archivos_adjuntos/index.shtml', 'id=<!--#4DVAR id-->&mod=cotizaciones');
+
+					 // iguala titulo final
+					 $(".titulofinal").text($("#main-container").data("titulofinal"));
+
+			});
+
+			<!--#4DIF Undefined(changed_working_currency)-->
+			$('a[href="#tabs-1"]').trigger('click');
+			<!--#4DELSE-->
+			$('a[href="#tabs-2"]').trigger('click');
+			<!--#4DENDIF-->
+
+
+			<!--#4DIF (vid_negocio > 0)-->
+			unaBase.log.save('Ha ingresado a <!--#4DTEXT etiqueta_cotizacion-->', 'cotizaciones', '<!--#4DVAR [Nota_de_venta]ID_Negocio-->');
+			<!--#4DENDIF-->
+
+			// Modo cliente
+			if (is_modo_cliente) {
+						$('#main-container').addClass('client-mode');
+			} else {
+				$('#main-container').removeClass('client-mode');
+			}
+
+			
+
+
+
+		});
+	</script>
+
+
+	<!-- <script type="text/javascript" src="/v3/script/current_tab.js"></script> -->
+
+</body>
+
+</html>

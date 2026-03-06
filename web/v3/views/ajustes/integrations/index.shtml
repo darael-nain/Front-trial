@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Integrations</title>
+		<script type="text/javascript" src="/v3/views/ajustes/integrations/index.js"></script>
+
+    	<link href="/css/form1.css" rel="stylesheet">
+    	<link href="/v3/views/ajustes/parametros/css/params.css" rel="stylesheet">
+</head>
+<script type="text/javascript">
+	$(document).ready(function(){
+
+	  	unaBase.ui.block();    
+	  	ParamConnect.menu();
+	  	ParamConnect.init();
+	  	unaBase.ui.unblock();
+	  	unaBase.ui.expandable.init();
+	  
+
+	});
+
+</script>
+
+<body>
+	<section class="sheet" id="ParamConnect">
+		<footer>
+			<article>
+				<h1>Pipedrive</h1>
+				<ul class="editable">
+					<li>
+						<br>
+					</li>
+					<li>
+						
+						<li>
+							
+							<div>
+								<label for="pipedrivetoken">Token</label><br><br>
+								<textarea class="key" id="pipedrive_token" name="pipedrive_token" rows="6" cols="80" />
+								<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" id="pipedrive_token_save">
+									<span class="ui-button-text">Guardar</span>
+								</button>
+								
+							</div>
+							<hr>
+							<div>
+								<label title="Seleccionar la etapa en la que se cargan a UNABASE" for="">Etapa de carga</label><br><br>
+								<select name="sel_etapa" id="">
+									<option value="0"></option>
+									<option value="op">Oportunidad</option>
+									<option value="neg">Negocio</option>
+								
+								</select>
+							</div>
+							<br><br><br>
+							<div>
+								<label title="Seleccionar el estado en el que quedan" for="">Estado Unabase</label><br><br>
+								<select name="sel_estado" id="">
+									<option value="0"></option>
+									<option value="cot">Cotizaciones</option>
+									<option value="neg">Negocios</option>
+								</select>
+							</div>
+						</li>
+					</li>
+				</ul>
+			</article>
+			
+		</footer>
+		
+	</section>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{	
+	"rows": [
+<!--#4DLOOP $a_id_nc-->
+		{
+			"id": <!--#4DTEXT $a_id_nc{$a_id_nc}-->,	
+			"numero": "<!--#4DTEXT $a_numero_nc{$a_id_nc}-->",			
+			"tipo": "<!--#4DTEXT $a_tipo_nc{$a_id_nc}-->",
+			"emisor": "<!--#4DTEXT $a_emisor_nc{$a_id_nc}-->",
+			"emision": "<!--#4DTEXT $a_emision_nc{$a_id_nc}-->",
+			"rut": "<!--#4DTEXT $a_rut_nc{$a_id_nc}-->",	
+			"cliente": "<!--#4DHTML _V3_escapeString($a_cliente_nc{$a_id_nc})-->",
+			"neto": "<!--#4DTEXT String($a_neto_nc{$a_id_nc};"&xml")-->",
+			"exento": "<!--#4DTEXT String($a_exento_nc{$a_id_nc};"&xml")-->",
+			"iva": "<!--#4DTEXT String($a_iva_nc{$a_id_nc};"&xml")-->",
+			"total": "<!--#4DTEXT String($a_total_nc{$a_id_nc};"&xml")-->",
+			"estado": "<!--#4DTEXT $a_estado_nc{$a_id_nc}-->"
+		}<!--#4DIF NOT($a_id_nc{$a_id_nc} = $a_id_nc{Size of array($a_id_nc)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

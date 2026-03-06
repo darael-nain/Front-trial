@@ -1,0 +1,93 @@
+<input type="hidden" name="oc[parametros]" data-impuesto="<!--#4DTEXT [Parametros]Iva-->" >
+
+<table class="items items-compras">
+	<thead>
+		<tr>						
+			<th>ítem</th>
+			<th>descripción</th>
+			<th>Cantidad</th>
+			<th>P.U.[<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+			<th>SUBTOTAL[<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+			<th>Exento</th>
+		</tr>	
+	</thead>
+	<tfoot>
+		<tr><td colspan="6"></td></tr>
+		<tr>				
+			<td class="rigth currency numeric">
+				<label class="hide">Descuento NC</label>
+				<input class="hide" type="text" readonly name="oc[descuento_nc]" value="0">
+			</td>
+			<td class="rigth currency numeric">
+				<label class="hide">Otros impuestos</label>
+				<input class="hide" type="text" name="oc[otros_impuestos]" value="0">
+			</td>
+			<td class="rigth currency numeric">
+				<label>% Descuento</label>				
+				<input class="incrementa-dscto dscto" value="<!--#4DTEXT [Orden_de_compra]Porcentaje_Desc-->" name="oc[porcentaje_descuento]" type="number" min="0" max="100">
+				<input class="dscto" type="text" name="oc[descuento]" value="<!--#4DTEXT [Orden_de_compra]Descuento-->">				
+			</td>
+			<td class="rigth currency numeric">
+				<label>Sub total</label>		
+				<input type="text" readonly name="oc[sub_total]" value="<!--#4DTEXT [Orden_de_compra]Subtotal-->">				
+			</td>
+			<td class="rigth currency numeric">
+				<label>Afecto</label>		
+				<input type="text" readonly name="oc[total_afecto]" value="<!--#4DTEXT [Orden_de_compra]Total_afecto-->">				
+			</td>
+			<td class="rigth currency numeric">
+				<label>Exento</label>		
+				<input type="text" readonly name="oc[total_exento]" value="<!--#4DTEXT [Orden_de_compra]Total_Exento-->">	
+			</td>			
+		</tr>		
+		<tr>
+			<td></td>
+			<td></td>
+			<td></td>
+			<td class="rigth currency numeric">
+				<label>Total neto</label>
+				<input readonly type="text" name="oc[neto]" value="<!--#4DTEXT [Orden_de_compra]Total_Neto-->">
+			</td>
+			<td class="rigth currency numeric">
+				<label>Impuesto</label>
+				<input readonly type="text" name="oc[impuesto]" value="<!--#4DTEXT [Orden_de_compra]Total_Impuesto-->">
+			</td>
+			<td class="rigth currency numeric">
+				<label>Total</label>
+				<input readonly type="text" name="oc[total]" value="<!--#4DTEXT [Orden_de_compra]Total_OC-->">
+				<input readonly type="hidden" name="oc[saldo]" value="<!--#4DTEXT [Orden_de_compra]Saldo-->">
+				<input readonly type="hidden" name="oc[ila]" value="<!--#4DTEXT [Orden_de_compra]SMP_ILA-->">
+			</td>
+		</tr>
+	</tfoot>
+	<tbody>
+		<!--#4DLOOP [Detalle_OC]-->
+		<input type="hidden" name="oc[detalle_item][llave]"  value="<!--#4DTEXT [Detalle_OC]LLave_detalle_oc-->">
+		<tr>
+		  <td class="white-fn">
+		  	<input readonly name="oc[detalle_item][correlativo]" type="text" value="<!--#4DTEXT [Detalle_OC]Correlativo-->">
+		  </td>
+		  <td class="white-fn center">
+		  	<input name="oc[detalle_item][nombre]" type="text" value="<!--#4DTEXT [Detalle_OC]Nombre_Producto-->">
+		  </td>
+		  <td class="white-fn">
+		  	<input name="oc[detalle_item][cantidad]" type="text" value="<!--#4DTEXT [Detalle_OC]Cantidad-->">
+		  </td>
+		  <td class="white-fn currency numeric">
+		  	<input name="oc[detalle_item][precio]" type="text" value="<!--#4DTEXT [Detalle_OC]Precio_Unitario-->">
+		  </td>
+		  <td class="white-fn right currency numeric">
+		  	<input readonly name="oc[detalle_item][subtotal]" type="text" value="<!--#4DTEXT [Detalle_OC]Subtotal-->">
+		  </td>
+		   <td class="white-fn center">
+		   	<!--#4DIF [Detalle_OC]exento-->
+		   		<input title="Marcar si el ítem es exento" checked type="checkbox" name="oc[detalle_item][exento]">
+		   	<!--#4DELSE-->
+		   		<input title="Marcar si el ítem es exento" type="checkbox" name="oc[detalle_item][exento]">
+		   	<!--#4DENDIF-->
+		  </td>
+		</tr>
+		<!--#4DENDLOOP-->
+	</tbody>
+  	<tfoot></tfoot>
+</table>

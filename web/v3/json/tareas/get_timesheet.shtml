@@ -1,0 +1,16 @@
+{
+	"total": <!--#4DTEXT $total-->,
+	"timesheet": [
+	<!--#4DLOOP $id-->
+		{	
+			"id": <!--#4DTEXT $id-->,
+			"task_id": <!--#4DTEXT $task_id-->,
+			"start_date" : "<!--#4DHTML [task_timesheet]start_date-->",
+			"start_time" : "<!--#4DTEXT [task_timesheet]start_time-->",
+			"end_date" : "<!--#4DTEXT [task_timesheet]end_date-->",
+			"end_time" : "<!--#4DTEXT [task_timesheet]end_time-->",
+			"total" : "<!--#4DTEXT [task_timesheet]total-->"
+		}<!--#4DIF NOT($id{$id} = $id{Size of array($id)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

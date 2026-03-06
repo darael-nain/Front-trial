@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_serverInfo-->
+<html>
+  <head>    
+    <title>Perfil</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="/v3/views/contactos/asignados/library/content.js?asdf"></script>
+	<script type="text/javascript" src="/v3/views/contactos/asignados/startup/content.js?asdf"></script> 
+	<style type="text/css">
+		table.items.compras tbody > tr > td:before,
+		table.items.ventas tbody > tr > td:before{
+			content: ""!important;		
+		}
+	</style>
+  </head>
+  <body>    
+    <section class="sheet">
+		<fieldset>
+		    <legend><strong>Compras</strong></legend>
+		    <table class="items compras">
+				<thead>
+					<tr>					
+						<th width="5%"></th>
+						<th width="50%">Servicio</th>						
+						<th width="23%"><!--#4DVAR _V3_defaultCurrencySymbol--> Tarifa</th>
+						<th width="20%">Observación</th>
+						<th width="2%">Sugerir?</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="title" data-jerarquia="0">
+						<th class="center"><button data-tipo="compras" class="ui-icon ui-icon-circle-plus add item" title="Agregar servicio"></button></th>
+						<th colspan="4"></th>
+					</tr>
+				</tbody>		
+			</table>
+		</fieldset>
+
+		<fieldset>
+		    <legend><strong>Ventas</strong></legend>
+		    <table class="items ventas">
+				<thead>
+					<tr>						
+						<th width="10%"></th>					
+						<th width="50%">Servicio</th>		      			
+		      			<th width="40%"><!--#4DVAR _V3_defaultCurrencySymbol--> Tarifa</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="title" data-jerarquia="0">
+						<th class="center"><button data-tipo="ventas" class="ui-icon ui-icon-circle-plus add item" title="Agregar servicio"></button></th>
+						<th colspan="2"></th>					
+					</tr>
+				</tbody>				
+			</table>
+		</fieldset>
+
+    </section>
+  </body>
+</html>
+

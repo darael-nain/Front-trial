@@ -1,0 +1,29 @@
+{
+	"suma_h_asignadas": "<!--#4DTEXT Sum([OT]horas_asignadas)-->",	
+	"suma_total_pres": "<!--#4DTEXT _V3_formatCurrency(Sum([OT]costo_hh_total_pres))-->",
+	"suma_h_real": "<!--#4DTEXT Sum([OT]horas_trabajadas)-->",
+	"suma_total_real": "<!--#4DTEXT _V3_formatCurrency(Sum([OT]costo_hh_total))-->",
+	"ocupa_tareas": <!--#4DIF g_uso_tareas_easy-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"rows": [
+<!--#4DLOOP [OT]-->
+		{
+			"id": <!--#4DTEXT [OT]ID_OT-->,
+			"folio": "<!--#4DTEXT Num([OT]Folio_OT)-->",
+			"referencia": "<!--#4DHTML _V3_escapeString([OT]Referencia)-->",
+			"responsable": "<!--#4DTEXT Lowercase([OT]responsable_tarea;*)-->",
+			"responsable_nombre": "<!--#4DTEXT Lowercase([OT]nombre_responsable_tarea;*)-->",
+			"estado": "<!--#4DTEXT [OT]estado-->",
+			"h_asignadas": "<!--#4DTEXT Round([OT]horas_asignadas;2)-->",
+			"h_asignadas_raw": <!--#4DHTML String([OT]horas_asignadas;"&xml")-->,			
+			"h_reales": "<!--#4DTEXT Round([OT]horas_trabajadas;2)-->",
+			"h_reales_raw": <!--#4DHTML String([OT]horas_trabajadas;"&xml")-->,
+			"costo_pres": "<!--#4DTEXT _V3_formatCurrency([OT]horas_asignadas*[OT]costo_hh_unitario)-->",
+			"costo_pres_raw": <!--#4DHTML String([OT]horas_asignadas*[OT]costo_hh_unitario;"&xml")-->,
+			"costo_unit": "<!--#4DTEXT _V3_formatCurrency([OT]costo_hh_unitario)-->",
+			"costo_unit_raw": <!--#4DHTML String([OT]costo_hh_unitario;"&xml")-->,
+			"total_real": "<!--#4DTEXT _V3_formatCurrency([OT]costo_hh_total)-->",
+			"total_real_raw": <!--#4DHTML String([OT]costo_hh_total;"&xml")-->
+		}<!--#4DIF Selected record number([OT])<Records in selection([OT])-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

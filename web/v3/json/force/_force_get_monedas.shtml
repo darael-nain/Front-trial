@@ -1,0 +1,14 @@
+{
+	"row": [
+	<!--#4DLOOP aCodigo -->
+			{
+				"codigo": "<!--#4DHTML aCodigo{aCodigo}-->",
+				"nombre": "<!--#4DHTML aNombre{aCodigo}-->",
+				"value": "<!--#4DHTML aValue{aCodigo}-->",
+				"view_decimal": "<!--#4DHTML aViewDecimal{aCodigo}-->",
+				"default": "<!--#4DHTML aDefault{aCodigo}-->",
+				"decimal": "<!--#4DHTML aDecimal{aCodigo}-->"
+			}<!--#4DIF NOT(aCodigo{aCodigo} = aCodigo{Size of array(aCodigo)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

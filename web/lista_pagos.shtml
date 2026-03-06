@@ -1,0 +1,85 @@
+<!--#4DINCLUDE head.shtml-->
+<body>
+<div id="content">
+<!--#4DIF vSesion>0-->
+<!--#4DINCLUDE menuSuperior.shtml-->
+<!--#4DINCLUDE mensajes2.shtml-->
+    
+    <section>
+    <!--#4DINCLUDE info_usuario.shtml-->    
+    	<h1>Lista de Ordenes de Pagos</h1>    	  
+         <article>
+			<h3 class="h3especial">Total Pagos : <!--#4DVAR vcantPagos--></h3>
+            <div class="mostrando"><span class="negro">Mostrando :</span> <!--#4DVAR vfiltroBusqueda--></div>
+			<div class="buscar-negocios">
+                <form id="frmbuscadores" class="frmbuscadores"  action="/4DACTION/W_BUSCAR_PAGOS" method="post" >
+                    <input id="tipo_busqueda_pago" name="tipo_busqueda_pago" type="hidden" value=""/>
+
+                    <div>
+                        <label for="cbo-estados">Estado : </label>
+                        <select onChange="fn_tipo_opcion_pago(this.value)" name="estados" id="estados" class="listas-especiales2" >
+                            <option selected value="<!--#4DVAR vEstadoActual-->"><!--#4DVAR vEstadoActual--></option>
+                            <!--#4DIF vEstadoActual#"EMITIDA"-->
+                                 <option value="EMITIDA">EMITIDA</option>
+                            <!--#4DENDIF-->
+                            <!--#4DIF vEstadoActual#"PAGADA"-->
+                                 <option value="PAGADA">PAGADA</option>
+                            <!--#4DENDIF-->
+                            <!--#4DIF vEstadoActual#"ANULADA"-->
+                                 <option value="ANULADA">ANULADA</option>
+                            <!--#4DENDIF-->
+                            <!--#4DIF vEstadoActual#"TODOS"-->
+                                 <option value="TODOS">TODOS</option>
+                            <!--#4DENDIF-->                                                                      
+                        </select>
+                    </div>
+                    
+                    <label for="cbo-buscadores">Buscar x : </label>
+                    <select name="opcionbuscarneg" id="opcionbuscarneg" class="listas-especiales2" onChange="fn_tipo_opcion_pago(this.value)" >
+                        <option selected value="<!--#4DVAR vBusquedaTexto-->"><!--#4DVAR vBusquedaTexto--></option>
+                        <!--#4DIF vBusquedaTexto#"NUMERO"-->
+                             <option value="NUMERO">NUMERO</option>
+                        <!--#4DENDIF-->
+                        <!--#4DIF vBusquedaTexto#"PORRUT"-->
+                             <option value="RUT">RUT</option>
+                        <!--#4DENDIF-->
+                        <!--#4DIF vBusquedaTexto#"RAZON"-->
+                             <option value="RAZON">RAZON</option>
+                        <!--#4DENDIF-->
+                        <!--#4DIF vBusquedaTexto#"TODOS"-->
+                             <option value="TODOS">TODOS</option>
+                        <!--#4DENDIF-->                                      
+                    </select>                 
+
+                    <input required autofocus class="txtbuscar" id="txtbuscar" name="txtbuscar" type="text"/>
+                    <button  id="valida-buscar-pago"class="buttonbuscar" type="submit">
+                            <img src="/imagenes/search.gif" border="0" /> Buscar
+                    </button>                                   
+
+                </form>
+            </div>			
+						
+			<!--#4DIF vcantPagos>0-->
+				<p><!--#4DINCLUDE lista_pagos_encontradas.shtml--></p>
+				<!--#4DIF vcantPagos>20-->
+						<p><!--#4DVAR vcantPagos--> Reg.</p>
+				<!--#4DELSE-->
+						<p><!--#4DVAR vcantPagos--> Reg.</p>
+				<!--#4DENDIF-->
+			<!--#4DELSE-->
+				<p>                    		
+					   NO SE ENCONTRARON PAGOS...!!!                                 
+				</p>
+			<!--#4DENDIF-->
+			
+         </article>         
+    </section>
+<!--#4DELSE-->
+  <p>
+    	LA SESI&Oacute;N HA EXPIRADO...!!!
+		<a class="enlaces" href="index.shtml?t=<!--#4DVAR String(Milliseconds+Random(2))-->">VOLVER A INICIAR</a>
+    </p>
+<!--#4DENDIF-->
+</div>  
+</body>
+</html>

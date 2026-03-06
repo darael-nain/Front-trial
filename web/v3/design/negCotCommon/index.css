@@ -1,0 +1,22 @@
+	/* 
+			// simon itemparent start*/
+		.itemParent *{
+			background-color: #98db8c !important;
+		}
+		.itemParent{
+			background-color: #98db8c !important;
+		}
+		.itemParent input{
+			font-style: italic;
+			font-weight: 900 !important;
+		}
+		.childItem *:not(input){
+			background-color: #ecfcea !important;
+		}
+		.childItem input{
+			font-style: italic;
+		}
+		.itemParent td input[name="item[][nombre]"] {
+			width: 300px !important;
+		}
+		/* simon itemparent end*/

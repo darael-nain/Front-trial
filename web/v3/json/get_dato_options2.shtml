@@ -1,0 +1,13 @@
+{
+	"rows": [
+	<!--#4DLOOP aDatoOptionsId-->
+		{
+			"id": <!--#4DVAR aDatoOptionsId{aDatoOptionsId}-->,
+			"enabled": <!--#4DIF aDatoOptionsEnabled{aDatoOptionsId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"text": "<!--#4DVAR _V3_escapeString(aDatoOptionsText{aDatoOptionsId})-->",
+			"cod": "<!--#4DVAR _V3_escapeString(aDatoOptionsTextCod{aDatoOptionsId})-->",
+			"correlativo_actual": "<!--#4DVAR aDatoOptionsCorrelativoActual{aDatoOptionsId}-->"
+		}<!--#4DIF NOT(aDatoOptionsId{aDatoOptionsId} = aDatoOptionsId{Size of array(aDatoOptionsId)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

@@ -1,0 +1,14 @@
+{
+	"ventas" : [
+		<!--#4DLOOP aid-->
+		{
+			"id": <!--#4DHTML aid{aid}-->,
+			"folio": <!--#4DHTML afolio{aid}-->,
+			"fecha": "<!--#4DHTML afecha{aid}-->",
+			"cliente": "<!--#4DHTML _V3_escapeString(arazon{aid})-->",
+			"referencia": "<!--#4DHTML _V3_escapeString(areferencia{aid})-->",
+			"total" : <!--#4DHTML String(atotal{aid};"&xml")-->
+		}<!--#4DIF NOT(aid{aid} = aid{Size of array(aid)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	]	
+}

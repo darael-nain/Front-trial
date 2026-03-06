@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_proxy_getProductoContent-->
+<html>
+	<head>		
+		<title>Perfil</title>
+		<meta charset="utf-8">		
+		<script type="text/javascript">
+			var container = $('.form-contact');
+			var full_fields = function(){				
+				container.find('input:not([type="radio"])').each(function() {
+					if ($(this).val() != "") {						
+						$(this).css("background-color","#FECA40");
+					}
+				});
+				if (container.find('textarea').val() != "") {						
+					container.find('textarea').css("background-color","#FECA40");
+				}
+			}
+
+
+			$(document).ready(function() {			
+			    $("#radio").buttonset();
+			    $('.hide').hide();
+			    full_fields();			   
+			    $(".tags li").click(function(){
+			    	$(this).fadeOut('slow');
+			    });
+
+			    $('table.proveedores > tbody > tr').click(function(event) {
+			    	var that = this;
+			    	if (!$(this).hasClass('selected')) {
+				    	var subtable = $(this).next().find('table > tbody');
+				    	if (!$(this).hasClass('loaded')) {
+					    	$.ajax({
+					    		url: '/4DACTION/_V3_getComprasByProveedor',
+					    		data: {
+					    			id: $(that).data('id'),
+					    			fk: <!--#4DTEXT id -->
+					    		},
+					    		dataType: 'json',
+					    		success: function(data) {
+					    			//subtable.parentTo('table').parent().prepend('<div style="font-weight: bold; text-align: right;">Promedio: $ <span class="currency" style="width: 70px; display: inline-block;">' + Math.round(data.extra.average) + '</span></div>');
+					    			subtable.parentTo('table').parent().prepend('<div style="font-weight: bold; text-align: right;">Cantidad: <span class="currency" style="width: 110px; display: inline-block;">' + Math.round(data.extra.count) + '</span></div>');
+					    			subtable.parentTo('table').parent().prepend('<div style="font-weight: bold; text-align: right;">Suma: <span class="currency" style="width: 110px; display: inline-block;">' + data.extra.sum + '</span></div>');
+					    			$.each(data.rows, function(key, item) {
+					    				subtable.append('\
+					    					<tr>								\
+					    						<td>' + item.index + '</td>		\
+					    						<td>							\
+					    							<time datetime="' + Date.parse(item.created_at).toISOString() + '">' + $.datepicker.formatDate('dd-mm-yy', Date.parse(item.created_at)) + '</time></td>	\
+					    						<td class="left">' + item.text + '</td>		\
+					    						<td>' + item.tipo + '</td>		\
+					    						<td class="currency"><span class="symbol">' + currency.symbol + '</span> <span class="value">' + item.total + '</span></td>		\
+					    					</tr>								\
+					    				');
+					    			});
+					    			subtable.find('td.currency > span.value').number(true, currency.decimals, ',', '.')
+					    			$(that).next().show();
+					    			$(that).addClass('loaded');
+					    		}
+					    	});
+						} else {
+							$(that).next().show();
+						}
+						$(this).addClass('selected');
+					} else {
+						$(that).next().hide();
+						$(this).removeClass('selected');
+					}	
+
+			    	event.preventDefault();
+			    });
+
+
+			});
+		</script>
+		<style>
+			tr.detail {
+				display: none;
+			}
+
+			tr.detail > td > table > * > tr {
+				height: 20px !important;
+			}
+
+			tr.detail > td > table > thead > tr {
+				background-color: rgb(128,128,128);
+			}
+
+			tr.detail > td > table > thead > tbody > tr:nth-of-type(odd) {
+				background-color: rgb(255,255,255) !important;
+			}
+
+			tr.detail > td > table > thead > tbody > tr:nth-of-type(even) {
+				background-color: rgb(255,255,255) !important;
+			}
+
+			tr.selected {
+				background-color: rgba(169,188,245,.5) !important;
+			}
+		</style>
+	</head>
+	<body>		
+		<section class="sheet" data-id="<!--#4DVAR [Servicio]Id_Servicio-->" data-index="<!--#4DVAR [Servicio]Codigo_Servicio-->"<!--#4DIF false--> data-new="true"<!--#4DENDIF--><!--#4DIF [Servicio]Estado=False--> data-readonly="true"<!--#4DENDIF-->>
+
+			<fieldset>
+				<legend><strong>Proveedores</strong></legend>
+				<!--#4DIF Size of array(aProveedorId)>0-->
+				<table class="proveedores">
+					<thead>
+						<tr>
+							<th>Proveedor</th>
+							<th>Promedio</th>
+							<th>Tarifa</th>
+							<th>Sugerir</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!--#4DLOOP aProveedorId-->
+						<tr data-id="<!--#4DTEXT aProveedorIndex{aProveedorId}-->" style="cursor: pointer;">
+							<td class="left"><!--#4DTEXT aProveedorText{aProveedorId}--></td>
+							<td class="currency"><span class="symbol"><!--#4DVAR _V3_defaultCurrencySymbol--></span> <!--#4DTEXT String(aProveedorPromedio{aProveedorId};"###.###.##0")--></td>
+							<td class="currency"><span class="symbol"><!--#4DVAR _V3_defaultCurrencySymbol--></span> <!--#4DTEXT String(aProveedorTarifa{aProveedorId};"###.###.##0")--></td>
+							<td><!--#4DIF aProveedorBookmark{aProveedorId}-->Sí<!--#4DELSE-->No<!--#4DENDIF--></td>
+						</tr>
+						<tr class="detail">
+							<td colspan="4">
+								<table>
+									<thead>
+										<tr>
+											<th>Nº</th>
+											<th>Fecha</th>
+											<th>Referencia</th>
+											<th>Tipo</th>
+											<th>Total</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+						<!--#4DENDLOOP-->
+					</tbody>
+				</table>
+				<!--#4DELSE-->
+				<p>No se encontró ningún proveedor</p>
+				<!--#4DENDIF-->
+			</fieldset>
+			<fieldset>
+				<legend><strong>Clientes</strong></legend>
+				<!--#4DIF Size of array(aClienteId)>0-->
+				<table>
+					<thead>
+						<tr>
+							<th>Cliente</th>
+							<th>Promedio</th>
+							<th>Tarifa</th>
+							<!-- <th>Sugerir</th> -->
+						</tr>
+					</thead>
+					<tbody>
+						<!--#4DLOOP aClienteId-->
+						<tr>
+							<td class="left"><!--#4DTEXT aClienteText{aClienteId}--></td>
+							<td class="currency"><span class="symbol"><!--#4DVAR _V3_defaultCurrencySymbol--></span> <!--#4DTEXT String(aClientePromedio{aClienteId};"###.###.##0")--></td>
+							<td class="currency"><span class="symbol"><!--#4DVAR _V3_defaultCurrencySymbol--></span> <!--#4DTEXT String(aClienteTarifa{aClienteId};"###.###.##0")--></td>
+							<!--<td><!- -#4DIF aClienteBookmark{aClienteId}- ->Sí<!- -#4DELSE- ->No<!- -#4DENDIF- -></td>-->
+						</tr>
+						<!--#4DENDLOOP-->
+					</tbody>
+				</table>
+				<!--#4DELSE-->
+				<p>No se encontró ningún cliente</p>
+				<!--#4DENDIF-->
+			</fieldset>
+		</section>
+	</body>
+
+</html>

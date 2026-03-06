@@ -1,0 +1,10 @@
+{
+	"rows": [
+<!--#4DLOOP [Prm_Usuario]-->
+		{
+			"id": "<!--#4DHTML [Prm_Usuario]Login-->",
+			"text": "<!--#4DHTML _V3_escapeString(Lowercase([Prm_Usuario]Nombres+" "+[Prm_Usuario]ApePaterno;*))-->"
+		}<!--#4DIF Selected record number([Prm_Usuario])<Records in selection([Prm_Usuario])-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

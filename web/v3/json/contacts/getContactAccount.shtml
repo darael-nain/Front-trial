@@ -1,0 +1,17 @@
+{
+	"total_records" :<!--#4DTEXT cuentasCont-->,
+	"rows": [
+<!--#4DLOOP accountId-->
+	{
+	"accountId": "<!--#4DTEXT accountId{accountId}-->",
+	"idBank": "<!--#4DTEXT idBank{accountId}-->",
+	"bank": "<!--#4DTEXT bank{accountId}-->",
+	"accountType": "<!--#4DTEXT accountType{accountId}-->",
+	"bankCode": "<!--#4DTEXT CodigoBanco{accountId}-->",
+	"accountNumber": "<!--#4DTEXT accountNumber{accountId}-->",
+	"accountMxClabe": "<!--#4DTEXT accountMxClabe{accountId}-->",
+	"asig": "<!--#4DTEXT asig{accountId}-->"
+	}<!--#4DIF NOT(accountId{accountId} = accountId{Size of array(accountId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

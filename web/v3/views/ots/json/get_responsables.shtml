@@ -1,0 +1,10 @@
+{
+	"rows": [
+<!--#4DLOOP aLoginResp-->
+		{
+			"id": "<!--#4DTEXT aLoginResp{aLoginResp}-->",
+			"text": "<!--#4DTEXT _V3_escapeString(aNamesResp{aLoginResp})-->"			
+		}<!--#4DIF NOT(aLoginResp{aLoginResp} = aLoginResp{Size of array(aLoginResp)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

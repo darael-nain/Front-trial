@@ -1,0 +1,13 @@
+{
+	"total": <!--#4DHTML $total-->,
+	"rows": [
+<!--#4DLOOP id_tipo_cuenta -->
+		{
+			"id": <!--#4DHTML id_tipo_cuenta{id_tipo_cuenta}-->,
+			"text": "<!--#4DHTML descripcion_tipo_cuenta{id_tipo_cuenta}-->",
+			"codigo_tipopago": "<!--#4DHTML codigo_tipo_cuenta{id_tipo_cuenta}-->",
+			"estado": <!--#4DIF estado_tipo_cuenta{id_tipo_cuenta}-->true<!--#4DELSE-->false<!--#4DENDIF-->	
+		}<!--#4DIF NOT(id_tipo_cuenta{id_tipo_cuenta} = id_tipo_cuenta{Size of array(id_tipo_cuenta)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

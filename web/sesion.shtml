@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>P&aacute;gina de bienvenida de 4D Web Application Server</title>
+	    <style type="text/css">
+<!--
+h2 {
+	font: 16px Verdana, Arial, Helvetica, sans-serif;
+}
+p {
+	font: 12px Verdana, Arial, Helvetica, sans-serif;
+}
+-->
+        </style>
+	</head>
+	<body bgcolor="#ffffff">
+		<div align="center">
+			<table border="0" cellpadding="0" cellspacing="0" width="675">
+				<tr>
+					
+      <td class="grayborder"> 
+        <h2 align="center">&#161;Bienvenido a la p&aacute;gina de inicio por defecto de
+        4D Web Server</h2>
+        <p align="center">Esta es la p&aacute;gina de bienvenida por defecto de 
+        <strong>4D Web Server</strong>. Esta <strong>p&aacute;gina de prueba</strong>
+        est&aacute; servida por 4D Application.</p>
+        <p align="center">Si Usted es el Webmaster, &#161;enhorabuena! Su servidor Web
+        ha arrancado correctamente. Est&aacute; visualizando esta p&aacute;gina porque
+        todav&iacute;a no ha reemplazado el archivo por defecto &quot;index.html&quot;
+        por su propia p&aacute;gina de bienvenida.</p>
+        <p align="center">Encontrar&aacute; las instrucciones para configurar su 4D Web Server
+        en la documentaci&oacute;n incluida.</p>
+        <p align="center"><b>IMPORTANTE</b>: Esta p&aacute;gina Web no pertenece y no est&aacute;
+        administrada por 4D SAS o cualquiera de sus filiales. Por favor contacte al editor
+        o al webmaster del presente sitio para se&ntilde;alar todo problema que tenga con ello.</p>
+        <p align="center">&copy;1995-2010 4D, Inc., 4D SAS y sus concedentes<br>
+          Todos los derechos reservados.</p>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,97 @@
+{
+	"ventas": {
+		"por_cobrar": [
+			<!--#4DLOOP aPorCobrarClienteId-->
+			{
+				"id": <!--#4DTEXT String(aPorCobrarClienteId{aPorCobrarClienteId};"&xml")-->,
+				"name": "<!--#4DHTML _V3_escapeString(aPorCobrarClienteName{aPorCobrarClienteId})-->",
+				"months": [
+					{ "value": <!--#4DTEXT String(aPorCobrarValueJan{aPorCobrarClienteId};"&xml")-->, "percent": <!--#4DTEXT String(aPorCobrarPercentJan{aPorCobrarClienteId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorCobrarValueFeb{aPorCobrarClienteId};"&xml")-->, "percent": <!--#4DTEXT String(aPorCobrarPercentFeb{aPorCobrarClienteId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorCobrarValueMar{aPorCobrarClienteId};"&xml")-->, "percent": <!--#4DTEXT String(aPorCobrarPercentMar{aPorCobrarClienteId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorCobrarValueApr{aPorCobrarClienteId};"&xml")-->, "percent": <!--#4DTEXT String(aPorCobrarPercentApr{aPorCobrarClienteId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorCobrarValueMay{aPorCobrarClienteId};"&xml")-->, "percent": <!--#4DTEXT String(aPorCobrarPercentMay{aPorCobrarClienteId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorCobrarValueJun{aPorCobrarClienteId};"&xml")-->, "percent": <!--#4DTEXT String(aPorCobrarPercentJun{aPorCobrarClienteId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorCobrarValueJul{aPorCobrarClienteId};"&xml")-->, "percent": <!--#4DTEXT String(aPorCobrarPercentJul{aPorCobrarClienteId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorCobrarValueAug{aPorCobrarClienteId};"&xml")-->, "percent": <!--#4DTEXT String(aPorCobrarPercentAug{aPorCobrarClienteId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorCobrarValueSep{aPorCobrarClienteId};"&xml")-->, "percent": <!--#4DTEXT String(aPorCobrarPercentSep{aPorCobrarClienteId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorCobrarValueOct{aPorCobrarClienteId};"&xml")-->, "percent": <!--#4DTEXT String(aPorCobrarPercentOct{aPorCobrarClienteId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorCobrarValueNov{aPorCobrarClienteId};"&xml")-->, "percent": <!--#4DTEXT String(aPorCobrarPercentNov{aPorCobrarClienteId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorCobrarValueDec{aPorCobrarClienteId};"&xml")-->, "percent": <!--#4DTEXT String(aPorCobrarPercentDec{aPorCobrarClienteId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorCobrarValueAcum{aPorCobrarClienteId};"&xml")-->, "percent": <!--#4DTEXT String(aPorCobrarPercentAcum{aPorCobrarClienteId};"&xml")--> }
+				]
+			}<!--#4DIF NOT(aPorCobrarClienteId{aPorCobrarClienteId} = aPorCobrarClienteId{Size of array(aPorCobrarClienteId)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		],
+		"suma": {
+			"months": [
+				{ "value": <!--#4DTEXT String(totalPorCobrarValueJan;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalPorCobrarValueFeb;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalPorCobrarValueMar;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalPorCobrarValueApr;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalPorCobrarValueMay;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalPorCobrarValueJun;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalPorCobrarValueJul;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalPorCobrarValueAug;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalPorCobrarValueSep;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalPorCobrarValueOct;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalPorCobrarValueNov;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalPorCobrarValueDec;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalPorCobrarValueAcum;"&xml")-->, "percent": 1 }
+			]
+		}
+	},
+	"compras": {
+		"por_pagar": [
+			<!--#4DLOOP aPorPagarProveedorId-->
+			{
+				"id": <!--#4DTEXT String(aPorPagarProveedorId{aPorPagarProveedorId};"&xml")-->,
+				"name": "<!--#4DHTML _V3_escapeString(aPorPagarProveedorName{aPorPagarProveedorId})-->",
+				"months": [
+					{ "value": <!--#4DTEXT String(aPorPagarValueJan{aPorPagarProveedorId};"&xml")-->, "percent": <!--#4DTEXT String(aPorPagarPercentJan{aPorPagarProveedorId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorPagarValueFeb{aPorPagarProveedorId};"&xml")-->, "percent": <!--#4DTEXT String(aPorPagarPercentFeb{aPorPagarProveedorId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorPagarValueMar{aPorPagarProveedorId};"&xml")-->, "percent": <!--#4DTEXT String(aPorPagarPercentMar{aPorPagarProveedorId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorPagarValueApr{aPorPagarProveedorId};"&xml")-->, "percent": <!--#4DTEXT String(aPorPagarPercentApr{aPorPagarProveedorId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorPagarValueMay{aPorPagarProveedorId};"&xml")-->, "percent": <!--#4DTEXT String(aPorPagarPercentMay{aPorPagarProveedorId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorPagarValueJun{aPorPagarProveedorId};"&xml")-->, "percent": <!--#4DTEXT String(aPorPagarPercentJun{aPorPagarProveedorId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorPagarValueJul{aPorPagarProveedorId};"&xml")-->, "percent": <!--#4DTEXT String(aPorPagarPercentJul{aPorPagarProveedorId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorPagarValueAug{aPorPagarProveedorId};"&xml")-->, "percent": <!--#4DTEXT String(aPorPagarPercentAug{aPorPagarProveedorId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorPagarValueSep{aPorPagarProveedorId};"&xml")-->, "percent": <!--#4DTEXT String(aPorPagarPercentSep{aPorPagarProveedorId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorPagarValueOct{aPorPagarProveedorId};"&xml")-->, "percent": <!--#4DTEXT String(aPorPagarPercentOct{aPorPagarProveedorId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorPagarValueNov{aPorPagarProveedorId};"&xml")-->, "percent": <!--#4DTEXT String(aPorPagarPercentNov{aPorPagarProveedorId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorPagarValueDec{aPorPagarProveedorId};"&xml")-->, "percent": <!--#4DTEXT String(aPorPagarPercentDec{aPorPagarProveedorId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorPagarValueAcum{aPorPagarProveedorId};"&xml")-->, "percent": <!--#4DTEXT String(aPorPagarPercentAcum{aPorPagarProveedorId};"&xml")--> }
+				]
+			}<!--#4DIF NOT(aPorPagarProveedorId{aPorPagarProveedorId} = aPorPagarProveedorId{Size of array(aPorPagarProveedorId)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		],
+		"suma": {
+			"months": [
+				{ "value": <!--#4DTEXT String(totalPorPagarValueJan;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalPorPagarValueFeb;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalPorPagarValueMar;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalPorPagarValueApr;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalPorPagarValueMay;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalPorPagarValueJun;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalPorPagarValueJul;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalPorPagarValueAug;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalPorPagarValueSep;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalPorPagarValueOct;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalPorPagarValueNov;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalPorPagarValueDec;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalPorPagarValueAcum;"&xml")-->, "percent": 1 }
+			]
+		}
+	},
+	"currency" : {
+		"code" : "<!--#4DTEXT _V3_defaultCurrencyCode-->",
+		"name" : "<!--#4DTEXT _V3_defaultCurrencyName-->",
+		"symbol" : "<!--#4DTEXT _V3_defaultCurrencySymbol-->",
+		"right" : <!--#4DIF _V3_defaultCurrencyRight-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+		"decimal": <!--#4DTEXT _V3_defaultCurrencyDecimals-->,
+		"decimal_sep": "<!--#4DTEXT _V3_defaultCurrencyDecimalSep-->",
+		"thousand_sep" : "<!--#4DTEXT _V3_defaultCurrencyThousandSep-->",
+		"decimal_text_excel" : "<!--#4DTEXT _V3_defaultCurrencyDecimalsText-->",
+		"format_code_excel" : "<!--#4DTEXT _V3_defaultCurrencyFormatCode-->"
+	}
+}

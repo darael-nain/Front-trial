@@ -1,0 +1,18 @@
+{
+	"create": <!--#4DIF create-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"id": <!--#4DTEXT id-->,
+	"descripcion": "<!--#4DHTML _V3_escapeString(descripcion)-->",
+	"hora": "<!--#4DHTML hora-->",
+	"codigo": "<!--#4DHTML codigo-->",
+	"enviara": "<!--#4DHTML enviara-->",
+	"copiara": "<!--#4DHTML copiara-->",
+	"descripcion_reporte": "<!--#4DHTML _V3_escapeString(descripcion_reporte)-->",
+	"usuarioReporte": "<!--#4DHTML _V3_escapeString(usuarioReporte)-->",
+	"origen": "<!--#4DHTML _V3_escapeString(origen)-->",
+	"periocidad": "<!--#4DHTML _V3_escapeString(periocidad)-->",
+	"estado": <!--#4DIF estado-->true<!--#4DELSE-->false<!--#4DENDIF-->
+}
+
+
+
+

@@ -1,0 +1,30 @@
+
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to":  <!--#4DIF Not(undefined ($to))--><!--#4DHTML ($offset + $to - 2)--><!--#4DELSE-->0<!--#4DENDIF-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP aId -->
+		{
+			"active": <!--#4DIF aActive{aId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"auto": <!--#4DIF aAuto{aId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"ok": <!--#4DIF Not(undefined (aOk{aId}))--> <!--#4DIF aOk{aId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+			"conciliado": <!--#4DIF Not(Undefined(aConciliado{aId}))--><!--#4DIF aConciliado{aId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+			"description": "<!--#4DHTML _V3_escapeString(aDescription{aId})-->",
+			"docType": "<!--#4DHTML aDocType{aId}-->",
+			"registryDate": "<!--#4DHTML aRegistryDate{aId}-->",
+			"registryHour": "<!--#4DHTML aRegistryHour{aId}-->",
+			"docDate": "<!--#4DHTML aDocDate{aId}-->",
+			"docHour": "<!--#4DHTML aDocHour{aId}-->",
+			"id": <!--#4DHTML aId{aId}-->,
+			"idDoc": <!--#4DHTML aIdDoc{aId}-->
+		}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

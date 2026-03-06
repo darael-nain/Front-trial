@@ -1,0 +1,17 @@
+{	
+	"rows": [
+	<!--#4DLOOP [OC_NV]-->
+		{
+			"id": "<!--#4DHTML [OC_NV]Id_OC_NV-->",
+			"folio": "<!--#4DHTML _V3_escapeString([OC_NV]Numero)-->",
+			"tipo": "<!--#4DHTML [OC_NV]Tipo-->",
+			"emision": "<!--#4DHTML [OC_NV]Fecha_Emi-->",
+			"recepcion": "<!--#4DHTML [OC_NV]Fecha_Recep-->",
+			"referencia": "<!--#4DHTML _V3_escapeString([OC_NV]Referencia)-->",
+			"cliente": "<!--#4DHTML _V3_escapeString([OC_NV]razon_cliente)-->",
+			"contacto": "<!--#4DHTML _V3_escapeString([OC_NV]nombre_contacto)-->",
+			"total": <!--#4DHTML String([OC_NV]Total;"&xml")-->
+		}<!--#4DIF Selected record number([OC_NV])<Records in selection([OC_NV])-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

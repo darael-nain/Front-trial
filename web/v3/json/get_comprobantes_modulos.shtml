@@ -1,0 +1,12 @@
+{
+	"rows": [
+<!--#4DLOOP aIdCom -->
+		{
+			"idCom": <!--#4DHTML aIdCom{aIdCom}-->,
+			"descripcion": "<!--#4DHTML  _V3_escapeString(aDescription{aIdCom})-->",
+			"fechaReg": "<!--#4DHTML aRegistryDate{aIdCom}-->",
+			"docType": "<!--#4DHTML aDocType{aIdCom}-->"
+		}<!--#4DIF NOT(aIdCom{aIdCom} = aIdCom{Size of array(aIdCom)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

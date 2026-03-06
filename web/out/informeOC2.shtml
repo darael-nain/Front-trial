@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="/out/style.css"/>
+    <title>REPORTES UNABASE</title>
+        <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+-->
+     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/out/report.js"></script>
+    <style>
+        /*p{text-align:left;display:block!important; margin: 30px 0 0 40px;}
+        
+        label{font-weight:bold;font-size:12px}  */ 
+        #ocpagada {
+            text-align: right;  
+        }
+        .orange { 
+            background-color: orange;
+            width: 20px;
+            height: 20px;
+            /*display: inline-block;*/
+            vertical-align: middle;
+            margin: 0 0 0 820px;        }
+        .red{ 
+            background-color: red;
+            width: 20px;
+            height: 20px;
+            /*display: inline-block;*/
+            vertical-align: middle;
+            margin: 0 0 0 820px;
+
+        }
+       /* #ocpagada tbody tr td:nth-child(2){
+            margin: 0;
+            padding-left: 0;
+        }*/
+        </style>
+</head>
+
+<body>
+<div class="contenedor" align="center">
+ <div class="cuadro2">
+   <div>
+        <h4><!--#4DVAR v_Tit_Informe--></h4>
+        <p><!--#4DVAR String(aReporteDesc)--></p>
+    </div>
+    <p><img src="<!--#4DVAR vUrlImagenLogo-->" width="<!--#4DVAR vAnchoPicture-->" height="<!--#4DVAR vAltoPicture-->" border="0"/>
+<!-- 
+    <div id="ocpagada">
+        <div>
+            <div></div>
+            <span>Ordenes de Compra sin justificar con 30 días de atraso desde la fecha de emisión.</span>
+        </div>
+        <div>
+            <div></div>
+            <span>Ordenes de Compra Pagadas y Abonadas sin justificar.</span>
+        </div>
+    </div>
+ -->
+
+    <table id="ocpagada" class="totaleshead">
+        <tr>
+            <td>
+                <div class="orange"></div>
+            </td>
+            <td>
+                <span>Ordenes de Compra sin justificar con 30 días de atraso desde la fecha de emisión.</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="red"></div>
+            </td>
+            <td>
+                <span>Ordenes de Compra Pagadas y Abonadas sin justificar.</span>
+            </td>
+        </tr>
+    </table>
+
+    
+    <hr>
+
+
+     <div class="row">
+
+
+  
+
+        <table class="totaleshead">
+            <tr>
+                <td width="85%" class="title">TOTAL NETO</td>
+                <td width="15%" class="text"><!--#4DVAR String(V_OCTotalNeto;"$ ###.###.###.##0")--></td>  
+            </tr>
+            <tr style="display:none">
+                <td width="85%" class="title">TOTAL IMPUESTOS</td>
+                <td width="15%" class="text"><!--#4DVAR String(V_OCTotalIMP;"$ ###.###.###.##0")--></td>  
+            </tr>
+            <tr style="display:none">
+                <td width="85%" class="title">TOTAL OC</td>
+                <td width="15%" class="text"><!--#4DVAR String(V_OCTotal;"$ ###.###.###.##0")--></td>  
+            </tr>
+            <tr>
+                <td width="85%" class="title">TOTAL JUSTIFICADO</td>
+                <td width="15%" class="text line"><!--#4DVAR String(V_OCTotalJusti;"$ ###.###.###.##0")--></td>  
+            </tr>
+            <tr>
+                <td width="85%" class="title">TOTAL POR JUSTIFICAR</td>
+                <td width="15%" class="text bold"><!--#4DVAR String(V_OCTotalConsol;"$ ###.###.###.##0")--></td>  
+            </tr>
+            <tr>
+                <td width="85%" class="title">TOTAL EN OCS PAGADAS SIN JUSTIFICAR</td>
+                <td width="15%" class="text redtext"><!--#4DVAR String(v_TotalAbonadaPagada;"$ ###.###.###.##0")--></td>  
+            </tr>
+            <tr>
+                <td width="85%" class="title">TOTAL EN OCS SIN JUSTIFICAR CON MAS DE 30 DÍAS SIN JUSTIFICAR</td>
+                <td width="15%" class="text redtext"><!--#4DVAR String(v_TotalSinJustificar;"$ ###.###.###.##0")--></td>  
+            </tr>
+        </table>
+
+
+            <div class="totalreg">Total registros: <!--#4DVAR String(v_TotReg;"###.###.###.##0")--></div>
+
+        <table class="table table-responsive table-bordered">
+            <thead>
+              <tr >
+                <td class="center-c" width="5%">Nro.</td>
+                <td class="center-c" width="5%">FECHA</td>
+                <!-- <td class="center-c">Dias Atrasados</td> -->
+                <td class="center-c" width="10%">PROVEEDOR</td>
+                <td class="center-c" width="10%">TIPO DOC.</td>
+                <td class="center-c" width="5%">AFECTO</td>
+                <td class="center-c" width="5%">EXENTO</td>
+                <td class="center-c" width="5%">ADICIONAL</td>
+                <td class="center-c" width="5%">TOTAL</td>
+                <td class="center-c" width="3%">JUSTIFICADO</td>
+                <td class="center-c" width="3%">POR JUSTIFICAR</td>
+                <td class="center-c" width="3%">ESTADO</td>
+              </tr>
+            </thead>
+         	 <!--#4DLOOP aFolioOcx_-->       
+            <tbody>
+                <tr id="ocj" class="abono" data-abono="<!--#4DVAR aAbonos{aFolioOcx_}-->" data-estado="<!--#4DVAR aEstadoOcx_{aFolioOcx_}-->" data-diasatras="<!--#4DVAR aCantidadDiasAtrasados{aFolioOcx_}-->">
+                    <td class="orden-alfa"><!--#4DVAR aFolioOcx_{aFolioOcx_}--></td>
+                    <td class="items"><!--#4DVAR aFechaOcx_{aFolioOcx_}--></td>
+                    <td class="items"><!--#4DVAR arprovOcx_{aFolioOcx_}--></td>
+                    <td class="nro-items-cant left"><!--#4DVAR aTipoOcx_{aFolioOcx_}--></td>
+                    <td class="nro-items-subtotal neto" ><!--#4DVAR  string(aNetoOcx_{aFolioOcx_};"$ ###.###.###.##0")--></td>
+                    <td class="nro-items-subtotal neto" ><!--#4DVAR  string(aExentoOcx_{aFolioOcx_};"$ ###.###.###.##0")--></td>
+                    <td class="nro-items-subtotal neto" ><!--#4DVAR  string(aAdicionalOcx_{aFolioOcx_};"$ ###.###.###.##0")--></td>
+                    <td style="display:none"><!--#4DVAR String(aTotImpOcx_{aFolioOcx_};"$ ###.###.###.##0")--></td>    
+                    <td class="nro-items-subtotal"><!--#4DVAR String(aTotalOcx_{aFolioOcx_};"$ ###.###.###.##0")--></td>
+                    <td class="nro-items-subtotal"><!--#4DVAR String(aTotJustifOcx_{aFolioOcx_};"$ ###.###.###.##0")--></td>
+                    <td class="nro-items-subtotal"><!--#4DVAR String(aSaldoConsoOcx_{aFolioOcx_};"$ ###.###.###.##0")--></td>
+                    <td class="nro-items-subtotal"><!--#4DVAR aEstadoOcx_{aFolioOcx_}--></td>    
+                </tr>   
+            </tbody>        
+            <!--#4DENDLOOP--> 
+        </table>
+    </div>
+<div class="contenedor-footer">
+	<span class="datos-empresa-izq">
+    <!--#4DVAR nom_empresa--> / <!--#4DVAR dir_empresa--> / <a target="_blank" href="<!--#4DVAR sitio_empresa-->"><!--#4DVAR sitio_empresa--></a></span><em></em>
+    <span class="datos-empresa-der">Reporte enviado por <a href="http://www.unabase.cl" target="_blank" >UnaBase.cl</a></span>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+    
+
+
+</script>
+</body>
+</html>

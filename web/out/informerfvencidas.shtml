@@ -1,0 +1,114 @@
+
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>REPORTES UNABASE</title>
+
+    <!-- Estilos propios -->
+    <link rel="stylesheet" href="/out/style.css"/>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" 
+          crossorigin="anonymous">
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" 
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" 
+            crossorigin="anonymous"></script>
+
+    <!-- JS propio -->
+    <script type="text/javascript" src="/out/report.js"></script>
+
+    <style>
+        .bg-reporte {
+            background-color: grey;
+            color: white;
+        }
+        .totalreg {
+            margin: 15px 0;
+            font-weight: bold;
+        }
+        .contenedor-footer {
+            margin-top: 50px;
+            font-size: 12px;
+            color: #555;
+        }
+        .datos-empresa-izq {
+            float: left;
+        }
+        .datos-empresa-der {
+            float: right;
+        }
+    </style>
+</head>
+
+<body>
+<div class="contenedor" align="center">
+    <div class="cuadro2">
+        <div>
+            <h4><!--#4DVAR v_Tit_Informe--></h4>
+            <p><!--#4DVAR String(aReporteDesc)--></p>
+        </div>
+
+        <p>
+            <img src="<!--#4DVAR vUrlImagenLogo-->" 
+                 width="<!--#4DVAR vAnchoPicture-->" 
+                 height="<!--#4DVAR vAltoPicture-->" 
+                 border="0"/>
+        </p>
+
+        <div class="row">
+            <table class="table table-bordered">
+                <thead>
+                    <tr class="bg-reporte">
+                        <th colspan="2" class="text-center">TOTALES GENERALES DEL REPORTE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="title">Total Solicitado:</td>
+                        <td class="text right"><!--#4DVAR String(v_TotSolicitado;"$ ###.###.###.##0")--></td>
+                    </tr>
+                    <tr>
+                        <td class="title">Total Pagado:</td>
+                        <td class="text right"><!--#4DVAR String(v_TotPagado;"$ ###.###.###.##0")--></td>
+                    </tr>
+                    <tr>
+                        <td class="title">Total Por Pagar:</td>
+                        <td class="text right"><!--#4DVAR String(v_TotPorPagar;"$ ###.###.###.##0")--></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+
+        <div class="totalreg">Total rendiciones: <!--#4DVAR Size of array(aFolioRF_)--></div>
+
+
+
+        
+
+        <!-- Bucle para mostrar todas las tablas agrupadas -->
+        <!--#4DLOOP aIdReg-->  
+            <!--#4DHTML aContenidoReg{aIdReg}-->
+        <!--#4DENDLOOP-->
+
+        <div class="contenedor-footer clearfix">
+            <span class="datos-empresa-izq">
+                <!--#4DVAR nom_empresa--> / <!--#4DVAR dir_empresa--> / 
+                <a target="_blank" href="<!--#4DVAR sitio_empresa-->"><!--#4DVAR sitio_empresa--></a>
+            </span>
+            <span class="datos-empresa-der">
+                Reporte enviado por <a href="http://www.unabase.cl" target="_blank">UnaBase.cl</a>
+            </span>
+        </div>
+    </div>
+</div>
+</body>
+</html>

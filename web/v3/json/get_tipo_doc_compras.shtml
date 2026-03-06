@@ -1,0 +1,18 @@
+{	
+	"rows": [
+<!--#4DLOOP aIdTipoDoc -->
+		{
+			"id": "<!--#4DTEXT aIdTipoDoc{aIdTipoDoc}-->",
+			"text": "<!--#4DHTML _V3_escapeString(aDesTipoDoc{aIdTipoDoc})-->",
+			"des": "<!--#4DHTML _V3_escapeString(aDesTipoDoc{aIdTipoDoc})-->",
+			"id_imp": "<!--#4DTEXT aIdImpDoc{aIdTipoDoc}-->",
+			"des_imp": "<!--#4DHTML _V3_escapeString(aDesImpDoc{aIdTipoDoc})-->",
+			"tipo_imp": "<!--#4DTEXT _V3_escapeString(aTipoImpDoc{aIdTipoDoc})-->",
+			"valor_imp": "<!--#4DTEXT aValorImpDoc{aIdTipoDoc}-->",
+			"correlativo": "<!--#4DTEXT aCorrelativoDoc{aIdTipoDoc}-->",
+			"especial": "<!--#4DTEXT aEspecialDoc{aIdTipoDoc}-->",
+			"imp_multiple": <!--#4DIF aImpMultiple{aIdTipoDoc}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aIdTipoDoc{aIdTipoDoc} = aIdTipoDoc{Size of array(aIdTipoDoc)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

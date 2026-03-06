@@ -1,0 +1,17 @@
+{
+	"rows": [
+<!--#4DLOOP aNumIngreso -->
+		{
+			"id": <!--#4DHTML aIdIngreso{aNumIngreso}-->,
+			"folio": "<!--#4DHTML aFolioIngreso{aNumIngreso}-->",
+			"documento": "<!--#4DHTML  _V3_escapeString(aDocumentoIngreso{aNumIngreso})-->",
+			"fecha": "<!--#4DHTML aFechaIngreso{aNumIngreso}-->",
+			"estado": "<!--#4DHTML aEstadoIngreso{aNumIngreso}-->",
+			"proveedor": "<!--#4DHTML  _V3_escapeString(aProveedorIngreso{aNumIngreso})-->",
+			"referencia": "<!--#4DHTML _V3_escapeString(aReferenciaIngreso{aNumIngreso})-->",
+			"justificado": "<!--#4DHTML _V3_formatCurrency(aJustificadoIngreso{aNumIngreso})-->",
+			"justificado_": <!--#4DHTML String(aJustificadoIngreso{aNumIngreso};"&xml")-->
+		}<!--#4DIF NOT(aNumIngreso{aNumIngreso} = aNumIngreso{Size of array(aNumIngreso)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

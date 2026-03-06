@@ -1,0 +1,230 @@
+<!--#4dscript/carga_tareas_etapa-->
+<!--#4dloop aIdTarea-->
+<div class="grupo-ots">
+	<input type="hidden" name="idtarea" value="<!--#4DVAR aIdTarea{aIdTarea}-->">
+	<div class="acciones-ot">
+  		<!--#4dif aFolioOtTarea{aIdTarea}#"0"-->
+
+			<!--#4dif aNotificadoTarea{aIdTarea}-->
+				<img src="/imagenes_green/accept.gif" alt="Notificado" class="accept-not">				
+			<!--#4dendif-->
+
+			<!--#4dif vEstadoProyecto="EN PROCESO"-->
+			<button type="button" title="Notificar OT" class="notificar-tarea">Notificar</button>
+			<!--#4dendif-->
+
+			<a target="_blank" class="boton2" href="/ot.shtml?i=<!--#4DVAR aIdOT{aIdTarea}-->&r=<!--#4DVAR String(Milliseconds+Random)-->">Ir a OT (<!--#4DVAR aFolioOtTarea{aIdTarea}-->)</a>
+
+		<!--#4dendif-->
+
+		<!--#4dif vEstadoProyecto#"ANULADA"-->
+			<button type="button" title="Eliminar OT" class="delete-tarea"></button>
+		<!--#4dendif-->
+		
+
+  	</div>
+	<h3>
+		<span class="titulo-tarea">
+			<span><!--#4DVAR aNomTarea{aIdTarea}--></span>
+			<!--#4dif aNomRespTarea{aIdTarea}#""-->
+				<span> | </span>
+				<span><!--#4DVAR aNomRespTarea{aIdTarea}--></span>
+			<!--#4dendif-->
+			<!--#4dif aFechaVctoTarea{aIdTarea}#!00-00-00!-->
+				<span> | </span>
+				<span><!--#4DVAR aFechaVctoTarea{aIdTarea}--></span>
+			<!--#4dendif-->
+		</span>
+	</h3>
+	<div>
+	  <p>	  	
+	  	<label>Ref. : </label>
+		<input <!--#4DVAR vDisabledEnabled--> name="nombre-tarea" class="save-tarea nombre-tarea textos" placeholder="Ingresar nombre de la tarea..."
+		value="<!--#4DVAR aNomTarea{aIdTarea}-->" >
+
+		<label for="">Area de Trabajo : </label>
+		<select <!--#4DVAR vDisabledEnabled--> name="area-trabajo" class="save-tarea select">
+			<!--#4dif aIdAreaTarea{aIdTarea}>0-->
+				<option selected="selected" value="<!--#4DVAR aIdAreaTarea{aIdTarea}-->">
+    				<!--#4DVAR aNomAreaTarea{aIdTarea}-->
+    			</option>
+			<!--#4delse-->
+				<option selected="selected" value="0">[ Seleccionar ]</option>
+			<!--#4dendif-->
+    		
+	    	<!--#4dloop aAreaId-->                    
+		       	<!--#4dif aIdAreaTarea{aIdTarea}#aAreaId{aAreaId}-->
+					<option value="<!--#4dvar aAreaId{aAreaId}-->">
+						<!--#4dvar aAreaNombre{aAreaId}-->
+					</option>
+	    		<!--#4dendif-->	
+	    	<!--#4dendloop-->
+    	</select>
+
+    	<label for="">Responsable : </label>
+		<select <!--#4DVAR vDisabledEnabled--> class="save-tarea responsables select" name="responsables">
+			<!--#4dif aIdAreaTarea{aIdTarea}>0-->
+				<!--#4dif aRespTarea{aIdTarea}#""-->
+					<option selected="selected" value="<!--#4DVAR aRespTarea{aIdTarea}-->">
+						<!--#4DVAR aNomRespTarea{aIdTarea}-->
+					</option>
+				<!--#4delse-->
+					<option selected="selected" value="">[Seleccionar]</option>
+				<!--#4dendif-->						
+			<!--#4delse-->
+				<option selected="selected" value="">[Seleccionar]</option>
+			<!--#4dendif-->
+
+			<!--#4dscript/carga_responsables_area-->		    		
+			<!--#4dloop aLoginAreaResp-->
+				<!--#4dif aRespTarea{aIdTarea}#aLoginAreaResp{aLoginAreaResp}-->
+					<option value="<!--#4dvar aLoginAreaResp{aLoginAreaResp}-->">
+			        	<!--#4dvar aNombresAreaResp{aLoginAreaResp}-->
+			        </option>
+				<!--#4dendif-->			        
+			<!--#4dendloop-->
+		</select>
+
+		<label for="">F.Vcto : </label>
+		<input <!--#4DVAR vDisabledEnabled--> value="<!--#4DVAR aFechaVctoTarea{aIdTarea}-->" name="fecha-vcto" class="datepicker save-tarea fecha-vcto textos" type="text" >
+
+		<label for="">Importancia : </label>
+		<select <!--#4DVAR vDisabledEnabled--> name="prioridad" class="save-tarea select">
+			<!--#4dif aPrioridadTarea{aIdTarea}#""-->
+				<option selected="selected" value="<!--#4DVAR aPrioridadTarea{aIdTarea}-->">
+					<!--#4DVAR aPrioridadTarea{aIdTarea}-->
+				</option>
+			<!--#4delse-->
+				<option selected="selected" value="">[ Seleccionar ]</option>
+			<!--#4dendif-->
+
+			<!--#4dif aPrioridadTarea{aIdTarea}#"ALTA"--> <option value="ALTA">ALTA</option><!--#4dendif-->
+			<!--#4dif aPrioridadTarea{aIdTarea}#"MEDIA"--> <option value="MEDIA">MEDIA</option><!--#4dendif-->
+			<!--#4dif aPrioridadTarea{aIdTarea}#"BAJA"--> <option value="BAJA">BAJA</option><!--#4dendif-->
+		</select>
+
+		<div>
+			<label>Descripción : </label>
+			<textarea <!--#4DVAR vDisabledEnabled--> name="descripcion" class="save-tarea"><!--#4DVAR aDesTarea{aIdTarea}--></textarea>
+		</div>
+
+		<article class="block-blue block-participantes" id="<!--#4DVAR aIdTarea{aIdTarea}-->">
+			<div class="title">
+				<div class="actions">
+					<!--#4dif vEstadoProyecto="EN PROCESO"-->
+						<button type="button" title="Agregar participantes" class="mas-ot add-participantes">Participantes</button>						
+					<!--#4delse-->
+						<button type="button">Participantes</button>						
+					<!--#4dendif-->
+				</div>
+			</div>
+
+			
+			<div class="content-p">
+				<!--#4dscript/web_asignados_ot2-->	
+				<!--#4dif size of array(aLoginAsig)>0-->
+					<!--#4dloop aLoginAsig-->
+					<!--#4dif aTipoAsig{aLoginAsig}#"RESPONSABLE"-->
+						<!--#4dif aDefectoAsig{aLoginAsig}="no"-->
+							<div>
+								<span><!--#4dvar aNombreAsig{aLoginAsig}--></span>
+								<a id="<!--#4dvar aLoginAsig{aLoginAsig}-->" class="delete-part">x</a>
+							</div>
+						<!--#4delse-->
+							<div>
+								<span><!--#4dvar aNombreAsig{aLoginAsig}--></span>				
+							</div>
+						<!--#4dendif-->	
+					<!--#4dendif-->					            
+					<!--#4dendloop-->
+				<!--#4delse-->
+					<h2>Aún no se han agregado participantes.</h2>
+				<!--#4dendif-->				
+			</div>
+			
+
+		</article>
+
+
+		<div class="block-blue block-componentes" id="<!--#4DVAR aIdTarea{aIdTarea}-->">
+			<div class="title">
+				<!--<a class="contraer-expandir-comp">+</a>-->
+				<div class="actions">
+					<!--#4dif vEstadoProyecto="EN PROCESO"-->
+						<button type="button" title="Agregar componentes" class="mas-ot add-componentes">Archivos</button>
+					<!--#4delse-->
+						<button type="button">Archivos</button>						
+					<!--#4dendif-->									
+				</div>
+			</div>
+			<div class="content-componente">				
+				<!--#4dscript/carga_componentes_tarea-->
+				<div class="list-componente-<!--#4DVAR aIdTarea{aIdTarea}-->">					
+					  <!--#4dloop aIdComp-->								
+						<div class="box-comp" id="<!--#4DVAR aIdComp{aIdComp}-->">
+							<!--#4dif aTipoComp{aIdComp}="adjunto"-->
+								<label class="label-comp<!--#4DVAR vDisabledEnabled-->"><!--#4DVAR aNomComp{aIdComp}--></label>
+								<!--#4dif aDesFormatoAdjunto{aIdComp}#""-->
+									<input <!--#4dvar vDisabledEnabled--> style="display:none" title="adjuntos" class="adjuntos" id="" type="file" name="WU_xb_file" />
+								<!--#4delse-->
+									<input <!--#4dvar vDisabledEnabled--> title="adjuntos" <!--#4DVAR vDisabledEnabled--> class="adjuntos" id="" type="file" name="WU_xb_file" />
+								<!--#4dendif-->				
+
+								<div class="file-comp" style="display:inline">
+								<!--#4dif aDesFormatoAdjunto{aIdComp}#""-->
+									<!--#4dif aDesFormatoAdjunto{aIdComp}="IMAGEN"-->
+										<a target="_black" href="/uploads_componentes_tarea/<!--#4DVAR aRutaAdjunto{aIdComp}-->">
+											<img width="80px" height="80px" src="/uploads_componentes_tarea/<!--#4DVAR aRutaAdjunto{aIdComp}-->">
+										</a>									
+									<!--#4delse-->
+										<a target="_black" href="/uploads_componentes_tarea/<!--#4DVAR aRutaAdjunto{aIdComp}-->">
+											<img width="80px" height="80px" src="/extensiones/PNG/<!--#4DVAR aFormatoAdjunto{aIdComp}-->.png">
+										</a>									
+									<!--#4dendif-->
+								<!--#4dendif-->											
+								</div>
+							<!--#4dendif-->
+
+							<!--#4dif aTipoComp{aIdComp}="campo"-->
+								<label class="label-comp"><!--#4DVAR aNomComp{aIdComp}--></label>
+								<input <!--#4dvar vDisabledEnabled--> value="<!--#4DVAR aValorComp{aIdComp}-->" class="save-valor-comp" title="campo" type="text" name="<!--#4DVAR aIdComp{aIdComp}-->"><span></span>
+								<!--#4dendif-->
+								<!--#4dif aTipoComp{aIdComp}="pregunta"-->			
+								<label class="label-comp"><!--#4DVAR aNomComp{aIdComp}--></label>
+
+								<!--#4dif aValorComp{aIdComp}="si"-->
+								<div>									
+									<input <!--#4dvar vDisabledEnabled--> class="radio save-valor-comp" checked value="si" style="width:30px;display:inline-block;vertical-align:middle;" type="radio" name="<!--#4DVAR aIdComp{aIdComp}-->">
+									<span class="opcion-radio" title="pregunta">Si</span>
+								</div>
+								<div>									
+									<input <!--#4dvar vDisabledEnabled--> class="radio save-valor-comp" value="no" style="width:30px;display:inline-block;vertical-align:middle;" type="radio" name="<!--#4DVAR aIdComp{aIdComp}-->">
+									<span class="opcion-radio" title="pregunta">No</span>
+								</div>													
+								<!--#4delse-->
+								<div>									
+									<input <!--#4dvar vDisabledEnabled--> class="radio save-valor-comp" value="si" style="width:30px;display:inline-block;vertical-align:middle;" type="radio" name="<!--#4DVAR aIdComp{aIdComp}-->">
+									<span class="opcion-radio" title="pregunta">Si</span>
+								</div>
+								<div>									
+									<input <!--#4dvar vDisabledEnabled--> checked class="radio save-valor-comp" value="no" style="width:30px;display:inline-block;vertical-align:middle;" type="radio" name="<!--#4DVAR aIdComp{aIdComp}-->">
+									<span class="opcion-radio" title="pregunta">No</span>
+								</div>
+								<!--#4dendif-->
+
+							<!--#4dendif-->
+							<!--#4dif vEstadoProyecto="EN PROCESO"-->
+								<button type="button" title="Eliminar componente" value="<!--#4DVAR aIdComp{aIdComp}-->" class="delete-comp s-btn-d-icono"></button>								
+							<!--#4dendif-->
+							
+						</div>					
+						<!--#4dendif-->        
+					  <!--#4dendloop-->					
+				</div>
+			</div>			
+		</div>
+
+	  </p>
+	</div>
+</div>	
+<!--#4dendloop-->

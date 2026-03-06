@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Unidad de fomento</title>
+	<meta charset="utf-8">
+	<script type="text/javascript">
+
+
+
+
+
+		unaBase.ready(()=>{
+			fetch(`${base_url}/4DACTION/_aParamGetUf`)
+			.then((response)=>{
+				return response.json();
+			})
+			.then((response)=>{
+				response.ufs.forEach(uf => {
+					let li = document.createElement('li');
+					li.classList.add('ufItem')
+					let line = `<input type="text" value=${uf.url} class="ufUrl"/>
+								<input type="text" value=${uf.method} class="ufMethod">
+								<input type="text" value=${uf.param1} class="ufParam1">
+								<input type="text" value=${uf.param2} class="ufParam2">
+					` 
+					li.innerHTML = line
+					document.getElementById('ufList').appendChild(li);
+				})
+			})
+		});
+
+
+	</script>
+	<style type="text/css">
+		.ufItem{
+			padding: 10px;
+		}
+	</style>
+</head>
+<body>
+	<section class="sheet">
+		<footer>
+			<article>
+				<h1>Unidad de Fomento</h1>
+				<form>
+					<label>
+						Url
+						<input type="text" name="url">
+					</label>
+					<button type="submit">Guardar</button>
+				</form>
+			</article>
+			
+		</footer>
+	</section>
+</body>
+</html>

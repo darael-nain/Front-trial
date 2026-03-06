@@ -1,0 +1,11 @@
+{
+	"rows": [
+	<!--#4DLOOP aIdComp -->
+		{
+			"id_comp": "<!--#4DHTML aIdComp{aIdComp}-->",
+			"description": "<!--#4DHTML aDesc{aIdComp}-->",
+			"docDate": "<!--#4DHTML aDocDate{aIdComp}-->"
+		}<!--#4DIF NOT(aIdComp{aIdComp} = aIdComp{Size of array(aIdComp)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

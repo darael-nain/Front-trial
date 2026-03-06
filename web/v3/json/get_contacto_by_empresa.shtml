@@ -1,0 +1,27 @@
+{
+	"page": {
+		"current": <!--#4DVAR page-->,
+		"last": <!--#4DVAR -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DVAR $offset-1-->,
+		"to": <!--#4DVAR (Selected record number([Relacionados]) - 2)-->,
+		"total": <!--#4DVAR $total-->
+	},
+	"rows": [
+<!--#4DLOOP aContactoId -->
+		{
+			"id": <!--#4DVAR aContactoId{aContactoId}-->,
+			"default": <!--#4DIF aContactoDefault{aContactoId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"text": "<!--#4DVAR _V3_escapeString(aContactoAlias{aContactoId})-->",
+			"ap_pat": "<!--#4DVAR _V3_escapeString(aContactoApPat{aContactoId})-->",
+			"ap_mat": "<!--#4DVAR _V3_escapeString(aContactoApMat{aContactoId})-->",
+			"nombres": "<!--#4DVAR _V3_escapeString(aContactoNombres{aContactoId})-->",
+			"nombre_completo": "<!--#4DVAR _V3_escapeString(aContactoNombreCompleto{aContactoId})-->",
+			"direccion": "<!--#4DVAR _V3_escapeString(aContactoDireccion{aContactoId})-->",
+			"telefonos": "<!--#4DVAR _V3_escapeString(aContactoTelefonos{aContactoId})-->",
+			"email": "<!--#4DVAR aContactoEmail{aContactoId}-->"
+		}<!--#4DIF NOT(aContactoId{aContactoId} = aContactoId{Size of array(aContactoId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

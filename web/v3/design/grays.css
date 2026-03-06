@@ -1,0 +1,79 @@
+.css-grays .warning-color {
+  font-weight: bold !important;
+  background-color: #F9994D !important;
+  border-color: #F9994D !important;
+  padding: 5px !important; }
+.css-grays a {
+  color: #43af7c !important;
+  font-size: 12px !important;
+  font-weight: bold;
+  text-decoration: underline; }
+.css-grays article {
+  background-color: white; }
+.css-grays .css-boxtotales {
+  padding: 5px;
+  background-color: #e8f7e8;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  border-radius: 3px;
+  border: 1px solid gainsboro;
+  text-align: right; }
+  .css-grays .css-boxtotales input {
+    color: #AF6D44 !important;
+    font-weight: bold !important; }
+.css-grays .css-fn-melon {
+  background-color: #f7f7dd; }
+.css-grays .css-fn-yellow {
+  background-color: #f2fe8a; }
+.css-grays .css-size-tiny-w {
+  width: 80px !important; }
+.css-grays .css-size-small-w {
+  width: 100px !important; }
+.css-grays .css-size-medium-w {
+  width: 300px !important; }
+.css-grays .css-size-large-w {
+  width: 620px !important; }
+.css-grays .css-fxr-fecha-cierre {
+  padding: 3px;
+  background-color: #e8f7e8;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  border-radius: 3px;
+  border: 1px solid gainsboro;
+  width: 520px !important; }
+  .css-grays .css-fxr-fecha-cierre > input {
+    width: 100px !important; }
+  .css-grays .css-fxr-fecha-cierre > textarea {
+    width: 300px !important; }
+.css-grays .css-section-comments ul {
+  margin: 0px;
+  padding: 0px; }
+  .css-grays .css-section-comments ul li {
+    padding: 5px;
+    margin: 2px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    border-radius: 3px;
+    border: 1px solid gainsboro;
+    background-color: #e8f7e8; }
+    .css-grays .css-section-comments ul li div > a {
+      color: black !important;
+      font-weight: bold;
+      text-decoration: none;
+      text-transform: capitalize; }
+    .css-grays .css-section-comments ul li div > time {
+      color: gray !important;
+      float: right;
+      font-weight: bold;
+      margin-right: 10px; }
+    .css-grays .css-section-comments ul li > p {
+      font-size: 12px !important; }
+    .css-grays .css-section-comments ul li > strong {
+      display: block;
+      color: gray;
+      margin-top: 5px; }
+
+/*# sourceMappingURL=grays.css.map */

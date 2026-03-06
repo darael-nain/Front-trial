@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Home</title>
+    <meta charset="utf-8">
+
+</head>
+
+<style>
+    #iframe-container {
+        height: 100vh;
+        /* Establece la altura del contenedor en la altura de la ventana actual */
+        overflow-y: auto;
+        /* Oculta el overflow de la página principal */
+    }
+</style>
+
+<body style="min-width: 900px !important;">
+    <!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->
+
+    <iframe id="mi-marco" name="mi-marco" src="about:blank" style="width: 100%;" referrerpolicy="no-referrer"></iframe>
+
+
+    <script type="text/javascript">
+  const NODE_BASE = "https://dev5.unabase.com/node";
+
+  async function toHomeRedirect(username) {
+    const frame = document.getElementById("mi-marco");
+
+    const ticketResp = await fetch(`${NODE_BASE}/auth/dashboard-ticket`, {
+      credentials: "include",
+      cache: "no-store"
+    });
+
+    if (!ticketResp.ok) {
+      throw new Error(`dashboard-ticket failed: ${ticketResp.status}`);
+    }
+
+    const t = await ticketResp.json();
+
+    frame.src =
+      `https://dev-panel.herokuapp.com/dashboard?from=v3` +
+      `&ticket=${encodeURIComponent(t.ticket)}`;
+
+    frame.style.height = "calc(100vh - 48px - 41px)";
+    frame.style.display = "";
+  }
+
+  (async function init() {
+    try {
+      const r = await fetch(`${NODE_BASE}/users/getUser`, {
+        credentials: "include",
+        cache: "no-store"
+      });
+
+      if (!r.ok) {
+        throw new Error(`getUser failed: ${r.status}`);
+      }
+
+      const currentUser = await r.json();
+      await toHomeRedirect(currentUser.username || currentUser.email || "");
+      window.unaBase?.ui?.unblock?.();
+    } catch (e) {
+      console.error("home init failed", e);
+      window.location.assign("/login/login.shtml?state=validacion");
+    }
+  })();
+</script>
+
+</body>
+<script>
+</script>
+
+</html>

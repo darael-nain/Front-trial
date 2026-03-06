@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_getPermisosUsuarios-->
+		<title>Permisos</title>
+		<meta charset="utf-8">
+		    <script type="text/javascript" src="/v3/views/ajustes/parametros/permisos/permisos.js"></script>
+		    <style type="text/css">
+		    	.selectedTr{
+		    		background-color: gold !important;
+		    		font-weight: bold;
+		    	}
+		    </style>
+		<script type="text/javascript">
+			unaBase.ready(()=>{
+				$(`tbody.permisos tr`).click(function(){
+					
+					$(this).toggleClass("selectedTr");
+					// $(this).find(`input[type="checkbox"]`).prop("checked", !$(this).find(`input[type="checkbox"]`).prop("checked"));
+					// $(this).find(`input[type="checkbox"]`).click();
+					// const isChecked = $(this).find(`input[type="checkbox"]`).prop("checked");
+					// $(this)[isChecked ? "addClass" : "removeClass"]("selectedTr");
+				});
+
+				// $(`tbody.usuarios tr`).click(function(){
+				// 	$(this).toggleClass("selectedTr");
+				// });
+				$(`li[data-name="selectAccess"]`).hide();
+
+				fetch(`/4DACTION/_V3_getUsuariosActivos`)
+				.then(response => {
+					return response.json()
+				})
+				.then(data => {
+					const container = $('.sheet-usuarios tbody.usuarios');
+					data.rows.forEach( item => {
+
+						let tr = $(`
+									<tr data-user=${item.login}  >										
+										<td  class="user">${item.login} </td>
+										<td  class="name">${item.name} </td>
+										<td  class="email">${item.email} </td>
+									</tr>
+									`);
+
+
+						container.append(tr);
+			
+						tr.click(function(){
+							$(this).toggleClass("selectedTr");
+						});
+					
+					})
+				})
+
+			});
+			var permisos = {
+				getSelectedAccess(){
+					let result = {
+						ids: [],
+						lines: [],
+						idsText: ""
+					}
+					// let ids = []		
+					// let accessLines = []		
+			        const accessSeleted = document.querySelectorAll(`tbody.permisos tr.selectedTr`);
+			        accessSeleted.forEach(access => {
+			        	result.ids.push(access.dataset.id);
+			        	result.idsText += `${access.dataset.id}/`;
+			        	result.lines.push(`${access.querySelector(`td.module`).innerHTML} / ${access.querySelector(`td.description`).innerHTML}`);
+			        });
+			        return result;
+				},
+				getSelectedUser(){
+					let result = {
+						ids: [],
+						lines: [],
+						idsText: ""
+					}
+					// let ids = []		
+					// let accessLines = []		
+			        const usersSelected = document.querySelectorAll(`tbody.usuarios tr.selectedTr`);
+			        usersSelected.forEach(access => {
+			        	result.ids.push(access.dataset.user);
+			        	result.idsText += `${access.dataset.user}/`;
+			        	result.lines.push(`${access.querySelector(`td.user`).innerHTML} / ${access.querySelector(`td.name`).innerHTML}`);
+			        });
+			        return result;
+				}
+			}
+
+			var set_access = function(id, login, estado){
+				var modulo =  $('#sheet-usuarios').data('modulo');
+				$.ajax({
+					url: '/4DACTION/_V3_setPermisosUsuarios',
+					data: {
+						"permisos[id]" : id,
+						"permisos[login]": login,
+						"permisos[estado]": estado,
+						"permisos[modulo]": modulo
+					},
+					dataType: 'json',
+					type: 'POST',
+					success: function(data) {
+						if (data.success) {
+							toastr.success(NOTIFY.get('SUCCESS_SAVE'));
+							var percent = $('#accordion_ > div[data-option="'+login+'"] > p');
+							percent.find('span[data-percent="general"] > strong').text(data.general_percent);
+							percent.find('span[data-percent="modulo"] > strong').text(data.modulo_percent);
+
+						}else{
+							toastr.error(NOTIFY.get('ERROR_RECORD_READONLY', 'Error'));
+						}
+					},
+					error: function(data) {
+						toastr.error(NOTIFY.get('ERROR_INTERNAL'));
+					}
+				});
+			}
+
+		
+
+			function checkTodos()
+			        {
+			            $(".check").each(function(){
+			                $(this).prop('checked',true);
+			            });
+			}
+
+		</script>
+
+	</head>
+	<body>
+		<section class="sheet sheet-permisos acceso css-main" >
+
+			<footer>
+				<article>
+					<h1>Permisos</h1>			
+					<ul>
+						<li>
+							<table>
+								<thead>
+									<tr>
+
+										<th>Id</th>
+										<th>Modulo</th>
+										<th>Funcion</th>
+										<th>Descripcion</th>
+									</tr>
+								</thead>
+								<tbody class="permisos">
+									<!--#4DLOOP modulo-->
+									<tr  data-id="<!--#4DVAR id_acceso{modulo}-->" >
+
+										
+										<td><!--#4DVAR id_acceso{modulo}--></td>
+										<td  class="module"><!--#4DVAR modulo{modulo}--></td>
+										<td><!--#4DVAR funcion{modulo}--></td>
+										<td class="description"><!--#4DVAR desc{modulo}--></td>
+
+
+									<!--#4DENDLOOP-->
+									</tr>
+								</tbody>
+					  			<tfoot></tfoot>
+							</table>
+
+
+						</li>
+					</ul>
+
+				</article>
+
+			</footer>
+		</section>
+		<section class="sheet sheet-usuarios  css-main" style="display: none;">
+
+			<footer>
+				<article>
+					<h1>Usuarios</h1>			
+					<ul>
+						<li>
+							<table>
+								<thead>
+									<tr>
+
+										<th>usuario</th>
+										<th>Nombre</th>
+										<th>email</th>
+									</tr>
+								</thead>
+								<tbody class="usuarios">
+								
+								</tbody>
+					  			<tfoot></tfoot>
+							</table>
+
+
+						</li>
+					</ul>
+
+				</article>
+
+			</footer>
+		</section>
+	</body>
+</html>

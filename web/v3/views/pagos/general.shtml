@@ -1,0 +1,2014 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getPagoContent-->
+		<title>Pagos</title>
+		<meta charset="utf-8">		
+		<link rel="stylesheet" href="/v3/views/compras/design/main.css?<!--#4DTEXT _V3_version-->">
+		<link rel="stylesheet" href="/v3/design/grays.css?<!--#4DTEXT _V3_version-->">
+		<script type="text/javascript" src="/v3/script/datepicker_es.js?<!--#4DTEXT _V3_version-->"></script>
+
+		<style>
+			.custom-emitido{
+				font-weight: bold;
+				color: orange;
+			}
+
+			.custom-pagado{
+				font-weight: bold;
+				color: greenyellow;
+			}
+		</style>
+		<script>
+
+			var defaultCurrencySymbol = "<!--#4DVAR _V3_defaultCurrencySymbol-->";
+
+			// BankCards
+			var enabledBankCards = <!--#4DIF enabledBankCards-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			var bankcardsConciliado = <!--#4DIF bankcardsConciliado-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			var bankcardsVerificado = <!--#4DIF bankcardsVerificado-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			var fileAttachment = "<!--#4DTEXT fileAttachment-->";
+			var bankcardsId = "<!--#4DTEXT bankcardsId-->";
+
+			var payment = {
+				"container" : $('section#sheet-payment'),
+				"menu" : $('#menu ul'),
+				"id" : "<!--#4DTEXT id-->",
+				"estado" : "<!--#4DTEXT estado-->",
+				"folio" : "<!--#4DTEXT folio-->",
+				"currentdate" : "<!--#4DTEXT currentdate-->",
+				"form_print_cheque" : "<!--#4DTEXT form_print_cheque-->",
+				'titular': "<!--#4DTEXT _V3_escapeString(titular)-->",
+				'monto_a_pagar': "<!--#4DTEXT monto_a_pagar-->",
+				'monto_a_pagar_raw': <!--#4DHTML String(monto_a_pagar;"&xml")-->,
+				'fecha_propuesta': "<!--#4DTEXT fecha_propuesta-->",
+				'fecha_creacion': "<!--#4DTEXT fecha_creacion-->",
+				'hora_creacion': "<!--#4DTEXT hora_creacion-->",			
+				'observacion': "<!--#4DTEXT  _V3_escapeString(observacion)-->",
+				'origen': "<!--#4DTEXT origen-->",
+				'id_origen': "<!--#4DTEXT id_origen-->",
+				'total_pago_origen': "<!--#4DTEXT total_pago_origen-->",
+				'login_responsable': "<!--#4DTEXT login_responsable-->",
+				'titulo_seccion_doc_pagos': "<!--#4DTEXT _V3_escapeString(titulo_seccion_doc_pagos)-->",
+				'cantidad_doc_pagos': 0,
+				'origen_modulo': "<!--#4DTEXT origen_modulo-->",
+				'bloquear_cambio': <!--#4DIF bloquear_cambio-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+				'id_op_repetido' : 0,
+				'folio_op_repetido' : "",
+				'odlnumbervalidate' : "",
+				'scheduled' : <!--#4DIF scheduled-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+				'idComp' :   "<!--#4DTEXT idComprobante-->",
+				'doc' : {
+					'id' : "<!--#4DTEXT doc_pago_id-->",
+					'tipo' : "<!--#4DTEXT doc_pago_tipo-->"				
+				},
+				'monedaTipo' : "<!--#4DTEXT v3_monedaTipo-->",
+				'monedaValorCambio' : <!--#4DHTML String(v3_monedaValorCambio;"&xml")-->,
+				display: function(){
+					payment.menu.find('li[data-name="preview_cheque"]').hide();
+					switch(payment.estado) {
+					    case 'POR EMITIR':
+					   		payment.menu.find('li[data-name="discard"]').hide();
+					   		payment.menu.find('li[data-name="boucher_pago"]').hide();
+					   		// payment.container.find('.container-options').hide();
+
+					   		if(payment.scheduled){
+					   			payment.container.find('#scrolldocpagos').hide();
+					   			$('.u-bg-scheduled').find('div').show();
+					   			$('.u-bg-scheduled').addClass('u-bg-orange');
+					   		}else{
+					   			if (enabledBankCards) {
+						    		if (bankcardsConciliado) {
+							    		$('.conciliado').show();
+							    	}else{
+							    		/*$('.u-coincidencia-banco').show();
+							   			var result = payment.bankcards.search();
+							   			if(result.id > 0){
+							   				$('.u-coincidencia-banco > li > .yes').show();
+							   				$('.u-coincidencia-banco > li > .not').hide();
+							   			}else{
+							   				$('.u-coincidencia-banco > li > .yes').hide();
+							   				$('.u-coincidencia-banco > li > .not').show();
+							   			}*/
+							   			$('.porconciliar').show();
+							    	}
+						    	}
+					   		}
+					   		payment.container.find('#scrolldocpagos button.opening').hide();
+					   		
+					    	break;
+
+					    case 'EMITIDA':
+
+					    	if(!access._499){ // anular pago
+								payment.menu.find('li[data-name="discard"]').hide();
+							} else {
+								payment.menu.find('li[data-name="discard"]').show();
+							}							
+
+							// modificar op  = 570
+							/*if (!access._570) {
+					        	payment.container.find('.info-general input').prop("readonly", true);
+					        	payment.container.find('#scrolldocpagos input, textarea').not(":checkbox").attr("type", "text").prop("readonly", true);
+					        	payment.container.find('#scrolldocpagos input[type="checkbox"]').prop("disabled", true);
+					        	// payment.container.find('#scrolldocpagos button.show').hide();
+					      	}*/
+
+					      	if(payment.container.find('#scrolldocpagos tbody tr[data-status="true"]').length == 0){
+								payment.container.find('.container-options').show();
+							}else{
+								payment.container.find('.container-options').hide();
+							}
+
+					    	payment.container.find('#scrolldocpagos button.opening').hide();
+
+					    	if (enabledBankCards) {
+					    		if (bankcardsConciliado) {
+						    		$('.conciliado').show();
+						    	}else{
+						    		/*$('.u-coincidencia-banco').show();
+						   			var result = payment.bankcards.search();
+						   			if(result.id > 0){
+						   				$('.u-coincidencia-banco > li > .yes').show();
+						   				$('.u-coincidencia-banco > li > .not').hide();
+						   			}else{
+						   				$('.u-coincidencia-banco > li > .yes').hide();
+						   				$('.u-coincidencia-banco > li > .not').show();
+						   			}*/
+						   			$('.porconciliar').show();
+						    	}
+					    	}
+
+					        break;
+					    case 'PAGADA':
+					    	payment.menu.find('li[data-name="discard"]').hide();
+					    	payment.container.find('.container-options').hide();
+					 
+					    	// modificar op  = 570
+							if (!access._570) {
+					        	payment.container.find('.info-general input').prop("readonly", true);
+					        	payment.container.find('.info-general input').prop("disabled", true);
+					        	payment.container.find('#scrolldocpagos input').not(":checkbox").attr("type", "text").prop("readonly", true);
+					        	payment.container.find('#scrolldocpagos input[type="checkbox"]').prop("disabled", true);
+					        	payment.container.find('#scrolldocpagos button.show').hide();
+					      	}
+
+					      	// opciones documento pago
+					    	payment.container.find('#scrolldocpagos button.pay').hide();
+					        payment.container.find('#scrolldocpagos input').prop("disabled", true);
+
+					    	payment.container.find('#scrolldocpagos button.nullify').hide();
+					    	payment.container.find('#scrolldocpagos button.delete').hide();
+					    	if (access._500) {
+					    		payment.container.find('#scrolldocpagos button.nullify').show();
+					      	}
+					      	if (access._501) {
+					    		payment.container.find('#scrolldocpagos button.delete').show();
+					      	}
+					    	payment.container.find('#scrolldocpagos button.print').show();
+					    	payment.container.find('#scrolldocpagos button.opening').hide();
+
+					    	break;
+					    case 'ANULADA':
+					    	payment.menu.find('li[data-name="discard"]').hide();
+					   		payment.menu.find('li[data-name="boucher_pago"]').hide();
+					   		payment.menu.find('li[data-name="save"]').hide();
+					   		payment.container.find('.container-options').hide();
+					   		payment.container.find('input, textarea').prop("readonly", true);	
+
+					   		payment.container.find('#scrolldocpagos button.pay').hide();
+					    	payment.container.find('#scrolldocpagos button.nullify').hide();
+					    	payment.container.find('#scrolldocpagos button.delete').hide();
+					    	payment.container.find('#scrolldocpagos button.print').hide();
+					    	payment.container.find('#scrolldocpagos button.opening').hide();
+
+					    	break;
+					}
+
+					// bloquea cambia cuando esta cerrado por administracion
+					if (payment.bloquear_cambio) {
+						$('.bloquear_cambio').show();
+						payment.menu.find('li[data-name="save"]').hide();
+						payment.menu.find('li[data-name="discard"]').hide();
+						payment.container.find('input[name="pago[titular]"]').prop('readonly', true);
+						payment.container.find('input[name="pago[abono]"]').prop('readonly', true).css('background-color', 'transparent');
+						payment.container.find('input[name="pago[fecha]"]').prop('disabled', true);
+						payment.container.find('.container-options').hide();
+						payment.container.find('textarea').prop("readonly", true);
+						payment.container.find('#scrolldocpagos').find('input').prop("disabled", true);
+						payment.container.find('button.show.tipopago, button.show.cuenta, button.show.forma').hide();
+						payment.container.find('.opciones').hide();			
+					}else{
+						$('.bloquear_cambio').hide();
+					}
+
+					// oculta secciones según origen para no confundir de dond eproviene la op
+					if (payment.origen_modulo == "FXR") {
+						$('#section_order, #section_dtc, #section_ftg').hide();
+					}
+					if (payment.origen_modulo == "OC") {
+						$('#section_fxr, #section_dtc, #section_ftg').hide();
+					}
+					if (payment.origen_modulo == "DTC") {
+						$('#section_fxr, #section_order, #section_ftg').hide();
+					}
+					if (payment.origen_modulo == "FTG") {
+						$('#section_fxr, #section_order, #section_dtc').hide();
+					}
+					if (payment.estado != "POR EMITIR") {
+						$('.text-monto-pagado').text('Total pagado:');
+						$('.text-emitido').text('Emitido a:');
+						$('.text-pagado-doc').text('Total pagado');
+					}
+
+
+				},
+				checkpaid: function(){
+					var target = payment.container.find('#scrolldocpagos tbody tr[data-status="true"]');
+					var status = true;
+					
+
+					$.ajax({
+						url: '/4DACTION/_V3_checkpaid',
+						data: {
+							currentid : target.data("id"),
+							type: target.find('[name="paid_tipo"]').val(),
+							number: target.find('[name="paid_numero"]').val(),
+							ctacte: target.find('[name="paid_cuenta"]').data("id")
+						},
+						dataType: 'json',
+						async:false,
+						success: function(data) {
+							if (!data.success){
+								payment.id_op_repetido = data.id_op_repetido;
+								payment.folio_op_repetido = data.folio_op_repetido;
+								payment.odlnumbervalidate = target.find('[name="paid_numero"]').val();
+								target.find('[name="paid_numero"]').val('').next().focus();
+								status = false;
+							}
+						}
+					});	
+					return status;
+				},
+				setpaid: function(){
+					 
+					return new Promise((resolve, reject)=>{
+					var target = payment.container.find('#scrolldocpagos tbody tr[data-status="true"]');
+					
+					if (payment.checkpaid()) {
+						if (target.length == 1) {
+							var cruzado = "false";
+							if (target.find('[name="paid_cruzado"]').prop("checked")) {
+								cruzado = "true";
+							}else{
+								cruzado = "false";
+							}
+							var save_first_time = false;
+							if(target.data("estado") == "POR EMITIR"){
+								save_first_time = true;
+							}else{
+								save_first_time = false;	
+							}
+
+							 
+							
+							$.ajax({
+								url: '/4DACTION/_V3_setDocPagoByPago2',
+								data: {
+									id: target.data("id"),
+									fk: payment.id,
+									paid_tipo: target.find('[name="paid_tipo"]').val(),
+									paid_cuenta: target.find('[name="paid_cuenta"]').data("id"),
+									paid_numero: target.find('[name="paid_numero"]').val(),
+									paid_forma: target.find('[name="paid_forma"]').val(),
+									paid_glosa: target.find('[name="glosa_banco"]').val(),
+									paid_cruzado: cruzado,
+									paid_emision: target.find('[name="paid_emision"]').val(),
+									save_first_time: save_first_time
+								},
+								dataType: 'json',
+								success: function(data) {
+									
+									
+									if (data.success) {
+										toastr.success('Datos del '+ target.find('[name="paid_tipo"]').val()+' modificado con éxito!');
+										resolve()			
+									} else{
+										if(data.errorMsg!="")
+										toastr.error(data.errorMsg.replaceAll(/SL/g, '<br>'))
+										else
+										toastr.error('No pudo modificarse los datos de '+ target.find('[name="paid_tipo"]').val() +'. Intente nuevamente.');
+										
+										reject()
+									}
+								}
+							});
+									
+						}else{
+							resolve()
+						}
+					}else{
+							reject()
+							
+						var msj = "El Nro. ingresado ("+ payment.odlnumbervalidate +") ya se encuentra registrado en la Orden de pago " + payment.folio_op_repetido;
+						confirm(msj, "Ver la Orden de pago " + payment.folio_op_repetido).done(function(data) {
+							if (data){
+								window.open('/4DACTION/wbienvenidos#pagos/content2.shtml?id=' + payment.id_op_repetido);
+							}
+						});
+						target.find('[name="paid_numero"]').val('').focus();
+
+
+						/*toastr.warning('El número ingresado ya se encuentra registrado.');
+						target.find('[name="paid_numero"]').val('').focus();*/
+
+					}	
+					});						
+				},
+				loadpaid : function(){
+					
+					payment.container.find('table.docpagos > tbody > tr').remove();
+					$.ajax({
+						url: '/4DACTION/_V3_getDocPagoByPago',
+						data: {
+							id: payment.id
+						},
+						dataType: 'json',
+						success: function(data) {
+							var error=false;
+							var htmlObject;
+							payment.container.find('#scrolldocpagos h1 span').text(data.rows.length);
+							payment.titulo_seccion_doc_pagos = "Documentos de pago";
+							if (data.rows.length > 0) {
+								$.each(data.rows, function(key, item) {
+
+
+									if (item.estado != "ANULADO") {
+										payment.cantidad_doc_pagos++;		
+										switch(item.tipo){
+											case 'CHEQUE':
+												payment.titulo_seccion_doc_pagos = "Cheques";
+												break;
+											case 'TRANSFERENCIA':
+												payment.titulo_seccion_doc_pagos = "Transferencias";
+												break;
+											case 'DEPOSITO':
+												payment.titulo_seccion_doc_pagos = "Depósitos";
+												break;
+												case 'TARJETA DE CREDITO':
+												payment.titulo_seccion_doc_pagos = "Tarjeta de Credito";
+												break;
+												case 'PAYPAL':
+												payment.titulo_seccion_doc_pagos = "Paypal";
+												break;
+												case 'VALE VISTA':
+												payment.titulo_seccion_doc_pagos = "Vale Vista";
+												break;
+												case 'P.A.C':
+												payment.titulo_seccion_doc_pagos = "P.A.C";
+												break;
+											case 'EFECTIVO':
+												payment.titulo_seccion_doc_pagos = "Efectivo";
+												break;
+											case 'NOMINA':
+												payment.titulo_seccion_doc_pagos = "Nomina";
+												break;
+											case 'DEBITO':
+												payment.titulo_seccion_doc_pagos = "Debito";
+												break;
+
+										}
+
+										
+										if (accountingMode) {
+											
+										 	$.ajax({
+							                  	url: "/4DACTION/_V3_get_estadoPeriodoContable",
+							                  	data: {
+								                    periodo: payment.fecha_creacion,
+								                    origen: "ext modulos"
+							                  	},
+							                  	dataType: "json",
+							                  	async: false,
+							                  	success: function (subdata) {
+								                    
+
+								                    if (subdata.exists==1) {
+								                      	if (subdata.closed==1) {
+								                        
+										                    htmlObject = $('<tr data-estado="' + item.estado + '" data-id="' + item.id + '" data-username="' + item.username + '" data-status="'+ item.status +'">' +
+																'<td><input readonly type="search" name="paid_tipo" style="width:100px!important" value="' + item.tipo + '" disabled><button class="show tipopago" disabled></button></td>' +								
+																'<td><input readonly type="search" data-id="' + ((item.tipo != "EFECTIVO") ? item.cuenta.id : '0') +'" name="paid_cuenta" type="text" class="w150px" value="' + ((item.tipo != "EFECTIVO") ? item.cuenta.banco + ' / '+ item.cuenta.index : 'N/A') +'">' + ((item.tipo != "EFECTIVO") ? '<button class="show cuenta" disabled></button>' : '') +'</td>' +
+																'<td><input ' + ((item.tipo != "EFECTIVO") ? '' : 'readonly type="search"') + ' name="paid_numero" style="width:100px!important" value="' + ((item.tipo != "EFECTIVO") ? item.index : 'N/A') + '" disabled></td>' +
+
+																'<td class="option-ch"><input readonly type="search" name="paid_forma" type="text" class="w150px" value="' + ((item.cuenta.forma != "" && item.tipo == "CHEQUE")? item.cuenta.forma : 'N/A') +'" disabled>' + ((item.tipo == "CHEQUE")? '<button class="show forma" disabled></button>' : '') +'</td>' +
+
+																'<td><textarea placeholder="Glosa mvto." name="glosa_banco" disabled>' + item.glosa_banco +'</textarea></td>' +
+
+																'<td class="option-ch"><input '+ ((item.tipo != "CHEQUE") ? 'disabled' : '') +' name="paid_cruzado" type="checkbox" '+ ((item.cruzado == "true")? 'checked': '') +' value="' + item.cruzado +'" disabled></td>' +
+
+																'<td><input name="paid_emision" style="width:100px!important" class="datepicker" value="' + item.created_emision + '" disabled></td>' +		
+
+																'<td class="currency">' + (item.monedaTipo != '' ? (item.total/item.monedaValorCambio) : item.total) + '</td>' +
+																`<td><span class="custom-${item.estado.toLowerCase()}">${item.estado}</span></td>` +
+																'<td class="opciones"><button style="display:none" class="opening" title="Abrir proceso de pago. Se cambiará el estado del pago a emitido" disabled>Abrir proceso de pago</button><button class="pay" title="Validar pago" disabled></button><button class="nullify" title="Anular pago" disabled></button><button class="delete" title="Eliminar pago" disabled></button><button class="print" title="Imprimir pago" disabled></button></td>' +
+																'</tr>');
+										                        
+									                        toastr.warning(
+									                          "El periodo seleccionado  se encuentra cerrado por tanto no puede modificar este pago."
+									                        );
+															error=true;
+
+									                    }else{
+
+									                      	htmlObject = $('<tr data-estado="' + item.estado + '" data-id="' + item.id + '" data-username="' + item.username + '" data-status="'+ item.status +'">' +
+															'<td><input readonly type="search" name="paid_tipo" style="width:100px!important" value="' + item.tipo + '"><button class="show tipopago"></button></td>' +								
+															'<td><input readonly type="search" data-id="' + ((item.tipo != "EFECTIVO") ? item.cuenta.id : '0') +'" name="paid_cuenta" type="text" class="w150px" value="' + item.cuenta.banco +'"><button class="show cuenta"></button></td>' +
+															'<td><input ' + ((item.tipo != "EFECTIVO") ? '' : 'readonly type="search"') + ' name="paid_numero" style="width:100px!important" value="' + ((item.tipo != "EFECTIVO") ? item.index : 'N/A') + '"></td>' +
+
+															'<td class="option-ch"><input readonly type="search" name="paid_forma" type="text" class="w150px" value="' + ((item.cuenta.forma != "" && item.tipo == "CHEQUE")? item.cuenta.forma : 'N/A') +'">' + ((item.tipo == "CHEQUE")? '<button class="show forma"></button>' : '') +'</td>' +
+
+															'<td><textarea placeholder="Glosa mvto." name="glosa_banco">' + item.glosa_banco +'</textarea></td>' +
+
+															'<td class="option-ch"><input '+ ((item.tipo != "CHEQUE") ? 'disabled' : '') +' name="paid_cruzado" type="checkbox" '+ ((item.cruzado == "true")? 'checked': '') +' value="' + item.cruzado +'"></td>' +
+
+															'<td><input name="paid_emision" style="width:100px!important" class="datepicker" value="' + item.created_emision + '"></td>' +		
+
+															'<td class="currency">' + (item.monedaTipo != '' ? (item.total/item.monedaValorCambio) : item.total) + '</td>' +
+															`<td><span class="custom-${item.estado.toLowerCase()}">${item.estado}</span></td>` +
+															'<td class="opciones"><button style="display:none" class="opening" title="Abrir proceso de pago. Se cambiará el estado del pago a emitido">Abrir proceso de pago</button><button class="pay" title="Validar pago"></button><button class="nullify" title="Anular pago"></button><button class="delete" title="Eliminar pago"></button><button class="print" title="Imprimir pago"></button></td>' +
+															'</tr>');
+
+
+
+									                    }
+								                      
+								                    }
+								                    else{
+								                      	toastr.warning(
+								                        "El periodo contable para este pago no está creado. Debe Crearlo");
+								                       	error=true;
+								                    }
+								                       
+								                }
+							            	});
+										}else{
+
+											htmlObject = $('<tr data-estado="' + item.estado + '" data-id="' + item.id + '" data-username="' + item.username + '" data-status="'+ item.status +'">' +
+											'<td><input readonly type="search" name="paid_tipo" style="width:100px!important" value="' + item.tipo + '"><button class="show tipopago"></button></td>' +								
+											'<td><input readonly type="search" data-id="' + ((item.tipo != "EFECTIVO") ? item.cuenta.id : '0') +'" name="paid_cuenta" type="text" class="w150px" value="' + item.cuenta.banco + '"><button class="show cuenta"></button></td>' +
+											'<td><input ' + ((item.tipo != "EFECTIVO") ? '' : 'readonly type="search"') + ' name="paid_numero" style="width:100px!important" value="' + ((item.tipo != "EFECTIVO") ? item.index : 'N/A') + '"></td>' +
+
+											'<td class="option-ch"><input readonly type="search" name="paid_forma" type="text" class="w150px" value="' + ((item.cuenta.forma != "" && item.tipo == "CHEQUE")? item.cuenta.forma : 'N/A') +'">' + ((item.tipo == "CHEQUE")? '<button class="show forma"></button>' : '') +'</td>' +
+
+											'<td><textarea placeholder="Glosa mvto." name="glosa_banco">' + item.glosa_banco +'</textarea></td>' +
+
+											'<td class="option-ch"><input '+ ((item.tipo != "CHEQUE") ? 'disabled' : '') +' name="paid_cruzado" type="checkbox" '+ ((item.cruzado == "true")? 'checked': '') +' value="' + item.cruzado +'"></td>' +
+
+											'<td><input name="paid_emision" style="width:100px!important" class="datepicker" value="' + item.created_emision + '"></td>' +		
+
+											'<td class="currency">' + (item.monedaTipo != '' ? (item.total/item.monedaValorCambio) : item.total) + '</td>' +
+											`<td><span class="custom-${item.estado.toLowerCase()}">${item.estado}</span></td>` +
+											'<td class="opciones"><button style="display:none" class="opening" title="Abrir proceso de pago. Se cambiará el estado del pago a emitido">Abrir proceso de pago</button><button class="pay" title="Validar pago"></button><button class="nullify" title="Anular pago"></button><button class="delete" title="Eliminar pago"></button><button class="print" title="Imprimir pago"></button></td>' +
+										'</tr>');
+										}
+									}else{
+										htmlObject = $('<tr data-id="' + item.id + '" data-username="' + item.username + '" data-status="'+ item.status +'">' +
+											'<td>' + item.tipo + '</td>' +
+											'<td>' + item.cuenta.banco + ' / '+ item.cuenta.index+'</td>' +
+											'<td>' + item.index + '</td>' +																
+											'<td class="option-ch">' + item.cuenta.forma +'</td>' +
+											'<td>' + item.glosa_banco +'</td>' +
+											'<td class="option-ch"><input name="paid_cruzado" disabled type="checkbox" value="false"></td>' +
+											'<td>' + item.created_emision + '</td>' +		
+											'<td class="currency">' + item.total + '</td>' +
+											`<td><span class="custom-${item.estado.toLowerCase()}">${item.estado}</span></td>` +
+											'<td class="opciones">' +											
+											'<button class="delete" title="Eliminar pago"></button>' +						
+											'</td>' +
+										'</tr>');
+									}
+
+
+									//CONTROL DE ERROR PARA PERIODO CONTABLE
+									if(error==false){
+										payment.container.find('table.docpagos > tbody').append(htmlObject);
+
+										if (item.tipo === "TRANSFERENCIA") 
+											htmlObject.find("button.print").hide();
+										
+										payment.display();
+
+										if (item.tipo != "CHEQUE")		
+											$('.option-ch').hide();
+										
+										if(item.estado != "ANULADO"){
+
+
+											htmlObject.find('input[name="paid_numero"]').on('blur', function(){
+												if (!payment.checkpaid()) {
+													var msj = "El Nro. ingresado ("+ payment.odlnumbervalidate +") ya se encuentra registrado en la Orden de pago " + payment.folio_op_repetido;
+													confirm(msj, "Ver la Orden de pago " + payment.folio_op_repetido).done(function(data) {
+														if (data){
+															window.open('/4DACTION/wbienvenidos#pagos/content2.shtml?id=' + payment.id_op_repetido);
+														}
+													});
+													$(this).val('').next().focus();											// toastr.warning('El número ingresado ya se encuentra registrado.');
+													// $(this).val('').next().focus();
+												}
+											});
+
+											$(".datepicker").datepicker();						
+
+											htmlObject.find('.currency').formatCurrency({
+												region: 'es-CL',
+												decimalSymbol: ',',
+												digitGroupSymbol: '.',
+												roundToDecimalPlace: currency.decimals,
+												symbol: '<span class="symbol">' + (item.monedaTipo != '' ? item.monedaTipo : currency.symbol) + '</span>',
+												positiveFormat: (currency.is_right)? '%n%s' : '%s%n',
+												negativeFormat: (currency.is_right)? '-%n%s' :'-%s%n'
+											});
+
+											// --- ini listas --		
+											payment.container.find('input[name="paid_forma"]').autocomplete({
+												source: function(request, response) {
+													var dataset = [
+														{ id: "ABIERTO", text: 'ABIERTO'},
+														{ id: "A LA ORDEN", text: 'A LA ORDEN'},
+														{ id: "AL PORTADOR", text: 'AL PORTADOR'},
+														{ id: "NOMINATIVO", text: 'NOMINATIVO'}
+													];
+													response($.map(dataset, function(item) {
+														return item;
+													}));
+												},
+												minLength: 0,
+												autoFocus: true,
+												delay: 5,
+												position: { my: "left top", at: "left bottom", collision: "flip" },
+												open: function() {
+													$(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+												},
+												close: function() {
+													$(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+												},
+												focus: function(event, ui) {
+													//$(this).val(ui.item.text);
+													return false;
+												},
+												response: function(event, ui) {
+												},
+												select: function(event, ui) {
+													$(this).val(ui.item.text);
+													return false;
+												}
+
+											}).data('ui-autocomplete')._renderItem = function(ul, item) {
+												return $('<li><a><span>' + item.text + '</span></a></li>').appendTo(ul);
+											};
+
+											payment.container.find('button.show.forma').button({
+												icons: {
+													primary: 'ui-icon-carat-1-s'
+												},
+												text: false
+											}).click(function() {
+												payment.container.find('input[name="paid_forma"]').autocomplete('search', '@').focus();
+											});
+
+
+											payment.container.find('input[name="paid_cuenta"]').autocomplete({
+												source: function(request, response) {
+													$.ajax({
+														url: '/4DACTION/_V3_' + 'getCuentaBancaria',
+														dataType: 'json',
+														data: {
+															q: request.term
+														},
+														success: function(data) {
+															response($.map(data.rows, function(item) {
+																return item;
+															}));
+														}
+													});
+												},
+												minLength: 0,
+												autoFocus: true,
+												delay: 5,
+												position: { my: "left top", at: "left bottom", collision: "flip" },
+												open: function() {
+													$(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+												},
+												close: function() {
+													$(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+												},
+												focus: function(event, ui) {
+													//$(this).val(ui.item.text);
+													return false;
+												},
+												response: function(event, ui) {
+												},
+												select: function(event, ui) {
+													$(this).val(ui.item.text);
+													$(this).data('id', ui.item.id);
+													if ($('input[name="paid_tipo"]').val().toUpperCase() == 'CHEQUE')
+														$('input[name="paid_numero"]').val(ui.item.next);															
+													return false;
+												}
+
+											}).data('ui-autocomplete')._renderItem = function(ul, item) {
+												return $('<li><a><span>' + item.text + '</span></a></li>').appendTo(ul);
+											};
+											payment.container.find('button.show.cuenta').button({
+												icons: {
+													primary: 'ui-icon-carat-1-s'
+												},
+												text: false
+											}).click(function() {
+												payment.container.find('input[name="paid_cuenta"]').autocomplete('search', '@').focus();
+											});
+
+
+											payment.container.find('input[name="paid_tipo"]').autocomplete({
+												source: function(request, response) {
+													$.ajax({
+														url: '/4DACTION/_V3_' + 'getTipoPagos?egreso=true',
+														dataType: 'json',
+														data: {
+															q: request.term
+														},
+														success: function(data) {
+															let next = data.cheque.numero;
+															response($.map(data.rows, function(item) {
+																if(item.text === "CHEQUE"){
+																	return {...item, next}
+																}else{
+																	return item;
+
+																}
+															}));
+														}
+													});
+												},
+												minLength: 0,
+												autoFocus: true,
+												delay: 5,
+												position: { my: "left top", at: "left bottom", collision: "flip" },
+												open: function() {
+													$(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+												},
+												close: function() {
+													$(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+												},
+												focus: function(event, ui) {
+													//$(this).val(ui.item.text);
+													return false;
+												},
+												response: function(event, ui) {
+												},
+												select: function(event, ui) {
+													$(this).val(ui.item.text);
+													if(ui.item.text === "CHEQUE"){
+														document.querySelector(`input[name="paid_numero"]`).value = ui.item.next;		
+														$(this).closest("tr").find("button.print").show()
+													}
+													if(ui.item.text === "TRANSFERENCIA"){
+														$(this).closest("tr").find("button.print").hide()
+													}
+													if ($('input[name="paid_cuenta"]').val() == '')
+														$.ajax({
+															url: '/4DACTION/_V3_' + 'getCuentaBancaria',
+															dataType: 'json',
+															data: {
+																q: '',
+																default: true
+															},
+															success: function(data) {
+																var record = data.rows[0];
+																$('input[name="paid_cuenta"]').val(record.index);
+																$('input[name="paid_cuenta"]').data('id', record.id);
+																if ($('input[name="paid_tipo"]').val().toUpperCase() == 'CHEQUE'){
+																	$('input[name="paid_numero"]').val(record.next);
+																}else{
+																	$('input[name="paid_numero"]').data("");
+																}
+															}
+														});
+
+													return false;
+												}
+
+											}).data('ui-autocomplete')._renderItem = function(ul, item) {
+												return $('<li><a><span>' + item.text + '</span></a></li>').appendTo(ul);
+											};
+
+											payment.container.find('button.show.tipopago').button({
+												icons: {
+													primary: 'ui-icon-carat-1-s'
+												},
+												text: false
+											}).click(function() {
+												payment.container.find('input[name="paid_tipo"]').autocomplete('search', '@').focus();
+											});
+											// --- fin listas --
+
+											htmlObject.find('button.opening').button({
+												caption: 'Abrir proceso pago',
+												icons: {
+													primary: 'ui-icon-unlocked'
+												},
+												text: false
+											}).click(function() {
+												confirm('Es posible que el pago haya sido realizado. Sugerimos revisar para evitar duplicación. <br><br>¿El documento se marcará como emitido. ¿Está seguro?').done(function(data) {
+													if (data)
+														$.ajax({
+															url: '/4DACTION/_V3_setDocPagoByPago2',
+															data: {
+																id: item.id,
+																fk: payment.id,
+																paid: false
+															},
+															dataType: 'json',
+															success: function(data) {
+																if (data.success) {
+																	toastr.success('El documento ha sido abierto!');
+																	unaBase.loadInto.viewport('/v3/views/pagos/content2.shtml?id=' + payment.id, undefined, undefined, true);												
+																} else
+																	toastr.error('El documento no pudo validarse. Intente nuevamente.');
+															}
+														});
+												});
+											})
+
+											htmlObject.find('button.pay').button({
+												caption: 'Pagar',
+												icons: {
+													primary: 'ui-icon-check'
+												},
+												text: false
+											}).click(function() {
+
+												if(payment.folio !== ""){
+													// enabledBankCards
+													
+													confirm('¿El documento se marcará como pagado. ¿Está seguro?').done(function(data) {
+														if (data)
+															$.ajax({
+																url: '/4DACTION/_V3_setDocPagoByPago2',
+																data: {
+																	id: item.id,
+																	fk: payment.id,
+																	paid: true
+																},
+																dataType: 'json',
+																success: function(data) {
+																	if (data.success) {
+																		toastr.success('El documento ha sido validado con éxito!');
+																		unaBase.loadInto.viewport('/v3/views/pagos/content2.shtml?id=' + payment.id, undefined, undefined, true);												
+																	} else{
+																		toastr.error('El documento no pudo ser validado. Intente nuevamente.');
+																		toastr.error(data.errorMsg.replaceAll(/SL/g, '<br>'))
+																	}
+
+																}
+															});
+													});
+
+												}else{
+													toastr.warning("Debes guardar el documento antes de validar el pago.");
+												}
+
+
+											});
+
+											htmlObject.find('button.nullify').button({
+												caption: 'Anular',
+												icons: {
+													primary: 'ui-icon-cancel'
+												},
+												text: false
+											}).click(function() {
+												confirm('¿Está seguro que desea anular el documento de pago?').done(function(data) {
+													if (data)
+														$.ajax({
+															url: '/4DACTION/_V3_setDocPagoByPago2',
+															data: {
+																id: item.id,
+																fk: payment.id,
+																nullified: true
+															},
+															dataType: 'json',
+															success: function(data) {
+																if (data.success) {
+																	toastr.success('El documento fue anulado con éxito!');
+																	unaBase.loadInto.viewport('/v3/views/pagos/content2.shtml?id=' + payment.id, undefined, undefined, true);			
+																} else
+																	toastr.error('El documento no pudo anularse. Intente nuevamente.');
+															}
+														});
+												});
+											});
+
+											htmlObject.find('button.delete').button({
+												caption: 'Eliminar',
+												icons: {
+													primary: 'ui-icon-trash'
+												},
+												text: false
+											}).click(function() {
+												confirm('¿Está seguro que desea eliminar el documento de pago?').done(function(data) {
+													if (data) {
+														$.ajax({
+															url: '/4DACTION/_V3_setDocPagoByPago2',
+															data: {
+																id: item.id,
+																fk: payment.id,
+																deleted: true
+															},
+															dataType: 'json',
+															success: function(data) {
+																if (data.success) {
+																	toastr.success('El documento fue eliminado con éxito!');
+																	unaBase.loadInto.viewport('/v3/views/pagos/content2.shtml?id=' + payment.id, undefined, undefined, true);																									
+																} else
+																	toastr.error('El documento no pudo eliminarse. Intente nuevamente.');
+															}
+														});																		
+													}
+												});
+											});
+
+											htmlObject.find('button.print').button({
+												caption: 'Imprimir',
+												icons: {
+													primary: 'ui-icon-print' 
+												},
+												text: false
+											}).click(function() {
+												payment.menu.find('li[data-name="preview_cheque"] button').triggerHandler('click');									
+											});
+										}
+										
+									}else{
+										$('li[data-name="save"]').css('display','none');
+									}
+
+									
+
+								});			
+							}else{
+								htmlObject = $('<tr><td colspan="9">No existe documentos ingresados</td></tr>');
+								payment.container.find('table.docpagos > tbody').append(htmlObject);
+							}						
+							payment.container.find('#scrolldocpagos h1 label').text(payment.titulo_seccion_doc_pagos);
+						}
+					});
+				},
+				bankcards: {
+					search: function() {
+						var target = payment.container.find('#scrolldocpagos tbody tr[data-status="true"]');
+						var result;
+						$.ajax({
+							url: '/4DACTION/_V3_searchBankcardsSimilar',
+							data: {
+								id: payment.doc.id,
+								amount: payment.container.find('.info-general [name="pago[abono]"]').val(),
+								number: target.find('input[name="paid_numero"]').val(),
+								types: "egresos"
+							},
+							dataType: 'json',
+							async:false,
+							success: function(data) {
+								result = data;
+							}
+						});	
+						return result;
+					},
+					merge: function(id, types) {
+						$.ajax({
+							url: '/4DACTION/_V3_setBankCards',
+							data: {
+								merge_estatus: true,
+								merge_id_pago: payment.doc.id,
+								merge_id_op: payment.id
+							},
+							dataType: 'json',
+							async:false,
+							success: function(data) {
+								if (data.success) {
+									toastr.success('El documento fue eliminado con éxito!');
+									unaBase.loadInto.viewport('/v3/views/pagos/content2.shtml?id=' + payment.id, undefined, undefined, true);				
+								} else
+									toastr.error('El documento no pudo eliminarse. Intente nuevamente.');
+							}
+						});
+					}
+				}
+			};
+
+			$(document).ready(function() {
+		        
+		        unaBase.print.url({
+		        	aliasfiles: 'PAGO_',
+					entity: 'pagos',
+					preview: false,
+					nullified: false,
+					form: 'print',
+					hostname: window.location.origin,
+					folio: payment.folio,
+					id: payment.id,
+		        });
+				/*$("body").mousedown(function(e){
+					//1: izquierda, 2: medio/ruleta, 3: derecho
+					if(e.which == 3){
+			   		 alert("has hecho click derecho");
+					}
+				});*/
+
+				payment.container.find('.numeric.currency input').number(true, currency.decimals, ',', '.');
+				unaBase.toolbox.init();
+				unaBase.toolbox.menu.init({
+					entity: 'Pago',
+					buttons: ['save', 'exit',  'preview_cheque', 'boucher_pago'],
+					// buttons: ['save', 'exit', 'discard', 'preview_cheque', 'boucher_pago'],
+					data: function() {
+						payment.titular = payment.container.find('.info-general [name="pago[titular]"]').val();
+						payment.monto_a_pagar = payment.container.find('.info-general [name="pago[abono]"]').val();
+						payment.fecha_propuesta = payment.container.find('.info-general [name="pago[fecha]"]').val();
+						payment.observacion = payment.container.find('[name="pago[observacion]"]').val();
+						payment.data = {
+							'id': payment.id,
+							'titular': payment.titular,
+							'monto_a_pagar': payment.monto_a_pagar,
+							'fecha_propuesta': payment.fecha_propuesta,
+							'observacion': payment.observacion,
+							'id_origen': payment.id_origen
+						}
+						return {
+							'id': payment.id,
+							'titular': payment.titular,
+							'monto_a_pagar': payment.monto_a_pagar,
+							'fecha_propuesta': payment.fecha_propuesta,
+							'observacion': payment.observacion,
+							'id_origen': payment.id_origen
+						};
+					},
+					validate: function() {
+						var status = true;
+						var target = payment.container.find('#scrolldocpagos tbody tr[data-status="true"]');
+						var msg = "";
+						// if (target) {
+						// 	if (target.find('input[name="paid_numero"]').val() == "") {
+						// 		msg = "Falta ingresar Nro. del documento de pago";
+						// 		status = false;
+						// 	}
+						// }
+
+						var fecha_pago = $('input[name="pago[fecha]"]').val();
+						if (payment.scheduled && (fecha_pago == "" || fecha_pago == "00-00-00")){
+							msg = "Falta ingresar la fecha de pago";
+							status = false;
+						}
+						let receptor = document.querySelector(`input[name="pago[titular]"]`).value;
+						if(receptor === ""){
+						
+							msg = "Falta ingresar emitodo a: ";
+							status = false;
+						
+						}
+						let abono = parseFloat(document.querySelector(`input[name="pago[abono]"]`).value);
+						
+						if(abono<=0){
+							msg = "El monto a pagar no puede ser negativo ni 0. ";
+							status = false;
+						}
+
+
+						if (msg == "") {
+							//var result = payment.bankcards.search();
+				   			/*if(result.id > 0){
+				   				confirm('Se encontró una concidencia en el banco. ¿Desea conciliar el movimiento?').done(function(data) {
+									if (data){
+										payment.bankcards.merge();
+									}
+								});
+				   			}*/
+				   			return true;
+						}else{
+							toastr.error(msg);
+							return false;
+						}
+
+					}
+				});
+				let entity = "Pago";
+				unaBase.toolbox.buttons( [
+							{
+						        name: "discard",
+						        icon: "ui-icon-cancel",
+						        caption: "Anular",
+						        access: true,
+					            action: function() {
+					            	let anular = true;		           
+						            // Verificar antes de anular
+						            if ($('.ui-dialog table > tbody > tr:not([data-new="true"]):first-of-type > td:nth-of-type(6)')
+						                .text()
+						                .toUpperCase() != "NULO" &&
+						              $(".ui-dialog table > tbody > tr").length > 0
+						            ) {
+						                toastr.warning(
+						                "No es posible anular la orden de pago. Hay documentos de pago vigentes."
+						              );
+						              anular = false;
+						            }
+						            let nullifyConfirm = () => {
+										if (anular) {
+											let nullMsg = payment.doc.tipo === "CHEQUE" ? `<p>${MSG.get("CONFIRM_DOCUMENT_NULLIFY")} <br/><br/>
+												El documento de pago es un <span class="bold">CHEQUE</span>, para anular este pago debes primero eliminar el cheque, de lo contrario el <span class="bold">número correlativo </span>quedara bloqueado para ser usado de nuevo.
+												</p>` : MSG.get("CONFIRM_DOCUMENT_NULLIFY")
+											confirm(nullMsg).done(function(
+											  data
+											) {
+											  if (data) {
+											    var htmlObject = $(
+											      '<section> \
+																	<span>Ingresar motivo anulación</span> \
+																	<input required readonly type="search" name="motivo"> \
+																	<button class="show motivo-anulacion">Ver motivos de anulación</button> \
+																</section>'
+											    );
+											    htmlObject
+											      .find('input[type="search"]')
+											      .autocomplete({
+											        source: function(request, response) {
+											          $.ajax({
+											            url: "/4DACTION/_V3_" + "getMotivoAnulacion",
+											            dataType: "json",
+											            data: {
+											              //q: request.term
+											              modulo: entity
+											            },
+											            success: function(data) {
+											              response(
+											                $.map(data.rows, function(item) {
+											                  return item;
+											                })
+											              );
+											            }
+											          });
+											        },
+											        minLength: 0,
+											        delay: 5,
+											        position: {
+											          my: "left top",
+											          at: "left bottom",
+											          collision: "flip"
+											        },
+											        open: function() {
+											          $(this)
+											            .removeClass("ui-corner-all")
+											            .addClass("ui-corner-top");
+											        },
+											        close: function() {
+											          $(this)
+											            .removeClass("ui-corner-top")
+											            .addClass("ui-corner-all");
+											        },
+											        focus: function(event, ui) {
+											          $(this).val(ui.item.text);
+											          return false;
+											        },
+											        select: function(event, ui) {
+											          $(this).val(ui.item.text);
+											          htmlObject.data("response", $(this).val());
+											          return false;
+											        }
+											      })
+											      .data("ui-autocomplete")._renderItem = function(
+											      ul,
+											      item
+											    ) {
+											      return $(
+											        "<li><a><span>" + item.text + "</span></a></li>"
+											      ).appendTo(ul);
+											    };
+
+											    htmlObject
+											      .find("button.show.motivo-anulacion")
+											      .button({
+											        icons: {
+											          primary: "ui-icon-carat-1-s"
+											        },
+											        text: false
+											      })
+											      .click(function() {
+											        htmlObject
+											          .find('input[type="search"]')
+											          .autocomplete("search", "@");
+											      });
+
+											    prompt(htmlObject).done(function(data) {
+											      var enteredMessage = data;
+											      $.ajax({
+											        url: "/4DACTION/_V3_setPago",
+											        dataType: "json",
+											        data: {
+											          id: payment.id,
+											          nullify: true, // TODO: este deberia ser el parámetro definitivo para anular genérico
+											          comment: data
+											        },
+											        success: function(data) {
+											          if (data.success) {
+											            var id = $("section.sheet").data("id");
+											            toastr.info(NOTIFY.get("SUCCESS_DOCUMENT_NULLIFY"));
+														unaBase.utilities.updateIncomeVx('pagos')
+											            unaBase.history.back();
+														
+											       
+											          } else {
+											            if (data.opened) {
+											              if (data.readonly)
+											                toastr.error(
+											                  NOTIFY.get("ERROR_RECORD_READONLY", "Error")
+											                );
+											            }
+											          }
+											        },
+											        error: function(xhr, text, error) {
+											          toastr.error(NOTIFY.get("ERROR_INTERNAL", "Error"));
+											        }
+											      });
+											    });
+											  }
+											});
+										}
+						            }
+						            
+						    //         if(payment.doc.tipo === "CHEQUE"){
+										// let verifyNullCheck = $(
+										// '<span>El documento de pago es un cheque, para anular este pago debes primero eliminar el cheque, de lo contrario el número correlativo quedara bloqueado para ser usado de nuevo. <span>'
+										// );
+										// prompt(verifyNullCheck).done(function(data) {
+						    //         		nullifyConfirm();
+										// });
+
+						    //         }else{
+						    //         	nullifyConfirm();
+						    //         }
+
+						            	nullifyConfirm();
+
+				            	}
+	          	}], true);
+
+				$(".datepicker").datepicker();
+				// $('button.saveall').button({icons: { primary: 'ui-icon-disk'}, text: true });
+
+				payment.display();
+				// if(document.querySelector(`li[data-name="boucher_pago"]`))
+				// 	document.querySelector(`li[data-name="boucher_pago"]`).style.display = payment.doc.tipo !== "CHEQUE" ? "none" : "";
+				
+
+				/*payment.container.find('#scrolldocpagos button.pay').hide();
+	    		payment.container.find('#scrolldocpagos button.opening').hide();
+	    		unaBase.back.callback = () => {
+	                $.ajax({
+	                  url: "/4DACTION/_V3_setPago",
+	                  data: {
+	                    id: payment.id,
+	                    delete: true
+	                  },
+	                  dataType: "json",
+	                  success: function(data) {
+	                  	unaBase.back.callback = null;
+	                  },
+	                  error: function(xhr, text, error) {
+	                    toastr.error(NOTIFY.get("ERROR_INTERNAL"));
+	                  }
+	                });
+	    		}
+            	unaBase.changeControl.hasChange = true;*/
+            	
+				
+			});		
+
+
+			// solo mostrar al crear la op, ya que se meustra el ado del doc de origen
+			var info_total_origen = '';	
+			if (payment.folio == "S/N" || payment.folio == "") {
+				info_total_origen = '<li><span><label>Saldo por pagar (origen):</label></span><span>'+ defaultCurrencySymbol + ' <input class="numeric currency w150px" readonly required type="text" name="pago[total]" placeholder="" value="'+ payment.total_pago_origen + '"></span></li>';
+			}
+
+			var info_origen = '<a style="text-transform:capitalize;font-size:10px!important" href="' + '//' + window.location.host + '/4DACTION/wbienvenidos#compras/content.shtml?id=' + payment.id_origen + '" target="_blank" style="cursor:pointer" title="IR A '+ payment.origen.toUpperCase() +'">' + payment.origen.toUpperCase() + '</a>';
+
+			let moneyDefault = unaBase.money.find(v => v.default)
+
+			let valorCambio = `<li class="exchange_rate_global">
+							<span><label class="text-total-pagado">Valor cambio:</label></span>
+							<span><input onkeyup="unaBase.utilities.general.formater(this)" style="width:80px!important;" class="fill1 inputCustom" name="exchange_rate_global" type="text" 
+									value="${$.number(payment.monedaValorCambio, 4, currency.decimals_sep, currency.thousands_sep)}">
+							</span>
+						</li>`
+
+			
+			var html_info_general = $(`<article class="info-general">
+					<h1>Información general</h1>
+					<h2>
+						<span class="temp_style_tipo">PAGO</span>
+						<span id="index">${(payment.folio == "" || payment.folio == "S/N") ? 'S/N' : `Nº ${payment.folio}`}</span>
+					</h2>
+					<p class="labels">
+						<span class="notices bloquear_cambio">
+							<label style="background-color:#F9994D!important;cursor:pointer;width:15px;height:15px;vertical-align:bottom!important;display:inline-block;border-radius:5px;" 
+								title="No es posible realizar cambios. El pago se encuentra cerrada administrativamente." 
+								class="ui-icon ui-icon-locked">
+							</label>
+						</span>
+						<span data-name="estado">${payment.estado}</span>
+						<span>Creada por ${payment.login_responsable} el ${payment.fecha_creacion} a las ${payment.hora_creacion} hrs.</span>
+						<span style="display:none" class="bankcards porconciliar u-color-orange ">Por conciliar</span>
+						<span style="display:none" class="bankcards conciliado">Conciliado 
+							<i style="display:inline-block;vertical-align:middle;" class="fa fa-check-circle fa-lg u-color-green u-cursor" aria-hidden="true" 
+								style="margin-left:5px;font-size:15px;vertical-align:middle;">
+							</i>
+						</span>
+					</p>
+					<ul class="expandable editable lineal">
+						<li class="money-dolar-op">
+							<span><label>Moneda:</label> <strong style="font-size:10px;">${payment.monedaTipo}</strong></span>
+						</li>
+						${payment.monedaTipo != '' & payment.monedaTipo != moneyDefault ? valorCambio : ''}
+						<li>
+							<span><label class="text-emitido">Emitir a:</label></span>
+							<span><input class="inputCustom" type="text" name="pago[titular]" value="${payment.titular}"></span>
+						</li>
+						<li>
+							<span><label class="text-monto-pagado">Monto a pagar:</label></span>
+							<span>${payment.monedaTipo != '' ? payment.monedaTipo : defaultCurrencySymbol} 
+								<input class="numeric inputCustom currency w150px bold padding2px" required type="text" name="pago[abono]" placeholder="" 
+									value="${payment.monedaTipo != '' ? payment.monto_a_pagar_raw/payment.monedaValorCambio : payment.monto_a_pagar_raw}">
+							</span>
+						</li>
+						<li class="u-bg-scheduled">
+							<span><label>Fecha de pago:</label></span>
+							<span><input class="datepicker inputCustom" required type="text" name="pago[fecha]" placeholder="" value="${payment.fecha_propuesta}"></span>
+							<div style="margin-top:5px;display:none">Fecha comprometida en la ${payment.origen}. 
+								<span style="color:black!important">Puedes cambiarla.</span>
+							</div>
+						</li>
+					</ul>
+					<ul class="expandable editable lineal">
+						<input type="file" name="resumen[pago][attachment]" style="display: none;">
+
+						<li class="mb-2">
+							<div class="file-upload-container file-upload">
+								<div class="file-upload-frame">
+									<span class="file-indicator"><i class="fas fa-folder"></i><span class="file-text">Sin archivo adjunto</span></span>
+								</div>
+								<div class="file-upload-frame-name">
+									<span class="file-text-name"></span><i class="fas fa-eye" onclick="unaBase.utilities.general.fileActions.viewAttachment('payment')"></i></span>
+									<span><i class="fas fa-paperclip" onclick="unaBase.utilities.general.fileActions.triggerFileUpload('payment')"></i></span>
+								</div>
+								<button class="file-upload-btn" onclick="unaBase.utilities.general.fileActions.triggerFileUpload('payment')"><i class="fas fa-paperclip"></i><span class="file-upload-text">Subir archivo</span></button>
+							</div>
+						</li>
+					</ul>
+					<ul style="display:none" class="expandable editable lineal">
+						<li>
+							<span><label>Origen:</label></span>
+							<span>${info_origen}</span>
+						</li>
+						${info_total_origen}
+					</ul>
+				</article>
+			`);
+
+			const initFileUpload = (htmlObject) => {
+				
+				let nameInput = htmlObject.find('.file-upload-container .file-text') 
+				nameInput.text(fileAttachment != '' ? fileAttachment : 'Sin archivo adjunto')
+
+			}
+
+			initFileUpload(html_info_general)
+
+			let htmlObjectInputFile = html_info_general.find('input[name="resumen[pago][attachment]"]');
+			unaBase.utilities.general.fileActions.handleFileChange(htmlObjectInputFile, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'Pago|' + payment.id);
+
+			let htmlObjectRateGlobal = html_info_general.find('input[name="exchange_rate_global"]');
+			htmlObjectRateGlobal.focusout(function(event) {
+				this.value= unaBase.utilities.transformNumber(this.value,'view',true)
+			});
+
+
+			
+			htmlObjectRateGlobal.change(function() {
+				$.ajax({
+					url: '/4DACTION/_force_changeValorCambioPago',
+					data: {
+						id: payment.id,
+						valor_cambio: htmlObjectRateGlobal.val()
+					},
+					dataType: 'json',
+					async:false,
+					success: function(data) {
+						
+						unaBase.loadInto.viewport('/v3/views/pagos/content2.shtml?id=' + payment.id);
+					}
+				});	
+			});
+
+
+
+
+			payment.container.find('footer').append(html_info_general);
+			//payment.container.find('.numeric.currency').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+			payment.container.find('.numeric.currency').number(true, currency.decimals);
+
+			$(".datepicker").datepicker();
+
+			var html_doc_pagos = $(`<article id="scrolldocpagos" class="bg-white">
+					<h1><label>${payment.titulo_seccion_doc_pagos}</label> (<span>0</span>)</h1>
+					<div class="container-options">
+						<div data-options="mas">
+							<button class="options tipospagos">Agregar</button>
+						</div>
+					</div>
+					<table class="docpagos" width="99%">
+						<thead>
+							<tr>
+								<th>Tipo</th>
+								<th>Cuenta</th>
+								<th>Número</th>
+								<th class="option-ch">Forma</th>
+								<th>Referencia</th>
+								<th class="option-ch">Cruzado?</th>
+								<th>Fecha de pago</th>
+								<th class="text-pagado-doc">Total pago</th>
+								<th>Estado</th>
+								<th class="opciones">Acción</th>
+							</tr>
+						</thead>
+						<tbody class="ui-selectable bg-white"></tbody>
+					</table>
+				</article>
+			`);
+		
+			payment.container.find('footer').append(html_doc_pagos);			
+
+			// options creacion doc de pagos
+			var htmlObjectListOptions;
+			htmlObjectListOptions = $('\
+				<ul class="dropdown-menu-options" style="position:absolute;top:47px;left:5px;z-index:1000;text-align:left"> \
+					<li data-option="CHEQUE"><a style="color:black!important;" href="#"><span style="color:black!important;" class="ui-icon ui-icon-circle-plus"></span>Cheque</a></li> \
+					<li data-option="TARJETA DE CREDITO"><a style="color:black!important;" href="#"><span style="color:black!important;" class="ui-icon ui-icon-circle-plus"></span>Tarjeta de Credito</a></li> \
+					<li data-option="PAYPAL"><a style="color:black!important;" href="#"><span style="color:black!important;" class="ui-icon ui-icon-circle-plus"></span>Paypal</a></li> \
+					<li data-option="TRANSFERENCIA"><a style="color:black!important;" href="#"><span style="color:black!important;" class="ui-icon ui-icon-circle-plus"></span>Transferencia</a></li> \
+					<li data-option="DEPOSITO"><a style="color:black!important;" href="#"><span style="color:black!important;" class="ui-icon ui-icon-circle-plus"></span>Depósito</a></li> \
+					<li data-option="VALE VISTA"><a style="color:black!important;" href="#"><span style="color:black!important;" class="ui-icon ui-icon-circle-plus"></span>Vale Vista</a></li> \
+					<li data-option="P.A.C"><a style="color:black!important;" href="#"><span style="color:black!important;" class="ui-icon ui-icon-circle-plus"></span>P.A.C</a></li> \
+					<li data-option="NOMINA"><a style="color:black!important;" href="#"><span style="color:black!important;" class="ui-icon ui-icon-circle-plus"></span>Nomina</a></li> \
+					<li data-option="EFECTIVO"><a style="color:black!important;" href="#"><span style="color:black!important;" class="ui-icon ui-icon-circle-plus"></span>Efectivo</a></li> \
+					<li data-option="DEBITO"><a style="color:black!important;" href="#"><span style="color:black!important;" class="ui-icon ui-icon-circle-plus"></span>Debito</a></li> \
+					<li data-option="TICKET RESTAURANT"><a style="color:black!important;" href="#"><span style="color:black!important;" class="ui-icon ui-icon-circle-plus"></span>Ticket restaurant</a></li> \
+				</ul> \
+			');
+			htmlObjectListOptions.appendTo('.container-options > div[data-options="mas"]').menu().hide();
+			$('button.options.tipospagos').button({
+				icons: {
+					primary: 'ui-icon ui-icon-triangle-1-s',
+				},
+				text: true
+			}).click(function() {
+				$('.dropdown-menu-options').toggle();
+			});
+
+			// oculatr lista de opciones
+			payment.container.click(function(event){
+				if (event.target.tagName != "SPAN") {
+					htmlObjectListOptions.menu().hide();
+				}				
+			});
+
+			htmlObjectListOptions.find('li').click(function(){	
+				$.ajax({
+					url: '/4DACTION/_V3_setDocPagoByPago2',
+					dataType: 'json',
+					type: 'POST',
+					data: {
+						fk : payment.id,
+						paid_tipo: $(this).data('option'),
+						create: true
+					}
+				}).done(function(data) {
+					payment.loadpaid();
+				});
+			});
+
+			payment.loadpaid();
+			payment.display();
+
+			var html_ocs = $('<article id="section_order" class="bg-white">\
+					<h1><label>Órdenes de compra</label> (<span>0</span>)</h1>\
+					<table width="99%">\
+						<thead>\
+							<tr>\
+								<th>Número</th>\
+								<th>Emisor</th>\
+								<th>Emisión</th>\
+								<th>Proveedor</th>\
+								<th>Referencia</th>\
+								<th>Estado</th>\
+								<th>Total pagado</th>\
+								<th>Total oc</th>\
+							</tr>\
+						</thead>\
+						<tbody class="ui-selectable bg-white"></tbody>\
+					</table>\
+				</article>');
+			payment.container.find('footer').append(html_ocs);
+			$.ajax({
+			    'url':'/4DACTION/_V3_get_doc_asociados_boucher',
+			    data:{
+			    	"id" : payment.id,
+			    	"doc" : "OC"
+			    },
+			    dataType:'json',
+			    success:function(data){
+			    	var htmlObject;
+					target = $('#section_order table > tbody');
+					target.find("*").remove();
+					$('#section_order h1 > span').text(data.documents.length);
+					if (data.documents.length > 0) {
+						
+						$.each(data.documents, function(key, item){
+
+							let abonoDOC = $.number(item.abono, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+							let TotalDOC = $.number(item.total, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+							let symbolDOC = currency.symbol;
+							if (item.monedaTipo != '') {
+								abonoDOC = $.number(item.abono/item.monedaValorCambio, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+								TotalDOC = $.number(item.total/item.monedaValorCambio, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+								symbolDOC = item.monedaTipo;
+							}
+
+							htmlObject = $('<tr data-id="' + item.id + '">' +				
+								'<td class="center">' + item.numero + '</td>' +
+								'<td class="center">' + item.login + '</td>' +
+								'<td class="center">' + item.emision + '</td>' +
+								'<td class="left">' + item.proveedor + '</td>' +
+								'<td class="left">' + item.referencia + '</td>' +
+								'<td class="center">' + item.estado + '</td>' +
+
+								'<td class="center">' + symbolDOC + '<span> ' + abonoDOC + '</span></td>' +
+
+								'<td class="center">' + symbolDOC + '<span> ' + TotalDOC + '</span></td>' +
+
+							'</tr>');
+							target.append(htmlObject);
+					        htmlObject.click(function(){
+					        	window.open('/4DACTION/wbienvenidos#compras/content.shtml?id=' + item.id);				     	
+				          	});
+
+						});
+					}else{
+						target.append('<tr><td colspan="7">No existe Órdenes de compra asociadas.<td></tr>');
+					}		        
+			    }
+			});
+
+			var html_fxr = $('<article id="section_fxr" class="bg-white">\
+					<h1><label>Rendición de fondo</label> (<span>0</span>)</h1>\
+					<table width="99%">\
+						<thead>\
+							<tr>\
+								<th>Número</th>\
+								<th>Emisor</th>\
+								<th>Emisión</th>\
+								<th>Solicitante</th>\
+								<th>Referencia</th>\
+								<th>Estado</th>\
+								<th>Total pagado</th>\
+								<th>Total fxr</th>\
+							</tr>\
+						</thead>\
+						<tbody class="ui-selectable bg-white"></tbody>\
+					</table>\
+				</article>');
+			payment.container.find('footer').append(html_fxr);
+			$.ajax({
+			    'url':'/4DACTION/_V3_get_doc_asociados_boucher',
+			    data:{
+			    	"id" : payment.id,
+			    	"doc" : "FXR"
+			    },
+			    dataType:'json',
+			    success:function(data){
+			    	var htmlObject;
+					target = $('#section_fxr table > tbody');
+					target.find("*").remove();
+					$('#section_fxr h1 > span').text(data.documents.length);
+					if (data.documents.length > 0) {
+						if(data.documents.length > 1){
+							document.querySelector('input[name="pago[abono]"]').readOnly = true
+						}
+						$.each(data.documents, function(key, item){
+							htmlObject = $('<tr data-id="' + item.id + '">' +				
+								'<td class="center">' + item.numero + '</td>' +
+								'<td class="center">' + item.login + '</td>' +
+								'<td class="center">' + item.emision + '</td>' +
+								'<td class="left">' + item.proveedor + '</td>' +
+								'<td class="left">' + item.referencia + '</td>' +
+								'<td class="center">' + item.estado + '</td>' +
+								'<td class="center">' + currency.symbol + '<span>' + $.number(item.abono, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</span></td>' +
+								'<td class="center">' + currency.symbol + '<span>' + $.number(item.total, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</span></td>' +
+							'</tr>');
+							target.append(htmlObject);
+					        htmlObject.click(function(){
+					        	window.open('/4DACTION/wbienvenidos#compras/content.shtml?id=' + item.id);				     	
+				          	});
+
+				          	// $('.numeric.currency span').number(true, 0, ',', '.');
+
+						});
+					}else{
+						target.append('<tr><td colspan="7">No existe rendición de fondo asociada.</td></tr>');
+					}			        
+			    }
+			});			
+
+
+
+			//REAPER 
+
+			var html_ftg = $('<article id="section_ftg" class="bg-white">\
+					<h1><label>Factoring</label> (<span>0</span>)</h1>\
+					<table width="99%">\
+						<thead>\
+							<tr>\
+								<th>Número</th>\
+								<th>Emisor</th>\
+								<th>Emisión</th>\
+								<th>Solicitante</th>\
+								<th>Referencia</th>\
+								<th>Estado</th>\
+								<th>Total pagado</th>\
+								<th>Total ftg</th>\
+							</tr>\
+						</thead>\
+						<tbody class="ui-selectable bg-white"></tbody>\
+					</table>\
+				</article>');
+			payment.container.find('footer').append(html_ftg);
+
+
+
+			$.ajax({
+
+
+			    'url':'/4DACTION/_V3_get_doc_asociados_boucher',
+			    data:{
+			    	"id" : payment.id,
+			    	"doc" : "FTG"
+			    },
+			    dataType:'json',
+			    success:function(data){
+			    	var htmlObject;
+					target = $('#section_ftg table > tbody');
+					target.find("*").remove();
+					$('#section_ftg h1 > span').text(data.documents.length);
+					if (data.documents.length > 0) {
+						if(data.documents.length > 1){
+							document.querySelector('input[name="pago[abono]"]').readOnly = true
+						}
+						$.each(data.documents, function(key, item){
+							htmlObject = $('<tr data-id="' + item.id + '">' +				
+								'<td class="center">' + item.numero + '</td>' +
+								'<td class="center">' + item.login + '</td>' +
+								'<td class="center">' + item.emision + '</td>' +
+								'<td class="left">' + item.proveedor + '</td>' +
+								'<td class="left">' + item.referencia + '</td>' +
+								'<td class="center">' + item.estado + '</td>' +
+								'<td class="center">' + currency.symbol + '<span>' + $.number(item.abono, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</span></td>' +
+								'<td class="center">' + currency.symbol + '<span>' + $.number(item.total, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</span></td>' +
+							'</tr>');
+							target.append(htmlObject);
+					        htmlObject.click(function(){
+					        	window.open('/4DACTION/wbienvenidos#compras/content.shtml?id=' + item.id);				     	
+				          	});
+
+				          	// $('.numeric.currency span').number(true, 0, ',', '.');
+
+						});
+					}else{
+						target.append('<tr><td colspan="7">No existe factorng asociads.</td></tr>');
+					}			        
+			    }
+			});			
+			
+
+			//END REAPER
+			
+			var html_dtc = $('<article id="section_dtc" class="bg-white">\
+					<h1><label>Documentos de compra</label> (<span>0</span>)</h1>\
+					<table width="99%">\
+						<thead>\
+							<tr>\
+								<th>Número</th>\
+								<!--<th>Oc</th>-->\
+								<th>Emisor</th>\
+								<th>Tipo doc.</th>\
+								<th>Emisión</th>\
+								<th>Proveedor</th>\
+								<th>Referencia</th>\
+								<th>Estado</th>\
+								<th>Total Doc.</th>\
+								<th>Pagado</th>\
+							</tr>\
+						</thead>\
+						<tbody class="ui-selectable bg-white"></tbody>\
+						<tfoot>\
+			                <tr>\
+			                  <td colspan="7"></td>\
+			                  <td style="font-weight:bold;text-align:center"><label class="symbol">' + currency.symbol + '</label> <span class="sum-dtc-totales"></span></td>\
+			                  <td style="font-weight:bold;text-align:center"><label class="symbol">' + currency.symbol + '</label> <span class="sum-dtc-pagados"></span></td>\
+			                </tr>\
+			            </tfoot>\
+					</table>\
+				</article>');
+			payment.container.find('footer').append(html_dtc);
+			$.ajax({
+			    'url':'/4DACTION/_V3_get_doc_asociados_boucher',
+			    data:{
+			    	"id" : payment.id,
+			    	"doc" : "DTC"
+			    },
+			    dataType:'json',
+			    success:function(data){
+					target = $('#section_dtc table > tbody');
+					var htmlObject;
+					target.find("*").remove();
+
+					let symbolDOC = unaBase.defaultCurrencyCode != payment.monedaTipo ? payment.monedaTipo : currency.symbol
+
+					$('#section_dtc h1 > span').text(data.documents.length);
+					if (data.documents.length > 0) {
+						if(data.documents.length > 1){
+							document.querySelector('input[name="pago[abono]"]').readOnly = true
+						}
+						$.each(data.documents, function(key,item){
+							htmlObject = $('<tr data-id="' + item.id + '">' +				
+								'<td class="center">' + item.numero + '</td>' +
+								// '<td class="center">' + item.oc + '</td>' +
+								'<td class="center">' + item.login + '</td>' +
+								'<td class="center">' + item.tipo_doc + '</td>' +
+								'<td class="center">' + item.emision + '</td>' +
+								'<td class="left">' + item.proveedor + '</td>' +
+								'<td class="left">' + item.referencia + '</td>' +
+								'<td class="center">' + item.estado + '</td>' +
+								'<td class="center">' + symbolDOC + '<span>' + $.number(item.total, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</span></td>' +
+								'<td class="center">' + symbolDOC + '<span>' + $.number(item.abono / payment.monedaValorCambio, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</span></td>' +
+							'</tr>');
+
+							// '<td class="center numeric currency">' + currency.symbol + '<span>' + item.total + '</span></td>' +
+
+							target.append(htmlObject);
+					        htmlObject.click(function(){
+					        	window.open('/4DACTION/wbienvenidos#dtc/content.shtml?id=' + item.id);				     	
+				          	});
+				          	
+				          	// $('.numeric.currency span').number(true, 0, ',', '.');
+						});
+
+						// setea totales
+						$('#section_dtc table > tfoot .sum-dtc-totales').text($.number(data.suma_docs, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+						$('#section_dtc table > tfoot .sum-dtc-pagados').text($.number(data.suma_pagado / payment.monedaValorCambio, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+
+						$('#section_dtc table > tfoot .symbol').text(symbolDOC)
+
+
+					}else{
+						target.append('<tr><td colspan="9">No existe docs asociados.</td></tr>');
+					}
+			    }
+			});	
+			var html_comprobantes = $('<article id="section_comprobantes" class="bg-white">\
+					<h1><label>Comprobantes</label> (<span>0</span>)</h1>\
+					<table width="99%">\
+						<thead>\
+							<tr>\<th width="5%">Numero</th>\
+								<th width="35%">Descripcion</th>\
+								<th width="30%">fecha Registro</th>\
+								<th width="30%">Tipo documento</th>\
+							</tr>\
+						</thead>\
+						<tbody class="ui-selectable bg-white"></tbody>\
+						<tfoot>\
+			                <tr>\
+			                  <td colspan="9"></td>\
+			                </tr>\
+			            </tfoot>\
+					</table>\
+				</article>');
+			payment.container.find('footer').append(html_comprobantes);
+			 
+			$.ajax({
+			    'url':'/4DACTION/_V3_get_comprobantes_modulos',
+			    data:{
+			    	"id" : "<!--#4DTEXT id-->",
+			    	"tipo" : "OP"
+			    },
+			    dataType:'json',
+			    success:function(data){
+			    	console.log(data);
+			    	
+					target = $('#section_comprobantes table > tbody');
+					var htmlObject;
+					target.find("*").remove();
+					$('#section_comprobantes h1 > span').text(data.rows.length);
+					if (data.rows.length > 0) {
+
+						
+
+						$.each(data.rows, function(key,item){
+							htmlObject = $('<tr data-id="' + item.idCom + '">' +				
+								'<td>' + item.idCom + '</td>' +
+								'<td>' + item.descripcion + '</td>' +
+								'<td>' + item.fechaReg + '</td>' +
+								'<td>' + item.docType + '</td>' +
+								'</tr>');
+
+							// '<td class="center numeric currency">' + currency.symbol + '<span>' + item.total + '</span></td>' +
+
+							target.append(htmlObject);
+					        htmlObject.click(function(){
+								localStorage.setItem('prevPago', window.location.origin + '/4DACTION/wbienvenidos#pagos/content2.shtml?id='+$('#main-container').data('id'))
+					        	window.open('/4DACTION/wbienvenidos#comprobantes/content.shtml?id=' + item.idCom);				     	
+				          	});
+				          	
+				          	// $('.numeric.currency span').number(true, 0, ',', '.');
+						});
+
+				
+					}else{
+						target.append('<tr><td colspan="9">No existe Comprobantes asociados.</td></tr>');
+					}
+			    }
+			});	
+
+
+
+
+			var html_observaciones = $('<article id="scrolldtc" class="bg-white">\
+					<h1>Información adicional</h1>\
+					<section><ul><li><span style="vertical-align:top">Observaciones</span> <span class="full-width"><textarea class="filltext" style="height:80px;text-transform:uppercase" name="pago[observacion]">' + payment.observacion + '</textarea></span></li></ul></section>\
+				</article>');
+
+			payment.container.find('footer').append(html_observaciones);
+
+			// ajuste para no pagar de más cuando es oc
+			$('input[name="pago[abono]"]').blur(function(){
+				if ((payment.origen_modulo != "FXR" ) && (payment.origen_modulo != "FTG")) {
+					var monto_ingresado = parseFloat($('input[name="pago[abono]"]').val());
+					if (monto_ingresado > payment.monto_a_pagar) {
+						$('input[name="pago[abono]"]').val(payment.monto_a_pagar);
+					}
+				}
+			});
+
+			payment.display();
+
+			if (payment.monedaTipo == "") {
+	      		$('.money-dolar-op').hide();
+	      	}
+
+
+				
+      
+            if (accountingMode) {
+
+        
+                $.ajax({
+                  url: "/4DACTION/_V3_get_estadoPeriodoContable",
+                  data: {
+                    periodo: payment.fecha_creacion,
+                    origen: "ext modulos"
+                  },
+                  dataType: "json",
+                  async: false,
+                  success: function (subdata) {
+                    
+                    if (subdata.exists==1) {
+                      if (subdata.closed==1) {
+                      	
+                        $('#menu [data-name="save"]').remove();
+                       
+                        $('#menu [data-name="discard"]').remove();
+                      
+                                    
+                          let all = $("#main-container");
+
+                            all.find("input").prop("readonly", true);
+                            all.find("input").prop("disabled", true);
+                            all.find("button.detail.item").hide();
+                            all.find("button.profile.item").hide();
+                            all.find(`input[type="checkbox"]`).prop("disabled", true);
+                            all.find(`input[type="text"]`).prop("disabled", true);
+                            all.find(`input[type="search"].datepicker`).prop("disabled", true);
+                            all.find(`select`).prop("disabled", true);
+                          all.find(`button[type="button"]`).prop("disabled", true);   
+                          all.find("button").prop("disabled", true);  
+                          all.find("button").remove();          
+
+                        // $('#menu [data-name="new_payment"]').remove();
+                        // $('#menu [data-name="discard"]').remove();
+                        
+                        toastr.warning(
+                          "El periodo seleccionado  se encuentra cerrado por tanto no puede modificar este gasto."
+                        );
+
+
+                      }
+                      
+                    } else {
+                      toastr.warning(
+                        "El periodo contable para este gasto no está creado.");
+                        }
+                  }
+                });
+
+            }
+			
+		
+			//CAMBIA LA FECHA DESDE EL PAGO EL DOCUMENTO DE PAGO
+			// document.querySelector('[name="pago[fecha]"]').addEventListener("update", function (e){
+			// 	
+			// 	document.querySelector('[name="paid_emision"]').value = e.target.value
+
+			// });    
+
+
+
+
+	
+		</script>
+
+		<style>			
+			.temp{
+				margin:auto!important;
+				width:350px!important;
+				/*border:1px solid red;*/
+			}
+			.temp_style_tipo{
+				width:200px!important;
+				color:rgb(67,175,124)!important;
+			}
+			.temp_style_transparent{
+				background:transparent!important;
+			}
+			.temp_style_clas{
+				width:150px!important;
+				text-align:center;
+				/*margin-left:10px;*/
+			}		
+
+			/* ajustes diseño */
+			.labels > span{
+				display: inline-block;
+				border: 1px solid rgb(220,220,220);
+				/*background-color: #C9DECB;*/
+				background-color:rgb(232, 247, 232);
+				padding:3px;
+				border-radius:3px;
+				font-size:10px!important;
+				font-weight: bold;
+				text-transform: uppercase;
+				margin:2px;
+			}
+			.labels > span.link{
+				text-decoration: underline;
+				cursor: pointer;
+			}
+			.labels > span.false{
+				color:red!important
+			}
+			.labels > span.important{
+				color:red!important
+			}
+			select.combos{
+				border:1px solid lightgray!important;
+				padding:3px!important;
+				font-size: 12px!important;
+			}
+
+			.valor-moneda {
+				border:1px solid gray;
+				background-color:white;
+				border-radius: 2px;
+				padding:2px;
+				margin:2px;
+				width:100px!important;
+			}
+			.notices{
+				font-weight:normal!important;
+    			background-color:#F9994D!important;
+    			border-radius:2px;
+    			border-color: #F9994D!important;
+    			padding:1px!important;
+    		}
+    		.items tbody tr td{
+    			background-color: white;
+    		}
+	    		.items tbody tr td input{
+	    			background-color: white;
+	    		}
+
+	    	.bg-white{
+	    		background: white!important;
+	    	}
+
+	    	/* ini -- options dtc */
+	    	.chk{
+				display: inline-block;
+				width: 20px;
+				height: 20px;
+				margin:0px;
+				vertical-align: middle;
+				cursor:pointer;
+			}
+			.container-options{
+				height:30px;
+				margin:5px 0 0 0;
+				padding: 3px;
+				border-color: red;
+			}
+				.container-options > div{
+					display: inline-block;
+				}
+			#selectdtc{
+				height:24px;
+				width:70px;
+				background-color:#e6e6e6;
+			}
+			/* fin -- options dtc */
+
+			/* ocultar por defecto opciones para tipo pago transferencia */
+			.transferencia {
+				display: none !important;
+			}
+
+			.background-none {
+				background-color: transparent!important;
+			}
+
+			.sheet ul > li{
+				padding:3px;
+			}
+
+			.w150px{
+				width:150px!important;
+			}
+
+			.bold{
+				font-weight: bold!important;
+			}
+
+			.padding2px{
+				padding:1px!important;
+			}
+
+			.u-color-orange{
+				color:#f07a19;
+			}
+			.u-color-green{
+				color:#00a972;
+			}
+			.u-color-black{
+				color:black;
+			}
+
+			.u-bg-orange{
+				background-color:#ffa5009e!important;
+				padding:10px!important;
+				border-radius:3px;
+			}
+
+			/*.u-coincidencia-banco{
+				font-size: 12px;
+				font-weight: bold;
+				margin-top:-10px!important;
+			}*/
+
+		</style>
+
+	</head>
+
+	<body>
+		<section id="sheet-payment" class="sheet css-grays" >
+			<footer></footer>
+		</section>
+	</body>
+</html>

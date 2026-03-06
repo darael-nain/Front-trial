@@ -1,0 +1,6 @@
+{
+	"id": <!--#4DIF Not(Undefined(idComp))--><!--#4DIF Type(idComp)=Is Text-->"<!--#4DVAR idComp-->"<!--#4DELSE--><!--#4DVAR idComp--><!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->,
+	"success": <!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF-->,		
+	"readonly": <!--#4DIF Not(Undefined(readonly))--><!--#4DIF readonly-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"errorMsg" : <!--#4DIF Not(Undefined(errorMsg))-->"<!--#4DVAR errorMsg-->"<!--#4DELSE-->""<!--#4DENDIF-->
+}

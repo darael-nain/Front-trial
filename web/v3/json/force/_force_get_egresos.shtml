@@ -1,0 +1,15 @@
+{
+	"exists": <!--#4DIF Not(Undefined($exists))--><!--#4DIF $exists-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+	"id": "<!--#4DHTML $id-->",
+	"filename": "<!--#4DHTML $filename-->",
+	"nominaType": "<!--#4DHTML $nominaType-->",
+	"created_at": "<!--#4DHTML $created_at-->",
+	"bancos": [
+	<!--#4DLOOP aIdBanco -->
+			{
+				"codigo": "<!--#4DHTML aIdBanco{aIdBanco}-->",
+				"nombre": "<!--#4DHTML aNombreBanco{aIdBanco}-->"
+			}<!--#4DIF NOT(aIdBanco{aIdBanco} = aIdBanco{Size of array(aIdBanco)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

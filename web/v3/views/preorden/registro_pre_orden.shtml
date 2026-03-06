@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Info proveedor</title>
+  <script>
+  $(document).ready(function() {
+
+  });
+  </script>
+  <style></style>  
+</head>
+<body>
+  <div>
+    <button>Agregar proveedor</button>
+  </div>
+  <table>
+     <thead>
+       <th>
+        <td>Proveedor</td>
+        <td>Documento</td>
+        <td>Servicio</td>
+        <td>Monto</td>
+        <td>Moneda</td>
+        <td>Observación</td>
+      </th>
+     </thead>
+    <tbody>
+      <tr>
+        <td><input name="pre_proveedor" type="text"></td>
+        <td>
+        <select name="pre_documento" id="">
+          <option value="">FACTURA (18%)</option>
+          <option value="">RECIBO DE HONORARIOS (8%)</option>
+          <option value="">RECIBO DE HONORARIOS INAFECTA</option>
+          <option value="">BOLETA DE VENTA</option>
+        </select>
+      </td>
+      <td><input name="pre_servicio" type="search"></td>
+      <td><input name="pre_monto" type="text"></td>
+      <td>
+        <select name="pre_moneda" id="">
+          <option value="SOLES">SOLES</option>
+          <option value="DOLARES">DOLARES</option>
+        </select>
+      </td>
+      <td><textarea name="pre_observacion" id="" cols="30" rows="10"></textarea></td>
+    </tbody>
+  </table>
+</body>
+</html>

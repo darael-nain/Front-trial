@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getSettingsContent-->
+		<title>Cotizaciones</title>
+		<meta charset="utf-8">
+		<script>
+			$(document).ready(function() {
+				$('button.save.currency').click(function(event) {
+					$.ajax({
+						url: '/4DACTION/_V3_setSettings',
+						data: {
+							currency: $('[name="moneda"]').val(),
+							iva: $('[name="iva"]').val(),
+							iva_rate: $('[name="iva_rate"]').val(),
+							replace_iva: $('[name="replace_iva"]').is(':checked'),
+							replace_iva_text: $('[name="replace_iva_text"]').val(),
+							condiciones_cotizacion: $('[name="condiciones_cotizacion"]').val(),
+							condiciones_oc: $('[name="condiciones_oc"]').val(),
+							paisorigen: $('[name="paisorigen"]').val()
+						},
+						dataType: 'json',
+						success: function(data) {
+							toastr.success('Parámetros cambiados con éxito');
+						}
+					});
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<section class="sheet">
+			<footer>
+				<article>
+					<h1>Origen</h1>
+					<ul>
+						<li>
+							<span>País de origen</span>
+							<select name="paisorigen">
+								<option value="<!--#4DTEXT [Parametros]v3_id_pais_origen-->" selected><!--#4DTEXT [Parametros]v3_des_pais_origen--></option>
+								<!--#4DLOOP [Pais]-->
+									<!--#4DIF [Pais]Id_Pais#[Parametros]v3_id_pais_origen-->
+									<option value="<!--#4DTEXT [Pais]Id_Pais-->"><!--#4DTEXT [Pais]Des_Pais--></option>
+									<!--#4DENDIF-->
+								<!--#4DENDLOOP-->
+							</select><br><br>
+							<span>Moneda</span>
+							<select name="moneda">
+								<!--#4DLOOP [Moneda]-->
+								<option value="<!--#4DVAR [Moneda]codigo-->"<!--#4DIF [Moneda]default--> selected="selected"<!--#4DENDIF-->><!--#4DVAR [Moneda]nombre--></option>
+								<!--#4DENDLOOP-->
+							</select>
+							<button class="save currency">Guardar</button>
+						</li>
+					</ul>
+					<ul>
+						<li>
+							<span>Nombre IVA</span>
+							<input type="text" name="iva" value="<!--#4DVAR [Parametros]nombre_iva-->">
+						</li>
+					</ul>
+					<ul>
+						<li>
+							<span>Tasa IVA (%)</span>
+							<input type="text" name="iva_rate" value="<!--#4DVAR [Parametros]Iva-->">
+						</li>
+					</ul>
+				</article>
+				<article>
+					<h1>Cotización</h1>
+					<ul>
+						<li>
+							<span><input type="checkbox" name="replace_iva" value="true"<!--#4DIF [Parametros]replace_iva--> checked="checked"<!--#4DENDIF-->> Reemplazar IVA y Total en Cotización por el siguiente texto:<br><br>
+							<textarea name="replace_iva_text" rows="5" cols="80"><!--#4DVAR [Parametros]replace_iva_text--></textarea>
+							</span>
+						</li>
+				</article>
+				<article>
+					<h1>Condiciones</h1>
+					<ul>
+						<li>
+							<span>Condiciones para cotizaciones:<br><br>
+							<textarea name="condiciones_cotizacion" rows="5" cols="80"><!--#4DVAR [Parametros]condicion_negocio--></textarea>
+							</span>
+							<br>
+						</li>
+						<li>
+							<span>Condiciones para órdenes de compra:<br><br>
+							<textarea name="condiciones_oc" rows="5" cols="80"><!--#4DVAR [Parametros]condicion_oc--></textarea>
+							</span>
+						</li>
+				</article>
+			</footer>
+		</section>
+	</body>
+
+</html>

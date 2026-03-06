@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Acción no autorizada</title>
+	</head>
+	<body>
+		<h1>Acción no autorizada</h1>
+		<p>Usted está intentando realizar una acción que no está autorizada.</p>
+		<p>Haga clic <a href="/4DACTION/wbienvenidos">aquí</a> para volver.</p>
+	</body>
+</html>

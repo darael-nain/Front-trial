@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+    <!--#4DSCRIPT/_V3_proxy_getDtvContent-->
+    <head>
+        <meta charset="utf-8">
+        <title>Factura perú</title>
+        <style>
+            body {
+                font-family: Verdana, sans-serif;
+            }
+            .css-table-items-fe{
+                border-collapse: collapse;
+            }
+           .css-table-items-fe > thead > tr{
+              border: 2px solid black;
+            }
+            .css-table-items-fe > thead > tr > th{
+              border: 0px;
+            }
+            .css-table-items-fe > tbody > tr{
+                border:0px;
+            }
+            .css-table-items-fe > tbody > tr > td{
+                border:0px;
+            }
+
+            .css-table-items-fe-2{
+                border-collapse: collapse;
+            }
+            .css-table-items-fe-2 > tbody tr{
+                border:0px;
+                margin:0px;
+                padding:0px;
+            }
+            .css-table-items-fe-2 > tbody td{
+                border:0px;
+                margin:0px;
+                padding:0px;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <table border="0" width="100%" style="padding:3px;">
+                <tr style="vertical-align:top;padding:2px;">
+                    <td width="25%" align="center">
+                        <img style="width: 100px; height:100px; display: inline-block; vertical-align: top;" src="<!--#4DTEXT vUrlImagenLogo-->">
+                    </td>
+                    <td  width="45%" align="center" style="font-weight:bold;">
+                        <div style="font-size:18px;"><!--#4DTEXT razonPropietaria--></div>
+                        <div style="font-size:14px;"><!--#4DTEXT direccionPropietaria--></div>
+                    </td>
+                    <td  width="50%" align="center" colspan="2">
+                        <div style="border:2px solid black">
+                            <div style="margin:5px;font-weight:bold;font-size:18px;">RUC: <!--#4DTEXT rutFormatPropietariaPEN--></div>
+                            <div style="margin:5px;font-weight:bold;font-size:18px;"><!--#4DTEXT vtipoFacturaAUX--></div>
+                            <div style="margin:5px;font-weight:bold;font-size:18px;">Nro. <!--#4DTEXT [Factura]Folio_Factura--></div>
+                        </div>
+                    </td>
+                 </tr>
+            </table>
+            <br>
+            <table border="0" width="100%">
+                <tr>
+                    <td style="font-size:14px;font-weight:bold;" width="15%">SEÑOR(ES)</td><td width="55%" style="font-size:13px;">: <!--#4DTEXT [Factura]EmpresaRazonsocial--></td>
+                    <td style="font-size:14px;font-weight:bold;" width="10%">F.EMISIÓN</td><td width="20%" style="font-size:13px;">: <!--#4DTEXT [Factura]Fecha_impresion--></td>
+                </tr>
+                <tr>
+                    <td style="font-size:14px;font-weight:bold;" width="15%">RUC</td><td width="55%" style="font-size:13px;">: <!--#4DTEXT [Factura]EmpresaRut--><!--#4DTEXT [Factura]EmpresaRutDV--></td>
+                    <td style="font-size:14px;font-weight:bold;" width="10%">MONEDA</td><td width="20%" style="font-size:13px;">: <!--#4DTEXT monedaDTVText--></td>
+                </tr>
+                <tr>
+                    <td style="font-size:14px;font-weight:bold;" width="15%">DIRECCIÓN</td><td width="55%" style="font-size:13px;">: <!--#4DTEXT [Factura]EmpresaDireccCalle--></td>
+                    <td style="font-size:14px;font-weight:bold;" width="10%">F. VENC.</td><td width="20%" style="font-size:13px;">: <!--#4DTEXT [Factura]Fecha_Vencimiento--></td>
+                </tr>
+                <tr>
+                    <td style="font-size:14px;font-weight:bold;" width="15%">O. COMPRA</td><td width="55%" style="font-size:13px;">: <!--#4DTEXT V3_FOLIOOCC--></td>
+                    <td style="font-size:14px;font-weight:bold;" width="10%">F. ORDEN COMPRA</td><td width="20%" style="font-size:13px;">: <!--#4DTEXT V3_FECHAOCC--></td>
+                </tr>
+            </table>
+        </header>
+        <section>
+           <div style="margin:5px;border:2px solid gray;height:600px;border-radius:2px;position:relative;">
+                <hr size="600" style="position:absolute;left:10%;top:-9px;background-color:black;">
+                <hr size="600" style="position:absolute;left:20%;top:-9px;background-color:black;">
+                <hr size="600" style="position:absolute;left:30%;top:-9px;background-color:black;">
+                <hr size="600" style="position:absolute;left:80%;top:-9px;background-color:black;">
+                <hr size="600" style="position:absolute;left:90%;top:-9px;background-color:black;">
+                <table border="0" width="100%" class="css-table-items-fe">
+                    <thead>
+                        <tr>
+                            <th style="font-size:14px;font-weight:bold;padding:5px;width:10%">Código</th>
+                            <th style="font-size:14px;font-weight:bold;padding:5px;width:10%">Cantidad</th>
+                            <th style="font-size:14px;font-weight:bold;padding:5px;width:10%">Unidad</th>
+                            <th style="font-size:14px;font-weight:bold;padding:5px;width:50%">Descripción</th>
+                            <th style="font-size:14px;font-weight:bold;padding:5px;width:10%">P. Unitario</th>
+                            <th style="font-size:14px;font-weight:bold;padding:5px;width:10%">Importe</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!--#4DLOOP [Detalle_Factura]-->
+                        <tr style="padding:5px;">
+                            <td style="text-align:center;font-size:13px;padding:5px;"><!--#4DIF [Detalle_Factura]Codigo_producto=""-->10005<!--#4DELSE--><!--#4DTEXT [Detalle_Factura]Codigo_producto--><!--#4DENDIF--></td>
+                            <td style="text-align:center;font-size:13px;padding:5px;"><!--#4DTEXT [Detalle_Factura]Cantidad--></td>
+                            <td style="text-align:center;font-size:13px;padding:5px;">ZZ</td>
+                            <td style="text-align:left;font-size:13px;padding:5px;"><!--#4DTEXT [Detalle_Factura]Nombre_producto--></td>
+                            <td style="text-align:right;font-size:13px;padding:5px;"><!--#4DTEXT _V3_formatCurrencyNoSymbol([Detalle_Factura]Precio_unitario/monedaDTVValorCambio)--></td>
+                            <td style="text-align:right;font-size:13px;padding:5px;"><!--#4DTEXT _V3_formatCurrencyNoSymbol([Detalle_Factura]Subtotal/monedaDTVValorCambio)--></td>
+                        </tr>
+                        <!--#4DENDLOOP-->
+                    </tbody>
+                </table>
+            </div>
+            <div style="margin:10px 0 10px 0;font-size:14px;">
+                <label style="font-weight:bold;">SON: </label><span><!--#4DTEXT vCadena--></span>
+            </div>
+        </section>
+        <footer>
+            <div style="width:99%;">
+                <div style="display:inline-block;border:2px solid gray;vertical-align:top;width:450px;height:150px;border-radius:3px;">
+                    <p style="padding:5px;vertical-align:top;margin:0px;"><span style="font-weight:bold;font-size:12px;">Observaciones:</span><div style="font-weight:bold;font-size:12px;margin-left:5px;"><!--#4DHTML [Factura]Notas--></div></p>
+                </div>
+                <div style="display:inline-block;vertical-align:top;width:360px;margin-left:40px;border:1px solid black;">
+                    <table border="0" width="100%" class="css-table-items-fe-2">
+                        <tbody>
+                            <tr>
+                                <td width="50%">
+                                    <div style="font-weight:bold;border-left:1px solid black;border:1px solid black;padding:7px;box-sizing: border-box;margin:0px;">Total Op. Gravada</div>
+                                </td>
+                                <td  width="50%">
+                                    <div style="text-align:right;border:1px solid black;padding:7px;box-sizing: border-box;margin:0px;">
+                                        <!--#4DIF monedaDTV="USD"-->
+                                            <span style="float:left;margin:-left:5px;">$</span> <!--#4DTEXT TotalNetoPrint-->
+                                        <!--#4DELSE-->
+                                            <!--#4DTEXT TotalNetoPrint-->
+                                        <!--#4DENDIF-->
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  width="50%">
+                                    <div style="font-weight:bold;border:1px solid black;border-left:1px solid black;padding:7px;box-sizing: border-box;margin:0px;">Total IGV</div>
+                                </td>
+                                <td  width="50%">
+                                    <div style="text-align:right;border:1px solid black;padding:7px;box-sizing: border-box;margin:0px;">
+                                        <!--#4DIF monedaDTV="USD"-->
+                                            <span style="float:left;margin:-left:5px;">$</span> <!--#4DTEXT TotalIvaPrint-->
+                                        <!--#4DELSE-->
+                                            <!--#4DTEXT TotalIvaPrint-->
+                                        <!--#4DENDIF-->
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  width="50%">
+                                    <div style="font-weight:bold;border:1px solid black;border-left:1px solid black;padding:6px;box-sizing: border-box;margin:0px;">Importe Total</div>
+                                </td>
+                                <td  width="50%">
+                                    <div style="text-align:right;border:1px solid black;padding:6px;box-sizing: border-box;">
+                                        <!--#4DIF monedaDTV="USD"-->
+                                            <span style="float:left;margin:-left:5px;">$</span> <!--#4DTEXT TotalFacturaPrint-->
+                                        <!--#4DELSE-->
+                                            <!--#4DTEXT TotalFacturaPrint-->
+                                        <!--#4DENDIF-->
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div style="margin-top:100px;width: 100%; display: inline-block; vertical-align: top; text-transform: uppercase; color: red; font-size:12px;text-align:left;">
+                <p>* Copia no válida para efectos tributarios.</p>
+            </div>
+        </footer>
+    </body>
+</html>

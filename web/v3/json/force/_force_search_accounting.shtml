@@ -1,0 +1,13 @@
+{
+	"records": {
+		"total": <!--#4DHTML totalRecords-->
+	},
+	"rows": [
+<!--#4DLOOP aId -->
+		{
+			"id": "<!--#4DHTML aId{aId}-->",
+			"name": "<!--#4DHTML aNameAccount{aId}-->"
+		}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

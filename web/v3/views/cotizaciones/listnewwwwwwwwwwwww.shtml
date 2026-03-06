@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!--#4DSCRIPT/_V3_serverInfo-->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/v3/views/cotizaciones/css/list.css?<!--#4DTEXT _V3_version-->" />
+  <link rel="stylesheet" href="/v3/views/cotizaciones/css/listSpinner.css?<!--#4DTEXT _V3_version-->" />
+  <title>Tabla</title>
+</head>
+
+<body>
+  <div class="containerPage">
+    <div class="containerBox">
+      <div class="containerBox__filter">
+        <div class="box1">
+          <input type="text" placeholder="Buscar..." id="search" />
+          <div id="dateFilterContainer"></div>
+          <button class="filterCustomModalBtn">
+            <i class="fas fa-filter"></i>
+            <span>Filtrar</span>
+          </button>
+        </div>
+        <div class="box1 box2">
+          <!-- <button class="NewCustomModalBtn">
+            <span><i class="fas fa-file-alt"></i></span>
+            <span>Crear</span>
+          </button> -->
+          <button class="filterCustomModalBtn actionsCustomModalBtn">
+            <span><i class="fas fa-ellipsis-v"></i></span>
+            <span>Más acciones</span>
+          </button>
+        </div>
+
+      </div>
+      <div class="containerBox__table">
+        <div class="containerBox__table-header">
+          <div class="col center">
+            <input type="checkbox" name="" id="" />
+          </div>
+          <div class="col center"><span>Número</span></div>
+          <div class="col center"><span>Código</span></div>
+          <div class="col center"><span>Fecha de Creación</span></div>
+          <div class="col center"><span>Fecha de Últ. Mod.</span></div>
+          <div class="col center"><span>Fecha de Realización</span></div>
+          <div class="col center"><span>Ejecutivo</span></div>
+          <div class="col center"><span>Cliente</span></div>
+          <div class="col center"><span>Referencia</span></div>
+          <div class="col center"><span>Total Neto</span></div>
+          <div class="col center"><span>Validada</span></div>
+        </div>
+        <div class="containerBox__table-msg">
+          <svg width="100px" viewBox="0 0 72 66" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M58.892 52.4505V57.6984C58.892 61.7544 55.9331 65.1189 52.0575 65.755C51.6245 65.8261 51.1794 65.8631 50.7266 65.8631H11.0349C8.11682 65.8631 5.31807 64.7426 3.2538 62.7557C1.16743 60.7471 0 58.0209 0 55.1804V1.61067C0 0.721117 0.721209 0 1.61142 0H44.1759C45.065 0 45.7862 0.721117 45.7862 1.61067C45.7862 1.61067 45.7862 11.0012 45.7862 22.1273H63.8357C65.5642 22.1273 67.1668 22.6649 68.4866 23.5813C70.6106 25.0554 72 27.5114 72 30.2919V50.8398C72 51.7294 71.2788 52.4505 70.3897 52.4505H58.892ZM45.7862 57.873V58.1102C45.879 60.6437 48.0692 62.6402 50.7233 62.6416H50.7266C51.0027 62.6416 51.2722 62.6193 51.5362 62.5761C53.881 62.1911 55.6702 60.1532 55.6702 57.6984V30.2919C55.6702 28.434 56.291 26.7208 57.3358 25.3487H45.7829V57.6984C45.7829 57.7568 45.784 57.8151 45.7862 57.873ZM63.8357 25.3487H63.8346C61.1054 25.3487 58.892 27.5619 58.892 30.2919V49.229H68.7782V30.2919C68.7782 28.6077 67.9366 27.1204 66.6499 26.2276C65.8514 25.6731 64.8816 25.3487 63.8357 25.3487ZM42.5645 58.1349V3.22144H3.22176V55.1804C3.22176 57.152 4.04018 59.0407 5.48816 60.4349C6.95933 61.8506 8.95512 62.6416 11.0349 62.6416H44.1538C43.1985 61.3856 42.6175 59.8475 42.5656 58.1848C42.5656 58.1682 42.5645 58.1516 42.5645 58.1349Z"
+              fill="#98a2b3" />
+            <g id="face">
+              <path id="mouth" fill-rule="evenodd" clip-rule="evenodd"
+                d="M31.3929 26.9916C31.4712 27.5298 31.2839 28.0957 30.8444 28.48C30.1563 29.0817 29.1093 29.0118 28.5075 28.3238C27.3731 27.026 25.6573 26.189 23.7325 26.1269C21.8078 26.189 20.092 27.026 18.9576 28.3238C18.3557 29.0118 17.3088 29.0817 16.6206 28.48C16.1812 28.0957 15.9938 27.5298 16.0722 26.9916C16.1176 26.6873 16.247 26.3918 16.4639 26.1433C18.19 24.1699 20.7983 22.8783 23.7325 22.8138C26.6668 22.8783 29.274 24.1699 31.0011 26.1433C31.218 26.3918 31.3474 26.6873 31.3929 26.9916Z"
+                fill="#98a2b3" />
+              <path id="eyeLeft"
+                d="M15.7961 18.4814C17.1026 18.4814 18.1618 17.4223 18.1618 16.1158C18.1618 14.8093 17.1026 13.7501 15.7961 13.7501C14.4896 13.7501 13.4305 14.8093 13.4305 16.1158C13.4305 17.4223 14.4896 18.4814 15.7961 18.4814Z"
+                fill="#98a2b3" />
+              <path id="eyeRight"
+                d="M32.3688 18.4815C33.6753 18.4815 34.7344 17.4224 34.7344 16.1159C34.7344 14.8094 33.6753 13.7503 32.3688 13.7503C31.0623 13.7503 30.0032 14.8094 30.0032 16.1159C30.0032 17.4224 31.0623 18.4815 32.3688 18.4815Z"
+                fill="#98a2b3" />
+            </g>
+            <path
+              d="M10.3803 48.6207C11.6021 48.6207 12.5926 47.6302 12.5926 46.4083C12.5926 45.1865 11.6021 44.196 10.3803 44.196C9.15843 44.196 8.16791 45.1865 8.16791 46.4083C8.16791 47.6302 9.15843 48.6207 10.3803 48.6207Z"
+              fill="#98a2b3" />
+            <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M37.8973 45.4749C37.8973 44.8258 37.3705 44.2996 36.7221 44.2996H18.0553C17.4059 44.2996 16.879 44.8258 16.879 45.4749C16.879 46.0574 16.879 46.7591 16.879 47.3416C16.879 47.9908 17.4059 48.5169 18.0553 48.5169C21.7388 48.5169 33.0376 48.5169 36.7221 48.5169C37.3705 48.5169 37.8973 47.9908 37.8973 47.3416V45.4749Z"
+              fill="#98a2b3" />
+            <path
+              d="M10.3803 57.4565C11.6021 57.4565 12.5926 56.466 12.5926 55.2441C12.5926 54.0223 11.6021 53.0318 10.3803 53.0318C9.15843 53.0318 8.16791 54.0223 8.16791 55.2441C8.16791 56.466 9.15843 57.4565 10.3803 57.4565Z"
+              fill="#98a2b3" />
+            <path fill-rule="evenodd" clip-rule="evenodd"
+              d="M37.8973 54.3108C37.8973 53.6617 37.3705 53.1355 36.7221 53.1355H18.0553C17.4059 53.1355 16.879 53.6617 16.879 54.3108C16.879 54.8933 16.879 55.595 16.879 56.1775C16.879 56.8267 17.4059 57.3528 18.0553 57.3528C21.7388 57.3528 33.0376 57.3528 36.7221 57.3528C37.3705 57.3528 37.8973 56.8267 37.8973 56.1775V54.3108Z"
+              fill="#98a2b3" />
+          </svg>
+          <span>Sin Resultados</span>
+        </div>
+
+      </div>
+      <div class="containerBox__metrics">
+
+      </div>
+    </div>
+    <div class="filterCustomModal">
+      <button class="btnfilterCustomModal"></button>
+      <div class="CustomModal">
+        <div class="CustomModal__header">
+          <span>Filtrar</span>
+          <button class="close"><span>x</span></button>
+        </div>
+        <div class="CustomModal__body">
+
+
+        </div>
+        <div class="CustomModal__footer">
+          <button class="second" id="cleanFilters">Limpiar Filtros</button>
+          <button class="main" id="applyFilters">Filtrar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="actionsCustomModal">
+      <button class="btnActionsCustomModal"></button>
+      <div class="CustomModalActions">
+        <div class="CustomModalActions__body">
+          <!-- Contenido del modal de más acciones -->
+
+        </div>
+        <button class="closeActionsModal"><span>x</span></button>
+      </div>
+    </div>
+
+
+
+
+  </div>
+
+  <div class="spinner-container">
+
+  </div>
+
+  <script src="/v3/views/cotizaciones/script/list.js"></script>
+  <script src="/v3/views/cotizaciones/script/listSpinner.js"></script>
+</body>
+
+</html>

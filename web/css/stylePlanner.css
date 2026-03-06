@@ -1,0 +1,119 @@
+.content-planner{
+	overflow:auto;min-height:500px;
+}
+.content-planner > table{
+	width:100%;
+}
+/*.content-planner > table > tbody > tr{
+	cursor: pointer;
+}*/
+.content-planner > table > tbody > tr > td {
+	background-color:white;
+	border:1px solid #D8D8D8;	
+	text-align:center;
+	vertical-align:top;
+	padding:15px;	
+}
+
+
+
+.content-planner > table > tbody > tr > td[data-days]{	
+	cursor:pointer;
+}
+.content-planner > table > tbody > tr > td[data-days]:hover{
+	/*background-color:lightgray;*/
+}
+
+.content-planner > table > tbody > tr > td > button.btn-planiar{
+	padding:5px;
+}
+
+.content-planner > table > tbody > tr > td > span {
+	display:block;
+	text-transform:none;	
+}
+
+.content-planner > table > tbody > tr > td > span.alta {
+	background-color:#FF7575;border-radius:3px;border:1px solid #FF4848;color:black;font-weight:bold;padding:3px;margin:2px;
+}
+.content-planner > table > tbody > tr > td > span.media {
+	background-color:#FFF06A;border-radius:3px;border:1px solid #F7DE00;color:black;font-weight:bold;padding:3px;margin:2px;
+}
+.content-planner > table > tbody > tr > td > span.baja {
+	background-color:#C0F7FE;border-radius:3px;border:1px solid #3DE4FC;color:black;font-weight:bold;padding:3px;margin:2px;
+}
+.content-planner > table > tbody > tr > td > span:hover {
+	border:1px solid black;
+}
+
+.content-planner > table > tbody > tr > td > span.vc {
+	background-color:#424242;border-radius:3px;border:1px solid #000000;color:white;font-weight:bold;padding:3px;margin:2px;
+}
+
+.content-planner > table > tbody > tr > td > span[data-allday]{
+	border:1px solid green;
+}
+
+.infografia{
+	padding:5px;margin:5px 0;
+}
+.infografia > label {
+	font-weight:bold;
+}
+.infografia > span.alta {
+	background-color:#FF7575;border-radius:3px;border:1px solid #FF4848;color:black;font-weight:bold;padding:3px;margin:2px;
+}
+.infografia > span.media {
+	background-color:#FFF06A;border-radius:3px;border:1px solid #F7DE00;color:black;font-weight:bold;padding:3px;margin:2px;
+}
+.infografia > span.baja {
+	background-color:#C0F7FE;border-radius:3px;border:1px solid #3DE4FC;color:black;font-weight:bold;padding:3px;margin:2px;
+}
+.infografia > span.vcto {
+	background-color:#424242;border-radius:3px;border:1px solid #000000;color:white;font-weight:bold;padding:3px;margin:2px;
+}
+
+.content-planner > table > thead > tr > th {
+	border:1px solid black;border:1px solid #D8D8D8;
+}
+
+.change-weeks{
+	text-align:center;font-weight:bold;padding:5px;
+}
+.change-weeks a{
+	color:#424242;font-size:13px;margin:5px;
+}
+
+.content-planner > table > thead > tr > th.current {
+	border-top:2px solid orange;
+}
+
+
+section.resumen-timesheet{
+	background-color:white;
+	padding:5px;
+	margin-top:10px
+}
+section.resumen-timesheet > h2{
+	font-weight:bold;
+	font-size:13px;
+	text-decoration:underline;
+}
+section.resumen-timesheet article{
+	margin:10px;
+	font-size:12px;
+}
+	section.resumen-timesheet article ul{
+		padding:5px;
+	}
+	section.resumen-timesheet article ul li{
+		list-style-type:circle;
+	}
+	section.resumen-timesheet article ul li span{
+		font-weight:bold;
+	}
+	section.resumen-timesheet article h2{
+		font-weight:bold;	
+	}
+
+/* pop planificar */

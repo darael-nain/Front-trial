@@ -1,0 +1,24 @@
+<td class="center" width="10%">COM.</td>
+<td></td>
+<td>
+<!--#4DIF a_chk_comision{a_llave}=true-->
+	<input onclick="calculaAfecto('<!--#4DVAR a_llave_titulo{a_llave}-->')" id="<!--#4DVAR a_llave{a_llave}-->_C8" name="<!--#4DVAR a_llave{a_llave}-->" type="checkbox" value=""  checked="checked" />
+<!--#4DELSE-->
+	<input onclick="calculaAfecto('<!--#4DVAR a_llave_titulo{a_llave}-->')" id="<!--#4DVAR a_llave{a_llave}-->_C8" name="<!--#4DVAR a_llave{a_llave}-->" type="checkbox" value=""  />
+<!--#4DENDIF-->
+</td>
+
+
+<button title="GUARDAR" class="button-inf" onClick="enviarEditarNeg()" type="button">
+                	<img src="/imagenes/Floppy.png" border="0" />
+                </button> 
+                <button title="LIMPIAR" class="button-inf" type="reset">
+                	<img src="/imagenes/Undo.png" border="0" />
+                </button>
+                <button title="CANCELAR" class="button-inf" type="button">
+                	<img src="/imagenes/Close.png" border="0" />
+                </button>
+                <button title="IMPRIMIR" class="button-inf" type="button" onClick="window.open('/4DACTION/outEmailNeg/<!--#4DVAR id_nv-->/<!--#4DVAR vLogin-->');">
+                	<img src="/imagenes/printer.png"  width="48px" height="48px" border="0" />
+                </button>
+               

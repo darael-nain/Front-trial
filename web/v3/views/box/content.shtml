@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_proxy_getBoxContent-->
+<html>
+  <head>
+    <title>Perfil</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="/v3/views/box/content.js"></script>
+    <link rel="stylesheet" href="/v3/design/temporal.css?<!--#4DTEXT random-->">     
+
+    <script>
+      $(document).ready(function() {
+        var id = $('.form-contact').find('input[name="id"]').val();       
+        $("#tabs-1-contacto").load('/v3/views/box/general.shtml', 'id='+ id);
+
+        $("#tabs-2-contacto").load('/v3/views/box/adicional.shtml', 'id='+ id);
+
+        $("#tabs-3-contacto").load('/v3/views/box/archivos.shtml', 'id='+ id);
+     
+      });
+    </script>
+    <style type="text/css">
+      .ui-tabs .ui-tabs-panel {
+        padding: 0 !important;
+        overflow: hidden;
+      }
+      .obligatorio{
+        color:red!important;
+        font-weight:bold;
+        margin:2px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="main-container" class="form-contact">   
+      <input type="hidden" name="id" value="<!--#4DTEXT [box]id-->">
+      <section class="tabs">
+        <ul class="infinite-tabs">
+          <li><a href="#tabs-1-contacto">General</a></li>
+          <li class="load-adicional" data-id="<!--#4DTEXT [box]id-->"><a href="#tabs-2-contacto">Datos</a></li>
+          <li class="load-archivos" data-id="<!--#4DTEXT [box]id-->"><a href="#tabs-3-contacto">Archivos</a></li>
+        </ul>
+        <article id="tabs-1-contacto"></article>
+        <article id="tabs-2-contacto"></article>
+        <article id="tabs-3-contacto"></article>        
+      </section>
+    </div>
+    <div style="margin:5px">(<strong class="obligatorio">*</strong>)<label> Información necesaria.</label></div>  
+  </body>
+</html>

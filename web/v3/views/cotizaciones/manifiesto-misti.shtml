@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--#4DSCRIPT/_V3_proxy_getCotContentMani-->
+    <meta charset="utf-8"/>
+    <script src="/v3/script/jquery/jquery.js"></script>
+    <link rel="stylesheet" media="print" href="/v3/design/print.css?_=363654">
+    <title>Manifiesto pasajeros</title>
+    <style>  
+        .header-table{
+          width: 100%;
+          border:0px;
+        }
+          .header-table td{
+            width: 25%
+            vertical-align:middle;
+          }
+          .header-table td.label{
+            font-weight: bold;
+            vertical-align:middle;
+          }
+
+        #pax-container-print{
+          width: 130%;
+          border: 1px solid #000;
+          border-spacing:0px;
+        }
+          #pax-container-print th{
+            vertical-align: middle;
+            padding: 5px;
+            font-size: 15px;
+            border: 1px solid gray;
+            border-collapse: collapse;
+            text-align: center;
+          }
+          #pax-container-print td{
+            vertical-align: middle;
+            padding: 5px;
+            border: 1px solid gray;
+            border-collapse: collapse;
+          }
+    </style>
+    </style>
+</head>
+<body>
+  <header>
+    <h1 style="text-align:center;">MANIFIESTO DE PASAJEROS</h1>
+    <div style="position:absolute;right:0px;top:0px;">
+      <img src="<!--#4DTEXT vUrlImagenLogo-->" width="<!--#4DTEXT vAnchoPicture-->" height="<!--#4DTEXT vAltoPicture-->" style="max-width: 500px; max-height: 500px; padding: 10px; margin-left: <!--#4DIF custom_background-->50<!--#4DELSE-->30<!--#4DENDIF-->px;">
+    </div>
+
+    <table class="header-table" style="margin-top:100px;">
+      <tr>
+        <td class="label">AGENCIA DE VIAJES:</td>
+        <td>CORPORACIÓN TURISTICA MISTI TOURS S.A.C</td>
+        <td></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td class="label">ORIGEN:</td>
+        <td>AREQUIPA</td>
+        <td class="label">DESTINO:</td>
+        <td>PUNO</td>
+      </tr>
+      <tr>
+        <td class="label">TOUR:</td>
+        <td><!--#4DTEXT vTours--></td>
+        <td class="label">FECHA DE VIAJE:</td>
+        <td><!--#4DTEXT vFechaDeViaje--></td>
+      </tr>
+      <tr>
+        <td class="label">Nº DE PAX:</td>
+        <td></td>
+        <td class="label">NOMBRE DEL CHOFER:</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td class="label">NOMBRE DE GUIA:</td>
+        <td></td>
+        <td class="label">Nº DE BREVETE:</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td class="label">Nº DE CARNET DE GUIA:</td>
+        <td></td>
+        <td class="label">Nº PLACA DEL VEHICULO:</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td class="label">DNI:</td>
+        <td></td>
+        <td class="label">RAZON SOCIAL TRANSPORTE:</td>
+        <td>TURISMO CRISTIANO</td>
+      </tr>
+    </table>
+  </header>
+
+  <section>
+    <table id="pax-container-print" style="margin-top:10px;">
+      <thead>
+        <tr>
+          <th></th>
+          <th>NOMBRE Y APELLIDOS</th>
+          <th>HAB</th>
+          <th>DNI / PASAPORTE</th>
+          <th>EDAD</th>
+          <th>NACIONALIDAD</th>
+          <th>HTL ARQ</th>
+          <th>HTL COLCA</th>
+          <th>HTL PUNO</th>
+          <th>DETALLES</th>
+          <th>OBS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!--#4DLOOP paxIndex-->
+          <tr>
+            <td><!--#4DTEXT paxIndex{paxIndex}--></td>
+            <td><!--#4DTEXT paxNombre{paxIndex}--></td>
+            <td></td>
+            <td><!--#4DTEXT paxDni{paxIndex}--></td>
+            <td><!--#4DTEXT paxEdad{paxIndex}--></td>
+            <td><!--#4DTEXT paxNacionalidad{paxIndex}--></td>
+            <td><!--#4DTEXT paxHtlArq{paxIndex}--></td>
+            <td><!--#4DTEXT paxHtlColca{paxIndex}--></td>
+            <td><!--#4DTEXT paxHtlPuno{paxIndex}--></td>
+            <td><!--#4DTEXT paxDetalles{paxIndex}--></td>
+            <td></td>
+          </tr>
+        <!--#4DENDLOOP-->
+      </tbody>
+    </table>
+  </section>
+
+</body>
+</html>

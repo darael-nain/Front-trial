@@ -1,0 +1,10 @@
+{
+	"rows": [
+<!--#4DLOOP aEmpresaId -->
+		{
+			"id": <!--#4DHTML aEmpresaId{aEmpresaId}-->,
+			"text": "<!--#4DHTML _V3_escapeString(aEmpresaRazonSocial{aEmpresaId})-->"
+		}<!--#4DIF NOT(aEmpresaId{aEmpresaId} = aEmpresaId{Size of array(aEmpresaId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

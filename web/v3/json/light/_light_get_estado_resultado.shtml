@@ -1,0 +1,37 @@
+{
+	"success": <!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"status":<!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"dateFrom": "<!--#4DHTML dateStart-->",
+	"errorMsg": "<!--#4DTEXT errorMsg-->",
+	"rows": {
+		"total_mes": [
+			<!--#4DLOOP aId-->
+			{
+				"id": <!--#4DTEXT String(aId{aId};"&xml")-->,
+				"name": "<!--#4DHTML _V3_escapeString(aNameAccount{aId})-->",
+				"tipo": "<!--#4DHTML _V3_escapeString(aTipo{aId})-->",
+				"number": "<!--#4DHTML aNumber{aId}-->",
+				"impuesto": "<!--#4DHTML aIs_Impuesto{aId}-->",
+				"i_nooperacional": "<!--#4DHTML aIs_INoOperacional{aId}-->",
+				"g_admin": "<!--#4DHTML aIs_GAdmin{aId}-->",
+				"c_operacional": "<!--#4DHTML aIs_COperacional{aId}-->",
+				"i_operacional": "<!--#4DHTML aIs_IOperacional{aId}-->", 
+				"months": [
+					{ "value": <!--#4DIF Not(Undefined(aTotalValueJan{aId}))--><!--#4DIF Size of array(aTotalValueJan)>0--><!--#4DTEXT String(aTotalValueJan{aId};"&xml")--><!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF--> },
+					{ "value": <!--#4DIF Not(Undefined(aTotalValueFeb{aId}))--><!--#4DIF Size of array(aTotalValueFeb)>0--><!--#4DTEXT String(aTotalValueFeb{aId};"&xml")--><!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF--> },
+					{ "value": <!--#4DIF Not(Undefined(aTotalValueMar{aId}))--><!--#4DIF Size of array(aTotalValueMar)>0--><!--#4DTEXT String(aTotalValueMar{aId};"&xml")--><!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF--> },
+					{ "value": <!--#4DIF Not(Undefined(aTotalValueApr{aId}))--><!--#4DIF Size of array(aTotalValueApr)>0--><!--#4DTEXT String(aTotalValueApr{aId};"&xml")--><!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF--> },
+					{ "value": <!--#4DIF Not(Undefined(aTotalValueMay{aId}))--><!--#4DIF Size of array(aTotalValueMay)>0--><!--#4DTEXT String(aTotalValueMay{aId};"&xml")--><!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF--> },
+					{ "value": <!--#4DIF Not(Undefined(aTotalValueJun{aId}))--><!--#4DIF Size of array(aTotalValueJun)>0--><!--#4DTEXT String(aTotalValueJun{aId};"&xml")--><!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF--> },
+					{ "value": <!--#4DIF Not(Undefined(aTotalValueJul{aId}))--><!--#4DIF Size of array(aTotalValueJul)>0--><!--#4DTEXT String(aTotalValueJul{aId};"&xml")--><!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF--> },
+					{ "value": <!--#4DIF Not(Undefined(aTotalValueAug{aId}))--><!--#4DIF Size of array(aTotalValueAug)>0--><!--#4DTEXT String(aTotalValueAug{aId};"&xml")--><!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF--> },
+					{ "value": <!--#4DIF Not(Undefined(aTotalValueSep{aId}))--><!--#4DIF Size of array(aTotalValueSep)>0--><!--#4DTEXT String(aTotalValueSep{aId};"&xml")--><!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF--> },
+					{ "value": <!--#4DIF Not(Undefined(aTotalValueOct{aId}))--><!--#4DIF Size of array(aTotalValueOct)>0--><!--#4DTEXT String(aTotalValueOct{aId};"&xml")--><!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF--> },
+					{ "value": <!--#4DIF Not(Undefined(aTotalValueNov{aId}))--><!--#4DIF Size of array(aTotalValueNov)>0--><!--#4DTEXT String(aTotalValueNov{aId};"&xml")--><!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF--> },
+					{ "value": <!--#4DIF Not(Undefined(aTotalValueDec{aId}))--><!--#4DIF Size of array(aTotalValueDec)>0--><!--#4DTEXT String(aTotalValueDec{aId};"&xml")--><!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF--> }
+				]
+			}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		]
+	}
+}

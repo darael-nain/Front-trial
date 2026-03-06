@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>    
+    <title>Perfil</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="/v3/views/contactos/relacionados/library/content.js"></script>
+	<script type="text/javascript" src="/v3/views/contactos/relacionados/startup/content.js"></script>
+	<style type="text/css">
+		table.items.relacionados tbody > tr > td:before{
+			content: ""!important;
+		}
+	</style>
+	<script>
+		function addRelacionados() {
+			var target = $('.ui-dialog section.sheet > fieldset > table.items.relacionados > tbody');
+        	var htmlObject = $(' \
+				<tr data-id="0"> \
+					<td></td> \
+					<td><input name="relacionado[id]" type="hidden" value="0"><input style="width:100%!important;vertical-align:bottom" name="relacionado[nombre]" type="text"></td> \
+					<td><input style="width:140px;margin-left:3px;vertical-align:bottom" name="relacionado[cargo]" type="text"></td> \
+					<td><input style="width:140px;margin-left:3px;vertical-align:bottom" name="relacionado[fono]" type="text"></td> \
+					<td><input style="width:140px;margin-left:3px;vertical-align:bottom" name="relacionado[email]" type="text"></td> \
+					<td><textarea style="vertical-align:bottom" name="relacionado[observacion]"></textarea></td> \
+					<td class="center"><input style="display:inline-blok;margin:auto;vertical-align:bottom" name="relacionado[defecto]" type="checkbox"></td> \
+					<td class="center"><button style="vertical-align:bottom">Quitar<button></td> \
+				</tr> \
+			');
+			// var current = target.find('tr').last();
+			//htmlObject.insertAfter(lastRow);
+			//htmlObject['insertAfter'](current);
+
+        	var current = target;
+			while(!(current.next().html() == undefined || current.next().find('th').length > 0)) {
+				current = current.next();
+			}
+			htmlObject['insertAfter'](current);
+
+		}
+	</script>
+  </head>
+  <body>    
+    <section class="sheet">
+		<fieldset>
+		    <legend><strong>Relacionados</strong></legend>
+		    <div><button onclick="addRelacionados()">Agregar relacionado</button></div>
+		    <table class="items relacionados" width="100%">
+				<thead>
+					<tr>
+						<th width="2%"></th>
+						<th width="30%">Nombre</th>
+						<th width="10%">Cargo</th>						
+						<th width="10%">Fono</th>
+						<th width="10%">Email</th>
+						<th width="15%">Observación</th>
+						<th width="3%">Por defecto</th>
+						<th width="3%"></th>
+					</tr>
+				</thead>
+				<tbody></tbody>		
+			</table>
+		</fieldset>		
+    </section>
+  </body>
+</html>
+

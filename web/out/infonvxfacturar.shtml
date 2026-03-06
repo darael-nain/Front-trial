@@ -1,0 +1,181 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="/out/style.css"/>
+        <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+-->
+     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <title>REPORTES-UNABASE</title>
+    <script type="text/javascript" src="/out/report.js"></script>
+    
+    <style>
+      /*  p{text-align:left;display:block!important; margin: 30px 0 0 40px;}
+        label{font-weight:bold;font-size:12px} */
+        table thead tr td{
+            font-size: 10px!important;
+        }
+        table tfoot {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .bg-reporte{
+            background-color:lightgray!important;
+            font-weight:bold!important;
+        }
+
+        .box-ejecutivo{
+            margin:5px;
+            padding: 5px;
+        }
+            .box-ejecutivo h3{
+                margin: 5px 25px;
+                padding: 0px;
+                text-align:left;
+            }
+            .box-ejecutivo td{
+               text-transform: uppercase;
+               padding:2px;
+            }
+
+        .left{
+            text-align:left;
+        }
+        .right{
+            text-align:right;
+        }
+        .center{
+            text-align:center;
+        }
+
+        .line{
+            border-bottom: 2px solid gray!important;
+        }
+
+        .reg{
+            text-align: left;
+            margin: 5px 5px 5px 25px;
+            padding: 0px;
+            font-size:12px;
+        }
+
+        .negrita{
+            font-weight:bold;
+        }
+
+    </style>
+
+</head>
+<body>
+<div class="contenedor" align="center">
+
+ <div class="cuadro2">
+    <div>
+        <div style="margin-left:20px;color:gray;font-size:11px;"><!--#4DTEXT nom_empresa--></div>
+        <h4><!--#4DVAR v_Tit_Informe--></h4>
+        <!--<div style="margin-left:20px;color:gray;font-size:11px;"><!- -#4DTEXT aReporteDesc- -></div>-->
+
+        <div style="text-align:left;position:absolute;top:80px;margin-left:0px;color:gray">
+            <h6 style="margin:0px;">Reportes que también te pueden interesar</h6>
+            <div><a href="/4DACTION/rep_negxfactcliente" target="_blank" style="color:black;font-size:12px;text-decoration:underline;">Negocios por facturar por cliente</a></div>
+            <div><a href="/4DACTION/rep_negxfactejecutivo" target="_blank" style="color:black;font-size:12px;text-decoration:underline;">Negocios por facturar por ejecutivos</a></div>
+            <div style="display:none"><a href="/4DACTION/rep_negxfactejecutivo" target="_blank" style="color:black;font-size:10px;text-decoration:underline;">Otros reportes</a></div>
+        </div>
+    </div>
+    <p><img src="<!--#4DVAR vUrlImagenLogo-->" width="<!--#4DVAR vAnchoPicture-->" height="<!--#4DVAR vAltoPicture-->" border="0"/></p>
+
+    <div class="row">
+
+        <table class="totaleshead">  
+            <tr>
+                <td colspan="2" style="padding:2px;">TOTAL NETO : <span><!--#4DVAR _V3_formatCurrency(V_NVTotal)--></span></td>
+                <!--<td width="15%" class="text"><!- -#4DVAR _V3_formatCurrency(V_NVTotal)- -></td>  -->
+            </tr>
+            <tr>
+                <td  colspan="2" style="padding:2px;">TOTAL FACTURADO : <span style="border-bottom:2px solid black;"><!--#4DVAR _V3_formatCurrency(V_NVAbono)--></span></td>
+                <!--<td width="85%" class="title">TOTAL FACTURADO</td>
+                <td width="15%" class="text line"><!- -#4DVAR _V3_formatCurrency(vTotalFacturado)- -></td>  -->
+            </tr>
+            <tr>
+                <td  colspan="2" style="padding:2px;">TOTAL POR FACTURAR : <span style="font-weight:bold;"><!--#4DVAR _V3_formatCurrency(V_NVSaldo)--></span></td>
+                <!--<td width="85%" class="title">TOTAL POR FACTURAR</td>
+                <td width="15%" class="text redtext"><!- -#4DVAR _V3_formatCurrency(V_NVSaldo)- -></td>  -->
+            </tr>
+        </table>
+
+        <div class="totalreg">Total Negocios: <!--#4DVAR v_TotReg--></div>
+
+        <table class="table table-responsive table-bordered">
+        <thead>
+            <tr>
+                <td class="center-c negrita" width="5%">NÚMERO</td>
+                <td class="center-c negrita" width="5%">ESTADO</td>
+                <td class="center-c negrita" width="5%">F. ASIGNACIÓN</td>
+                <td class="center-c negrita" width="5%">EJECUTIVO</td>
+                <td class="center-c negrita" width="5%">CLIENTE</td>
+                <td class="center-c negrita" width="5%">REFERENCIA</td>
+                <td class="center-c negrita" width="5%">TOTAL NETO</td>
+                <td class="center-c negrita" width="5%">FACTURADO</td>
+                <td class="center-c negrita" width="5%">POR FACTURAR</td>  
+                <td class="center-c negrita" width="5%">OCC</td>
+            </tr>
+        </thead>
+             <!--#4DLOOP aFolioNV_-->    
+             <tbody>
+                <tr>
+                    <td class="orden-alfa"><!--#4DVAR aFolioNV_{aFolioNV_}--></td>
+                    <td class="orden-alfa"><!--#4DVAR aEstado2NV_{aFolioNV_}--></td>
+                    <td class="center"><!--#4DVAR aFechaNV_{aFolioNV_}--></td>
+                    <td class="center" style="text-align:left;"><!--#4DVAR aEjecutivo{aFolioNV_}--></td>
+                    <td class="items"><!--#4DVAR aClienteNV_{aFolioNV_}--></td>
+                    <!--<td class="items"><!- -#4DVAR aContacto{aFolioNV_}- -></td>-->
+                    <td class="items"><!--#4DVAR aRefNVRF_{aFolioNV_}--></td>
+
+                    <!--#4DIF aWorkingCurrency{aFolioNV_}="USD"-->
+                        <td class="nro-items-subtotal">
+                            <!--#4DTEXT  String((aNetoNV_{aFolioNV_}/aValorCambioExchange{aFolioNV_});"USD ###.###.###.##0,00")-->
+                        </td>
+                        <td class="nro-items-subtotal bg-reporte">
+                            <!--#4DTEXT  String(aExchange_facturado{aFolioNV_};"USD ###.###.###.##0,00")-->
+                        </td>    
+                        <td class="nro-items-subtotal bg-reporte">
+                            <!--#4DTEXT  String(aExchange_porfacturar{aFolioNV_};"USD ###.###.###.##0,00")-->
+                        </td>
+                    <!--#4DELSE-->
+                        <td class="nro-items-subtotal"><!--#4DVAR  _V3_formatCurrency(aNetoNV_{aFolioNV_})--></td>
+                        <td class="nro-items-subtotal bg-reporte"><!--#4DVAR _V3_formatCurrency(aFacturadoNV_{aFolioNV_})--></td>    
+                        <td class="nro-items-subtotal bg-reporte"><!--#4DVAR _V3_formatCurrency(aSaldoxFacturarNV_{aFolioNV_})--></td>
+                    <!--#4DENDIF-->
+                    
+                    <!--#4DIF aOCC{aFolioNV_}-->  
+                        <!--<td class="nro-items-subtotal">SI</td>  -->   
+                        <td class="nro-items-subtotal"><!--#4DVAR aNroOCC{aFolioNV_}--></td>  
+                    <!--#4DELSE -->  
+                        <td class="nro-items-subtotal">NO</td>  
+                    <!--#4DENDIF -->  
+
+
+                </tr>       
+            </tbody>       
+            <!--#4DENDLOOP--> 
+        </table>
+    </div>
+<div class="contenedor-footer">
+    <span class="datos-empresa-izq">
+    <!--#4DVAR nom_empresa--> / <!--#4DVAR dir_empresa--> / <a target="_blank" href="<!--#4DVAR sitio_empresa-->"><!--#4DVAR sitio_empresa--></a></span><em></em>
+    <span class="datos-empresa-der">Reporte enviado por <a href="http://www.unabase.com" target="_blank" >unabase.com</a></span>
+</div>
+</div>
+</div>
+</body>
+</html>

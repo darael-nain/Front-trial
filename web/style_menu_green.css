@@ -1,0 +1,104 @@
+#nav-superior{
+ 	border:0; 	
+ 	border-bottom:1px solid #04B404;
+ 	height:30px;
+ 	margin:0 0 20px 0;
+ 	text-align:left;
+ 	
+ 	display:block; 
+ 	padding-left:15px;
+}
+
+#menu-horizontal {	
+	height:26px;
+	margin:0 auto;
+	padding:3px;	
+}
+
+#menu-horizontal li {
+	margin:0 1px;
+	width:105px;
+	min-height:19px;
+	text-align:center;
+	background:#BBB;
+	list-style:none;
+	padding:2px 0;
+	border:0;
+	font-weight: bold;
+	text-align:center;
+}
+
+ul#menu-horizontal li{
+	float: left;
+	display: inline;
+	position: relative;
+	background:white;	
+	border-right:1px solid black;	
+}
+
+ul#menu-horizontal ul {
+	display: none;
+	position:relative;
+	top: 24;
+	left:0;
+	margin:5px;
+	padding:0;	
+}
+
+ul#menu-horizontal ul li {
+	display: block !important;
+}
+
+ul#menu-horizontal li:hover ul{
+	display: none;
+	background:#848484;	
+}
+
+ul#menu-horizontal li:hover ul{
+	display: block;
+	background:#848484;
+	padding:0;
+}
+
+/* y otro poquito por aquí.. */
+
+#menu-horizontal li:hover {
+	background:black;	
+}
+
+#menu-horizontal li a {	
+	color:black;
+	text-decoration:none;
+	width:100px;
+	display: block;
+	/*border:1px solid red;*/
+}
+
+#menu-horizontal li a:hover {	
+	color:white;
+}
+
+#menu-horizontal li ul li{
+	float:none;
+	width:98px;
+	margin:1px 0;
+	background:#848484;	
+	font-size:11px;
+	border:0;
+	font-weight: normal;
+}
+
+#menu-horizontal li ul li a{	
+	color:white;
+}
+
+#menu-horizontal li ul li a:hover{	
+	text-decoration:underline;
+}
+
+#menu-horizontal li ul li:hover{	
+	background:#848484;	
+}
+
+
+

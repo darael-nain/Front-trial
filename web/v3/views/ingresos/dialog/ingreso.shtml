@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nueva orden de ingreso</title>
+    <link rel="stylesheet" href="/v3/views/ingresos/dialog/ingreso.css?b=494948">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="actionsModal centerLeft">
+      <button class="btn actionModalBtn centerTotal" onclick="sendDataIngreso()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <title>content-save</title>
+          <path
+            d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z"
+          />
+        </svg>
+        <span>Guardar</span>
+      </button>
+
+      <button class="btn actionModalBtn centerTotal" onclick="anularIngreso()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <title>content-save</title>
+          <path
+            d="M15,9H5V5H15M12,19A3,3 0 0,1 9,16A3,3 0 0,1 12,13A3,3 0 0,1 15,16A3,3 0 0,1 12,19M17,3H5C3.89,3 3,3.9 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V7L17,3Z"
+          />
+        </svg>
+        <span>Anular</span>
+      </button>
+      <div id="loader">
+        <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+           width="40px" height="40px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+        <path fill="#20a789" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+          <animateTransform attributeType="xml"
+            attributeName="transform"
+            type="rotate"
+            from="0 25 25"
+            to="360 25 25"
+            dur="0.6s"
+            repeatCount="indefinite"/>
+          </path>
+        </svg>
+      </div>
+    </div>
+    <section class="section">
+      <div class="customHeader">
+        Orden de Ingreso Nº <span id="numOrder"></span>
+      </div>
+      <div class="formContainer">
+        <div class="formCol formTitle" id="estado"></div>
+        <div class="formCol">
+          <label>Emitir</label>
+          <div class="formInputContainer">
+            <input type="text" id="emitirForm" />
+          </div>
+        </div>
+        <div class="formCol">
+          <label>Fecha de ingreso</label>
+          <div class="formInputContainer disabled">
+            <input type="text" id="fechaIngresoForm" disabled />
+          </div>
+        </div>
+        <div class="formCol">
+          <label>Total cobrado</label>
+          <div class="formInputContainer disabled">
+            <span>$</span>
+            <input type="text" id="totalPagoForm" disabled />
+          </div>
+        </div>
+        <div class="formCol">
+          <label>Valor original (en factura)</label>
+          <div class="formInputContainer disabled">
+            <span>$</span>
+            <input type="text" id="valorOriginalForm" disabled />
+          </div>
+        </div>
+        <!-- <div class="formCol">
+          <label>Abono</label>
+          <div class="formInputContainer disabled">
+            <span>$</span>
+            <input type="text" id="abonoForm" disabled />
+          </div>
+        </div> -->
+        
+        <div class="formCol">
+          <label>Valor tipo de cambio</label>
+          <div class="formInputContainer disabled">
+            <input type="text" id="valorTipoCambioForm" onkeyup="unaBase.utilities.general.formater(this)" disabled/>
+            <input type="hidden" id="valorTipoCambioFormOriginal" onkeyup="unaBase.utilities.general.formater(this)" />
+          </div>
+        </div>
+    
+        <!-- NUEVOS CAMPOS -->
+        <div class="formCol">
+          <label>Comisión bancaria</label>
+          <div class="formInputContainer disabled">
+            <span>$</span>
+            <input type="text" id="comisionBancariaForm" disabled/>
+          </div>
+        </div>
+        <div class="formCol">
+          <label>Diferencia cambio</label>
+          <div class="formInputContainer disabled">
+            <span>$</span>
+            <input type="text" id="diferenciaCambiariaForm" disabled />
+          </div>
+        </div>
+        
+      </div>
+    </section>
+    
+    <section class="section">
+      <div class="customHeader">Cheques / Transferencias</div>
+      <div class="formContainer">
+        <div class="formCol">
+          <label>Tipo</label>
+          <div class="formInputContainer">
+            <select id="tipoForm" onchange="showCruzado()"></select>
+          </div>
+        </div>
+        <div class="formCol">
+          <label>Nº pago</label>
+          <div class="formInputContainer">
+            <input type="text" id="pagoForm" />
+          </div>
+        </div>
+        <div class="formCol">
+          <label>Cuenta</label>
+          <div class="formInputContainer">
+            <select id="cuentasForm"></select>
+          </div>
+        </div>
+        <div class="formCol">
+          <label>Fecha de cobro doc.</label>
+          <div class="formInputContainer">
+            <input type="date" id="fechaCobroForm" class="datepicker" name="ingreso[fecha]"/>
+          </div>
+        </div>
+        <div class="formCol" id="cruzado">
+          <label>Cruzado</label>
+          <div class="formInputContainer">
+            <input
+              id="cruzadoForm"
+              class="checkbox"
+              type="checkbox"
+              value="true"
+              checked="checked"
+            />
+          </div>
+        </div>
+        <div class="centerRight colDouble">
+          <button class="add centerTotal" id="add" onclick="agregarDocumento()">
+            <svg
+              class="btnSymbol"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+            </svg>
+            <span class="btnText">Agregar</span>
+          </button>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="customHeader">Documentos de ingreso</div>
+      <div class="containerTable documentos">
+        <div class="headerTable">
+          <div class="headerTableCol">Registro</div>
+          <div class="headerTableCol">Emisión</div>
+          <div class="headerTableCol">Tipo</div>
+          <div class="headerTableCol">Número</div>
+          <div class="headerTableCol">Cuenta</div>
+          <div class="headerTableCol">Monto</div>
+          <div class="headerTableCol">Estado</div>
+          <div class="headerTableCol">Acción</div>
+        </div>
+        <div class="bodyTable itemDocumentos"></div>
+        <div class="msgTable" id="msgDocumentos">
+          No existen documentos registrados
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="customHeader">Facturas de ventas</div>
+      <div class="containerTable ventas">
+        <div class="headerTable">
+          <div class="headerTableCol">Número</div>
+          <div class="headerTableCol">Cliente</div>
+          <div class="headerTableCol">Total Factura</div>
+          <div class="headerTableCol">Monto Cobrado</div>
+        </div>
+        <div class="bodyTable itemVentas"></div>
+        <div class="msgTable" id="msgVentas">No existen ventas registradas</div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="customHeader">Comprobantes</div>
+      <div class="containerTable comprobantes">
+        <div class="headerTable">
+          <div class="headerTableCol">Número</div>
+          <div class="headerTableCol">Descripción</div>
+          <div class="headerTableCol">Fecha Registro</div>
+          <div class="headerTableCol">Tipo Documento</div>
+        </div>
+        <div class="bodyTable itemComprobantes"></div>
+        <div class="msgTable" id="msgComprobantes">
+          No existen comprobantes registrados
+        </div>
+      </div>
+    </section>
+    <script src="/v3/views/ingresos/dialog/ingreso.js?v=43992394" defer></script>
+  </body>
+</html>

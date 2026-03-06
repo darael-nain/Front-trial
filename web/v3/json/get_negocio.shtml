@@ -1,0 +1,306 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DIF results#0--><!--#4DHTML -INT(($total/results)* -1)--><!--#4DELSE-->0<!--#4DENDIF-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Nota_de_venta]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"sort": {
+		"by": "<!--#4DTEXT sort_by-->",
+		"order": "<!--#4DTEXT sort_order-->"
+	},
+	"totales": {
+		"neto": "<!--#4DHTML _V3_formatCurrency(totales_neto)-->",
+		"gasto_p": "<!--#4DHTML _V3_formatCurrency(totales_gasto_p)-->",
+		"gasto_r": "<!--#4DHTML _V3_formatCurrency(totales_gasto_r)-->",
+		"por_gastar": "<!--#4DHTML _V3_formatCurrency(totales_por_gastar)-->",
+		"utilidad_value": "<!--#4DHTML _V3_formatCurrency(totales_utilidad_value)-->",
+		"utilidad_percent": "<!--#4DHTML String(totales_utilidad_percent;"###.###.###.###.###.###.##0,## %")-->",
+		"utilidad_final": "<!--#4DHTML _V3_formatCurrency(totales_utilidad_final)-->",
+		"utilidad_neta": "<!--#4DHTML _V3_formatCurrency(totales_utilidad_neta)-->",
+		"totales_saldo_por_facturar": "<!--#4DHTML _V3_formatCurrency(totales_saldo_por_facturar)-->",
+		"totales_total_facturado": "<!--#4DHTML _V3_formatCurrency(totales_total_facturado)-->",
+		"total_cobrado": "<!--#4DHTML _V3_formatCurrency(totales_total_cobrado)-->",
+		"total_por_cobrar": "<!--#4DHTML _V3_formatCurrency(totales_total_porcobrar)-->",
+		"total_justificado": "<!--#4DHTML _V3_formatCurrency(totales_total_justificado)-->",
+		"total_por_justificar": "<!--#4DHTML _V3_formatCurrency(totales_total_porjustificar)-->",
+		"total_pagado": "<!--#4DHTML _V3_formatCurrency(totales_total_pagado)-->",
+		"total_por_pagar": "<!--#4DHTML _V3_formatCurrency(totales_total_porpagar)-->"
+	},
+	"name_shift":   <!--#4DIF Not(Undefined(name_shift))--><!--#4DIF name_shift-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+	"modo_diferencia" : <!--#4DIF Not(Undefined(_V3_difGastoListNegocios))--><!--#4DTEXT _V3_difGastoListNegocios--><!--#4DELSE-->False<!--#4DENDIF-->,
+	"rows": [
+<!--#4DLOOP aProyectoId -->
+		{
+			"id": <!--#4DHTML aProyectoId{aProyectoId}-->,
+			"folio": <!--#4DHTML aProyectoFolio{aProyectoId}-->,
+			"id_income_vx": "<!--#4DHTML aIdIncomeVx{aProyectoId}-->",
+			"id_sap": <!--#4DIF Not(Undefined(aIdSap))--><!--#4DHTML aIdSap{aProyectoId}--><!--#4DELSE -->0<!--#4DENDIF-->,
+			"id_proyecto_vx": "<!--#4DHTML aIdProyectoVx{aProyectoId}-->",
+			"vx": <!--#4DIF aProyectoVx{aProyectoId}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"estado_programacion": <!--#4DIF Not(Undefined(aEstadoProgramacion))--><!--#4DIF aEstadoProgramacion{aProyectoId}-->true<!--#4DELSE -->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+			"correo_programacion": <!--#4DIF Not(Undefined(aCorreoProgramacion))--><!--#4DIF (aCorreoProgramacion{aProyectoId}#"")-->"<!--#4DHTML aCorreoProgramacion{aProyectoId}-->"<!--#4DELSE -->""<!--#4DENDIF--><!--#4DELSE -->""<!--#4DENDIF-->,
+			"monto_facturacion": <!--#4DIF Not(Undefined(aMontoFacturacion))--><!--#4DIF (aMontoFacturacion{aProyectoId}>0)--><!--#4DHTML aMontoFacturacion{aProyectoId}--><!--#4DELSE -->0<!--#4DENDIF--><!--#4DELSE -->0<!--#4DENDIF-->,
+			"fecha_programacion": <!--#4DIF Not(Undefined(aFechaProgramacion))-->"<!--#4DHTML aFechaProgramacion{aProyectoId}-->"<!--#4DELSE -->"00-00-00"<!--#4DENDIF-->,
+			"oc_cliente": "<!--#4DHTML _V3_escapeString(aOcCliente{aProyectoId})-->",
+			"fecha_realizacion": "<!--#4DHTML String(aFechaRealizacion{aProyectoId})-->",
+			"fecha_cierre_negocio": "<!--#4DHTML String(aFechaCierreNegocio{aProyectoId})-->",
+			"fecha_estimada_cierre": "<!--#4DHTML String(aFechaEstimadaCierre{aProyectoId})-->",
+			"fecha_conversion_negocio": "<!--#4DHTML String(aFechaConversionnegocio{aProyectoId})-->",
+			"resp_conversion": "<!--#4DHTML String(aRespConversionnegocio{aProyectoId})-->",
+			"rutClient": "<!--#4DHTML _V3_escapeString(aRutClient{aProyectoId})-->",
+			"nombre_contacto": "<!--#4DHTML _V3_escapeString(aContactoCliente{aProyectoId})-->",
+			"text": "<!--#4DHTML _V3_escapeString(aProyectoNombre{aProyectoId})-->",
+			"username": "<!--#4DHTML _V3_escapeString(aProyectoUsuario{aProyectoId}-->",
+			"ejecutivo": "<!--#4DHTML _V3_escapeString(aProyectoEjecutivo{aProyectoId})-->",
+			"productor": "<!--#4DHTML _V3_escapeString(aProyectoProductor{aProyectoId})-->",
+			"area_negocio": "<!--#4DHTML _V3_escapeString(aProyectoAreaNegocio{aProyectoId})-->",
+			"block_user": "<!--#4DHTML block_user{aProyectoId}-->",
+			"block_user_email": "<!--#4DHTML block_user_email{aProyectoId}-->",
+			"block_user_name": "<!--#4DHTML block_user_name{aProyectoId}-->",
+			"block_by_use": <!--#4DIF block_by_use{aProyectoId}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"modoCine": <!--#4DIF aModoCine{aProyectoId}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"empresa": {
+				"id": <!--#4DHTML aProyectoEmpresaId{aProyectoId}-->,
+				"alias": "<!--#4DHTML _V3_escapeString(aProyectoEmpresaAlias{aProyectoId})-->",
+				"softland": "<!--#4DHTML aCuentaContableSoftland{aProyectoId}-->",
+				"razon_social": "<!--#4DHTML _V3_escapeString(aProyectoEmpresaRazonSocial{aProyectoId})-->"
+			},
+			"sub_total": <!--#4DHTML String(Round(aProyectoSubtotal{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->,
+			"total_neto": <!--#4DHTML String(Round(aProyectoTotalNeto{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->,
+			"ca" : <!--#4DHTML String(Round(aProyectoComAgencia{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->,
+			<!--#4DIF (aProyectoMonedaTrabajo{aProyectoId}#"")-->
+			"exchange": {
+				"type": "<!--#4DHTML aProyectoMonedaTrabajo{aProyectoId}-->",
+				"rate": <!--#4DHTML String(aProyectoTipoCambio{aProyectoId};"&xml")-->
+			},
+			<!--#4DENDIF-->
+			"costo": {
+				"otros_gastos": <!--#4DHTML String(Round(aOtrosGastos{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->,
+				"presupuestado": <!--#4DHTML String(Round(aProyectoCostoPresupuestado{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->,
+				"real": <!--#4DHTML String(Round(aProyectoCostoReal{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->,
+				"total_justificado_fxr": "<!--#4DHTML  String(Round(aGastosTotalNegJustificadoFXR{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->",
+				"total_por_justificar_fxr": "<!--#4DHTML  String(Round(aGastosTotalNegPorJustificarFXR{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->",
+				"total_justificado_oc": "<!--#4DHTML  String(Round(aGastosTotalNegJustificadoOcs{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->",
+				"total_por_justificar_oc": "<!--#4DHTML  String(Round(aGastosTotalNegPorJustificarOcs{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->",
+				"total_justificado": "<!--#4DHTML  String(Round(aGastosTotalNegJustificado{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->",
+				"total_por_justificar": "<!--#4DHTML  String(Round(aGastosTotalNegPorJustificar{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->",
+				"total_pagado": "<!--#4DHTML  String(Round(aGastosTotalNegPagado{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->",
+				"total_por_pagar": "<!--#4DHTML  String(Round(aGastosTotalNegPorPagar{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->"
+			},
+			"por_gastar": <!--#4DHTML String(Round(aProyectoPorGastar{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->,
+			"estado": "<!--#4DTEXT aProyectoEstado2{aProyectoId}-->",
+			"status": <!--#4DIF aProyectoEstado{aProyectoId}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"closed": <!--#4DIF aProyectoCerrado{aProyectoId}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"closed_compras": <!--#4DIF aProyectoCerradoCompras{aProyectoId}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"closed_ventas": <!--#4DIF aProyectoCerradoVentas{aProyectoId}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"id_proyecto": <!--#4DTEXT aProyectoIdProyecto{aProyectoId}-->,
+			"total_neto_proyecto": "<!--#4DTEXT aProyectoTotalNetoProyecto{aProyectoId}-->",
+			"gastor_proyecto": "<!--#4DTEXT aProyectoGastoRProyecto{aProyectoId}-->",
+			"gastop_proyecto": "<!--#4DTEXT aProyectoGastoPProyecto{aProyectoId}-->",
+			"por_gastar_proyecto": "<!--#4DTEXT aProyectoPorGastarProyecto{aProyectoId}-->",
+			"cantidad_proyecto": "<!--#4DTEXT aProyectoCantidadProyecto{aProyectoId}-->",
+			"text_proyecto": "<!--#4DTEXT aProyectoTextProyecto{aProyectoId}-->",
+			"referencia_proyecto": "<!--#4DHTML _V3_escapeString(aProyectoReferenciaProyecto{aProyectoId})-->",
+			"folio_proyecto": "<!--#4DTEXT aProyectoFolioProyecto{aProyectoId}-->",
+			"fecha_asig_proyecto": "<!--#4DTEXT aProyectoFechaAsigProyecto{aProyectoId}-->",
+			"autoclone_active": <!--#4DIF aProyectoAutomaticCloneActive{aProyectoId}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"fecha_asignacion": "<!--#4DHTML Substring(String(aProyectoAsignacionFecha{aProyectoId};8);1;10)-->T00:00:00-04:00",
+			"fecha_asignacion_": "<!--#4DHTML String(aProyectoAsignacionFecha{aProyectoId})-->",
+			"created_at": "<!--#4DHTML Substring(String(aProyectoCreacionFecha{aProyectoId};8);1;10)-->T<!--#4DHTML aProyectoCreacionHora{aProyectoId}-->-04:00"<!--#4DIF (NOT(aProyectoModificacionFecha{aProyectoId} = aProyectoCreacionFecha{aProyectoId}) & (NOT(aProyectoModificacionHora{aProyectoId} = aProyectoCreacionHora{aProyectoId}) ))-->,
+			"created_at_": "<!--#4DHTML String(aProyectoCreacionFecha{aProyectoId})-->",
+			"updated_at": "<!--#4DHTML Substring(String(aProyectoModificacionFecha{aProyectoId};8);1;10)-->T<!--#4DHTML aProyectoModificacionHora{aProyectoId}-->-04:00"<!--#4DENDIF-->,
+			"updated_at_": "<!--#4DHTML String(aProyectoModificacionFecha{aProyectoId})-->",
+			<!--#4DIF Not(Undefined($items))-->
+			<!--#4DHTML _V3_getItemByCotizacion(aProyectoId{aProyectoId})-->
+			"items": [
+				<!--#4DLOOP aItemId -->
+						{
+							"id": "<!--#4DHTML aItemId{aItemId}-->",
+							"text": "<!--#4DHTML _V3_escapeString(aItemText{aItemId})-->",
+							"nombre_categoria": "<!--#4DHTML _V3_escapeString(aDescripcionCategoria{aItemId})-->",
+							"index": <!--#4DHTML aItemIndex{aItemId}-->,
+							"deletable": <!--#4DIF aItemDeletable{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+							"hidden": <!--#4DIF aItemHidden{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+							"titulo": <!--#4DIF aItemTitulo{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+							<!--#4DIF aItemCategoriaId{aItemId}#0)-->"categoria": {
+								"id": <!--#4DHTML aItemCategoriaId{aItemId}-->
+							},<!--#4DENDIF-->
+							<!--#4DIF aItemProductoId{aItemId}#0)-->"producto": {
+								"id": <!--#4DHTML aItemProductoId{aItemId}-->
+							},<!--#4DENDIF-->
+							"nombre": "<!--#4DHTML _V3_escapeString(aItemNombre{aItemId})-->",
+							"origen": "<!--#4DHTML _V3_escapeString(aItemOrigen{aItemId})-->",
+							"tag": "<!--#4DHTML _V3_escapeString(aItemTag{aItemId})-->",
+							"observacion": "<!--#4DHTML _V3_escapeString(aItemObservacion{aItemId})-->",
+							"comentario": "<!--#4DHTML _V3_escapeString(aItemComentario{aItemId})-->",
+							<!--#4DIF NOT(aItemTitulo{aItemId})-->"codigo": "<!--#4DHTML aItemCodigo{aItemId}-->",<!--#4DENDIF-->
+							<!--#4DIF NOT(aItemTitulo{aItemId})-->"codigo_origen": "<!--#4DHTML aItemCodigoOrigen{aItemId}-->",<!--#4DENDIF-->
+							<!--#4DIF NOT(aItemTitulo{aItemId})-->"cantidad": <!--#4DHTML String(aItemCantidad{aItemId};"&xml")-->,
+							"unidad": "<!--#4DHTML _V3_escapeString(aItemUnidad{aItemId})-->",
+							"factor": <!--#4DHTML String(aItemFactor{aItemId};"&xml")-->,<!--#4DENDIF-->
+							"porcentaje_monto_total": <!--#4DHTML String(aItemPorcentajeMontoTotal{aItemId}/100;"&xml")-->,
+							"formula_productor_ejecutivo": <!--#4DIF aItemFormulaProdEjec{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+							"formula_productor_ejecutivo_ratio": <!--#4DHTML String(aItemFormulaProdEjecRatio{aItemId};"&xml")-->,
+							"formula_asistente_produccion": <!--#4DIF aItemFormulaAsistProd{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+							"formula_horas_extras": <!--#4DIF aItemFormulaHorasExtras{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+							"director_internacional": <!--#4DIF aItemDirectorInternacional{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+							"cuenta_contable": "<!--#4DHTML  _V3_escapeString(aItemCuentaContable{aItemId})-->",
+							"precio": {
+								<!--#4DIF NOT(aItemTitulo{aItemId})-->"unitario": <!--#4DHTML String(aItemPrecioUnitario{aItemId};"&xml")-->,<!--#4DENDIF-->
+								"subtotal": <!--#4DHTML String(aItemSubtotalPrecio{aItemId};"&xml")-->
+							},
+							"costo": {
+								"previo": {
+									<!--#4DIF NOT(aItemTitulo{aItemId})-->"unitario": <!--#4DHTML String(aItemCostoUnitarioPrevio{aItemId};"&xml")-->,<!--#4DENDIF-->
+									"subtotal": <!--#4DHTML String(aItemSubtotalCostoPrevio{aItemId};"&xml")-->
+								},
+								"presupuestado": {
+									<!--#4DIF NOT(aItemTitulo{aItemId})-->"unitario": <!--#4DHTML String(aItemCostoUnitarioPresupuestado{aItemId};"&xml")-->,<!--#4DENDIF-->
+									"subtotal": <!--#4DHTML String(aItemSubtotalCostoPresupuestado{aItemId};"&xml")--><!--#4DIF NOT(aItemTitulo{aItemId})-->,
+									"hh": {
+										"username": "<!--#4DHTML aItemUsernameHHPresupuestado{aItemId}-->",
+										"cantidad": <!--#4DHTML String(aItemCantidadHHPresupuestado{aItemId};"&xml")-->,
+										"valor": <!--#4DHTML String(aItemValorHHPresupuestado{aItemId};"&xml")-->
+									}<!--#4DENDIF-->
+								},
+								"real": {
+									"subtotal": <!--#4DHTML String(aItemSubtotalCostoReal{aItemId};"&xml")--><!--#4DIF NOT(aItemTitulo{aItemId})-->,
+									"hh": {
+										"cantidad": <!--#4DHTML String(aItemCantidadHHReal{aItemId};"&xml")-->,
+										"total": <!--#4DHTML String(aItemCostoInternoReal{aItemId};"&xml")-->
+									}<!--#4DENDIF-->
+								}<!--#4DIF NOT(aItemTitulo{aItemId})-->,
+								"interno": <!--#4DIF aItemCostoInterno{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DENDIF-->
+							},
+							"costo_directo": <!--#4DIF aItemCostoDirecto{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DIF Not(aItemTitulo{aItemId})-->,
+							"costo_admin": <!--#4DIF aItemCostoAdmin{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+							"aplica_sobrecargo": <!--#4DIF aItemAplicaSobrecargo{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+							"closed_compras": <!--#4DIF aItemClosedCompras{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DENDIF--><!--#4DIF Num(aItemTDId{aItemId})#0-->,
+							"tipo_documento": {
+								"id": <!--#4DHTML Num(aItemTDId{aItemId})-->,
+								"abbr": "<!--#4DHTML aItemTDAbbr{aItemId}-->",
+								"text": "<!--#4DHTML aItemTDNombre{aItemId}-->",
+								"ratio": <!--#4DHTML String(aItemTDValor{aItemId}/100;"&xml")-->,
+								"valor_usd": <!--#4DIF aItemTDValorUSD{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+								"inverse": <!--#4DIF aItemTDDivision{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+							}<!--#4DENDIF-->,
+							"hora_extra": {
+								"enabled": <!--#4DIF aItemHoraExtra{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+								"cantidad": <!--#4DHTML String(aItemHoraExtraCantidad{aItemId};"&xml")--><!--#4DIF NOT(aItemTitulo{aItemId})-->,
+								"factor": <!--#4DHTML String(aItemHoraExtraFactor{aItemId};"&xml")-->,
+								"jornada": <!--#4DIF aItemHoraExtraJornada{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DENDIF-->,
+								"base_imponible": <!--#4DHTML String(aItemHoraExtraBI{aItemId};"&xml")-->,
+								"dias": <!--#4DIF aItemHoraExtraDias{aItemId}>0--><!--#4DHTML aItemHoraExtraDias{aItemId}--><!--#4DELSE-->7<!--#4DENDIF-->
+							},
+							"ocultar_print": <!--#4DIF aItemOcultarPrint{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+							"mostrar_carta_cliente": <!--#4DIF aItemMostrarCartaCliente{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+							"preset_margen": <!--#4DIF aItemPresetMargen{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+							"preset_margen_value": <!--#4DHTML String(aItemPresetMargenValue{aItemId};"&xml")-->
+						}<!--#4DIF NOT(aItemId{aItemId} = aItemId{Size of array(aItemId)})-->,<!--#4DENDIF-->
+				<!--#4DENDLOOP-->
+					],
+			<!--#4DENDIF-->
+			"exchange_facturado": <!--#4DHTML String(aExchangeTotalFacturado{aProyectoId};"&xml")-->,
+			"exchange_porfacturar": <!--#4DHTML String(aExchangeSaldoPorFacturar{aProyectoId};"&xml")-->,
+			"saldo_por_facturar": <!--#4DHTML String(Round(aSaldoPorFacturar{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->,
+			"total_facturado": <!--#4DHTML String(Round(aTotalFacturado{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->,
+			"total_cobrado": <!--#4DHTML  String(Round(aGastosTotalNegCobrado{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->,
+			"total_por_cobrar": <!--#4DHTML  String(Round(aGastosTotalNegPorCobrar{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->,
+			"nro_oc_cliente": "<!--#4DHTML _V3_escapeString(aNroOCCliente{aProyectoId})-->",
+			"id_oc_cliente": "<!--#4DHTML aIdOCCliente{aProyectoId}-->",
+			"tipo_oc_cliente": "<!--#4DHTML _V3_escapeString(aTipoOCCliente{aProyectoId})-->",
+			"neto_oc_cliente": <!--#4DHTML  String(aTotalNetoOCCliente{aProyectoId};"&xml")-->,
+			"emision_oc_cliente": "<!--#4DHTML aEmisionOCCliente{aProyectoId}-->",
+			"nro_factura": "<!--#4DHTML _V3_escapeString(aNrofactura{aProyectoId})-->",
+			"emision_factura": "<!--#4DHTML aEmisionFactura{aProyectoId}-->",
+			"sobrecargos":{
+						"sobrecargo1": "<!--#4DHTML aSobrecargo1{aProyectoId}-->",
+				"sobrecargo2": "<!--#4DHTML aSobrecargo2{aProyectoId}-->",
+				"sobrecargo3": "<!--#4DHTML aSobrecargo3{aProyectoId}-->",
+				"sobrecargo4": "<!--#4DHTML aSobrecargo4{aProyectoId}-->",
+				"sobrecargo5": "<!--#4DHTML aSobrecargo5{aProyectoId}-->",
+				"sobrecargo6": "<!--#4DHTML aSobrecargo6{aProyectoId}-->"
+			},
+			"param1_valor": "<!--#4DHTML _V3_escapeString(aParam1NegValor{aProyectoId})-->",
+			"param2_valor": "<!--#4DHTML _V3_escapeString(aParam2NegValor{aProyectoId})-->",
+			"param3_valor": "<!--#4DHTML _V3_escapeString(aParam3NegValor{aProyectoId})-->",
+			"param4_valor": "<!--#4DHTML _V3_escapeString(aParam4NegValor{aProyectoId})-->",
+			"param5_valor": "<!--#4DHTML _V3_escapeString(aParam5NegValor{aProyectoId})-->",
+			"param6_valor": "<!--#4DHTML _V3_escapeString(aParam6NegValor{aProyectoId})-->",
+			"param7_valor": "<!--#4DHTML _V3_escapeString(aParam7NegValor{aProyectoId})-->",
+			"param8_valor": "<!--#4DHTML _V3_escapeString(aParam8NegValor{aProyectoId})-->",
+			"param9_valor": "<!--#4DHTML _V3_escapeString(aParam9NegValor{aProyectoId})-->",
+			"param10_valor": "<!--#4DHTML _V3_escapeString(aParam10NegValor{aProyectoId})-->",
+			"comision1_porcentaje": <!--#4DHTML String(Round(aCinemagicaRentabilidad{aProyectoId};2);"&xml")-->,
+			"dscto_porcentaje": <!--#4DHTML String(Round(aPorcentaje_Desc{aProyectoId};2);"&xml")-->,
+			"margen_compra_resumenes": <!--#4DIF aProyectoMargenCompraResumenes{aProyectoId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DIF v3_sobrecargos_cinemagica-->,
+			"cinemagica": {
+				"valor_pelicula": <!--#4DHTML String(Round(aCinemagicaValorPelicula{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->,
+				"porcentaje_comision_agencia": <!--#4DHTML String(Round(aCinemagicaPorcCA{aProyectoId};2);"&xml")-->,
+				"comision_agencia": <!--#4DHTML String(Round(aCinemagicaCA{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->,
+				"costo_directo": <!--#4DHTML String(Round(aCinemagicaCostoDirecto{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->,
+				"rentabilidad": <!--#4DHTML String(Round(aCinemagicaRentabilidad{aProyectoId};2);"&xml")-->,
+				"utilidad_neta":<!--#4DHTML String(Round(aCinemagicaUtilidadNeta{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->,
+				"utilidad_bruta": <!--#4DHTML String(Round(aCinemagicaUtilBruta{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->,
+				"comision_productor_ejecutivo": <!--#4DHTML String(Round(aCinemagicaComProdEjec{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->,
+				"comision_asistente_produccion": <!--#4DHTML String(Round(aCinemagicaComAsistProd{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->
+			}<!--#4DENDIF-->
+		}<!--#4DIF NOT(aProyectoId{aProyectoId} = aProyectoId{Size of array(aProyectoId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	],
+	"parametros" : {
+			"nombre_param1": "<!--#4DHTML _V3_escapeString(aNombreParametro)-->",
+			"param1Name": "<!--#4DHTML _V3_escapeString(vParam1Name)-->",
+			"param1Status": <!--#4DIF vParam1Status-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"param2Name": "<!--#4DHTML _V3_escapeString(vParam2Name)-->",
+			"param2Status": <!--#4DIF vParam2Status-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"param3Name": "<!--#4DHTML _V3_escapeString(vParam3Name)-->",
+			"param3Status": <!--#4DIF vParam3Status-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"param4Name": "<!--#4DHTML _V3_escapeString(vParam4Name)-->",
+			"param4Status": <!--#4DIF vParam4Status-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"param5Name": "<!--#4DHTML _V3_escapeString(vParam5Name)-->",
+			"param5Status": <!--#4DIF vParam5Status-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"param6Name": "<!--#4DHTML _V3_escapeString(vParam6Name)-->",
+			"param6Status": <!--#4DIF vParam6Status-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"param7Name": "<!--#4DHTML _V3_escapeString(vParam7Name)-->",
+			"param7Status": <!--#4DIF vParam7Status-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"param8Name": "<!--#4DHTML _V3_escapeString(vParam8Name)-->",
+			"param8Status": <!--#4DIF vParam8Status-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"param9Name": "<!--#4DHTML _V3_escapeString(vParam9Name)-->",
+			"param9Status": <!--#4DIF vParam9Status-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"param10Name": "<!--#4DHTML _V3_escapeString(vParam10Name)-->",
+			"param10Status": <!--#4DIF vParam10Status-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"paramURSubtotal": <!--#4DIF vParamURSubtotal-->true<!--#4DELSE -->false<!--#4DENDIF-->
+	},
+	"sobrecargos":{
+		"sobrecargo1": "<!--#4DHTML _V3_escapeString(sobrecargoNombre1)-->",
+		"sobrecargo2": "<!--#4DHTML _V3_escapeString(sobrecargoNombre2)-->",
+		"sobrecargo3": "<!--#4DHTML _V3_escapeString(sobrecargoNombre3)-->",
+		"sobrecargo4": "<!--#4DHTML _V3_escapeString(sobrecargoNombre4)-->",
+		"sobrecargo5": "<!--#4DHTML _V3_escapeString(sobrecargoNombre5)-->",
+		"sobrecargo6": "<!--#4DHTML _V3_escapeString(sobrecargoNombre6)-->"
+	},
+	"mostrar_totales_extendidos": <!--#4DIF v3_mostrar_totales_extendidos-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"margen_compra_inverso": <!--#4DIF _V3_param_margenCompraInverso-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"currency_decimals": <!--#4DVAR _V3_defaultCurrencyDecimals-->,
+	"sobrecargos_cinemagica": <!--#4DIF v3_sobrecargos_cinemagica-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"currency" : {
+        "code" : "<!--#4DTEXT _V3_defaultCurrencyCode-->",
+        "name" : "<!--#4DTEXT _V3_defaultCurrencyName-->",
+        "symbol" : "<!--#4DTEXT _V3_defaultCurrencySymbol-->",
+        "right" : <!--#4DIF _V3_defaultCurrencyRight-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+        "decimal": <!--#4DTEXT _V3_defaultCurrencyDecimals-->,
+        "decimal_sep": "<!--#4DTEXT _V3_defaultCurrencyDecimalSep-->",
+        "thousand_sep" : "<!--#4DTEXT _V3_defaultCurrencyThousandSep-->",
+        "decimal_text_excel" : "<!--#4DTEXT _V3_defaultCurrencyDecimalsText-->",
+        "format_code_excel" : "<!--#4DTEXT _V3_defaultCurrencyFormatCode-->",
+        "label_rut" : "<!--#4DTEXT country_label_rut-->"
+    }
+}
+
+
+

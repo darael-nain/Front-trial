@@ -1,0 +1,189 @@
+<!--#4DSCRIPT/_V3_proxy_get_ItemsProyCompras-->
+<table class="items">
+	<thead>
+		<!--#4DIF ocultar=false-->
+		<tr>						
+			<th rowspan="2">Código</th>
+			<th rowspan="2">Nombre</th>			
+			<th rowspan="2">Cant.</th>
+			<th class="segunda-cantidad" rowspan="2">Días</th>
+			<th colspan="2" class="">Venta [$]</th>
+			<th colspan="2" class="costo verde">Gasto P. [$]</th>			
+			<th rowspan="2" class="utilidad verde">Util. P [$]</th>
+			<th rowspan="2" class="utilidad verde ">Marg. P [%]</th>
+			<th rowspan="2" class="utilidad rojo">Gasto R [$] </th>
+			<th rowspan="2" class="utilidad rojo">Util. R [$]</th>
+			<th rowspan="2" class="utilidad rojo">Marg. R [%]</th>
+			<th rowspan="2" class="utilidad">Dif. [$]</th>
+			<th rowspan="2" class="utilidad">Dif. [%]</th>
+			<th rowspan="2" class="utilidad">Aplica SC(*)</th>
+			<th rowspan="2">Sel.<br/><br/><input name="opcion[seleccionar_todo]" title="Seleccionar todo" type="checkbox"></th>
+		</tr>		
+		<tr>
+			<th class="">Unit.</th>
+			<th class="">Subtotal</th>
+			<th class="costo verde">Unit.</th>
+			<th class="costo verde">Subtotal</th>			
+		</tr>	
+		<!--#4DELSE-->
+		<tr>						
+			<th width="50px">Código</th>
+			<th>Nombre</th>			
+			<th class="costo">Gasto P. [$]</th>			
+			<th class="utilidad">Gasto R. [$] </th>			
+			<th class="utilidad">Por gastar [$]</th>			
+			<th><!--Sel.<br/><br/><input name="opcion[seleccionar_todo]" title="Seleccionar todo" type="checkbox">--></th>
+		</tr>	
+	<!--#4DENDIF-->
+	</thead>
+	<tbody>
+		<!--#4DLOOP a_llave-->
+		<tr class="<!--#4DTEXT a_tipo_det{a_llave}-->-neg">
+		<!--#4DIF ocultar=false-->		
+			<td><!--#4DTEXT a_cod_det{a_llave}--></td>
+			<td><!--#4DTEXT a_des{a_llave}--></td>			
+			<td><!--#4DTEXT a_cantidad{a_llave}--></td>
+			<td><!--#4DTEXT a_cantidad2{a_llave}--></td>
+			<td class="ventas-back numeric currency"><input type="text" readonly value="<!--#4DTEXT a_pu1{a_llave}-->"></td>
+			<td class="ventas-back numeric currency"><input type="text" readonly value="<!--#4DTEXT a_subtotal{a_llave}-->"></td>
+			<td class="compras-back numeric currency"><input type="text" readonly value="<!--#4DTEXT aItemCostoUnitarioPresupuestado{a_llave}-->"></td>
+	  		<td class="compras-back numeric currency"><input type="text" readonly value="<!--#4DTEXT a_gasto_p{a_llave}-->"></td>			
+			<td class="uti-pres-back numeric currency"><input type="text" readonly value="<!--#4DTEXT a_utilidad{a_llave}-->"></td>	  			
+	  		<td class="uti-pres-back numeric percent"><input type="text" readonly value="<!--#4DTEXT a_margen{a_llave}-->"></td>
+	  		<td class="gasto-real-back numeric currency"><input type="text" readonly value="<!--#4DTEXT a_gasto_real{a_llave}-->"></td>		
+			<td class="gasto-real-back numeric currency"><input type="text" readonly value="<!--#4DTEXT aUtilidadRealpeso{a_llave}-->"></td>
+			<td class="gasto-real-back numeric percent"><input type="text" readonly value="<!--#4DTEXT aPorc_gasto{a_llave}-->"></td>
+			<td class="numeric currency"><input type="text" readonly value="<!--#4DTEXT aDiferencia{a_llave}-->"></td>
+			<td class="numeric percent"><input type="text" readonly value="<!--#4DTEXT aPorcDif{a_llave}-->"></td>
+			<td>
+			<!--#4DIF a_tipo_det{a_llave}#"TITULO"-->
+				<!--#4DIF a_chk_comision{a_llave}-->
+					<input disabled name="item[][aplica_sobrecargo]" type="checkbox" checked>
+				<!--#4DELSE-->
+					<input disabled name="item[][aplica_sobrecargo]" type="checkbox">
+				<!--#4DENDIF-->	  	
+			<!--#4DENDIF-->  	
+			</td>			
+			<td>
+			<!--#4DIF a_tipo_det{a_llave}="TITULO"-->
+				<input name="detalle[check_titulo]" value="<!--#4DTEXT a_llave{a_llave}-->" type="checkbox">
+			<!--#4DELSE-->
+				<input data-llavetit="<!--#4DTEXT a_llave_titulo{a_llave}-->" name="detalle[check_item][<!--#4DTEXT a_llave{a_llave}-->]" value="<!--#4DTEXT a_llave{a_llave}-->" type="checkbox">
+			<!--#4DENDIF-->  	
+			</td>
+		<!--#4DELSE-->
+			<td><!--#4DTEXT a_cod_det{a_llave}--></td>
+			<!--#4DIF a_tipo_det{a_llave}="TITULO"-->
+				<td><!--#4DTEXT a_des{a_llave}--></td>
+			<!--#4DELSE-->
+				<td class="left"><!--#4DTEXT a_des{a_llave}--></td>
+			<!--#4DENDIF-->			
+			<td class="costo">
+				<span>
+					<span name="ffff"><!--#4DTEXT String(a_gasto_p{a_llave};"$ ###.###.###.##0")--></span>
+				</span>
+			</td>
+			<td class="costo">
+				<span>
+					<span name="ffff"><!--#4DTEXT String(a_gasto_real{a_llave};"$ ###.###.###.##0")--></span>
+				</span>
+			</td>
+			<td><!--#4DTEXT String(aDiferencia{a_llave};"$ ###.###.###.##0")--></td>
+			<td>
+			<!--#4DIF a_tipo_det{a_llave}#"TITULO"-->
+				<input data-llavetit="<!--#4DTEXT a_llave_titulo{a_llave}-->" name="detalle[check_item][<!--#4DTEXT a_llave{a_llave}-->]" value="<!--#4DTEXT a_llave{a_llave}-->" type="checkbox">		
+			<!--#4DENDIF-->  	
+			</td>
+		<!--#4DENDIF-->
+		</tr>
+		<!--#4DENDLOOP-->
+	</tbody>
+
+	<!--#4DIF ocultar=false-->
+	<tfoot>
+		<tr>
+			<th colspan="5"></th>
+			<th class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--><span><input readonly value="<!--#4DTEXT vSubTotal-->" name="cotizacion[precios][subtotal]" data-aplica-sobrecargo="<!--#4DTEXT vSubTotalComision-->" type="text" ></span></th>
+			<th></th>
+			<th class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--><span><input readonly value="<!--#4DTEXT vTotalGP-->" type="text"></span></th>
+			<th class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--><span><input readonly value="<!--#4DTEXT vTotalUP-->" type="text"></span></th>
+			<th class="numeric percent">%<span><input readonly value="<!--#4DTEXT vTotalMP-->" type="text"></span></th>
+			<th class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--><span><input readonly value="<!--#4DTEXT vTotalGR-->" type="text"></span></th>
+			<th class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--><span><input readonly value="<!--#4DTEXT vTotalUR-->" type="text"></span></th>
+			<th class="numeric percent">%<span><input readonly value="<!--#4DTEXT vTotalMR-->" type="text"></span></th>
+			<th colspan="1"></th>
+		</tr>
+	</tfoot>
+	<!--#4DENDIF--> 	
+</table>
+
+<!--#4DIF ocultar=false-->
+<section class="sheet" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->">
+<footer>
+		<article>
+			<section class="sobrecargos">
+				<h1>Sobrecargos</h1>
+				<ul></ul>
+				<p><sup>(*)</sup>: se aplica sobre ítems seleccionados.</p>
+				<p><sup>(**)</sup>: se aplica sobre total.</p>
+			</section>
+			<section>
+				<h1>Totales</h1>
+				<ul>
+					<!-- BEGIN TODO: quitar estos campos sin afectar el guardado del subtotal neto -->
+					<li style="display: none;"><span>Subtotal ítems</span> <span><!--#4DVAR _V3_defaultCurrencySymbol--> <input readonly type="text" value="<!--#4DTEXT String(vSubTotal;"$ ###.###.###.##0")-->"></span></li>
+					<li style="display: none;"><span>Subtotal sobrecargos</span> <span><!--#4DVAR _V3_defaultCurrencySymbol--> <input readonly type="text"></span></li>
+					<!-- END TODO -->
+					<li class="margin-after">
+						<span>Descuento</span>
+						<span class="numeric percent"><input readonly type="text" value="<!--#4DTEXT vPorcDesc-->">%</span>
+						<span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--><input readonly type="text" value="<!--#4DTEXT vDescuento-->"></span>
+					</li>
+					<li>
+						<span>Total neto</span>
+						<span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--><input readonly type="text" value="<!--#4DTEXT vTotalNeto-->"></span>
+					</li>
+					<li>
+						<span><!--#4DVAR <>_V3_IVAName--> (<!--#4DVAR <>_V3_IVARate-->%)</span>
+						<span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--><input readonly type="text" value="<!--#4DTEXT vTotalIva-->"></span>
+						<span>
+							<label><!--#4DIF vCheckExenta-->
+								<input disabled checked type="checkbox">
+								<!--#4DELSE-->
+								<input disabled type="checkbox">
+								<!--#4DENDIF-->	Exento</label>
+						</span>
+					</li>
+					<li>
+						<span>Total + IVA</span><span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--><input readonly type="text" value="<!--#4DTEXT vTotalNv-->"></span>
+					</li>
+				</ul>
+			
+				<h1>Rentabilidad esperada</h1>
+				<ul>
+					<li>
+						<span>Utilidad total presup.</span>
+						<span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input class="utilidad" readonly type="text" value="<!--#4DTEXT vUtilRealIncRF_c-->"></span>
+					</li>
+					<li>
+						<span>Gasto total presup.</span>
+						<span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input class="costo" readonly type="text" value="<!--#4DTEXT vGasto_Item_c-->"></span>
+					</li>
+				</ul>
+
+				<h1>Rentabilidad real</h1>
+				<ul>
+					<li>
+						<span>Utilidad total presup.</span>
+						<span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input class="utilidad" readonly type="text" value="<!--#4DTEXT vUtilRealIncRF_r-->"></span>
+					</li>
+					<li>
+						<span>Gasto total presup.</span>
+						<span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input class="costo" readonly type="text" value="<!--#4DTEXT vGasto_Item_r-->"></span>
+					</li>
+				</ul>
+			</section>
+		</article>		
+	</footer>
+</section>
+<!--#4DENDIF-->

@@ -1,0 +1,17 @@
+<!--4DACTION/weditarot-->
+<!--#4DINCLUDE headgreen.shtml-->
+<body>
+<!--#4dscript/datos_generales_ot-->
+<div id="container-ot">
+    <form id="frmnuevaot" action="#" method="post" enctype="multipart/form-data" >            
+        <input name="ot[id]" type="hidden" value="<!--#4DVAR vIdot-->"/>
+        <input name="ot[login]" type="hidden" value="<!--#4DVAR vLogin-->"/>
+        <input name="ot[notificar]" type="hidden" value="no"/>
+        <input name="ot[folio]" type="hidden" value="<!--#4DTEXT vFolioOt-->">
+        <input name="ot[estado]" type="hidden" value="<!--#4DTEXT vEstadoOT_-->">
+        <section class="info-header"><!--#4DINCLUDE /v3/views/ots/info_top.shtml--></section>   
+        <!--#4DINCLUDE ot_tabs_datos.shtml-->           
+    </form>
+</div>
+</body>
+</html>

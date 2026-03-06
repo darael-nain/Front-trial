@@ -1,0 +1,119 @@
+<!--4DSCRIPT/web_verificar_sesion-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>INTRANET ::: UNA BASE</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="/v3/design/reset.css">
+    <script src="/v3/script/jquery/jquery.js"></script>
+    <script src="/v3/script/jquery/plugins/jquery-migrate/jquery-migrate.js"></script>
+    <script src="/v3/script/jquery/plugins/jquery-ui/js/jquery-ui.js"></script> 
+    <link rel="stylesheet" href="/v3/script/jquery/jquery-plugins.css">   
+
+    <!-- Archivos que de la ot que sirven en el planificador-->
+    <link rel="stylesheet" href="/v3/views/ots/ots.css"/>
+
+    <!-- Archivos propios del modulo de planificador-->
+    <script src="/script/jsPlanner.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+    <link rel="stylesheet" href="/css/stylePlanner.css?<!--#4DVAR String(Milliseconds+Random)-->"/>
+
+</head>
+
+<body>
+<section id="main-container">
+    <!--#4DINCLUDE sub_menu_ots.shtml-->    
+    <header class="temp">
+        <form id="search-form-planner">
+            <div class="search2">
+                <label>Buscar por</label>
+                <input name="ots[texto]" type="text" class="combinadas" placeholder="Folio, Referencia, Negocio, Cliente" >
+            </div>
+            <div>
+                <label>Estado</label>
+                <select name="ots[estados]" class="combinadas">
+                    <option selected="selected" value="PA">Pendiente / Atrasada</option>
+                    <option value="PENDIENTE">Pendiente</option>
+                    <option value="ATRASADA">Atrasada</option>
+                    <option value="CERRADA">Cerrada</option>
+                    <option value="ANULADA">Anulada</option>                           
+                    <option value="TODAS">Todas</option>
+                </select>
+            </div>
+            <div>
+                <label for="">Mes</label>
+                <select name="ots[mes]" class="combinadas">
+                    <option selected="selected" value="all">[ Mes ]</option>
+                    <option value="1">Enero</option>
+                    <option value="2">Febrero</option>
+                    <option value="3">Marzo</option>
+                    <option value="4">Abril</option>
+                    <option value="5">Mayo</option>
+                    <option value="6">Junio</option>
+                    <option value="7">Julio</option>
+                    <option value="8">Agosto</option>
+                    <option value="9">Septiembre</option>
+                    <option value="10">Octubre</option>
+                    <option value="11">Noviembre</option>
+                    <option value="12">Diciembre</option>
+                </select>
+            </div>
+            <div>
+                <label for="">Año</label>
+                <select name="ots[anos]" class="combinadas">
+                    <option selected="selected" value="all">[ Año ]</option>
+                    <!--#4dloop aYearSearch-->
+                        <option value="<!--#4DVAR aYearSearch{aYearSearch}-->"><!--#4DVAR aYearSearch{aYearSearch}--></option>          
+                    <!--#4dendloop-->
+                </select>   
+            </div>
+            <div>
+                <label for="">Prioridad</label>
+                <select name="ots[prioridades]" class="combinadas ">
+                    <option selected="selected" value="all">[ Prioridad ]</option>
+                    <option value="ALTA">Alta</option>
+                    <option value="MEDIA">Media</option>
+                    <option value="BAJA">Baja</option>
+                </select>
+            </div>
+            <div>
+                <label for="">Área de trabajo</label>
+                <!--#4DIF size of array(aIdAreasTrabajo1)=1-->
+                    <select name="ots[areas]" class="combinadas">
+                        <option selected="selected" value="<!--#4DVAR aLoginAreaResp1{1}-->">
+                            <!--#4DVAR aAreasTrabajo1{1}-->                        
+                        </option>        
+                    </select>
+                <!--#4delse-->
+                    <select name="ots[areas]" class="combinadas">
+                        <option selected="selected" value="all">[ Área de trabajo ]</option>
+                        <!--#4DLOOP aIdAreasTrabajo1--> 
+                            <option value="<!--#4DVAR aIdAreasTrabajo1-->"><!--#4DVAR aAreasTrabajo1{aIdAreasTrabajo1}--></option>                   
+                        <!--#4DENDLOOP-->
+                        <option value="all">TODAS</option>
+                    </select>
+                <!--#4dendif-->
+            </div>
+            <div>
+                <label for="">Responsables</label>
+                <!--#4DIF size of array(aLoginAreaResp1)=1-->
+                    <select name="ots[responsables]" multiple="multiple" class="combinadas">
+                        <option selected="selected" value="<!--#4DVAR aLoginAreaResp1{1}-->">
+                            <!--#4DVAR aNombresAreaResp1{1}-->                        
+                        </option>        
+                    </select>
+                <!--#4delse-->
+                    <select  name="ots[responsables]" multiple="multiple" class="combinadas">
+                        <option selected="selected" value="all">[ Responsables ]</option>
+                        <!--#4DLOOP aLoginAreaResp1--> 
+                            <option value="<!--#4DVAR aLoginAreaResp1{aLoginAreaResp1}-->"><!--#4DVAR aNombresAreaResp1{aLoginAreaResp1}--></option>                   
+                        <!--#4DENDLOOP-->
+                        <option value="all">TODOS</option>
+                    </select>                   
+                <!--#4dendif-->             
+            </div>
+        </form>  
+    </header>
+    <article><!--4DINCLUDE ajax/week_planner.html--></article>
+</section>
+</body>
+</html>

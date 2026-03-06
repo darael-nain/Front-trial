@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getCotizacion-->
+		<title>Cotizaciones</title>
+		<meta charset="utf-8">
+		<script>
+
+			$(document).ready(function() {
+				$('section.summary > section.user > h1 > span').text($('html > body > aside > div > div > h1').text());
+				$('section.summary > section.global > h1 > span').text($('html > body > aside > div > div > h1').data('organizacion'));
+
+				$(".live-tile, .flip-list").not(".exclude").liveTile();
+
+				$.ajax({
+					url: '/4DACTION/_V3_statsCotizacion',
+					dataType: 'json',
+				}).success(function(data) {
+
+					var writeTopStats = function(target, selector, source) {
+						var grand_total = source.total;
+						var current;
+
+						for (var i in source.detail) {
+							current = source.detail[i];
+							if (current.total == 0 || i > 2)
+								break;
+
+							if (typeof current.total != 'undefined') {
+								$('<li><span>' + Math.round(current.total/grand_total * 100, 0) +  '%</span> ' + current.text.charAt(0).toUpperCase() + current.text.slice(1).toLowerCase() + '</li>').appendTo(target.find($(selector)));
+							}
+							
+						};
+					};
+
+					var target = $('section.summary');
+
+					target.find('.user .current.approved').text(data.user.current.approved);
+					target.find('.user .last.approved').text(data.user.last.approved);
+
+					target.find('.user .current.total').text(data.user.current.total);
+					target.find('.user .last.total').text(data.user.last.total);
+
+					target.find('.user .all.expired').text(data.user.all.expired);
+
+					writeTopStats(target, '.user .all.nullified', data.user.all.nullified);
+					writeTopStats(target, '.user .all.customers', data.user.all.customers);
+
+					target.find('.global .current.approved').text(data.global.current.approved);
+					target.find('.global .last.approved').text(data.global.last.approved);
+
+					target.find('.global .current.total').text(data.global.current.total);
+					target.find('.global .last.total').text(data.global.last.total);
+
+					target.find('.global .all.expired').text(data.global.all.expired);
+
+					writeTopStats(target, '.global .all.nullified', data.global.all.nullified);
+					writeTopStats(target, '.global .all.customers', data.global.all.customers);
+
+					// validacion
+					target.find('.global .no_validadas').text(data.validacion.no_validadas);
+					target.find('.global .solicitadas_sin_validar').text(data.validacion.solicitadas_sin_validar);
+					target.find('.global .no_solicitadas_sin_validar').text(data.validacion.no_solicitadas_sin_validar);
+					target.find('.global .rechazadas').text(data.validacion.rechazadas);
+
+					// compartido
+					target.find('.global .validados').text(data.compartido.validados);
+					target.find('.global .compartidos').text(data.compartido.compartidos);
+					target.find('.global .por_compartir').text(data.compartido.por_compartir);
+
+				});
+
+				$('html > body.menu.home > section > header').hide();
+				$('#viewport').addClass('standalone');
+
+				document.title = '<!--#4DTEXT _V3_nombre_empresa--> / COTIZACIÓN - Inicio';
+
+
+				var anuladasUsers = $('.all.nullified.user').text();
+				if (anuladasUsers == "") {
+					$('.all.nullified.user').html('<span style="margin:5px;">Ninguna</span>');
+				}
+
+				var anuladasGlobal = $('.all.nullified.global').text();
+				if (anuladasGlobal == "") {
+					$('.all.nullified global').html('<span style="margin:5px;">Ninguna</span>');
+				}
+				unaBase.ui.unblock();
+			});
+
+
+			var newCotizacion = function() {
+				
+				$.ajax({
+					url: '/4DACTION/_V3_getCotizacion',
+					data: {
+						q: '',
+						template: true
+					},
+					dataType: 'json',			      
+					error: function (xhr, ajaxOptions, thrownError) {
+						console.log(xhr.status);
+						console.log(thrownError);
+					}
+				}).done(function(data) {
+					if (data.rows.length == 0) {
+						$.ajax({
+							url: '/4DACTION/_V3_setCotizacion',
+							dataType: 'json',
+							type: 'POST'
+						}).done(function(data) {
+							unaBase.loadInto.viewport('/v3/views/cotizaciones/content.shtml?id=' + data.id);
+						});
+					} else {
+						unaBase.loadInto.dialog('/v3/views/cotizaciones/dialog/template.shtml', 'Crear <!--#4DTEXT etiqueta_cotizacion--> desde una plantilla', 'medium');
+					}
+				});
+			};
+
+			
+
+		</script>
+		<style>
+
+			section.summary {
+				position: relative;
+				top: 35px;
+			}
+
+			section.summary > section > h1 span {
+				text-transform: capitalize;
+			}
+
+			section.summary > section {
+				display: inline-block;
+				width: calc(50% - 125px);
+				min-width: 480px;
+				margin-left: 0px;
+				margin-right: 15px;
+				padding-left: 15px;
+				padding-right: 15px;
+				padding-top: 15px;
+				padding-bottom: 15px;
+				background-color: rgba(128,128,128,.3);
+				vertical-align: top;
+			}
+
+			section.summary > section > h1 {
+				margin-left: 5px;
+				margin-bottom: 15px;
+				color: rgb(103,103,103);
+				font-size: 24px;
+			}
+
+			.tiles > div > span {
+				display: block;
+				width: calc(100% - 5px);
+				margin-left: 5px;
+				margin-top: 5px;
+				font-size: 20px;
+			}
+
+			.tiles > div > div > span:not(.tile-title) {
+				display: block;
+				width: 100%;
+				margin-top: 52px;
+				font-size: 48px;
+				text-align: center;
+			}
+
+			.tiles > div > div > ul {
+				display: block;
+				width: 100%;
+				margin-top: 40px;
+				text-align: left;
+				list-style: none;
+			}
+
+			.tiles > div > div > ul > li {
+				margin: 0 5px 5px 5px;
+				font-size: 12px;
+				text-indent: -30px;
+				padding-left: 30px;
+			}
+
+			.tiles > div > div > ul > li > span {
+				display: inline-block;
+				width: 30px;
+				margin-left: 30px;
+				margin-right: -33px;
+				font-weight: bold;
+			}
+
+			.tiles > div > div > span.tile-title {
+				display: block;
+				width: calc(100% - 5px);
+				margin-right: 5px;
+				text-align: right;
+			}
+
+			.tiles > .live-tile.rectangle {
+				width: calc(150px * 1.5 + 5px);
+			}
+
+			.red {
+				background-color: rgba(160,15,15,.6);
+			}
+
+			.blue {
+				background-color: rgba(15,15,160,.6);
+			}
+
+			.green {
+				background-color: rgba(15,160,15,.6);
+			}
+
+			.yellow {
+				background-color: rgba(160,160,15,.6);
+			}
+
+			.orange {
+				background-color: rgba(160,80,15,.6);
+			}
+
+			button.list, button.new {
+				position: relative;
+				top: 40px;
+				left: 30px;
+			}
+
+		</style>
+	</head>
+	<body>
+		<section class="summary">
+			<a onclick="unaBase.loadInto.viewport('/v3/views/cotizaciones/list.shtml', 'Cotizaciones');" style="display: block; text-align: left; font-size: 20px; top: -35px; left: 30px; cursor: pointer; position: absolute;">[Ir a <!--#4DTEXT etiqueta_cotizaciones-->]</a>
+			<!--#4DIF _V3_verifica_permisos_web(_V3_data_username;514)-->
+			<a onclick="newCotizacion();" style="display: block; text-align: left; font-size: 20px; top: -35px; left: 220px; cursor: pointer; position: absolute;">[Crear <!--#4DTEXT etiqueta_cotizacion-->]</a>
+			<!--#4DENDIF-->
+
+			<section class="user">
+				<h1>Mis <!--#4DTEXT etiqueta_cotizaciones-->: &laquo;<span></span>&raquo;</h1>
+				<!-- Apply blue theme as default for all tiles, but use the tiles class to allow the theme to be swapped -->
+				<div class="tiles tile-group three-wide">
+
+				    <div class="live-tile blue" data-mode="carousel" data-direction="horizontal" data-delay="2500">
+				    	<span>Realizados</span>
+				        <div>
+				            <span class="current total"></span>
+				            <span class="tile-title">mes actual</span>
+				        </div>
+				        <!--#4DIF Not(v3_noMostrarlastStats)-->
+				        <div>
+				            <span class="last total"></span>
+				            <span class="tile-title">mes anterior</span>
+				        </div>
+				        <!--#4DENDIF-->
+				    </div>
+
+				    <div class="live-tile green" data-mode="carousel" data-direction="horizontal" data-delay="2500">
+				    	<span>Aprobados</span>
+				        <div>
+				            <span class="current approved"></span>
+				            <span class="tile-title">mes actual</span>
+				        </div>
+				        <!--#4DIF Not(v3_noMostrarlastStats)-->
+				        <div>
+				            <span class="last approved"></span>
+				            <span class="tile-title">mes anterior</span>
+				        </div>
+				        <!--#4DENDIF-->
+				    </div>
+
+				    <div class="live-tile red" data-mode="carousel" data-direction="horizontal" data-delay="2500">
+				    	<span>Vencidos</span>
+				        <div>
+				            <span class="all expired"></span>
+				            <span class="tile-title">a la fecha</span>
+				        </div>
+				    </div>
+
+				    <div class="live-tile yellow rectangle" data-mode="carousel" data-direction="horizontal" data-delay="2500">
+				    	<span>Anulaciones</span>
+				        <div>
+				            <ul class="all nullified user"></ul>
+				            <span class="tile-title">a la fecha</span>
+				        </div>
+				    </div>
+
+					<div class="live-tile orange rectangle" data-mode="carousel" data-direction="horizontal" data-delay="2500">
+				    	<span>Top Clientes</span>
+				        <div>
+				            <ul class="all customers"></ul>
+				            <span class="tile-title">a la fecha</span>
+				        </div>
+				    </div>
+
+				</div>
+
+
+			</section>
+
+			<section class="global">
+				<h1><!--#4DTEXT _V3_capitalizeString(etiqueta_cotizaciones)--> de &laquo;<span></span>&raquo;</h1>
+				<div class="tiles tile-group three-wide">
+
+				    <div class="live-tile blue" data-mode="carousel" data-direction="horizontal" data-delay="2500">
+				    	<span>Realizados</span>
+				        <div>
+				            <span class="current total"></span>
+				            <span class="tile-title">mes actual</span>
+				        </div>
+				        <!--#4DIF Not(v3_noMostrarlastStats)-->
+				        <div>
+				            <span class="last total"></span>
+				            <span class="tile-title">mes anterior</span>
+				        </div>
+				        <!--#4DENDIF-->
+				    </div>
+
+				    <div class="live-tile green" data-mode="carousel" data-direction="horizontal" data-delay="2500">
+				    	<span>Aprobados</span>
+				        <div>
+				            <span class="current approved"></span>
+				            <span class="tile-title">mes actual</span>
+				        </div>
+				        <!--#4DIF Not(v3_noMostrarlastStats)-->
+				        <div>
+				            <span class="last approved"></span>
+				            <span class="tile-title">mes anterior</span>
+				        </div>
+				        <!--#4DENDIF-->
+				    </div>
+
+				    <div class="live-tile red" data-mode="carousel" data-direction="horizontal" data-delay="2500">
+				    	<span>Vencidos</span>
+				        <div>
+				            <span class="all expired"></span>
+				            <span class="tile-title">a la fecha</span>
+				        </div>
+				    </div>
+
+				    <div class="live-tile yellow rectangle" data-mode="carousel" data-direction="horizontal" data-delay="2500">
+				    	<span>Anulaciones</span>
+				        <div>
+				            <ul class="all nullified global"></ul>
+				            <span class="tile-title">a la fecha</span>
+				        </div>
+				    </div>
+
+					<div class="live-tile orange rectangle" data-mode="carousel" data-direction="horizontal" data-delay="2500">
+				    	<span>Top Clientes</span>
+				        <div>
+				            <ul class="all customers"></ul>
+				            <span class="tile-title">a la fecha</span>
+				        </div>
+				    </div>
+
+				    <div class="live-tile blue rectangle" data-mode="carousel" data-direction="horizontal" data-delay="2500">
+				    	<span>Validación</span>
+				        <div>
+				            <ul>
+				            	<li style="font-size:12px;"><label class="no_validadas" style="font-weight:bold;">0</label> No validadas</li>
+				            	<li style="font-size:12px"><label class="solicitadas_sin_validar" style="font-weight:bold;margin-left:15px;">0</label> Solicitadas sin validar</li>
+				            	<li style="font-size:12px;"><label class="no_solicitadas_sin_validar" style="font-weight:bold;margin-left:15px;">0</label> No solicitadas</li><br>
+				            	<li style="font-size:12px;"><label class="rechazadas" style="font-weight:bold;">0</label> Rechazada(s)</li>
+				            </ul>
+				            <span class="tile-title">a la fecha</span>
+				        </div>
+				    </div>
+
+				     <div class="live-tile red rectangle" data-mode="carousel" data-direction="horizontal" data-delay="2500">
+				    	<span>Enviado a cliente</span>
+				        <div>
+				            <ul>
+				            	<li style="font-size:12px;"><label class="validados" style="font-weight:bold;">0</label> Validadas</li>
+				            	<li style="font-size:12px"><label class="compartidos" style="font-weight:bold;margin-left:15px;">0</label> Enviado(s)</li>
+				            	<li style="font-size:12px;"><label class="por_compartir" style="font-weight:bold;margin-left:15px;">0</label> Por enviar</li><br>
+				            </ul>
+				            <span class="tile-title">a la fecha</span>
+				        </div>
+				    </div>
+
+				</div>
+			</section>
+
+		</section>
+	</body>
+</html>

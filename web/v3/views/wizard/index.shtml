@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Asistente de configuración</title>
+		<script>
+		$(document).ready(function() {
+
+			//REAPER COMENTADO POR CAMBIO DE ESTrUCTURA
+			// var logo = $('html > body.menu.home > aside > div > div > h1').data('logo');
+			// $('section#viewport img').attr('src', logo);
+
+			var target = $('html > body.menu.home > aside > div > div > h1');
+			var nombre = target.text();
+			var tratamiento = target.data('tratamiento');
+
+			//var message = ((tratamiento.match(/SR(T|A)(\.)?/i))? 'Bienvenida' : 'Bienvenido') + '<br>' + tratamiento.toLowerCase() + ' ' + nombre;
+			var message = ((tratamiento.match(/SR(T|A)(\.)?/i))? 'Bienvenida' : 'Bienvenido') + '<br>' + ' ' + nombre.split(' ')[0];
+
+			$('section#viewport h2').html(message);
+
+			// Insertar video
+			/*if (is_demo) {
+				var div_videos = $('<div id="demo" style="position: absolute; z-index: 0; display: block; width: calc(100% - 40px); height: 400px; margin-top: 150px; padding: 20px;">');
+				div_videos.load('/v3/views/wizard/demo.shtml');
+				$('section#viewport').append(div_videos);
+			}*/
+
+
+			// Smart Wizard
+
+			// Email Validation
+			var isValidEmailAddress = function(emailAddress) {
+				var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+				return pattern.test(emailAddress);
+			};
+
+			var validateAllSteps = function() {
+				var isStepValid = true;
+
+				if (validateStep1() == false) {
+					isStepValid = false;
+					$('#wizard').smartWizard('setError', {
+						stepNum: 1,
+						iserror: true
+					});
+				} else {
+					$('#wizard').smartWizard('setError', {
+						stepNum: 1,
+						iserror: false
+					});
+				}
+
+				if (validateStep3() == false) {
+					isStepValid = false;
+					$('#wizard').smartWizard('setError', {
+						stepNum: 3,
+						iserror: true
+					});
+				} else {
+					$('#wizard').smartWizard('setError', {
+						stepNum: 3,
+						iserror: false
+					});
+				}
+
+				if (!isStepValid) {
+					$('#wizard').smartWizard('showMessage', 'Corrija los errores para continuar');
+				}
+
+				return isStepValid;
+
+			};
+
+			var validateStep1 = function() {
+				
+				return true;
+				// saltar
+				var isValid = true; 
+
+				// Validate Username
+				var un = $('#username').val();
+				if(!un && un.length <= 0){
+					isValid = false;
+					$('#msg_username').html('Please fill username').show();
+				} else
+					$('#msg_username').html('').hide();
+
+				// validate password
+				var pw = $('#password').val();
+				if(!pw && pw.length <= 0){
+					isValid = false;
+					$('#msg_password').html('Please fill password').show();         
+				} else
+					$('#msg_password').html('').hide();
+
+				// validate confirm password
+				var cpw = $('#cpassword').val();
+				if(!cpw && cpw.length <= 0){
+					isValid = false;
+					$('#msg_cpassword').html('Please fill confirm password').show();         
+				}else
+					$('#msg_cpassword').html('').hide();
+
+				// validate password match
+				if(pw && pw.length > 0 && cpw && cpw.length > 0){
+					if(pw != cpw){
+						isValid = false;
+						$('#msg_cpassword').html('Password mismatch').show();            
+					}else
+						$('#msg_cpassword').html('').hide();
+				}
+
+				return isValid;
+
+
+			};
+
+			var validateStep3 = validateStep1;
+
+			var validateSteps = function(step) {
+				var isStepValid = true;
+				switch (Number(step)) {
+					case 1:
+						if (validateStep1() == false) {
+							isStepValid = false;
+							$('#wizard').smartWizard('showMessage', 'Favor corregir errores en paso ' + step + ' y haga clic en Siguiente');
+							$('#wizard').smartWizard('setError', { stepNum: step, iserror: true });
+						} else
+							$('#wizard').smartWizard('setError', { stepNum: step, iserror: false });
+						break;
+					case 3:
+						if (validateStep3() == false) {
+							isStepValid = false;
+							$('#wizard').smartWizard('showMessage', 'Favor corregir errores en paso ' + step + ' y haga clic en Siguiente');
+							$('#wizard').smartWizard('setError', { stepNum: step, iserror: true });
+						} else
+							$('#wizard').smartWizard('setError', { stepNum: step, iserror: false });
+						break;
+					default:
+						
+
+				}
+				return isStepValid;
+			};
+
+			unaBase.ui.unblock();
+		});
+
+		</script>
+		<style type="text/css">
+			section#viewport.standalone > img,
+			section#viewport.standalone > h2 {
+				display: inline-block;
+				margin-top: 20px;
+				vertical-align: top;
+			}
+
+			section#viewport.standalone > img {
+				margin-top: 0px;
+				float: left;
+				margin-left: 20px;
+				max-width: 150px;
+				max-height: 200px;
+				height: 50px;
+			}
+
+			section#viewport.standalone > h2,
+			section#viewport.standalone > p {
+				display: inline-block;
+				margin-top: -10px;
+				width: 50px;
+				margin-left: 20px;
+				margin-bottom: 10px;
+				color: rgb(103,103,103);
+			}
+
+			section#viewport.standalone > h2 {
+				font-size: 13px;
+				text-transform: capitalize;
+			}
+
+			section#viewport.standalone > p {
+				font-size: 14px;
+			}
+
+			legend {
+				display: none;
+			}
+
+		</style>
+	</head>
+	<body>
+		<img src="" alt="Organización" >
+		<br><br><br>
+		<h2 ></h2>
+		<bh>
+		<section class="">
+			<p align="right">
+			<iframe marginheight="10"  width="100%" height="800" class="" src="https://d.unabase.com" ></iframe>
+			</p>		
+		</section>
+		<section id="wizard" class="swMain">
+			<header>
+				<ul>
+					<li>
+						<a href="#step-1">
+							<label>1</label>
+							<span>
+								Empresa
+								<small>Antecedentes de tu empresa</small>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a href="#step-2">
+							<label>2</label>
+							<span>
+								Trabajadores
+								<small>Información de empleados</small>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a href="#step-3">
+							<label>3</label>
+							<span>
+								Catálogos
+								<small>Productos y servicios</small>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a href="#step-4">
+							<label>4</label>
+							<span>
+								Procesos
+								<small>Flujo de trabajo</small>
+							</span>
+						</a>
+					</li>
+					<li>
+						<a href="#step-5">
+							<label>5</label>
+							<span>
+								¡Listo!
+								<small>Ya puedes trabajar</small>
+							</span>
+						</a>
+					</li>
+				</ul>
+			</header>
+			<fieldset id="step-1">
+				<legend>Cuéntanos acerca de tu empresa</legend>
+				<div>
+					<span>¿Cómo se llama tu empresa?</span>
+					<input required type="text" name="empresa[nombre]">
+				</div>
+				<div>
+					<span>¿A qué te dedicas? ¿Qué vendes?</span>
+					<input requiredtype="text" name="empresa[rubro]">
+				</div>
+				<div>
+					<span>¿Qué vendes?</span>
+					<label><input type="checkbox" name="empresa[producto_servicio][]" value="producto"> Productos</label>
+					<label><input type="checkbox" name="empresa[producto_servicio][]" value="servicio"> Servicios</label> 
+				</div>
+				<div>
+					<span>¿Tienes logo? Adjúntalo aquí</span>
+					<input type="file" name="empresa[logo]">
+				</div>
+				<div>
+					<span>¿Tienes más de un área de trabajo? <small>Ejemplo: producción, creatividad, desarrollo, ventas</small></span>
+					<label><input required type="radio" name="empresa[areas_trabajo]" value="true"> Sí</label> <label><input required type="radio" name="empresa[areas_trabajo]" value="false"> No</label>
+				</div>
+				<div>
+					<span>¿Qué áreas de trabajo tiene?</span>
+					<input placeholder="Nombra un área de trabajo" type="text" name="empresa[area_trabajo][]">
+				</div>
+				<div>
+					<span>¿Tienes ejecutivos?</span>
+					<label><input required type="radio" name="empresa[ejecutivos]" value="true"> Sí</label> <label><input required type="radio" name="empresa[ejecutivos]" value="false"> No</label>
+				</div>
+			</fieldset>
+			<fieldset id="step-2">
+				<legend>Cuéntanos quiénes forman tu empresa</legend>
+				<div>
+					<span>¿Quiénes trabajan contigo?</span>
+					<table>
+						<caption>Trabajadores</caption>
+						<thead>
+							<tr>
+								<th>Nombre</th>
+								<th>Email</th>
+								<th>Cargo</th>
+								<th>¿Es ejecutivo?</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><input type="text" name="empresa[trabajador][][nombre]"></td>
+								<td><input type="email" name="empresa[trabajador][][email]"></td>
+								<td><input type="text" name="empresa[trabajador][][cargo]"></td>
+								<td>
+									<label><input type="radio" name="empresa[trabajador][][ejecutivo]" value="true"> Sí</label>
+									<label><input type="radio" name="empresa[trabajador][][ejecutivo]" value=false> No</label>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</fieldset>
+			<fieldset id="step-3">
+				<legend>Cuéntanos qué productos y/o servicios vendes</legend>
+				<div>
+					<span>¿Qué tipos de productos vendes?</span>
+					<input placeholder="Nombra una categoría" type="text" name="empresa[catalogo][categoria][]">
+				</div>
+				<div>
+					<span>¿Qué vendes?</span>
+					<table>
+						<caption>Productos y/o servicios</caption>
+						<thead>
+							<tr>
+								<th>Código</th>
+								<th>Nombre</th>
+								<th></th>
+								<th>¿Es ejecutivo?</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><input type="text" name="empresa[trabajador][][nombre]"></td>
+								<td><input type="email" name="empresa[trabajador][][email]"></td>
+								<td><input type="text" name="empresa[trabajador][][cargo]"></td>
+								<td>
+									<label><input type="radio" name="empresa[trabajador][][ejecutivo]" value="true"> Sí</label>
+									<label><input type="radio" name="empresa[trabajador][][ejecutivo]" value=false> No</label>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</fieldset>
+			<fieldset id="step-4">
+				<legend>Cuéntanos cómo se trabaja en tu empresa</legend>
+				<div>
+					<span>¿Se utilizan órdenes de trabajo?</span>
+					<label><input type="radio" name="empresa[proceso][ot]" value="true"> Sí</label>
+					<label><input type="radio" name="empresa[proceso][ot]" value="false"> No</label>
+				</div>
+				<div>
+					<span>¿Se utilizan órdenes de compra?</span>
+					<label><input type="radio" name="empresa[proceso][ot]" value="true"> Sí</label>
+					<label><input type="radio" name="empresa[proceso][ot]" value="false"> No</label>
+				</div>
+				Otros...
+			</fieldset>
+			<fieldset id="step-5">
+				<legend>Estás listo</legend>
+				<p>Estás listo para comenzar a trabajar en UNA Base.</p>
+				<p>blabla</p>
+			</fieldset>
+		</section>
+		
+	</body>
+</html>

@@ -1,0 +1,12 @@
+{
+	"id": <!--#4DTEXT $id-->,
+	"task_id": <!--#4DTEXT $task_id-->,
+	"timing_task_number": <!--#4DIF Not(Undefined(timing_task_number))-->"<!--#4DTEXT timing_task_number-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"timing_task": <!--#4DTEXT timing_task-->,
+	"start_date" : "<!--#4DTEXT $start_date-->",
+	"start_time" : "<!--#4DTEXT $start_time-->",
+	"end_date" : "<!--#4DTEXT $end_date-->",
+	"end_time" : "<!--#4DTEXT $end_time-->",
+	"timing": <!--#4DIF Not(Undefined(timing_task_number))--><!--#4DIF $timing-->true<!--#4DELSE -->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"total_subtask" : "<!--#4DTEXT $total_subtask-->"
+}

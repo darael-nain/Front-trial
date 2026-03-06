@@ -1,0 +1,21 @@
+{
+	
+	"records": {
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP aId -->
+		{
+			"id": "<!--#4DHTML aId{aId}-->",
+			"name": "<!--#4DHTML _V3_escapeString(aNameAccount{aId})-->",
+			"number": "<!--#4DHTML _V3_escapeString(aNumber{aId})-->",
+			"label": "<!--#4DHTML aNameAccount{aId}-->",
+			"nivel": "<!--#4DHTML aNivel{aId}-->",
+			"type": "<!--#4DHTML aType{aId}-->",
+			"auxiliar": <!--#4DIF aAuxiliar{aId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"documento": <!--#4DIF aDocumento{aId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"c_costo": <!--#4DIF aCCosto{aId}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

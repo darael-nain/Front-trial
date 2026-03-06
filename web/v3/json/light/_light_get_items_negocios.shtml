@@ -1,0 +1,37 @@
+{
+	"rows": [
+		<!--#4DLOOP aIdItem-->
+		{
+			"id": <!--#4DHTML aIdItem{aIdItem}-->,
+			"cod": "<!--#4DHTML aCodigo{aIdItem}-->",
+			"codigo_servicio": "<!--#4DHTML aCodServicio{aIdItem}-->",
+			"id_categoria": "<!--#4DHTML aIdCategoria{aIdItem}-->",
+			"id_producto": "<!--#4DHTML aIdProducto{aIdItem}-->",
+			"llave_item": "<!--#4DHTML aLlaveItem{aIdItem}-->",
+			"isSubCat":  <!--#4DIF aIsParent{aIdItem}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"llaveSubCat": "<!--#4DHTML aItemParent{aIdItem}-->",
+			"llave_titulo": "<!--#4DHTML aLlaveTitulo{aIdItem}-->",
+			"tipo_item": "<!--#4DHTML aTipoItem{aIdItem}-->",
+			"categoria": "<!--#4DHTML  _V3_escapeString(aCategoria{aIdItem})-->",
+			"num_item": "<!--#4DHTML aNumItem{aIdItem}-->",
+			"nombre": "<!--#4DHTML  _V3_escapeString(aNombreItem{aIdItem})-->",
+			"descripcion": "<!--#4DHTML _V3_escapeString(aDescripcionLarga{aIdItem})-->",
+			"cantidad": "<!--#4DHTML aCantidad{aIdItem}-->",
+			"cantidad2": "<!--#4DHTML aCantidad2{aIdItem}-->",
+			"cont_sub_cat_items":<!--#4DHTML aContSubcatItems{aIdItem}-->,
+			"pu_venta": "<!--#4DHTML aPuVenta{aIdItem}-->",
+			"sub_venta": "<!--#4DHTML aSubVenta{aIdItem}-->",
+			"pu_gasto_pre": "<!--#4DHTML aPuGastoPre{aIdItem}-->",
+			"sub_gasto_pre": "<!--#4DHTML aSubGastoPre{aIdItem}-->",
+			"diferencia": "<!--#4DHTML aDiferencia{aIdItem}-->",
+			"porc_diferencia": "<!--#4DHTML aPorcDiferencia{aIdItem}-->",
+			"total_gasto_real": "<!--#4DHTML aGastoReal{aIdItem}-->",
+			"codigo_area_negocio_sap": "<!--#4DHTML aCodigoAreaNegocioSap{aIdItem}-->"
+		}<!--#4DIF NOT(aIdItem{aIdItem} = aIdItem{Size of array(aIdItem)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	]
+	
+}
+
+
+

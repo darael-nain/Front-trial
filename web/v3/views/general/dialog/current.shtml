@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Actual</title>
+	<script type="text/javascript">
+		unaBase.ready(() => {
+				
+			if(!(Object.entries(unaBase.doc).length === 0 && unaBase.doc.constructor === Object)){
+				const container = document.querySelector('#currentData .editable');
+				for(let item of Object.keys(unaBase.doc)){
+					let text = unaBase.doc[item];
+					
+					let isBoolean = typeof text === 'boolean';
+					let value = isBoolean ? `disabled ${text ? 'checked=checked': ''}` : `readonly value="${text}"`
+					let label = `<label for="${item}">${item}</label>`;
+					
+					let data = `<input id="${item}" type="${checkType.value(text)}" ${value} >`;
+
+					let li = document.createElement('li');
+					li.innerHTML = label + data;
+					container.appendChild(li);
+
+				}			
+			}
+			
+		})
+	</script>
+    	<link href="/css/form1.css" rel="stylesheet">
+    	<link href="/v3/views/ajustes/parametros/css/params.css" rel="stylesheet">
+    	<style type="text/css">
+
+    	</style>
+</head>
+<body>		
+	<section class="sheet" id="currentData">
+		<footer>
+			<article class="article-half">
+			<!-- <article> -->
+				<ul class="editable">
+					
+				</ul>
+			</article>
+
+			
+				
+			
+		</footer>
+	</section>
+</body>
+</html>

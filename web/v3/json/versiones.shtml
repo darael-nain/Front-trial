@@ -1,0 +1,48 @@
+{	
+	"inbox": {
+		"cancel": <!--#4DHTML default-->,
+		"share": <!--#4DHTML default-->
+	},
+	"cotizacion": {
+		"cancel": <!--#4DHTML default-->,
+		"share": <!--#4DHTML default-->
+	},
+	"negocio": {
+		"cancel": <!--#4DHTML default-->,
+		"share": <!--#4DHTML default-->
+	},
+	"compra": {
+		"cancel": <!--#4DHTML nullAccess-->,
+		"share": <!--#4DHTML shareAccess-->,
+		"modify": <!--#4DHTML modifyOc-->
+	},
+	"dtc": {
+		"cancel": <!--#4DHTML default-->,
+		"share": <!--#4DHTML default-->,
+		"modify": <!--#4DHTML modifyDtc-->	
+	},	
+	"fxr": {
+		"cancel": <!--#4DHTML default-->,
+		"share": <!--#4DHTML default-->		
+	},
+	"ot": {
+		"cancel": <!--#4DHTML default-->,
+		"share": <!--#4DHTML default-->		
+	},
+	"contacto": {
+		"cancel": <!--#4DHTML default-->,
+		"share": <!--#4DHTML default-->		
+	},
+	"acceso": {
+		"cancel": <!--#4DHTML default-->,
+		"share": <!--#4DHTML default-->		
+	},
+	"usario": {
+		"cancel": <!--#4DHTML default-->,
+		"share": <!--#4DHTML default-->		
+	},
+	"ajuste": {
+		"cancel": <!--#4DHTML default-->,
+		"share": <!--#4DHTML default-->		
+	}	
+}

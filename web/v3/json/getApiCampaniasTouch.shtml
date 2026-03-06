@@ -1,0 +1,41 @@
+[
+	<!--#4DLOOP aIdProyecto -->
+		{
+			"id": <!--#4DHTML aIdProyecto{aIdProyecto}-->,
+			"camp_nro": <!--#4DHTML String(aNroProyecto{aIdProyecto})-->,
+			"camp_nombre": "<!--#4DHTML _V3_escapeString(aNombreProyecto{aIdProyecto})-->",
+			"camp_estado_aprobado": "<!--#4DHTML aEstadoAprobadoProyecto{aIdProyecto}-->",
+			"camp_estado_cierre": "<!--#4DHTML aEstadoCierreProyecto{aIdProyecto}-->",
+			"camp_cliente": "<!--#4DHTML _V3_escapeString(aClienteProyecto{aIdProyecto})-->",
+			"camp_fecha_creacion": "<!--#4DHTML String(aFechaCreacionProyecto{aIdProyecto})-->",
+			"camp_ejecutivo": "<!--#4DHTML aEjecutivoProyecto{aIdProyecto}-->",
+			"area_negocio": "<!--#4DHTML aAreaNegocio{aIdProyecto}-->",
+			"tipo": "<!--#4DHTML aTipo{aIdProyecto}-->",
+			"canal": "<!--#4DHTML aCanal{aIdProyecto}-->",
+			"categoria": "<!--#4DHTML aCategoria{aIdProyecto}-->",
+			"ubicacion": "<!--#4DHTML aUbicacion{aIdProyecto}-->",
+			"marca": "<!--#4DHTML aMarca{aIdProyecto}-->",
+			"porcentaje": "<!--#4DHTML aPorcentajeAvance{aIdProyecto}-->",
+			<!--#4DIF Not(Undefined($items))-->
+			<!--#4DHTML _V3_getItemByAPICot(aIdProyecto{aIdProyecto})-->
+			"items": [
+				<!--#4DLOOP aItemLlave-->
+					{
+						"id": "<!--#4DHTML aItemLlave{aItemLlave}-->",
+						"id_titulo": "<!--#4DHTML aItemLlaveTitulo{aItemLlave}-->",
+						"nombre": "<!--#4DHTML _V3_escapeString(aItemNombre{aItemLlave})-->",
+						"nombre_catalogo": "<!--#4DHTML _V3_escapeString(aItemNombreCatalogo{aItemLlave})-->",
+						"pv_unitario": <!--#4DHTML String(aItemPrecioVenta{aItemLlave};"&xml")-->,
+						"pv_total": <!--#4DHTML String(aItemTotalVenta{aItemLlave};"&xml")-->,
+						"pc_unitario": <!--#4DHTML String(aItemPrecioCosto{aItemLlave};"&xml")-->,
+						"pc_total": <!--#4DHTML String(aItemTotalCosto{aItemLlave};"&xml")-->,
+						"cantidad": <!--#4DHTML String(aItemCantidad{aItemLlave};"&xml")-->,
+						"cantidad2": <!--#4DHTML String(aItemCantidad2{aItemLlave};"&xml")-->
+					}<!--#4DIF NOT(aItemLlave{aItemLlave} = aItemLlave{Size of array(aItemLlave)})-->,<!--#4DENDIF-->
+				<!--#4DENDLOOP-->
+			],
+			<!--#4DENDIF-->
+			"otro" : ""
+		}<!--#4DIF NOT(aIdProyecto{aIdProyecto} = aIdProyecto{Size of array(aIdProyecto)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+]

@@ -1,0 +1,10 @@
+{
+	"rows": [
+<!--#4DLOOP $id-->
+		{
+			"id": "<!--#4DHTML $login{$id}-->",
+			"name": "<!--#4DHTML _V3_escapeString($name{$id})-->"
+		}<!--#4DIF NOT($id{$id} = $id{Size of array($id)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

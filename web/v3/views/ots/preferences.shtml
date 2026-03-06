@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!--#4DSCRIPT/_V3_proxy_getInfoPreferences-->
+	<meta charset="utf-8">
+	<title>Preferencias</title>
+	<script type="text/javascript">		
+		$('#formPreferencias button[name="preferences[save]"]').click(function(){
+			var target = $(this);
+			$.ajax({
+				url: '/4DACTION/_V3_ot_save_preferences',
+				data: $("#formPreferencias").serialize(),
+				dataType: 'json',
+				type: 'POST'
+			}).done(function(data){
+				if (data.success) {
+					toastr.success('Las preferencias se guardó exitosamente!');
+					$(target).closest('.ui-dialog-content').dialog('close');	
+				}else{
+					toastr.error('Error al guardar las preferencias. Intente nuevamente.', 'Error');
+				}
+			});	
+		});
+
+		$(document).ready(function(){
+			$('button[name="preferences[save]"]').button({icons:{primary:"ui-icon-disk"}},{text:true});
+		});		
+
+	</script>
+	<style type="text/css">
+		.times > div{
+			vertical-align: bottom;
+			margin:5px;
+			display: inline-block;
+			border:1px solid lightgray;
+			border-radius:3px;
+			padding: 5px;
+		}
+		.times > div > span{
+			display: inline-block;
+			vertical-align:baseline;
+			font-size: 13px;
+		}		
+	</style>
+</head>
+<body>
+	<form id="formPreferencias">		
+	<article>
+	    <label>Días desde:</label>
+	    <select name="preferences[dias_desde]">
+	        <option selected value="<!--#4DTEXT diasDesdeCod-->"><!--#4DTEXT diasDesdeName--></option>
+	       	<!--#4DIF diasDesdeCod#"1"--><option value="1">Lunes</option><!--#4DENDIF-->
+	        <!--#4DIF diasDesdeCod#"2"--><option value="2">Martes</option><!--#4DENDIF-->
+	        <!--#4DIF diasDesdeCod#"3"--><option value="3">Miercoles</option><!--#4DENDIF-->
+	        <!--#4DIF diasDesdeCod#"4"--><option value="4">Jueves</option><!--#4DENDIF-->
+	        <!--#4DIF diasDesdeCod#"5"--><option value="5">Viernes</option><!--#4DENDIF-->
+	        <!--#4DIF diasDesdeCod#"6"--><option value="6">Sábado</option><!--#4DENDIF-->
+	        <!--#4DIF diasDesdeCod#"7"--><option value="7">Domingo</option><!--#4DENDIF-->       
+	    </select>
+	</article>
+	<article>
+	    <label>Días Hasta:</label>
+	    <select name="preferences[dias_hasta]">
+	        <option selected value="<!--#4DTEXT diasHastaCod-->"><!--#4DTEXT diasHastaName--></option>
+	        <!--#4DIF diasHastaCod#"1"--><option value="1">Lunes</option><!--#4DENDIF-->
+	        <!--#4DIF diasHastaCod#"2"--><option value="2">Martes</option><!--#4DENDIF-->
+	        <!--#4DIF diasHastaCod#"3"--><option value="3">Miercoles</option><!--#4DENDIF-->
+	        <!--#4DIF diasHastaCod#"4"--><option value="4">Jueves</option><!--#4DENDIF-->
+	        <!--#4DIF diasHastaCod#"5"--><option value="5">Viernes</option><!--#4DENDIF-->
+	        <!--#4DIF diasHastaCod#"6"--><option value="6">Sábado</option><!--#4DENDIF-->
+	        <!--#4DIF diasHastaCod#"7"--><option value="7">Domingo</option><!--#4DENDIF-->
+	    </select>
+	</article>
+	<article class="times">
+    	<h2>Horas habilitadas: <!--#4DIF vCantidadActivas=24--><span>Todo el día.</span><!--#4DELSE--><span><!--#4DTEXT vCantidadActivas--> hrs.</span><!--#4DENDIF--></h2>
+    	<!--#4DLOOP aTimes-->
+			<div>
+				<span>
+					<!--#4DIF aTimesChecked{aTimes}-->
+						<input value="<!--#4DTEXT aTimes{aTimes}-->" checked name="preferences[times][<!--#4DTEXT aTimes{aTimes}-->]" type="checkbox">
+					<!--#4DELSE-->
+						<input value="<!--#4DTEXT aTimes{aTimes}-->" name="preferences[times][<!--#4DTEXT aTimes{aTimes}-->]" type="checkbox">
+					<!--#4DENDIF-->					
+				</span>
+				<span><!--#4DTEXT aTimes{aTimes}--> hrs.</span>
+			</div></span>
+		<!--#4DENDLOOP-->
+  	</article>  
+	<footer>
+		<button name="preferences[save]" type="button">Guardar</button>
+	</footer>
+	</form>
+</body>
+</html>
+
+
+

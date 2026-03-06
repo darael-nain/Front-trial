@@ -1,0 +1,52 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([preorden]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"sort": {
+		"by": "<!--#4DTEXT sort_by-->",
+		"order": "<!--#4DTEXT sort_order-->"
+	},
+	"rows": [
+<!--#4DLOOP aId -->
+		{
+			"id": <!--#4DHTML aId{aId}-->,
+			"idprov": <!--#4DTEXT aIdProv{aId}-->,
+			"fecha": "<!--#4DHTML String(aFecha{aId})-->",
+			"nombreprov": "<!--#4DHTML _V3_escapeString(aNomProv{aId})-->",
+			"iddoc": "<!--#4DTEXT aIdDoc{aId}-->",
+			"nomdoc": "<!--#4DHTML _V3_escapeString(aNomDoc{aId})-->",
+			"llaveitem": "<!--#4DTEXT aItemLLave{aId}-->",
+			"nomitem": "<!--#4DHTML _V3_escapeString(aItemNombre{aId})-->",
+			"moneda": "<!--#4DTEXT aMoneda{aId}-->",
+			"monto": <!--#4DHTML String(aMonto{aId};"&xml")-->,
+			"observacion": "<!--#4DHTML _V3_escapeString(aObservacion{aId})-->",
+			"idgasto": <!--#4DTEXT aidGastoAsociado{aId}-->,
+			"estado": "<!--#4DTEXT aEstado{aId}-->",
+			"origen": "<!--#4DTEXT aOrigen{aId}-->",
+			"emisor": "<!--#4DHTML _V3_escapeString(aNombreEjecutivo{aId})-->",
+			"nom_ejecutivo": "<!--#4DHTML _V3_escapeString(aNombreEjecutivo{aId})-->",
+			"emisor": "<!--#4DHTML _V3_escapeString(aEmisor{aId})-->",
+			"idnv": <!--#4DTEXT aIdNv{aId}-->,
+			"folionegpres": "<!--#4DTEXT aFolioNegPres{aId}-->",
+			"nomnegpres": "<!--#4DTEXT aNomNegPres{aId}-->"
+		}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	],
+	"currency" : {
+		"code" : "<!--#4DTEXT _V3_defaultCurrencyCode-->",
+		"name" : "<!--#4DTEXT _V3_defaultCurrencyName-->",
+		"symbol" : "<!--#4DTEXT _V3_defaultCurrencySymbol-->",
+		"right" : <!--#4DIF _V3_defaultCurrencyRight-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+		"decimal": <!--#4DTEXT _V3_defaultCurrencyDecimals-->,
+		"decimal_sep": "<!--#4DTEXT _V3_defaultCurrencyDecimalSep-->",
+		"thousand_sep" : "<!--#4DTEXT _V3_defaultCurrencyThousandSep-->",
+		"decimal_text_excel" : "<!--#4DTEXT _V3_defaultCurrencyDecimalsText-->",
+		"format_code_excel" : "<!--#4DTEXT _V3_defaultCurrencyFormatCode-->"
+	}
+}

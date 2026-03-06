@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>    
+    <title>Descuentos legales</title>
+    <meta charset="utf-8">
+    <style type="text/css">
+    	#container-descuento{
+
+    	}
+    	#container-descuento table tbody input{
+    		/*background-color: white;*/
+    	}
+    	table.items.legales tbody tr td input {
+    		text-align: right;
+    	}
+    </style>
+
+    <script type="text/javascript">
+    $(document).ready(function() {
+		axios(`/4DACTION/_V3_proxy_getDescuentoContacto?id=${idContacto}`).
+		then(res => {
+			let container = $('table.items.legales tbody');
+			
+			for(let item of res.data.rows){
+				let line = $(`
+					<tr>
+						<td><input type="text" name="descripcion" value="${item.description}"></td>
+						<td><input type="text" name="monto" value="${item.monto}"></td>
+						<td><input type="text" name="categoria" value="${item.tipoDescuento}"></td>
+						<td><input type="text" name="tipo" value="${item.tipo_valor}"></td>
+						<td><input type="checkbox" ${item.legal ? 'checked' : ''} name="legal"></td>
+					</tr>`);
+				container.append(line);
+			}
+		}).catch(err => {
+			console.log(err);
+		})
+	});
+    </script>
+
+  </head>
+  <body>    
+    <section id="container-descuento"> 
+		<fieldset>
+		    <legend><strong>Descuentos</strong></legend>
+		    <table class="items legales">
+				<thead>
+					<tr>
+						<th width="20%">Descripción</th>
+						<th width="20%">Monto</th>						
+						<th width="20%">Categoría</th>
+						<th width="20%">Tipo</th>
+						<th width="20%">Legal</th>
+					</tr>
+				</thead>
+				<tbody>
+				<!-- 	<tr>
+						<td><input type="text" name="descripcion"></td>
+						<td><input type="text" name="monto"></td>
+						<td><input type="text" name="categoria"></td>
+						<td><input type="text" name="tipo"></td>
+						<td><input type="checkbox" name="legal"></td>
+					</tr> -->
+				</tbody>		
+			</table>
+		</fieldset>		
+    </section>
+  </body>
+</html>
+

@@ -1,0 +1,12 @@
+{
+	"rows": [
+		{
+		  	"id":"true",
+		  	"text":"VALIDADAS"
+		},
+		{
+			"id":"false",
+			"text":"NO VALIDADAS"
+		}
+	]
+}

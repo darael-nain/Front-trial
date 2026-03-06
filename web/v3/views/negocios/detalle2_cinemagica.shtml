@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_serverInfo-->
+		<!--#4DSCRIPT/_V3_proxy_getCotizacionContent/light-->
+		<title>Cotizaciones</title>
+		<meta charset="utf-8">
+
+		<link rel="stylesheet" href="/v3/design/negCotCommon/index.css">
+		<style>
+		.tipo-documento { /* display: none !important; */ }
+
+		input[name="item[][nombre]"] { min-width: 100px !important; }
+		input[name="item[][tipo_documento]"] { width: 30px !important; }
+		</style>
+
+		<script>
+		var margenCompraResumenes = <!--#4DIF v3_margen_compra_resumenes-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+		var decimalesCantidad1 = <!--#4DVAR v3_decimales_cantidad_1-->;
+		var decimalesCantidad2 = <!--#4DVAR v3_decimales_cantidad_2-->;
+
+		var calculo_UR_con_subtotal = <!--#4DVAR calculo_UR_con_subtotal-->;
+
+		if (calculo_UR_con_subtotal) {
+			$(".gasto-presupuestado, .utilidad-presupuestada").hide();
+		}
+
+
+		<!--#4DIF formulario_cinemagica-->
+
+		var modoOfflineCantItems = 0;
+		var modoOfflineSiempre = false;
+		var modoOffline = false;
+		modoOfflineRemember = false;
+		modoOfflineRememberGlobal = false;
+
+		var valor_pelicula_guardado = <!--#4DVAR String(valor_pelicula;"&xml")-->;
+		var director_porcentaje_guardado = <!--#4DVAR String(director_porcentaje;"&xml")-->;
+		var director_valor_guardado = <!--#4DVAR String(director_valor;"&xml")-->;
+
+		<!--#4DELSE-->
+
+		var modoOfflineCantItems = <!--#4DVAR _V3_modoOfflineCantItems-->;
+		<!--#4DIF _V3_modoOfflineSiempre-->
+		var modoOfflineSiempre = true;
+		var modoOffline = true;
+		modoOfflineRemember = true;
+		modoOfflineRememberGlobal = true;
+		<!--#4DELSE-->
+		var modoOfflineSiempre = false;
+		var modoOffline = false;
+		<!--#4DENDIF-->
+
+		<!--#4DENDIF-->
+
+		var showUnidad = <!--#4DIF v3_show_unidad-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+		</script>
+
+		<script>
+		var aplica_sobrecargo_items = <!--#4DIF aplica_sobrecargo_items-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+		<!--#4DIF compartir_ocultar_cantidades-->
+		var compartir_ocultar_cantidades = true;
+		<!--#4DELSE-->
+		var compartir_ocultar_cantidades = false;
+		<!--#4DENDIF-->
+		</script>
+
+		<!--#4DIF _V3_param_copiarPrecioACosto-->
+		<script>
+		// Determinar si se copia precio venta al gasto P
+		var copiar_precio_a_costo = true;
+		</script>
+		<!--#4DENDIF-->
+		<!--#4DIF _V3_verifica_permisos_web(_V3_data_username;480)-->
+		<script>
+		// Determinar si es posible agregar ítems al catálogo
+		var agregar_items_catalogo = true;
+		</script>
+		<!--#4DENDIF-->
+
+
+		<script>
+
+		<!--#4DIF _V3_param_showMargenDesdeCompra-->
+		var margen_desde_compra = true;
+		<!--#4DELSE-->
+		var margen_desde_compra = false;
+		<!--#4DENDIF-->
+
+		<!--#4DIF _V3_param_margenCompraInverso-->
+		var margen_desde_compra_inverso = true;
+		<!--#4DELSE-->
+		var margen_desde_compra_inverso = false;
+		<!--#4DENDIF-->
+
+		<!--#4DIF _V3_param_subtotalGastopManual-->
+		var subtotal_gasto_p_manual = true;
+		<!--#4DELSE-->
+		var subtotal_gasto_p_manual = false;
+		<!--#4DENDIF-->
+
+		<!--#4DIF compartir_totales_titulos-->
+		var compartir_totales_titulos = true;
+		<!--#4DELSE-->
+		var compartir_totales_titulos = false;
+		<!--#4DENDIF-->
+
+		<!--#4DIF compartir_items-->
+		var compartir_items = true;
+		<!--#4DELSE-->
+		var compartir_items = false;
+		<!--#4DENDIF-->
+
+		<!--#4DIF compartir_totales_items-->
+		var compartir_totales_items = true;
+		<!--#4DELSE-->
+		var compartir_totales_items = false;
+		<!--#4DENDIF-->
+
+		
+		<!--#4DIF compartir_solo_resumen-->
+		var compartir_solo_resumen = true;
+		<!--#4DELSE-->
+		var compartir_solo_resumen = false;
+		<!--#4DENDIF-->
+		
+		<!--#4DIF compartir_totales_cotizacion-->
+		var compartir_totales_cotizacion = true;
+		<!--#4DELSE-->
+		var compartir_totales_cotizacion = false;
+		<!--#4DENDIF-->
+
+
+		<!--#4DIF _V3_verifica_permisos_web(_V3_data_username;484)-->
+		var convertir_en_negocio = true;
+		<!--#4DENDIF-->
+
+		<!--#4DIF v3_ingreso_simple_items_cot_neg-->
+		var ingreso_simple_items_cot_neg = true;
+		<!--#4DELSE-->
+		var ingreso_simple_items_cot_neg = false;
+		<!--#4DENDIF-->
+
+		</script>
+
+
+		<script type="text/javascript" src="/v3/views/negocios/script/library/editor<!--#4DIF formulario_cinemagica-->_cinemagica<!--#4DENDIF-->.js?<!--#4DTEXT _V3_version-->"></script>
+		<script type="text/javascript" src="/v3/views/negocios/script/library/editor_common.js?<!--#4DTEXT _V3_version-->"></script>
+		<script type="text/javascript" src="/v3/views/negocios/script/startup/editor<!--#4DIF formulario_cinemagica-->_cinemagica<!--#4DENDIF-->.js?<!--#4DTEXT _V3_version-->"></script>
+
+		<style>
+
+			/* Segunda cantidad */
+			<!--#4DIF NOT(vUsarsegunda_cantidad)-->
+			#tabs-2a .segunda-cantidad {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/* 460	Ver sección totales */
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;451))-->
+			#tabs-2a .block-totales,
+			#tabs-2a .block-cinemagica {
+				display: none;
+			}
+			#tabs-2a .totales{
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/* 452	Ver precios de venta en ítems */
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;452))-->
+			#tabs-2a table .venta {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/* 453	Ver utilidad presupuestada en ítems */
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;453))-->
+			#tabs-2a table .utilidad:not(.real) {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/* 454	Ver utilidad real en ítems */
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;454))-->
+			#tabs-2a table .utilidad.real {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/* 455	Ver gasto presupuestado en ítems */
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;455))-->
+			#tabs-2a table .costo:not(.real):not(.previo) {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/* 593	Ver gasto previo en ítems */
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;593))-->
+			#tabs-2a table .previo {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/* 456	Ver gasto real en ítems */
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;456))-->
+			#tabs-2a table .costo.real {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/* 457	Ver márgenes en ítems */
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;457))-->
+			#tabs-2a table .margen {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/* 545	Ver eficiencia */
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;545))-->
+			#tabs-2a table .eficiencia {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/* 562	Cargar todos los ítems de una categoría */
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;562))-->
+			.add.all-items {
+			    display: none !important;
+			}
+			<!--#4DENDIF-->
+
+			/* 587	Quitar sección herramientas */
+			<!--#4DIF _V3_verifica_permisos_web (_V3_data_username;587)-->
+			table.items tr th:first-of-type,
+			table.items tbody tr td:first-of-type {
+			    display: none !important;
+			}
+			<!--#4DENDIF-->
+
+			/* 587	Quitar sección tipo de documento */
+			<!--#4DIF _V3_verifica_permisos_web (_V3_data_username;588)-->
+			table.items .tipo-documento {
+			    display: none !important;
+			}
+			<!--#4DENDIF-->
+
+			/* 589	Quitar sección selección */
+			<!--#4DIF _V3_verifica_permisos_web (_V3_data_username;589)-->
+			section.sheet.detalle-items table.items thead tr:first-of-type th:last-of-type,
+			section.sheet.detalle-items table.items *.aplica-sobrecargo,
+			section.sheet.detalle-items table.items *.costo-interno,
+			section.sheet.detalle-items table.items *.ocultar-print,
+			section.sheet.detalle-items table.items *.fit,
+			section.sheet.detalle-items table.items thead tr.headings th:last-of-type,
+			section.sheet.detalle-items table.items tbody th:last-of-type,
+			section.sheet.detalle-items table.items tbody th:nth-last-of-type(2),
+			section.sheet.detalle-items table.items tbody th:nth-last-of-type(3),
+			section.sheet.detalle-items table.items tbody th:nth-last-of-type(4),
+			section.sheet.detalle-items table.items tfoot th:nth-last-of-type(3),
+			section.sheet.detalle-items table.items tfoot th:nth-last-of-type(2),
+			section.sheet.detalle-items table.items tfoot th:nth-last-of-type(1) {
+			    display: none !important;
+			}
+			<!--#4DENDIF-->
+
+			/* Márgenes según parámetro */
+
+			<!--#4DIF _V3_param_showMargenDesdeCompra-->
+			#tabs-2a table .margen-desde-venta {
+				display: none;
+			}
+			<!--#4DELSE-->
+			#tabs-2a table .margen-desde-compra {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			<!--#4DIF Not(_V3_param_showHorasExtras)-->
+			#tabs-2a table .horas-extras {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			#tabs-2a section.sheet table .collapsed {
+				display: none;
+			}
+
+			#tabs-2a table .moving-src, table .moving-dst {
+				outline: 1px dashed black;
+				opacity: .3;
+			}
+
+			#tabs-2a section.sheet table th:last-of-type {
+				width: 28px;
+			}
+
+			/* Fondo línea que se está trabajando */
+			tr.focused {
+				background-color: lightblue !important;
+			}
+
+			/* Nuevo */
+
+			#tabs-2a section.sheet > footer > article {
+				position: relative;
+			}
+
+			/* Ocultar costo interno */
+
+			/* section.sheet table > tr > th.costo-interno {
+				display: none;
+			} */
+
+
+			#tabs-2a span.costo {
+				/* color: #CF8D64; */
+				background-color: #CF8D64;
+				color: black;
+			}
+
+			#tabs-2a span.utilidad {
+				/* color: #64CF8D; */
+				background-color: #64CF8D;
+				color: black;
+			}
+
+			#tabs-2a span.total-neto {
+				background-color: yellow;
+				color: black;
+			}
+
+			#tabs-2a section.sheet {
+				position: relative;
+			}
+
+			#tabs-2a table.items th.costo span > input[name] {
+				color: #AF6D44;
+			}
+
+			#tabs-2a table.items th.utilidad span > input[name] {
+				color: #44AF6D;
+			}
+
+			div.totales {
+				height: 200px !important;
+			}
+
+			div.totales, div.totales * {
+				font-size: 12px !important;
+			}
+
+			div.totales > span.total-a-cliente,
+			div.totales > span.total-a-cliente > span:not(:first-of-type) {
+				background-color: black !important;
+				color: white !important;
+				font-weight: bold;
+			}
+
+			div.totales > span.gasto-presupuestado,
+			div.totales > span.utilidad-presupuestada,
+			div.totales > span.gasto-presupuestado > span:not(:first-of-type),
+			div.totales > span.utilidad-presupuestada > span:not(:first-of-type) {
+				background-color: rgb(118,118,118) !important;
+				color: white !important;
+				font-weight: bold;
+			}
+
+			div.totales > span.gasto-real,
+			div.totales > span.utilidad-real,
+			div.totales > span.gasto-real > span:not(:first-of-type),
+			div.totales > span.utilidad-real > span:not(:first-of-type) {
+				background-color: rgb(212,179,124) !important;
+				font-weight: bold;
+			}
+
+			div.totales > span.dato-extended,
+			div.totales > span.dato-extended > span:not(:first-of-type) {
+				background-color: rgb(104,169,109) !important;
+				font-weight: bold;
+			}
+
+			div.totales > span > span:not(:first-of-type) {
+				-webkit-filter: none !important;
+			}
+
+			table.items th.heading-venta {
+
+			}
+
+			table.items thead th.heading-previo {
+				background-color: rgb(124,179,212) !important;
+			}
+
+			table.items th.heading-presupuestado {
+				background-color: rgb(118,118,118) !important;
+			}
+
+			table.items th.heading-real {
+				background-color: rgb(212,179,124) !important;
+				color: rgb(41,41,41);
+			}
+
+			table.items th.heading-eficiencia {
+				background-color: rgb(104,169,109) !important;
+			}
+
+			table.items > thead > tr.headings > th:not(first-of-type) {
+				border-top: 1px solid white !important;
+			}
+
+
+			<!--#4DIF Not(v3_show_unidad)-->
+			.unidad {
+				display: none !important;
+			}
+			<!--#4DELSE-->
+			span.unit {
+				display: none !important;
+			}
+			<!--#4DENDIF-->
+
+			.filled {
+				background-color: yellow;
+			}
+
+		</style>
+
+		<!--
+		<script src="/v3/script/jquery/plugins/Fixed-Header-Table/jquery.fixedheadertable.min.js"></script>
+		-->
+
+		<script>
+
+			$(document).ready(function() {
+				console.warn("detalle2_cinemagica");
+				if (typeof selected_currency == 'undefined')
+					$('#tabs-2a div.totales').find('.numeric.currency input').number(true, currency.decimals, ',', '.');
+				else
+					$('#tabs-2a div.totales').find('.numeric.currency input').number(true, 2, ',', '.');
+				$('#tabs-2a div.totales').find('.numeric.percent input:not([name="cotizacion[descuento][porcentaje]"])').number(true, 2, ',', '.');
+
+				if (!access._498)
+					$('#tabs-2a div.totales').hide();
+
+				if (typeof selected_currency == 'undefined')
+					$('#tabs-2a section.sheet').find('tfoot .numeric.currency input').number(true, currency.decimals, ',', '.');
+				else
+					$('#tabs-2a section.sheet').find('tfoot .numeric.currency input').number(true, 2, ',', '.');
+				$('#tabs-2a section.sheet').find('tfoot .numeric.percent input').number(true, 2, ',', '.');
+				//$('section.sheet').find('footer .numeric.currency input').number(true, 0, ',', '.');
+				//$('section.sheet').find('footer .numeric.percent input').number(true, 2, ',', '.');
+
+				$('section.sheet').find('input[name="cotizacion[descuento][porcentaje]"]').number(true, 6, ',', '.');
+
+
+
+				//$('table.items').fixedHeaderTable({ footer: true, cloneHeadToFoot: true, fixedColumn: false });
+
+				if ($('#tabs-2a input.working-view[name="cotizacion[tipo_cambio]"]').length > 0) {
+					$('#tabs-2a input.working-view[name="cotizacion[tipo_cambio]"]').change(function(event) {
+					
+
+						if (typeof selected_currency != 'undefined') {
+							var data = {};
+							if (selected_currency == "USD")
+								data = {
+									id: <!--#4DVAR id-->,
+									tipo_cambio_usd: $(event.target).val()
+								};
+
+							if (selected_currency == "CLF")
+								data = {
+									id: <!--#4DVAR id-->,
+									tipo_cambio_clf: $(event.target).val()
+								};
+
+							$.ajax({
+								url: '/4DACTION/_V3_setCotizacion',
+								data: data,
+								dataType: 'json',
+								success: function(data) {
+									if (data.success)
+										$('#tabs-2a select[name="cotizacion[currency][working]"]').trigger('change');
+									else
+										toastr.error('No se pudo aplicar la moneda y/o tipo de cambio seleccionados.');
+								}
+							});
+						}
+
+					});
+
+					if (parseFloat($('#tabs-2a input.working-view[name="cotizacion[tipo_cambio]"]').val().replace(/\./g, '.')) == 0) {
+						$('#tabs-2a input.working-view[name="cotizacion[tipo_cambio]"]').val(exchange_rate.toString().replace(/\./g, ','));
+					}
+
+				}
+
+				setTimeout((function() {
+					$('#tabs-2a div.totales').draggable({ containment: "parent" });
+				})(), 3000);
+
+			});
+
+		</script>
+		<style>
+            #tabs-2a div.totales {
+            	position: absolute;
+            	right: 15px;
+            	bottom: 30px;
+            	z-index: 1000;
+            	width: 510px;
+            	height: 110px !important;
+            	padding: 5px;
+
+            	opacity: 0.9;
+            	background-color: darkgrey;
+            	color: black;
+            	font-size: 14px;
+            	cursor: move;
+            	border-radius: 4px;
+            	box-shadow: -4px 4px 8px 1px rgba(48, 48, 48, 0.75);
+            }
+
+            #tabs-2a div.totales.extended {
+            	height: 265px !important;
+            }
+
+            #tabs-2a div.totales > span {
+            	display: block;
+            	padding: 5px !important;
+            }
+
+            #tabs-2a div.totales > span > span {
+            	display: inline-block;
+            }
+
+            #tabs-2a div.totales > span > span:first-of-type {
+            	width: 220px;
+            }
+
+            #tabs-2a div.totales > span > span:nth-of-type(2) {
+            	width: 120px;
+            }
+
+            #tabs-2a div.totales > span > span:nth-of-type(3) {
+            	width: 90px;
+            }
+
+            #tabs-2a div.totales > span > span.numeric {
+            	text-align: right;
+            }
+
+            #tabs-2a span.costo {
+				/* color: #CF8D64; */
+				background-color: #CF8D64;
+				color: black;
+			}
+
+			#tabs-2a span.extended.separation {
+
+			}
+
+			#tabs-2a span.extended {
+				background-color: #648DCF;
+				color: black;
+			}
+
+			#tabs-2a span.utilidad {
+				/* color: #64CF8D; */
+				background-color: #64CF8D;
+				color: black;
+			}
+
+			#tabs-2a span.total-neto {
+				background-color: yellow;
+				color: black;
+			}
+
+			<!--#4DIF v3_ocultar_columna_gastop_unit-->
+			table.items .costo.unitario,
+			table.items .costo.previo.unitario {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+		</style>
+
+		<script type="text/javascript" src="/v3/views/cotizaciones/script/startup/columns.js?<!--#4DTEXT _V3_version-->"></script>
+
+	</head>
+	<body>
+		<div class="totales<!--#4DIF flotante_negocio_extendida--> extended<!--#4DENDIF-->">
+			<!--#4DIF flotante_negocio_extendida-->
+			<span class="total-a-cliente">
+				<span>Subtotal</span>
+				<span class="numeric currency total-neto"><!--#4DIF Undefined(working_currency)--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DIF working_currency=_V3_defaultCurrencyCode--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DVAR working_currency--><!--#4DENDIF--><!--#4DENDIF--> <span name="cotizacion[montos][subtotal_flotante]"></span></span>
+			</span>
+			<!--#4DENDIF-->
+			<span class="total-a-cliente">
+				<span>Total a cliente</span>
+				<span class="numeric currency total-neto"><!--#4DIF Undefined(working_currency)--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DIF working_currency=_V3_defaultCurrencyCode--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DVAR working_currency--><!--#4DENDIF--><!--#4DENDIF--> <span name="cotizacion[ajuste]"></span></span>
+			</span>
+			<span class="gasto-presupuestado">
+				<span>Gasto presupuestado</span>
+				<span class="numeric currency costo"><!--#4DIF Undefined(working_currency)--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DIF working_currency=_V3_defaultCurrencyCode--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DVAR working_currency--><!--#4DENDIF--><!--#4DENDIF--> <span name="cotizacion[montos][costo]"></span></span>
+				<span class="numeric percent costo"><span name="cotizacion[montos][costo_ratio]"></span> %</span>
+			</span>
+			<span class="utilidad-presupuestada">
+				<span>Utilidad presupuestada</span>
+				<span class="numeric currency utilidad"><!--#4DIF Undefined(working_currency)--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DIF working_currency=_V3_defaultCurrencyCode--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DVAR working_currency--><!--#4DENDIF--><!--#4DENDIF--> <span name="cotizacion[montos][utilidad]"></span></span>
+				<span class="numeric percent utilidad"><span name="cotizacion[montos][utilidad_ratio]"></span> %</span>
+			</span>
+			<span class="gasto-real">
+				<span>Gasto real</span>
+				<span class="numeric currency costo real"><!--#4DIF Undefined(working_currency)--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DIF working_currency=_V3_defaultCurrencyCode--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DVAR working_currency--><!--#4DENDIF--><!--#4DENDIF--> <span name="cotizacion[montos][costo_real]"></span></span>
+				<span class="numeric percent costo real"><span name="cotizacion[montos][costo_real_ratio]"></span> %</span>
+			</span>
+			<span class="utilidad-real">
+				<span>Utilidad real<!--#4DIF flotante_negocio_extendida--> (delta)<!--#4DENDIF--></span>
+				<span class="numeric currency utilidad real"><!--#4DIF Undefined(working_currency)--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DIF working_currency=_V3_defaultCurrencyCode--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DVAR working_currency--><!--#4DENDIF--><!--#4DENDIF--> <span name="cotizacion[montos][utilidad_real]"></span></span>
+				<span class="numeric percent utilidad real"><span name="cotizacion[montos][utilidad_real_ratio]"></span> %</span>
+			</span>
+
+			<!--#4DIF flotante_negocio_extendida-->
+			<span class="dato-extended">
+				<span>(-) Gasto of.</span>
+				<span class="numeric currency extended"><!--#4DVAR _V3_defaultCurrencySymbol--> <span name="cotizacion[montos_custom][gasto_of]" style="border-bottom:1px solid gray"></span></span>
+				<span class="numeric percent extended"><span name="cotizacion[montos_custom][gasto_of_ratio]"></span> %</span>
+			</span>
+			<span class="dato-extended" style="border-bottom:1px solid gray">
+				<span>Resultado evento</span>
+				<span class="numeric currency extended"><!--#4DVAR _V3_defaultCurrencySymbol--> <span name="cotizacion[montos_custom][resultado_evento]"></span></span>
+			</span class="dato-extended">
+
+			<span class="dato-extended">
+				<span>(-) Com. Ejec. Agencia</span>
+				<span class="numeric currency extended separation"><!--#4DVAR _V3_defaultCurrencySymbol--> <span name="cotizacion[montos_custom][ejecutivo_ca]"></span></span>
+				<span class="numeric percent extended separation"><span name="cotizacion[montos_custom][ejecutivo_ca_ratio]"></span> %</span>
+			</span>
+			<span class="dato-extended">
+				<span>(-) Com. Ejec. Resultado evento</span>
+				<span class="numeric currency extended"><!--#4DVAR _V3_defaultCurrencySymbol--> <span name="cotizacion[montos_custom][ejecutivo_resultado]" style="border-bottom:1px solid gray"></span></span>
+				<span class="numeric percent extended"><span name="cotizacion[montos_custom][ejecutivo_resultado_ratio]"></span> %</span>
+			</span>
+
+			<span class="dato-extended" style="border-bottom:1px solid gray">
+				<span>Total Com. Ejecutivo</span>
+				<span class="numeric currency extended"><!--#4DVAR _V3_defaultCurrencySymbol--> <span name="cotizacion[montos_custom][total_comision_ejecutivo]"></span></span>
+			</span>
+
+			<span class="dato-extended">
+				<span>(+) Saldo</span>
+				<span class="numeric currency extended"><!--#4DVAR _V3_defaultCurrencySymbol--> <span name="cotizacion[montos_custom][saldo]"></span></span>
+			</span>
+
+			<span class="dato-extended">
+				<span>(+) Diferencia CA</span>
+				<span class="numeric currency extended"><!--#4DVAR _V3_defaultCurrencySymbol--> <span name="cotizacion[montos_custom][dif_ca_empresa]" style="border-bottom:1px solid gray"></span></span>
+				<span class="numeric percent extended"><span name="cotizacion[montos_custom][diferencia_ca_ratio]"></span> %</span>
+			</span>
+
+			<span class="dato-extended">
+				<span>Resultado Final</span>
+				<span class="numeric currency extended separation"><!--#4DVAR _V3_defaultCurrencySymbol--> <span name="cotizacion[montos_custom][resultado_final]"></span></span>
+				<span class="numeric percent extended"><span name="cotizacion[montos_custom][resultado_final_ratio]"></span> %</span>
+			</span>
+			<!--#4DENDIF-->
+		</div>
+		<!-- Formularios de contenido -->
+		<section class="sheet detalle-items" data-id="<!--#4DVAR vid_nv-->" data-index="<!--#4DVAR vid_negocio-->"<!--#4DIF vNuevo--> data-new="true"<!--#4DENDIF--><!--#4DIF vAnulada|vCerrada--> data-readonly="true"<!--#4DENDIF--><!--#4DIF vBloqueada--> data-locked="true"<!--#4DENDIF-->>
+			<!--4DINCLUDE infogeneral.shtml-->
+			<section style="height: 25px; padding:3px;">
+				<label>
+					Moneda
+					<!--#4DIF _V3_new_currency_system-->
+
+					<select name="cotizacion[currency][working]" style="border:1px solid gray; margin:2px" onchange="
+					updateIndexes();
+					(
+						function(element) {
+				
+				
+							var exchange_rate = 1;
+							$.ajax({
+								url: '/4DACTION/_V3_exchangeRate',
+								data: {
+									to: $(element).val()
+								},
+								dataType: 'json',
+								async: false,
+								success: function(data) {
+									exchange_rate = data.rate;
+								}
+							});
+							var data = {
+								id: <!--#4DVAR id-->,
+								first_time: true,
+								moneda_trabajo: $(element).val(),
+								tipo_cambio_trabajo: exchange_rate.toString().replace('.', ',')<!--#4DIF vid_negocio=0-->,
+								preview: true<!--#4DENDIF-->
+							};
+
+							$.ajax({
+								url: '/4DACTION/_V3_setCotizacion',
+								data: data,
+								async: false,
+								dataType: 'json',
+								success: function(data) {
+
+								}
+							});
+							return true;
+						}
+					)(this);
+
+					unaBase.loadInto.viewport('/v3/views/negocios/content.shtml?id=<!--#4DHTML id-->&working_currency=' + $(this).val() + '&changed_working_currency=true', undefined, undefined, true);">
+						<!--#4DLOOP _V3_currenciesCode-->
+						<option value="<!--#4DVAR _V3_currenciesCode{_V3_currenciesCode}-->"<!--#4DIF ( (Undefined(working_currency) & (_V3_defaultCurrencyCode=_V3_currenciesCode{_V3_currenciesCode}) ) | (working_currency=_V3_currenciesCode{_V3_currenciesCode})) --> selected<!--#4DENDIF-->><!--#4DVAR _V3_currenciesName{_V3_currenciesCode}--> (<!--#4DVAR _V3_currenciesCode{_V3_currenciesCode}-->)</option>
+						<!--#4DENDLOOP-->
+					</select>
+
+
+					<!--#4DELSE-->
+					<select name="cotizacion[currency][working]" style="border:1px solid gray; margin:2px" onchange="updateIndexes();(
+						function(element) { 
+							var data = {};
+							if ($(element).val() == 'USD'){
+								data = { 
+								 	id: <!--#4DVAR id-->,
+								 	first_time: true, 
+								 	tipo_cambio_usd: valor_usd.toString().replace('.', ',')<!--#4DIF vid_negocio=0-->,
+								 	preview: true<!--#4DENDIF-->
+							 	}; 
+
+							}
+						 	 if ($(element).val() == 'CLF') {
+							 	 data = {
+							 	 	id: <!--#4DVAR id-->, 
+							 	 	first_time: true,
+							 	 	tipo_cambio_clf: valor_clf.toString().replace('.', ',')<!--#4DIF vid_negocio=0-->,
+							 	 	preview: true<!--#4DENDIF--> 
+						 	 	}; 
+
+						 	 }
+						 	 /*$.ajax({ url: '/4DACTION/_V3_setCotizacion', data: data, async: false, dataType: 'json', success: function(data) {  } });*/ 
+						 	 return true;
+						 })(this);
+						  unaBase.loadInto.viewport('/v3/views/negocios/content.shtml?id=<!--#4DHTML id-->&working_currency=' + $(this).val() + '&changed_working_currency=true', undefined, undefined, true);">
+						<!--#4DIF Undefined(working_currency)-->
+						<option value="<!--#4DVAR <>_V3_defaultCurrencyCode-->" selected><!--#4DVAR <>_V3_defaultCurrencyName--> (<!--#4DVAR <>_V3_defaultCurrencyCode-->)</option>
+						<option value="USD">Dólar (USD)</option>
+						<option value="CLF">UF (CLF)</option>
+						<!--#4DELSE-->
+						<option value="<!--#4DVAR <>_V3_defaultCurrencyCode-->"<!--#4DIF (((working_currency="CLP") | (working_currency=<>_V3_defaultCurrencyCode)) | (working_currency=""))--> selected<!--#4DENDIF-->><!--#4DVAR <>_V3_defaultCurrencyName--> (<!--#4DVAR <>_V3_defaultCurrencyCode-->)</option>
+						<option value="USD"<!--#4DIF (working_currency="USD")--> selected<!--#4DENDIF-->>Dólar (USD)</option>
+						<option value="CLF"<!--#4DIF (working_currency="CLF")--> selected<!--#4DENDIF-->>UF (CLF)</option>
+						<!--#4DENDIF-->
+					</select>
+					<!--#4DENDIF-->
+				</label>
+				<!--#4DIF Not(Undefined(working_currency))-->
+				<!--#4DIF (((working_currency#"CLP") & (working_currency#<>_V3_defaultCurrencyCode)) & (working_currency#""))-->
+				<label style="float:left;">
+					Tipo de cambio
+					<!--#4DIF _V3_new_currency_system-->
+					<input type="text" class="working-view" name="cotizacion[tipo_cambio_trabajo]" value="<!--#4DIF ((working_currency="") | (working_currency=<>_V3_defaultCurrencyCode))-->1<!--#4DELSE--><!--#4DTEXT String([Nota_de_venta]working_exchange_rate;"###########0,0000")--><!--#4DENDIF-->" style="width: auto !important;">
+					<!--#4DELSE-->
+					<input type="text" class="working-view" name="cotizacion[tipo_cambio]" value="<!--#4DIF (working_currency="USD")--><!--#4DTEXT String([Nota_de_venta]param_dolar;"###########0,0000")--><!--#4DENDIF--><!--#4DIF (working_currency="CLF")--><!--#4DTEXT String([Nota_de_venta]UF_ValorCambio;"###########0,00")--><!--#4DENDIF--><!--#4DIF ((working_currency="CLP") | (working_currency=<>_V3_defaultCurrencyCode))-->1<!--#4DENDIF-->" style="width: auto !important;">
+					<!--#4DENDIF-->
+					<button class="fetch exchange-rate working-currency">Obtener tipo de cambio para hoy</button>
+				</label>
+				<!--#4DENDIF-->
+				<!--#4DENDIF-->
+				<label>
+					<input type="checkbox" name="cotizacion[ver_solo_items_usados]" value="true"<!--#4DIF [Nota_de_venta]ver_solo_items_usados--> checked="checked"<!--#4DENDIF-->> Ver solo items usados (con venta o gasto mayor a cero)
+				</label>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<label>
+					Tipo cambio Dolar
+					<input type="text" name="cotizacion[tipo_cambio_trabajo][usd]" style="background-color: white; width: 60px; display: inline-block; text-align: right;">
+				</label>
+				<label class="seccion-clf">
+					Tipo cambio UF
+					<input type="text" name="cotizacion[tipo_cambio_trabajo][clf]" style="background-color: white; width: 60px; display: inline-block; text-align: right;">
+				</label>
+				<script>
+					$(document).ready(function() {
+
+						//debugsimon
+						console.time('3 detalle2')
+						var exchange_rate_usd = (valor_usd_cotizacion > 0)? valor_usd_cotizacion : valor_usd;
+						var exchange_rate_clf = (valor_clf_cotizacion > 0)? valor_clf_cotizacion : valor_clf;
+						if (exchange_rate_usd == 0)
+							exchange_rate_usd = 1;
+						if (exchange_rate_clf == 0)
+							exchange_rate_clf = 1;
+						$('input[name="cotizacion[tipo_cambio_trabajo][usd]"]').number(true, 4, ',', '.').val(exchange_rate_usd);
+						$('input[name="cotizacion[tipo_cambio_trabajo][clf]"]').number(true, 2, ',', '.').val(exchange_rate_clf);
+
+						//debugsimon
+						console.timeEnd('3 detalle2')
+
+						//debugsimon
+						console.time('4 detalle2')
+						$('input[name="cotizacion[tipo_cambio_trabajo][usd]"]').blur(function(event) {
+							unblockCot();
+							var value = parseFloat($(event.target).val());
+
+							var callback = function() {
+
+								(
+									function(value) {
+										var data = {
+											id: <!--#4DVAR id-->,
+											tipo_cambio_usd_express: value.toString().replace('.', ',')<!--#4DIF vid_negocio=0-->,
+											preview: true<!--#4DENDIF-->
+										};
+
+										var ajaxData = params.data();
+        								$.extend(data, data, ajaxData);
+
+										$.ajax({
+											url: '/4DACTION/_V3_setCotizacion',
+											data: data,
+											async: false,
+											dataType: 'json',
+											success: function(data) {
+												unaBase.loadInto.viewport('/v3/views/negocios/content.shtml?id=<!--#4DHTML id-->&changed_working_currency=true', undefined, undefined, true);
+											}
+										});
+										return true;
+									}
+								)(value);
+							}
+
+							updateIndexes(callback);
+
+						});
+						$('input[name="cotizacion[tipo_cambio_trabajo][clf]"]').blur(function(event) {
+							unblockCot();
+							var value = parseFloat($(event.target).val());
+
+							var callback = function() {
+								(
+									function(value) {
+										var data = {
+											id: <!--#4DVAR id-->,
+											tipo_cambio_clf_express: value.toString().replace('.', ',')<!--#4DIF vid_negocio=0-->,
+											preview: true<!--#4DENDIF-->
+										};
+
+										var ajaxData = params.data();
+										$.extend(data, data, ajaxData);
+
+										$.ajax({
+											url: '/4DACTION/_V3_setCotizacion',
+											data: data,
+											async: false,
+											dataType: 'json',
+											success: function(data) {
+												unaBase.loadInto.viewport('/v3/views/negocios/content.shtml?id=<!--#4DHTML id-->&changed_working_currency=true', undefined, undefined, true);
+											}
+										});
+										return true;
+									}
+								)(value);
+							};
+
+							updateIndexes(callback);
+
+						});
+
+						//debugsimon
+						console.timeEnd('4 detalle2')
+					});
+				</script>
+			</section>
+			<div style="width: 100% !important; overflow-x: scroll;">
+				<table class="items cotizacion">
+					<thead>
+						<tr>
+							<!--<th style="background-color: <!- -#4DVAR vColorCorporativoCSS- -> !important;"></th>-->
+							<th style="background-color:#00b16a!important;"></th>
+							<th class="heading-venta" colspan="<!--#4DIF _V3_verifica_permisos_web(_V3_data_username;452)--><!--#4DIF _V3_param_showHorasExtras--><!--#4DIF vUsarsegunda_cantidad--><!--#4DIF v3_show_tipodoc_items--><!--#4DIF v3_show_unidad-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->9<!--#4DELSE-->8<!--#4DENDIF-->
+							<!--#4DELSE-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->8<!--#4DELSE-->7<!--#4DENDIF-->
+							<!--#4DENDIF--><!--#4DELSE--><!--#4DIF v3_show_unidad-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->8<!--#4DELSE-->7<!--#4DENDIF-->
+							<!--#4DELSE-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->7<!--#4DELSE-->6<!--#4DENDIF-->
+							<!--#4DENDIF--><!--#4DENDIF--><!--#4DELSE--><!--#4DIF v3_show_tipodoc_items--><!--#4DIF v3_show_unidad-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->8<!--#4DELSE-->7<!--#4DENDIF-->
+							<!--#4DELSE-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->7<!--#4DELSE-->6<!--#4DENDIF-->
+							<!--#4DENDIF--><!--#4DELSE--><!--#4DIF v3_show_unidad-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->7<!--#4DELSE-->6<!--#4DENDIF-->
+							<!--#4DELSE-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->6<!--#4DELSE-->5<!--#4DENDIF-->
+							<!--#4DENDIF--><!--#4DENDIF--><!--#4DENDIF--><!--#4DELSE--><!--#4DIF vUsarsegunda_cantidad--><!--#4DIF v3_show_tipodoc_items--><!--#4DIF v3_show_unidad-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->8<!--#4DELSE-->7<!--#4DENDIF-->
+							<!--#4DELSE-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->7<!--#4DELSE-->6<!--#4DENDIF-->
+							<!--#4DENDIF--><!--#4DELSE--><!--#4DIF v3_show_unidad-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->7<!--#4DELSE-->6<!--#4DENDIF-->
+							<!--#4DELSE-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->6<!--#4DELSE-->5<!--#4DENDIF-->
+							<!--#4DENDIF--><!--#4DENDIF--><!--#4DELSE--><!--#4DIF v3_show_tipodoc_items--><!--#4DIF v3_show_unidad-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->7<!--#4DELSE-->6<!--#4DENDIF-->
+							<!--#4DELSE-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->6<!--#4DELSE-->5<!--#4DENDIF-->
+							<!--#4DENDIF--><!--#4DELSE--><!--#4DIF v3_show_unidad-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->6<!--#4DELSE-->5<!--#4DENDIF-->
+							<!--#4DELSE-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->5<!--#4DELSE-->4<!--#4DENDIF-->
+							<!--#4DENDIF--><!--#4DENDIF--><!--#4DENDIF--><!--#4DENDIF--><!--#4DELSE--><!--#4DIF _V3_param_showHorasExtras--><!--#4DIF vUsarsegunda_cantidad--><!--#4DIF v3_show_tipodoc_items--><!--#4DIF v3_show_unidad-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->7<!--#4DELSE-->6<!--#4DENDIF-->
+							<!--#4DELSE-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->6<!--#4DELSE-->5<!--#4DENDIF-->
+							<!--#4DENDIF--><!--#4DELSE--><!--#4DIF v3_show_unidad-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->6<!--#4DELSE-->5<!--#4DENDIF-->
+							<!--#4DELSE-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->5<!--#4DELSE-->4<!--#4DENDIF-->
+							<!--#4DENDIF--><!--#4DENDIF--><!--#4DELSE--><!--#4DIF v3_show_tipodoc_items--><!--#4DIF v3_show_unidad-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->6<!--#4DELSE-->5<!--#4DENDIF-->
+							<!--#4DELSE-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->5<!--#4DELSE-->4<!--#4DENDIF-->
+							<!--#4DENDIF--><!--#4DELSE--><!--#4DIF v3_show_unidad-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->5<!--#4DELSE-->4<!--#4DENDIF-->
+							<!--#4DELSE-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->4<!--#4DELSE-->3<!--#4DENDIF-->
+							<!--#4DENDIF--><!--#4DENDIF--><!--#4DENDIF--><!--#4DELSE--><!--#4DIF vUsarsegunda_cantidad--><!--#4DIF v3_show_tipodoc_items--><!--#4DIF v3_show_unidad-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->6<!--#4DELSE-->5<!--#4DENDIF-->
+							<!--#4DELSE-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->5<!--#4DELSE-->4<!--#4DENDIF-->
+							<!--#4DENDIF--><!--#4DELSE--><!--#4DIF v3_show_unidad-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->5<!--#4DELSE-->4<!--#4DENDIF-->
+							<!--#4DELSE-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->4<!--#4DELSE-->3<!--#4DENDIF-->
+							<!--#4DENDIF--><!--#4DENDIF--><!--#4DELSE--><!--#4DIF v3_show_tipodoc_items--><!--#4DIF v3_show_unidad-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->5<!--#4DELSE-->4<!--#4DENDIF-->
+							<!--#4DELSE-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->4<!--#4DELSE-->3<!--#4DENDIF-->
+							<!--#4DENDIF--><!--#4DELSE--><!--#4DIF v3_show_unidad-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->4<!--#4DELSE-->3<!--#4DENDIF-->
+							<!--#4DELSE-->
+							<!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;588))-->3<!--#4DELSE-->2<!--#4DENDIF-->
+							<!--#4DENDIF--><!--#4DENDIF--><!--#4DENDIF--><!--#4DENDIF--><!--#4DENDIF-->"><!--#4DIF (v3_cot_etiqueta_cliente="")--><!--#4DIF _V3_param_preciosComoCostos-->Costo<!--#4DELSE-->Cliente<!--#4DENDIF--><!--#4DELSE--><!--#4DVAR v3_cot_etiqueta_cliente--><!--#4DENDIF--></th>
+
+							<!--#4DIF (_V3_verifica_permisos_web (_V3_data_username;593))-->
+							<!--#4DIF v3_ocultar_columna_gastop_unit-->
+							<th class="heading-previo" colspan="<!--#4DIF _V3_verifica_permisos_web(_V3_data_username;457)-->2<!--#4DELSE-->1<!--#4DENDIF-->">Previo</th>
+							<!--#4DELSE-->
+							<th class="heading-previo" colspan="3">Previo</th>
+							<!--#4DENDIF-->
+							<!--#4DENDIF-->
+
+							<!--#4DIF (_V3_verifica_permisos_web (_V3_data_username;453) | _V3_verifica_permisos_web (_V3_data_username;455) | _V3_verifica_permisos_web (_V3_data_username;457))-->
+							<th class="heading-presupuestado" colspan="<!--#4DIF (_V3_verifica_permisos_web (_V3_data_username;453) & _V3_verifica_permisos_web (_V3_data_username;455) & _V3_verifica_permisos_web (_V3_data_username;457))-->
+							<!--#4DIF v3_ocultar_columna_gastop_unit-->3<!--#4DELSE-->4<!--#4DENDIF-->
+							<!--#4DELSE-->
+							<!--#4DIF (_V3_verifica_permisos_web (_V3_data_username;455) & (_V3_verifica_permisos_web (_V3_data_username;453) | _V3_verifica_permisos_web (_V3_data_username;457)))-->
+							<!--#4DIF v3_ocultar_columna_gastop_unit-->2<!--#4DELSE-->3<!--#4DENDIF-->
+							<!--#4DELSE-->
+							<!--#4DIF (_V3_verifica_permisos_web (_V3_data_username;455) | (_V3_verifica_permisos_web (_V3_data_username;453) & _V3_verifica_permisos_web (_V3_data_username;457)))-->
+							<!--#4DIF v3_ocultar_columna_gastop_unit-->1<!--#4DELSE-->2<!--#4DENDIF-->
+							<!--#4DELSE-->
+							<!--#4DIF (_V3_verifica_permisos_web (_V3_data_username;453) | _V3_verifica_permisos_web (_V3_data_username;457))-->
+							<!--#4DIF v3_ocultar_columna_gastop_unit-->0<!--#4DELSE-->1<!--#4DENDIF-->
+							<!--#4DENDIF-->
+							<!--#4DENDIF-->
+							<!--#4DENDIF-->
+							<!--#4DENDIF-->"><!--#4DIF (v3_cot_etiqueta_presupuestado="")-->Presupuestado<!--#4DELSE--><!--#4DVAR v3_cot_etiqueta_presupuestado--><!--#4DENDIF--></th>
+							<!--#4DENDIF-->
+							<!--#4DIF (_V3_verifica_permisos_web (_V3_data_username;454) | _V3_verifica_permisos_web (_V3_data_username;456) | _V3_verifica_permisos_web (_V3_data_username;457))-->
+							<th class="heading-real" colspan="<!--#4DIF (_V3_verifica_permisos_web (_V3_data_username;454) & _V3_verifica_permisos_web (_V3_data_username;456) & _V3_verifica_permisos_web (_V3_data_username;457))-->
+							3
+							<!--#4DELSE-->
+							<!--#4DIF (_V3_verifica_permisos_web (_V3_data_username;454) & (_V3_verifica_permisos_web (_V3_data_username;456) | _V3_verifica_permisos_web (_V3_data_username;457))) | (_V3_verifica_permisos_web (_V3_data_username;456) & (_V3_verifica_permisos_web (_V3_data_username;454) | _V3_verifica_permisos_web (_V3_data_username;457)))  | (_V3_verifica_permisos_web (_V3_data_username;457) & (_V3_verifica_permisos_web (_V3_data_username;454) | _V3_verifica_permisos_web (_V3_data_username;456)))-->
+							2
+							<!--#4DELSE-->
+							1
+							<!--#4DENDIF-->
+							<!--#4DENDIF-->">Actual</th>
+							<!--#4DENDIF-->
+							<!--#4DIF _V3_verifica_permisos_web (_V3_data_username;545)-->
+							<th class="heading-eficiencia percent currency" colspan="2">Proyectado</th>
+							<!--#4DENDIF-->
+							<th colspan="4">Selección</th>
+						</tr>
+						<tr class="headings">
+
+
+							<!--<th style="background-color: vColorCorporativoCSS!important; border-top: 1px solid <!- -#4DVAR vColorCorporativoCSS- -> !important;"><button style="zoom: 140%" class="ui-icon ui-icon-circle-plus add categoria" title="Agregar categoría" data-help="Haz clic en este botón para agregar una categoría"></button></th>-->
+
+							<th style="background-color:#00b16a!important; border-top: 1px solid #00b16a!important;"><button style="zoom: 140%" class="ui-icon ui-icon-circle-plus add categoria" title="Agregar categoría al principio" data-help="Haz clic en este botón para agregar una categoría"></button></th>
+							<th rowspan="2" style="width: 70px; text-align: left;"><button style="-webkit-filter: invert(100%);" class="ui-icon ui-icon-folder-open toggle all" title="Contraer todo"></button> <!-- Código --></th>
+							<th class="heading-venta">Nombre</th>
+							<th class="heading-venta tipo-documento">Doc.</th>
+							<th class="heading-venta">Cant.</th>
+							<th class="heading-venta unidad">Unidad</th>
+							<th class="heading-venta segunda-cantidad">Días</th>
+							<th class="heading-venta horas-extras">Hrs&nbsp;E.</th>
+							<th class="heading-venta venta">Unitario</th>
+							<th class="heading-venta venta">Subtotal</th>
+
+							<!--#4DIF (_V3_verifica_permisos_web (_V3_data_username;593))-->
+							<th class="heading-previo costo previo unitario">Unitario</th>
+							<th class="heading-previo costo previo">Subtotal</th>
+							<th class="heading-previo utilidad previo">Diferencia</th>
+							<!--#4DENDIF-->
+
+							<th class="heading-presupuestado costo presupuestado unitario">Unitario</th>
+							<th class="heading-presupuestado costo presupuestado">Subtotal</th>
+							<th class="heading-presupuestado utilidad presupuestado">Utilidad&nbsp;[$]</th>
+							<th class="heading-presupuestado margen-desde-venta margen presupuestado">Utilidad&nbsp;[%]</th>
+							<th class="heading-presupuestado margen-desde-compra margen presupuestado">Utilidad&nbsp;[%]</th>
+							<th class="heading-real costo real adquisicion">Gasto real</th>
+							<th class="heading-real utilidad real adquisicion">Utilidad&nbsp;[$]</th>
+							<th class="heading-real margen-desde-venta margen real adquisicion">Utilidad&nbsp;[%]</th>
+							<th class="heading-real margen-desde-compra margen real adquisicion">Utilidad&nbsp;[%]</th>
+							<th class="heading-eficiencia adquisicion eficiencia currency">Diferencia&nbsp;[$]</th>
+							<th class="heading-eficiencia adquisicion eficiencia percent">[%]</th>
+							<th class="aplica-sobrecargo">SC <sup>(*)</sup></th>
+							<th  class="costo-interno">Int.<br><input type="checkbox" name="item[][costo_interno]" value="true" indeterminate="true" style="-webkit-filter: invert(100%); margin-top: 3px; border-color: white; border-width: 2px;"></th>
+							<th class="ocultar-print" title="Oculta el ítem al imprimir">Ocultar<br><input type="checkbox" name="item[][ocultar_print]" value="true" indeterminate="true" style="-webkit-filter: invert(100%); margin-top: 3px; border-color: white; border-width: 2px;"></th>
+							<th><button class="dropdown-button actions items"></button></th>
+						</tr>
+					</thead>
+					<tfoot>
+						<tr>
+							<th></th>
+							<th colspan="2"></th>
+							<th class="tipo-documento"></th>
+							<th class="info"></th>
+							<th class="unidad"></th>
+							<th class="segunda-cantidad"></th>
+							<th class="horas-extras"></th>
+							<th class="venta"><div></div></th>
+							<th class="numeric currency venta"><!--#4DIF Undefined(working_currency)--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DIF working_currency=_V3_defaultCurrencyCode--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DVAR working_currency--><!--#4DENDIF--><!--#4DENDIF--> <span><input readonly name="cotizacion[precios][subtotal]" type="text" value="0"><input style="display: none;" readonly name="cotizacion[cinemagica][costos_directos]" type="text" value="0"></span></th>
+							<!--#4DIF (_V3_verifica_permisos_web (_V3_data_username;593))-->
+							<th class="heading-previo costo previo unitario"></th>
+							<th class="numeric currency heading-previo costo previo"><!--#4DIF Undefined(working_currency)--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DIF working_currency=_V3_defaultCurrencyCode--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DVAR working_currency--><!--#4DENDIF--><!--#4DENDIF--> <span><input readonly name="cotizacion[costos_previo][subtotal]" type="text" value="0"></span></th>
+							<th class="numeric currency heading-previo utilidad previo"><!--#4DIF Undefined(working_currency)--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DIF working_currency=_V3_defaultCurrencyCode--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DVAR working_currency--><!--#4DENDIF--><!--#4DENDIF--> <span><input readonly name="cotizacion[diferencias_previo][subtotal]" type="text" value="0"></span></th>
+							<!--#4DENDIF-->
+							<th class="costo unitario"></th>
+							<th class="numeric currency costo"><!--#4DIF Undefined(working_currency)--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DIF working_currency=_V3_defaultCurrencyCode--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DVAR working_currency--><!--#4DENDIF--><!--#4DENDIF--> <span><input readonly name="cotizacion[costos][subtotal]" type="text" value="0"><input style="display: none;" readonly name="cotizacion[costos][subtotal_directo]" type="text" value="0"></span></th>
+							<th class="numeric currency utilidad"><div><!--#4DIF Undefined(working_currency)--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DIF working_currency=_V3_defaultCurrencyCode--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DVAR working_currency--><!--#4DENDIF--><!--#4DENDIF--> <span><input readonly name="cotizacion[utilidades][subtotal]" type="text" value="0"><input style="display: none;" readonly name="cotizacion[utilidades][subtotal_directo]" type="text" value="0"></span></th>
+							<th class="numeric percent margen-desde-venta margen"><span><input name="cotizacion[margenes][margen_venta]" type="text" value="0"><input style="display: none;" name="cotizacion[margenes][margen_venta_directo]" type="text" value="0"> %</span></th>
+							<th class="numeric percent margen-desde-compra margen"><span><input name="cotizacion[margenes][margen_compra]" type="text" value="0"><input style="display: none;" name="cotizacion[margenes][margen_compra_directo]" type="text" value="0"> %</span></th>
+							<th class="numeric currency costo real adquisicion"><!--#4DIF Undefined(working_currency)--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DIF working_currency=_V3_defaultCurrencyCode--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DVAR working_currency--><!--#4DENDIF--><!--#4DENDIF--> <span><input readonly name="cotizacion[costos_real][subtotal]"></span></th>
+							<th class="numeric currency utilidad real adquisicion"><!--#4DIF Undefined(working_currency)--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DIF working_currency=_V3_defaultCurrencyCode--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DVAR working_currency--><!--#4DENDIF--><!--#4DENDIF--> <span><input readonly name="cotizacion[utilidades_real][subtotal]"></span></th>
+							<th class="numeric percent margen-desde-venta margen real adquisicion"><span><input readonly name="cotizacion[margenes][margen_venta_real]"> %</span></th>
+							<th class="numeric percent margen-desde-compra margen real adquisicion"><span><input readonly name="cotizacion[margenes][margen_compra_real]"> %</span></th>
+							<th class="numeric currency adquisicion eficiencia"><!--#4DIF Undefined(working_currency)--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DIF working_currency=_V3_defaultCurrencyCode--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DVAR working_currency--><!--#4DENDIF--><!--#4DENDIF--> <span><input readonly name="cotizacion[diferencia]"></span></th>
+							<th class="numeric percent adquisicion eficiencia"><span><input readonly name="cotizacion[diferencia_ratio]"> %</span></th>
+							<th></th>
+							<!--
+							<th class="costo-interno"></th>
+							<th></th>
+							<th></th>
+							-->
+							<th></th>
+							<th colspan="2">
+								<label>
+									<input type="checkbox" name="cotizacion[margenes][fijo]" value="true"<!--#4DIF [Nota_de_venta]margen_fijo_items--> checked="checked"<!--#4DENDIF-->> Margen fijo
+								</label>
+							</th>
+						</tr>
+					</tfoot>
+
+
+					<tbody></tbody>
+				</table>
+			</div>
+			<footer>
+				<article class="block-cinemagica"<!--#4DIF Not(v3_sobrecargos_cinemagica)--> style="display: none;"<!--#4DENDIF-->>
+					<h1>Totales</h1>
+					<section class="cinemagica">
+						<ul>
+							<li>
+								<span>Valor película</span>
+								<span class="numeric currency">
+									$ <input required type="text" name="sobrecargo[1][subtotal]" value="0">
+								</span>
+								<span class="numeric currency">
+									US$ <input readonly type="text" name="sobrecargo[1][subtotal][usd]" value="0">
+								</span>
+								<span>Costos directos</span>
+								<span class="numeric currency">
+									$ <input class="costo" readonly type="text" name="cotizacion[cinemagica][costos_directos]" value="0">
+								</span>
+							</li>
+						</ul>
+						<ul style="margin-top: 30px;">
+							<li>
+								<span>Utilidad bruta</span>
+								<span class="numeric percent">
+									<input class="utilidad" required type="text" name="sobrecargo[1][porcentaje]" value="0"> %
+								</span>
+								<span class="numeric currency">
+									$ <input readonly class="utilidad" required type="text" name="sobrecargo[1][valor]" value="0">
+								</span>
+							</li>
+							<li>
+								<span>Costos fijos</span>
+								<span class="numeric percent">
+									<input class="costo"   required type="text" name="sobrecargo[4][porcentaje]" value="0"> %
+								</span>
+								<span class="numeric currency">
+									$ <input class="costo" id="sobrecargo[4]" required type="text" name="sobrecargo[4][valor]" value="0">
+								</span>
+							</li>
+							<li>
+								<span>Utilidad neta</span>
+								<span class="numeric percent"></span>
+								<span class="numeric currency">
+									$ <input readonly class="utilidad" required type="text" name="cotizacion[cinemagica][utilidad_neta]" value="0">
+								</span>
+							</li>
+							<li>
+								<span>Director</span>
+								<span class="numeric percent">
+									<input class="costo" required type="text" name="cotizacion[cinemagica][director][porcentaje]" value="<!--#4DHTML String(v3_director_porcentaje;"&xml")-->"> %
+								</span>
+								<span class="numeric currency">
+									$ <input readonly class="costo" required type="text" name="cotizacion[cinemagica][director][valor]" value="<!--#4DHTML String(v3_director_valor;"&xml")-->">
+								</span>
+							</li>
+							<li>
+								<span>Compañía</span>
+								<span class="numeric percent"></span>
+								<span class="numeric currency">
+									$ <input readonly class="utilidad" required type="text" name="cotizacion[cinemagica][compania][valor]" value="0">
+								</span>
+							</li>
+						</ul>
+						<ul style="margin-top: 30px;">
+						<li>
+							<span>Comisión agencia</span>
+							<span class="numeric percent">
+								<input class="costo"  required type="text" name="sobrecargo[6][porcentaje]" value="0"> %
+							</span>
+							<span class="numeric currency">
+								$ <input  class="costo" id="sobrecargo[6]" required type="text" name="sobrecargo[6][valor]" value="0">
+							</span>
+						</li>
+						</ul>
+					</section>
+
+					<section>
+						<h1>Montos</h1>
+						<ul>
+							<li class="margin-before" style="zoom: 115%;"><span>Total a Cliente</span> <span class="numeric currency" style="margin-left: 5px; width: 120px;"><!--#4DIF Undefined(working_currency)--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DIF working_currency=_V3_defaultCurrencyCode--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DVAR working_currency--><!--#4DENDIF--><!--#4DENDIF--> <input readonly type="text" name="cotizacion[ajuste]" style="width: 65%;">  <button style="display: inline-block;" class="ui-icon ui-icon-notice detail total">Ver total en dólares</button></span></li>
+						</ul>
+						<ul style="margin-top: 30px;">
+							<li><span><!--#4DVAR <>_V3_IVAName--> (<!--#4DVAR <>_V3_IVARate-->%)</span> <span class="numeric currency"><!--#4DIF Undefined(working_currency)--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DIF working_currency=_V3_defaultCurrencyCode--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DVAR working_currency--><!--#4DENDIF--><!--#4DENDIF--> <input readonly type="text" name="cotizacion[montos][impuesto]" data-porcentaje="19" value="<!--#4DVAR Num(vtotaliva)-->"></span> <span><label><input type="checkbox" name="cotizacion[montos][impuesto][exento]" value="true"<!--#4DIF vExento--> checked<!--#4DENDIF-->> Exento</label></span></li>
+							<li><span>Total + <!--#4DVAR <>_V3_IVAName--></span> <span class="numeric currency"><!--#4DIF Undefined(working_currency)--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DIF working_currency=_V3_defaultCurrencyCode--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DVAR working_currency--><!--#4DENDIF--><!--#4DENDIF--> <input readonly type="text" name="cotizacion[montos][total]"></span></li>
+						</ul>
+						<ul style="display: none;">
+							<li><span>Utilidad total presup.</span> <span class="numeric currency"><!--#4DIF Undefined(working_currency)--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DIF working_currency=_V3_defaultCurrencyCode--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DVAR working_currency--><!--#4DENDIF--><!--#4DENDIF--> <input class="utilidad" readonly type="text" name="cotizacion[montos][utilidad]" value="0"></span> <span class="numeric percent"><input class="utilidad" readonly type="text" name="cotizacion[montos][utilidad_ratio]" value="0.00"> %</span></li>
+							<li><span>Gasto total presup.</span> <span class="numeric currency"><!--#4DIF Undefined(working_currency)--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DIF working_currency=_V3_defaultCurrencyCode--><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DELSE--><!--#4DVAR working_currency--><!--#4DENDIF--><!--#4DENDIF--> <input class="costo" readonly type="text" name="cotizacion[montos][costo]" value="0"></span> <span class="numeric percent"><input class="costo" readonly type="text" name="cotizacion[montos][costo_ratio]" value="0.00"> %</span></li>
+						</ul>
+					</section>
+				</article>
+			</footer>
+		</section>
+	</body>
+
+</html>

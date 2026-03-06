@@ -1,0 +1,30 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Prm_Usuario]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP aUsuarioId -->
+		{
+			"id": "<!--#4DHTML aUsuarioId{aUsuarioId}-->",
+			"ejecutivo": <!--#4DIF aUsuarioEjecutivo{aUsuarioId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"text": "<!--#4DHTML _V3_escapeString(aUsuarioNombres{aUsuarioId})--> <!--#4DHTML _V3_escapeString(aUsuarioApPat{aUsuarioId})-->",
+			"text2": "<!--#4DIF aUsuarioAlias{aUsuarioId}#""--><!--#4DHTML _V3_escapeString(aUsuarioAlias{aUsuarioId})--><!--#4DELSE--><!--#4DHTML _V3_escapeString(aUsuarioId{aUsuarioId})--><!--#4DENDIF-->",
+			"ap_pat": "<!--#4DHTML _V3_escapeString(aUsuarioApPat{aUsuarioId})-->",
+			"ap_mat": "<!--#4DHTML _V3_escapeString(aUsuarioApMat{aUsuarioId})-->",
+			"nombres": "<!--#4DHTML _V3_escapeString(aUsuarioNombres{aUsuarioId})-->",
+			"cargo": "<!--#4DHTML _V3_escapeString(aUsuarioCargo{aUsuarioId})-->",
+			"rut": "<!--#4DHTML _V3_escapeString(aUsuarioRut{aUsuarioId})-->",
+			"direccion": "<!--#4DHTML _V3_escapeString(aUsuarioDireccion{aUsuarioId})-->",
+			"telefonos": "<!--#4DHTML _V3_escapeString(aUsuarioTelefonos{aUsuarioId})-->",
+			"email": "<!--#4DHTML _V3_escapeString(aUsuarioEmail{aUsuarioId})-->",
+			"allow_email": <!--#4DIF aUsuarioAllowEmail{aUsuarioId}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aUsuarioId{aUsuarioId} = aUsuarioId{Size of array(aUsuarioId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

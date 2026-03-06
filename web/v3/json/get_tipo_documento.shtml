@@ -1,0 +1,52 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Tipo_Doctribu]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP aTipoDocumentoId -->
+		{
+			"id": <!--#4DHTML Num(aTipoDocumentoId{aTipoDocumentoId})-->,
+			"text": "<!--#4DHTML aTipoDocumentoNombre{aTipoDocumentoId}-->",
+			"abbr": "<!--#4DHTML aTipoDocumentoAbbr{aTipoDocumentoId}-->",
+			"tipoSoftland": "<!--#4DHTML aTipoSoftland{aTipoDocumentoId}-->",
+			"softland": "<!--#4DHTML aSoftland{aTipoDocumentoId}-->",
+			"ratio": <!--#4DHTML String(aTipoDocumentoValor{aTipoDocumentoId};"&xml")-->,
+			"valor_usd": <!--#4DIF aTipoDocumentoValorUSD{aTipoDocumentoId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"default": <!--#4DIF aDocumentoDefault{aTipoDocumentoId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"valor_moneda": "<!--#4DHTML aTipoDocumentoValorMoneda{aTipoDocumentoId}-->",
+			"valor_moneda_nv": "<!--#4DHTML aTD_val_moneda_nv{aTipoDocumentoId}-->",
+			"code": "<!--#4DHTML aTipoDocCode{aTipoDocumentoId}-->",
+			"cuenta_centralizacion": "<!--#4DHTML aCtableCuentaCentral{aTipoDocumentoId}-->",
+            "impuesto": "<!--#4DHTML aImpuestoId{aTipoDocumentoId}-->",
+            "libroBoletas": "<!--#4DHTML aLibroBoletas{aTipoDocumentoId}-->",
+            "libroC": "<!--#4DHTML aLibroC{aTipoDocumentoId}-->",
+            "negocio": "<!--#4DHTML aNegocio{aTipoDocumentoId}-->",
+            "gastos": "<!--#4DHTML aGastos{aTipoDocumentoId}-->",
+            "ventas": "<!--#4DHTML aVentas{aTipoDocumentoId}-->",
+            "especial": "<!--#4DHTML aEspecial{aTipoDocumentoId}-->",
+            "excluir_gastos": "<!--#4DHTML aExcluirGastos{aTipoDocumentoId}-->",
+            "contableBoleta": "<!--#4DHTML aContableBoleta{aTipoDocumentoId}-->",
+            "contableBoletaVenta": "<!--#4DHTML aContableBoletaVenta{aTipoDocumentoId}-->",
+            "contableFactura": "<!--#4DHTML aContableFactura{aTipoDocumentoId}-->",
+            "contableFacturaExenta": "<!--#4DHTML aContableFacturaExenta{aTipoDocumentoId}-->",
+            "contableNotaCredito": "<!--#4DHTML aContableNotaCredito{aTipoDocumentoId}-->",
+            "contableNotaDebito": "<!--#4DHTML aContableNotaDebito{aTipoDocumentoId}-->",
+			"contableFacturaLiquidacion": "<!--#4DHTML aContableFacturaLiquidacion{aTipoDocumentoId}-->",
+            "contableFacturaTerceros": "<!--#4DHTML aContableFacturaTerceros{aTipoDocumentoId}-->",
+            "justificaAutomatico": <!--#4DHTML aJustificaAutomatico{aTipoDocumentoId}-->,
+            "valido": "<!--#4DHTML aValido{aTipoDocumentoId}-->",
+			"inverse": <!--#4DIF aTipoDocumentoDivision{aTipoDocumentoId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DIF aTipoDocumentoHE{aTipoDocumentoId}-->,
+			"hora_extra": {
+				"factor": <!--#4DHTML String(aTipoDocumentoHEFactor{aTipoDocumentoId};"&xml")-->,
+				"jornada": <!--#4DIF aTipoDocumentoHEJornada{aTipoDocumentoId}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+			}<!--#4DENDIF-->
+		}<!--#4DIF NOT(aTipoDocumentoId{aTipoDocumentoId} = aTipoDocumentoId{Size of array(aTipoDocumentoId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

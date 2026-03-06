@@ -1,0 +1,34 @@
+<table width="100%" border="1" cellpadding="0" cellspacing="0" hspace="0" vspace="0">
+    <tr bgcolor="#CCCCCC" >
+        <td class="center">NRO</td>        
+        <td class="center">FECHA</td>
+		<td class="center">PROYECTO</td>
+        <td class="center">CLIENTE / PROV.</td>		
+        <td class="center">REFERENCIA</td>
+        <td class="center">ESTADO</td>
+        <td class="center">TOTAL [$]</td>            
+        <td class="center">ACCION</td>        
+    </tr>      
+  <!--#4DLOOP aIdDocumento-->
+  <tr bgcolor="">
+    <td class="center-rojo-maraco"><!--#4DVAR aFolioDocumento{aIdDocumento}--></td>    
+    <td class="center"><!--#4DVAR aFechaDocumento{aIdDocumento}--></td>    
+	<td class="left"><!--#4DVAR aNegocioDocumento{aIdDocumento}--></td>
+    <td class="left"><!--#4DVAR aEmpresaDocumento{aIdDocumento}--></td>
+    <td class="left"><!--#4DVAR aRefDocumento{aIdDocumento}--></td>    
+    <td class="center"><!--#4DVAR aEstadoDocumento{aIdDocumento}--></td>	
+	<td class="right"><!--#4DVAR String(aTotalDocumento{aIdDocumento};"$###.###.###.###")--></td>
+    <td>
+		<div align="center">
+            <a class="link-crear-lista" title="Entrar a la OP." href="/4DACTION/W_EDITAR_PAGOS/<!--#4DVAR aIdDocumento{aIdDocumento}-->/n" >
+                <p>
+                    <img src="/imagenes/page_white_edit.png" border="0" />
+                    <span>Editar</span>
+                </p>                        
+            </a>			
+		</div>	
+    </td>
+	
+  </tr>
+<!--#4DENDLOOP-->
+</table>

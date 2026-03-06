@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--#4DSCRIPT/_V3_proxy_getCotizacionContent-->
+    <meta charset="utf-8"/>
+    <script src="/v3/script/jquery/jquery.js"></script>
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" media="print" href="/v3/design/print.css?_=363654">
+    <title>NRO <!--#4DTEXT vid_negocio--></title>
+    <style>
+    @media print {
+      <!--#4DIF (preview="true") & (nullified#"true") & (vid_negocio#-1)-->
+      html > body:before {
+        display: block;
+        position: absolute;
+        top:180px;
+        left:50px;
+        width:100vw;
+        text-align: center;
+        content: 'COPIA NO VALIDA';
+        color: rgba(0,0,0,.3);
+        font-size:140px;
+        font-weight: bold;
+        -webkit-transform: rotate(-45deg);
+      }
+      <!--#4DENDIF-->
+      <!--#4DIF (preview="true") & (nullified#"true") & (vid_negocio=-1)-->
+      html > body:before {
+        display: block;
+        position: absolute;
+        top: 220px;
+        left: 50px;
+        width: 100vw;
+        text-align: center;
+        content: 'PLANTILLA';
+        color: rgba(0,0,0,.3);
+        font-size: 160px;
+        font-weight: bold;
+        -webkit-transform: rotate(-45deg);
+      }
+      <!--#4DENDIF-->
+      <!--#4DIF nullified="true"-->
+      html > body:before {
+        display: block;
+        position: absolute;
+        top: 215px;
+        left: 120px;
+        width: 100vw;
+        text-align: center;
+        content: 'ANULADO';
+        color: rgba(0,0,0,.3);
+        font-size: 145px;
+        font-weight: bold;
+        -webkit-transform: rotate(-45deg);
+      }
+      <!--#4DENDIF-->
+      body {
+        font-family: 'Open Sans' !important;
+      }
+      .cuadradito {
+         background-color: <!--#4DVAR vColorCorporativoCSS--> !important;
+      }
+
+      .tabla-detalle, .totales > table, .tabla-condiciones {
+        width: 100% !important;
+      }
+
+      .info-extra{
+        padding:0px;
+        position:absolute;
+        /*right:-100px;
+        top:80px;*/
+        left:155px;
+        top:30px;
+        font-size:22px;
+      }
+      .info-extra > span{
+        display:block;
+        font-weight:bold;
+        text-align: left;
+      }
+
+      .bloque1 td {
+          padding-top: 2px;
+          padding-bottom: 2px;
+      }
+
+    }
+    </style>
+    <script>
+    $(document).ready(function() {
+      $('.imagenes-adjuntas').hide();
+      $('.archivos-enlazados').hide();
+
+      $.ajax({
+        url: '/4DACTION/_V3_getAttachmentByCotizacion',
+        data: {
+          id: <!--#4DVAR vid_nv-->,
+          sid: '<!--#4DVAR sid-->'
+        },
+        async: false,
+        dataType: 'json',
+        success: function(data) {
+          var htmlObject;
+          if (data.rows.length > 0)
+            $('.imagenes-adjuntas').show();
+          for (var i = 0; i < data.rows.length; i++) {
+            htmlObject = '<p style="margin-top: 15px; margin-bottom: 5px;">' + data.rows[i].notas + '</p><img src="/4DACTION/_V3_getAttachment?id=' + data.rows[i].id + '&amp;sid=<!--#4DVAR sid-->" alt="' + data.rows[i].text + '" width="900">';
+            $('.attachments').append(htmlObject);
+          }
+        }
+      });
+
+      $.ajax({
+        url: '/4DACTION/_V3_getLinkByCotizacion',
+        data: {
+          id: <!--#4DVAR vid_nv-->,
+          sid: '<!--#4DVAR sid-->'
+        },
+        async: false,
+        dataType: 'json',
+        success: function(data) {
+          var htmlObject;
+          if (data.rows.length > 0)
+            $('.archivos-enlazados').show();
+          for (var i = 0; i < data.rows.length; i++) {
+              if (data.rows[i].visible) {
+                  htmlObject = '<p style="margin-top: 15px; margin-bottom: 5px;"><a href="' + data.rows[i].href + '">' + data.rows[i].notas + '</a></p>';
+                  $('.links').append(htmlObject);
+              }
+          }
+        }
+      });
+
+      <!--#4DIF print_datos_adicionales_cot-->
+      $.ajax({
+        url: '/4DACTION/_V3_getDatoByCotizacion',
+        data: {
+          id: <!--#4DVAR vid_nv-->,
+          sid: '<!--#4DVAR sid-->'
+        },
+        async: false,
+        dataType: 'json',
+        success: function(data) {
+          var htmlObject;
+          if (data.rows.length > 0)
+            $('.datos-adicionales').show();
+          for (var i = 0; i < data.rows.length; i++) {
+            if (data.rows[i].enabled && data.rows[i].valor != '') {
+              htmlObject = '<p style="font-size: 11px; display: block !important; margin: 0;">' + data.rows[i].nombre + ': ' + data.rows[i].valor + '</p>';
+              $('.datos').append(htmlObject);
+            }
+          }
+          if ($('.datos').text() == '')
+            $('.datos-adicionales').hide();
+        }
+      });
+      <!--#4DENDIF-->
+
+    });
+    </script>
+</head>
+
+<body>
+  <!--#4DIF custom_background-->
+  <img src="/4DACTION/_V3_printBackground" style="display: block; width: 1024px; height: 1400px; position: absolute; top: 0; left: 0;
+  z-index: -20;">
+  <!--#4DENDIF-->
+<div class="contenedor" align="center">
+<div class="cuadro">
+
+<div class="new-header">
+
+<img src="<!--#4DTEXT vUrlImagenLogo-->" width="<!--#4DTEXT vAnchoPicture-->" height="<!--#4DTEXT vAltoPicture-->" style="max-width: 500px; max-height: 500px; padding: 10px; margin-left: <!--#4DIF custom_background-->50<!--#4DELSE-->30<!--#4DENDIF-->px;">
+
+  <p>
+    <label><!--#4DTEXT razonPropietaria--></label>
+    <label><!--#4DTEXT giroPropietaria--></label>
+    <label><!--#4DTEXT rutPropietaria--></label>
+    <label><!--#4DTEXT direccionPropietaria--></label>
+    <label><!--#4DTEXT telefonoPropietaria--></label>
+    <label><!--#4DTEXT comunaPropietaria--> - <!--#4DTEXT ciudadPropietaria--></label>
+  </p>
+  <p class="atributos"<!--#4DIF custom_background--> style="margin-right: 30px;"<!--#4DENDIF-->>
+    <span><!--#4DIF idNegocioPrint#0--><!--#4DIF idNegocioPrint#-1-->N&deg; <!--#4DTEXT idNegocioPrint--><!--#4DELSE-->Plantilla<!--#4DENDIF--><!--#4DELSE-->Borrador<!--#4DENDIF--></span>
+    <!--#4DIF vFechaImpresion#"00-00-00"--><span><!--#4DTEXT vFechaImpresion--></span><!--#4DENDIF-->
+    <!--#4DIF ((vVersionActual#"") & (vVersionActual#"Ver-1-@"))--><span>Versión <!--#4DTEXT Substring(vVersionActual;5;Position("-";vVersionActual;5)-5)--></span><!--#4DENDIF-->
+  </p>
+</div>
+
+<!--#4DIF showInfoArribaInfo--><div class="info-extra"><span><!--#4DTEXT razon--></span><span><!--#4DTEXT rut--></span></div><!--#4DENDIF-->
+
+<div align="left" class="header-datos">
+  <table class="tabla-datos" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td class="etiquetas" width="60">Para</td>
+    <td class="para-cliente" width="200"> : <!--#4DVAR Uppercase(vnombrecontacto;*)--></td>
+    <td class="etiquetas" width="60">Empresa</td>
+    <td class="otros-header" width="300"> : <!--#4DVAR Uppercase(vempresa;*)--></td>
+  </tr>
+  <tr>
+    <td class="etiquetas">Cliente</td>
+    <td class="para-cliente"> :  <!--#4DVAR Uppercase(valias;*)--></td>
+    <td class="etiquetas">Rut</td>
+    <td class="otros-header"> :  <!--#4DIF vrut#""--><!--#4DVAR Uppercase(vrut;*)--><!--#4DELSE-->N/A<!--#4DENDIF--></td>
+  </tr>
+  <tr>
+    <td class="etiquetas">De</td>
+    <td class="otros-header"> : <!--#4DVAR vDeEmisor--></td>
+    <td class="etiquetas">Dirección</td>
+    <td class="otros-header"> : <!--#4DIF vdireccion#""--><!--#4DVAR Uppercase(vdireccion;*)--><!--#4DELSE-->N/A<!--#4DENDIF--></td>
+  </tr>
+  <tr>
+    <td class="etiquetas">E-mail</td>
+    <td class="otros-header"> : <!--#4DIF vDeEmisorEmail#""--><!--#4DVAR Uppercase(vDeEmisorEmail;*)--><!--#4DELSE-->N/A<!--#4DENDIF--></td>
+    <td class="etiquetas">Tel.</td>
+    <td class="otros-header"> : <!--#4DIF vfono#""--><!--#4DVAR Uppercase(vfono;*)--><!--#4DELSE-->N/A<!--#4DENDIF--></td>
+  </tr>
+  </table>
+</div>
+
+<!--#4DIF print_datos_adicionales_cot-->
+<table class="tabla-condiciones datos-adicionales" border="0" cellpadding="0" cellspacing="0">
+  <tr bgcolor="#DDDDDD" style="display: none !important;">
+    <td class="condiciones">DATOS ADICIONALES</td>
+  </tr>
+  <tr>
+    <td><div class="datos"></div></td>
+  </tr>
+</table>
+<!--#4DENDIF-->
+
+<table class="tabla-detalle" border="0" cellpadding="1" cellspacing="0">
+<thead style="display: table-header-group;">
+  <tr>
+    <td colspan="5" class="referencia"><!--#4DVAR vreferencia--> <span style="position: absolute; right: 0;">Cotización</span></td>
+  </tr>
+  <tr>
+    <td colspan="5">&nbsp;</td>
+  </tr>
+  <!--#4DLOOP a_tipo_det-->
+  <!--#4DIF (special_item_summary & a_especial{a_tipo_det} & (a_tipo_det{a_tipo_det}#"TITULO"))-->
+  <tr>
+    <td colspan="5" style="font-size: 13px;"><!--#4DIF show_code--><!--#4DVAR a_codigo{a_tipo_det}--> <!--#4DVAR Uppercase(a_des{a_tipo_det};*)--><!--#4DENDIF--></td>
+  </tr>
+  <!--#4DENDIF-->
+  <!--#4DENDLOOP-->
+  <tr>
+    <td colspan="5">&nbsp;</td>
+  </tr>
+
+  <tr bgcolor="#000000">
+    <td class="left-h"><div class="cuadradito"></div>Item</td>
+    <td class="center-h">Nombre</td>
+    <!--#4DIF porcentaje_valor_plataforma#0-->
+    <td class="center-h">Valor&nbsp;plataforma</td>
+    <td class="center-h">% desc.</td>
+    <!--#4DENDIF-->
+    <!--#4DIF Not(compartir_ocultar_cantidades)-->
+    <td class="center-h">Cant.</td>
+    <!--#4DIF vUsarsegunda_cantidad-->
+     <td class="center-h">Días</td>
+    <!--#4DENDIF-->
+    <td class="center-h"><!--#4DIF (show_total_item)-->P.U.<!--#4DENDIF--></td>
+    <!--#4DENDIF-->
+    <td class="center-h"><!--#4DIF (show_total_titulo | show_total_item)-->Subtotal<!--#4DENDIF--></td>
+  </tr>
+</thead>
+<tbody>
+   <!--#4DLOOP a_tipo_det-->
+    <!--#4DIF a_tipo_det{a_tipo_det}="TITULO"-->
+     <!--#4DIF (Not((special_item_summary) & (a_especial{a_tipo_det})) & Not(a_items_ocultar_print{a_tipo_det}))-->
+      <tr class="tr-titulo" bgcolor="#DDDDDD">
+        <!--#4DIF (show_total_titulo) -->
+        <td colspan="<!--#4DIF porcentaje_valor_plataforma#0-->7<!--#4DELSE--><!--#4DIF vUsarsegunda_cantidad-->5<!--#4DELSE-->4<!--#4DENDIF--><!--#4DENDIF-->" class="titulos"><!--#4DVAR Uppercase(a_des{a_tipo_det};*)-->
+          <!--#4DIF (a_observ_items{a_tipo_det}#"")--><div class="observacion-items"><!--#4DHTML Replace string(Replace string(Replace string(_V3_escapeString(a_observ_items{a_tipo_det});"<";"&lt");">";"&gt;");"\\n";"<br>")--></div><!--#4DENDIF-->
+        </td>
+        <td class="titulos" style="white-space: nowrap;padding-left: 10px;text-align: right;"><!--#4DVAR a_subtotal{a_tipo_det}--></td>
+        <!--#4DELSE-->
+        <td colspan="<!--#4DIF porcentaje_valor_plataforma#0-->8<!--#4DELSE-->6<!--#4DENDIF-->" class="titulos"><!--#4DVAR a_des{a_tipo_det}-->
+          <!--#4DIF (a_observ_items{a_tipo_det}#"")--><div class="observacion-items"><!--#4DHTML Replace string(Replace string(Replace string(_V3_escapeString(a_observ_items{a_tipo_det});"<";"&lt");">";"&gt;");"\\n";"<br>")--></div><!--#4DENDIF-->
+        </td>
+        <!--#4DENDIF-->
+      </tr>
+      <!--#4DENDIF-->
+    <!--#4DELSE-->
+        <!--#4DIF (show_item) & ((compartir_ocultar_items_cero & (a_subtotal_raw{a_tipo_det}#0)) | Not(compartir_ocultar_items_cero))-->
+        <!--#4DIF (Not((special_item_summary) & (a_especial{a_tipo_det})) & Not(a_items_ocultar_print{a_tipo_det}))-->
+        <tr class="tr-item">
+            <td class="orden-alfa"><!--#4DVAR a_orden_alfa_det{a_tipo_det}--></td>
+            <td class="items">
+              <!--#4DIF show_code--><!--#4DVAR a_codigo{a_tipo_det}--><!--#4DENDIF-->
+              <!--#4DVAR Uppercase(a_des{a_tipo_det};*)--><!--#4DIF mostrar_tipo_doc & (a_tipo_doc{a_tipo_det}#"")--><br><small style="text-transform: uppercase;">Tipo de documento: <!--#4DTEXT a_tipo_doc{a_tipo_det}--></small><!--#4DENDIF-->
+              <div class="observacion-items"><!--#4DHTML Replace string(Replace string(Replace string(_V3_escapeString(a_observ_items{a_tipo_det});"<";"&lt");">";"&gt;");"\\n";"<br>")--></div>
+            </td>
+            <!--#4DIF porcentaje_valor_plataforma#0-->
+            <!--#4DIF ((tipoCambio="PESOS") | (tipoCambio=<>_V3_defaultCurrencyName))-->
+            <td class="nro-items-subtotal"><!--#4DVAR _V3_formatCurrency(Num(a_pu1{a_tipo_det})/(porcentaje_valor_plataforma/100))--></td>
+            <!--#4DENDIF-->
+            <!--#4DIF tipoCambio="DOLARES"-->
+            <td class="nro-items-subtotal"><!--#4DVAR String(Num(a_pu1{a_tipo_det})/(porcentaje_valor_plataforma/100);"US$  ###.###.###.##0,00")--></td>
+            <!--#4DENDIF-->
+            <!--#4DIF tipoCambio="UF"-->
+            <td class="nro-items-subtotal"><!--#4DVAR String(Num(a_pu1{a_tipo_det})/(porcentaje_valor_plataforma/100);"###.###.###.##0,00 UF")--></td>
+            <!--#4DENDIF-->
+            <td class="nro-items-cant"><!--#4DVAR 100-porcentaje_valor_plataforma--> %</td>
+            <!--#4DENDIF-->
+            <!--#4DIF Not(compartir_ocultar_cantidades)-->
+            <td class="nro-items-cant"><!--#4DVAR a_cantidad{a_tipo_det}--><!--#4DIF cantidad_como_hh--> HH<!--#4DENDIF--></td>
+
+            <!--#4DIF vUsarsegunda_cantidad-->
+            <td class="nro-items-cant"><!--#4DVAR a_cantidad2{a_tipo_det}--></td>
+            <!--#4DENDIF-->
+
+            <td class="nro-items-subtotal" style="white-space: nowrap;padding-left: 5px;"><!--#4DIF (show_total_item)--><!--#4DVAR a_pu1{a_tipo_det}--><!--#4DENDIF--></td>
+            <!--#4DENDIF-->
+            <td class="nro-items-subtotal" style="white-space: nowrap;padding-left: 5px;"><!--#4DIF (show_total_item)--><!--#4DVAR a_subtotal{a_tipo_det}--><!--#4DENDIF--></td>
+        </tr>
+        <!--#4DENDIF-->
+        <!--#4DENDIF-->
+    <!--#4DENDIF-->
+    <!--#4DENDLOOP-->
+</tbody>
+</table>
+
+
+<div align="right" class="totales">
+<!--#4DIF show_total-->
+<table border="0">
+  <tr>
+    <td align="right" valign="top">
+
+    </td>
+    <!--#4DIF v3_print_formato_nuevo_totales-->
+    <td align="right" valign="top">
+            <table class="bloque1" border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">
+            <!--#4DIF mostrar_bloque1=true-->
+                <!--#4DIF (show_total_item) | (show_total_titulo) -->
+                <tr>
+                    <td class="valor-comision"></td>
+
+                    <td class="etiquetas-valores">SUBTOTAL</td>
+                    <td class="valores-totales"><!--#4DVAR vsuma_subtotales--></td>
+                </tr>
+                <!--#4DENDIF-->
+                <!--#4DIF (vPrintComisionCerrada1=false) & (valor_por_comision1 > 0) & comision1_activa & vPrintComisionGasto1-->
+                <tr>
+                    <!--#4DIF print_porc_sc_ingresado-->
+                    <td class="valor-comision"><!--#4DVAR String(valor_por_comision1_ingresado; "###.###.###.##0,00")--> %</td>
+                    <!--#4DELSE-->
+                    <td class="valor-comision"><!--#4DVAR String(valor_por_comision1; "###.###.###.##0,00")--> %</td>
+                    <!--#4DENDIF-->
+                    <td class="etiquetas-valores"><!--#4DVAR Uppercase(nom_comision1;*)--></td>
+                    <td class="valores-totales"><!--#4DVAR sobrecargo3--></td>
+                </tr>
+                 <!--#4DENDIF-->
+                <!--#4DIF (vPrintComisionCerrada4=false) & (valor_por_comision4 > 0) & comision4_activa & vPrintComisionGasto4-->
+                <tr>
+                    <!--#4DIF print_porc_sc_ingresado-->
+                    <td class="valor-comision"><!--#4DVAR String(valor_por_comision4_ingresado; "###.###.###.##0,00")--> %</td>
+                    <!--#4DELSE-->
+                    <td class="valor-comision"><!--#4DVAR String(valor_por_comision4; "###.###.###.##0,00")--> %</td>
+                    <!--#4DENDIF-->
+                    <td class="etiquetas-valores"><!--#4DVAR Uppercase(nom_comision4;*)--></td>
+                    <td class="valores-totales"><!--#4DVAR sobrecargo4--></td>
+                </tr>
+                <!--#4DENDIF-->
+                <!--#4DIF (vPrintComisionCerrada5=false) & (valor_por_comision5 > 0) & comision5_activa & vPrintComisionGasto5-->
+                <tr>
+                    <!--#4DIF print_porc_sc_ingresado-->
+                    <td class="valor-comision"><!--#4DVAR String(valor_por_comision5_ingresado; "###.###.###.##0,00")--> %</td>
+                    <!--#4DELSE-->
+                    <td class="valor-comision"><!--#4DVAR String(valor_por_comision5; "###.###.###.##0,00")--> %</td>
+                    <!--#4DENDIF-->
+                    <td class="etiquetas-valores"><!--#4DVAR Uppercase(nom_comision5;*)--></td>
+                    <td class="valores-totales"><!--#4DVAR sobrecargo5--></td>
+                </tr>
+                <!--#4DENDIF-->
+
+                <!--#4DIF (vPrintComisionCerrada2=false) & (valor_por_comision2 > 0) & comision2_activa & vPrintComisionGasto2-->
+                <tr>
+                    <!--#4DIF print_porc_sc_ingresado-->
+                    <td class="valor-comision"><!--#4DVAR String(valor_por_comision2_ingresado; "###.###.###.##0,00")--> %</td>
+                    <!--#4DELSE-->
+                    <td class="valor-comision"><!--#4DVAR String(valor_por_comision2; "###.###.###.##0,00")--> %</td>
+                    <!--#4DENDIF-->
+                    <td class="etiquetas-valores"><!--#4DVAR Uppercase(nom_comision2;*)--></td>
+                    <td class="valores-totales"><!--#4DVAR sobrecargo2--></td>
+                </tr>
+                <!--#4DENDIF-->
+
+                <!--#4DIF (vPrintComisionCerrada3=false) & (valor_por_comision3 > 0) & comision3_activa & vPrintComisionGasto3-->
+                <tr>
+                    <!--#4DIF print_porc_sc_ingresado-->
+                    <td class="valor-comision"><!--#4DVAR String(valor_por_comision3_ingresado; "###.###.###.##0,00")--> %</td>
+                    <!--#4DELSE-->
+                    <td class="valor-comision"><!--#4DVAR String(valor_por_comision3; "###.###.###.##0,00")--> %</td>
+                    <!--#4DENDIF-->
+                    <td class="etiquetas-valores"><!--#4DVAR Uppercase(nom_comision3;*)--></td>
+
+                    <!--#4DIF comision_sobre_total_venta=true-->
+                      <td class="valores-totales"><!--#4DVAR sobrecargo1--></td>
+                   <!--#4DELSE-->
+                      <td class="valores-totales"><!--#4DVAR sobrecargo1--></td>
+                    <!--#4DENDIF-->
+
+                </tr>
+                <!--#4DENDIF-->
+
+                <!--#4DIF (vPrintComisionCerrada6=false) & (sobrecargo_utilidad_raw > 0) & vPrintComisionGasto6-->
+                <tr>
+                    <td class="valor-comision" style="visibility: hidden"></td>
+                    <td class="etiquetas-valores">DIFERENCIA</td>
+                    <td class="valores-totales"><!--#4DVAR sobrecargo6--></td>
+                </tr>
+                <!--#4DENDIF-->
+
+                <!--#4DIF Not(vPrintComisionGasto1 & vPrintComisionGasto2 & vPrintComisionGasto3 & vPrintComisionGasto4 & vPrintComisionGasto5 & vPrintComisionGasto6) & (sobrecargo_utilidad_raw#0)-->
+                <tr>
+                    <!--#4DIF print_porc_sc_ingresado-->
+                    <td class="valor-comision"><!--#4DVAR String(valor_por_comision1_ingresado; "###.###.###.##0,00")--> %</td>
+                    <!--#4DELSE-->
+                    <td class="valor-comision"><!--#4DIF Not(ocultar_porcentaje_fee)--><!--#4DVAR String(Round((suma_acumulada_sc_util_raw/suma_acumulada_sc_gasto_raw) * 100; 2); "###.###.###.##0,00")--> %<!--#4DENDIF--></td>
+                    <!--#4DENDIF-->
+                    <td class="etiquetas-valores"><!--#4DVAR print_utilidad_name--></td>
+                    <td class="valores-totales"><!--#4DVAR sobrecargo_utilidad_print--></td>
+                </tr>
+
+                <!--#4DENDIF-->
+            <!--#4DENDIF-->
+
+                <!--#4DIF cantidad_como_hh-->
+                <tr>
+                <td class="valor-comision" style="visibility: hidden"></td>
+                <td class="etiquetas-valores">Total HH</td>
+                <td class="valores-totales"><!--#4DVAR total_hh--> HH</td>
+                </tr>
+                <!--#4DENDIF-->
+                <!--#4DIF (Num(valor_por_desc) > 0)-->
+                <tr>
+                <td class="valor-comision" style="visibility: hidden"></td>
+                <td class="etiquetas-valores"><!--#4DVAR Round(valor_por_desc;2)--> % DESC </td>
+                <td class="valores-totales"><!--#4DVAR T_descuento--></td>
+                </tr>
+                <!--#4DENDIF-->
+                <tr style="border-top: 1px solid black !important;">
+                <td class="valor-comision" style="visibility: hidden"></td>
+                <td class="etiquetas-valores">TOTAL NETO</td>
+                <td class="valores-totales"><!--#4DVAR vtotalneto--></td>
+                </tr>
+                <!--#4DIF _V3_replaceIva-->
+                <tr>
+                <td colspan="3" class="valores-totales"><!--#4DTEXT Uppercase(_V3_replaceIvaText;*)--></td>
+                </tr>
+                <!--#4DELSE-->
+                <tr>
+                <td class="valor-comision" style="visibility: hidden"></td>
+                <td class="etiquetas-valores"><!--#4DVAR <>_V3_IVAName--> (<!--#4DVAR <>_V3_IVARate-->%)</td>
+                <td class="valores-totales"><!--#4DVAR vtotaliva--></td>
+                </tr>
+                <tr>
+                <td class="valor-comision" style="visibility: hidden"></td>
+                <td class="etiquetas-valores-total">TOTAL</td>
+                <td class="valores-totales"><!--#4DVAR vtotalneg--></td>
+                </tr>
+                <!--#4DENDIF-->
+            </table>
+    </td>
+    <!--#4DELSE-->
+    <td align="right" valign="top">
+        <!--#4DIF mostrar_bloque1=true-->
+            <table  class="bloque1" border="0" cellpadding="0" cellspacing="0">
+                <!--#4DIF (show_total_item) | (show_total_titulo) -->
+                <tr>
+                    <td class="valor-comision"></td>
+
+                    <td class="etiquetas-valores">SUBTOTAL</td>
+                    <td class="valores-totales"><!--#4DVAR vsuma_subtotales--></td>
+                    <td class="etiquetas-valores"></td>
+                    <td class="valores-totales"></td>
+                </tr>
+                <!--#4DENDIF-->
+                <!--#4DIF (vPrintComisionCerrada1=false) & (valor_por_comision1 > 0) & comision1_activa & vPrintComisionGasto1-->
+                <tr>
+                    <!--#4DIF print_porc_sc_ingresado-->
+                    <td class="valor-comision"><!--#4DVAR String(valor_por_comision1_ingresado; "###.###.###.##0,00")--> %</td>
+                    <!--#4DELSE-->
+                    <td class="valor-comision"><!--#4DVAR String(valor_por_comision1; "###.###.###.##0,00")--> %</td>
+                    <!--#4DENDIF-->
+                    <td class="etiquetas-valores"><!--#4DVAR Uppercase(nom_comision1;*)--></td>
+                    <td class="valores-totales"><!--#4DVAR sobrecargo3--></td>
+                    <td class="etiquetas-valores" style="visibility: hidden;">SUBTOTAL</td>
+                    <td class="valores-totales" style="visibility: hidden;"><!--#4DVAR suma_subtotal1--></td>
+                </tr>
+                 <!--#4DENDIF-->
+                <!--#4DIF (vPrintComisionCerrada4=false) & (valor_por_comision4 > 0) & comision4_activa & vPrintComisionGasto4-->
+                <tr>
+                    <!--#4DIF print_porc_sc_ingresado-->
+                    <td class="valor-comision"><!--#4DVAR String(valor_por_comision4_ingresado; "###.###.###.##0,00")--> %</td>
+                    <!--#4DELSE-->
+                    <td class="valor-comision"><!--#4DVAR String(valor_por_comision4; "###.###.###.##0,00")--> %</td>
+                    <!--#4DENDIF-->
+                    <td class="etiquetas-valores"><!--#4DVAR Uppercase(nom_comision4;*)--></td>
+                    <td class="valores-totales"><!--#4DVAR sobrecargo4--></td>
+                    <td class="etiquetas-valores" style="visibility: hidden;"></td>
+                    <td class="valores-totales" style="visibility: hidden;"></td>
+                </tr>
+                <!--#4DENDIF-->
+                <!--#4DIF (vPrintComisionCerrada5=false) & (valor_por_comision5 > 0) & comision5_activa & vPrintComisionGasto5-->
+                <tr>
+                    <!--#4DIF print_porc_sc_ingresado-->
+                    <td class="valor-comision"><!--#4DVAR String(valor_por_comision5_ingresado; "###.###.###.##0,00")--> %</td>
+                    <!--#4DELSE-->
+                    <td class="valor-comision"><!--#4DVAR String(valor_por_comision5; "###.###.###.##0,00")--> %</td>
+                    <!--#4DENDIF-->
+                    <td class="etiquetas-valores"><!--#4DVAR Uppercase(nom_comision5;*)--></td>
+                    <td class="valores-totales"><!--#4DVAR sobrecargo5--></td>
+                    <td class="etiquetas-valores" style="visibility: hidden;"></td>
+                    <td class="valores-totales" style="visibility: hidden;"></td>
+                </tr>
+                <!--#4DENDIF-->
+
+                <!--#4DIF (vPrintComisionCerrada2=false) & (valor_por_comision2 > 0) & comision2_activa & vPrintComisionGasto2-->
+                <tr>
+                    <!--#4DIF print_porc_sc_ingresado-->
+                    <td class="valor-comision"><!--#4DVAR String(valor_por_comision2_ingresado; "###.###.###.##0,00")--> %</td>
+                    <!--#4DELSE-->
+                    <td class="valor-comision"><!--#4DVAR String(valor_por_comision2; "###.###.###.##0,00")--> %</td>
+                    <!--#4DENDIF-->
+                    <td class="etiquetas-valores"><!--#4DVAR Uppercase(nom_comision2;*)--></td>
+                    <td class="valores-totales"><!--#4DVAR sobrecargo2--></td>
+                    <td class="etiquetas-valores" style="visibility: hidden;">SUBTOTAL</td>
+                    <td class="valores-totales" style="visibility: hidden;"><!--#4DVAR suma_subtotal2--></td>
+                </tr>
+                <!--#4DENDIF-->
+
+                <!--#4DIF (vPrintComisionCerrada3=false) & (valor_por_comision3 > 0) & comision3_activa & vPrintComisionGasto3-->
+                <tr>
+                    <!--#4DIF print_porc_sc_ingresado-->
+                    <td class="valor-comision"><!--#4DVAR String(valor_por_comision3_ingresado; "###.###.###.##0,00")--> %</td>
+                    <!--#4DELSE-->
+                    <td class="valor-comision"><!--#4DVAR String(valor_por_comision3; "###.###.###.##0,00")--> %</td>
+                    <!--#4DENDIF-->
+                    <td class="etiquetas-valores"><!--#4DVAR Uppercase(nom_comision3;*)--></td>
+
+                    <!--#4DIF comision_sobre_total_venta=true-->
+                      <td class="valores-totales"><!--#4DVAR sobrecargo1--></td>
+                   <!--#4DELSE-->
+                      <td class="valores-totales"><!--#4DVAR sobrecargo1--></td>
+                    <!--#4DENDIF-->
+
+                    <td class="etiquetas-valores" style="visibility: hidden;">SUBTOTAL</td>
+
+                    <!--#4DIF comision_sobre_total_venta=true-->
+                      <td class="valores-totales" style="visibility: hidden;"><!--#4DVAR monto_comision3--></td>
+                    <!--#4DELSE-->
+                      <td class="valores-totales" style="visibility: hidden;"><!--#4DVAR suma_subtotal3--></td>
+                     <!--#4DENDIF-->
+                </tr>
+                <!--#4DENDIF-->
+
+                <!--#4DIF (vPrintComisionCerrada6=false) & (sobrecargo_utilidad_raw > 0) & vPrintComisionGasto6-->
+                <tr>
+                    <td class="valor-comision" style="visibility: hidden"></td>
+                    <td class="etiquetas-valores">DIFERENCIA</td>
+                    <td class="valores-totales"><!--#4DVAR sobrecargo6--></td>
+                    <td style="visibility: hidden;"></td>
+                    <td style="visibility: hidden;"></td>
+                </tr>
+                <!--#4DENDIF-->
+
+                <!--#4DIF Not(vPrintComisionGasto1 & vPrintComisionGasto2 & vPrintComisionGasto3 & vPrintComisionGasto4 & vPrintComisionGasto5 & vPrintComisionGasto6) & (sobrecargo_utilidad_raw#0)-->
+                <tr>
+                    <!--#4DIF print_porc_sc_ingresado-->
+                    <td class="valor-comision"><!--#4DVAR String(valor_por_comision1_ingresado; "###.###.###.##0,00")--> %</td>
+                    <!--#4DELSE-->
+                    <td class="valor-comision"><!--#4DIF Not(ocultar_porcentaje_fee)--><!--#4DVAR String(Round((suma_acumulada_sc_util_raw/suma_acumulada_sc_gasto_raw) * 100; 2); "###.###.###.##0,00")--> %<!--#4DENDIF--></td>
+                    <!--#4DENDIF-->
+                    <td class="etiquetas-valores"><!--#4DVAR print_utilidad_name--></td>
+                    <td class="valores-totales"><!--#4DVAR sobrecargo_utilidad_print--></td>
+                    <td style="visibility: hidden;"></td>
+                    <td style="visibility: hidden;"></td>
+                </tr>
+
+                <!--#4DENDIF-->
+
+            </table>
+            <!--#4DENDIF-->
+    </td>
+    <td align="right" valign="top">
+            <table class="bloque2" border="0" cellpadding="0" cellspacing="0">
+                <!--#4DIF cantidad_como_hh-->
+                <td class="etiquetas-valores">Total HH</td>
+                <td class="valores-totales"><!--#4DVAR total_hh--> HH</td>
+                <!--#4DENDIF-->
+                <!--#4DIF (Num(valor_por_desc) > 0)-->
+                <tr>
+                <td class="etiquetas-valores"><!--#4DVAR Round(valor_por_desc;2)--> % DESC </td>
+                <td class="valores-totales"><!--#4DVAR T_descuento--></td>
+                </tr>
+                <!--#4DENDIF-->
+                <tr class="total-neto">
+                <td class="etiquetas-valores">TOTAL&nbsp;NETO</td>
+                <td class="valores-totales"><!--#4DVAR vtotalneto--></td>
+                </tr>
+                <!--#4DIF Not(_V3_replaceIva)-->
+                <tr>
+                <td class="etiquetas-valores"><!--#4DVAR <>_V3_IVAName--> (<!--#4DVAR <>_V3_IVARate-->%)</td>
+                <td class="valores-totales"><!--#4DVAR vtotaliva--></td>
+                </tr>
+                <tr>
+                <td class="etiquetas-valores-total">TOTAL</td>
+                <td class="valores-totales"><!--#4DVAR vtotalneg--></td>
+                </tr>
+                <!--#4DELSE-->
+                <tr>
+                <td colspan="2" class="valores-totales"><!--#4DIF _V3_replaceIva--> <!--#4DTEXT Uppercase(_V3_replaceIvaText;*)--><!--#4DENDIF--></td>
+                </tr>
+                <!--#4DENDIF-->
+            </table>
+    </td>
+    <!--#4DENDIF-->
+  </tr>
+</table>
+<!--#4DENDIF-->
+</div>
+
+<table class="tabla-condiciones" border="0" cellpadding="0" cellspacing="0">
+  <tr bgcolor="#DDDDDD">
+    <td class="condiciones">OBSERVACIONES</td>
+  </tr>
+  <tr>
+    <td class="condiciones-datos-tit">Forma de pago : </td>
+  </tr>
+  <tr>
+    <td class="condiciones-datos-item"><!--#4DVAR vFormaPago--></td>
+  </tr>
+  <!--#4DIF (vFechaVencimiento#!00/00/00!) & (Not(noshow_fecha_realizacion))-->
+  <tr>
+    <td class="condiciones-datos-tit">Fecha de realización : </td>
+  </tr>
+  <tr>
+    <td class="condiciones-datos-item"><!--#4DVAR vFechaVencimiento--></td>
+  </tr>
+  <!--#4DENDIF-->
+  <!--#4DIF vComentarios#""-->
+  <tr>
+    <td class="condiciones-datos-tit">Observaciones : </td>
+  </tr>
+  <tr>
+    <td class="condiciones-datos-item"><!--#4DVAR vComentarios--></td>
+  </tr>
+  <!--#4DENDIF-->
+  <!--#4DIF [Nota_de_venta]no_incluye#""-->
+  <tr style="margin-top: 10px;">
+    <td class="condiciones-datos-tit">No incluye : </td>
+  </tr>
+  <tr>
+    <td class="condiciones-datos-item"><!--#4DVAR [Nota_de_venta]no_incluye--></td>
+  </tr>
+  <!--#4DENDIF-->
+</table>
+
+<table class="tabla-condiciones imagenes-adjuntas" border="0" cellpadding="0" cellspacing="0">
+  <tr bgcolor="#DDDDDD">
+    <td class="condiciones">IMÁGENES ADJUNTAS</td>
+  </tr>
+  <tr>
+    <td><div class="attachments"></div></td>
+  </tr>
+</table>
+
+<table class="tabla-condiciones archivos-enlazados" border="0" cellpadding="0" cellspacing="0">
+  <tr bgcolor="#DDDDDD">
+    <td class="condiciones">ARCHIVOS ENLAZADOS</td>
+  </tr>
+  <tr>
+    <td><div class="links"></div></td>
+  </tr>
+</table>
+
+  <!--#4DIF custom_background_footer-->
+  <img src="/4DACTION/_V3_printBackgroundFooter" style="display: block; width: 1024px;">
+  <!--#4DENDIF-->
+
+<p class="datos-empresa"<!--#4DIF custom_background_footer--> style="display: none;"<!--#4DENDIF-->>
+  <!--#4DVAR nom_empresa--> /
+  <!--#4DVAR rut--> /
+    <!--#4DVAR fono_empresa--> /
+    <!--#4DVAR dir_empresa--> /
+    <a target="_blank" href="<!--#4DVAR sitio_empresa-->"><!--#4DVAR sitio_empresa--></a>
+</p>
+</div>
+</div>
+</body>
+</html>

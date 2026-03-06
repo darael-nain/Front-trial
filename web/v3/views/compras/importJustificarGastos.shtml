@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_serverInfo-->
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Importar y crear gastos</title>
+		<script>
+
+			let modulo = $('html > body.menu.home > aside > div > div > ul > li.active').data('name').toUpperCase();
+
+			var importLoad = function(append, element) {			
+
+				let sid = '';					
+				$.each($.cookie(),function(clave,valor) {sid+= (valor + ' '); });
+
+				let data = new FormData();
+				let attachment = $('.ui-dialog fieldset [name="upload[attachment]"]').get(0).files[0];
+				let separate = $('input[name="separate"]').prop('checked');
+				data.append('upload[attachment]', attachment);
+				data.append('separate', separate);
+				data.append('sid', sid);
+
+				if (modulo == "GASTOS") {
+					data.append('tipo', "OC");
+				}else{
+					data.append('tipo', "FXR");
+				}			
+
+				if (attachment) {
+					unaBase.ui.block();
+					$.ajax({
+						url: nodeUrl + '/import-load-expenses?hostname=' + window.location.origin + '&id=' + $('section.sheet').data('id') + '&sid=' + encodeURIComponent(sid),
+						type: 'POST',
+						contentType: false,
+						data: data,
+						processData: false,
+						cache: false,
+						success: function(data) {
+							unaBase.ui.unblock();
+							if (data.success) {
+								toastr.success('Archivo cargado con éxito!');
+								setTimeout(function() {
+									unaBase.toolbox.search.save();
+									unaBase.toolbox.search.restore();
+								}, 1000);
+								$(element).parentTo('.ui-dialog-content').dialog('close');
+							} else {
+								toastr.error('No fue posible importar la información!');
+								let errorMsg = data.errorMsg.replace(/SL/g, '<br>');
+								alert("<span style='font-weight:bold;'>Falta información:</span><br><br>" + errorMsg + "<br><span style='font-weight:bold;'>Verfica tu excel y vuelve a intentar.</span>");
+							}
+						},
+						fail: function(e1,e2,e3) {
+							toastr.error('No fue posible realizar la cargar de los datos debido a un problema con el servidor, Por favor intente nuevamente. <p><small>Si el inconveniente persiste, por favor comuniquese con Soporte@una.cl.</small></p>');
+						}
+					});
+				}else{
+					alert("Falta seleccionar archivo excel.");
+				}
+				
+			};
+
+			$(document).ready(function() {
+
+				let fileName = '';
+				let modulo = $('html > body.menu.home > aside > div > div > ul > li.active').data('name').toUpperCase();
+				if (modulo == 'GASTOS') {
+					fileName = "orden_de_compra_S_N";
+					$('.separate').find('label').text('Marcar para crear sólo una Orden de compra por todo el excel.');
+					$('.btn-create-gasto').html('<label style="font-weight:bold;">CREAR ORDEN DE COMPRA</label>');
+				}else{
+					fileName = "rendicion_S_N";
+					$('.separate').find('label').text('Marcar para crear sólo una Rendición por todo el excel.');
+					$('.btn-create-gasto').html('<label style="font-weight:bold;">CREAR RENDICIÓN</label>');
+				}
+
+				unaBase.toolbox.init();
+
+				$('.ui-dialog fieldset.export button').button({
+					icons: {
+						primary: 'ui-icon-circle-arrow-s'
+					},
+					text: true
+				}).click(function() {					
+					
+					let sid = '';					
+					$.each($.cookie(),function(clave,valor) {sid+= (valor + ' '); });
+
+					var url = nodeUrl + '/export-template-expenses/?id=0&filename='+ fileName + '&sid=' + encodeURIComponent(sid) + '&modulo=' + modulo + '&hostname='+window.location.origin;
+					var download = window.open(url).blur();
+					window.focus();
+					download.close();
+				});
+
+				$('.ui-dialog fieldset.import button').button({
+					icons: {
+						primary: 'ui-icon-circle-arrow-n'
+					},
+					text: true
+				}).click(function() {
+					var element = this;
+					var items = $('section.sheet > table.items > tbody').find('tr');
+					
+					if (items.length > 0) {
+						var itemsConGastos = false;
+						$('section.sheet > table.items > tbody').find('tr').each(function(key, item) {
+							if ($(item).find('td:first-of-type').find('button.remove.item').css('visibility') == 'hidden') {
+								itemsConGastos = true;
+							}
+						});
+						if (itemsConGastos) {
+							confirm("<!--#4DTEXT _V3_escapeString(etiqueta_cotizacion)--> actualmente tiene ítems agregados que cuentan con gastos asociados.\n\nSolamente es posible añadir ítems\n\n¿Desea continuar?").done(function(option) {
+								if (option) {
+									importLoad(true, element);
+								}
+							});
+						} else {
+							confirm("La cotización actualmente tiene ítems agregados.\n\n¿Desea reemplazar o agregar?", "Agregar", "Reemplazar").done(function(option) {
+								importLoad(option, element);
+							});
+						}
+					} else {
+						importLoad(false, element);
+					}
+				});
+
+			});
+		</script>
+	</head>
+	<body>
+		<fieldset class="export">
+			<legend>Paso 1 - Descargar plantilla Excel</legend>
+			<button>Descargar plantilla de ayuda</button>
+		</fieldset>
+		<p style="padding: 5px; font-weight: bold;">Una vez descargada la plantilla Excel, puede reemplazar los datos de prueba con los definitivos.</p>
+		<p style="padding: 5px; font-weight: bold;">Para cargar y crear gastos, vuelva aquí y cargue el archivo Excel utilizando el siguiente formulario (paso 2).</p>
+		<fieldset class="import">
+			<legend>Paso 2 - Subir y crear desde Excel</legend>
+			<label>
+				<span style="width: 200px; margin-bottom: 5px;">Archivo XLSX</span>
+				<input style="width: 100% !important; display: block !important;" type="file" name="upload[attachment]" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+			</label><br><br>
+			<div style="margin-bottom:15px" class="separate">
+				<input id="separate" type="checkbox" name="separate">
+				<label for="separate"></label>
+			</div>			
+			<button style="border:2px solid gray;" class="btn-create-gasto">Crear gastos</button>
+		</fieldset>
+	</body>
+</html>

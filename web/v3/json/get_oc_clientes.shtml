@@ -1,0 +1,17 @@
+{	
+	"rows": [
+<!--#4DLOOP $a_id_occ-->
+		{
+			"id": <!--#4DHTML $a_id_occ{$a_id_occ}-->,	
+			"numero": "<!--#4DHTML $a_nro_occ{$a_id_occ}-->",			
+			"tipo": "<!--#4DHTML $a_tipo_occ{$a_id_occ}-->",
+			"emision": "<!--#4DHTML $a_emision_occ{$a_id_occ}-->",
+			"recepcion": "<!--#4DHTML $a_recepcion_occ{$a_id_occ}-->",	
+			"cliente": "<!--#4DHTML _V3_escapeString($a_cliente_occ{$a_id_occ})-->",
+			"referencia": "<!--#4DHTML _V3_escapeString($a_referencia_occ{$a_id_occ})-->",
+			"observacion": "<!--#4DHTML _V3_escapeString($a_observaciones_occ{$a_id_occ})-->",
+			"total": <!--#4DHTML String($a_total_occ{$a_id_occ};"&xml")-->		
+		}<!--#4DIF NOT($a_id_occ{$a_id_occ} = $a_id_occ{Size of array($a_id_occ)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

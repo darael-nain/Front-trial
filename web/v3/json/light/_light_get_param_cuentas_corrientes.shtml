@@ -1,0 +1,30 @@
+{
+	"success": <!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"status":<!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"errorMsg": "<!--#4DTEXT errorMsg-->",
+	"records": {
+		"total_records": <!--#4DHTML totalRecords-->
+	},
+	
+
+	"rows": [
+	
+		<!--#4DIF totalRecords > 0-->
+			<!--#4DLOOP aId-->
+			{
+				"id": <!--#4DHTML aId{aId}-->,
+				"des_banco": "<!--#4DHTML aDesBanco{aId}-->",
+				"nombre_banco": "<!--#4DHTML aNombreBanco{aId}-->",
+				"cuenta_contable": "<!--#4DHTML aCuentaContable{aId}-->",
+				"cuenta_corriente": "<!--#4DHTML aCuentaCorriente{aId}-->",
+				"nrocheque_inicial": "<!--#4DHTML aNroChequeInicial{aId}-->",
+				"nrocheque_actual": "<!--#4DHTML aNroChequeActual{aId}-->",
+				"saldo_actual_lc": "<!--#4DHTML aSaldoActualLC{aId}-->",
+				"saldo_contable_cte": "<!--#4DHTML aSaldoContableCte{aId}-->"
+			}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		<!--#4DENDIF-->
+	]
+
+	
+}

@@ -1,0 +1,26 @@
+{
+	"id": <!--#4DIF Not(Undefined(id))--><!--#4DIF Type(id)=Is Text-->"<!--#4DHTML id-->"<!--#4DELSE--><!--#4DHTML id--><!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"origen": "<!--#4DHTML origen_-->",
+	"idNv": "<!--#4DHTML idNv-->",
+	"refnv": "<!--#4DHTML refnv-->",
+	"nro": "<!--#4DHTML nroNegocio-->",
+	"tipoorigen": "<!--#4DHTML tipoorigen_-->",
+	"index": <!--#4DIF Not(Undefined(index))-->"<!--#4DHTML index-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"success": <!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF-->,<!--#4DIF Not(Undefined(computer))-->
+	"computer": "<!--#4DTEXT _V3_escapeString(computer)-->",
+	"process": "<!--#4DTEXT _V3_escapeString(process)-->",
+	"bloqueo": "<!--#4DTEXT _V3_escapeString(bloqueo)-->",<!--#4DENDIF-->
+	"new": <!--#4DIF new-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"opened": <!--#4DIF opened-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"readonly": <!--#4DIF Not(Undefined(readonly))--><!--#4DIF readonly-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"unique": <!--#4DIF Not(Undefined(unique))--><!--#4DIF unique-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"folio": "<!--#4DHTML vFolio-->",
+    "email_contacto": "<!--#4DHTML _V3_escapeString(vEmailCont)-->",
+    "referencia": "<!--#4DHTML _V3_escapeString(vReferencia)-->",
+    "current_user_name": "<!--#4DHTML _V3_escapeString(vNomUsr2)-->",
+    "current_user_email": "<!--#4DHTML _V3_escapeString(vEmail)-->",
+    "tipoGasto": "<!--#4DHTML vTipoGasto-->",
+    "username_creador": "<!--#4DHTML username_creador-->",
+    "email_creador": "<!--#4DHTML email_creador-->",
+	"btn_contrato": <!--#4DIF Not(Undefined(vBtnContrato))--><!--#4DIF vBtnContrato-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->
+}

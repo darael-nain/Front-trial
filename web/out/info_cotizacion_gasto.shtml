@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="/out/style.css"/>
+    <title>REPORTE - <!--#4DVAR vTitle--></title>
+        <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+-->
+     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/out/report.js">        
+    </script>
+
+</head>
+<body>
+<div class="contenedor" align="center">
+ <div class="cuadro2">
+    <div>
+        <h4><!--#4DVAR v_Tit_Informe--></h4>
+
+        <p><!--#4DVAR String(aReporteDesc)--></p>
+
+    </div>
+    <p><img src="<!--#4DVAR vUrlImagenLogo-->" width="<!--#4DVAR vAnchoPicture-->" height="<!--#4DVAR vAltoPicture-->" border="0"/></p>
+
+    <div class="row">
+        <table class="totaleshead">  
+            <tr>
+                <td class="title">Total neto cotizaciones en proceso:</td>
+                <td  class="text"><!--#4DVAR String(V_NVTotal;"$ ###.###.###.##0")--></td>  
+            </tr>
+            <tr>
+                <td class="title">Total gasto asociados:</td>
+                <td  class="text redtext"><!--#4DVAR String(V_NVGasto;"$ ###.###.###.##0")--></td>  
+            </tr>
+            
+        </table>
+
+
+
+        <div class="totalreg">Total cotizaciones: <!--#4DVAR String(v_TotReg;"###.###.###.##0")--></div>
+
+        <table class="table table-responsive table-bordered" >
+            <thead>
+              <tr >
+                <td class="center-c" width="1%">Número</td>
+                <td class="center-c" width="3%">Creado el</td>
+                <td class="center-c" width="3%">Última Mod.</td>
+                <td class="center-c" width="3%">Fecha de Realización</td>
+                <td class="center-c" width="10%">Ejecutivo</td>
+                <td class="center-c" width="10%">Cliente</td>
+                <td class="center-c" width="10%">Referencia</td>
+                <td class="center-c" width="2%">Total Neto</td>
+                <td class="center-c" width="2%">Total Gasto </td>  
+              </tr>
+            </thead>
+            <!--#4DLOOP aFolioNV-->       
+            <tbody>    
+                <tr>
+                    <td class="orden-alfa"><!--#4DVAR aFolioNV{aFolioNV}--></td>
+                    <td class="orden-alfa"><!--#4DVAR aFechaCreacion{aFolioNV}--></td>
+                    <td class="orden-alfa"><!--#4DVAR aFechaMod{aFolioNV}--></td>
+                    <td class="orden-alfa"><!--#4DVAR aFechaRealizacion{aFolioNV}--></td>
+                    <td class="items"><!--#4DVAR aEjecutivo{aFolioNV}--></td>
+                    <td class="items"><!--#4DVAR aCliente{aFolioNV}--></td>
+                    <td class="items"><!--#4DVAR aReferencia{aFolioNV}--></td>
+                    <td class="nro-items-subtotal"><!--#4DVAR string(aTotalNeto{aFolioNV};"$ ###.###.###.##0")--></td>
+                    <td class="nro-items-subtotal"><!--#4DVAR string(aGasto{aFolioNV};"$ ###.###.###.##0")--></td>
+
+                 
+                </tr>       
+            </tbody>
+            <!--#4DENDLOOP--> 
+        </table>
+    </div>
+
+    <div class="contenedor-footer">
+        <span class="datos-empresa-izq">
+        <!--#4DVAR nom_empresa--> / <!--#4DVAR dir_empresa--> / <a target="_blank" href="<!--#4DVAR sitio_empresa-->"><!--#4DVAR sitio_empresa--></a></span><em></em>
+    <span class="datos-empresa-der">Reporte enviado por <a href="http://www.unabase.cl" target="_blank" >UnaBase.cl</a></span>
+    </div>
+</div>
+</div>
+</body>
+</html>

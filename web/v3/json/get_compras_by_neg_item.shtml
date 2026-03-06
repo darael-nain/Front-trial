@@ -1,0 +1,48 @@
+{
+    "rows": [
+        <!--#4DLOOP aId -->
+        {
+            "id": "<!--#4DHTML aId{aId}-->",
+            "codigo": "<!--#4DHTML _V3_escapeString(aCod{aId})-->",
+            "codigo_origen": "<!--#4DHTML _V3_escapeString(aCodOrigen{aId})-->",
+            "nombre": "<!--#4DHTML _V3_escapeString(aName{aId})-->",
+            "descripcion": "<!--#4DHTML _V3_escapeString(aDesc{aId})-->",
+            "cantidad": "<!--#4DHTML String(aCant{aId};"&xml")-->" ,
+            "dias": "<!--#4DHTML aDias{aId}-->",
+            "precio": {
+                "unitario": "<!--#4DHTML String(aPU{aId};"&xml")-->",
+                "subtotal": "<!--#4DHTML String(aSPU{aId};"&xml")-->"
+            },
+            "costo": {
+                "presupuestado": {
+                    "subtotal": "<!--#4DHTML String(aSGP{aId};"&xml")-->"
+                },
+                "real": {
+                    "subtotal": "<!--#4DHTML String(aGR{aId};"&xml")-->"
+                }
+            },
+            "diferencia": "<!--#4DHTML String(aDif{aId};"&xml")-->" ,
+            "justificado": "<!--#4DHTML String(aJustify{aId};"&xml")-->" ,
+            "xjustificar": "<!--#4DHTML String(aXJustify{aId};"&xml")-->" ,
+            "categoria": "<!--#4DHTML aCat{aId}-->",
+            "subcategoria": "<!--#4DHTML _V3_escapeString(aSubCat{aId})-->",
+            "folio_oc": "<!--#4DHTML aFolioOc{aId}-->",
+            "proveedor": "<!--#4DHTML _V3_escapeString(aProveedor{aId})-->",
+            "numero_documentos": "<!--#4DHTML aNroDocs{aId}-->",
+            "usuario_modificacion": "<!--#4DHTML aItemUsuario{aId}-->",
+			"fecha_modificacion": "<!--#4DHTML aItemFecha{aId}-->",
+			"hora_modificacion": "<!--#4DHTML aItemHora{aId}-->"
+        }<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+        <!--#4DENDLOOP-->
+    ],
+    "adicionales": [
+        <!--#4DLOOP aIdAdicional-->
+        {
+            "id": <!--#4DHTML aIdAdicional{aIdAdicional}-->,
+            "id_servicio": <!--#4DHTML aIdServicio{aIdAdicional}-->,
+            "name": "<!--#4DHTML _V3_escapeString(aNameAdicional{aIdAdicional})-->",
+            "valor": "<!--#4DHTML aValor{aIdAdicional}-->"
+        }<!--#4DIF NOT(aIdAdicional{aIdAdicional} = aIdAdicional{Size of array(aIdAdicional)})-->,<!--#4DENDIF-->
+        <!--#4DENDLOOP-->
+    ]
+}

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getDetalleItems-->
+		<meta charset="utf-8">
+		<title>Compras - items</title>
+		<script>
+		$(document).ready(function() {
+
+			var considerarSoloGastosValidados = <!--#4DTEXT considerarSoloGastosValidados-->;
+
+			unaBase.ui.block();
+			var container = $('.ui-dialog section.sheet-list-compras-item');
+			
+			var llave_detalle_nv = container.data('llave');			
+			var tbody = container.find('table > tbody');
+			var tfoot = container.find('table > tfoot');
+			var costoempresa = 0;
+
+			var loadTotalesFoot = function(costoempresa){
+				var htmlObject;
+				htmlObject = $('<tr>'+
+						'<th></th>' +
+						'<th></th>' +
+						'<th></th>' +
+						'<th></th>' +
+						'<th></th>' +
+						'<th></th>' +
+						'<th></th>' +					
+						'<th class="currency right">'+ costoempresa +'</th>' +					
+						'</tr>');
+				return htmlObject;
+			}
+			
+			var loadComprasNegocio = function(data) {
+				
+				tbody.find("*").remove();
+				var costoempresa = 0;
+				
+				var htmlObject;
+				$.each(data.rows, function(key, item) {
+
+					/*if(item.estado!="ANULADA"  && !item.excluir_gasto){						
+						costoempresa += item.costoempresa_;					
+					}*/
+
+					if (considerarSoloGastosValidados) {
+						if(item.estado != "ANULADA" && !item.excluir_gasto && item.validado){
+							costoempresa += item.costoempresa_;
+						}
+					}else{
+						if(item.estado != "ANULADA" && !item.excluir_gasto){				
+							costoempresa += item.costoempresa_;
+						}
+					}
+
+					var v2 = "";
+					var title = "";
+					if (item.version == "") {
+						v2 = '<strong title="Orden de compra creada en versión antigua" style="font-size:11px!important;font-weight:bold">*</strong>';
+						title = "Orden de compra creada en versión antigua";
+					}
+					htmlObject = $('<tr  title="'+ title +'" data-id="'+item.id+'" data-version="'+item.version+'" data-costoempresa="'+item.costoempresa_+'" data-estado="'+item.estado +'"'+ ( (item.excluir_gasto == 1)? '" data-skip="true"' : '' ) + '>'+
+								'<td>'+ v2 +' '+ item.folio +'</td>' +
+								'<td>'+ item.documento +'</td>' +
+								'<td>'+ item.fecha +'</td>' +
+								'<td>'+ item.vencimiento +'</td>' +
+								'<td class="left">'+ item.estado +'</td>' +
+								'<td class="left">'+ item.proveedor +'</td>' +								
+								'<td class="left">'+ item.referencia +'</td>' +
+								'<td class="currency right">'+ item.costoempresa +'</td>' +	
+								'<td>'+ ((item.validado) ? 'SI' : 'NO')+'</td>' +
+								'<td>'+ ((item.excluir_gasto) ? 'SI' : '')+'</td>' +						
+								'</tr>');
+					tbody.append(htmlObject);
+				});				
+				tfoot.html(loadTotalesFoot(costoempresa));
+				formatCurrency();
+				$('table.gastos-items tbody').find('tr[data-estado="ANULADA"]').hide();
+
+				unaBase.ui.unblock();
+
+			};
+
+			$.ajax({
+				url: '/4DACTION/_V3_getOrdenesByNegocioItems',
+				dataType: 'json',
+				async: false, // para que no avance hasta que la llamada se complete
+				cache: false,
+				data: {
+					llave: llave_detalle_nv					
+				},
+				success: loadComprasNegocio
+			}).fail(function(a, b, c) {
+				
+			});
+			formatCurrency();
+
+			//Ingresar a una oc, dando doble click			
+		    tbody.find('tr').unbind('click').bind('click', function(event) {
+				// unaBase.loadInto.viewport('/v3/views/compras/content.shtml?id=' + $(this).data('id'), 'Modificar orden de compra');
+
+				window.open('/4DACTION/wbienvenidos#compras/content.shtml?id=' + $(this).data('id'));
+				
+			});		    
+
+			// by state
+			$('select.by-status').change(function(event) {
+				var status = $(this).val();
+
+				// disabled checked
+				$('input.show-hide-null').prop('checked', false);
+				$('table.gastos-items tbody').find('tr').show();
+				switch(status) {
+					case 'EMITIDA':
+						$('table.gastos-items tbody').find('tr[data-estado!="EMITIDA"]').hide();
+						break;
+					case 'CERRADA':
+						$('table.gastos-items tbody').find('tr[data-estado!="CERRADA"]').hide();
+						break;
+					case 'PAGADA':
+						$('table.gastos-items tbody').find('tr[data-estado!="PAGADA"]').hide();
+						break;
+					case 'ANULADA':
+						$('table.gastos-items tbody').find('tr[data-estado!="ANULADA"]').hide();
+						break;
+					case '':
+						$('table.gastos-items tbody').find('tr[data-estado="ANULADA"]').hide();
+						break;					
+				}
+
+				var costoempresa = 0;			
+				if (status=="") {					
+					tbody.find('tr:not(:hidden)').each(function() {
+						var item = $(this);
+						if (item.is(':visible') && item.find('td.status') != 'ANULADA' && !item.hasData('skip')){
+							costoempresa += item.data('costoempresa');											
+						}						
+					});
+				}else{					
+					tbody.find('tr:not(:hidden)').each(function() {
+						var item = $(this);
+						if (!item.hasData('skip'))
+							costoempresa += item.data('costoempresa');					
+					});
+				}
+				tfoot.html(loadTotalesFoot(costoempresa));
+				formatCurrency();
+
+			});
+			
+			// show / hide null
+			$('input.show-hide-null').change(function(event) {				
+				var checked = $(this);
+				var costoempresa = 0;
+				if (checked.prop('checked')){				
+					$('table.gastos-items tbody').find('tr[data-estado="ANULADA"]').show();
+					tbody.find('tr:not(:hidden)').each(function() {
+						var item = $(this);
+						if (!item.hasData('skip'))
+							costoempresa += item.data('costoempresa');											
+					});
+				}else{				
+					$('table.gastos-items tbody').find('tr[data-estado="ANULADA"]').hide();
+					tbody.find('tr:not(:hidden)').each(function() {
+						var item = $(this);
+						if (item.is(':visible') && item.find('td.status') != 'ANULADA' && !item.hasData('skip')){
+							costoempresa += item.data('costoempresa');			
+						}
+					});
+				}
+				tfoot.html(loadTotalesFoot(costoempresa));
+				formatCurrency();
+
+			});
+
+		});
+		</script>
+	</head>
+	<body>
+		<section class="sheet-list-compras-item sheet" data-llave="<!--#4DTEXT [Detalle_NV]Llave_NV-->">
+			<section style="height: 25px; padding:3px">				
+				<label style="float:left;">
+					Estado
+					<select class="by-status" style="border:1px solid gray;margin:2px">
+						<option value="">Todos</option>
+						<option value="EMITIDA">Emitida</option>
+						<option value="PAGADA">Pagada</option>
+						<option value="CERRADA">Cerrada</option>
+						<option value="ANULADA">Anulada</option>
+					</select>
+					<span><input class="show-hide-null" type="checkbox" value="ANULADA"> Anuladas</span>
+				</label>
+			</section>
+			<table class="gastos-items">
+				<thead>
+					<tr>					
+						<th width="5%">Número</th>
+						<th width="5%">Documento</th>					
+						<th width="5%">Emisión</th>
+						<th width="5%">Vencimiento</th>
+						<th width="10%">Estado</th>						
+						<th width="25%" class="left">Proveedor</th>
+						<th width="25%" class="left">Referencia</th>
+						<th width="10%" class="right">Costo empresa [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th width="2%" class="center" title="¿Se encuentra validada?">V</th>
+						<th width="2%" class="center" title="¿Excluye gasto?">E</th>	
+					</tr>		
+				</thead>				
+				<tbody class="ui-selectable"></tbody>
+			  	<tfoot></tfoot>
+			</table>
+		</section>
+	</body>
+</html>

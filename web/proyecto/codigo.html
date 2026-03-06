@@ -1,0 +1,124 @@
+<!--<button id="add-records" onClick="create_record(this)" type="button">+ Crear</button>
+<div class="box-new-records"></div>-->
+<ul class="records" id="records">
+<!--#4dloop aIdAntecedentes-->
+	<li><input disabled type="text" value="<!--#4DVAR aIdAntecedentes{aDesAntecedentes}-->"><a class="remove_records" href="#">- Quitar</a></li>
+<!--#4dendloop-->								
+</ul>
+
+<!--<div><button id="add-phase" type="button">+ Crear</button></div>-->
+		
+		
+<label>Agregar</label>
+<select>
+	<option selected>[ Seleccionar ]</option>
+	<!--#4dloop aIdEtapa-->
+	<option value="<!--#4DVAR aIdEtapa{aIdEtapa}-->"><!--#4DVAR aDesEtapa{aIdEtapa}--></option>
+	<!--#4dendloop-->
+</select>
+
+
+#frm-proyect fieldset div{margin:2px}
+#frm-proyect fieldset div input{width:400px}
+#frm-proyect fieldset div button{margin:5px 0}
+
+
+
+
+
+
+<!--#4DINCLUDE head2.shtml-->
+<body>
+<!--#4DINCLUDE menu_superior_green.shtml-->
+<input id="idproyecto" value="<!--#4DVAR vIdProyecto-->" type="hidden">
+<section>   	
+	<article>
+		<fieldset>                              
+		<legend>Nuevo proyecto</legend>
+			<div class="right">
+				<div class="info-de-creacion"><label>Nro : </label><span> <!--#4DVAR vNroProy--></span></div>
+				<div class="info-de-creacion"><label>Fecha : </label><span> <!--#4DVAR vFechaCreacionP--></span></div>
+				<div class="info-de-creacion"><label>Emisor : </label><span> <!--#4DVAR vNomEmisor--></span></div>				
+			</div>
+			<form id="frm-proyect" action="/4DACTION/WINGRESAOC_" method="post">
+				<fieldset>                              
+					<legend>Datos del Proyecto</legend>
+					<div>
+						<label>Nombre</label><input name="name" value="<!--#4DVAR vNombreProy-->" type="text">
+					</div>
+					<div>
+						<label>Cliente</label><input name="customer" value="<!--#4DVAR vClienteProy-->" type="text">
+					</div>
+					<div>
+						<label>Solicitante</label><input name="customer" value="<!--#4DVAR vClienteProy-->" type="text">
+					</div>	
+				</fieldset>
+
+				<fieldset>
+					<legend>Antecedentes</legend>
+						<!--#4dloop aIdAntProy-->
+							<div>
+								<label><!--#4DVAR aDesAntProy{aIdAntProy}--></label>
+								<input value="<!--#4DVAR aValorAntProy{aIdAntProy}-->" name="customer" type="text">
+							</div>
+						<!--#4dendloop-->		
+				</fieldset>
+				
+				<fieldset>
+					<legend>Etapas</legend>
+						<div class="actions"><a href='javascript:add_etapa();'>+ Etapa</a></div>
+						<div id="etapas"></div>
+						<!--#4dloop aIdEtapaProy-->
+						<fieldset>
+							<legend><input placeholder="Ingrese el nombre de la etapa..." value="<!--#4DVAR aDesEtapaProy{aIdEtapaProy}-->" type="text"><span>100%</span></legend>
+							<div class="actions">
+								<a href='#'>+ Tarea</a>
+							</div>
+							<div class="task">
+								<span>Tarea : Enviar cotización "A"  :</span>
+								<ul>
+									<li><label>Responsable : </label><span>Karina</span></li>
+									<li><label>Fecha de Vencimiento : </label><span>03-10-2012</span></li>
+									<li><label>Responsable : </label><span>Karina</span></li>
+								</ul>
+								<ol>
+									<li>Se envió cotización a cliente? Si  / no</li>
+									<li>Se confirmó recepción de cotización? Si / no</li>
+									<li>Pregunta personalizada ?  Si / no</li>
+									<li>Cajon de texto , personalizado</li>
+									<li>Combobox</li>
+									<li>Adjuntar archivo 1</li>
+									<li>Adjuntar archivo 2</li>
+								</ol>
+							</div>
+							<div class="task">
+								<span>Tarea : Enviar cotización "B"  :</span>
+								<ul>
+									<li><label>Responsable : </label><span>Karina</span></li>
+									<li><label>Fecha de Vencimiento : </label><span>03-10-2012</span></li>
+									<li><label>Responsable : </label><span>Karina</span></li>
+								</ul>
+								<ol>
+									<li>Se envió cotización a cliente? Si  / no</li>
+									<li>Se confirmó recepción de cotización? Si / no</li>
+									<li>Pregunta personalizada ?  Si / no</li>
+									<li>Cajon de texto , personalizado</li>
+									<li>Combobox</li>
+									<li>Adjuntar archivo 1</li>
+									<li>Adjuntar archivo 2</li>
+								</ol>
+							</div>
+						</fieldset>
+						<!--#4dendloop-->					
+				</fieldset>
+				
+			<form>
+			<div class="left">
+				<button type="button">Aceptar</button>
+			</div>
+		</fieldset>
+	</article>  
+</section>
+<script src="/script/project.js"></script>
+</body>
+</html>

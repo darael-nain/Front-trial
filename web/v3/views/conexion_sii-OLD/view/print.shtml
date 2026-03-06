@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+    <!--#4DSCRIPT/_V3_proxy_getDTCPDF-->
+    <head>
+        <meta charset="utf-8">
+        <title>Factura</title>
+    </head>
+    <body>
+        <header>
+            <div>
+                <div style="width: 540px; display: inline-block; vertical-align: top; margin-right: 80px;">
+                    <h1 style="font-size: 18px; text-transform: uppercase;"><!--#4DTEXT proveedor--></h1>
+                    <h2 style="font-size: 14px; text-transform: uppercase; font-weight: normal; border-bottom: 1px solid black; width: 100%;"><!--#4DTEXT giro--></h2>
+                </div>
+                <div style="display: inline-block; text-transform: uppercase; color: red; text-align: center; font-weight: bold;">
+                    <div style="width: 240px; border: 3px solid red; vertical-align: top;">
+                        <!--#4DIF _V3_defaultCurrencyCode="PEN"-->
+                        <p>RUC: <!--#4DTEXT rutFormatPropietariaPEN--></p>
+                        <!--#4DELSE-->
+                        
+                        <p>R.U.T.:  <!--#4DTEXT _V3_currency_format(Num(rut))-->-<!--#4DTEXT dv-->  </p>
+                        <p><!--#4DTEXT tipo_doc --></p>
+                        <!--#4DENDIF-->
+                        <p></p>
+                        <p>Nº <!--#4DTEXT folio--></p>
+                    </div>
+                    
+                </div>
+            </div>
+            <div style="text-align: right; font-size: 16px; font-weight: bold;">
+                <p><!--#4DTEXT ciudadPropietaria-->, <!--#4DTEXT String(fecha;System date long)--></p>
+            </div>
+            <div style="border: 2px solid black; padding-left: 5px; padding-right: 5px; font-size: 14px;">
+                <ul style="display: inline-block; width: 400px; vertical-align: top; list-style: none; padding: 0;">
+                    <li>
+                        <span style="display: inline-block; font-weight: bold; width: 125px; vertical-align: top;">Señor(es)</span>
+                        <span style="display: inline-block: font-weight: bold; vertical-align: top;">: </span>
+                        <span style="display: inline-block; text-transform: uppercase; width: 250px; vertical-align: top;"><!--#4DTEXT receptor--></span>
+                    </li>
+                    <li>
+                        <span style="display: inline-block; font-weight: bold; width: 125px; vertical-align: top;">R.U.T.</span>
+                        <span style="display: inline-block: font-weight: bold; vertical-align: top;">: </span>
+                        <span style="display: inline-block; text-transform: uppercase; width: 250px; vertical-align: top;"><!--#4DTEXT rutFormatPropietaria--></span>
+                    </li>
+                    <li>
+                        <span style="display: inline-block; font-weight: bold; width: 125px; vertical-align: top;">Giro</span>
+                        <span style="display: inline-block: font-weight: bold; vertical-align: top;">: </span>
+                        <span style="display: inline-block; text-transform: uppercase; width: 250px; vertical-align: top;"><!--#4DTEXT giroPropietaria--></span>
+                    </li>
+                    <li>
+                        <span style="display: inline-block; font-weight: bold; width: 125px; vertical-align: top;">Dirección</span>
+                        <span style="display: inline-block: font-weight: bold; vertical-align: top;">: </span>
+                        <span style="display: inline-block; text-transform: uppercase; width: 250px; vertical-align: top;"><!--#4DTEXT direccionPropietaria--></span>
+                    </li>
+                    <!--#4DIF _V3_defaultCurrencyCode#"PEN"-->
+                    <li>
+                        <span style="display: inline-block; font-weight: bold; width: 125px; vertical-align: top;">Comuna</span>
+                        <span style="display: inline-block: font-weight: bold; vertical-align: top;">: </span>
+                        <span style="display: inline-block; text-transform: uppercase; width: 250px; vertical-align: top;"><!--#4DTEXT comunaPropietaria--></span>
+                    </li>
+                    <!--#4DENDIF-->
+                </ul>
+                <ul style="display: inline-block; width: 400px; vertical-align: top; list-style: none; padding: 0;">
+                    <li>
+                        <span style="display: inline-block; font-weight: bold; width: 125px; vertical-align: top;">Vencimiento</span>
+                        <span style="display: inline-block: font-weight: bold; vertical-align: top;">: </span>
+                        <span style="display: inline-block; text-transform: uppercase; width: 250px; vertical-align: top;"></span>
+                    </li>
+                    <li>
+                        <span style="display: inline-block; font-weight: bold; width: 125px; vertical-align: top;">Forma de Pago</span>
+                        <span style="display: inline-block: font-weight: bold; vertical-align: top;">: </span>
+                        <span style="display: inline-block; text-transform: uppercase; width: 250px; vertical-align: top;"></span>
+                    </li>
+                    <li>
+                        <span style="display: inline-block; font-weight: bold; width: 125px; vertical-align: top;">Ciudad</span>
+                        <span style="display: inline-block: font-weight: bold; vertical-align: top;">: </span>
+                        <span style="display: inline-block; text-transform: uppercase; width: 250px; vertical-align: top;"><!--#4DTEXT ciudadPropietaria--></span>
+                    </li>
+                </ul>
+            </div>
+            <ul style="font-size: 14px; display: inline-block; vertical-align: top; list-style: none; padding: 0;">
+                <li>
+                    <!--#4DIF (Size of array(aRefFolio) > 0)-->
+                    <span style="font-weight: bold; width: 125px;">Referencia</span>
+                    <span>:
+                        <ul style="display: inline-block; vertical-align: top; list-style: none; padding: 0;">
+                            <!--#4DLOOP aRefFolio-->
+                            <li>en <!--#4DTEXT aRefTipo{aRefFolio}--> : Nro. <!--#4DTEXT aRefFolio{aRefFolio}--> del <!--#4DTEXT aRefFecha{aRefFolio}--></li>
+                            <!--#4DENDLOOP-->
+                        </ul>
+                    </span>
+                    <!--#4DENDIF-->
+                </li>
+            </ul>
+        </header>
+        <section>
+            <table style="border-spacing: 0; font-size: 14px; width: 100%;">
+                <thead style="background-color: black; color: white;">
+                    <tr>
+                        <th style="padding: 3px; text-align: center;">Ítem</th>
+                        <th style="padding: 3px; text-align: center;">Código</th>
+                        <th style="padding: 3px; text-align: center;">Descripción</th>
+                        <th style="padding: 3px; text-align: center;"></th>
+                        <th style="padding: 3px; text-align: center;">Cant.</th>
+                        <th style="padding: 3px; text-align: center;">P.U</th>
+                        <th style="padding: 3px; text-align: center;">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td style="padding: 3px; text-align: center; vertical-align: top;">1</td>
+                        <td style="padding: 3px; text-align: center; vertical-align: top;">0</td>
+                        <td style="padding: 3px; text-align: center; vertical-align: top;">
+                            <span style="display: block;"><!--#4DHTML description--></span>
+                            <span style="display: block; white-space: pre;"></span>
+                        </td>
+                        <td style="padding: 3px; text-align: center; vertical-align: top;"></td>
+                        <td style="padding: 3px; text-align: center; vertical-align: top;">1</td>
+
+                        
+                        <td style="padding: 3px; text-align: center; vertical-align: top;"><!--#4DTEXT _V3_formatCurrency(neto)--></td>
+                        <td style="padding: 3px; text-align: center; vertical-align: top;"><!--#4DTEXT _V3_formatCurrency(neto)--></td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <footer>
+            <div style="width: 450px; display: inline-block; vertical-align: top; text-transform: uppercase; color: red; font-size: 24px; text-align: center; min-height: 200px;">
+                
+            </div>
+            <div style="width: 450px; display: inline-block; vertical-align: top;">
+                <ul style="margin-left: 240px; width: 220px;font-size: 14px; display: inline-block; vertical-align: top; list-style: none; padding: 0;">
+                    <!--#4DIF false-->
+                    <li style="border-bottom: 1px solid black; width: 100%; padding-bottom: 5px; margin-bottom: 5px;">
+                        <span style="width: 100px; display: inline-block;">% Desc.:</span>
+                        <!--<span style="display: inline-block;">$</span>-->
+                        <span style="width: 100px; display: inline-block; text-align: right;"></span>
+                    </li>
+                    <!--#4DENDIF-->
+                    <!--#4DIF impuesto > 0-->
+                    <li style="border-bottom: 1px solid black; width: 100%; padding-bottom: 5px; margin-bottom: 5px;">
+                        <span style="width: 100px; display: inline-block;">Neto:</span>
+                        <!--<span style="display: inline-block;">$</span>-->
+                        <span style="width: 100px; display: inline-block; text-align: right;"><!--#4DTEXT _V3_formatCurrency(neto)--></span>
+                    </li>
+
+                    <li style="border-bottom: 1px solid black; width: 100%; padding-bottom: 5px; margin-bottom: 5px;">
+                        <span style="width: 100px; display: inline-block;">I.V.A.:</span>
+                       <!-- <span style="display: inline-block;">$</span>-->
+                        <span style="width: 100px; display: inline-block; text-align: right;"><!--#4DTEXT _V3_formatCurrency(impuesto)--></span>
+                    </li>
+
+                    <!--#4DELSE-->
+                    <li style="border-bottom: 1px solid black; width: 100%; padding-bottom: 5px; margin-bottom: 5px;">
+                        <span style="width: 100px; display: inline-block;">Exento:</span>
+                        <!--<span style="display: inline-block;">$</span>-->
+                        <span style="width: 100px; display: inline-block; text-align: right;"> <!--#4DTEXT _V3_formatCurrency(total)-->   </span>
+                    </li>
+                    <!--#4DENDIF-->
+                    <li>
+                        <span style="width: 100px; display: inline-block;">Total:</span>
+                        <!--<span style="display: inline-block;">$</span>-->
+                        <span style="width: 100px; display: inline-block; text-align: right;"><!--#4DTEXT _V3_formatCurrency(total)--></span>
+                    </li>
+                </ul>
+                <div style="border: 1px solid black; padding: 5px; min-height: 90px;">
+                    <p style="margin: 0; padding: 0; display: inline-block; vertical-align: top;">Observaciones:</p>
+                    <p style="white-space: pre;"></p>
+                </div>
+            
+            </div>
+        </footer>
+    </body>
+</html>

@@ -1,0 +1,46 @@
+{
+	"comuna": <!--#4DIF Not(Undefined(comuna))-->"<!--#4DHTML comuna-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"ciudad": <!--#4DIF Not(Undefined(ciudad))-->"<!--#4DHTML ciudad-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"rut": <!--#4DIF Not(Undefined(rut))-->"<!--#4DHTML rut-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"nombre_empresa": <!--#4DIF Not(Undefined(nombre_empresa))-->"<!--#4DHTML nombre_empresa-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"giro": <!--#4DIF Not(Undefined(giro))-->"<!--#4DHTML giro-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"direccion": <!--#4DIF Not(Undefined(direccion))-->"<!--#4DHTML direccion-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"fecha": <!--#4DIF Not(Undefined(fecha))-->"<!--#4DHTML fecha-->"<!--#4DELSE-->null<!--#4DENDIF-->,	
+	"decimals": <!--#4DIF Not(Undefined(_V3_defaultCurrencyDecimals))-->"<!--#4DHTML _V3_defaultCurrencyDecimals-->"<!--#4DELSE-->null<!--#4DENDIF-->,		
+	"date_from":"<!--#4DHTML date_from-->",
+	"date_to":"<!--#4DHTML date_to-->",
+	"details": [
+	<!--#4DLOOP aIdDetail -->
+			{
+				"id_comp": "<!--#4DHTML aIDComp{aIdDetail}-->",
+				"id_comp3": "<!--#4DHTML aIDComp3{aIdDetail}-->",
+				"cod_proyecto": "<!--#4DHTML aCodProyecto{aIdDetail}-->",
+				"nro_proyecto": "<!--#4DHTML _V3_escapeString(aNroProyecto{aIdDetail})-->",
+				"codigoCuenta": "<!--#4DHTML _V3_escapeString(aCodigoCuenta{aIdDetail})-->",
+				"fechaRegistro": "<!--#4DHTML aRegistryDate{aIdDetail}-->",
+				"glosa": "<!--#4DHTML  _V3_escapeString(aGlosa{aIdDetail})-->",
+				"tipoReg": "<!--#4DHTML  _V3_escapeString(aTipoReg{aIdDetail})-->",
+				"tipoDoc": "<!--#4DHTML  _V3_escapeString(aTipoDoc{aIdDetail})-->",
+				"tipo_cuenta": "<!--#4DHTML  _V3_escapeString(aTipoCuenta{aIdDetail})-->",
+				"numReg": "<!--#4DHTML aNumReg{aIdDetail}-->",
+				"automatico": "<!--#4DHTML aAutomatico{aIdDetail}-->",
+				"obligacion": "<!--#4DHTML aObligacion{aIdDetail}-->",
+				"rut": "<!--#4DHTML _V3_escapeString(aRut{aIdDetail})-->",
+				"razon": "<!--#4DHTML _V3_escapeString(aRazon{aIdDetail})-->",
+				"numDoc": "<!--#4DHTML _V3_escapeString(aNumDoc{aIdDetail})-->",
+				"debe": "<!--#4DHTML aDebe{aIdDetail}-->",
+				"correlativo": <!--#4DHTML aCorrelativo{aIdDetail}-->,
+				"haber": "<!--#4DHTML aHaber{aIdDetail}-->",
+				"cuentaContable": "<!--#4DHTML _V3_escapeString(aCuentacontable{aIdDetail})-->"
+			}<!--#4DIF NOT(aIdDetail{aIdDetail} = aIdDetail{Size of array(aIdDetail)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+		],
+		"saldos": [
+	<!--#4DLOOP aCuentasSaldoAnterior -->
+			{
+				"saldo_anterior": "<!--#4DHTML aSaldoAnterior{aCuentasSaldoAnterior}-->",
+				"codigoCuenta": "<!--#4DHTML _V3_escapeString(aCuentasSaldoAnterior{aCuentasSaldoAnterior})-->"
+			}<!--#4DIF NOT(aCuentasSaldoAnterior{aCuentasSaldoAnterior} = aCuentasSaldoAnterior{Size of array(aCuentasSaldoAnterior)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+		]
+}

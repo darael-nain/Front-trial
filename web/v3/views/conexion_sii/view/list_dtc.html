@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Expires" content="0">
+
+  <meta http-equiv="Last-Modified" content="0">
+
+  <meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+
+  <meta http-equiv="Pragma" content="no-cache">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+  <link href="../css/general.css" rel="stylesheet">
+  <link href="../css/list_dtc.css" rel="stylesheet">
+  <link rel="stylesheet" href="/v3/design/icons/fontawesome-free-6.6.0/css/all.min.css">
+  <script rel="stylesheet" href="/v3/design/icons/fontawesome-free-6.6.0/js/all.js"></script>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
+    integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <title>Document</title>
+  <!-- 🔒 GUARD: oculta todo y solo muestra si (1) iframe same-origin + (2) login OK -->
+    <style>
+        html.guard-hide body {
+            display: none !important;
+        }
+    </style>
+    <script>
+        (function guard() {
+            // Oculta todo por defecto (evita que se vea contenido antes del check)
+            document.documentElement.classList.add("guard-hide");
+
+            const deny = () => {
+                // “No aparece nada”: dejamos el body vacío + oculto
+                try { if (document.body) document.body.innerHTML = ""; } catch (_) { }
+                // mantenemos guard-hide activo
+            };
+
+            const allow = () => {
+                document.documentElement.classList.remove("guard-hide");
+            };
+
+            // 1) Debe estar embebido en iframe (si lo abres directo en pestaña => DENY)
+            let isInIFrame = false;
+            try {
+                isInIFrame = (window.self !== window.top);
+            } catch (e) {
+                // Si falla acceder a top, asumimos cross-origin => DENY abajo
+                isInIFrame = true;
+            }
+            if (!isInIFrame) return deny();
+
+            // 2) El parent debe ser same-origin (si no => DENY)
+            try {
+                if (window.top.location.origin !== window.location.origin) return deny();
+            } catch (e) {
+                return deny();
+            }
+
+            // 3) Debe estar logeado (reusa tu misma lógica)
+            const checkUrl =
+                `${window.origin}/4DACTION/_v3_checkLogin?nodeUrl=${encodeURIComponent("https://frank.unabase.com/node")}`;
+
+            fetch(checkUrl, { credentials: "include", cache: "no-store" })
+                .then(r => r.ok ? r.json() : Promise.reject(r))
+                .then(data => {
+                    if (!data || !data.isLogin || data.login == null) return deny();
+                    // OK: recién aquí mostramos
+                    allow();
+                })
+                .catch(() => deny());
+        })();
+    </script>
+    <!-- 🔒 FIN GUARD -->
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"
+    integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js@1.11.1/src/toastify.min.css">
+  <style type="text/css">
+    .table-fixed tbody {
+      height: 300px;
+      overflow-y: auto;
+      width: 100%;
+    }
+
+    .table-fixed thead,
+    .table-fixed tbody,
+    .table-fixed tr,
+    .table-fixed td,
+    .table-fixed th {
+      display: block;
+      width: 100%;
+    }
+
+    .table-fixed tbody td,
+    .table-fixed tbody th,
+    .table-fixed thead>tr>th {
+      float: left;
+      position: relative;
+
+      &::after {
+        content: '';
+        clear: both;
+        display: block;
+      }
+    }
+
+    #tooltip {
+      width: 500px;
+      background-color: rgb(110, 108, 108);
+      color: white;
+      padding: 10px 50px;
+      border-radius: 10px;
+      font-size: 13px;
+    }
+
+    body {
+      margin: 0;
+    }
+
+    #loading-screen {
+      background-color: rgba(25, 25, 25, 0.7);
+      height: 100%;
+      width: 100%;
+      position: fixed;
+      z-index: 9999;
+      margin-top: 0;
+      top: 0;
+      text-align: center;
+    }
+
+    #loading-screen img {
+      width: 100px;
+      height: 100px;
+      position: relative;
+      margin-top: -50px;
+      margin-left: -50px;
+      top: 50%;
+    }
+
+    .newBtnFilter {
+      width: 100%;
+      height: 34.86px;
+      color: #fff;
+      font-size: 12px;
+      font-weight: bold;
+      position: relative;
+    }
+
+    .newBtnFilter .tooltip {
+      visibility: hidden;
+      width: 0;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      border-radius: 4px;
+      padding: 6px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s ease, width 0.3s ease;
+    }
+
+    .newBtnFilter:hover .tooltip {
+      visibility: visible;
+      width: 160px;
+      opacity: 1;
+    }
+
+    .newBtnFilter:hover .tooltip::before {
+      content: "";
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 8px;
+      border-style: solid;
+      border-color: transparent transparent #333 transparent;
+    }
+
+    .newBtnFilter:hover .tooltip::after {
+      content: attr(title);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+    }
+
+    table {
+
+      position: relative;
+      overflow: auto;
+      width: auto;
+
+
+    }
+
+    table thead {
+      position: sticky;
+      background-color: white;
+      top: 0px;
+    }
+  </style>
+
+</head>
+
+<body class="container-fluid mx-auto body-index">
+  <input id="colorSelector" class="form-control " type="text" value="" style="display:none;">
+
+
+  <main class="row mb-3">
+    <div id="loading-screen">
+      <img src="../css/img/spinning-circles.svg">
+    </div>
+    <div class="container p-2">
+      <div class="fixed-bottom container-fluid mx-auto " id="alertas"></div>
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top  shadow p-2 mb-5 bg-white rounded  mx-auto container  ">
+        <div class="card border-0" style="width: 100%;">
+          <div class="container mx-auto">
+            <h5 class="card-title t" id="list-dtc-title">Lista de Documentos SII</h5>
+
+
+
+            </button>
+            <small style=" color: #a2a6a6;"> <span id="doc_cont" class="badge rounded-pill"
+                style="background-color:black; color: white;font-weight: bold;font-size: 12px;"> 0
+              </span> Documentos.</small>
+          </div>
+
+          <div class="card-body">
+
+            <div class="row align-items-center mx-auto">
+
+
+              <div class="searchbar col-6 col-md-2">
+                <input id="searchDtc" class="form-control " type="text" placeholder="Buscar..." autocomplete="off">
+
+              </div>
+              <div class="col-4 col-md-2">
+                <input type="month" name="fecha" id="fecha" class="form-control" value="">
+              </div>
+
+              <div class="col-2 col-md-1">
+                <button type="button" class="btn colorSelector newBtnFilter" id="btn1OC" value="green"
+                  style="background-color: #34CC02;">
+                  1 OC
+                  <!-- <span class="tooltip">Filtrar y seleccionar las coincidencias de cada documento con 1 gasto</span> -->
+                  <span class="tooltip">Con un gasto</span>
+                </button>
+              </div>
+              <div class="col-2 col-md-1">
+                <button type="button" class="btn colorSelector newBtnFilter" id="btn1OCplus" value="blue"
+                  style="background-color: #03D6F9;">
+                  +1 OC
+                  <!-- <span class="tooltip">Filtrar las coincidencias de cada documentos con varios gastos</span> -->
+                  <span class="tooltip">Con varios gastos</span>
+                </button>
+              </div>
+              <div class="col-2 col-md-1" style="border-right: black;">
+                <button type="button" class="btn colorSelector newBtnFilter" id="btn0OC" value="red"
+                  style="background-color: #FC4903;">
+                  0 OC
+                  <!-- <span class="tooltip">Filtrar y seleccionar los documentos sin gastos coincidentes</span> -->
+                  <span class="tooltip">Sin gastos</span>
+                </button>
+              </div>
+              <div class="col-2 col-md-1">
+                <button type="button" class="btn colorSelector newBtnFilter" id="btnNC" value="grey"
+                  style="background-color: #c2c5c3;">
+                  NC
+                  <!-- <span class="tooltip">Estas son las notas de credito</span> -->
+                  <span class="tooltip">Notas de crédito</span>
+                </button>
+              </div>
+              <div class="col-2 col-md-1">
+                <button type="button" class="btn colorSelector newBtnFilter" id="btnND" value="aqua"
+                  style="background-color: #0ef5f5;">
+                  ND
+                  <!-- <span class="tooltip">Estas son las notas de credito</span> -->
+                  <span class="tooltip">Notas de debito</span>
+                </button>
+              </div>
+              <div class="col-2 col-md-1">
+                <button type="button" class="btn colorSelector newBtnFilter" value="black" id="btnNull"
+                  style="background-color: #000; color: #fff;">
+                  Nulos
+                  <!-- <span class="tooltip">Estos son los documentos nulos</span> -->
+                  <span class="tooltip">Nulos</span>
+                </button>
+              </div>
+              <div class="col-2 col-md-1">
+                <button type="button" class="btn colorSelector newBtnFilter" id="pending" value="orange"
+                  style="background-color: #F9BD00;">
+                  Pendientes
+                  <!-- <span class="tooltip">Estos son los documentos por asignar</span> -->
+                  <span class="tooltip">Por asignar</span>
+                </button>
+              </div>
+              <div class="col-2 col-md-1 d-flex flex-row-reverse">
+                <button type="button" class="btn colorSelector newBtnFilter" id="btnStop" value="cancel"
+                  style="border: 2px #3B88A7 solid; cursor: pointer; color: #3B88A7;">
+                  <i class="fas fa-ban" style="font-size: 20px;"></i>
+                  <!-- <span class="tooltip">Activa solo los filtro de OCs</span> -->
+                  <span class="tooltip">Filtro de OCs</span>
+                </button>
+              </div>
+              <div class="col-12 col-md-1 d-flex flex-row-reverse">
+                <button type="button" id="reload" class="btn colorSelector newBtnFilter"
+                  style="border: 2px #34CC02 solid; cursor: pointer; color: #34CC02;" disabled>
+                  <i class="fas fa-sync" style="font-size: 20px;"></i>
+                  <!-- <span class="tooltip">Consultar documentos al sii manualmente</span> -->
+                  <span class="tooltip">SII manual</span>
+                </button>
+              </div>
+              <div class="col-md-12">
+                <br>
+                <!--  <i   class=" fas fa-search  float-left"></i> -->
+                <button type="button" class="btn float-right action green"
+                  style="width: 15em; background-color: #34CC02; color: white; display: none;cursor: pointer; font-weight: bold;"
+                  data-bs-toggle="modal" data-bs-target="#modalmatch">Justificar</button>
+                <button type="button" class="btn float-right action blue"
+                  style="width: 15em; background-color: #03D6F9; color: black; display: none;cursor: pointer;font-weight: bold;"
+                  data-bs-toggle="modal" data-bs-target="#modalmatch">Seleccionar OC</button>
+                <button type="button" class="btn btn-danger float-right action red"
+                  style="width: 15em; background-color: #FC4903; color: white; display: none;cursor: pointer;font-weight: bold;"
+                  data-bs-toggle="modal" data-bs-target="#modalmatch">Crear OC y Justificar</button>
+                <button type="button" class="btn btn-danger float-right action red gg"
+                  style="width: 15em; background-color: #FC4903; color: white; display: none;cursor: pointer;font-weight: bold;"
+                  data-bs-toggle="modal" data-bs-target="#modalmatch">Crear OC y Justificar GG</button>
+                <button type="button" class="btn btn-danger float-right action red two"
+                  style="width: 25em; background-color: #FC4903; color: white; display: none;cursor: pointer;font-weight: bold;"
+                  title="Dejar los documentos creados y en estado 'Por asignar' a gasto">Dejar pendiente
+                  (Contabilizar)</button>
+                <button type="button" class="btn btn-danger float-right action yellow jg"
+                  style="width: 15em; background-color: #FC4903; color: white; display: none;cursor: pointer;font-weight: bold;"
+                  title="Selecciona una rendicion del listado y justificala" data-bs-toggle="modal"
+                  data-bs-target="#modalmatch">Justificar gasto</button>
+
+                <button type="button" class="btn float-right action grey"
+                  style="width: 15em; background-color: #c2c5c3; color: white; display: none;cursor: pointer;font-weight: bold;"
+                  title="Selecciona una rendicion del listado y justificala" data-bs-toggle="modal"
+                  data-bs-target="#modalmatch">Justificar NC</button>
+
+
+                <button type="button" class="btn btn-danger float-right action aqua"
+                  style="width: 15em; background-color: #FC4903; color: white; display: none;cursor: pointer;font-weight: bold;"
+                  title="Selecciona una rendicion del listado y justificala" data-bs-toggle="modal"
+                  data-bs-target="#modalmatch">Asociar</button>
+
+
+
+                <button type="button" class="btn btn-danger float-right action black"
+                  style="width: 15em; background-color: black; color: white; display: none;cursor: pointer;font-weight: bold;"
+                  title="Dejar documento nulo">Anular</button>
+              </div>
+
+            </div>
+            <div id="loading"></div>
+          </div>
+        </div>
+
+
+
+      </nav>
+
+      <div class="table-responsive" style="margin-top: 200px; min-height: 280px; height: calc(100vh - 200px) ">
+
+        <table class="table table-striped table-hover " id="tables"></table>
+      </div>
+
+      <div id="msg"></div>
+    </div>
+    </div>
+
+    <div id="modal-oc-match">
+
+      <!-- Modal -->
+      <div class="modal fade" id="modalmatch" data-bs-keyboard="false" data-bs-backdrop="static" tabindex="-1"
+        role="dialog" aria-labelledby="modaltitle" aria-hidden="true">
+        <!--  <div class="modal fade show" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-modal="true" role="dialog" style="display: block;"> -->
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="fixed-bottom container mx-auto" id="alertas-modal"></div>
+
+            <div class="modal-header">
+              <div class="container-fluid">
+
+                <div id="item_list">
+                  <datalist id="il">
+                  </datalist>
+                </div>
+                <div class="row justify-content-start">
+                  <div class="col-md-12 col-lg-4">
+                    <h5 class="modaltitle" id="modaltitle">Ordenes de compra coincidentes:</h5>
+                    <div id="loading-modal"></div>
+                  </div>
+                  <div id="div-fecha-neg" class="col-4 justify-content-end " style="text-align: left; display: none;">
+                    <label for="fecha-neg" style="font-size: 0.8rem;">Filtrar negocios por año:</label>
+                    <select id="fecha-neg" class="form-control custom-select" style="max-width: 50%;"></select>
+                  </div>
+                  <div id="div-fecha-fxr" class="col-4 justify-content-end " style="text-align: left; display: none;">
+                    <label for="fecha-fxr" style="font-size: 0.8rem;">Filtrar gastos por año:</label>
+                    <select id="fecha-fxr" class="form-control custom-select" style="max-width: 50%;"></select>
+
+                  </div>
+                  <div class="col justify-content-end d-flex align-items-center" style="text-align: right;  ">
+                    <button type="button" class="btn float-right" id="justify-btn"
+                      style="width: 10em; background-color: #34CC02; color: white;cursor: pointer; font-weight: bold;">Justificar</button>
+                  </div>
+                  <div class=" col-1 justify-content-end" style="text-align: right;  ">
+                    <button type="button" class="btn-close col-lg-1" data-bs-dismiss="modal" aria-label="Close"
+                      id="closemodal"></button>
+                  </div>
+
+                </div>
+                <div class="row justify-content-start" style="margin-top: 20px;">
+                  <div class=" col-4 justify-content-end " style="text-align: left;">
+                    <input id="input-file-attach" type="file" class="form-control input-file-adjunto">
+                  </div>
+                </div>
+
+
+              </div>
+
+            </div>
+            <div class="modal-body">
+
+              <input id="search-general" class="form-control " type="text" placeholder="Buscar..." autocomplete="off" />
+
+              <div id="modal-list">
+
+              </div>
+            </div>
+            <div class="modal-footer">
+              <!--  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button> -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="confirm-modal">
+
+      <!-- Modal -->
+      <div class="modal fade" id="confirm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticConfirmLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticConfirmLabel">CONFIRMAR</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Se crearan las OC y justificación de los documentos seleccionados, favor confirmar.
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-success">Aceptar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </main>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js@1.11.1"></script>
+  <script src="/v3/script/toastify/toastify.js"></script>
+  <script src="/v3/script/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+    crossorigin="anonymous"></script>
+  <script type="text/javascript" src="../js/controllers/c_general.js?v=180408082024" data-from="list_dtc"></script>
+  <script type="text/javascript" src="../js/general_functions.js?v=180408082024"></script>
+  <script type="text/javascript" src="../js/classes.js?v=180408082024"></script>
+  <script type="text/javascript" src="../js/templates.js?v=180408082024"></script>
+  <script type="text/javascript" src="../js/controllers/c_list_dtc.js?v=180408082024"></script>
+  <!-- 
+  <script type="text/javascript" src="../js/list_dtc.js?v=173032023"></script> -->
+
+
+</body>
+
+</html>

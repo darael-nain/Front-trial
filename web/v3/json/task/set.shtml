@@ -1,0 +1,10 @@
+{
+	"id": <!--#4DIF Not(Undefined(id))-->"<!--#4DVAR id-->"<!--#4DELSE-->"0"<!--#4DENDIF-->,
+	"success": <!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF-->,		
+	"add" : <!--#4DIF Not(Undefined(add))--><!--#4DIF add-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+	"delete" : <!--#4DIF Not(Undefined(del))--><!--#4DIF del-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+	"fecha" : <!--#4DIF Not(Undefined(fecha))-->"<!--#4DVAR fecha-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+	"name" : <!--#4DIF Not(Undefined(name))-->"<!--#4DVAR name-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+	"folio" : <!--#4DIF Not(Undefined(folio))-->"<!--#4DVAR folio-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+	"errorMsg" : <!--#4DIF Not(Undefined(errorMsg))-->"<!--#4DVAR errorMsg-->"<!--#4DELSE-->""<!--#4DENDIF-->
+}

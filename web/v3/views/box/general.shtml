@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_proxy_getBoxContent-->
+<html>
+	<head>		
+		<title>Perfil</title>
+		<meta charset="utf-8">	
+		<script type="text/javascript">
+			var container = $('.form-contact');			
+			var idContacto = containerContacto.find('input[name="id"]').val();
+
+			// setea valores por defecto
+			if (idContacto == 0) {
+				var infoalias = $('input[name="contacto[info][alias]"]');
+				if (infoalias.length > 0) {
+					var busqueda = infoalias.val();			
+					var srt = busqueda.split(" ");
+					$('input[name="contact[nombre]"]').val(srt[0]);
+					$('input[name="contact[paterno]"]').val(srt[1]);
+					$('input[name="contact[materno]"]').val(srt[2]);
+					$('input[name="contact[alias]"]').val(busqueda);
+					$('input[name="contact[razon]"]').val(busqueda);
+				}				
+			}
+
+			var full_fields = function(){				
+				container.find('input:not([type="radio"])').each(function() {
+					if ($(this).val() != "") {						
+						$(this).css("background-color","#FECA40");
+					}
+				});
+				if (container.find('textarea').val() != "") {						
+					container.find('textarea').css("background-color","#FECA40");
+				}
+			}			
+
+			var getTagByContact = function(){
+				var contacto = $('.form-contact').find('input[name="id"]').val();				
+				var ul = $('.tags');				
+				$.ajax({
+		          url: '/4DACTION/_v3_getTagByContacto',
+		          dataType: 'json',
+		          data:{
+		          	"contacto[id]": contacto
+		          },
+		          success: function(data) {		         
+		            $.each(data.rows, function(key, item){             
+		                ul.append('<li data-id="'+ item.id +'" data-contacto="'+ contacto +'" data-tag="'+ item.tag_id +'">#'+ item.tag_name +'</li>');
+		            });           
+		          }
+		        });
+			}			
+
+			var complete_razon = function(){
+				if ($('input[name="contact[razon]"]').val()=="") {
+		    		var nombre = $('input[name="contact[nombre]"]').val();
+		    		var pat = $('input[name="contact[paterno]"]').val();
+		    		var mat = $('input[name="contact[materno]"]').val();
+		    		var cadena = "";
+		    		if (nombre!="") {
+		    			cadena = cadena + nombre+" ";
+		    		}
+		    		if (pat!="") {
+	    				cadena = cadena + pat+" ";
+	    			}
+		    		if (mat!="") {
+    					cadena = cadena + mat+" ";
+    				}    				
+		    		$('input[name="contact[razon]"]').val(cadena.trim());
+		    	}		
+			}			
+
+			$(document).ready(function() {			
+			    $("#radio").buttonset();
+			    $('.hide').hide();
+			    full_fields();
+
+			    $('.form-contact input[name="contact[rut]"]').change(function(){
+			      verifica_duplicacion();
+			    });
+
+			    //remove tag
+			    $(".tags").on('click','li', function(){
+			    	var li = $(this);
+					var tagContactoId = $(this).data('id');
+
+			    	confirm(MSG.get('CONFIRM_TAG_REMOVE')).done(function(data) {
+						if (data) {									    	
+					    	$.ajax({
+				              url: '/4DACTION/_V3_setTagContacto',
+				              dataType: 'json',
+				              data: {
+				              	'tag_contact[delete]': "yes",
+				              	'tag_contact[id]': tagContactoId		              	
+				              },
+				              success: function(data) {
+								if (data.success) {
+									li.fadeOut(function(){
+										$(this).remove;
+									});
+									toastr.success('Etiqueta quitado exitosamente!');	                  
+								}else {
+								  if (data.opened) {
+								    if (data.readonly)
+								      toastr.error(NOTIFY.get('ERROR_RECORD_READONLY', 'Error'));
+								  }                     
+								}
+				              },
+				              error: function(xhr, text, error) {
+				                toastr.error(NOTIFY.get('ERROR_INTERNAL', 'Error'));                
+				              }
+				            });	
+						}
+					});			    			    	
+			    });
+			  
+			    getTagByContact();			      
+
+			    // set razon
+			    $('input[name="contact[razon]"]').focus(function(){
+			    	complete_razon();
+			    });
+
+			    // set estado
+			    $('input[name="check[estado]"]').click(function(){			    	
+			    	if ($(this).prop('checked')) {
+			    		$('input[name="contact[estado]"]').val('true');
+			    	}else{
+			    		$('input[name="contact[estado]"]').val('false');
+			    	}
+			    });
+
+
+			});
+		</script>
+		<style type="text/css">
+			.radius{
+				border-radius:none!important;
+			}
+		</style>
+	</head>
+	<body>		
+		<section class="sheet">
+
+			<nav style="height:30px;">
+
+				<!--<ul class="tags">
+					<li>#tag1</li>
+					<li>#tag2</li>
+					<li>#tag3</li>
+				</ul>-->
+
+				<ul class="tags"></ul>
+
+				<div style="margin:10px">
+					<!--#4DIF [box]id>0-->
+						<!--#4DIF ([box]deleted_at_date=!00/00/00!)-->
+							<span style="display:inline-block;vertical-align:middle"><input name="check[estado]" type="checkbox" checked="checked"></span>
+							<input name="contact[estado]" type="hidden" value="true">
+						<!--#4DELSE-->
+							<span style="display:inline-block;vertical-align:middle"><input name="check[estado]" type="checkbox"></span>
+							<input name="contact[estado]" type="hidden" value="false">
+						<!--#4DENDIF-->						
+					<!--#4DELSE-->
+						<span style="display:inline-block;vertical-align:middle"><input name="contact[estado]" type="checkbox" checked="checked"></span>
+						<input name="contact[estado]" type="hidden" value="true">
+					<!--#4DENDIF-->
+					<span style="display:inline-block;vertical-align:middle;font-weight:bold">Activo</span>					
+				</div>
+			</nav>
+
+			<fieldset>
+			<legend><strong>Información básica</strong></legend>
+				<article class="inline">
+					<div><label>Nombre:</label><input name="contact[alias]" value="<!--#4DTEXT Uppercase([box]text;*)-->" type="text"></div>				 	
+	            </article>
+	            <article class="inline">
+                	<div><label>Categoría:</label><input name="contact[categoria]" value="<!--#4DTEXT Uppercase(String([box]id_categoria);*)-->" type="text"></div>
+              	</article>
+			</fieldset>			
+			<fieldset>
+				<legend><strong>Archivos</strong></legend>
+				Acá van los archivos...
+			</fieldset>
+		</section>			
+	</body>	
+</html>

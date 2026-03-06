@@ -1,0 +1,657 @@
+var get_element_oc = {
+  titulo:function(functor, element, i) {
+    var htmlObject;
+    if (i.des_lugar_origen=="GASTO GENERAL" || i.des_lugar_origen=="OTROS GASTOS") {
+      var nomTitulo = '<input class="sc-full" style="width:250px" name="oc[detalle_item][nombre]" type="search" value="'+i.nombre+'" placeholder="Buscar categoría por nombre...">';
+      var addItem = '<button class="ui-icon ui-icon-circle-plus add item" title="Agregar ítem">';
+    }else{
+      var nomTitulo = '<input style="width:250px" name="oc[detalle_item][nombre]" type="text" value="'+i.nombre+'">';
+      var addItem = '';
+    }
+    var idNeg = parseInt($('input[name="oc[negocio][id]"]').val());
+    if (idNeg==0) {
+      $('input[name="oc[negocio][id]"]').val(i.id_nv);
+    }
+
+    var valoresOCultos= '<input type="hidden" name="oc[detalle_item][llave]" value="'+i.llave+'">'+
+                        '<input type="hidden" name="oc[detalle_item][tipo]" value="'+i.tipo+'">'+
+                        '<input type="hidden" name="oc[detalle_item][items]" value="'+i.items+'">'+
+                        '<input type="hidden" name="oc[detalle_item][idnv]" value="'+i.id_nv+'">'+
+                        '<input type="hidden" name="oc[detalle_item][origen]" value="'+i.origen+'">'+
+                        '<input type="hidden" name="oc[detalle_item][origen][lugar]" value="'+i.lugar_origen+'">'+
+                        '<input type="hidden" name="oc[detalle_item][origen][lugar][des]" value="'+i.des_lugar_origen+'">'+
+                        '<input type="hidden" name="oc[detalle_item][id_tipo_producto]" value="04">'+
+                        '<input type="hidden" name="oc[detalle_item][cod_producto]" value="'+i.cod_prod+'">'+
+                        '<input type="hidden" name="oc[detalle_item][id_producto]" value="'+i.id_prod+'">'+
+                        '<input type="hidden" name="oc[detalle_item][llave_nv]" value="'+i.llave_nv+'">'+
+                        '<input type="hidden" name="oc[detalle_item][id_clasif]" value="'+i.id_clas+'">'+
+                        '<input type="hidden" name="oc[detalle_item][des_clasif]" value="'+i.des_clas+'">'+
+                        '<input type="hidden" name="oc[detalle_item][llave_titulo]" value="'+i.llave_titulo+'">' +
+                        '<input type="hidden" name="oc[detalle_item][observacion_item]" value="'+i.observacion_item+'">';
+
+
+    var htmlObject = $(' \
+          <tr class="title" data-destit="'+i.nombre+'" data-nombre="'+i.nombre+'" data-categoria="'+i.id_clas+'" data-tipo="'+i.tipo+'" data-deslugarorigen="'+i.des_lugar_origen+'" data-idnv="'+i.id_nv+'" data-origen="'+i.origen+'" data-llave="'+i.llave+'"> \
+            <th>'+valoresOCultos+'<button class="ui-icon ui-icon-minus remove item" title="Quitar categoría"></button></th> \
+            <th>'+addItem+'</th> \
+            <th></th> \
+            <th colspan="2">'+nomTitulo+'</th> \
+            <th></th> \
+            <th><input type="hidden" name="oc[detalle_item][cantidad]" value="0"></th> \
+            <th class="columna-dias"><input type="hidden" name="oc[detalle_item][dias]" value="0"></th> \
+            <th><input type="hidden" name="oc[detalle_item][precio]" value="0"></th> \
+            <th><input type="hidden" name="oc[detalle_item][subtotal]" value="0"></th> \
+            <th><input name="oc[detalle_item][dscto]" type="hidden" value="0"></th> \
+            <th><input name="oc[detalle_item][total]" type="hidden" value="0"></th> \
+            <th></th> \
+            <th></th> \
+            </tr> \
+        ');
+
+    if (!mostrar_columna_dias) {
+      $(".columna-dias").hide();
+    }
+
+    htmlObject[functor](element);
+
+    htmlObject.focusin(function() {
+      $(this).find('input[name="oc[detalle_item][nombre]"]').autocomplete({
+        source: function(request, response) {
+          $.ajax({
+            url: '/4DACTION/_V3_' + 'getCategoria',
+            dataType: 'json',
+            data: {
+              q: request.term
+            },
+            success: function(data) {
+              response($.map(data.rows, function(item) {
+                return item;
+              }));
+            },
+            error: function(jqXHR, exception) {
+              toastr.error('No se pudo cargar los datos. Error de conexión al servidor. Por favor, intente nuevamente.');
+              htmlObject.find('input[name="oc[detalle_item][id_clasif]"]').val(0);
+              htmlObject.find('input[name="oc[detalle_item][des_clasif]"]').val("");
+              htmlObject.find('input[name="oc[detalle_item][nombre]"]').focus();
+            }
+          });
+        },
+        minLength: 0,
+        delay: 0,
+        position: { my: "left top", at: "left bottom", collision: "flip" },
+        open: function() {
+          $(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+        },
+        close: function() {
+          $(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+        },
+        focus: function(event, ui) {
+          $(this).val(ui.item.text);
+          return false;
+        },
+        select: function(event, ui) {
+          $(this).val(ui.item.text);
+          htmlObject.data('categoria', ui.item.id);
+          htmlObject.find('input[name="oc[detalle_item][id_clasif]"]').val(ui.item.id);
+          htmlObject.find('input[name="oc[detalle_item][des_clasif]"]').val(ui.item.text);
+          return false;
+        }
+
+      }).data('ui-autocomplete')._renderItem = function(ul, item) {
+        return $('<li><a><strong>' +  ((item.especial)? 'Especial' : '') + '</strong><em>' + ((item.gasto_fijo)? 'Gasto Fijo' : '') + '</em><span class="highlight">' + item.text + '</span></a></li>').appendTo(ul);
+      };
+
+    });
+
+    htmlObject.focusout(function() {
+      $(this).find('input[name="oc[detalle_item][nombre]"]').autocomplete('destroy');
+    });
+
+    return htmlObject;
+  },
+  item: function(functor, element, i) {
+
+    var htmlObject;
+
+    var precio = 0;
+    if (i.precio==0) {
+      if (i.diferencia<0) {
+        precio = 0;
+      }else{
+        precio = i.diferencia;
+      }
+    }else{
+      precio = i.precio;
+    }
+
+    var desOrigen =  "";
+
+    if (i.origen=="PROYECTO") {
+      var titles = 'NEGOCIO #' + i.nro_nv +' - '+ i.ref_nv + '/ Ítem: ' + i.nombre_llave_nv;
+      if (i.des_lugar_origen=="OTROS GASTOS") {
+         //var desOrigen = 'Neg. #'+i.nro_nv+' '+i.ref_nv+' '+'(Otros)';
+
+        if (access._1) { // acceso modulo negocio
+          desOrigen = '<a data-llave='+i.llave_nv+' class="tooltipsItem" style="text-transform:capitalize;font-size:10px!important" href="' + '//' + window.location.host + '/4DACTION/wbienvenidos#negocios/content.shtml?id=' + i.id_nv + '" target="_blank" style="cursor:pointer" titlee="'+titles+'">Neg. Nro. '+i.nro_nv+' (Otros)</a>';
+        }else{
+          desOrigen = '<label style="color:rgb(103,103,103)">Neg. Nro. '+ i.nro_nv +'</label>';
+        }
+
+      }else{
+
+         //var desOrigen = 'Neg. #'+i.nro_nv+' '+i.ref_nv+' '+'(Item)';
+
+        if (access._1) { // acceso modulo negocio
+          desOrigen = '<a data-llave='+i.llave_nv+' class="tooltipsItem"  style="text-transform:capitalize;font-size:10px!important" href="' + '//' + window.location.host + '/4DACTION/wbienvenidos#negocios/content.shtml?id=' + i.id_nv + '" target="_blank" style="cursor:pointer" titlee="'+titles+'">Neg. Nro. '+i.nro_nv+' (Item)</a>';
+        }else{
+          desOrigen = '<label style="color:rgb(103,103,103)">Neg. Nro. '+ i.nro_nv +'</label>';
+        }
+
+      }
+  } else if (i.origen=="PRESUPUESTO") {
+
+    var titles = 'PRESUP. #' + i.nro_nv +' - '+ i.ref_nv + '/ Ítem: ' + i.nombre_llave_nv;
+
+    if (i.des_lugar_origen=="OTROS GASTOS") {
+       //var desOrigen = 'Neg. #'+i.nro_nv+' '+i.ref_nv+' '+'(Otros)';
+       var desOrigen = '<a style="text-transform:capitalize;font-size:10px!important" href="' + '//' + window.location.host + '/4DACTION/wbienvenidos#presupuestos/content.shtml?id=' + i.id_nv + '" target="_blank" style="cursor:pointer" title="'+titles+'">Pres. Nro. '+i.nro_nv+' (Otros)</a>';
+    }else{
+       //var desOrigen = 'Neg. #'+i.nro_nv+' '+i.ref_nv+' '+'(Item)';
+       var desOrigen = '<a style="text-transform:capitalize;font-size:10px!important" href="' + '//' + window.location.host + '/4DACTION/wbienvenidos#presupuestos/content.shtml?id=' + i.id_nv + '" target="_blank" style="cursor:pointer" title="'+titles+'">Pres. Nro. '+i.nro_nv+' (Item)</a>';
+    }
+
+  }else{
+      var desOrigen = '<a title="GASTOS GENERALES">G.G</a>';
+      //var desOrigen = 'GASTO GENERAL';
+    }
+
+    if (i.des_lugar_origen == "GASTO GENERAL" || i.des_lugar_origen == "OTROS GASTOS") {
+      var nomItem = '<input class="sc-full filltext" style="width:200px" name="oc[detalle_item][nombre]" type="search" value="'+ i.nombre +'" placeholder="Buscar servicio por nombre...">';
+    }else{
+      var nomItem = '<input class="filltext" style="width:200px" name="oc[detalle_item][nombre]" type="text" value="'+ i.nombre +'">';
+    }
+
+    // var inputPos = '$ <span><input readonly class="restante-item" data-dif="'+i.dif+'" data-pos="0" type="text" value="0"></span>';
+
+    var impuesto = '<input style="inline-block;width:50px;font-size:10px" readonly name="oc[detalle_item][imp][des]" placeholder="Seleccionar impuesto" type="search" value="'+i.des_imp+'">';
+    impuesto = impuesto+'<button style="inline-block;width:20px" type="button" class="show impuestos">ver impuestos</button>';
+    impuesto = impuesto+'<input data-valorimp="'+i.valor_imp+'" data-tipoimp="'+i.tipo_imp+'" name="oc[detalle_item][imp][id]" type="hidden" value="'+i.id_imp+'">';
+
+    var valoresOCultos= '<input type="hidden" name="oc[detalle_item][llave]" value="'+i.llave+'">'+
+                        '<input type="hidden" name="oc[detalle_item][tipo]" value="'+i.tipo+'">'+
+                        '<input type="hidden" name="oc[detalle_item][items]" value="'+i.items+'">'+
+                        '<input type="hidden" name="oc[detalle_item][idnv]" value="'+i.id_nv+'">'+
+                        '<input type="hidden" name="oc[detalle_item][origen]" value="'+i.origen+'">'+
+                        '<input type="hidden" name="oc[detalle_item][origen][lugar]" value="'+i.lugar_origen+'">'+
+                        '<input type="hidden" name="oc[detalle_item][origen][lugar][des]" value="'+i.des_lugar_origen+'">'+
+                        '<input type="hidden" name="oc[detalle_item][id_tipo_producto]" value="04">'+
+                        '<input type="hidden" name="oc[detalle_item][cod_producto]" value="'+i.cod_prod+'">'+
+                        '<input type="hidden" name="oc[detalle_item][id_producto]" value="'+i.id_prod+'">'+
+                        '<input type="hidden" name="oc[detalle_item][llave_nv]" value="'+i.llave_nv+'">'+
+                        '<input type="hidden" name="oc[detalle_item][id_clasif]" value="'+i.id_clas+'">'+
+                        '<input type="hidden" name="oc[detalle_item][des_clasif]" value="'+i.des_clas+'">'+
+                        '<input type="hidden" name="oc[detalle_item][llave_titulo]" value="'+i.llave_titulo+'">'+
+                        '<input type="hidden" name="oc[detalle_item][observacion_item]" value="'+i.observacion_item+'">';
+
+    htmlObject = $('<tr data-id="'+i.id_oc+'" data-montoinicial="'+i.precio+'" data-idservicio="'+i.id_prod+'" data-nombre="'+i.nombre+'" data-refnv="'+i.ref_nv+'" data-nronv="'+i.nro_nv+'" data-tipo="'+i.tipo+'" data-nv="'+i.id_nv+'" data-llave="'+i.llave+'" data-deslugarorigen="'+i.des_lugar_origen+'" data-origen="'+i.origen+'" data-llavetitulo="'+i.llave_titulo+'">'+
+                  '<td style="width:5%">'+valoresOCultos+'<button class="ui-icon ui-icon-minus remove item" title="Quitar ítem"></button></td>'+
+                  '<td class="numeric code" style="width:5%"><input name="oc[detalle_item][correlativo]" type="text" readonly></td>'+
+                  '<td class="" style="width:10%">'+i.cod_prod+'</td>'+
+                  '<td class="left" style="width:22%">'+nomItem+'<button class="ui-icon ui-icon-document detail item" title="Detalle">Detalle</button><button class="profile item" title="Perfil"></button></td>'+
+                  '<td class="azul center" style="width:5%"><button data-itemid="'+i.llave_nv+'" class="tooltipsItem noticecon">!</button>'+desOrigen+'</td>'+
+                  '<td style="width:10%">'+impuesto+'</td>'+
+                  '<td class="numeric center" style="width:5%"><input class="sc-full filltext" style="width:50px" name="oc[detalle_item][cantidad]" type="number" value="0"></td>'+
+                  '<td class="numeric center columna-dias" style="width:5%"><input class="sc-full filltext" style="width:50px" name="oc[detalle_item][dias]" type="number" value="0"></td>'+
+                  '<td class="numeric currency" style="width:9%">' + currency.symbol + ' <span><input class="sc-full filltext" style="width:70px" name="oc[detalle_item][precio]" type="text" value="0"></span></td>'+
+                  '<td class="numeric currency" style="width:9%">' + currency.symbol + ' <span><input style="width:70px" readonly name="oc[detalle_item][subtotal]" type="text" value="0"></span></td>'+
+                  '<td class="numeric currency" style="width:9%">' + currency.symbol + ' <span><input class="filltext" style="width:70px" name="oc[detalle_item][dscto]" type="text" value="0"></span></td>'+
+                  '<td class="numeric currency" style="width:9%">' + currency.symbol + ' <span><input style="width:70px" readonly name="oc[detalle_item][total]" onchange="getItemOcTotal(this)" type="text" value="0"></span></td>'+
+                  //'<td class="numeric currency costo restante-col-item">$ <span><input readonly name="oc[detalle_item][restante]" data-restante="'+i.restante+'" type="text" value="'+i.restante+'"></span></td>'+
+                  '<td class="numeric currency costo" style="width:9%">' + currency.symbol + ' <span><input style="width:70px" readonly name="oc[detalle_item][justificado]" type="text" value="0"></span></td>'+
+                  '<td style="width:5%"><input name="oc[detalle_item][select]" type="checkbox" data-tipoimp="'+i.tipo_imp+'" data-selected=""></td>'+
+              '</tr>');
+    htmlObject[functor](element);
+
+    // htmlObject.find('.numeric.currency input').number(true, 2, ',', '.');
+
+    htmlObject.find('.numeric.currency input').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+    htmlObject.find('.numeric.percent input').number(true, 1, ',', '.');
+
+    //set value numeric
+    htmlObject.find('input[name="oc[detalle_item][cantidad]"]').val(i.cantidad);
+    htmlObject.find('input[name="oc[detalle_item][dias]"]').val(i.dias);
+    htmlObject.find('input[name="oc[detalle_item][precio]"]').val(parseFloat(precio));
+    htmlObject.find('input[name="oc[detalle_item][precio]"]').data('oldprice', parseFloat(precio));
+    htmlObject.find('input[name="oc[detalle_item][subtotal]"]').val(i.subtotal);
+    htmlObject.find('input[name="oc[detalle_item][dscto]"]').val(i.descuento);
+    htmlObject.find('input[name="oc[detalle_item][total]"]').val(i.total);
+    htmlObject.find('input[name="oc[detalle_item][justificado]"]').val(i.justificado);
+    oc_checkout_text_full();
+
+    if (!access._1) { // acceso modulo negocio
+      htmlObject.find('button.tooltipsItem').hide();
+    }
+
+    // left = 37
+    // up = 38
+    // right = 39
+    // down = 40
+
+    // enter
+    /*htmlObject.find('input[name="oc[detalle_item][nombre]"]').keydown(function(event) {
+
+      // enter and arrow down
+      if (event.which == 13 || event.which == 40) {
+        var current = $(this).parentTo('tr');
+        current.next().find('input[name="oc[detalle_item][nombre]"]').focus();
+      }
+
+      // arrow right
+      if (event.which == 39 ) {
+        var current = $(this).parentTo('tr');
+        current.next().find('input[name="oc[detalle_item][cantidad]"]').focus();
+      }
+
+      // arrow left
+      if (event.which == 37 ) {
+        $(this).prev().find('input').focus();
+      }
+
+      // arrow up
+      if (event.which == 38 ) {
+        var current = $(this).parentTo('tr');
+        current.prev().find('input[name="oc[detalle_item][nombre]"]').focus();
+      }
+
+    });*/
+
+    var loadTooltips = function(target, id, itemId){
+
+      var toolHtml = "";
+      $.ajax({
+                'url':'/4DACTION/_V3_getItemFromOc',
+                data:{
+                  'detalle_id': itemId,
+                  'idOC': id
+                },
+                dataType:'json',
+                async: false,
+                success:function(data){
+                  
+                    var linea = $("[data-llave='"+i.llave+"']");
+                    var porValidar = linea.find('input[name="oc[detalle_item][total]"]').val();
+
+                    var diferencia = data.presupuesto - data.gastoActual;
+                    var diferenciaValidado = data.presupuesto - data.gastoActual- parseFloat(porValidar);
+
+                    var venta = $.number(data.venta, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+
+                    var presupuesto = $.number(data.presupuesto, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+                    var gastoActual = $.number(porValidar, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+                    var item = $.number(data.gastoActual, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+                    var diferenciaf = $.number(diferencia, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+                    var diferenciaValidadof = $.number(diferenciaValidado, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+
+
+                    if(access._452){
+                        var tdVenta = "<td class='rightNum'>"+venta+"</td>";                        
+                    }
+                    var tdPresupuesto = "<td class='rightNum'>"+presupuesto+"</td>";                    
+
+                    var tdGastoActual = "<td class='rightNum'>"+gastoActual+"</td>";
+                    
+
+                    var tdItem = "<td class='rightNum boldtext'>"+item+"</td>";
+                    
+                    if(parseFloat(diferenciaf)<0){
+
+                    var tdDiferencia = "<td  class='rightNum redTd'>"+diferenciaf+"</td>";
+                    }else {
+
+                    var tdDiferencia = "<td class='rightNum'>"+diferenciaf+"</td>";
+                    }
+                    if(parseFloat(diferenciaValidadof)<0){
+
+                    var tdDiferenciaValidado = "<td class='rightNum redTd'>"+diferenciaValidadof+"</td>";
+                    }else {
+
+                    var tdDiferenciaValidado = "<td class='rightNum'>"+diferenciaValidadof+"</td>";
+                    }
+
+
+
+
+                    if(access._452) { 
+                        toolHtml = "<table class='tabletooltip'>\
+                        <thead>\
+                            <tr>\
+                                <th width='15%' class='blacknv'>Negocio\
+                                </th>\
+                                <th width='30%' class='blacknv'>Ítem\
+                                </th>\
+                                <th width='10%' class='blacknv'>Venta\
+                                </th>\
+                                <th width='10%' class='greynv'>Presupuestado\
+                                </th>\
+                                <th width='10%' class='orangenv'>Real Validado\
+                                </th>\
+                                <th width='10%' class='orange2nv'>Real + Pendiente de validar\
+                                </th>\
+                                <th width='10%' class='greennv'>Diferencia hoy\
+                                </th>\
+                                <th width='10%' class='greennv'>Diferencia Posterior\
+                                </th>\
+                            </tr>\
+                        </thead>\
+                        <tbody>\
+                          <tr>\
+                            <td>"+data.negocio+"\
+                            </td>\
+                            <td>"+data.nombre+"\
+                            </td>\
+                            </td>"+tdVenta+tdPresupuesto+tdItem+tdGastoActual+tdDiferencia+tdDiferenciaValidado+"\
+                            </td>\
+                          </tr>\
+                        </tbody>\
+                        </table>";
+                    }else {
+                            tooltipHtml = "<table class='tabletooltip'>\
+                          <thead>\
+                              <th width='15%' class='blacknv'>Negocio\
+                              </th>\
+                              <th width='30%' class='blacknv'>Ítem\
+                              </th>\
+                              <th width='10%' class='greynv'>Presupuestado\
+                              </th>\
+                              <th width='10%' class='orangenv'>Real Validado\
+                              </th>\
+                              <th width='10%' class='orange2nv'>Real + Pendiente de validar\
+                              </th>\
+                              <th width='10%' class='greennv'>Diferencia hoy\
+                              </th>\
+                              <th width='10%' class='greennv'>Diferencia Posterior\
+                              </th>\
+                            </tr>\
+                          </thead>\
+                        <tbody>\
+                          <tr>\
+                            <td>"+data.negocio+"\
+                            </td>\
+                            <td>"+data.nombre+"\
+                            </td>\
+                            </td>"+tdVenta+tdPresupuesto+tdItem+tdGastoActual+tdDiferencia+tdDiferenciaValidado+"\
+                            </td>\
+                          </tr>\
+                        </tbody>\
+                        </table>";
+                        
+                    }
+                }
+            });     
+
+        target.tooltipster('update', tooltipHtml);
+
+    }
+    $('button.noticecon').button({icons: { primary: 'ui-icon-notice'}, text: false }).css({"background":"transparent", "border":"none"}).on('hover', function(){
+        
+        var tr = $(this).closest('tr');
+        // if (tr.data('origen') == "PROYECTO") {
+        console.log($(this), tr.data('id'),$(this).data('itemId'));
+        loadTooltips($(this), tr.data('id'),$(this).data('itemId'));
+        // }else {
+
+        //     $(this).tooltipster('update', "Gasto General");
+        // }
+    });
+
+
+
+    var content = "e";
+    $('.tooltipsItem').tooltipster({
+        content: content,
+        contentAsHTML: true,  
+        contentCloning: false,
+        interactive: true,
+        maxWidth: 800,
+        multiple: true
+      });
+
+
+
+    if (!mostrar_columna_dias) {
+      $(".columna-dias").hide();
+    }
+
+
+    $('button.show').button({icons: {primary: 'ui-icon-carat-1-s'},text: false});
+    htmlObject.find('button.show.impuestos').click(function() {
+      var currentRow = $(this).parentTo('tr');
+      currentRow.find('input[name="oc[detalle_item][imp][des]"]').autocomplete('search', '@').focus();
+    });
+
+    htmlObject.focusin(function(event) {
+      $(this).find('input[name="oc[detalle_item][nombre]"]').autocomplete({
+        source: function(request, response) {
+          $.ajax({
+            url: '/4DACTION/_V3_' + 'getProductoByCategoria',
+            dataType: 'json',
+            data: {
+              q: request.term,
+              id: htmlObject.prevTo('.title').data('categoria')
+            },
+            success: function(data) {
+              response($.map(data.rows, function(item) {
+                return item;
+              }));
+            },
+            error: function(jqXHR, exception) {
+              toastr.error('No se pudo cargar los datos. Error de conexión al servidor. Por favor, intente nuevamente.');
+              htmlObject.data('idservicio', 0);
+              htmlObject.data('nombre', "");
+              htmlObject.find('input[name="oc[detalle_item][id_producto]"]').val(0);
+              htmlObject.find('input[name="oc[detalle_item][cod_producto]"]').val("");
+              htmlObject.find('input[name="oc[detalle_item][nombre]"]').val("");
+              htmlObject.find('input[name="oc[detalle_item][id_clasif]"]').val(0);
+              htmlObject.find('input[name="oc[detalle_item][des_clasif]"]').val("");
+              htmlObject.find('input[name="oc[detalle_item][nombre]"]').focus();
+
+            }
+          });
+        },
+        minLength: 0,
+        delay: 0,
+        position: { my: "left top", at: "left bottom", collision: "flip" },
+        open: function() {
+          $(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+        },
+        close: function() {
+          $(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+        },
+        focus: function(event, ui) {
+          // $(this).val(ui.item.text);
+          return false;
+        },
+        select: function(event, ui) {
+          $(this).val(ui.item.text);
+          htmlObject.data('idservicio', ui.item.id);
+          htmlObject.data('nombre', ui.item.text);
+          htmlObject.find('input[name="oc[detalle_item][id_producto]"]').val(ui.item.id);
+          htmlObject.find('input[name="oc[detalle_item][cod_producto]"]').val(ui.item.index);
+          htmlObject.find('input[name="oc[detalle_item][id_clasif]"]').val(ui.item.categoria.id);
+          htmlObject.find('input[name="oc[detalle_item][des_clasif]"]').val(ui.item.categoria.text);
+
+           // Cargar la categoría automática al seleccionar el ítem
+          //if (ui.item.idcategoria>0) {
+          if (ui.item.categoria.id > 0) {
+            var keyTitle = htmlObject.data('llavetitulo');
+            var rowTitle = $('table.items > tbody > tr[data-llave="'+ keyTitle +'"]');
+            var idCat = rowTitle.find('input[name="oc[detalle_item][id_clasif]"]').val();
+            var cantItemsCat = $('table.items > tbody > tr[data-llavetitulo="'+ keyTitle +'"]').length;
+            // Se carga categoría sólo si no hay ninguno seleccionado.
+            if (idCat == 0 || cantItemsCat == 1){
+              //rowTitle.data('categoria', ui.item.idcategoria);
+              //rowTitle.find('input[name="oc[detalle_item][nombre]"]').val(ui.item.categoria);
+              //rowTitle.find('input[name="oc[detalle_item][id_clasif]"]').val(ui.item.idcategoria);
+              //rowTitle.find('input[name="oc[detalle_item][des_clasif]"]').val(ui.item.categoria);
+              rowTitle.data('categoria', ui.item.categoria.id);
+              rowTitle.find('input[name="oc[detalle_item][nombre]"]').val(ui.item.categoria.text);
+              rowTitle.find('input[name="oc[detalle_item][id_clasif]"]').val(ui.item.categoria.id);
+              rowTitle.find('input[name="oc[detalle_item][des_clasif]"]').val(ui.item.categoria.text);
+            }
+          }
+
+          set_referencia_oc();
+          return false;
+        }
+
+      }).data('ui-autocomplete')._renderItem = function(ul, item) {
+        return $('<li><a><strong>' + item.index + ' ' + ((item.gasto_fijo)? '[Gasto Fijo]' : '') + ' ' +  ((item.especial)? '[Especial]' : '') + '</strong><em>' +  item.categoria.text + '</em><span class="highlight">' + item.text + '</span></a></li>').appendTo(ul);
+      };
+
+      var element = $(this);
+      var tipoDoc = $('[name="tipo_doc[id]"]').val();
+      $(this).find('input[name="oc[detalle_item][imp][des]"]').autocomplete({
+        source: function(request, response) {
+          $.ajax({
+            url: '/4DACTION/_V3_getImpuestos',
+            dataType: 'json',
+            data: {
+              'dtc[id]': tipoDoc
+            },
+            success: function(data) {
+              response($.map(data.rows, function(item) {
+                return item;
+              }));
+            }
+          });
+        },
+        minLength: 0,
+        autoFocus: true,
+        open: function() {
+          $(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+        },
+        close: function() {
+          $(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+        },
+        focus: function(event, ui) {
+          return false;
+        },
+        response: function(event, ui) {
+        },
+        select: function(event, ui) {
+          
+          element.find('input[name="oc[detalle_item][imp][id]"]').val(ui.item.id);
+          element.find('input[name="oc[detalle_item][imp][id]"]').data('valorimp',ui.item.valor);
+          element.find('input[name="oc[detalle_item][imp][id]"]').data('tipoimp',ui.item.tipo);
+          element.find('input[name="oc[detalle_item][imp][des]"]').val(ui.item.des);
+          element.find('input[name="oc[detalle_item][imp][des]"]').autocomplete('destroy');
+          update_subtotal_items();
+          return false;
+        }
+
+      }).data('ui-autocomplete')._renderItem = function(ul, item) {
+        return $('<li><a>' +  item.des + '</a></li>').appendTo(ul);
+      };
+
+    });
+
+    htmlObject.focusout(function(event) {
+      oc_checkout_text_full();
+      $(this).find('input[name="oc[detalle_item][nombre]"]').autocomplete('destroy');
+    });
+
+    htmlObject.find('input[name="oc[detalle_item][precio]"]').on("focus", function(event){
+      var decimals = currency.decimals + 2;
+      $(event.target).unbind(".format");
+      $(event.target).number(true, decimals, currency.decimals_sep, currency.thousands_sep);
+      $(event.target).val(parseFloat($(event.target).data('oldprice')));
+    });
+
+    htmlObject.find('input[name="oc[detalle_item][precio]"]').on("blur", function(event){
+      $(event.target).data('oldprice', parseFloat($(event.target).val()));
+      $(event.target).unbind(".format");
+      $(event.target).number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+    });
+
+    htmlObject.find('td.numeric input').on("blur change", function(){
+      calcula_por_filas($(this).closest('tr'));
+    });
+
+    return htmlObject;
+  }
+};
+
+
+
+
+
+// function callTool(keyNv,keyData){
+//       var toolHtml = "";
+//       var llaveNv = $("a[data-llave]");
+//       $.ajax({
+//                 'url':'/4DACTION/_V3_getItemFromOc',
+//                 data:{
+//                   'detalle_id': keyNv
+//                 },
+//                 dataType:'json',
+//                 async: false,
+//                 success:function(data){
+
+//                   var linea = $("[data-llave='"+keyData+"']");
+//                   var porValidar = linea.find('input[name="oc[detalle_item][total]"]').val();
+
+//                   var diferencia = parseInt(data.venta) - parseInt(porValidar);
+//                   toolHtml = "<table class='tabletooltip'>\
+//                   <thead>\
+//                     <tr>\
+//                       <th >Negocio\
+//                       </th>\
+//                       <th >Código\
+//                       </th>\
+//                       <th >Nombre\
+//                       </th>\
+//                       <th >Venta\
+//                       </th>\
+//                       <th >Presup.\
+//                       </th>\
+//                       <th>Actual\
+//                       </th>\
+//                       <th >Valor del Item\
+//                       </th>\
+//                       <th>Diferencia\
+//                       </th>\
+//                     </tr>\
+//                   </thead>\
+//                   <tbody>\
+//                     <tr>\
+//                       <td>"+data.negocio+"\
+//                       </td>\
+//                       <td>"+data.codigo+"\
+//                       </td>\
+//                       <td>"+data.nombre+"\
+//                       </td>\
+//                       <td>"+data.venta+"\
+//                       </td>\
+//                       <td>"+data.presupuesto+"\
+//                       </td>\
+//                       <td>"+data.gastoActual+"\
+//                       </td>\
+//                       <td>"+porValidar+"\
+//                       </td>\
+//                       <td>"+diferencia+"\
+//                       </td>\
+//                     </tr>\
+//                   </tbody>\
+//                   </table>";
+//                 }
+//              });
+
+//     $('.tooltipsItem').tooltipster({
+//         content: toolHtml,
+//         contentAsHTML: true,  
+//         contentCloning: false
+//       });
+
+// }

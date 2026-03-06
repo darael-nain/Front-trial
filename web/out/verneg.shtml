@@ -1,0 +1,200 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="/out/style.css"/>
+    <title>NEGOCIO NRO <!--#4DVAR vid_negocio--></title>
+</head>
+<body>
+<div class="contenedor" align="center">
+<div class="cuadro">
+  
+<table class="tabla-header" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+      	<td valign="top" class="left"><img src="<!--#4DVAR vUrlImagenLogo-->" width="<!--#4DVAR vAnchoPicture-->" height="<!--#4DVAR vAltoPicture-->" /></td>
+        <!--<td valign="top" class="left"><img src="/imagenes/logo_empresa.jpg" alt="" width="141" height="71" /></td>-->
+        <td valign="top" class="right"><div class="nro">N&deg; : <!--#4DVAR vid_negocio--></div><div class="fecha"><!--#4DVAR vFechaEmi1--></div></td>
+      </tr>
+ </table>
+
+<img src="http://"+vDominio+"/4DACTION/logo_empresa_web" align=middle>
+ 
+ 
+ <div align="left" class="header-datos">
+ <table class="tabla-datos" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td class="etiquetas" width="44">Para</td>
+    <td class="para-cliente" width="69"> : <!--#4DVAR vnombrecontacto--></td>
+    <td class="etiquetas" width="59">Empresa</td>
+    <td class="otros-header" width="197"> : <!--#4DVAR vempresa--></td>
+  </tr>
+  <tr>
+    <td class="etiquetas">Cliente</td>
+    <td class="para-cliente"> :  <!--#4DVAR vempresa--></td>
+    <td class="etiquetas">Rut</td>
+    <td class="otros-header"> :  <!--#4DVAR vrut--></td>
+  </tr>
+  <tr>
+    <td class="etiquetas">De</td>
+    <td class="otros-header"> : <!--#4DVAR vDeEmisor--></td>
+    <td class="etiquetas">Direccion</td>
+    <td class="otros-header"> : <!--#4DVAR vdireccion--></td>
+  </tr>
+  <tr>
+    <td class="etiquetas">E-mail</td>
+    <td class="otros-header"> : <!--#4DVAR vDeEmisorEmail--></td>
+    <td class="etiquetas">Tel.</td>
+    <td class="otros-header"> : <!--#4DVAR vfono--></td>
+  </tr>  
+</table>
+ </div>
+ 
+<table class="tabla-detalle" border="0" cellpadding="1" cellspacing="0">
+  <tr>
+    <td colspan="4" class="referencia"><!--#4DVAR vreferencia--></td>
+    <td class="tipo"><!--#4DVAR vtipo--></td>
+  </tr>
+  <tr bgcolor="#000000">
+    <td class="left-h"><div class="cuadradito"></div>Item</td>
+    <td class="center-h">Nombre</td>
+    <td class="center-h">Cant.</td>
+    <!--#4DIF vUsarsegunda_cantidad-->
+     <td class="center-h">Días</td>
+    <!--#4DENDIF--> 
+    <td class="center-h">P.U.</td>      
+    <td class="center-h">Subtotal</td>
+  </tr>
+ 	 <!--#4DLOOP a_tipo_det-->        
+    <!--#4DIF a_tipo_det{a_tipo_det}="TITULO"-->
+      <tr bgcolor="#CCCCCC">
+        <td colspan="6" class="titulos"><!--#4DVAR a_des{a_tipo_det}--></td>    
+      </tr>
+    <!--#4DELSE-->
+        <tr>
+            <td class="orden-alfa"><!--#4DVAR a_orden_alfa_det{a_tipo_det}--></td>
+            <td class="items">
+            	<!--#4DVAR a_des{a_tipo_det}-->
+          		<div class="observacion-items"><!--#4DVAR a_observ_items{a_tipo_det}--></div>
+            </td>            
+            <td class="nro-items-cant"><!--#4DVAR a_cantidad{a_tipo_det}--></td>
+
+            <!--#4DIF vUsarsegunda_cantidad-->
+            <td class="nro-items-cant"><!--#4DVAR a_cantidad2{a_tipo_det}--></td>
+            <!--#4DENDIF-->
+
+            <td class="nro-items-subtotal"><!--#4DVAR a_pu1{a_tipo_det}--></td>
+            <td class="nro-items-subtotal"><!--#4DVAR a_subtotal{a_tipo_det}--></td>    
+        </tr>  
+    <!--#4DENDIF-->    
+    <!--#4DENDLOOP--> 
+</table>
+
+<div align="right" class="totales">
+<table border="0">
+  <tr>    
+    <td align="right" valign="top">
+    		<!--#4DIF mostrar_bloque1=true-->
+            <table  class="bloque1" border="0" cellpadding="0" cellspacing="0">
+             <!--#4DIF vPrintComisionCerrada1=false-->
+                <tr>                    
+                    <td class="valor-comision"><!--#4DIF comision1_activa=true--><!--#4DVAR valor_por_comision1--> %<!--#4DENDIF--></td>
+                    <td class="etiquetas-valores"><!--#4DIF comision1_activa=true--><!--#4DVAR nom_comision1--><!--#4DENDIF--></td>
+                    <td class="valores-totales"><!--#4DIF comision1_activa=true--><!--#4DVAR monto_comision1--><!--#4DENDIF--></td>
+                    <td class="etiquetas-valores" ><!--#4DIF comision1_activa=true-->SUBTOTAL 1<!--#4DENDIF--></td>
+                    <td class="valores-totales"><!--#4DIF comision1_activa=true--><!--#4DVAR suma_subtotal1--><!--#4DENDIF--></td>                     
+                </tr>
+                 <!--#4DENDIF-->
+                
+                <!--#4DIF vPrintComisionCerrada2=false-->
+                <tr>                 
+                    <td class="valor-comision"><!--#4DIF comision2_activa=true--><!--#4DVAR valor_por_comision2--> %<!--#4DENDIF--></td>
+                    <td class="etiquetas-valores"><!--#4DVAR nom_comision2--></td>
+                    <td class="valores-totales"><!--#4DIF comision2_activa=true--><!--#4DVAR monto_comision2--><!--#4DENDIF--></td>
+                    <td class="etiquetas-valores"><!--#4DIF comision2_activa=true-->SUBTOTAL 2<!--#4DENDIF--></td>
+                    <td class="valores-totales"><!--#4DIF comision2_activa=true--><!--#4DVAR suma_subtotal2--><!--#4DENDIF--></td>                    
+                </tr>
+                <!--#4DENDIF-->
+                
+                <tr>
+                	 <!--#4DIF vPrintComisionCerrada3=false-->
+                    <td class="valor-comision"><!--#4DIF comision3_activa=true--><!--#4DVAR valor_por_comision3--> %<!--#4DENDIF--></td>
+                    <td class="etiquetas-valores"><!--#4DVAR nom_comision3--></td>
+                    <!--#4DENDIF-->
+                    
+                    <!--#4DIF vPrintComisionCerrada3=false-->
+                    <!--#4DIF comision_sobre_total_venta=true-->
+                    	<td class="valores-totales"><!--#4DIF comision1_activa=true--><!--#4DVAR suma_subtotal3--><!--#4DENDIF--></td>
+                   <!--#4DELSE-->
+                     	<td class="valores-totales"><!--#4DIF comision1_activa=true--><!--#4DVAR monto_comision3--><!--#4DENDIF--></td>
+                    <!--#4DENDIF-->
+                    <!--#4DENDIF-->
+                     
+                    <!--#4DIF vPrintComisionCerrada3=false-->                  
+                    <td class="etiquetas-valores"><!--#4DIF comision1_activa=true-->SUBTOTAL 3<!--#4DENDIF--></td>
+                     <!--#4DENDIF-->
+                    
+                    <!--#4DIF vPrintComisionCerrada3=false-->
+                    <!--#4DIF comision_sobre_total_venta=true-->
+                    	<td class="valores-totales"><!--#4DIF comision1_activa=true--><!--#4DVAR monto_comision3--><!--#4DENDIF--></td>
+                    <!--#4DELSE-->
+                     	<td class="valores-totales"><!--#4DIF comision1_activa=true--><!--#4DVAR suma_subtotal3--><!--#4DENDIF--></td>
+                     <!--#4DENDIF-->  
+                    <!--#4DENDIF-->             
+                                       
+                    
+                </tr>
+            </table>
+            <!--#4DENDIF-->
+    </td>
+    <td align="right" valign="top">
+            <table class="bloque2" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                <td class="etiquetas-valores"><!--#4DVAR valor_por_desc--> % DESC </td>
+                <td class="valores-totales"><!--#4DVAR T_descuento--></td>
+                </tr>
+                <tr>
+                <td class="etiquetas-valores">SUB-TOTAL NETO</td>
+                <td class="valores-totales"><!--#4DVAR vtotalneto--></td>
+                </tr>
+                <tr>
+                <td class="etiquetas-valores">IVA -19 %</td>
+                <td class="valores-totales"><!--#4DVAR vtotaliva--></td>
+                </tr>
+                <tr>
+                <td class="etiquetas-valores-total">TOTAL</td>
+                <td class="valores-totales"><!--#4DVAR vtotalneg--></td>
+                </tr>
+                </table>
+    </td>
+  </tr>
+</table>       
+</div>
+
+<table class="tabla-condiciones" border="0" cellpadding="0" cellspacing="0">
+  <tr bgcolor="#CCCCCC">
+    <td class="condiciones">CONDICIONES</td>
+  </tr>
+  <tr>
+    <td class="condiciones-datos-tit">Forma de pago : </td>
+  </tr>
+  <tr>
+    <td class="condiciones-datos-item"><!--#4DVAR vFormaPago--></td>
+  </tr>
+  <tr>
+    <td class="condiciones-datos-tit">Observaciones : </td>
+  </tr>
+  <tr>
+    <td class="condiciones-datos-item"><!--#4DVAR vComentarios--></td>
+  </tr>
+</table>
+
+<p class="datos-empresa">
+	<!--#4DVAR nom_empresa--> / 
+    <!--#4DVAR fono_empresa--> / 
+    <!--#4DVAR dir_empresa--> / 
+    <a target="_blank" href="<!--#4DVAR sitio_empresa-->"><!--#4DVAR sitio_empresa--></a>
+</p>
+</div>
+</div>
+</body>
+</html>

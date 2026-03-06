@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--#4DSCRIPT/_V3_proxy_getCotizacionContent-->
+        <meta charset="utf-8">
+        <title>Cotización</title>
+        <!--<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">-->
+        <style>
+            @font-face {
+                font-family: 'Lato-Regular';
+                src: url('./font/Lato-Regular.ttf')  format('truetype');
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            @font-face {
+                font-family: 'Lato-Bold';
+                src: url('./font/Lato-Bold.ttf')  format('truetype');
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+            }
+
+            body {
+                font-family: 'Lato-Regular';
+              /* font-family: 'Lato', sans-serif;*/
+            }
+
+            footer img {
+                display: block;
+                width: 100%;
+            }
+
+
+        </style>
+    </head>
+    <body>
+        <footer>
+            <img src="/4DACTION/_V3_printBackgroundFooter">
+        </footer>
+    </body>
+</html>

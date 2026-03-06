@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_serverInfo-->
+<html>
+	<head>
+		<title>Compras</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="/v3/views/compras/lista.css?65735343487687">
+		<script type="text/javascript" src="/v3/views/compras/script/active_menu.js"></script>
+		<script>
+			unaBase.ui.block();
+
+			$(document).ready(function() {
+
+				unaBase.toolbox.init();
+
+				// Inicializamos un buscador
+				var params = {
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/_V3_getGastosNew' },
+					entity: 'Compras',
+					data: {
+						'tipo_gasto' : "FXR"
+					},
+					callback : function(data){
+						$('.especial .totales').find('span[data-total]').text(data.totales.total);
+						$('.especial .totales').find('span[data-pagado]').text(data.totales.pagado);
+						$('.especial .totales').find('span[data-porpagar]').text(data.totales.porpagar);
+						$('.especial .totales').find('span[data-justificado]').text(data.totales.justificado_fxr);
+						$('.especial .totales').find('span[data-porjustificar]').text(data.totales.porjustificar_fxr);
+						$('.especial .totales').find('span[data-depositado]').text(data.totales.depositado);
+						$('.especial .totales').find('span[data-saldo]').text(data.totales.saldo);
+						$('.especial .totales').find('span[data-saldo]').addClass(data.totales.classColor);
+
+						// Fijar header y footer
+						$('#viewport .fht-table-init').fixedHeaderTable('destroy');
+						//$('#viewport table.fixed').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false });
+						// --ini-- corrección para ordenar
+						$('#viewport table.fixed').fixedHeaderTable({
+							footer: true,
+							cloneHeadToFoot: false,
+							fixedColumn: false,
+							create: function() {
+								$('[data-sort-by]').removeClass('sort-order-desc').removeClass('sort-order-asc').removeData('sort-order');
+								$('[data-sort-by="' + data.sort.by + '"]').addClass('sort-order-' + data.sort.order).data('sort-order', data.sort.order);
+							}
+						});
+						// --fin-- corrección para ordenar
+
+
+					},
+					row: {
+						html: function(i, rows) {
+							var v2 = "";
+							var title = "";
+							if (rows[i].version=="") {
+								//v2 = '<strong style="font-size:8px!important;font-weight:bold">V2</strong>';
+								v2 = '<strong title="oc creada en versión antigua" style="font-size:11px!important;font-weight:bold">*</strong>';
+								title = "Rendición creada en versión antigua";
+							}
+
+							var style = 'style="color:green"';
+							var dias = "";
+							if (rows[i].dias_atrasados_fxr > 0 && rows[i].estado != "CERRADA") {
+								style = 'style="color:red"';
+								dias = rows[i].dias_atrasados_fxr + ((rows[i].dias_atrasados_fxr == 1)? " día atrasado": " días atrasados");
+							}else{
+								if (rows[i].estado == "CERRADA") {
+									var style = 'style="color:rgb(103,103,103)"';
+								}
+							}
+
+							var cierre = '';
+							if (rows[i].cierre_admin) {
+								cierre = '<span title="El proceso de rendición se encuentra cerrado por administración" style="text-align:bottom" class="ui-icon ui-icon-locked"></span>';
+							}else{
+								cierre = '<span title="El Proceso de rendición se encuentra abierto" style="text-align:bottom" class="ui-icon ui-icon-unlocked"></span>';
+							}
+
+							var desOrigen = "";
+							if (rows[i].origen == "PROYECTO" || rows[i].origen == "PRESUPUESTO") {
+								desOrigen = rows[i].nro_neg +' - '+ rows[i].referencia_neg_clasif;
+							}else{
+								desOrigen = rows[i].referencia_neg_clasif;
+							}
+
+							return '<tr title="'+ title +'" data-id="' + rows[i].id + '">' +
+								'<td width="5%">' + v2 + ' ' + rows[i].folio + '</td>' +
+								'<td width="5%">' + rows[i].emisor + '</td>' +
+								'<td width="5%">' + rows[i].fecha + '</td>' +
+								'<td width="5%"><div '+ style +' >' + rows[i].fecha_vcto_fxr + '</div><div style="font-size:9px;font-weight:bold">' + dias +'</div></td>' +
+								'<td width="5%">' + rows[i].estado + '</td>' +
+								'<td width="5%" class="left">' + desOrigen + '</td>' +
+								'<td width="10%" class="left" >' + rows[i].proveedor + '</td>' +
+								'<td width="15%" class="left" >' + rows[i].referencia + '</td>' +
+								'<td width="5%" class="right"  >' + rows[i].total + '</td>' +
+								'<td width="5%" class="right" >' + rows[i].pago + '</td>' +
+								'<td width="5%" class="right" >' + rows[i].saldo_a_pagar + '</td>' +
+								'<td width="5%" class="right" >' + rows[i].justificado_fxr + '</td>' +
+								'<td width="5%" class="right" >' + rows[i].saldo_a_justificar_fxr + '</td>' +
+								'<td width="5%" class="right" >' + rows[i].deposito + '</td>' +
+								'<td width="5%" class="right '+rows[i].color+'" >' + rows[i].saldo_real + '</td>' +
+								'<td width="5%" class="center" width="5%">' + rows[i].validado + '</td>' +
+								'<td width="5%">' + cierre + '</td>' +
+							'</tr>'
+						}
+					},
+					detail: {
+						url: function(id) { return '/v3/views/compras/content.shtml?id=' + id +'&from=self'},
+						iframe: false
+					},
+					// Inflexiones
+					inflection: {
+						singular: 'gasto',
+						plural: 'gastos',
+						none: 'ningún'
+					},
+					filters: [
+						{ name: 'created_at', type: 'month', caption: 'Fecha de creación', range: true, currentMonth: true},
+						//{ name: 'tipo_gasto', type: 'autocomplete', caption: 'Tipo de gastos', dataSource: 'get_tipo_gasto' },
+						{ name: 'validacion_gasto', type: 'autocomplete', caption: 'Según validación', dataSource: 'get_validacion' },
+						{ name: 'origen', type: 'autocomplete', caption: 'Origen', dataObject: [
+							{ id: "PROYECTO", text: 'NEGOCIOS'},
+							{ id: "GASTO GENERAL", text: 'GASTOS GENERALES'}
+						] },
+						{ name: 'por_negocio', type: 'autocomplete', caption: 'Por negocio', dataSource: 'getNegociosActivos' },
+						{ name: 'por_clasificacion', type: 'autocomplete', caption: 'Por Clasificación', dataSource: 'getClasificacionGG' },
+						{ name: 'estado', type: 'checkbox', caption: 'Estado de la compra', options: [
+							{ caption: 'Emitida', name: 'estado_emitida', value: true },
+							{ caption: 'Pagada', name: 'estado_pagada', value: true },
+							{ caption: 'Cerrada', name: 'estado_cerrada', value: false },
+							{ caption: 'Anulada', name: 'estado_nulo', value: false }
+						]}
+					],
+					container : "listindex"
+
+				};
+
+				unaBase.toolbox.search.init(params);
+				unaBase.toolbox.menu.init({
+					entity: 'Compras',
+					buttons: ["create_gasto_from_fxr", "export_list"]
+				});
+
+				/*setTimeout(function(){
+					$('.especial').fixedHeaderTable({ footer: false, cloneHeadToFoot: false, fixedColumn: false });
+				}, 100);*/
+
+				if(!access._509) { // crear rendicion
+					$('#menu ul').find('li[data-name="create_gasto_from_fxr"]').hide();
+    			}
+
+    			$('#search').find('input[name="por_negocio"]').closest('.autocomplete').hide();
+    			$('#search').find('input[name="por_clasificacion"]').closest('.autocomplete').hide();
+    			$('#search').find('input[name="origen"]').blur(function(){
+    				switch($(this).val()){
+    					case '' :
+    						$('#search').find('input[name="por_negocio"]').closest('.autocomplete').hide();
+    						$('#search').find('input[name="por_clasificacion"]').closest('.autocomplete').hide();
+    						break;
+    					case 'NEGOCIOS' :
+    						$('#search').find('input[name="por_negocio"]').closest('.autocomplete').show();
+    						$('#search').find('input[name="por_clasificacion"]').closest('.autocomplete').hide();
+    						break;
+    					case 'GASTOS GENERALES' :
+    						$('#search').find('input[name="por_negocio"]').closest('.autocomplete').hide();
+    						$('#search').find('input[name="por_clasificacion"]').closest('.autocomplete').show();
+    						break;
+    				}
+    			});
+
+
+    			setTimeout(function(){
+					unaBase.ui.unblock();
+				}, 500);
+
+			});
+		</script>
+	</head>
+	<body>
+		<div style="width: 100%; height: calc(100% - 10px); overflow-x: scroll; overflow-y: scroll">
+			<table width="100%" data-tipogasto="FXR" class="results especial listindex fixed">
+				<thead>
+					<tr>
+						<th class="center" width="5%" data-sort-by="folio" data-sort-default="desc">Número</th>
+						<th class="center" width="5%" data-sort-by="emisor" data-sort-default="desc">Emisor</th>
+						<th class="center" width="5%" data-sort-by="fecha" data-sort-default="desc">Emisión</th>
+						<th class="center" width="5%" data-sort-by="fecha_vcto_fxr" data-sort-default="desc">Vcto.</th>
+						<th class="center" width="5%" data-sort-by="estado" data-sort-default="asc">Estado</th>
+						<th class="center" width="5%" data-sort-by="origen" data-sort-default="asc">Neg/GG</th>
+						<th class="center" width="10%" data-sort-by="proveedor" data-sort-default="asc">Solicitante</th>
+						<th class="center" width="15%" data-sort-by="referencia" data-sort-default="asc">Referencia</th>
+						<th class="center" width="5%" data-sort-by="total" data-sort-default="desc">Solicitado [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th class="center" width="5%" data-sort-by="pago" data-sort-default="desc">Pagado [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th class="center" width="5%" data-sort-by="saldo_a_pagar" data-sort-default="desc">Por pagar [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th class="center" width="5%" data-sort-by="justificado_fxr" data-sort-default="desc">Rendido [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th class="center" width="5%" data-sort-by="saldo_a_justificar_fxr" data-sort-default="desc">Por rendir [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th class="center" width="5%" data-sort-by="deposito" data-sort-default="desc">Depósito [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th class="center" width="5%" data-sort-by="saldo_real" data-sort-default="desc">Saldo [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th class="center" width="5%" data-sort-by="validado" data-sort-default="desc">Validado</th>
+						<th class="center" width="5%" style="border:none" title="Indica si el porceso de rendición se encuentra abierto o cerrado por administración"><!--<span title="Abierto" style="text-align:bottom" class="ui-icon ui-icon-help"></span>-->C.A</th>
+					</tr>
+				</thead>
+				<tfoot class="totales">
+					<tr>
+						<th width="5%"></th>
+						<th width="5%"></th>
+						<th width="5%"></th>
+						<th width="5%"></th>
+						<th width="5%"></th>
+						<th width="5%"></th>
+						<th width="10%"></th>
+						<th width="15%"></th>
+						<th width="5%" class="center"><span data-total="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+		           		<th width="5%" class="center"><span data-pagado="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+		            	<th width="5%" class="center"><span data-porpagar="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+		            	<th width="5%" class="center"><span data-justificado="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+						<th width="5%" class="center"><span data-porjustificar="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+		           		<th width="5%" class="center"><span data-depositado="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+		            	<th width="5%" class="center"><span data-saldo="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+		            	<th width="5%"></th>
+						<th width="5%"></th>
+					</tr>
+				</tfoot>
+				<tbody></tbody>
+			</table>
+		</div>
+	</body>
+</html>

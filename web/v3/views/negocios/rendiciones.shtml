@@ -1,0 +1,30 @@
+<!--#4DSCRIPT/_V3_getRendicionesNegocio-->
+<table class="items">
+	<thead>
+		<tr>						
+			<th>Folio</th>
+			<th>F.Emisión</th>
+			<th>Responsable</th>			
+			<th>Referencia</th>
+			<th>Estado</th>	
+			<th>Saldo</th>	
+			<th>Pagado</th>	
+			<th>Rendido</th>			
+		</tr>		
+	</thead>
+	<tbody>
+		<!--#4DLOOP [Solicitud_Fondos]-->            
+		<tr>
+		  <td><!--#4DTEXT [Solicitud_Fondos]Folio_solicitud--></td>
+		  <td><!--#4DTEXT [Solicitud_Fondos]Fecha--></td>
+		  <td><!--#4DTEXT [Solicitud_Fondos]Nombre_Responsable--></td>
+		  <td><!--#4DTEXT [Solicitud_Fondos]Referencia--></td>
+		  <td><!--#4DTEXT [Solicitud_Fondos]Estado_sf--></td>
+		  <td><!--#4DTEXT String([Solicitud_Fondos]Saldo;"$ ###.###.###.##0")--></td>
+		  <td><!--#4DTEXT String([Solicitud_Fondos]Total_Pagos;"$ ###.###.###.##0")--></td>
+		  <td><!--#4DTEXT String([Solicitud_Fondos]Total_DC;"$ ###.###.###.##0")--></td>		  
+		</tr>
+		<!--#4DENDLOOP-->
+	</tbody>
+  	<tfoot></tfoot>
+</table>

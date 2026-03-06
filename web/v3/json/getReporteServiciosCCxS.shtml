@@ -1,0 +1,26 @@
+{
+	"rows" : [
+	<!--#4DLOOP aIdDtll -->
+		{
+			"id": <!--#4DHTML aIdDtll{aIdDtll}-->,
+			"centroCosto": "<!--#4DHTML aCentroCosto{aIdDtll}-->",
+			"codigoServicio": "<!--#4DHTML aCS{aIdDtll}-->",
+			"CodigoCuenta":"<!--#4DHTML aCC{aIdDtll}-->",
+			"origenServicio":"<!--#4DHTML aOrigenServicio{aIdDtll}-->",
+			"nombreServicio":"<!--#4DHTML aNombreServicio{aIdDtll}-->",
+			"tipoDoc": "<!--#4DHTML aTipoDTC{aIdDtll}-->",
+			"fechaDoc": "<!--#4DHTML aFechaDOC{aIdDtll}-->",
+			"folioDoc": "<!--#4DHTML aFolioDTC{aIdDtll}-->",
+			"totalExento": <!--#4DHTML aTotalExento{aIdDtll}-->,
+			"totalNeto": <!--#4DHTML aTotalNeto{aIdDtll}-->,
+			"totalImpuesto": <!--#4DHTML aTotalImpuesto{aIdDtll}-->,
+			"totalDoc": <!--#4DHTML aTotalDoc{aIdDtll}-->,
+			"contabilizado":  <!--#4DIF aContabilizado{aIdDtll}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"fechaContable": "<!--#4DHTML aFechaConta{aIdDtll}-->",
+			"NameProveedor": "<!--#4DHTML _V3_escapeString(aNameProveedor{aIdDtll})-->",
+			"rutProveedor": "<!--#4DHTML aRutProveedor{aIdDtll}-->",
+			"numGasto": "<!--#4DHTML aNumGasto{aIdDtll}-->"
+		}<!--#4DIF NOT(aIdDtll{aIdDtll} = aIdDtll{Size of array(aIdDtll)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

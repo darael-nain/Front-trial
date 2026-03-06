@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getComprasContent/light-->
+		<title>Gastos</title>
+		<meta charset="utf-8">
+		<meta http-equiv="Expires" content="0">
+ 
+		<meta http-equiv="Last-Modified" content="0">
+		 
+		<meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+		 
+		<meta http-equiv="Pragma" content="no-cache">
+		<link rel="stylesheet" type="text/css" href="/v3/views/compras/design/tooltips.css">
+		<script>
+			
+			var view_decimals = parseFloat("<!--#4DTEXT modeda_decimals-->")
+			var considerarSoloGastosValidados = <!--#4DIF considerarSoloGastosValidados-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			unaBase.ui.block();
+			
+			var envioCorreoAutomatico = <!--#4DIF Not(Undefined(envioCorreoAutomatico))--><!--#4DIF envioCorreoAutomatico-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DENDIF-->;
+			$(document).ready(function() {
+
+				$( "#tabs-compras" ).tabs();
+
+				<!--#4DIF Undefined(edit)-->
+				$("#tabs-1").load('/v3/views/compras/general2.shtml', 'id=<!--#4DVAR id-->');
+				<!--#4DELSE-->
+				$("#tabs-1").load('/v3/views/compras/general2.shtml', 'id=<!--#4DVAR id-->&edit=true');
+				<!--#4DENDIF-->
+				$("#tabs-2").load('/v3/views/compras/staff.shtml', 'id=<!--#4DVAR id-->');
+				$("#tabs-3").load('/v3/views/compras/archivos.shtml', 'id=<!--#4DVAR id-->');
+				// $("#tabs-4").load('/v3/views/historial/index.shtml', 'id=<!--#4DVAR id-->&mod=gastos');
+
+
+				$('a[href="#tabs-1"]').click(function() {
+					unaBase.interval.clearAll();
+				});
+
+				$('a[href="#tabs-2"]').click(function() {
+					unaBase.interval.clearAll();
+				});
+
+				$('a[href="#tabs-3"]').click(function() {
+					unaBase.interval.clearAll();
+				});
+
+				$('a[href="#tabs-4"]').click(function() {
+					unaBase.interval.clearAll();
+					$("#tabs-4").empty();
+					$("#tabs-4").load('/v3/views/historial/index.shtml', 'id=<!--#4DVAR id-->&mod=gastos');
+				});
+
+				$('a[href="#tabs-1"]').trigger('click');
+			});
+		</script>
+		<style>
+			.ui-tabs .ui-tabs-panel {
+				padding: 0 !important;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="main-container" data-id="<!--#4DTEXT id-->">
+			<section id="tabs-compras">
+				<ul class="infinite-tabs">
+					<li><a href="#tabs-1">General</a></li>
+					<li class="load-staff" data-id="<!--#4DTEXT id-->"><a href="#tabs-2">Responsables de rendir</a></li>
+					<li class="load-archivos" data-id="<!--#4DTEXT id-->"><a href="#tabs-3">Archivos adjuntos</a></li>
+					<li class="load-historial" data-id="<!--#4DTEXT id-->"><a href="#tabs-4">Historial</a></li>
+				</ul>
+				<article id="tabs-1"></article>
+				<article id="tabs-2"></article>
+				<article id="tabs-3"></article>
+				<article id="tabs-4"></article>
+				
+			</section>
+		</div>
+	</body>
+
+	<!-- <script type="text/javascript" src="/v3/script/current_tab.js"></script> -->
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getReportes-->
+		<title>Reportes</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/views/reportes2/reportes.js"></script>
+    	<script type="text/javascript" src="/v3/views/reportes2/content.js"></script>
+    	<style type="text/css">
+    		.newcolor input,textarea{
+    			background-color: #ffffff !important;
+    		}
+			 table #usuario_asignado thead tr{
+			 	/*width: 30% !important;*/
+			 	background-color: rgb(189,189,192) !important;
+			 }
+			/* table#usuario_asignado tr td:nth-child(1), table#usuario_asignado tr td:nth-child(2), table#usuario_asignado tr th:nth-child(1), table#usuario_asignado tr th:nth-child(2){
+			 	width: 62% !important;	
+			 	text-align: left !important;
+			 	padding-left: 0.5em !important;
+			 }
+			 table#usuario_asignado tr td:nth-child(3){
+			 	width: 10% !important;	
+			 }
+			 table#usuario_asignado tr td:nth-child(4){
+			 	width: 10% !important;	
+			 }
+			 table#usuario_asignado tr td button{
+			 	margin: 0 !important;	
+			 }
+			 table#usuario_asignado tr th {
+			 	font-weight: bold;	
+			 }*/
+			 section footer article div {	
+			  	margin-bottom: 4px;
+			 }
+			 html > body.home > section > section#viewport section.sheet > footer > article:nth-child(2) > h1 {
+			 	margin-bottom: 5px !important;
+			 }
+			 input[name=select_user].ui-autocomplete-input{
+			 	width: 20% !important;
+			 	margin-bottom: 0.5em;	
+			 	margin-top: 0.5em;
+			 	margin-left: 0.5em;
+			 }
+			 .show.user{
+			 	width: 18px;
+			 	height: 18px;
+			 }
+			 article ul {
+			 	margin-top: 5px !important;
+			 	margin-bottom: 5px !important;
+			 }
+			 article:nth-child(2) div {
+			 	margin-top: 10px !important;
+			 	margin-bottom: 10px !important;
+			 }
+			/*#usuario_asignado {
+			    border: solid 1px #DDEEEE;
+			    border-collapse: collapse;
+			    border-spacing: 0;
+			}
+			#usuario_asignado thead th {
+			    background-color: #DDEFEF;
+			    border: solid 1px #DDEEEE;
+			    color: #336B6B;
+			    padding: 10px;
+			    text-align: left;
+			    text-shadow: 1px 1px 1px #fff;
+			}
+			#usuario_asignado tbody td {
+			    border: solid 1px #DDEEEE;
+			    color: #333;
+			    padding: 10px;
+			    text-shadow: 1px 1px 1px #fff;
+			}
+			#usuario_asignado {
+			    border: none;
+			}
+			#usuario_asignado thead th {
+			    background-color: #CFAD70;
+			    border: none;
+			    text-shadow: 1px 1px 1px #ccc;
+			    color: #333;
+			}
+			#usuario_asignado thead th:first-child {
+			    border-radius: 10px 0 0 0;
+			}
+			#usuario_asignado thead th:last-child {
+			    border-radius: 0 10px 0 0;
+			}
+			#usuario_asignado tbody tr:last-child td:first-child {
+			    border-radius: 0 0 0 10px;
+			}
+			#usuario_asignado tbody tr:last-child td:last-child {
+			    border-radius: 0 0 10px 0;
+			}*/
+			textarea{
+
+			}
+    	</style>
+    	<link href="/css/form1.css" rel="stylesheet">
+    	<script type="text/javascript">
+
+    	// REMUEVE EL USUARIO ASIGNADO AL REPORTE
+    	function del_usuario_asignado(login){
+			$.ajax({
+			    url: '/4DACTION/_V3_del_usuario_asignado',
+			    dataType: 'json',
+			    data: {
+			    	'id_reporte': reportes.id,
+			    	'login': login,			    	
+			    	'delete': true
+			    },
+			    async: false,
+			    success: function(data) {
+			    	var login = $('[data-login='+login+']');
+				    // login.hide();
+				    get_users();
+			    	
+
+				},
+				error: function() {
+					alert("No se puede eliminar el usuario asignado");
+				}
+			});
+			
+		}
+
+
+		
+
+
+		function get_users(){
+			$('tbody[name=usuario_asignado]').empty();
+
+				$.ajax({
+			    url: '/4DACTION/_v3_getUsuarioAsignado',
+			    dataType: 'json',
+			    data: {
+			      'id': reportes.id
+			    },
+			    async: false,
+			    success: function(data) {
+				    for (var i = 0; i < data.rows.length; i++){
+				    	var login = data.rows[i].login;
+				    	// var fnt = del_usuario_asignado(login);
+
+				    	var trObj = $('<tr ><td data-login="'+login+'"  >'+ data.rows[i].nombre +'</button></td><td   >'+ data.rows[i].mail +'</td><td   >'+ data.rows[i].cargo +'</td><td ><button   title="Remover usuario asignado al reporte" onclick=del_usuario_asignado("'+login+'") >Quitar</button></td></tr>');
+
+				    	$('[name="usuario_asignado"]').append(trObj);
+
+				    	trObj.find('button:first').button({icons: { primary: 'ui-icon-minus'}, text: false });
+
+				    }
+				}
+			});		
+
+		}
+		
+		$(document).ready(function(){
+			get_users();
+
+
+
+
+				//botton de asociar usuario
+ 				var addButton = $('.show.user');
+
+			// al hacer click vuelve el campo search un autocomplete
+				addButton.button({icons: { primary: 'ui-icon-triangle-1-s'}, text: false }).click(function() {
+					$('input[name="select_user"]').autocomplete('search', '@').focus();
+				});
+				// activa boton de jquery ui
+ 				// addButton.button({icons: { primary: 'ui-icon-caret-1-s'}, text: false });
+
+			//devuelve todos los usuarios
+			if ($('input[name="select_user"]').length > 0)
+					$('input[name="select_user"]').autocomplete({
+						source: function(request, response) {
+							$.ajax({
+								url: '/4DACTION/_V3_getUsuario2?q2=&estado_activo=true',
+								dataType: 'json',
+								data: {										
+								},
+								success: function(data) {
+									response($.map(data.rows, function(item) {
+										return item;
+									}));
+								}
+							});
+						},
+						minLength: 0,
+						autoFocus: true,
+						delay: 5,
+						position: { my: "left top", at: "left bottom", collision: "flip" },
+						open: function() {
+							$(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+						},
+						close: function() {
+							$(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+						},
+						focus: function(event, ui) {
+							//$(this).val(ui.item.text);
+							return false;
+						},
+						response: function(event, ui) {
+						},
+						select: function(event, ui) {
+							$.ajax({
+						        'url':'/4DACTION/_V3_set_usuario_asignado',
+						        data:{
+						          "id_reporte" : reportes.id,
+						          "login" : ui.item.login,
+						          "create_usuario_asignado" : true,
+						          'delete': false
+						        },
+						        dataType:'json',
+						        async: false,
+						        success:function(data){
+						        	get_users();
+						        }
+					      	});
+							get_users();
+							return false;
+						}
+
+					}).data('ui-autocomplete')._renderItem = function(ul, item) {
+						return $('<li><a><strong class="highlight">' +  item.nombres +" "+item.ape_paterno +   '</strong><em>' + item.cargo + '</em><span>' + item.email + '</span></a></li>').appendTo(ul);
+					};
+
+			});
+
+    	</script>
+	</head>
+	<body>
+		<section class="sheet" id="reportes" data-id="<!--#4DTEXT id-->">
+			<footer>
+				<article>
+					<h1>Información general - Reportes</h1>
+					<ul class="editable newcolor">
+						<li><input name="estado" id="estado" class="checkbox" type="checkbox"><label for="estado" class="sg-input-title" >Habilitado</label></li>
+
+						
+						<li><span class="sg-input-title">Nombre</span> <span><input disabled type="text" class="form-control rise" name="descripcion" ></span></li>
+						<li><span class="sg-input-title">Módulo</span> <span><input disabled type="text" class="form-control rise" name="origen" ></span></li>
+						<li><span class="sg-input-title">Descripción</span> <span><textarea disabled rows="3" cols="80" class="form-control rise" name="descripcion_reporte"></textarea></span></li>
+
+
+						<!-- <li><span class="sg-input-title">Origen</span> <span><input type="text" class="form-control rise" name="origen" ></span></li> -->
+						<!-- <li><span class="sg-input-title">Periocidad</span> <span><input type="text" class="form-control rise" name="periocidad" ></span></li> -->
+						<li><span class="sg-input-title">Para</span> <span><input type="email" class="form-control rise" name="enviara" ></span><span> (Separar por comas(,) para a mas de un destinatario)</span></li>
+						<li><span class="sg-input-title">Cc </span> <span><input type="email" class="form-control rise" name="copiara" ></span></li>
+					    <li class="li">
+			              <span class="sg-input-title">Periocidad
+
+			              </span><br>
+			              
+			                <select name="periocidad"  >
+			                    <option selected>Seleccionar</option>
+			                    <option value="1">TODOS LOS DIAS</option>
+			                    <option value="2">TODOS LOS VIERNES</option>
+			                    <option value="3">TODOS LOS LUNES</option>
+			                    <option value="4">MENSUAL (PRIMER LUNES)</option>
+			                </select>
+			            </li>
+						<li><span class="sg-input-title">Hora</span> <span><input type="time" class="form-control rise" name="hora" ></span></li>
+
+					</ul>
+				</article>
+				
+				<article>
+					<h1>Usuarios asignados al reporte</h1>
+					<div>
+						<input type="search" name="select_user" placeholder="Seleccionar de la lista para asociar" >
+						<button  class="show user"></button>
+					</div>
+					<table id="usuario_asignado" class="results" style="display: table;" >
+						<thead>
+							<tr>
+								<th >Usuario</th>
+								<th >Email</th>
+								<th >Cargo</th>
+								<th  title="Remueve la asociación de este usuario con el reporte">Quitar</th>
+							</tr>
+						</thead>
+						<tbody name="usuario_asignado" class="ui-selectable">
+							
+						</tbody>	
+					</table>
+				</article>
+			</footer>
+		</section>
+	</body>
+</html>

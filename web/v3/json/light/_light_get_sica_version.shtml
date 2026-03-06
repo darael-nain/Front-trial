@@ -1,0 +1,15 @@
+{
+	"records": {
+		"total": <!--#4DVAR $total-->
+	},
+	"rows": [
+<!--#4DLOOP aValorId -->
+		{
+			"id": <!--#4DVAR aValorId{aValorId}-->,
+			"text": "<!--#4DHTML _V3_escapeString(aNombre{aValorId})-->",
+			"date": "<!--#4DHTML _V3_escapeString(aNombre{aDate})-->"
+		}<!--#4DIF NOT(aValorId{aValorId} = aValorId{Size of array(aValorId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+
+}

@@ -1,0 +1,27 @@
+{	
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([tipos_de_pago]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"sort": {
+		"by": "<!--#4DTEXT sort_by-->",
+		"order": "<!--#4DTEXT sort_order-->"
+	},
+	"rows": [
+<!--#4DLOOP aIdTipopago -->
+		{
+			"id": <!--#4DTEXT aIdTipopago{aIdTipopago}-->,
+			"descripcion": "<!--#4DHTML _V3_escapeString(aDescripcionTipopago{aIdTipopago})-->",
+			"estado": <!--#4DIF aEstadoTipopago{aIdTipopago}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"ingreso": <!--#4DIF aIngreso{aIdTipopago}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"egreso": <!--#4DIF aEgreso{aIdTipopago}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"codigo": "<!--#4DTEXT aCodigoTipopago{aIdTipopago}-->"
+		}<!--#4DIF NOT(aIdTipopago{aIdTipopago} = aIdTipopago{Size of array(aIdTipopago)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

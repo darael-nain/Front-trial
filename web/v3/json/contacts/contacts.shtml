@@ -1,0 +1,15 @@
+{
+	"contacts": [
+	<!--#4DLOOP aContactoId-->
+		{	
+			"id": "<!--#4DTEXT aContactoId{aContactoId}-->",
+			"name": "<!--#4DTEXT _V3_escapeString(aContactoNombre{aContactoId})-->",
+			"position": "<!--#4DTEXT _V3_escapeString(aRelationCargo{aContactoId})-->",
+			"email": "<!--#4DTEXT aContactoEmail{aContactoId}-->"
+		}<!--#4DIF NOT(aContactoId{aContactoId} = aContactoId{Size of array(aContactoId)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}
+
+
+

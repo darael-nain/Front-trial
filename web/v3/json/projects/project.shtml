@@ -1,0 +1,24 @@
+{
+	"id": <!--#4DHTML id-->,
+	"number": <!--#4DHTML number-->,
+	"creator_id": "<!--#4DHTML creator-->",
+	"creator_name": "<!--#4DHTML creator_name-->",
+	"create_date": "<!--#4DHTML create_date-->",
+	"create_time": "<!--#4DHTML create_time-->",
+	"start_date": "<!--#4DHTML start_date-->",
+	"end_date": "<!--#4DHTML end_date-->",
+	"name": "<!--#4DHTML name-->",
+	"company_id": <!--#4DHTML vid_empresa-->,
+	"company_name": "<!--#4DHTML valias-->",
+	"manager_name": "<!--#4DHTML jefeProyectoNombre-->",
+	"manager_id": "<!--#4DHTML jefeProyecto-->",
+	"manager_email": "<!--#4DHTML jefeProyectoEmail-->",
+	"business_area_name": "<!--#4DHTML areaNegocio-->",
+	"business_area_id": "<!--#4DHTML areaNegocioId-->",
+	"contact_id": <!--#4DHTML vid_contacto-->,
+	"contact_name": "<!--#4DHTML vnombrecontacto-->",
+	"contact_position": "<!--#4DHTML vcargocontacto-->",
+	"contact_email": "<!--#4DHTML vemailcontacto-->",
+	"notify": <!--#4DIF notify-->true<!--#4DELSE -->false<!--#4DENDIF-->
+	
+}

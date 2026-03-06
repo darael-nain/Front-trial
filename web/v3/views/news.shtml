@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>NOVEDADES</title>
+		<meta charset="utf-8">
+		<style>
+			/*#news-container-home{
+				position: relative;
+			}
+			.news-header{
+				background:#00a86c;
+				height:100px;
+				position:absolute;
+				top:0px;
+			}
+			.news-body {
+				background:#00a86c;
+				height:100px;
+			}
+			.news-footer {
+				top:400px;
+				background:#00a86c;
+				height:100px;
+				position:absolute;
+			}*/
+			.news-header-title{
+				color:#00a86c;
+				font-size:25px;
+				font-weight:bold;
+			}
+			.news-header-subtitle{
+				color:gray;
+				font-size:15px;
+				margin-top:5px;
+			}
+			.news-body {
+				margin-top:10px;
+				font-size:15px;
+				overflow-y:auto;
+				height:320px;
+				/*border:1px solid red;*/
+			}
+			.news-footer{
+				margin-top:20px;
+				text-align:left;
+			}
+				.news-footer > button {
+					background:#00a86c;
+					border-radius:3px;
+					text-align:auto;
+					width:100px;
+					height:30px;
+				}
+					.news-footer > button > span {
+						color:white;
+						font-size:15px;
+					}
+		</style>
+		<script>
+			$(document).ready(function(){
+				$('.news-footer > button').click(function(){
+					$(this).parentTo('.ui-dialog-content').dialog('close');
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div id="news-container-home">
+			<div class="news-header">
+				<h1 class="news-header-title">Nueva actualización!</h1>
+				<h2 class="news-header-subtitle">Hola Juanito, tenemos nuevas novedades para tí.</h2>
+			</div>
+			<div class="news-body">
+				<p>
+					Lorem ipsum dolor sit amet consectetur adipiscing elit, praesent rhoncus est sed velit lacus nulla proin, turpis id neque iaculis semper vestibulum. Scelerisque vestibulum vehicula habitasse bibendum nibh pharetra aptent, vitae aliquet suscipit blandit feugiat massa nascetur, a sapien cubilia vivamus penatibus duis. Nisl viverra sagittis nullam morbi pretium et egestas habitasse dui nisi vestibulum, pharetra justo euismod congue sollicitudin eleifend aliquet mattis platea. Pulvinar parturient arcu eget nullam orci non turpis, nulla dui augue himenaeos conubia consequat, a vestibulum cubilia praesent natoque sapien.
+				</p><br>
+				<p>
+					Lorem ipsum dolor sit amet consectetur adipiscing elit, praesent rhoncus est sed velit lacus nulla proin, turpis id neque iaculis semper vestibulum. Scelerisque vestibulum vehicula habitasse bibendum nibh pharetra aptent, vitae aliquet suscipit blandit feugiat massa nascetur, a sapien cubilia vivamus penatibus duis. Nisl viverra sagittis nullam morbi pretium et egestas habitasse dui nisi vestibulum, pharetra justo euismod congue sollicitudin eleifend aliquet mattis platea. Pulvinar parturient arcu eget nullam orci non turpis, nulla dui augue himenaeos conubia consequat, a vestibulum cubilia praesent natoque sapien.
+				</p><br>
+				<p>
+					Lorem ipsum dolor sit amet consectetur adipiscing elit, praesent rhoncus est sed velit lacus nulla proin, turpis id neque iaculis semper vestibulum. Scelerisque vestibulum vehicula habitasse bibendum nibh pharetra aptent, vitae aliquet suscipit blandit feugiat massa nascetur, a sapien cubilia vivamus penatibus duis. Nisl viverra sagittis nullam morbi pretium et egestas habitasse dui nisi vestibulum, pharetra justo euismod congue sollicitudin eleifend aliquet mattis platea. Pulvinar parturient arcu eget nullam orci non turpis, nulla dui augue himenaeos conubia consequat, a vestibulum cubilia praesent natoque sapien.
+				</p>
+			</div>
+			<div class="news-footer">
+				<button><span>Entendido!</span></button>
+			</div>
+		</div>
+	</body>
+</html>

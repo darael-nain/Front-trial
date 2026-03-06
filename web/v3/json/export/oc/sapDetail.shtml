@@ -1,0 +1,22 @@
+{
+	"total": <!--#4DHTML $total-->,
+	"items": [
+<!--#4DLOOP aIdDetail -->
+		{
+			"aParentKey": "<!--#4DHTML aParentKey{aIdDetail}-->",
+			"aProjectCode": "<!--#4DHTML aProjectCode{aIdDetail}-->",
+			"aLineNum": "<!--#4DHTML aLineNum{aIdDetail}-->",
+			"aItemCode": "<!--#4DHTML aItemCode{aIdDetail}-->",
+			"aQuantity": "<!--#4DHTML aQuantity{aIdDetail}-->",
+			"aShipDate": "<!--#4DHTML aShipDate{aIdDetail}-->",
+			"aPrice": "<!--#4DHTML aPrice{aIdDetail}-->",
+			"aDescription": "<!--#4DHTML aDescription{aIdDetail}-->",
+			"aVendorNum": "<!--#4DHTML aVendorNum{aIdDetail}-->",
+			"aWareHouse": "<!--#4DHTML aWareHouse{aIdDetail}-->",
+			"aCurrency": "<!--#4DHTML aCurrency{aIdDetail}-->",
+			"aTaxCode": "<!--#4DHTML aTaxCode{aIdDetail}-->",
+			"aLineTotal": "<!--#4DHTML aLineTotal{aIdDetail}-->"
+		}<!--#4DIF NOT(aIdDetail{aIdDetail} = aIdDetail{Size of array(aIdDetail)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

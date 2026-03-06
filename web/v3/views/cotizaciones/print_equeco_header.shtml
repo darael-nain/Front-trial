@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--#4DSCRIPT/_V3_proxy_getCotizacionContent-->
+        <meta charset="utf-8">
+        <title>Cotización</title>
+     
+        
+      
+        <style>
+       
+
+             
+                .new-header{padding:10px 10px 10px 0;text-align:left;position:relative; left: -40px;}
+    .new-header > img, p {display:inline-block;vertical-align:top;margin:10px;}
+    .new-header > img {padding-left: 20px; margin-top: 15px;}
+
+    .new-header > p:first-of-type {
+      display: none ! important;
+    }
+
+    .new-header > p:nth-of-type(1) > label{display:block;font-size:9pt}
+      .new-header > p:nth-of-type(1) > label:nth-of-type(1){text-transform:uppercase;font-weight:bold;font-size:12pt;}
+      .new-header > p:nth-of-type(1) > label:nth-of-type(4){margin-top:10px}
+
+    .new-header > p:nth-of-type(2){position:absolute;top:5px;right:40px}
+      .new-header > p:nth-of-type(2) > span:nth-of-type(1){display:block;font-size:15pt;font-weight:bold;}
+      .new-header > p:nth-of-type(2) > span:nth-of-type(2){display:block;font-size:12pt;}
+
+  
+        
+
+
+   body > div > p.equeco > span {
+        display: inline-block; /* the default for span */
+        max-width: 500px;
+        color:#ff4338;
+        
+
+      }
+       .a{
+        display: inline-block; /* the default for span */
+        max-width: 150px;
+        color:#ff4338;
+         font-weight: lighter;
+        width: 100px;
+        font-weight: bold;
+       }
+       .b{
+        
+          display: inline-block; /* the default for span */
+        max-width: 250px;
+        color:#ff4338;
+        width: 200px;
+       
+        
+       }
+       
+      
+
+       span.ref{
+        font-family: WBlack;
+         font-size: 25px;
+       }
+  
+
+
+    </style>
+    </head>
+    <body>
+         
+            <div class="container" id="header">
+            
+            <div class="new-header "  style="text-align: left;">
+
+              <!--#4DIF pg_usar_logo_por_area-->
+                  <img src="<!--#4DTEXT vUrlImagenLogoPorArea-->" width="<!--#4DTEXT vAnchoPictureLogoArea-->" height="<!--#4DTEXT vAltoPictureLogoArea-->" style="max-width: 500px; max-height: 500px; padding: 10px; margin-left: <!--#4DIF custom_background-->50<!--#4DELSE-->30<!--#4DENDIF-->px;">
+              <!--#4DELSE-->
+                  <img src="<!--#4DTEXT vUrlImagenLogo-->" width="<!--#4DTEXT vAnchoPicture-->" height="<!--#4DTEXT vAltoPicture-->" style="max-width: 500px; max-height: 500px; padding: 10px; margin-left: <!--#4DIF custom_background-->50<!--#4DELSE-->30<!--#4DENDIF-->px;">
+              <!--#4DENDIF-->
+
+              <p>
+               
+              </p>
+              <p class="equeco" style="color:#ff4338; " >
+                
+                
+                <span class="ref" style="max-width: 360px;">  <!--#4DVAR vreferencia--> </span>
+                <span   style="font-weight: bold;">COTIZACIÓN <!--#4DIF idNegocioPrint#0--><!--#4DIF idNegocioPrint#-1-->N&deg; <!--#4DTEXT idNegocioPrint--><!--#4DELSE-->Plantilla<!--#4DENDIF--><!--#4DELSE-->Borrador<!--#4DENDIF--></span>
+                <!--#4DIF vVersionActual#""--><span class="" style=" font-weight: bold;">Versión <!--#4DTEXT Substring(vVersionActual;5;Position("-";vVersionActual;5)-5)--></span><!--#4DENDIF--><br><br>
+                <span class="a">Cliente</span> <span class="b"> <!--#4DVAR Uppercase(valias;*)--></span><br>
+                <span class="a">Para</span> <span class="b"> <!--#4DVAR Uppercase(vnombrecontacto;*)--></span><br>
+                <span class="a">Email</span> <span class="b">  <!--#4DIF clienteEmailPrint#""--><!--#4DVAR Uppercase(clienteEmailPrint;*)--><!--#4DELSE-->N/A<!--#4DENDIF--></span><br>
+                <span class="a">De</span> <span class="b">  <!--#4DIF ejecutivoNamePrint#""--><!--#4DVAR Uppercase(ejecutivoNamePrint;*)--><!--#4DELSE-->N/A<!--#4DENDIF--></span><br>
+                <span class="a">Email</span> <span class="b"> <!--#4DIF ejecutivoEmailPrint#""--><!--#4DVAR Uppercase(ejecutivoEmailPrint;*)--><!--#4DELSE-->N/A<!--#4DENDIF--></span><br>
+
+                <!--#4DIF ((vFechaCreacion#"00-00-00") & ([Nota_de_venta]print_mostrar_fecha_creacion))-->
+                  <span class="b" ><label style="font-weight:bold;">F. Creación:</label> <!--#4DTEXT vFechaCreacion--></span><br>
+                  <!--#4DELSE-->
+                   <!--#4DIF vFechaImpresion#"00-00-00"--><span class="b"  style="display: none"><!--#4DTEXT vFechaImpresion--></span><!--#4DENDIF--><br>
+                <!--#4DENDIF-->
+             
+              </p>
+            </div>
+            </div>
+         
+    
+    </body>
+</html>

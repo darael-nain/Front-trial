@@ -1,0 +1,38 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Contacto]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP aEmpresaId -->
+		{
+			"id": <!--#4DHTML aEmpresaId{aEmpresaId}-->,
+			"text": "<!--#4DHTML _V3_escapeString(aEmpresaAlias{aEmpresaId})-->",
+			"razon_social": "<!--#4DHTML _V3_escapeString(aEmpresaRazonSocial{aEmpresaId})-->",
+			"nombre_completo": "<!--#4DHTML _V3_escapeString(aEmpresaNombreCompleto{aEmpresaId})-->",
+			"rut": "<!--#4DHTML _V3_escapeString(aEmpresaRut{aEmpresaId})-->",
+			"rut_validar": <!--#4DIF aEmpresaRutValidar{aEmpresaId}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"giro": "<!--#4DHTML _V3_escapeString(aEmpresaGiro{aEmpresaId})-->",
+			"email": "<!--#4DHTML _V3_escapeString(aEmpresaEmail{aEmpresaId})-->",
+			"direccion": "<!--#4DHTML _V3_escapeString(aEmpresaDireccion{aEmpresaId})-->",
+			"telefonos": "<!--#4DHTML _V3_escapeString(aEmpresaTelefonos{aEmpresaId})-->",
+			"porcentaje_sobrecargo_ca": <!--#4DVAR String(aEmpresaSobrecargoCA{aEmpresaId};"&xml")-->,
+			"id_dtc_default": "<!--#4DHTML aEmpresaIdDtcDefault{aEmpresaId}-->",
+			"des_dtc_default": "<!--#4DHTML _v3_escapeString(aEmpresaDesDtcDefault{aEmpresaId})-->",
+			"id_forma_default": "<!--#4DHTML aEmpresaIdFPagoDefault{aEmpresaId}-->",
+			"des_forma_default": "<!--#4DHTML _v3_escapeString(aEmpresaDesFPagoDefault{aEmpresaId})-->",
+			"tipopago_default": "<!--#4DHTML _v3_escapeString(aEmpresaTipoPagoDefault{aEmpresaId})-->",
+			"id_banco_default": "<!--#4DHTML _v3_escapeString(aEmpresaIdBancoDefault{aEmpresaId})-->",
+			"nombre_banco_default": "<!--#4DHTML _v3_escapeString(aEmpresaNombreBancoDefault{aEmpresaId})-->",
+			"tipo_cuenta_default": "<!--#4DHTML _v3_escapeString(aEmpresaTipoCuentaDefault{aEmpresaId})-->",
+			"nro_cuenta_default": "<!--#4DHTML _v3_escapeString(aEmpresaNroCuentaDefault{aEmpresaId})-->",
+			"has_payment_data": <!--#4DIF aEmpresaDatosBancarios{aEmpresaId}-->true<!--#4DELSE -->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aEmpresaId{aEmpresaId} = aEmpresaId{Size of array(aEmpresaId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

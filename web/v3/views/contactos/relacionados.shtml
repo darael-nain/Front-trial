@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+  <head>    
+    <title>Perfil</title>
+    <meta charset="utf-8">
+	<style type="text/css">
+		<style>
+			#related-container > table > tbody > tr > td > input{
+				border: 1px solid gray;
+				background-color: yellow;
+				padding: 5px;
+				width:90%;
+				text-transform: uppercase;
+			}
+				#related-container > table > tbody tr{
+					padding:3px;
+					background-color: white;
+				}
+		</style>
+	</style>
+	<script>
+		var idContactoPadre = document.querySelector('.form-contact > input[name="id"]').value;
+
+		const buildList = (obj) => {
+			if (obj) {
+				item = {
+					idRelacion : obj.id,
+					idContactoPadre : idContactoPadre,
+					idRelacionado : obj.id_rel,
+					nombreRelacionado : obj.nombre_rel,
+					cargoRelacionado : obj.cargo_rel,
+					fonoRelacionado : obj.fono_rel,
+					mailRelacionado : obj.email_rel,
+					notaRelacionado : obj.observacion_rel,
+					defectoRelacionado : obj.defecto_rel
+				}
+			}else{
+				item = {
+					idRelacion : 0,
+					idContactoPadre : idContactoPadre,
+					idRelacionado : 0,
+					nombreRelacionado : "",
+					cargoRelacionado : "",
+					fonoRelacionado : "",
+					mailRelacionado : "",
+					notaRelacionado : "",
+					defectoRelacionado : false
+				}
+			}
+			var htmlObject = $(' \
+				<tr data-idrelacion="' + item.idRelacion + '" data-idcontactopadre="' + item.idContactoPadre + '" data-idrelacionado="' + item.idRelacionado + '"> \
+					<td><input type="search" name="related-name" placeholder="Buscar y asociar" value="' + item.nombreRelacionado + '" style="width:200px;"></td> \
+					<td><input type="text" name="related-position" value="' + item.cargoRelacionado + '"></td> \
+					<td><input type="text" name="related-phone" value="' + item.fonoRelacionado + '"></td> \
+					<td><input type="text" name="related-email" value="' + item.mailRelacionado + '"></td> \
+					<td><textarea style="vertical-align:bottom" name="related-note" placeholder="ninguno">' + item.notaRelacionado + '</textarea></td> \
+					<td><input style="display:inline-blok;margin:auto;vertical-align:bottom" name="related-defecto" type="checkbox" '+ ((item.defectoRelacionado) ? "checked" : "") +'></td> \
+					<td>\
+						<button class="save" style="border:1px solid gray;margin:10px 0 10px 0;border-radius:5px"><span style="font-size:10px;font-weight:bold;">Guardar</span></button>\
+						<button '+ ((item.idRelacion > 0) ? 'style="display:none;"' : '') + ' class="remove" style="border:1px solid gray;margin:10px 0 10px 0;border-radius:5px"><span style="font-size:10px;font-weight:bold;">Quitar</span></button>\
+						<button class="delete" style="border:1px solid gray;margin:10px 0 10px 0;border-radius:5px"><span style="font-size:10px;font-weight:bold;">Eliminar</span></button>\
+					</td>\
+				</tr> \
+			');
+
+			if (item.idRelacion > 0) {
+				htmlObject.find('input[name="related-name"]').attr({
+					type: "text",
+				 	disabled: "disabled"
+				});
+			}
+
+			return htmlObject;
+		};
+
+		const saveRelated = (relatedRow) => {
+			$.ajax({
+				'url': '/4DACTION/setAsociaContactoRelacionado',
+				data: {
+					'id_relacionado' : relatedRow.data('idrelacionado'),
+					'id_contacto' : relatedRow.data('idcontactopadre'),
+					'cargo_relacionado' : relatedRow.find('input[name="related-position"]').val(),
+					'email_relacionado' : relatedRow.find('input[name="related-email"]').val(),
+					'fono_relacionado' : relatedRow.find('input[name="related-phone"]').val(),
+					'obs_relacionado' : relatedRow.find('input[name="related-note"]').val()
+				},
+				dataType: 'json',
+				async: false,
+				success: function(data) {
+					if (data.success) {
+						toastr.success('Asociado con éxito!');
+						relatedRow.data('idrelacion', data.id);
+						relatedRow.find('input[name="related-name"]').attr({type: "text", disabled: "disabled"});
+					}else{
+						if (data.unique == false) {
+							toastr.error("No fue posible asociar. La asociación ya existe.");
+							relatedRow.find('input[name="related-name"]').val("").focus();
+						}else{
+							toastr.error("No fue posible asociar el contacto. Intente nuevamente.");
+						}
+					}							},
+				error: function(xhr, text, error) {
+					toastr.error(NOTIFY.get('ERROR_INTERNAL', 'Error'));
+				}
+			});
+		}
+
+		const updateRelated = (relatedRow) => {
+			$.ajax({
+				'url': '/4DACTION/_V3_setRelacionado',
+				data: {
+					'id' : relatedRow.data('idrelacion'),
+					'id_relacionado' : relatedRow.data('idcontactopadre'),
+					'cargo_relacionado' : relatedRow.find('input[name="related-position"]').val(),
+					'email_relacionado' : relatedRow.find('input[name="related-email"]').val(),
+					'fono_relacionado' 	: relatedRow.find('input[name="related-phone"]').val(),
+					'obs_relacionado' 	: relatedRow.find('input[name="related-note"]').val(),
+					'por_defecto' 	: relatedRow.find('input[name="related-defecto"]').prop('checked')
+				},
+				dataType: 'json',
+				async: false,
+				success: function(data) {
+					if (data.success) {
+						toastr.success('Datos actualizados con éxito!');
+					}else{
+						toastr.error("No fue posible actualizar los datos. Intente nuevamente.");
+					}							},
+				error: function(xhr, text, error) {
+					toastr.error(NOTIFY.get('ERROR_INTERNAL', 'Error'));
+				}
+			});
+		}
+
+		const searchingContact = (htmlObjectIn) =>  {
+			htmlObjectIn.find('input[name="related-name"]').autocomplete({
+			    source: function(request, response) {
+			      $.ajax({
+			        url: '/4DACTION/_V3_getEmpresa',
+			        dataType: 'json',
+			        data: {
+			          q: request.term
+			        },
+			        success: function(data) {
+			          response($.map(data.rows, function(item) {
+			            return item;
+			          }));
+			        }
+			      });
+			    },
+			    minLength: 0,
+			    autoFocus: true,
+			    open: function() {
+			      $(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+			    },
+			    close: function() {
+			      $(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+			    },
+			    focus: function(event, ui) {
+			      return false;
+			    },
+			    response: function(event, ui) {
+			    },
+			    select: function(event, ui) {
+			      $(this).val(ui.item.text);
+			      $(this).closest('tr').data('idrelacionado', ui.item.id);
+			      $(this).closest('tr').find('input[name="related-phone"]').val(ui.item.telefonos);
+			      $(this).closest('tr').find('input[name="related-email"]').val(ui.item.email);
+			      saveRelated($(this).closest('tr'));
+			      return false;
+			    }
+			}).data('ui-autocomplete')._renderItem = function(ul, item) {
+			      return $('<li><a><strong class="highlight">' + ((item.text)? item.text : '[Sin Alias]') + '</strong><em>' + ((item.rut != "")? 'Ruc: ' + item.rut : '') + '</em><span>' + item.razon_social + '</span></a></li>').appendTo(ul);
+			};
+		};
+
+		const deleteRelated  = (relatedRow) => {
+			confirm("¿Está seguro que desea eliminar la relación?").done(function(datax) {
+			  if (datax) {
+			    $.ajax({
+			    	'url': '/4DACTION/_V3_setRelacionado',
+			    	data: {
+			    		'id' : relatedRow.data('idrelacion'),
+			    		'delete' : true
+			    	},
+			    	dataType: 'json',
+			    	async: false,
+			    	success: function(data) {
+			    		if (data.success) {
+			    			relatedRow.remove();
+			    			toastr.success('Asociación eliminada con éxito!');
+			    		}else{
+			    			toastr.error("No fue posible eliminar la asociación. Intente nuevamente.");
+			    		}							},
+			    	error: function(xhr, text, error) {
+			    		toastr.error(NOTIFY.get('ERROR_INTERNAL', 'Error'));
+			    	}
+			    });
+			  }
+			});
+		}
+
+		var related = {
+			add : function(){
+
+				var htmlObject = buildList(undefined);
+				$('#related-container > table').append(htmlObject);
+
+				htmlObject.find('button.save').button({
+					icons: {
+						primary: 'ui-icon-disk'
+					},
+					text: false
+				}).click(function() {
+					updateRelated($(this).closest('tr'));
+				});
+
+				htmlObject.find('button.delete').button({
+					icons: {
+						primary: 'ui-icon-trash'
+					},
+					text: false
+				}).click(function() {
+					deleteRelated($(this).closest('tr'));
+				});
+
+				htmlObject.find('button.delete').hide();
+
+				htmlObject.find('button.remove').button({
+					icons: {
+						primary: 'ui-icon-circle-minus'
+					},
+					text: false
+				}).click(function() {
+					this.closest("tr").remove();
+				});
+
+				htmlObject.find('input[name="related-defecto"]').change(function() {
+					var idrelacionNow = $(this).closest('tr').data('idrelacion');
+					var selectableCheck = $('#related-container > table > tbody > tr').find('input[name="related-defecto"]');
+					for (var i = 0; i < selectableCheck.length; i++) {
+						var id = selectableCheck[i].closest('tr').dataset.idrelacion;
+						if (idrelacionNow != id) {
+							selectableCheck[i].checked = false;
+						}
+					}
+				});
+
+				searchingContact(htmlObject);
+
+			},
+			get : function(){
+				$.ajax({
+					url: '/4DACTION/_v3_getRelacionadosById',
+					data:{
+						'contacto[id]' : idContactoPadre
+					},
+					dataType: 'json',
+					success: function(data) {
+						var rows = data.rows;
+						for (var i = 0; i < rows.length; i++) {
+
+							var htmlObject = buildList(rows[i]);
+							$('#related-container > table').append(htmlObject);
+
+							htmlObject.find('button.save').button({
+								icons: {
+									primary: 'ui-icon-disk'
+								},
+								text: false
+							}).click(function() {
+								updateRelated($(this).closest('tr'));
+							});
+
+							htmlObject.find('button.delete').button({
+								icons: {
+									primary: 'ui-icon-trash'
+								},
+								text: false
+							}).click(function() {
+								deleteRelated($(this).closest('tr'));
+							});
+
+							htmlObject.find('input[name="related-defecto"]').change(function() {
+								var idrelacionNow = $(this).closest('tr').data('idrelacion');
+								var selectableCheck = $('#related-container > table > tbody > tr').find('input[name="related-defecto"]');
+								for (var i = 0; i < selectableCheck.length; i++) {
+									var id = selectableCheck[i].closest('tr').dataset.idrelacion;
+									if (idrelacionNow != id) {
+										selectableCheck[i].checked = false;
+									}
+								}
+							});
+
+							searchingContact(htmlObject);
+
+						}
+					}
+				});
+			}
+		};
+
+		(function() {
+			$('.related-container-add').button({icons: {primary: 'ui-icon-circle-plus'}, text: true });
+			related.get();
+		})();
+
+	</script>
+
+  </head>
+  <body>    
+    <section class="sheet">
+		<div style="margin:10px;" id="related-container">
+			<button class="related-container-add" style="margin:10px 0 10px 0;" onclick="related.add();"><span style="font-size:10px;font-weight:bold;">Agregar</span></button>
+			<table>
+				<thead>
+					<tr>
+						<th>Nombre</th>
+						<th>Cargo</th>						
+						<th>Fono</th>
+						<th>Email</th>
+						<th>Observación</th>
+						<th>Por defecto</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</div>
+    </section>
+  </body>
+</html>
+

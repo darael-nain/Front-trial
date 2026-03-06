@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_getUsuariosActivos-->
+		<title>Permisos</title>
+		<meta charset="utf-8">
+		    <script type="text/javascript" src="/v3/views/ajustes/parametros/areasMany/areas.js"></script>
+		    <style type="text/css">
+		    	.selectedTr{
+		    		background-color: gold !important;
+		    		font-weight: bold;
+		    	}
+		    </style>
+		<script type="text/javascript">
+			unaBase.ready(()=>{
+				$(`tbody.usuarios tr`).click(function(){
+					
+					$(this).toggleClass("selectedTr");
+					// $(this).find(`input[type="checkbox"]`).prop("checked", !$(this).find(`input[type="checkbox"]`).prop("checked"));
+					// $(this).find(`input[type="checkbox"]`).click();
+					// const isChecked = $(this).find(`input[type="checkbox"]`).prop("checked");
+					// $(this)[isChecked ? "addClass" : "removeClass"]("selectedTr");
+				});
+
+				// $(`tbody.usuarios tr`).click(function(){
+				// 	$(this).toggleClass("selectedTr");
+				// });
+				$(`li[data-name="selectUsersForArea"]`).hide();
+
+				fetch(`/4DACTION/_v3_getAreasNegocio?activo=true`)
+				.then(response => {
+					return response.json()
+				})
+				.then(data => {
+					const container = $('.sheet-areas tbody.areas');
+					// 
+					data.rows.forEach( item => {
+
+						let tr = $(`
+									<tr data-id=${item.id}  >					
+										<td  class="descripcion_centrocosto">${item.descripcion_centrocosto} </td>
+									</tr>
+									`);
+
+
+						container.append(tr);
+			
+						tr.click(function(){
+							$(this).toggleClass("selectedTr");
+						});
+					
+					})
+				})
+				unaBase.ui.unblock();
+			});
+			var areas = {
+				getSelectedAreas(){
+					let result = {
+						ids: [],
+						lines: [],
+						idsText: ""
+					}
+					// let ids = []		
+					// let accessLines = []		
+			        const accessSeleted = document.querySelectorAll(`tbody.areas tr.selectedTr`);
+			        accessSeleted.forEach(access => {
+			        	result.ids.push(access.dataset.id);
+			        	result.idsText += `${access.dataset.id}/`;
+			        	result.lines.push(`${access.querySelector(`td.descripcion_centrocosto`).innerHTML}`);
+			        });
+			        return result;
+				},
+				getSelectedUser(){
+					let result = {
+						ids: [],
+						lines: [],
+						idsText: ""
+					}
+					// let ids = []		
+					// let accessLines = []		
+			        const accessSeleted = document.querySelectorAll(`tbody.usuarios tr.selectedTr`);
+			        accessSeleted.forEach(access => {
+			        	result.ids.push(access.dataset.user);
+			        	result.idsText += `${access.dataset.user}/`;
+			        	result.lines.push(`${access.querySelector(`td.user`).innerHTML} / ${access.querySelector(`td.name`).innerHTML}`);
+			        });
+			        return result;
+				}
+			}
+
+			// var set_access = function(id, login, estado){
+			// 	var modulo =  $('#sheet-usuarios').data('modulo');
+			// 	$.ajax({
+			// 		url: '/4DACTION/_V3_setPermisosUsuarios',
+			// 		data: {
+			// 			"permisos[id]" : id,
+			// 			"permisos[login]": login,
+			// 			"permisos[estado]": estado,
+			// 			"permisos[modulo]": modulo
+			// 		},
+			// 		dataType: 'json',
+			// 		type: 'POST',
+			// 		success: function(data) {
+			// 			if (data.success) {
+			// 				toastr.success(NOTIFY.get('SUCCESS_SAVE'));
+			// 				var percent = $('#accordion_ > div[data-option="'+login+'"] > p');
+			// 				percent.find('span[data-percent="general"] > strong').text(data.general_percent);
+			// 				percent.find('span[data-percent="modulo"] > strong').text(data.modulo_percent);
+
+			// 			}else{
+			// 				toastr.error(NOTIFY.get('ERROR_RECORD_READONLY', 'Error'));
+			// 			}
+			// 		},
+			// 		error: function(data) {
+			// 			toastr.error(NOTIFY.get('ERROR_INTERNAL'));
+			// 		}
+			// 	});
+			// }
+
+		
+
+			// function checkTodos()
+			//         {
+			//             $(".check").each(function(){
+			//                 $(this).prop('checked',true);
+			//             });
+			// }
+
+		</script>
+
+	</head>
+	<body>
+		<section class="sheet sheet-usuarios css-main" >
+
+			<footer>
+				<article>
+					<h1>Permisos</h1>			
+					<ul>
+						<li>
+							<table>
+								<thead>
+									<tr>
+
+										<th>Id</th>
+										<th>Modulo</th>
+										<th>Funcion</th>
+										<th>Descripcion</th>
+									</tr>
+								</thead>
+								<tbody class="usuarios">
+									<!--#4DLOOP aLogin-->
+									<tr  data-user="<!--#4DVAR aLogin{aLogin}-->" >
+
+										
+										<td data-user="<!--#4DVAR aLogin{aLogin}-->" class="user"><!--#4DVAR aLogin{aLogin}--></td>
+										<td class="name"><!--#4DVAR aName{aLogin}--></td>
+										<td class="email"><!--#4DVAR aEmail{aLogin}--></td>
+
+
+									<!--#4DENDLOOP-->
+									</tr>
+								</tbody>
+					  			<tfoot></tfoot>
+							</table>
+
+
+						</li>
+					</ul>
+
+				</article>
+
+			</footer>
+		</section>
+		<section class="sheet sheet-areas  css-main" style="display: none;">
+
+			<footer>
+				<article>
+					<h1>Areas</h1>			
+					<ul>
+						<li>
+							<table>
+								<thead>
+									<tr>
+
+										<th>centro de costo</th>
+									</tr>
+								</thead>
+								<tbody class="areas">
+								
+								</tbody>
+					  			<tfoot></tfoot>
+							</table>
+
+
+						</li>
+					</ul>
+
+				</article>
+
+			</footer>
+		</section>
+	</body>
+</html>

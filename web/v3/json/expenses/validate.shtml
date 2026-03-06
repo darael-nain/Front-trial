@@ -1,0 +1,21 @@
+{
+	"total_expenses": <!--#4DTEXT total_expenses-->,
+	"rows": [
+	<!--#4DLOOP doc_id-->
+		{	
+			"id": <!--#4DTEXT doc_id{doc_id}-->,
+			"number": "<!--#4DTEXT doc_number{doc_id}-->",
+			"criterios_oc": "<!--#4DTEXT $criterios_oc{doc_id}-->",
+			"date": "<!--#4DTEXT $date{doc_id}-->",
+			"type": "<!--#4DTEXT doc_type{doc_id}-->",
+			"business_id": <!--#4DHTML business_id{doc_id}-->,
+			"business_name": "<!--#4DHTML _V3_escapeString(business_name{doc_id})-->",
+			"request_user": "<!--#4DHTML _V3_escapeString(request_users{doc_id})-->",
+			"clients": "<!--#4DHTML _V3_escapeString(clients{doc_id})-->",
+			"business_many": <!--#4DIF business_many{doc_id}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"business_number": <!--#4DHTML business_number{doc_id}-->,
+			"total": "<!--#4DHTML String(doc_total{doc_id};"###.###.###.##0")-->"
+		}<!--#4DIF NOT(doc_id{doc_id} = doc_id{Size of array(doc_id)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

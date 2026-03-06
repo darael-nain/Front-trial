@@ -1,0 +1,14 @@
+{
+	"success": <!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"ocbs": [
+<!--#4DLOOP aIdOcbCreadas-->
+		{
+			"id": <!--#4DHTML aIdOcbCreadas{aIdOcbCreadas}-->,
+			"folio": "<!--#4DHTML aFoliosOcbCreadas{aIdOcbCreadas}-->",
+			"prov": "<!--#4DHTML _V3_escapeString(aProvOcbCreadas{aIdOcbCreadas})-->",
+			"referencia": "<!--#4DHTML _V3_escapeString(aRefOcbCreadas{aIdOcbCreadas})-->",
+			"monto": <!--#4DHTML String(aMontosOcbCreadas{aIdOcbCreadas};"&xml")-->
+		}<!--#4DIF NOT(aIdOcbCreadas{aIdOcbCreadas} = aIdOcbCreadas{Size of array(aIdOcbCreadas)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

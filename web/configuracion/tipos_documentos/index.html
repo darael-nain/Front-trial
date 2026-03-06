@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Last-Modified" content="0">
+    <meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <title>Tipo Documento</title>
+
+    <!-- 🔒 GUARD: oculta todo y solo muestra si (1) iframe same-origin + (2) login OK -->
+    <style>
+        html.guard-hide body {
+            display: none !important;
+        }
+    </style>
+    <script>
+        (function guard() {
+            // Oculta todo por defecto (evita que se vea contenido antes del check)
+            document.documentElement.classList.add("guard-hide");
+
+            const deny = () => {
+                // “No aparece nada”: dejamos el body vacío + oculto
+                try { if (document.body) document.body.innerHTML = ""; } catch (_) { }
+                // mantenemos guard-hide activo
+            };
+
+            const allow = () => {
+                document.documentElement.classList.remove("guard-hide");
+            };
+
+            // 1) Debe estar embebido en iframe (si lo abres directo en pestaña => DENY)
+            let isInIFrame = false;
+            try {
+                isInIFrame = (window.self !== window.top);
+            } catch (e) {
+                // Si falla acceder a top, asumimos cross-origin => DENY abajo
+                isInIFrame = true;
+            }
+            if (!isInIFrame) return deny();
+
+            // 2) El parent debe ser same-origin (si no => DENY)
+            try {
+                if (window.top.location.origin !== window.location.origin) return deny();
+            } catch (e) {
+                return deny();
+            }
+
+            // 3) Debe estar logeado (reusa tu misma lógica)
+            const checkUrl =
+                `${window.origin}/4DACTION/_v3_checkLogin?nodeUrl=${encodeURIComponent("https://frank.unabase.com/node")}`;
+
+            fetch(checkUrl, { credentials: "include", cache: "no-store" })
+                .then(r => r.ok ? r.json() : Promise.reject(r))
+                .then(data => {
+                    if (!data || !data.isLogin || data.login == null) return deny();
+                    // OK: recién aquí mostramos
+                    allow();
+                })
+                .catch(() => deny());
+        })();
+    </script>
+    <!-- 🔒 FIN GUARD -->
+</head>
+
+
+<style>
+    body {
+        margin: 0px;
+        width: 100%;
+        height: 100vh;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        position: relative;
+        padding-top: 10px;
+    }
+
+    .btn {
+        color: #8e8e8e6c;
+        width: 100px;
+        box-sizing: border-box;
+        border-radius: 5px;
+        transition: 0.3s;
+        transform-origin: left;
+        text-decoration: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        font-family: 'Open Sans', sans-serif !important;
+    }
+
+    .btn:hover {
+        color: #bcc0c2;
+        transition: 0.3s;
+    }
+    
+    .btn:hover .arrow-left {
+        fill: #bcc0c2;
+        transition: 0.3s;
+    }
+
+    #mi-marco {
+        border: none;
+        height: calc(100vh - 44px - 20px);
+        box-sizing: border-box;
+    }
+
+    .loader {
+        width: 100%;
+        height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-direction: column;
+        gap: 20px;
+        position: absolute;
+        top: 100px;
+    }
+
+    .loader__text {
+        font-size: 20px;
+        color: #0BCF0B;
+        font-family: 'Open Sans', sans-serif !important;
+        font-weight: bold;
+    }
+
+    .arrow-left {
+        fill: #8e8e8e6c;
+        transition: 0.3s;
+    }
+</style>
+
+<body>
+    <a class="btn" href="/configuracion/index.shtml" role="button">
+        <svg class="arrow-left" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+            <path
+                d="M512 256A256 256 0 1 0 0 256a256 256 0 1 0 512 0zM231 127c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-71 71L376 232c13.3 0 24 10.7 24 24s-10.7 24-24 24l-182.1 0 71 71c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0L119 273c-9.4-9.4-9.4-24.6 0-33.9L231 127z" />
+        </svg>
+        <span>Volver</span>
+    </a>
+    <iframe id="mi-marco" name="mi-marco" src="about:blank"></iframe>
+    <div class="loader">
+        <svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px" y="0px" width="60px" height="60px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;"
+            xml:space="preserve">
+            <path fill="#0BCF0B"
+                d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z">
+                <animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25"
+                    to="360 25 25" dur="0.6s" repeatCount="indefinite" />
+            </path>
+        </svg>
+        <div class="loader__text">
+            Cargando
+        </div>
+    </div>
+
+    <script type="text/javascript" src="/configuracion/script/tipo_documento.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,47 @@
+{
+	"project": [
+	  <!--#4DLOOP aIdProyect-->
+	  {
+		"totales_globales": {
+		  "id": "<!--#4DHTML aIdProyect{aIdProyect}-->",
+		  "nombre": "<!--#4DHTML aNameProyect{aIdProyect}-->",
+		  "budget": "<!--#4DHTML aBudget{aIdProyect}-->",
+		  "spent": "<!--#4DHTML aSpent{aIdProyect}-->",
+		  "commitments": "<!--#4DHTML aCommitments{aIdProyect}-->",
+		  "costToDate": "<!--#4DHTML aCostToDate{aIdProyect}-->",
+		  "estimateToComplete": "<!--#4DHTML aEstimateToComplete{aIdProyect}-->",
+		  "efc": "<!--#4DHTML aEfc{aIdProyect}-->",
+		  "variance": "<!--#4DHTML aVariance{aIdProyect}-->"
+		},
+		"totales_negocio": [
+		  <!--#4DLOOP aIdNegocio-->
+		  <!--#4DIF aNegocioProyecto{aIdNegocio}=aIdProyect{aIdProyect}-->
+		  {
+			"id_negocio": "<!--#4DHTML aIdNegocio{aIdNegocio}-->",
+			"nombre_negocio": "<!--#4DHTML aNameNegocio{aIdNegocio}-->",
+			"budget_negocio": "<!--#4DHTML aBudgetNegocio{aIdNegocio}-->",
+			"spent_negocio": "<!--#4DHTML aSpentNegocio{aIdNegocio}-->",
+			"commitments_negocio": "<!--#4DHTML aCommitmentsNegocio{aIdNegocio}-->",
+			"costToDate_negocio": "<!--#4DHTML aCostToDateNegocio{aIdNegocio}-->",
+			"estimateToComplete_negocio": "<!--#4DHTML aEstimateToCompleteNegocio{aIdNegocio}-->",
+			"efc_negocio": "<!--#4DHTML aEfcNegocio{aIdNegocio}-->",
+			"variance_negocio": "<!--#4DHTML aVarianceNegocio{aIdNegocio}-->"
+		  }<!--#4DIF NOT(aIdNegocio{aIdNegocio}=aIdNegocio{Size of array(aIdNegocio)})-->,<!--#4DENDIF-->
+		  <!--#4DENDIF-->
+		  <!--#4DENDLOOP-->
+		]
+	  }<!--#4DIF NOT(aIdProyect{aIdProyect}=aIdProyect{Size of array(aIdProyect)})-->,<!--#4DENDIF-->
+	  <!--#4DENDLOOP-->
+	],
+	"tipos_cambio": [
+	  <!--#4DLOOP aTipoCambio_cont-->
+	  {
+		"cont": "<!--#4DHTML aTipoCambio_cont{aTipoCambio_cont}-->",
+		"id_nv": "<!--#4DHTML aTipoCambio_idnv{aTipoCambio_cont}-->",
+		"codigo": "<!--#4DHTML aTipoCambio_codigo{aTipoCambio_cont}-->",
+		"valor": "<!--#4DHTML aTipoCambio_valor{aTipoCambio_cont}-->"
+	  }<!--#4DIF NOT(aTipoCambio_cont{aTipoCambio_cont}=aTipoCambio_cont{Size of array(aTipoCambio_cont)})-->,<!--#4DENDIF-->
+	  <!--#4DENDLOOP-->
+	]
+  }
+  

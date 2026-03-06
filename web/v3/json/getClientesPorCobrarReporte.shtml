@@ -1,0 +1,32 @@
+{
+	"total_por_cobrar" : <!--#4DTEXT String(totalPorCobrar;"&xml")-->,
+	"cliente_por_cobrar" : <!--#4DTEXT String(clientes_por_cobrar;"&xml")-->,
+	"por_cobrar": [
+		<!--#4DLOOP aPorCobrarClienteId-->
+		{
+			"id": <!--#4DTEXT String(aPorCobrarClienteId{aPorCobrarClienteId};"&xml")-->,
+			"cliente": "<!--#4DHTML _V3_escapeString(aPorCobrarClienteName{aPorCobrarClienteId})-->",
+			"cantidad": <!--#4DTEXT String(aPorCobrarCantidad{aPorCobrarClienteId};"&xml")-->,
+			"monto": <!--#4DTEXT String(aPorCobrarMonto{aPorCobrarClienteId};"&xml")-->,
+			"nombre_cont_rel": "<!--#4DHTML _V3_escapeString(aNombreContactoRel{aPorCobrarClienteId})-->",
+			"email_cont_rel": "<!--#4DTEXT String(aEmailContactoRel{aPorCobrarClienteId};"&xml")-->",
+			"telefono_cont_rel": "<!--#4DTEXT String(aTelefonContactoRel{aPorCobrarClienteId};"&xml")-->",
+			"cargo_cont_rel": "<!--#4DTEXT String(aCargoContactoRel{aPorCobrarClienteId};"&xml")-->",
+			"email": "<!--#4DTEXT String(aEmailEmpresa{aPorCobrarClienteId};"&xml")-->",
+			"telefono": "<!--#4DTEXT String(aTelefonoEmpresa{aPorCobrarClienteId};"&xml")-->",
+			"vencimiento": "<!--#4DTEXT aPorCobrarVencimiento{aPorCobrarClienteId}-->"
+		}<!--#4DIF NOT(aPorCobrarClienteId{aPorCobrarClienteId} = aPorCobrarClienteId{Size of array(aPorCobrarClienteId)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	],
+	"currency" : {
+		"code" : "<!--#4DTEXT _V3_defaultCurrencyCode-->",
+		"name" : "<!--#4DTEXT _V3_defaultCurrencyName-->",
+		"symbol" : "<!--#4DTEXT _V3_defaultCurrencySymbol-->",
+		"right" : <!--#4DIF _V3_defaultCurrencyRight-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+		"decimal": <!--#4DTEXT _V3_defaultCurrencyDecimals-->,
+		"decimal_sep": "<!--#4DTEXT _V3_defaultCurrencyDecimalSep-->",
+		"thousand_sep" : "<!--#4DTEXT _V3_defaultCurrencyThousandSep-->",
+		"decimal_text_excel" : "<!--#4DTEXT _V3_defaultCurrencyDecimalsText-->",
+		"format_code_excel" : "<!--#4DTEXT _V3_defaultCurrencyFormatCode-->"
+	}
+}

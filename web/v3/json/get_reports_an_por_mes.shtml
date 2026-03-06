@@ -1,0 +1,10 @@
+{
+	"ventas": [
+		<!--#4DLOOP ameses-->["<!--#4DHTML _V3_escapeString(ameses{ameses})-->",<!--#4DHTML String(aventa{ameses};"&xml")-->]<!--#4DIF NOT(ameses{ameses} = ameses{Size of array(ameses)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	],
+	"gastos": [
+		<!--#4DLOOP ameses-->["<!--#4DHTML _V3_escapeString(ameses{ameses})-->",<!--#4DHTML String(agasto{ameses};"&xml")-->]<!--#4DIF NOT(ameses{ameses} = ameses{Size of array(ameses)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	]
+}

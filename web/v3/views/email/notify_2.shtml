@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<!--#4DSCRIPT/_V3_proxy_getInfoEmpresaPro-->
+	<!--#4DSCRIPT/_V3_proxy_getParametros-->
+	<head>
+		<title>Notificación Inbox</title>
+	</head>
+	<body style="font-family:sans-serif;text-align:center">
+		<div style="margin:0;padding:0;">
+			<h2 data-subject style="display:none!important;"><span data-from-name></span> <span data-document></span> Nº <span data-index></span> / <span data-title></span></h2>
+			<div style="margin:auto;width:100%!important;display:relative">
+				<h1 style="max-width: 141px; max-height: 141px;"><img src="<!--#4DTEXT vUrlImagenLogo-->" width="<!--#4DTEXT vAnchoPicturePromedio-->" height="<!--#4DTEXT vAltoPicturePromedio-->" style="max-width: 500px; max-height: 90px;"></h1>
+				<div style="border:1px solid #f0f0f0;padding:0px">
+					<header style="position: relative; height:60px;background-color:rgb(67,175,124)!important">
+						<span style="display:inline-block;color:white;font-size:15px;margin:20px 0 0 15px">Solicitud de Validación para la <span data-document></span> Nº <span data-index></span></span>
+					</header>
+					<section style="margin:0!important;padding:0!important">
+						<p data-extra style="margin:0!important;padding:0!important"></p>
+						<!--4DIF [Parametros]v3_activar_envio_link_correo--><!--<p>Para proceder con la validación, favor ingresar <a data-href>aquí</a>.</p>--><p style="margin:20px!important;text-align:center">Para ingresar al documento, <a data-href>haz clic aquí</a>.</p><!--4DENDIF-->
+					</section>
+				</div>
+				<div style="margin:5px!important;color:gray">La información entregada en este email se encuentra actualizada al <span data-date></span>, a las <span data-time></span> horas.</div>
+				<footer style="text-align:left;margin-top:40px!important">
+					<div><img style="height: 40px;" src="cid:logo.png" alt="UNA Base" height="40"></div>
+					<div>Email generado vía <a href="http://www.unabase.cl/">UnaBase</a> - Software de Gestión</span></div>
+				</footer>
+			</div>
+		</div>
+	</body>
+</html>

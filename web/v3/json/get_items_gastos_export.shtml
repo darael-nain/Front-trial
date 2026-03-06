@@ -1,0 +1,53 @@
+{
+	"rows": [
+<!--#4DLOOP aIndex-->
+		{
+			"folio_factura": "<!--#4DHTML a14{aIndex}-->",
+			"fecha_factura": "<!--#4DHTML String(a15{aIndex};7)-->",
+			"nro_negocio": "<!--#4DHTML a16{aIndex}-->",
+			"cliente_negocio": "<!--#4DHTML _V3_escapeString(a17{aIndex})-->",
+			"folio_oc": "<!--#4DHTML a1{aIndex}-->",
+			"fecha_oc": "<!--#4DHTML String(a2{aIndex};7)-->",		
+			"forma_pago_oc": "<!--#4DHTML _V3_escapeString(a20{aIndex})-->",
+			"fecha_vcto_oc": "<!--#4DHTML String(a21{aIndex};7)-->",
+			"proveedor_oc": "<!--#4DHTML _V3_escapeString(a3{aIndex};7)-->",			
+			"referencia_oc": "<!--#4DHTML _V3_escapeString(a4{aIndex})-->",
+			"referencia_neg": "<!--#4DHTML _V3_escapeString(aRefNegocio{aIndex})-->",
+			"tipo_doc_oc": "<!--#4DHTML _V3_escapeString(a5{aIndex})-->",
+			"neto_oc": <!--#4DHTML String(a6{aIndex};"&xml")-->,
+			"exento_oc": <!--#4DHTML String(aTotalExentoOc{aIndex};"&xml")-->,
+			"impuesto_oc": <!--#4DHTML String(a7{aIndex};"&xml")-->,
+			"adicional_oc": <!--#4DHTML String(aTotalAdicionalOc{aIndex};"&xml")-->,
+			"total_oc": <!--#4DHTML String(a8{aIndex};"&xml")-->,
+			"por_justificar_oc": <!--#4DHTML String(a9{aIndex};"&xml")-->,
+			"justificado_oc": <!--#4DHTML String(a10{aIndex};"&xml")-->,
+			"abono_oc": <!--#4DHTML String(a11{aIndex};"&xml")-->,
+			"saldo_oc": <!--#4DHTML String(a12{aIndex};"&xml")-->,
+			"estado_oc": "<!--#4DHTML _V3_escapeString(a13{aIndex})-->",			
+			"tipo_oc": "<!--#4DHTML _V3_escapeString(a18{aIndex})-->",
+			"proyecto_clasificacion": "<!--#4DHTML _V3_escapeString(a19{aIndex})-->",
+			"emisor_oc": "<!--#4DHTML _V3_escapeString(a22{aIndex})-->",
+			"item_asociado": "<!--#4DHTML _V3_escapeString(a23{aIndex})-->",
+			"item_categoria": "<!--#4DHTML _V3_escapeString(aItemCategoriaCompra{aIndex})-->",
+			"valor_venta_item_asociado": <!--#4DHTML String(a24{aIndex};"&xml")-->,
+			"items_cant_compra": "<!--#4DHTML aItemCantCompra{aIndex}-->",
+			"items_precio_compra": <!--#4DHTML String(aItemPrecioCompra{aIndex};"&xml")-->,
+			"items_subtotal_compra": <!--#4DHTML String(aItemSubtotalCompra{aIndex};"&xml")-->,
+			"items_descuento_compra": <!--#4DHTML String(aItemDescuentoCompra{aIndex};"&xml")-->,
+			"items_total_compra": <!--#4DHTML String(aItemTotalCompra{aIndex};"&xml")-->
+		}<!--#4DIF NOT(aIndex{aIndex} = aIndex{Size of array(aIndex)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	],
+	"currency" : {
+	    "code" : "<!--#4DTEXT _V3_defaultCurrencyCode-->",
+	    "name" : "<!--#4DTEXT _V3_defaultCurrencyName-->",
+	    "symbol" : "<!--#4DTEXT _V3_defaultCurrencySymbol-->",
+	    "right" : <!--#4DIF _V3_defaultCurrencyRight-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	    "decimal": <!--#4DTEXT _V3_defaultCurrencyDecimals-->,
+	    "decimal_sep": "<!--#4DTEXT _V3_defaultCurrencyDecimalSep-->",
+	    "thousand_sep" : "<!--#4DTEXT _V3_defaultCurrencyThousandSep-->",
+	    "decimal_text_excel" : "<!--#4DTEXT _V3_defaultCurrencyDecimalsText-->",
+	    "format_code_excel" : "<!--#4DTEXT _V3_defaultCurrencyFormatCode-->",
+	    "label_rut" : "<!--#4DTEXT country_label_rut-->"
+	}
+}

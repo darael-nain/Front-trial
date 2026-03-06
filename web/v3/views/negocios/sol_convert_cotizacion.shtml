@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<!--#4DSCRIPT/_V3_proxy_solConvertCotizacion-->
+<html>
+<head>   
+    <title>Validación modificación del negocio</title>
+	<meta charset="utf-8">
+    <script>	    
+		$(document).ready(function() {		
+
+			var container = $('#sheet-sol_convert_cot');
+			unaBase.toolbox.init();
+			unaBase.toolbox.menu.init({
+				entity: 'Permisos',
+				buttons: ['sol_convert_cot'],
+				data: function(){     
+				  return $('#sheet-sol_convert_cot').serializeAnything();            
+				},
+				validate:function(){
+				  return true;
+				}    
+			});
+
+			/*var descripcion = "Solicito modificar el negocio, por favor revisar mi solicitud. Muchas gracias!";
+			container.find('textarea').val(descripcion);*/
+
+			setTimeout(function() {
+				var cant = parseInt($('#sheet-sol_convert_cot').data('validators'));
+				if (cant==0) {
+					$('.ui-dialog-content').dialog('close');
+					var msj = 'No cuentas con permiso para realizar cambios en el Negocio. Por favor comuníquese con "soporte@una.cl". Gracias!';
+					alert(msj);
+				}				
+			}, 1);
+
+		});		
+    </script>
+    <style>
+		#sheet-sol_convert_cot > textarea{
+			width:calc(100% - 10px);
+			height:200px;
+			font-size:12px!important;
+		}
+		#sheet-sol_convert_cot > article{		
+			padding:5px;
+		}
+		#sheet-sol_convert_cot > article > h2{
+			font-size:12px;
+			font-weight:bold;
+		}		
+		#sheet-sol_convert_cot > article > ul li{
+			font-size:12px;
+			list-style-type:square!important;
+			margin:3px!important;
+			text-transform: capitalize;
+		}
+    </style>
+</head>
+<body>
+	<section class="sheet" id="sheet-sol_convert_cot" data-validators="<!--#4DTEXT vCantValidators-->" data-folio="<!--#4DTEXT vIdNeg-->" data-id="<!--#4DTEXT vIdNv-->">
+		<article>
+			<h2>Para realizar cambios, se requiere la validación de uno de los responsables:</h2>
+			<!--<h2>La modificación del negocio debe ser validada por uno de los responsables:</h2>-->
+			<ul>
+				<!--#4DLOOP aNameValidators-->
+				<li data-email="<!--#4DTEXT aEmailValidators{aNameValidators}-->">- <!--#4DTEXT aNameValidators{aNameValidators}--></li>
+				<!--#4DENDLOOP-->
+			</ul>
+		</article>		
+		<textarea name="comment" placeholder="Por favor especifique el motivo del cambio...(es necesario)"></textarea>	
+	</section>
+</body>
+</html>

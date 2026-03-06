@@ -1,0 +1,15 @@
+{
+	"rows": 
+	[
+		<!--#4DLOOP aMultipleImpId -->
+		{
+			"id": <!--#4DHTML aMultipleImpId{aMultipleImpId}-->,
+			"name": "<!--#4DHTML aMultipleImpName{aMultipleImpId}-->",
+			"id_name": "<!--#4DHTML String(aMultipleImpIdName{aMultipleImpId})-->",
+			"value": "<!--#4DHTML aMultipleImpValue{aMultipleImpId}-->",
+			"tipo": "<!--#4DHTML String(aMultipleImpTipo{aMultipleImpId})-->",
+			"estado": "<!--#4DHTML aMultipleImpEstado{aMultipleImpId}-->"
+		}<!--#4DIF NOT(aMultipleImpId{aMultipleImpId} = aMultipleImpId{Size of array(aMultipleImpId)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	]
+}

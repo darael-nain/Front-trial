@@ -1,0 +1,32 @@
+<h2>Participantes :
+    <span class="etiqueta-int">Integrantes</span> <span>/</span>
+    <span class="etiqueta-inv">Invitados</span>
+</h2>
+
+<div class="link-select">
+    <a id="todo-part" href="#">Seleccionar todo</a>
+    <a id="ninguno-part" href="#">Ninguno</a>
+</div>
+
+<div id="container-pop-participantes">
+    <!--#4DVAR vHtml-->
+</div>
+
+<h2>Otros</h2>
+<div class="invitados">
+    <div class="guest-box-suggest">
+        <input id="guest-name" placeholder="Nombre" type="text"/>
+        <div class="guest-list-suggest" id="guest-list-suggest-name"></div>
+    </div>
+
+    <div class="guest-box-suggest">
+        <input id="guest-email" placeholder="Correo" type="text"/>
+        <div class="guest-list-suggest" id="guest-list-suggest-email"></div>
+    </div>   
+    <button type="button" id="add-invitado">Agregar </button>
+</div>
+
+<p class="set-botones-pop">
+    <button title="Cancelar" id="close-modal" type="button">Cancelar</button>
+    <button title="Aceptar" id="aceptar-participantes" type="button">Aceptar</button>    
+</p>

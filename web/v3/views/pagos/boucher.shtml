@@ -1,0 +1,411 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <!--#4DSCRIPT/_v3_print_cheque_boucher-->
+    <meta charset="utf-8"/>
+    <script src="/v3/script/jquery/jquery.js"></script>
+    <!-- <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700' rel='stylesheet' type='text/css'> -->
+    <link rel="stylesheet" media="print" href="/v3/design/print.css"/>
+    <title>Comprobante de pago - voucher</title>
+    <style>
+      @media print {
+        body {
+          font-family: 'Open Sans', sans-serif !important;
+          font-size:18px;
+        }
+      }
+
+      html{
+        overflow-x: hidden;
+      }
+
+      header, section, article, footer{
+        display:block;
+        padding:0px;
+        margin:10px;
+        position: relative;
+      }
+
+      table {
+          border-collapse: collapse;
+      }
+        th, td {
+          padding:5px;
+          border: 1px solid lightgray;
+          vertical-align: middle;
+        }
+
+      .address{
+        text-transform: uppercase;
+        color:gray;
+        margin: 5px 0 0 10px;
+      }
+
+      section > article{
+        border-top: 2px solid lightgray;
+      }
+        section > article h2{
+          font-size:17px;
+        }
+
+      h1, h2, h3, h4, h5{
+        text-decoration: underline;
+        text-transform: uppercase;
+      }
+
+      h3{
+        color: gray;
+        font-size:15px;
+        text-decoration:none;
+      }
+
+      h4{
+        color: gray;
+        font-size:15px;
+      }
+
+      hr{
+         color: #0056b2!important;
+      }
+
+      footer{
+        text-align: center;
+      }
+        footer > div{
+          display: inline-block;
+          text-align: auto;
+          margin: 10px;
+        }
+          footer > div hr{
+            width: 300px!important;
+          }
+          footer > div > table{
+            width:300px!important;
+          }
+            footer > div > table td{
+              text-align:left!important;
+            }
+        footer > article{}
+          footer > article > div{
+             position:absolute!important;
+          }
+            footer article div:nth-child(1){ /* monto */
+              top:80px!important;
+              right:10px!important;
+            }
+            footer article div:nth-child(2){ /* fecha */
+              top:160px!important;
+              right:40px!important;
+              text-transform: uppercase;
+            }
+            footer article div:nth-child(3){ /* razon */
+              top:200px!important;
+              left:350px!important;
+              text-transform: uppercase;
+            }
+            footer article div:nth-child(4){ /* cadena */
+              top:250px!important;
+              left:340px!important;
+              text-transform: uppercase;
+            }
+            footer article > div.line{
+              border:1px solid black;
+              width:500px;
+              webkit-transform:rotate(-45deg);
+            }
+            footer article div:nth-child(5){
+              top:250px!important;
+              left:200px!important;
+            }
+            footer article div:nth-child(6){
+              top:300px!important;
+              left:200px!important;
+            }
+
+      header{}
+         header > h1{
+          font-weight:normal;
+          text-align:center;
+          text-transform: uppercase;
+          font-size:20px;
+        }
+        header > .logo{
+          max-width:150px!important;
+          max-height:150px!important;
+          padding:10px;
+          position:absolute;
+          top:10px!important;
+          right:100px!important;
+        }
+
+      label {
+        font-weight:bold!important;
+        text-align: right;
+      }
+
+      .info{
+        margin-top:5px;
+      }
+        .info td:nth-child(1), .info td:nth-child(3){
+          font-weight: bold!important;
+          text-align:right!important;
+          border: none;
+        }
+        .info td:nth-child(2), .info td:nth-child(4){
+          text-align:left;
+          text-transform: uppercase;
+          border: none;
+        }
+
+      .list{
+        border: 1px solid lightgray;
+        /*height:220px;*/
+      }
+        .list table{
+          width: 100%;
+        }
+          .list > table th{
+            background-color: lightgray;
+            color:black;
+            text-align: center;
+          }
+          .list > table td {
+             /*color:gray;*/
+             font-size: 15px;
+          }
+          .list > table tbody > tr > td {
+             /*text-align: center;*/
+          }
+          .list > table tbody td:nth-child(5),
+          .list > table tbody td:nth-child(6),
+          .list > table tbody td:nth-child(7) {
+             text-align:right!important;
+          }
+
+        /*  .maximotam{
+            max-width:500px;
+          }*/
+
+          .dinamico{
+            /*border: 1px solid red;*/
+            height: 300px;
+          }
+
+          .left{
+            text-align: left!important;
+          }
+
+    </style>
+</head>
+<body>
+<div id="ch">
+  <header>
+    <h1>COMPROBANTE DE PAGO - VOUCHER</h1>
+    <div class="address">
+      <div><!--#4DTEXT razonPropietaria--></div>
+      <div><!--#4DTEXT direccionPropietaria-->, <!--#4DTEXT comunaPropietaria--></div>
+      <div><!--#4DTEXT telefonoPropietaria--></div>
+    </div>
+    <img class="logo" src="<!--#4DTEXT vUrlImagenLogo-->" width="<!--#4DTEXT Num(vAnchoPicture)*2-->">
+  </header><br>
+
+  <section>
+
+     <article>
+      <h2>Datos del pago</h2>
+      <table class="info">
+        <tr>
+          <td>Número:</td>
+          <td><!--#4DTEXT nro_op--></td>
+          <td>Total:</td>
+          <td><!--#4DTEXT monto_op--> <!--#4DIF isOtraMoneda--><span>(Cambio: <!--#4DTEXT valorCambioOP-->)</span><!--#4DENDIF--></td>
+        </tr>
+        <tr>
+          <td>Proveedor:</td>
+          <td colspan="3"><!--#4DTEXT emitido_a--></td>
+        </tr>
+        <tr>
+          <td>Emitida por:</td>
+          <td><!--#4DTEXT emisor_op--></td>
+          <td>Fecha de pago:</td>
+          <td><!--#4DTEXT fecha_op--></td>
+        </tr>
+      </table>
+    </article>
+
+     <article>
+      <!--#4DIF cantidaddoc > 0-->
+        <!--#4DIF tipo_pago="CHEQUE"--><h2>Datos del cheque</h2><!--#4DENDIF-->
+        <!--#4DIF tipo_pago="TRANSFERENCIA"--><h2>Datos de la transferencia </h2><!--#4DENDIF-->
+        <!--#4DIF tipo_pago="DEPOSITO"--><h2>Datos del depósito</h2><!--#4DENDIF-->
+        <!--#4DIF tipo_pago="EFECTIVO"--><h2>Datos del pago en efectivo</h2><!--#4DENDIF-->
+        <table class="info">
+          <tr>
+            <td>Número:</td>
+            <td><!--#4DTEXT nro_pago--></td>
+            <td>Total pago:</td>
+            <td><!--#4DTEXT monto_pago--></td>
+          </tr>
+          <tr>
+            <td>Emitida por:</td>
+            <td><div class="maximotam"><!--#4DTEXT emisor_pago--></div></td>
+            <td>Fecha de pago:</td>
+            <td><!--#4DTEXT fecha_pago--></td>
+          </tr>
+          <tr>
+            <td colspan="3">Cargo a la cuenta de origen:</td>
+            <td><!--#4DTEXT cuenta_pago--></td>
+          </tr>
+        </table>
+
+        <h4>Cuenta bancaría del proveedor (Destino)</h4>
+        <table class="info">
+          <tr>
+            <td>Emitido a:</td>
+            <td colspan="3"><!--#4DTEXT emitido_a--></td>
+          </tr>
+          <tr>
+            <td>Banco:</td>
+            <td><!--#4DTEXT prov_banco--></td>
+          </tr>
+           <tr>
+            <td>Tipo cuenta:</td>
+            <td><!--#4DTEXT prov_tipo_cuenta--></td>
+          </tr>
+          <tr>
+            <td><!--#4DTEXT country_label_rut-->:</td>
+            <td colspan="3"><div class="maximotam"><!--#4DTEXT prov_rut--></div></td>
+          </tr>
+        </table>
+      <!--#4DELSE-->
+        <h3>No existe documento de pago asociado.</h3>
+      <!--#4DENDIF-->
+      </article>
+
+      <article>
+        <!--#4DIF ((Size of array(aIdgasto) > 0) & (Not(isFxr)))-->
+        <h2>Órdenes de compra</h2>
+        <div class="list">
+            <table>
+              <thead>
+                <tr>
+                  <th>Número</th>
+                  <th>Emisor</th>
+                  <th>Emisión</th>
+                  <th>Proveedor</th>
+                  <th>Referencia</th>
+                  <th>Estado</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!--4DLOOP aIdgasto-->
+                  <tr>
+                    <td><!--#4DTEXT aFoliogasto{aIdgasto}--></td>
+                    <td><!--#4DTEXT aLoginGasto{aIdgasto}--></td>
+                    <td><!--#4DTEXT aEmisionGasto{aIdgasto}--></td>
+                    <td style="text-align:left"><!--#4DTEXT aProveedorGasto{aIdgasto}--></td>
+                    <td style="text-align:left"><!--#4DTEXT aRefGasto{aIdgasto}--></td>
+                    <td><!--#4DTEXT aEstadoGasto{aIdgasto}--></td>
+                    <td><!--#4DTEXT aTotalGastoText{aIdgasto}--></td>
+                  </tr>
+                <!--4DENDLOOP-->
+              </tbody>
+            </table>
+        </div>
+        <!--#4DELSE-->
+          <h3>No existe órdenes de compra asociadas.</h3>
+        <!--#4DENDIF-->
+      </article>
+
+      <article>
+        <!--#4DIF ((Size of array(aIdgasto) > 0) & (isFxr))-->
+        <h2>Rendición de fondo</h2>
+        <div class="list">
+            <table>
+              <thead>
+                <tr>
+                  <th>Número</th>
+                  <th>Emisor</th>
+                  <th>Emisión</th>
+                  <th>Solicitante</th>
+                  <th>Referencia</th>
+                  <th>Estado</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!--4DLOOP aIdgasto-->
+                  <tr>
+                    <td><!--#4DTEXT aFoliogasto{aIdgasto}--></td>
+                    <td><!--#4DTEXT aLoginGasto{aIdgasto}--></td>
+                    <td><!--#4DTEXT aEmisionGasto{aIdgasto}--></td>
+                    <td style="text-align:left"><!--#4DTEXT aProveedorGasto{aIdgasto}--></td>
+                    <td style="text-align:left"><!--#4DTEXT aRefGasto{aIdgasto}--></td>
+                    <td><!--#4DTEXT aEstadoGasto{aIdgasto}--></td>
+                    <td><!--#4DTEXT aTotalGastoText{aIdgasto}--></td>
+                  </tr>
+                <!--4DENDLOOP-->
+              </tbody>
+            </table>
+        </div>
+        <!--#4DELSE-->
+          <h3>No existe rendiciones asociadas.</h3>
+        <!--#4DENDIF-->
+      </article>
+
+    <article>
+      <!--#4DIF (Size of array(aIdDtc) > 0)-->
+      <h2>Documentos de compra</h2>
+      <div class="list">
+          <table>
+            <thead>
+              <th>Número</th>
+              <!--<th>Oc</th>-->
+              <th>Emisor</th>
+              <th>Tipo doc.</th>
+              <th>Emisión</th>
+              <th>Proveedor</th>
+              <th>Referencia</th>
+              <th>Estado</th>
+              <th>Total Doc.</th>
+              <th>Pagado</th>
+            </thead>
+            <tbody>
+                <!--4DLOOP aIdDtc-->
+                  <tr>
+                    <td><!--#4DTEXT aFolioDtc{aIdDtc}--></td>
+                    <!--<td><!- -#4DTEXT aFolioAsociadoDtc{aIdDtc}- -></td>-->
+                    <td><!--#4DTEXT aLoginDtc{aIdDtc}--></td>
+                    <td><!--#4DTEXT aTipoDocDtc{aIdDtc}--></td>
+                    <td><!--#4DTEXT aEmisionDtc{aIdDtc}--></td>
+                    <td style="text-align:left"><!--#4DTEXT aProveedorDtc{aIdDtc}--></td>
+                    <td style="text-align:left"><!--#4DTEXT aRefDtc{aIdDtc}--></td>
+                    <td><!--#4DTEXT aEstadoDtc{aIdDtc}--></td>
+                    <!--<td><!- -#4DTEXT _V3_formatCurrency(aTotalDtc{aIdDtc})- -></td>-->
+                    <td><!--#4DTEXT aTotalDtcTEXT{aIdDtc}--></td>
+                    <!--<td><!- -#4DTEXT _V3_formatCurrency(a_dtc_abono{aIdDtc})- -></td>-->
+                    <td><!--#4DTEXT a_dtc_abonoText{aIdDtc}--></td>
+                  </tr>
+                <!--4DENDLOOP-->
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colspan="7"></td>
+                  <!--<td style="font-weight:bold"><!- -#4DTEXT _V3_formatCurrency(sumaDocs)- -></td>
+                  <td style="font-weight:bold"><!- -#4DTEXT _V3_formatCurrency(sumaPagado)- -></td>-->
+                  <td style="font-weight:bold"><!--#4DTEXT sumaDocsTEXT--></td>
+                  <td style="font-weight:bold"><!--#4DTEXT sumaPagadoTEXT--></td>
+                </tr>
+            </tfoot>
+          </table>
+      </div>
+      <!--#4DELSE-->
+        <h3>No existe documentos de compra asociados.</h3>
+      <!--#4DENDIF-->
+    </article>
+  </section>
+
+</div>
+</body>
+</html>

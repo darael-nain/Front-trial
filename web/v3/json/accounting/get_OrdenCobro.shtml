@@ -1,0 +1,30 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": 1,
+		"total": <!--#4DHTML $total-->
+	},
+	"sort": {
+		"by": "<!--#4DTEXT sort_by-->",
+		"order": "<!--#4DTEXT sort_order-->"
+	},
+	"rows": [
+	<!--#4DLOOP aIdCobro -->
+	{
+		"id": <!--#4DHTML aIdCobro{aIdCobro}-->,
+		"folio": "<!--#4DHTML aFolioCobro{aIdCobro}-->",
+		"libro": "COBROS",
+		"fechaEmision": "<!--#4DHTML String(aFechaEmision{aIdCobro})-->",
+		"referencia": "<!--#4DHTML _V3_escapeString(aReferencia{aIdCobro})-->",
+		"doc": "Cobro",
+		"total": "<!--#4DHTML _V3_formatCurrency(aTotalCobro{aIdCobro})-->",
+		"cliente": "<!--#4DHTML _V3_escapeString(aNombreCliente{aIdCobro})-->"
+	}<!--#4DIF NOT(aIdCobro{aIdCobro} = aIdCobro{Size of array(aIdCobro)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+	
+}

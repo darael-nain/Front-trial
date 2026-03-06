@@ -1,0 +1,11 @@
+{
+	"rows": [
+<!--#4DLOOP aLogin -->
+		{
+			"login": "<!--#4DHTML aLogin{aLogin}-->",
+			"email": "<!--#4DHTML aEmail{aLogin}-->",
+			"name": "<!--#4DHTML _V3_escapeString(aName{aLogin})-->"
+		}<!--#4DIF NOT(aLogin{aLogin} = aLogin{Size of array(aLogin)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

@@ -1,0 +1,31 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Orden_de_compra]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP aIdOC -->
+		{
+			"id": <!--#4DHTML aIdOC{aIdOC}-->,
+			"folio": "<!--#4DHTML aNroOC{aIdOC}-->",
+			"tipo": "<!--#4DHTML aTipoOC{aIdOC}-->",
+			"fecha": "<!--#4DHTML String(aFechaOC{aIdOC};7)-->",
+			"referencia": "<!--#4DHTML _V3_escapeString(aReferenciaOC{aIdOC})-->",
+			"proveedor": "<!--#4DHTML _V3_escapeString(aProveedorOC{aIdOC})-->",
+			"neto": "<!--#4DHTML _V3_formatCurrency(aNetoOC{aIdOC})-->",
+			"total": "<!--#4DHTML _V3_formatCurrency(aTotalOC{aIdOC})-->",
+			"estado": "<!--#4DHTML aEstadoOC{aIdOC}-->",
+			"validado": "<!--#4DHTML aValidadoOC{aIdOC}-->",
+			"negocio": "<!--#4DHTML _V3_escapeString(aRefNegOC{aIdOC})-->",			
+			"emisor": "<!--#4DHTML aLoginOC{aIdOC}-->",
+			"origen": "<!--#4DHTML aOrigenOC{aIdOC}-->",
+			"version": "<!--#4DHTML aVersionOC{aIdOC}-->"
+		}<!--#4DIF NOT(aIdOC{aIdOC} = aIdOC{Size of array(aIdOC)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

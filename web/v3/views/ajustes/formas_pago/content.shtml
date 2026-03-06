@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--#4DSCRIPT/_V3_proxy_getFormaspago-->
+    <title>Formas de Pago</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="/v3/views/ajustes/formas_pago/formas.js"></script>
+    <script type="text/javascript" src="/v3/views/ajustes/formas_pago/content.js"></script>
+
+    <style type="text/css">
+      .newcolor input,textarea{
+        background-color: #ffffff !important;
+      }
+
+
+    </style>
+    <link href="/css/form1.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <section class="sheet" id="formadepago" data-id="<!--#4DTEXT id-->">
+      <footer>
+        <article>
+          <h1>Información general - Formas de pago</h1>
+          <ul class="editable newcolor">
+
+            <li class="li"> <input name="estado" id="estado" class="checkbox" type="checkbox"><label class="sg-input-title" for="estado">Habilitar Uso</label></li>
+
+            <li class="li">
+              <span class="sg-input-title">Seleccionar Periodo
+              
+                <select name="periodo" id="periodo" class="form-control" onchange="pers();" >
+                    <option selected>Seleccionar</option>
+                    <option value="0">Al día</option>
+                    <option value="30">30 días</option>
+                    <option value="60">60 días</option>
+                    <option value="90">90 días</option>
+                    <option value="1" >Personalizado</option>
+                </select>
+
+              </span>
+            </li>
+
+
+            <li id="custom" class="li"><span class="sg-input-title">Días del periodo de pago</span> <span><input onkeyup="persval();" type="text" class="form-control rise min-input"  name="personalizado"></span></li>
+
+
+
+            <li class="li"><span class="sg-input-title">Nombre de forma de pago</span> <span><input class="form-control rise" id="descripcion" type="text" name="descripcion"></span></li>
+
+
+            <li class="li"><span class="sg-input-title">Descripción de forma de pago (ingrese mas detalles - opcional)</span> <span><input type="textarea" id="observaciones" class="form-control rise" name="observaciones"></span></li>
+
+          </ul>
+          <ul class="editable newcolor">
+            <li class="li"> <input name="isCustom" disabled="" id="isCustom" class="checkbox" type="checkbox"><span class="sg-input-title">Personalizado</span></li>
+            <li class="li"> <input name="compra"  id="compra" class="checkbox" type="checkbox"><span class="sg-input-title">Compra</span></li>
+            <li class="li"> <input name="venta"  id="venta" class="checkbox" type="checkbox"><span class="sg-input-title">Venta</span></li>
+          </ul>
+
+        
+        </article>
+      </footer>
+    </section>
+
+  <script type="text/javascript">
+    // verifica si personalizado esta seleccionado para así mostrar el campo de texto
+    var checked = $('select[name=periodo]').val();
+    if (checked != 30 && checked != 60 && checked != 90 && checked != 0)  {    
+      $("#custom").show();
+    }else {
+      $("#custom").hide();
+    }
+    // verifica la opcion seleccionada en periodo, para así popular los campos y darle el valor.
+    function pers(){
+      var checke = $('select[name=periodo]').val();
+      var desc = document.getElementById("descripcion");
+      var obs = document.getElementById("observaciones");
+      var per = $('input[name=personalizado]');
+      if (checke == 0) {
+        $("#custom").hide();
+        $("#isCustom").prop("checked", false);
+        desc.value = "Pago al día";
+        obs.value = "Pago de contado";
+        per.val(0); 
+      }else if (checke == 30) {
+        $("#custom").hide();
+        $("#isCustom").prop("checked", false);
+        desc.value = "Pago a 30 días";
+        obs.value = "Pago a 30 días de la fecha";
+        per.val(30);       
+      }else if (checke == 60) {
+        $("#custom").hide();
+        $("#isCustom").prop("checked", false);
+        desc.value = "Pago a 60 días";
+        obs.value = "Pago a 60 días de la fecha";
+        per.val(60);          
+      }else if (checke == 90) {
+        $("#custom").hide();
+        $("#isCustom").prop("checked", false);
+        desc.value = "Pago a 90 días";
+        obs.value = "Pago a 90 días de la fecha";
+        per.val(90);        
+      }else{
+        $("#custom").show();
+        $("#isCustom").prop("checked", true);
+      }
+    }
+    // toma el valor ingresado en el campo personalizado y lo guarda como PERIODO        
+    function persval(){
+      var per = $('input[name=personalizado]').val();
+      $('select[name=periodo]').val(per);
+    }
+    // solo permite numeros
+    $('input[name="personalizado"]').keydown(function (e) {
+      if (e.keyCode >= 65 && e.keyCode <= 90) { //0-9 only
+        return false;
+      }else{
+        return;
+      }
+      return false;
+    });
+
+  </script>
+
+  </body>
+</html>

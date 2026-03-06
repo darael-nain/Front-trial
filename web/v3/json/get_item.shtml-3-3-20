@@ -1,0 +1,95 @@
+{
+	"otros_gastos": <!--#4DHTML String(vOtrosGastos;"&xml")-->,
+	"rows": [
+<!--#4DLOOP aItemId -->
+		{
+			"id": "<!--#4DHTML aItemId{aItemId}-->",
+			"text": "<!--#4DHTML _V3_escapeString(aItemText{aItemId})-->",
+			"nombre_categoria": "<!--#4DHTML _V3_escapeString(aDescripcionCategoria{aItemId})-->",
+			"index": <!--#4DHTML aItemIndex{aItemId}-->,
+			"deletable": <!--#4DIF aItemDeletable{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"hidden": <!--#4DIF aItemHidden{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"titulo": <!--#4DIF aItemTitulo{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			<!--#4DIF aItemCategoriaId{aItemId}#0)-->"categoria": {
+				"id": <!--#4DHTML aItemCategoriaId{aItemId}-->
+			},<!--#4DENDIF--><!--#4DIF aItemProductoId{aItemId}#0)-->"producto": {
+				"id": <!--#4DHTML aItemProductoId{aItemId}-->
+			},<!--#4DENDIF-->
+			"nombre": "<!--#4DHTML _V3_escapeString(aItemNombre{aItemId})-->",
+			"itemParent": "<!--#4DHTML _V3_escapeString(aItemParent{aItemId})-->",
+			"isParent": <!--#4DIF aIsParent{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"tag": "<!--#4DHTML _V3_escapeString(aItemTag{aItemId})-->",
+			"observacion": "<!--#4DHTML _V3_escapeString(aItemObservacion{aItemId})-->",
+			"comentario": "<!--#4DHTML _V3_escapeString(aItemComentario{aItemId})-->",<!--#4DIF NOT(aItemTitulo{aItemId})-->
+			"codigo": "<!--#4DHTML aItemCodigo{aItemId}-->",
+			"justificado": <!--#4DHTML String(aItemJust{aItemId};"&xml")-->,
+			"xjustificar": <!--#4DHTML String(aItemxJust{aItemId};"&xml")-->,
+			"codigo_origen": "<!--#4DHTML aItemCodigoOrigen{aItemId}-->",
+			"cantidad": <!--#4DHTML String(aItemCantidad{aItemId};"&xml")-->,
+			"unidad": "<!--#4DHTML _V3_escapeString(aItemUnidad{aItemId})-->",
+			"factor": <!--#4DHTML String(aItemFactor{aItemId};"&xml")-->,<!--#4DENDIF-->
+			"porcentaje_monto_total": <!--#4DHTML String(aItemPorcentajeMontoTotal{aItemId}/100;"&xml")-->,
+			"formula_productor_ejecutivo": <!--#4DIF aItemFormulaProdEjec{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"formula_productor_ejecutivo_ratio": <!--#4DHTML String(aItemFormulaProdEjecRatio{aItemId};"&xml")-->,
+			"formula_asistente_produccion": <!--#4DIF aItemFormulaAsistProd{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"formula_horas_extras": <!--#4DIF aItemFormulaHorasExtras{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"director_internacional": <!--#4DIF aItemDirectorInternacional{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"precio": {
+				<!--#4DIF NOT(aItemTitulo{aItemId})-->"unitario": <!--#4DHTML String(aItemPrecioUnitario{aItemId};"&xml")-->,<!--#4DENDIF-->"subtotal": <!--#4DHTML String(aItemSubtotalPrecio{aItemId};"&xml")-->
+			},
+			"costo": {
+				"previo": {
+					<!--#4DIF NOT(aItemTitulo{aItemId})-->"unitario": <!--#4DHTML String(aItemCostoUnitarioPrevio{aItemId};"&xml")-->,<!--#4DENDIF-->"subtotal": <!--#4DHTML String(aItemSubtotalCostoPrevio{aItemId};"&xml")-->
+				},
+				"presupuestado": {
+					<!--#4DIF NOT(aItemTitulo{aItemId})-->"unitario": <!--#4DHTML String(aItemCostoUnitarioPresupuestado{aItemId};"&xml")-->,<!--#4DENDIF-->"subtotal": <!--#4DHTML String(aItemSubtotalCostoPresupuestado{aItemId};"&xml")--><!--#4DIF NOT(aItemTitulo{aItemId})-->,
+					"hh": {
+						"username": "<!--#4DHTML aItemUsernameHHPresupuestado{aItemId}-->",
+						"cantidad": <!--#4DHTML String(aItemCantidadHHPresupuestado{aItemId};"&xml")-->,
+						"valor": <!--#4DHTML String(aItemValorHHPresupuestado{aItemId};"&xml")-->
+					}<!--#4DENDIF-->
+				},
+				"real": {
+					"subtotal": <!--#4DHTML String(aItemSubtotalCostoReal{aItemId};"&xml")--><!--#4DIF NOT(aItemTitulo{aItemId})-->,
+					"hh": {
+						"cantidad": <!--#4DHTML String(aItemCantidadHHReal{aItemId};"&xml")-->,
+						"total": <!--#4DHTML String(aItemCostoInternoReal{aItemId};"&xml")-->
+					}<!--#4DENDIF-->
+				}<!--#4DIF NOT(aItemTitulo{aItemId})-->,
+				"interno": <!--#4DIF aItemCostoInterno{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DENDIF-->
+			},
+			"costo_directo": <!--#4DIF aItemCostoDirecto{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DIF Not(aItemTitulo{aItemId})-->,
+			"costo_admin": <!--#4DIF aItemCostoAdmin{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"aplica_sobrecargo": <!--#4DIF aItemAplicaSobrecargo{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"closed_compras": <!--#4DIF aItemClosedCompras{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DENDIF--><!--#4DIF Num(aItemTDId{aItemId})#0-->,
+			"tipo_documento": {
+				"id": <!--#4DHTML Num(aItemTDId{aItemId})-->,
+				"abbr": "<!--#4DHTML aItemTDAbbr{aItemId}-->",
+				"text": "<!--#4DHTML aItemTDNombre{aItemId}-->",
+				"ratio": <!--#4DHTML String(aItemTDValor{aItemId}/100;"&xml")-->,
+				"valor_usd": <!--#4DIF aItemTDValorUSD{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+				"inverse": <!--#4DIF aItemTDDivision{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+			}<!--#4DENDIF-->,
+			"hora_extra": {
+				"enabled": <!--#4DIF aItemHoraExtra{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+				"cantidad": <!--#4DHTML String(aItemHoraExtraCantidad{aItemId};"&xml")--><!--#4DIF NOT(aItemTitulo{aItemId})-->,
+				"factor": <!--#4DHTML String(aItemHoraExtraFactor{aItemId};"&xml")-->,
+				"jornada": <!--#4DIF aItemHoraExtraJornada{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DENDIF-->,
+				"base_imponible": <!--#4DHTML String(aItemHoraExtraBI{aItemId};"&xml")-->,
+				"dias": <!--#4DIF aItemHoraExtraDias{aItemId}>0--><!--#4DHTML aItemHoraExtraDias{aItemId}--><!--#4DELSE-->7<!--#4DENDIF-->
+			},
+			"ocultar_print": <!--#4DIF aItemOcultarPrint{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"mostrar_carta_cliente": <!--#4DIF aItemMostrarCartaCliente{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"preset_margen": <!--#4DIF aItemPresetMargen{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"preset_margen_value": <!--#4DHTML String(aItemPresetMargenValue{aItemId};"&xml")-->,
+			"custom_data_1": "<!--#4DTEXT aItemCustomData1{aItemId}-->",
+			"custom_data_2": "<!--#4DTEXT aItemCustomData2{aItemId}-->",
+			"custom_data_3": "<!--#4DTEXT aItemCustomData3{aItemId}-->",
+			"custom_data_4": "<!--#4DTEXT aItemCustomData4{aItemId}-->",
+			"afecto_exportativo": <!--#4DIF aAfectoExportativo{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"afecto_no_exportativo": <!--#4DIF aAfectoNoExportativo{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"no_considera_impuesto": <!--#4DIF aNoConsideraImpuesto{aItemId}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aItemId{aItemId} = aItemId{Size of array(aItemId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

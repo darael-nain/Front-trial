@@ -1,0 +1,15 @@
+<h2>Subir archivo</h2>
+<div class="contenedor-upload">
+	<input id="origen-file" type="hidden" value="">
+    <div id="status"></div>
+    <form id="dialog_form" enctype="multipart/form-data" method="post">       
+      <label>Archivo nuevo :</label>
+      <input id="WU_xb_file" type="file" name="WU_xb_file" />
+      <button class="btn-subir-archivo2" id="upload-file-revision" type="button">Subir</button>  
+    </form>
+</div>
+<p class="set-botones-pop">
+    <button title="Cerrar" class="button-new" id="close-modal-file" type="button">                    
+        <span>Cerrar</span>
+    </button>
+</p>

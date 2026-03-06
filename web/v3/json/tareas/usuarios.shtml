@@ -1,0 +1,14 @@
+{
+	"usuarios": [
+	<!--#4DLOOP a_usuarios_login-->
+		{	
+			"login": "<!--#4DTEXT a_usuarios_login{a_usuarios_login}-->",
+			"nombre": "<!--#4DTEXT _V3_escapeString(a_usuarios_nombre{a_usuarios_login})-->",
+			"email": "<!--#4DTEXT a_usuarios_email{a_usuarios_login}-->"
+		}<!--#4DIF NOT(a_usuarios_login{a_usuarios_login} = a_usuarios_login{Size of array(a_usuarios_login)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}
+
+
+

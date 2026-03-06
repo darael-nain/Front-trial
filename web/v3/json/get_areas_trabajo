@@ -1,0 +1,10 @@
+{
+	"rows": [
+<!--#4DLOOP [areas_de_trabajo]-->
+		{
+			"id": <!--#4DHTML [areas_de_trabajo]id_area-->,
+			"text": "<!--#4DHTML _V3_escapeString([areas_de_trabajo]nombre_area)-->"
+		}<!--#4DIF Selected record number([areas_de_trabajo])<Records in selection([areas_de_trabajo])-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

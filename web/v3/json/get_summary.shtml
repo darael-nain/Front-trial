@@ -1,0 +1,95 @@
+{
+	"rows": [
+		{
+			"id": <!--#4DHTML Num(id)-->,
+			"closed": <!--#4DIF closed-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"closed_compras": <!--#4DIF closed_compras-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"utilidad_costo": {
+				"presupuestado": {
+					"utilidad": {
+						"value": <!--#4DHTML String(ucp_utilidad_value;"&xml")-->,
+						"ratio": "<!--#4DHTML String(ucp_utilidad_ratio;"&xml")-->"
+					},
+					"costo": {
+						"value": <!--#4DHTML String(ucp_costo_value;"&xml")-->,
+						"ratio": "<!--#4DHTML String(ucp_costo_ratio;"&xml")-->"
+					}
+				},
+				"real": {
+					"utilidad": {
+						"value": <!--#4DHTML String(ucr_utilidad_value;"&xml")-->,
+						"ratio": "<!--#4DHTML String(ucr_utilidad_ratio;"&xml")-->"
+					},
+					"costo": {
+						"value": <!--#4DHTML String(ucr_costo_value;"&xml")-->,
+						"ratio": "<!--#4DHTML String(ucr_costo_ratio;"&xml")-->"
+					}
+				},
+				"indicador": {
+					"total_neto": {
+						"value": <!--#4DHTML String(uci_total_neto_value;"&xml")-->
+					},
+					"diferencia_costos": {
+						"value": <!--#4DHTML String(uci_diferencia_costos_value;"&xml")-->
+					},
+					"eficiencia": {
+						"ratio": <!--#4DIF (String(uci_eficiencia_ratio) = "I")-->0<!--#4DELSE--><!--#4DHTML String(uci_eficiencia_ratio;"&xml")--><!--#4DENDIF-->
+					},
+					"utilidad_esperada": {
+						"value": <!--#4DHTML String(uci_utilidad_esperada_value;"&xml")-->
+					}
+				}
+			},
+			"resumen": {
+				"gasto_real": {
+					"directo": {
+						"value": "<!--#4DHTML String(rgr_directo_value;"&xml")-->"
+					},
+					"interno": {
+						"value": <!--#4DHTML String(rgr_interno_value;"&xml")-->,
+						"enabled": <!--#4DIF rgr_interno_enabled-->true<!--#4DELSE-->false<!--#4DENDIF-->
+					},
+					"otros": {
+						"value": <!--#4DHTML String(rgr_otros_value;"&xml")-->
+					},
+					"sobrecargos": {
+						"value": <!--#4DHTML String(rgr_sobrecargos_value;"&xml")-->,
+						"enabled": <!--#4DIF rgr_sobrecargos_enabled-->true<!--#4DELSE-->false<!--#4DENDIF-->
+					}
+				},
+				"justificacion": {
+					"pending": {
+						"value": "<!--#4DHTML String(rj_pending_value;"&xml")-->"
+					},
+					"done": {
+						"value": <!--#4DHTML String(rj_done_value;"&xml")-->
+					}
+				},
+				"cobro": {
+					"pending": {
+						"value": <!--#4DHTML String(rc_pending_value;"&xml")-->
+					},
+					"done": {
+						"value": <!--#4DHTML String(rc_done_value;"&xml")-->
+					}
+				},
+				"pago": {
+					"pending": {
+						"value": <!--#4DHTML String(rp_pending_value;"&xml")-->
+					},
+					"done": {
+						"value": <!--#4DHTML String(rp_done_value;"&xml")-->
+					}
+				},
+				"impuesto": {
+					"iva": {
+						"value": <!--#4DHTML String(ri_iva_value;"&xml")-->
+					},
+					"retenciones": {
+						"value": <!--#4DHTML String(ri_retenciones_value;"&xml")-->
+					}
+				}
+			}
+		}
+	]
+}

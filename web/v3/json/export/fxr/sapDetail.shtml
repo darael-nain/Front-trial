@@ -1,0 +1,20 @@
+{
+	"total": <!--#4DHTML total-->,
+	"items": [
+<!--#4DLOOP aIdDetail -->
+		{
+			"aParentKey": "<!--#4DHTML aParentKey{aIdDetail}-->",
+			"aTaxDate": "<!--#4DHTML aTaxDate{aIdDetail}-->",
+			"aDueDate": "<!--#4DHTML aDueDate{aIdDetail}-->",
+			"aAccountCode": "<!--#4DHTML aAccountCode{aIdDetail}-->",
+			"aDebit": "<!--#4DHTML aDebit{aIdDetail}-->",
+			"aCredit": "<!--#4DHTML aCredit{aIdDetail}-->",
+			"aShortName": "<!--#4DHTML aShortName{aIdDetail}-->",
+			"aLineMemo": "<!--#4DHTML aLineMemo{aIdDetail}-->",
+			"aReference1": "<!--#4DHTML aReference1{aIdDetail}-->",
+			"aReference2": "<!--#4DHTML aReference2{aIdDetail}-->",
+			"aAdditionalReference": "<!--#4DHTML aAdditionalReference{aIdDetail}-->"
+		}<!--#4DIF NOT(aIdDetail{aIdDetail} = aIdDetail{Size of array(aIdDetail)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

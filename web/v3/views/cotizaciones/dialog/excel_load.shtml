@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_serverInfo-->
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Cargar ítems mediante Excel</title>
+		<script>
+			var importLoad = function(append, element) {
+				unaBase.ui.block();
+
+				var sid ="";
+				$.each($.cookie(),function(clave,valor) {
+					sid = valor;
+				});
+
+				var data4 = new FormData();
+				
+				var attachment = $('.ui-dialog fieldset [name="upload[attachment]"]').get(0).files[0];
+				var fk = $('section.sheet').data('id');
+
+				// let data = {
+				// 	'upload[attachment]': attachment,
+				// 	'fk': fk,
+				// 	'sid': sid,
+				// 	'append_items': append
+				// }
+
+
+				data4.append('upload[attachment]', attachment);
+				data4.append('fk', fk);
+				data4.append('sid', sid);
+				data4.append('append_items', append);
+
+					
+				$.ajax({
+					url: nodeUrl + '/import-load?hostname=' + window.location.hostname + '&id=' + $('section.sheet').data('id'),
+					type: 'POST',
+					dataType:"json",
+					contentType: false,
+					processData: false,
+					cache: false,
+					data: data4,
+					//crossDomain: true,
+					success: function(data) {
+						unaBase.ui.unblock();
+						if (data.success) {
+							toastr.success('Archivo cargado con éxito!');
+							getDetail();
+							//updateIndexes();
+							$(element).parentTo('.ui-dialog-content').dialog('close');
+						} else {
+							if (!data.isValidFormat) {
+								toastr.error('Error en el formato del archivo. Por favor verificar que tenga al menos un título con ítem y que no tenga títulos vacíos.');
+							}
+							if (!data.isValidContent) {
+								toastr.error('Error en el contenido del archivo, fila ' + data.invalidRow + '. Por favor verificar la fila contiene todos los datos obligatorios (para títulos: nombre / para ítems: nombre, cantidades y precios).')
+							}
+						}
+
+					},
+					fail: function(e1,e2,e3) {
+						toastr.error('No fue posible realizar la cargar de los datos debido a un problema con el servidor, Por favor intente nuevamente. <p><small>Si el inconveniente persiste, por favor comuniquese con Unabase.</small></p>');
+					}
+				});
+			};
+
+			$(document).ready(function() {
+				unaBase.toolbox.init();
+
+			
+
+				$('.ui-dialog fieldset.export button').button({
+					icons: {
+						primary: 'ui-icon-circle-arrow-s'
+					},
+					text: true
+				}).click(function() {
+						let sid ="";
+						$.each($.cookie(),function(clave,valor) {
+							sid = valor;
+						});
+					$.each($.cookie(),function(clave,valor) {sid+= (valor + ' '); });
+					//var url = 'http://desarrollo.unabase.cl:3000/download/?download=true&entity=cotizaciones&id=' + params.data().id + '&folio=' + ((typeof params.data().index != 'undefined')? params.data().index : 'S/N')+ '&sid=' + encodeURIComponent(sid) + '&preview=' + ((htmlObject.find('[name="draft"]').prop('checked'))? 'true' : 'false') + '&nullified=' + params.data().readonly;
+					var url =nodeUrl +'/export/?download=true&entity=cotizaciones_load&id=' + $('section.sheet').data('id') + '&folio=' + (($('section.sheet').data('index') > 0)? $('section.sheet').data('index') : 'S/N')+ '&sid=' + sid + '&preview=false&nullified=' + $('section.sheet').data('readonly');
+					var download = window.open(url).blur();
+					window.focus();
+					download.close();
+				});
+
+				$('.ui-dialog fieldset.import button').button({
+					icons: {
+						primary: 'ui-icon-circle-arrow-n'
+					},
+					text: true
+				}).click(function() {
+					var element = this;
+
+					// Antes de subir, verifica ítems existentes
+
+					var items = $('section.sheet > table.items > tbody').find('tr');
+
+
+					if (items.length > 0) {
+						var itemsConGastos = false;
+						$('section.sheet > table.items > tbody').find('tr').each(function(key, item) {
+							if ($(item).find('td:first-of-type').find('button.remove.item').css('visibility') == 'hidden') {
+								itemsConGastos = true;
+							}
+						});
+						if (itemsConGastos) {
+							confirm("<!--#4DTEXT _V3_escapeString(etiqueta_cotizacion)--> actualmente tiene ítems agregados que cuentan con gastos asociados.\n\nSolamente es posible añadir ítems\n\n¿Desea continuar?").done(function(option) {
+								if (option) {
+									importLoad(true, element);
+								}
+							});
+						} else {
+							confirm("La cotización actualmente tiene ítems agregados.\n\n¿Desea reemplazar o agregar?", "Agregar", "Reemplazar").done(function(option) {
+								importLoad(option, element);
+							});
+						}
+					} else {
+						importLoad(false, element);
+					}
+
+
+				});
+
+			});
+		</script>
+	</head>
+	<body>
+		<fieldset class="export">
+			<legend>Paso 1 - Plantilla Excel</legend>
+			<button>Descargar plantilla</button>
+		</fieldset>
+		<p style="padding: 5px; font-weight: bold;">Una vez descargada la plantilla Excel, puede reemplazar los datos de prueba con los definitivos.</p>
+		<p style="padding: 5px; font-weight: bold;">Para cargar ítems en <!--#4DTEXT etiqueta_cotizacion-->, vuelva aquí y cargue el archivo Excel utilizando el siguiente formulario (paso 2).</p>
+		<fieldset class="import">
+			<legend>Paso 2 - Cargar desde Excel</legend>
+			<label>
+				<span style="width: 200px; margin-bottom: 5px;">Archivo XLSX</span>
+				<input style="width: 100% !important; display: block !important;" type="file" name="upload[attachment]" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+			</label>
+			<button>Subir plantilla con datos</button>
+		</fieldset>
+	</body>
+</html>

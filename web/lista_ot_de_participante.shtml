@@ -1,0 +1,66 @@
+<!--4DACTION/otscopiados-->
+<!--#4DINCLUDE headgreen.shtml-->
+<body>
+
+<div id="bg-preferences" class="bg-popup">
+    <div id="modal-preferences" class="modal-popup">       
+        <div class="box-lightBox">
+            <!--#4DINCLUDE pop_preferencias.shtml-->            
+        </div>           
+    </div>
+</div>
+
+<div id="main-container">
+
+    <h2 class="sub-title">Órdenes de Trabajo (Copiados) / <!--#4DTEXT vNomUsr2--></h2>
+
+    <div class="search">
+    	<label>Estado</label>
+		<select onChange="buscar_por_estado_participantes(this.value)">
+			<option selected="selected" value="-1">[ Seleccionar ]</option>
+			<option value="PA">Pendiente / Atrasada</option>
+			<option value="PENDIENTE">Pendiente</option>
+			<option value="ATRASADA">Atrasada</option>
+			<option value="CERRADA">Cerrada</option>
+			<option value="ANULADA">Anulada</option>			               
+			<option value="TODAS">Todas</option>
+		</select>
+    </div> 
+
+    <div class="link-ots-copiados">
+    	<a href="lista_ot.shtml?r=<!--#4DVAR String(Milliseconds+Random)-->">VOLVER A LISTA DE OT PRINCIPAL</a>
+    </div>
+    
+	<div class="mostrando">
+		<!--#4DIF vEstadoPart="PA"-->
+			Mostrando Pendientes y Atrasadas
+	    <!--#4DENDIF-->
+
+	    <!--#4DIF vEstadoPart="PENDIENTE"-->
+			Mostrando Pendientes y Atrasadas
+	    <!--#4DENDIF-->
+
+	    <!--#4DIF vEstadoPart="CERRADA"-->
+			Mostrando Cerradas
+	    <!--#4DENDIF-->
+
+	    <!--#4DIF vEstadoPart="ANULADA"-->
+			Mostrando Anuladas
+	    <!--#4DENDIF-->
+
+	    <!--#4DIF vEstadoPart="PENDIENTE/ATRASADA"-->
+			Mostrando Pendientes y Atrasadas
+	    <!--#4DENDIF-->
+	    
+	    <!--#4DIF vEstadoPart="TODAS"-->
+			Mostrando Todas
+	    <!--#4DENDIF-->
+	</div>
+
+    <div id="content-list-ot" class="content">
+        <!--#4DINCLUDE lista_ot_encontradas.shtml-->
+    </div>
+
+</div>
+</body>
+</html>

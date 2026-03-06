@@ -1,0 +1,2180 @@
+<!DOCTYPE html>
+<html>
+	<!--#4DSCRIPT/_V3_proxy-->
+	<!--#4DSCRIPT/_V3_proxy_getCotizacion-->
+	<head>
+		<title>Negocios</title>
+		<meta charset="utf-8">
+
+		<script src="/v3/script/idle.js"></script>
+		<script src="/v3/views/negocios/script/notify.js"></script>
+		<script defer src="/v3/views/negocios/script/oc_download.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+
+
+
+		<style>
+			
+
+
+
+		  </style>
+		<style>
+
+			td.currency {
+				text-align: left !important;
+			}
+
+			td.closed-compras{
+				text-align: left !important;
+			}
+
+			table.symbol{
+				text-align: left !important;
+			}
+
+			tr:not([data-closed-compras="true"]) .closed-compras span {
+				display: none;
+			}
+
+			.u-cot-block{
+				background-color: #ffb2ae !important;
+				color: white;
+				/*pointer-events: none;*/
+				cursor: default;
+				
+			}
+			.u-cot-block:active{
+				/*background-color: #ffb2ae !important;
+				color: white;*/
+				/*pointer-events: none;*/
+				/*cursor: default;*/
+				
+			}
+			.u-cot-block input[type="checkbox"]{
+				display: none;
+
+			}
+			.ui-tooltip *{
+				font-size: 14px;
+			}
+			#userBlock{
+				font-weight: bold;
+			}
+
+		
+			
+			.style_por_proyecto{
+				width:150px!important;
+				border-radius: 3px;
+				margin-right: 2px;
+				height:22px;
+			}
+			tr.project {
+				background-color: rgb(141, 221, 141) !important;
+				box-shadow: 0px 2px 2px  black;
+				-moz-box-shadow: 0px 2px 2px  black;
+				-webkit-box-shadow: 0px 2px 2px  black;
+				border-bottom: 0.15em solid #cfccca;
+			}
+			tr.project span{
+				font-weight: bold !important;
+			}
+			tr.in-project {
+				display: none;
+				padding: 5px;
+				background-color: #d8e8dd !important;
+			}
+
+
+		</style>
+		<script defer src="/v3/script/block_by_use.js?<!--#4DTEXT _V3_version-->"></script>
+		<script defer src="/v3/script/unblock.js?<!--#4DTEXT _V3_version-->"></script>
+		<script defer src="/v3/script/requestUnblock.js?<!--#4DTEXT _V3_version-->"></script>
+
+		<link rel="stylesheet" href="/v3/views/compras/lista.css?7474848334748474847">
+		<script>
+
+			<!--#4DIF _V3_param_margenCompraInverso-->
+			var margen_desde_compra_inverso = true;
+			<!--#4DELSE-->
+			var margen_desde_compra_inverso = false;
+			<!--#4DENDIF-->
+
+			var mostrar_marca_nocliente = <!--#4DTEXT mostrar_marca_nocliente-->;
+
+			let cant_proyectos_registrados = <!--#4DTEXT cant_proyectos_registrados-->;
+
+			$(document).ready(function() {
+				// var socketNew = io.connect(nodeUrl);
+				// try{
+				// 	socketNew.on('negocios', function(data) {
+				// 		var container = $('table.results tbody');
+				// 		for(var i = 0; i < data.length; i++){
+				// 			data[i].id = String(data[i].id);
+				// 			var exchange = $;
+				// 			if( data[i].exchange == "Peso chileno"){
+				// 				exchange = "$";
+				// 			}else if(data[i].exchange == "UF"){
+				// 				exchange = "CLF";
+				// 			}else if(data[i].exchange == "DOLARES"){
+				// 				exchange = "USD";
+				// 			} 
+				// 			if(!superUsers.includes(currentUser.username)){
+
+				// 				if(data[i].block == "true" || data[i].block){							
+				// 					container.find('tr[data-id='+ data[i].id +']').addClass('u-cot-block').attr({'id':data[i].id, 'data-block': true, 'data-blockUserName':data[i].name, 'data-blockUserEmail': data[i].user_email, 'data-blockUser': data[i].user});
+				
+				// 				}else{
+				// 					// var oldTitle = container.find('tr[data-id='+data[i].id+']').attr('data-title');
+				// 					container.find('tr[data-id='+ data[i].id +']').removeClass('u-cot-block').attr({'id':data[i].id, 'data-block': false, 'data-blockUserName':"", 'data-blockUserEmail': "", 'data-blockUser': ""});
+				// 					// container.find('tr[data-id='+data[i].id+']').find('td.currency').text($.number(data[i].totalNeto, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+				// 					// container.find('tr[data-id='+data[i].id+']').find('td.currency').append('<span style="position: absolute; left: 10px;">'+ exchange + '</span> ');
+				// 					// container.find('tr[data-id='+data[i].id+']').find('td.text').text(data[i].description);
+				// 				}
+				// 			}
+
+				// 		}
+				// 	});
+				// 	unblockDisconnected(socketNew);
+
+				// }catch(err){
+				// 	console.log(err);
+				// 	console.warn('socket no disponible negocios no se bloquearan.');
+				// }
+
+				
+
+				$('.results').find('.links-ver-formula').click(function(){
+					window.open('https://docs.google.com/document/d/1Ga3Ars9JuHjHIOFEZBMtRrmwHivI-J29QiiIc6pvSF0/edit?usp=sharing');
+				});
+
+				var showCurrentAll = <!--#4DTEXT _V3_showAllNegociosTodo-->;
+				var showCurrentYear = <!--#4DTEXT _V3_showAllNegociosAnio-->;
+				var showCurrentMonth = <!--#4DTEXT _V3_showAllNegociosMes-->;
+
+				unaBase.toolbox.init();
+				unaBase.toolbox.search.init({
+					url: function() { return '/4DACTION/_V3_getNegocio' },
+					entity: 'Negocio',
+					
+					callback : function(data){
+
+						$('tfoot.totales').find('span[data-name="total-neto"]').text(data.totales.neto);
+						$('tfoot.totales').find('span[data-name="gasto-p"]').text(data.totales.gasto_p);
+						$('tfoot.totales').find('span[data-name="gasto-r"]').text(data.totales.gasto_r);
+						$('tfoot.totales').find('span[data-name="por-gastar"]').text(data.totales.por_gastar);
+						$('tfoot.totales').find('span[data-name="utilidad-neta"]').text(data.totales.utilidad_neta);
+						$('tfoot.totales').find('span[data-name="utilidad-value-pres"]').text(data.totales.utilidad_value);
+						$('tfoot.totales').find('span[data-name="utilidad-percent"]').text(data.totales.utilidad_percent);
+						$('tfoot.totales').find('span[data-name="utilidad-final"]').text(data.totales.utilidad_final);
+						
+						$('tfoot.totales').find('span[data-name="total_facturado"]').text(data.totales.totales_total_facturado);
+						$('tfoot.totales').find('span[data-name="por_facturar"]').text(data.totales.totales_saldo_por_facturar);
+
+						$('tfoot.totales').find('span[data-name="total_cobrado"]').text(data.totales.total_cobrado);
+						$('tfoot.totales').find('span[data-name="total_por_cobrar"]').text(data.totales.total_por_cobrar);
+						
+						$('tfoot.totales').find('span[data-name="total_justificado"]').text(data.totales.total_justificado);
+						$('tfoot.totales').find('span[data-name="total_por_justificar"]').text(data.totales.total_por_justificar);
+
+						$('tfoot.totales').find('span[data-name="total_pagado"]').text(data.totales.total_pagado);
+						$('tfoot.totales').find('span[data-name="total_por_pagar"]').text(data.totales.total_por_pagar);
+
+						// para probar con cifras de mil millones
+						/*$('tfoot.totales').find('span[data-name="total-neto"]').text("$ 2.812.427.572");
+						$('tfoot.totales').find('span[data-name="gasto-p"]').text("$ 2.054.582.972");
+						$('tfoot.totales').find('span[data-name="gasto-r"]').text("$ 1.587.415.489");
+						$('tfoot.totales').find('span[data-name="por-gastar"]').text("$ 467.167.483");
+						$('tfoot.totales').find('span[data-name="utilidad-value-pres"]').text("$ 757.844.600");
+						$('tfoot.totales').find('span[data-name="utilidad-final"]').text("$ 1.225.012.083");
+						$('tfoot.totales').find('span[data-name="utilidad-percent"]').text("43,55 %");
+						$('tfoot.totales').find('span[data-name="por_facturar"]').text("$ 2.374.379.572");
+						$('tfoot.totales').find('span[data-name="total_facturado"]').text("$ 438.048.001");*/
+
+						// Fijar header y footer
+						$('#viewport .fht-table-init').fixedHeaderTable('destroy');
+						//$('#viewport table.fixed').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false });
+						// --ini-- corrección para ordenar - V3_212
+						$('#viewport table.fixed').fixedHeaderTable({
+							footer: true,
+							cloneHeadToFoot: false,
+							fixedColumn: false,
+							create: function() {
+								$('[data-sort-by]').removeClass('sort-order-desc').removeClass('sort-order-asc').removeData('sort-order');
+								$('[data-sort-by="' + data.sort.by + '"]').addClass('sort-order-' + data.sort.order).data('sort-order', data.sort.order);
+							}
+						});
+
+						// --fin-- corrección para ordenar - V3_212
+
+
+						//REAPER Agrupado proyectos
+						$("tr.project").on('click', function() {
+							
+							$header = $(this);
+							//getting the next element
+							$content = $('tr[data-inprojectid="'+$header.data('projectid')+'"]')
+							//open up the content needed - toggle the slide- if visible, slide up, if not slidedown.
+							$content.slideToggle(0, function () {
+								//execute this after slideToggle is done
+								//change text of header based on visibility of content div
+							
+							});
+						});
+
+
+						$('#search input[name="parametro"]').attr('placeholder', data.parametros.nombre_param1.toLowerCase()).css('text-transform', 'capitalize');
+
+						for(var i = 0; i < $('tbody.ui-selectable tr').length; i ++ ){ 
+							var dataBlock = $('tbody.ui-selectable tr')[i].dataset.block;
+							var dataUser = $('tbody.ui-selectable tr')[i].dataset.blockuser;
+							if(dataBlock == "true"){								
+								$('tbody.ui-selectable tr')[i].className += " block_by_use u-cot-block";
+							}
+						}
+
+						
+
+					},
+					row: {
+						html: function(i, rows) {
+							let proyectObjHtml='';
+							var nombre_cliente = rows[i].empresa;
+							if (mostrar_marca_nocliente) {
+								if (rows[i].param1_valor != "") {
+									nombre_cliente = rows[i].param1_valor;
+								}else{
+									nombre_cliente = ((rows[i].empresa !== undefined)? rows[i].empresa.alias : 'N/A');
+								}
+							}else{
+								nombre_cliente = ((rows[i].empresa !== undefined)? rows[i].empresa.alias : 'N/A');
+							}
+
+							let sAdminTitle = "";
+							if(access._650){
+								sAdminTitle = `/ Info admin id:${rows[i].id} / modoSobrecargo: ${rows[i].modoCine}`
+							}
+							var title = "Área de negocio: " + rows[i].area_negocio + " / Emisor: " + rows[i].username.toUpperCase() + " / Fecha estimada de cierre: " + rows[i].fecha_estimada_cierre + sAdminTitle;
+
+							var utilidad_presupuestada_ratio = 0;
+							var utilidad_real_ratio = 0;
+							if (rows[i].margen_compra_resumenes) {
+								if (margen_desde_compra_inverso) {
+									utilidad_presupuestada_ratio = (1 - (rows[i].total_neto - rows[i].costo.presupuestado) / rows[i].total_neto) * 100;
+									utilidad_real_ratio = (1 - (rows[i].total_neto - (rows[i].costo.real + rows[i].por_gastar)) / rows[i].total_neto) * 100;
+								} else {
+									utilidad_presupuestada_ratio = (rows[i].total_neto - rows[i].costo.presupuestado) / rows[i].costo.presupuestado * 100;
+									utilidad_real_ratio = (rows[i].total_neto - (rows[i].costo.real + rows[i].por_gastar)) / rows[i].costo.real * 100;
+								}
+							} else {
+								utilidad_presupuestada_ratio = (rows[i].total_neto - rows[i].costo.presupuestado) / rows[i].total_neto * 100;
+								utilidad_real_ratio = (rows[i].total_neto - (rows[i].costo.real + rows[i].por_gastar)) / rows[i].total_neto * 100;
+							}
+							let isBlock = (!superUsers.includes(currentUser.username) ) ? rows[i].block_by_use : false;
+
+							var utilidadFinalMonto = (rows[i].total_neto - rows[i].costo.real - ((rows[i].por_gastar > 0)? rows[i].por_gastar : 0));
+							var utilidadRealMonto = rows[i].total_neto - rows[i].costo.real;
+							var diferenciaDeGasto = rows[i].costo.presupuestado - rows[i].costo.real;
+
+							var gpRounded =  Math.round(rows[i].costo.presupuestado);
+							var grRounded =  Math.round(rows[i].costo.real);
+							var pgRounded =  Math.round(rows[i].por_gastar);
+							var eficienciaProyectada = ((gpRounded != 0)? (((gpRounded - grRounded - pgRounded) / gpRounded) * 100.00) : 0);
+
+							const formatDate = (inputDate) => {
+								let formattedDate
+								if(inputDate !== '00-00-00'){
+									// Crea un objeto de fecha a partir de la fecha ingresada (asumiendo formato DD-MM-YYYY)
+									const dateParts = inputDate.split('-');
+									const dateObj = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]); // -1 en el mes porque los meses en JavaScript van de 0-11
+
+									// Define los nombres de los meses en español
+									const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+
+									// Formatea la fecha
+									formattedDate = dateObj.getDate() + " " + monthNames[dateObj.getMonth()] + ", " + dateObj.getFullYear();
+								}else{
+									formattedDate = inputDate
+								}
+
+								return formattedDate;
+							}
+
+							const isVX = rows[i].vx;
+							let projectVx = ''
+							if (typeof isVX === "boolean" && isVX === true) {
+								projectVx = `<img src="/v3/images/logo_transparente_ub.png" style="width: 15px; height: 15px; margin-left: 5px; margin-top: -5px;">`
+							}
+							const ocTd = (rows[i].oc_cliente !== "---------")
+								? '<td class="w-medium"><span style="font-size:9px;">' + rows[i].oc_cliente + '<button type="button" class="btn btn-outline-secondary btn-sm btn-clip" title="Descargar Adjunto(s)">' + '<i class="fa fa-paperclip" aria-hidden="true"></i></button></span></td>'
+								: '<td class="w-medium"><span style="font-size:9px;">' + rows[i].oc_cliente + '</span></td>';
+
+							let htmlData='<tr   class="' + (rows[i].id_proyecto != 0 && unaBase.vista_proyectos ? 'in-project" data-inprojectid="project'+rows[i].id_proyecto+'"  style="box-shadow: 0px 2px 2px black;-moz-box-shadow: 0px 2px 2px black;-webkit-box-shadow: 0px 2px 2px black;border-bottom: 0.2px;"' : '')+'"  data-id="' + rows[i].id + '"  data-index="' + rows[i].folio + '" data-username="' + rows[i].username + '" data-status="' + rows[i].status + '" data-closed="' + rows[i].closed + '" data-closed-compras="' + rows[i].closed_compras + '" data-vx="'+rows[i].vx+'" data-idincomevx="'+rows[i].id_income_vx+'" data-idprojectvx="'+rows[i].id_proyecto_vx+'" data-closed-ventas="' + rows[i].closed_ventas + '" title="' + title + '" data-por-facturar="' + rows[i].saldo_por_facturar + '" data-block="'+isBlock+'"  data-blockUser="'+rows[i].block_user+'" data-blockUserEmail="'+rows[i].block_user_email+'" data-blockUserName="'+rows[i].block_user_name+'" data-id-proyecto="' + rows[i].id_proyecto + '" data-text-proyecto="' + rows[i].text_proyecto + '">' +
+
+											`<td class="w-small" data-disabled=true><input class="selected" type="checkbox" data-id='${rows[i].id}'  data-folio='${rows[i].folio}' name="selected_one"></td>` +
+											`<td>${projectVx}</td>` +
+
+											<!--#4DIF _V3_verifica_permisos_web(_V3_data_username;494)-->
+
+												// 1. numero
+											'<td>' + rows[i].folio +'<span class="ui-icon ui-icon-locked " style="display:block;color:rgb(67,165,24);font-size:9px;margin-top:5px; display: ' + ((rows[i].closed_compras)? '' : 'none' ) + ';"></span> '+ ' ' + ((rows[i].text_proyecto !="Sin proyecto") ? '<span class="label-info-proyecto" style="display:block;color:rgb(67,165,24);font-size:9px;margin-top:5px;">'+ rows[i].text_proyecto +'</span>' : '') + ((rows[i].autoclone_active) ? ' <i class="far fa-clock" style="color: #34CC02" title="Autoclon activo"></i></td>': '</td>') +
+
+
+											<!--#4DIF (show_codigo_column)-->
+											'<td class="w-medium">' + rows[i].param4_valor + '</td>' +
+											<!--#4DENDIF-->
+
+											//oc cliente
+											ocTd +
+											
+
+											// 2. f.asignación
+											//'<td width="5%">' + '<time datetime="' + Date.parse(rows[i].fecha_asignacion).toISOString() + '">' + $.datepicker.formatDate('dd-mm-yy', Date.parse(rows[i].fecha_asignacion)) + '</time></td>' +
+
+											'<td class="w-medium"><span style="font-size:9px;">' + formatDate(rows[i].fecha_asignacion_) + '</span></td>' +
+
+											// 3. f.realización
+											'<td class="w-medium"><span style="font-size:9px;">' + formatDate(rows[i].fecha_realizacion) + '</span></td>' +
+
+											<!--#4DIF (v3_mostrar_columna_emisor)-->
+											'<td class="w-medium">' + rows[i].username + '</td>' +
+											<!--#4DENDIF-->
+
+											'<td class="w-medium">' + rows[i].ejecutivo + '</td>' +
+
+											// 4. f.cliente
+											// '<td width="15%" class="left">' + ((rows[i].empresa !== undefined)? rows[i].empresa.alias : 'N/A') + '</td>' +
+
+											'<td class="left w-large">' + nombre_cliente + '</td>' +
+
+											// 5. referencia
+											'<td class="left w-extra-large"' + ((rows[i].closed)? ' style="color: blue !important;"' : '') + '>' + rows[i].text + '</td>' +
+
+											// 6. neto
+											(
+												(rows[i].exchange !== undefined && rows[i].exchange.type != currency.code)?
+												'<td class="w-medium" style="text-align: right; position: relative;"><span>'+ rows[i].exchange.type + '</span> ' + (rows[i].total_neto / rows[i].exchange.rate).numberFormat(2, ',', '.') + '</td>'
+												:
+												'<td class="currency w-medium">' + rows[i].total_neto + '</td>'
+											) +
+
+											// 7. gp
+											//'<td class="currency w-medium">' + rows[i].costo.presupuestado + '</td>' +
+											(
+												(rows[i].exchange !== undefined && rows[i].exchange.type != currency.code)?
+												'<td class="w-medium" style="text-align: right; position: relative;"><span>'+ rows[i].exchange.type + '</span> ' + (rows[i].costo.presupuestado / rows[i].exchange.rate).numberFormat(2, ',', '.') + '</td>'
+												:
+												'<td class="currency w-medium">' + rows[i].costo.presupuestado + '</td>'
+											) +
+
+											// 8. gr
+											//'<td class="extended currency w-medium">' + rows[i].costo.real + '</td>' +
+											(
+												(rows[i].exchange !== undefined && rows[i].exchange.type != currency.code)?
+												'<td class="w-medium" style="text-align: right; position: relative;"><span>'+ rows[i].exchange.type + '</span> ' + (rows[i].costo.real / rows[i].exchange.rate).numberFormat(2, ',', '.') + '</td>'
+												:
+												'<td class="currency w-medium">' + rows[i].costo.real + '</td>'
+											) +
+
+											<!--#4DIF _V3_difGastoListNegocios-->
+											// 9. diferencia gasto
+											//'<td class="currency w-medium" style="color: ' + (( diferenciaDeGasto >= 0)? 'green' : 'red'  ) + ';">' + (diferenciaDeGasto) + '</td>' +
+
+											(
+												(rows[i].exchange !== undefined && rows[i].exchange.type != currency.code)?
+												'<td class="w-medium" style="text-align: right; position: relative;"><span>'+ rows[i].exchange.type + '</span> ' + (diferenciaDeGasto/rows[i].exchange.rate).numberFormat(2, ',', '.') + '</td>'
+												:
+												'<td class="currency w-medium" style="color: ' + (( diferenciaDeGasto >= 0)? 'green' : 'red'  ) + ';">' + diferenciaDeGasto + '</td>'
+											) +
+
+											<!--#4DELSE-->
+
+											// 10. por gastar
+											//'<td class="currency w-medium" style="color: ' + ( (rows[i].por_gastar >= 0)? 'inherit' : 'inherit'  ) + ';">' + ((rows[i].por_gastar > 0)? rows[i].por_gastar : 0) + '</td>' +
+											(
+												(rows[i].exchange !== undefined && rows[i].exchange.type != currency.code)?
+
+												'<td class="w-medium" style="color: ' + ( (rows[i].por_gastar/rows[i].exchange.rate >= 0)? 'inherit' : 'inherit'  ) + ';text-align: right;"><span> '+ rows[i].exchange.type + ' </span>' + ((rows[i].por_gastar/rows[i].exchange.rate > 0)? rows[i].por_gastar/rows[i].exchange.rate : 0).numberFormat(2, ',', '.') + '</td>'
+
+												//'<td class="w-medium" style="text-align: right; position: relative;"><span>'+ rows[i].exchange.type + '</span> ' + (rows[i].costo.real / rows[i].exchange.rate).numberFormat(2, ',', '.') + '</td>'
+
+												:
+												'<td class="currency w-medium" style="color: ' + ( (rows[i].por_gastar >= 0)? 'inherit' : 'inherit'  ) + ';">' + ((rows[i].por_gastar > 0)? rows[i].por_gastar : 0) + '</td>'
+											) +
+
+											<!--#4DENDIF-->
+
+											// 11. eficiencia
+											<!--#4DIF _V3_difGastoListNegocios-->
+												'<td class="extended percent w-medium" style="color: ' + ( (((rows[i].costo.presupuestado != 0)? (((rows[i].costo.presupuestado - rows[i].costo.real) / rows[i].costo.presupuestado) * 100.00) : 0) >= 0)? 'green' : 'red'  ) + ';">' +  ( (rows[i].costo.presupuestado != 0)? (((rows[i].costo.presupuestado - rows[i].costo.real) / rows[i].costo.presupuestado) * 100.00) : 0) + '</td>' +
+											<!--#4DELSE-->
+
+												'<td class="extended percent w-medium" style="color: ' + (( eficienciaProyectada >= 0)? 'green' : 'red'  ) + ';">' +  ((eficienciaProyectada != 0)? eficienciaProyectada : 0  ) + '</td>' +
+
+											<!--#4DENDIF-->
+
+											<!--#4DIF v3_sobrecargos_cinemagica-->
+												// 12,5 . utilidad presupuestada
+												//'<td class="extended currency w-medium">' + (rows[i].total_neto - rows[i].costo.presupuestado) + '</td>' +
+												(
+													(rows[i].exchange !== undefined && rows[i].exchange.type != currency.code)?
+													'<td class="w-medium" style="text-align: right; position: relative;"><span>'+ rows[i].exchange.type + '</span> ' + ((rows[i].cinemagica.utilidad_neta) / rows[i].exchange.rate).numberFormat(2, ',', '.') + '</td>'
+													:
+													'<td class="currency w-medium">' + (rows[i].cinemagica.utilidad_neta) + '</td>'
+												) +
+											<!--#4DENDIF-->
+
+
+											<!--#4DIF Not(hideUtilPres)-->
+											// 12. utilidad presupuestada
+											//'<td class="extended currency w-medium">' + (rows[i].total_neto - rows[i].costo.presupuestado) + '</td>' +
+											(
+												(rows[i].exchange !== undefined && rows[i].exchange.type != currency.code)?
+												'<td class="w-medium" style="text-align: right; position: relative;"><span>'+ rows[i].exchange.type + '</span> ' + ((rows[i].total_neto - rows[i].costo.presupuestado) / rows[i].exchange.rate).numberFormat(2, ',', '.') + '</td>'
+												:
+												'<td class="currency w-medium">' + (rows[i].total_neto - rows[i].costo.presupuestado) + '</td>'
+											) +
+											<!--#4DENDIF-->
+
+											<!--#4DIF _V3_difGastoListNegocios-->
+												// 13. utilidad real monto
+												//'<td class="extended currency w-medium">' + (rows[i].total_neto - rows[i].costo.real) + '</td>' +
+
+												(
+													(rows[i].exchange !== undefined && rows[i].exchange.type != currency.code)?
+													'<td class="w-medium" style="text-align: right; position: relative;"><span>'+ rows[i].exchange.type + '</span> ' + (utilidadRealMonto/rows[i].exchange.rate).numberFormat(2, ',', '.') + '</td>'
+													:
+													'<td class="currency w-medium">' + utilidadRealMonto + '</td>'
+												) +
+
+
+												// 14. utilidad real porcentaje
+												'<td class="extended percent w-medium' + (!rows[i].margen_compra_resumenes? ' old-margen' : '') + '"' + ((rows[i].total_neto > 0)? (' style="color: ' + ( (  ((rows[i].total_neto - rows[i].costo.real) / rows[i].total_neto) * 100.00 >= ((rows[i].total_neto - rows[i].costo.presupuestado) / rows[i].total_neto) * 100.00  )? 'green' : 'red' ) + ';"') : '') + '>' + ((rows[i].total_neto > 0)? ((rows[i].total_neto - rows[i].costo.real) / rows[i].total_neto) * 100.00 : 'N/A') + '</td>' +
+											<!--#4DELSE-->
+												// 15. utilidad final monto
+												//'<td class="extended currency w-medium">' + (rows[i].total_neto - rows[i].costo.real - ((rows[i].por_gastar > 0)? rows[i].por_gastar : 0)) + '</td>' +
+
+												(
+													(rows[i].exchange !== undefined && rows[i].exchange.type != currency.code)?
+													'<td class="w-medium" style="text-align: right; position: relative;"><span>'+ rows[i].exchange.type + '</span> ' + (utilidadFinalMonto/rows[i].exchange.rate).numberFormat(2, ',', '.') + '</td>'
+													:
+													'<td class="currency w-medium">' + utilidadFinalMonto + '</td>'
+												) +
+
+												// 16. utilidad final porcentaje
+												//'<td width="5%" class="extended percent"' + ((rows[i].total_neto > 0)? (' style="color: ' + ( (  ((rows[i].total_neto - (rows[i].costo.real + rows[i].por_gastar)) / rows[i].total_neto) * 100.00 >= ((rows[i].total_neto - rows[i].costo.presupuestado) / rows[i].total_neto) * 100.00  )? 'green' : 'red' ) + ';"') : '') + '>' + ((rows[i].total_neto > 0)? ((rows[i].total_neto - (rows[i].costo.real + rows[i].por_gastar)) / rows[i].total_neto) * 100.00 : 'N/A') +
+													'<td class="extended percent w-small' + (!rows[i].margen_compra_resumenes? ' old-margen' : '') + '"' + ((rows[i].total_neto > 0 && isFinite(utilidad_real_ratio))? ' style="color: ' + ( (  (utilidad_real_ratio > 0 )? 'green' : 'red' ) + ';"') : '') + '>' + ((rows[i].total_neto > 0 && isFinite(utilidad_real_ratio))? utilidad_real_ratio : 'N/A') +
+												'</td>' +
+											<!--#4DENDIF-->
+
+											// 17. facturado
+											(
+												(rows[i].exchange !== undefined && rows[i].exchange.type != currency.code && ((rows[i].exchange.type == "USD" || rows[i].exchange.type == "CLF")))?
+												'<td class="w-medium" style="text-align: right; position: relative;"><span>'+ rows[i].exchange.type + '</span> ' + rows[i].exchange_facturado.numberFormat(2, ',', '.') + '</td>'
+												:
+												'<td class="currency w-medium">' + rows[i].total_facturado + '</td>'
+											) +
+
+											// 18. por facturar
+											(
+												(rows[i].exchange !== undefined && rows[i].exchange.type != currency.code && ((rows[i].exchange.type == "USD" || rows[i].exchange.type == "CLF")))?
+												'<td class="w-medium" style="text-align: right; position: relative;"><span>'+ rows[i].exchange.type + '</span> ' + rows[i].exchange_porfacturar.numberFormat(2, ',', '.') + '</td>'
+												:
+												'<td class="currency w-medium">' + rows[i].saldo_por_facturar + '</td>'
+											) +
+
+
+											//Nuevos campos desde cinemagica
+
+
+											<!--#4DIF v3_sobrecargos_cinemagica-->
+				
+												(
+													(rows[i].exchange !== undefined && rows[i].exchange.type != currency.code && ((rows[i].exchange.type == "USD" || rows[i].exchange.type == "CLF")))?
+													'<td class="w-medium" style="text-align: right; position: relative;"><span>'+ rows[i].exchange.type + '</span> ' + rows[i].cinemagica.comision_agencia.numberFormat(2, ',', '.') + '</td>'
+													:
+													'<td class="currency w-medium">' + rows[i].cinemagica.comision_agencia + '</td>'
+												) +
+
+												(
+													(rows[i].exchange !== undefined && rows[i].exchange.type != currency.code && ((rows[i].exchange.type == "USD" || rows[i].exchange.type == "CLF")))?
+													'<td class="w-medium" style="text-align: right; position: relative;"><span>'+ rows[i].exchange.type + '</span> ' + rows[i].cinemagica.costo_directo.numberFormat(2, ',', '.') + '</td>'
+													:
+													'<td class="currency w-medium">' + rows[i].cinemagica.costo_directo + '</td>'
+												) +
+
+												(
+													(rows[i].exchange !== undefined && rows[i].exchange.type != currency.code && ((rows[i].exchange.type == "USD" || rows[i].exchange.type == "CLF")))?
+													'<td class="w-medium" style="text-align: right; position: relative;"><span>'+ rows[i].exchange.type + '</span> ' + rows[i].cinemagica.comision_productor_ejecutivo.numberFormat(2, ',', '.') + '</td>'
+													:
+													'<td class="currency w-medium">' + rows[i].cinemagica.comision_productor_ejecutivo + '</td>'
+												) +
+													//Otros gastos
+					
+												(
+													(rows[i].exchange !== undefined && rows[i].exchange.type != currency.code && ((rows[i].exchange.type == "USD" || rows[i].exchange.type == "CLF")))?
+													'<td class="w-medium" style="text-align: right; position: relative;"><span>'+ rows[i].exchange.type + '</span> ' + rows[i].costo.otros_gastos.numberFormat(2, ',', '.') + '</td>'
+													:
+													'<td class="currency w-medium">' + rows[i].costo.otros_gastos + '</td>'
+												) +
+											<!--#4DENDIF-->
+											
+											<!--#4DIF v3_mostrar_totales_extendidos-->
+											// 19. cobrado
+											'<td class="extended currency w-medium">' + rows[i].total_cobrado + '</td>' +
+
+											// 20. por cobrar
+											'<td class="extended currency w-medium">' + rows[i].total_por_cobrar + '</td>' +
+
+											// 21. Justificado
+											'<td class="extended currency w-medium">' + rows[i].costo.total_justificado + '</td>' +
+
+											// 22. por justificar
+											'<td class="extended currency w-medium">' + rows[i].costo.total_por_justificar + '</td>' +
+
+											// 23. Pagado
+											'<td class="extended currency w-medium">' + rows[i].costo.total_pagado + '</td>' +
+
+											// 24. por pagar
+											'<td class="extended currency w-medium">' + rows[i].costo.total_por_pagar + '</td>' +
+											<!--#4DENDIF-->
+
+
+											<!--#4DELSE-->
+
+											// 1. numero
+											'<td class="w-medium">' + rows[i].folio + ' <span class="ui-icon ui-icon-locked" style="vertical-align: middle; margin-top: -2px; display: inline-block; visibility: ' + ((rows[i].closed_compras)? 'visible' : 'hidden' ) + ';"></span>'+ ((rows[i].text_proyecto !="Sin proyecto") ? '<span class="label-info-proyecto" style="color:rgb(67,165,24);font-size:9px;">'+ rows[i].text_proyecto +'</span>' : '') +'</td>' +
+
+											<!--#4DIF (show_codigo_column)-->
+											'<td class="w-medium">' + rows[i].param4_valor + '</td>' +
+											<!--#4DENDIF-->
+
+											// 2. f.asignación
+											//'<td width="10%">' + '<time datetime="' + Date.parse(rows[i].fecha_asignacion).toISOString() + '">' + $.datepicker.formatDate('dd-mm-yy', Date.parse(rows[i].fecha_asignacion)) + '</time></td>' +
+
+											'<td class="w-medium">' + rows[i].fecha_asignacion_ + '</td>' +
+
+											// 3. f.realización
+											'<td class="w-medium">' + rows[i].fecha_realizacion + '</td>' +
+
+											<!--#4DIF (v3_mostrar_columna_emisor)-->
+											'<td class="w-medium">' + rows[i].username + '</td>' +
+											<!--#4DENDIF-->
+
+											'<td class="w-medium">' + rows[i].ejecutivo + '</td>' +
+
+											// 4. f.cliente
+											'<td class="left w-medium">' + nombre_cliente + '</td>' +
+
+											// 5. referencia
+											'<td class="left w-medium"' + ((rows[i].closed)? ' style="color: blue !important;"' : '') + '>' + rows[i].text + '</td>' +
+
+											<!--#4DIF (Not(no_mostrar_total_neto_neg))-->
+
+											// 5. neto
+											'<td class="currency w-medium">' + rows[i].total_neto + '</td>' +
+
+											<!--#4DENDIF-->
+
+											<!--#4DENDIF-->
+
+											'</tr>';
+
+										
+							if(rows[i].id_proyecto != 0 && unaBase.vista_proyectos){
+								if($(`tr[data-projectid="project${rows[i].id_proyecto}"]`).length > 0){
+									$(htmlData).insertAfter(`tr[data-projectid="project${rows[i].id_proyecto}"]`)
+									
+									if(rows[i].autoclone_active)
+									$(`tr[data-projectid="project${rows[i].id_proyecto}"]`).css( "display", "" );
+									return '';
+								}else{
+									proyectObjHtml =`<tr class="clickable-row project" data-projectid="project${rows[i].id_proyecto}">
+														<td><i class="fas fa-chevron-circle-down fa-2x"></i></td>
+														<td><button type="button" class="btn p-0 border-0 bg-transparent project-settings text-muted" data-projectid="${rows[i].id_proyecto}" data-name="${String(rows[i].referencia_proyecto ?? '').replaceAll('"','&quot;')}" data-value="${rows[i].total_neto_proyecto ?? ''}"><i class="fas fa-cog fa-x"></i></button></td>
+														<td><i class="far fa-clock" style="color: black; display:${(rows[i].autoclone_active) ? '':'none'};" title="Autoclon activo en este proyecto"></i></td>
+														<td colspan="	<!--#4DIF (show_codigo_column)--> 3<!--#4DELSE-->2<!--#4DENDIF-->"></td>
+														<td class="left w-medium"><span style="display:block;font-size:12px;">${rows[i].fecha_asig_proyecto}</span></td>
+														<td colspan="3"></td>
+														<td class="left w-medium"><span style="display:block;font-size:12px;">${rows[i].referencia_proyecto}</span><span style="display:block;font-weight: lighter !important;font-size: smaller !important;">(${rows[i].cantidad_proyecto} negocios)</span></td>
+														<td class="currency w-medium"><span>$ ${unaBase.utilities.transformNumber(rows[i].total_neto_proyecto, 'view')}</span></td>
+														<td class="currency w-medium"><span>$ ${unaBase.utilities.transformNumber(rows[i].gastop_proyecto, 'view')}</span></td>
+														<td class="currency w-medium"><span>$ ${unaBase.utilities.transformNumber(rows[i].gastor_proyecto, 'view')}</span></td>
+														<td class="currency w-medium"><span>$ ${unaBase.utilities.transformNumber(rows[i].por_gastar_proyecto, 'view')}</span></td>
+														<td colspan="6"></td>	
+													</tr>`;
+
+									$('table.padre tbody').prepend(proyectObjHtml+htmlData)
+
+								
+								}
+							
+
+							}else{
+								
+								return htmlData;
+							}
+
+
+
+
+							
+						}
+					},
+					// detail: {
+					// 	url: function(id) { return '/v3/views/negocios/content.shtml?id=' + id },
+					// 	iframe: false
+					// },
+					inflection: {
+						singular: 'negocio',
+						plural: 'negocios',
+						none: 'ningun'
+					},
+					searchOff: true,
+					// Filtros
+					filters: [
+						{ name: 'occ', type: 'new_select', caption: 'Oc cliente', dataObject: [
+
+							{
+								id: true,
+								text: 'Si'
+							},
+							{
+								id: false,
+								text: 'No'
+							}
+
+
+						] },
+						{ name: 'fecha_asignacion', type: 'month', caption: 'Fecha de asignación', range: true, currentMonth: ((showCurrentMonth) ? true : false) , currentYear: ((showCurrentYear) ? true : false) },
+						//{ name: 'updated_at', type: 'month', caption: 'Fecha últ. modificación', range: true },
+						// Pendiente: agregar datasource remoto y convertir a checkbox
+						// con jquery ui autocomplete
+						// { name: 'area_negocio', type: 'autocomplete', caption: 'Área de negocio', dataSource: 'getAreaNegocio' },
+						{ name: 'area_negocio', type: 'new_select', caption: 'Área de negocio', dataSource: 'getAreaNegocio' },
+
+						{ name: 'por_emisor', type: 'new_select', caption: 'Por emisor', dataSource: 'getUsuariosEmisores' },
+
+						{ name: 'ejecutivo_responsable', type: 'new_select', caption: 'Ejecutivo responsable', dataSource: 'getUsuarioEjecutivo?state=neg' },
+
+						{ name: 'estado', type: 'checkbox', caption: 'Estado del negocio', options: [
+							{ caption: 'En proceso', name: 'estado_en_proceso', value: true },
+							{ caption: 'Cerrado', name: 'estado_cerrado', value: true }
+							//{ caption: 'Anulado', name: 'estado_nulo', value: false }
+						] },
+						{ name: 'estado_compras', type: 'new_select', caption: 'Estado de las compras', dataObject: [
+							{
+								id: true,
+								text: 'Abiertas para compras'
+							},
+							{
+								id: false,
+								text: 'Cerradas para compras'
+							}
+						]},
+
+						{ name: 'estado_ventas', type: 'new_select', caption: 'Estado de las ventas', dataObject: [
+							{
+								id: true,
+								text: 'Abiertas para ventas'
+							},
+							{
+								id: false,
+								text: 'Cerradas para ventas'
+							}
+						]},
+
+
+						{ name: 'estado_factura', type: 'new_select', caption: 'Estado de la factura', dataObject: [
+
+							{
+								id: true,
+								text: 'facturado'
+							},
+							{
+								id: false,
+								text: 'por facturar'
+							}
+
+
+						] },
+
+						
+						
+
+						{ name: 'por_proyecto', type: 'autocomplete', caption: 'Por proyecto', dataSource: 'getProyectosActivos' },
+
+						// { name: 'parametro', type: 'autocomplete', caption: '', dataSource: 'Param1' },
+
+						{ name: 'personalizadoUno', type: 'autocomplete', caption: 'campo1', dataSource: 'getParamForSearch1' },
+						{ name: 'personalizadoDos', type: 'autocomplete', caption: 'campo2', dataSource: 'getParamForSearch2' },
+						{ name: 'personalizadoTres', type: 'autocomplete', caption: 'campo3', dataSource: 'getParamForSearch3' },
+
+						{ name: 'more', caption: 'Más', type: 'date_advanced', options: [
+							{ caption: 'Fecha de asignación', name: 'asignado_at', default: true, currentMonth: ((showCurrentMonth) ? true : false) , currentYear: ((showCurrentYear) ? true : false) },
+							{ caption: 'Fecha de creación', name: 'created_at' },
+							{ caption: 'Fecha de realización', name: 'realizado_at' },
+							{ caption: 'Fecha de cierre de negocio', name: 'cerrado_at' },
+							{ caption: 'Fecha de última modificación', name: 'updated_at' }
+						] }
+
+
+					]
+				});
+
+				unaBase.toolbox.menu.init({
+					entity: 'Negocios',
+					buttons: [ 'searchOff','export_list', 'export_list_items_doc', 'export_list_cot_consolidadoPE','export_list_items_gastos_periode','import_nv_xml','classic_view', 'export_resumen_list_neg', 'export_costreport_list_neg', 'export_costreport_consolidated','programador_masivo']
+				});
+
+				$('#menu ul').find('li[data-name="export_list_cot_consolidadoPE"]').hide();
+				$('#menu ul').find('li[data-name="export-resumen"]').hide();
+				$('#menu ul').find('li[data-name="export-cost-report"]').hide();
+				$("body").on("click", "input.selected", function(){
+					var input = $(this);
+					var cantSelect = $('table tbody td input:checked').length;
+					if(cantSelect == 1){
+						$('#menu ul').find('li[data-name="export-resumen"]').show();
+						if(access._683){
+							$('#menu ul').find('li[data-name="export-cost-report"]').show();
+						}
+					}else{
+						$('#menu ul').find('li[data-name="export-resumen"]').hide();
+						$('#menu ul').find('li[data-name="export-cost-report"]').hide();
+					}
+					if (input.attr('name') == "selected_all" ) {
+						if (input.prop("checked")) {
+							$('table tbody input[name="selected_one"]').prop("checked", true);
+							$('#dropdown_launcher').show();
+						}else{
+							$('table tbody input[name="selected_one"]').prop("checked", false);
+							$('#dropdown_launcher').hide();
+						}
+					}else{
+						
+						var cantSelect = $('table tbody td input:checked').length;
+						if (input.prop("checked")) {
+							$('#dropdown_launcher').show();
+						}else{
+							if(cantSelect == 0){
+								$('#dropdown_launcher').hide();
+							}
+
+							
+						}
+					}
+				});
+
+				//ir a detalle
+				$('table.padre tbody').on('click', 'td', function(e) {
+
+					
+
+
+					
+
+					
+					var idCot = $(this).parent('tr').data("id");
+					var number = $(this).parent('tr').data("index");
+					var disb = $(this).attr('data-disabled');
+					var trBlocked = $(this).closest("tr").attr('data-block');
+					var trBlockedUser = $(this).closest("tr").attr('data-blockuser');
+
+					let isProject = this.parentNode.classList.contains('project')
+
+					// Omite entrar en el negocio al descargar el Archivo adjunto a OC (clip)
+					if ($(e.target).closest('.btn-clip').length) {
+						e.preventDefault();
+						return;
+					}
+					//
+					if(trBlocked == 'false' && !disb && !isProject){
+						const isVX = $(this).parent('tr').data("vx");
+						if (typeof isVX === "boolean" && isVX === true) {
+							const idIncome = $(this).parent('tr').data("idincomevx");
+							const idProject = $(this).parent('tr').data("idprojectvx");
+							
+							if(!idProject){
+								toastr.warning('No se ha encontrado el ID del proyecto asociado a este negocio.')
+								return
+							}
+							// Construye la URL con los ID obtenidos
+							const url = `https://app.unabase.cc/incomes/project/${idProject}/income/${idIncome}`;
+							
+							// Abre la nueva URL en una pestaña nueva
+							window.open(url, '_blank');
+							return;
+						}
+
+						unaBase.loadInto.viewport('/v3/views/negocios/content.shtml?id=' + idCot+'&from=self');
+					}else if(trBlockedUser == $('html > body.menu.home > aside > div > div > h1').data('username') ){
+	
+
+						confirm('Este negocio esta bloqueado ya que anteriormente estabas trabajando en él, si deseas seguir editándolo verifica que no lo tengas abierto en otra pestaña, de no ser así, desbloquealo acá.').done(function(data) {
+							if (data) {
+								window.open(nodeUrl+'/unblockSameUser/'+idCot+'/'+ $('.sidebar li.active').data('name')+'/'+$(this).attr('data-blockuser'), '_blank');								
+								// $(this).remove();
+								unaBase.history.back();
+							}
+						});
+					}else if (!disb && !isProject){
+						var block_user = $(this).parent('tr').attr('data-blockuser');
+						var block_user_email = $(this).parent('tr').attr('data-blockuseremail');
+						var block_user_name = camelWord($(this).parent('tr').attr('data-blockUserName'));
+						var reqName = camelWord($('html > body.menu.home > aside > div > div > h1').text());
+						var reqEmail = $('html > body.menu.home > aside > div > div > h1').data('email');
+						// var number = $(this).attr('data-index');
+						// var cotId = $(this).attr('data-id');
+
+
+						confirm('El negocio está siendo modificada por   <span id="userBlock">'+block_user_name+'</span><br/> ¿Deseas solicitar el desbloqueo de esta cotización?').done(function(data) {
+							if (data) {
+								var htmlText = 'Estimado <b style="color: rgb(4,167,107);">'+block_user_name+'</b>,<br>    Actualmente estás trabajando en el negocio Nro.'+number+', <b>'+reqName+'</b> ha solicitado trabajar en el mismo. Si aún continuas trabajando y deseas habilitar el acceso debes guardar y salir del negocio. <br><br> De lo contrario puedes desbloquear haciendo<br><br> <a class="u-internal" href="'+nodeUrl+'/unblock/'+idCot+'/'+number+'/negocios/'+block_user+'/'+reqName+'/'+reqEmail+'">Desbloquear</a><br><br>';
+								window.open(nodeUrl+'/unblock?subject='+reqName+' ha solicitado desbloquear el negocio Nro.'+number+'&msg='+htmlText+'&email='+block_user_email, '_blank');
+								$(this).remove();
+							}
+						});
+					}else if(isProject){
+						
+						if($(this).parent('tr').find('i').hasClass('fa-rotate-180'))
+							$(this).parent('tr').find('i').removeClass('fa-rotate-180');
+						else
+							$(this).parent('tr').find('i').addClass('fa-rotate-180');
+						
+					}
+				});
+
+				// Opciones para listado
+				(function() {
+					var htmlObject;
+
+					htmlObject = $(`
+						<ul id="dropdown_menu" class="dropdown-menu" style="position: absolute; top: 90px; left: 90px; z-index: 1000;"> 
+							<li><a href="#" '+ ((!access._488)? 'style="color:gray"':'') +' class="close-negocios" data-size="small"><span class="ui-icon ui-icon-locked"></span>Cerrar negocios</a></li>	
+							<li><a href="#" '+ ((!access._489)? 'style="color:gray"':'') +' class="open-negocios" data-size="small"><span class="ui-icon ui-icon-unlocked"></span>Abrir negocios</a></li>	
+							<li><a href="#" '+ ((!access._490)? 'style="color:gray"':'') +' class="close-compras" data-size="small"><span class="ui-icon ui-icon-locked"></span>Cerrar compras</a></li>	
+							<li><a href="#" '+ ((!access._491)? 'style="color:gray"':'') +' class="open-compras" data-size="small"><span class="ui-icon ui-icon-unlocked"></span>Abrir compras</a></li>	
+							<li><a href="#" '+ ((!access._598)? 'style="color:gray"':'') +' class="close-ventas" data-size="small"><span class="ui-icon ui-icon-locked"></span>Cerrar ventas</a></li>	
+							<li><a href="#" '+ ((!access._674)? 'style="color:gray"':'') +' class="asociar-proyectos" data-size="small"><span class="ui-icon ui-icon-link"></span>Asociar a proyecto</a></li>	
+							<li><a href="#" '+ ((!access._674)? 'style="color:gray"':'') +' class="desasociar-proyectos" data-size="small"><span class="ui-icon ui-icon-link"></span>Desasociar de proyecto</a></li>
+							<li><a href="#" '+ ((!access._485)? 'style="color:gray"':'') +' class="convertir-cotizacion" data-size="small"><span class="ui-icon ui-icon-link"></span>Convertir en cotizacion</a></li>	
+							<li><a href="#" '+ ((!access._642)? 'style="color:gray"':'') +' class="clone-negocios" data-size="small"><span class="ui-icon ui-icon-link"></span>Duplicar negocios</a></li>
+								
+							</ul> 
+					`);
+
+					//<li><a href="#" '+ ((!access._642)? 'style="color:gray"':'') +' class="export-resumen" data-size="small"><span class="ui-icon ui-icon-link"></span>Exportar resumen</a></li>
+					htmlObject.find('a.close-negocios').click(function(event) {
+						if (access._488) {
+							var ids = [];
+							var ids_notificacion = [];
+							var ids_nulo = [];
+							var ids_cerrado = [];
+							var ids_cerrado_compras = [];
+							var ids_facturado = [];
+
+							$('#viewport tbody.ui-selectable tr[data-id] td:first-of-type input.selected:checked').each(function() {
+								ids.push($(this).closest('tr').data('id'));
+								ids_notificacion.push($(this).closest('tr').data('index'));
+								if (!$(this).closest('tr').data('status')) {
+									ids_nulo.push($(this).closest('tr').data('id'));
+								}
+								if ($(this).closest('tr').data('closed')) {
+									ids_cerrado.push($(this).closest('tr').data('id'));
+								}
+								if ($(this).closest('tr').data('closed-compras')) {
+									ids_cerrado_compras.push($(this).closest('tr').data('id'));
+								}
+								if (!$(this).closest('tr').data('por-facturar')) {
+									ids_facturado.push($(this).closest('tr').data('id'));
+								}
+							});
+
+							var nulo = (ids_nulo.length > 0);
+							var cerrado = (ids_cerrado.length > 0);
+							var cerrado_compras = (ids_cerrado_compras.length > 0);
+							var facturado = (ids_facturado.length > 0);
+
+							if (!nulo && !cerrado) {
+								confirm(MSG.get('CONFIRM_NEGOCIO_CLOSE_BATCH')).done(function(data) {
+									if (data) {
+										$.ajax({
+											url: '/4DACTION/_V3_batchCierreByNegocio',
+											data: {
+												ids: ids.join('|'),
+												close: true
+											},
+											dataType: 'json',
+											success: function(data) {
+												if (typeof data.detail != 'undefined') {
+													if (data.detail.result) {
+														toastr.success(NOTIFY.get('SUCCESS_NEGOCIO_CLOSE_BATCH'));
+
+							                          notifyNv.close({
+							                            number: ids_notificacion
+							                          });
+													} else {
+														toastr.warning(sprintf(NOTIFY.get('WARNING_NEGOCIO_CLOSE_BATCH'), data.detail.data.replace("\n", '<br>')));
+													}
+												} else {
+													if (data.success) {
+														toastr.success(NOTIFY.get('SUCCESS_NEGOCIO_CLOSE_BATCH'));
+
+								                          notifyNv.close({
+								                            number: ids_notificacion
+								                          });
+														setTimeout(function() {
+															unaBase.toolbox.search.save();
+															unaBase.toolbox.search.restore();
+														}, 1000);
+													} else {
+														if (data.opened) {
+															if (data.readonly)
+																toastr.error(NOTIFY.get('ERROR_RECORD_READONLY_BATCH', 'Error'));
+														}
+													}
+												}
+											}
+										});
+									}
+								});
+							} else {
+								var msg = "No es posible hacer cierre masivo de negocios porque se han seleccionado:<br>";
+								msg+= cerrado? "- Negocios que ya fueron cerrados.<br>" : '';
+								msg+= nulo? "- Negocios anulados.<br>" : '';
+								toastr.warning(msg);
+							}
+						}else{
+							alert("No cuentas con permiso para realizar esta acción.");
+						}
+					});
+
+					htmlObject.find('a.open-negocios').click(function(event) {
+						if (access._489) {
+							var ids = [];
+							var ids_nulo = [];
+							var ids_opens_neg = [];
+							var ids_notificacion = [];
+							
+							$('#viewport tbody.ui-selectable tr[data-id] td:first-of-type input.selected:checked').each(function() {
+								ids.push($(this).closest('tr').data('id'));
+								ids_notificacion.push($(this).closest('tr').data('index'));
+								if (!$(this).closest('tr').data('status')) {
+									ids_nulo.push($(this).closest('tr').data('id'));
+								}
+								if (!$(this).closest('tr').data('closed')) {
+									ids_opens_neg.push($(this).closest('tr').data('id'));
+								}
+							});
+
+							var nulo = (ids_nulo.length > 0);
+							var abiertos_neg = (ids_opens_neg.length > 0);
+
+							if (!nulo && !abiertos_neg) {
+								confirm(MSG.get('CONFIRM_NEGOCIO_OPEN_BATCH')).done(function(data) {
+									if (data) {
+										$.ajax({
+											url: '/4DACTION/_V3_batchCierreByNegocio',
+											data: {
+												ids: ids.join('|'),
+												close: false
+											},
+											dataType: 'json',
+											success: function(data) {
+												if (typeof data.detail != 'undefined') {
+													if (data.detail.result) {
+														toastr.success(NOTIFY.get('SUCCESS_NEGOCIO_OPEN_BATCH'));
+
+								                          notifyNv.open({
+								                            number: ids_notificacion
+								                          });
+													} else {
+														toastr.warning(sprintf(NOTIFY.get('WARNING_NEGOCIO_OPEN_BATCH'), data.detail.data.replace("\n", '<br>')));
+													}
+												} else {
+													if (data.success) {
+														toastr.success(NOTIFY.get('SUCCESS_NEGOCIO_OPEN_BATCH'));
+
+								                          notifyNv.open({
+								                            number: ids_notificacion
+								                          });
+														setTimeout(function() {
+															unaBase.toolbox.search.save();
+															unaBase.toolbox.search.restore();
+														}, 1000);
+													} else {
+														if (data.opened) {
+															if (data.readonly)
+																toastr.error(NOTIFY.get('ERROR_RECORD_READONLY_BATCH', 'Error'));
+														}
+													}
+												}
+											}
+										});
+									}
+								});
+							} else {
+								var msg = "No es posible hacer apertura masiva de negocios porque se han seleccionado:<br>";
+								msg+= abiertos_neg? "- Negocios que ya fueron abiertos.<br>" : '';
+								msg+= nulo? "- Negocios anulados.<br>" : '';
+								toastr.warning(msg);
+							}
+						}else{
+							alert("No cuentas con permiso para realizar esta acción.");
+						}
+					});
+
+					htmlObject.find('a.clone-negocios').click(function(event) {
+				     if (access._642) {
+				     	
+						var ids = [];
+						var ids_nulo = [];
+						var ids_cerrado = [];
+						var ids_cerrado_compras = [];
+						var ids_facturado = [];
+
+						$('#viewport tbody.ui-selectable tr[data-id] td:first-of-type input.selected:checked').each(function() {
+							ids.push($(this).closest('tr').data('id'));
+							if (!$(this).closest('tr').data('status')) {
+								ids_nulo.push($(this).closest('tr').data('id'));
+							}
+							if ($(this).closest('tr').data('closed')) {
+								ids_cerrado.push($(this).closest('tr').data('id'));
+							}
+							if ($(this).closest('tr').data('closed-compras')) {
+								ids_cerrado_compras.push($(this).closest('tr').data('id'));
+							}
+							if (!$(this).closest('tr').data('por-facturar')) {
+								ids_facturado.push($(this).closest('tr').data('id'));
+							}
+						});
+
+						var nulo = (ids_nulo.length > 0);
+						var cerrado = (ids_cerrado.length > 0);
+						var cerrado_compras = (ids_cerrado_compras.length > 0);
+						var facturado = (ids_facturado.length > 0);
+
+						//if (!nulo && !cerrado && cerrado_compras && facturado) {
+						if (!nulo) {
+							confirm("¿Quieres duplicar los negocios seleccionados?").done(function(data) {
+								if (data) {
+									  var htmlObject = $(
+							                '<section> \
+							                  <span>Seleccionar fecha de asignacion:</span> \
+							                  <input required type="text" style="border-bottom:solid 1px!important;width:300px" name="assignmentpicker" placeholder="00-00-0000" autocomplete="off"> \
+							                </section>'
+							              );
+
+							              htmlObject.find('input[name="assignmentpicker"]').datepicker({
+							              	// changeDay: true,
+							               //  changeMonth: true,
+							               //  changeYear: true,
+							               //  yearRange: "c-10:c+3",
+							               dateFormat: 'dd/mm/yy',
+							                onSelect: function (event) {
+							                  htmlObject.data("response", $(this).val());
+							                  htmlObject
+							                    .find("input")
+							                    .css("background-color", "white");
+							                }
+							              });
+
+							        prompt(htmlObject).done(function (data) {
+                						if (data !== false && data !== "") {
+								       		
+                							var fecha_asignacion=data.replace(/\//g, "-");
+											$.ajax({
+												url: '/4DACTION/_V3_batchduplicarnegocio',
+												data: {
+													ids: ids.join('|'),
+													fecha_asignacion: fecha_asignacion,
+													close: true
+												},
+												dataType: 'json',
+												success: function(data) {
+													
+													if (typeof data.detail !== 'undefined') {
+														if (data.detail.result) {
+															toastr.success(NOTIFY.get('SUCCESS_NEGOCIO_CLONE_BATCH'));
+														} else {
+															toastr.warning(sprintf(NOTIFY.get('WARNING_NEGOCIO_CLOSE_BATCH'), data.detail.data.replace("\n", '<br>')));
+														}
+													} else {
+														if (data.success) {
+															toastr.success("Duplicado exitoso");
+															setTimeout(function() {
+																unaBase.toolbox.search.save();
+																unaBase.toolbox.search.restore();
+															}, 1000);
+														} else {
+															if (data.opened) {
+																if (data.readonly)
+																	toastr.error(NOTIFY.get('ERROR_RECORD_READONLY_BATCH', 'Error'));
+															}
+														}
+													}
+												}
+											});
+										
+
+										}
+									});
+
+								}
+							});
+						} else {
+							var msg = "No es posible duplicar negocios porque se han seleccionado:<br>";
+							//msg+= !facturado? "- Negocios por facturar.<br>" : '';
+							msg+= cerrado? "- Negocios que ya fueron cerrados.<br>" : '';
+							//msg+= !cerrado_compras? "- Negocios sin cierre de compras.<br>" : '';
+							msg+= nulo? "- Negocios anulados.<br>" : '';
+							toastr.warning(msg);
+						}
+
+						}else{
+							alert("No cuentas con permiso para realizar esta acción.");
+						}
+
+
+					});
+
+					htmlObject.find('a.close-compras').click(function(event) {
+						if (access._490) {
+							var ids = [];
+							var ids_nulo = [];
+							var ids_cerrado = [];
+							var ids_cerrado_compras = [];
+
+							$('#viewport tbody.ui-selectable tr[data-id] td:first-of-type input.selected:checked').each(function() {
+								ids.push($(this).closest('tr').data('id'));
+								if (!$(this).closest('tr').data('status')) {
+									ids_nulo.push($(this).closest('tr').data('id'));
+								}
+								if ($(this).closest('tr').data('closed')) {
+									ids_cerrado.push($(this).closest('tr').data('id'));
+								}
+								if ($(this).closest('tr').data('closed-compras')) {
+									ids_cerrado_compras.push($(this).closest('tr').data('id'));
+								}
+							});
+
+							var nulo = (ids_nulo.length > 0);
+							var cerrado = (ids_cerrado.length > 0);
+							var cerrado_compras = (ids_cerrado_compras.length > 0);
+
+							if (!nulo && !cerrado && !cerrado_compras) {
+								confirm(MSG.get('CONFIRM_NEGOCIO_CLOSE_COMPRAS_BATCH')).done(function(data) {
+									if (data) {
+										$.ajax({
+											url: '/4DACTION/_V3_batchCierreComprasNeg',
+											data: {
+												ids: ids.join('|'),
+												close: true
+											},
+											dataType: 'json',
+											success: function(data) {
+												if (data.success) {
+													toastr.success(NOTIFY.get('SUCCESS_NEGOCIO_CLOSE_COMPRAS'));
+													var folios = [];
+													
+													for (var key in data.rows) {
+														folios.push(data.rows[key].folio2);
+														
+													}
+
+								                          notifyNv.closeCompras({
+								                            number: folios
+								                          });
+													setTimeout(function() {
+														unaBase.toolbox.search.save();
+														unaBase.toolbox.search.restore();
+													}, 1000);
+												} else {
+													if (data.opened) {
+														if (data.readonly)
+															toastr.error(NOTIFY.get('ERROR_RECORD_READONLY_BATCH', 'Error'));
+													}
+												}
+											}
+										});
+									}
+								});
+							} else {
+								var msg = "No es posible hacer cierre masivo de compras porque se han seleccionado:<br>";
+								msg+= cerrado? "- Negocios que ya fueron cerrados.<br>" : '';
+								msg+= nulo? "- Negocios anulados.<br>" : '';
+								msg+= cerrado_compras? "- Negocios que ya fueron cerrados para compra.<br>" : '';
+								toastr.warning(msg);
+							}
+						}else{
+							alert("No cuentas con permiso para realizar esta acción.");
+						}
+					});
+
+					htmlObject.find('a.open-compras').click(function(event) {
+						if (access._491) {
+							var ids = [];
+							var ids_nulo = [];
+							var ids_opens_oc = [];
+							var ids_cerrado_neg = [];
+
+							$('#viewport tbody.ui-selectable tr[data-id] td:first-of-type input.selected:checked').each(function() {
+								ids.push($(this).closest('tr').data('id'));
+								if (!$(this).closest('tr').data('status')) {
+									ids_nulo.push($(this).closest('tr').data('id'));
+								}
+								if (!$(this).closest('tr').data('closed-compras')) {
+									ids_opens_oc.push($(this).closest('tr').data('id'));
+								}
+								if ($(this).closest('tr').data('closed')) {
+									ids_cerrado_neg.push($(this).closest('tr').data('id'));
+								}
+							});
+
+							var nulo = (ids_nulo.length > 0);
+							var abiertos = (ids_opens_oc.length > 0);
+							var cerrado_neg = (ids_cerrado_neg.length > 0);
+
+							if (!nulo && !abiertos && !cerrado_neg) {
+								confirm(MSG.get('CONFIRM_NEGOCIO_OPEN_COMPRAS_BATCH')).done(function(data) {
+									if (data) {
+										$.ajax({
+											url: '/4DACTION/_V3_batchCierreComprasNeg',
+											data: {
+												ids: ids.join('|'),
+												close: false
+											},
+											dataType: 'json',
+											success: function(data) {
+												if (data.success) {
+													toastr.success(NOTIFY.get('SUCCESS_NEGOCIO_OPEN_COMPRAS'));
+													var folios = [];
+													
+													for (var key in data.rows) {
+														folios.push(data.rows[key].folio2);
+														
+													}
+								                          notifyNv.openCompras({
+								                            number: folios
+								                          });
+													setTimeout(function() {
+														unaBase.toolbox.search.save();
+														unaBase.toolbox.search.restore();
+													}, 1000);
+												} else {
+													if (data.opened) {
+														if (data.readonly)
+															toastr.error(NOTIFY.get('ERROR_RECORD_READONLY_BATCH', 'Error'));
+													}
+												}
+											}
+										});
+									}
+								});
+							} else {
+								var msg = "No es posible hacer apetura masiva de compras porque se han seleccionado:<br>";
+								msg+= abiertos? "- Negocios que ya fueron abiertos para compra.<br>" : '';
+								msg+= nulo? "- Negocios anulados.<br>" : '';
+								msg+= cerrado_neg? "- Negocios cerrados.<br>" : '';
+								toastr.warning(msg);
+							}
+						}else{
+							alert("No cuentas con permiso para realizar esta acción.");
+						}
+					});
+
+					htmlObject.find('a.close-ventas').click(function(event) {
+						if (access._598) {
+							var ids = [];
+							var ids_nulo = [];
+							var ids_cerrado = [];
+							var ids_cerrado_ventas = [];
+
+							$('#viewport tbody.ui-selectable tr[data-id] td:first-of-type input.selected:checked').each(function() {
+								ids.push($(this).closest('tr').data('id'));
+								if (!$(this).closest('tr').data('status')) {
+									ids_nulo.push($(this).closest('tr').data('id'));
+								}
+								if ($(this).closest('tr').data('closed')) {
+									ids_cerrado.push($(this).closest('tr').data('id'));
+								}
+								if ($(this).closest('tr').data('closed-ventas')) {
+									ids_cerrado_ventas.push($(this).closest('tr').data('id'));
+								}
+							});
+
+							var nulo = (ids_nulo.length > 0);
+							var cerrado = (ids_cerrado.length > 0);
+							var cerrado_ventas = (ids_cerrado_ventas.length > 0);
+
+							if (!nulo && !cerrado && !cerrado_ventas) {
+								confirm(MSG.get('CONFIRM_NEGOCIO_CLOSE_VENTAS_BATCH')).done(function(data) {
+									if (data) {
+										$.ajax({
+											url: '/4DACTION/_V3_batchCierreVentasNeg',
+											data: {
+												ids: ids.join('|'),
+												close: true
+											},
+											dataType: 'json',
+											success: function(data) {
+												if (data.success) {
+													toastr.success(NOTIFY.get('SUCCESS_NEGOCIO_CLOSE_VENTAS'));
+													setTimeout(function() {
+														unaBase.toolbox.search.save();
+														unaBase.toolbox.search.restore();
+													}, 1000);
+												} else {
+													if (data.opened) {
+														if (data.readonly)
+															toastr.error(NOTIFY.get('ERROR_RECORD_READONLY_BATCH', 'Error'));
+													}
+												}
+											}
+										});
+									}
+								});
+							} else {
+								var msg = "No es posible hacer cierre masivo de ventas porque se han seleccionado:<br>";
+								msg+= cerrado? "- Negocios que ya fueron cerrados.<br>" : '';
+								msg+= nulo? "- Negocios anulados.<br>" : '';
+								msg+= cerrado_ventas? "- Negocios que ya fueron cerrados para venta.<br>" : '';
+								toastr.warning(msg);
+							}
+						}else{
+							alert("No cuentas con permiso para realizar esta acción.");
+						}
+					});
+
+					htmlObject.find('a.asociar-proyectos').click(function(event) {
+						if (access._674) {
+							let ids = [];
+							let ids_nulo = [];
+							let ids_con_proyectos = [];
+
+							$('#viewport tbody.ui-selectable tr[data-id] td:first-of-type input.selected:checked').each(function() {
+								ids.push($(this).closest('tr').data('id'));
+								if (!$(this).closest('tr').data('status')) {
+									ids_nulo.push($(this).closest('tr').data('id'));
+								}
+								if ($(this).closest('tr').data('id-proyecto')) {
+									ids_con_proyectos.push($(this).closest('tr').data('id'));
+								}
+							});
+
+							let nulo = (ids_nulo.length > 0);
+							let asociado_a_proyecto = (ids_con_proyectos.length > 0);
+							if (!nulo && !asociado_a_proyecto) {
+
+								let htmlObject = $('<section> \
+										<!--<span>Buscar proyecto para asociar:</span>--> \
+										<form autocomplete="on" target="the_iframe" action="about:blank"> \
+											<input data-id-seleccionado="0" placeholder="Buscar proyecto para asociar..." style="border: 1px solid lightgray;width:250px;margin:5px 0 0 0;border-radius:3px;padding:2px;background-color:yellow;" required type="text" name="buscar_proyectos_selected"> \
+											<div style="margin-top:5px;">ó <a href="#" class="newproject" style="color:green;!important;font-size:8px;!important">+ Crear nuevo proyecto para asociar</a></div>\
+											<iframe style="display: none;" id="the_iframe" name="the_iframe" src="about:blank"></iframe> \
+										</form> \
+									</section>');
+
+								// buscar proyectos
+								htmlObject.find('input[name="buscar_proyectos_selected"]').autocomplete({
+								  source: function(request,response) {
+									$.ajax( {
+									 	url: '/4DACTION/_V3_getProyectosActivos',
+									  dataType: "json",
+									  type: 'POST',
+									  data: {
+										q: request.term
+									  },
+									  success: function(data) {
+										response($.map(data, function(item) {
+											return item;
+										}));
+									  }
+									});
+								  },
+								  minLength: 2,
+								  select: function(event,ui) {
+								 	htmlObject.find('input[name="buscar_proyectos_selected"]').val(ui.item.text);
+								 	htmlObject.find('input[name="buscar_proyectos_selected"]').data('id-seleccionado', ui.item.id);
+									return false;
+								  }
+								}).data('ui-autocomplete')._renderItem = function(ul, item) {
+									return $(`<li><a class="u-show-list"> ${item.text}</a></li>`).appendTo(ul);
+								};
+
+								confirm(htmlObject, 'Asociar','Cancelar').done(function(data) {
+									let id = $('input[name="buscar_proyectos_selected"]').data('id-seleccionado');									
+									if (data) {
+										if (parseFloat(id) > 0) {
+											$.ajax({
+												url: '/4DACTION/_V3_batchAsociarProyectos',
+												data: {
+													ids: ids.join('|'),
+													idproyecto: $('input[name="buscar_proyectos_selected"]').data('id-seleccionado')											},
+												dataType: 'json',
+												success: function(data) {
+													if (data.success) {
+														toastr.success('Negocios asociados con éxito.');
+														setTimeout(function() {
+															unaBase.toolbox.search.save();
+															unaBase.toolbox.search.restore();
+														}, 1000);
+													} else {
+														if (data.opened) {
+															if (data.readonly)
+																toastr.error(NOTIFY.get('ERROR_RECORD_READONLY', 'Error'));
+														}
+													}
+												}
+											});
+										}else{
+											toastr.warning('Falta seleccionar proyecto.');
+											callback(data)
+										}										
+									}
+								});
+
+								htmlObject.find('.newproject').click(function(){
+									var htmlObject2 = $('<section> \
+										<span>Ingrese nombre del nuevo proyecto:</span> \
+										<form autocomplete="on" target="the_iframe" action="about:blank"> \
+											<input type="hidden" name="express" value="ok"> \
+											<input style="border-bottom: 1px solid black;" required type="text" name="nombre_nuevo_proyecto"> \
+										</form> \
+										<iframe style="display: none;" id="the_iframe" name="the_iframe" src="about:blank"></iframe> \
+									</section>');
+									htmlObject2.find('input').on('blur change', function() {
+										htmlObject2.data('response', $(this).val());
+									});
+									prompt(htmlObject2, 'Guardar','Cancelar').done(function(data) {
+										if (data !== false) {											
+											if (data != "") {
+												htmlObject2.find('form')[0].submit();
+												$.ajax({
+													url: '/4DACTION/_V3_setProyecto_responsive',
+													data: {
+														nombre_express : data,
+														express: true
+													},
+													dataType: 'json',
+													success: function(data) {
+														if (data.success) {
+															toastr.success('Proyecto creado con éxito.');
+															htmlObject.find('input[name="buscar_proyectos_selected"]').val(data.index + " - " + data.text);
+									 						htmlObject.find('input[name="buscar_proyectos_selected"]').data('id-seleccionado', data.id);
+														} else {
+															if (data.opened) {
+																if (data.readonly)
+																	toastr.error(NOTIFY.get('ERROR_RECORD_READONLY', 'Error'));
+															}
+														}
+													}
+												});
+											}else{
+												toastr.warning('Falta ingresar nombre proyecto.');
+												callback(data);
+											}
+										}
+									});
+								});								
+
+							} else {
+								let msg = "No es posible asociar a proyecto porque se han seleccionado:<br>";
+								msg+= nulo? "- Negocios anulados.<br>" : '';
+								msg+= asociado_a_proyecto? "- Negocios que ya están asociados a proyectos.<br>" : '';
+								toastr.warning(msg);
+							}
+
+						}else{
+							alert("No cuentas con permiso para realizar esta acción.");
+						}
+					});
+
+					htmlObject.find('a.desasociar-proyectos').click(function(event) {
+						if (access._674) {
+							let ids = [];
+							let ids_nulo = [];
+							let ids_con_proyectos = [];
+
+							$('#viewport tbody.ui-selectable tr[data-id] td:first-of-type input.selected:checked').each(function() {
+								ids.push($(this).closest('tr').data('id'));
+								if (!$(this).closest('tr').data('status')) {
+									ids_nulo.push($(this).closest('tr').data('id'));
+								}
+								if ($(this).closest('tr').data('id-proyecto')) {
+									ids_con_proyectos.push($(this).closest('tr').data('id'));
+								}
+							});
+
+							let nulo = (ids_nulo.length > 0);
+							let asociado_a_proyecto = (ids_con_proyectos.length > 0);
+							if (!nulo && asociado_a_proyecto) {
+
+								confirm('Seguro que deseas desasociar los negocios?', 'Desasociar','Cancelar').done(function(data) {
+									if (data) {
+										
+											$.ajax({
+												url: '/4DACTION/_V3_batchAsociarProyectos',
+												data: {
+													ids: ids.join('|'),
+													desasociar: true,
+													idproyecto: $('input[name="buscar_proyectos_selected"]').data('id-seleccionado')											},
+												dataType: 'json',
+												success: function(data) {
+													if (data.success) {
+														toastr.success('Negocios asociados con éxito.');
+														setTimeout(function() {
+															unaBase.toolbox.search.save();
+															unaBase.toolbox.search.restore();
+														}, 1000);
+													} else {
+														if (data.opened) {
+															if (data.readonly)
+																toastr.error(NOTIFY.get('ERROR_RECORD_READONLY', 'Error'));
+														}
+													}
+												}
+											});
+																			
+									}
+								});
+
+															
+
+							} else {
+								let msg = "No es posible desasociar a proyecto porque se han seleccionado:<br>";
+								msg+= nulo? "- Negocios anulados.<br>" : '';
+								msg+= !asociado_a_proyecto? "- Negocios que no están asociados a proyectos.<br>" : '';
+								toastr.warning(msg);
+							}
+
+						}else{
+							alert("No cuentas con permiso para realizar esta acción.");
+						}
+					});
+
+					htmlObject.find('a.convertir-cotizacion').click(function(event) {
+						if (access._485) {
+							// Permiso para convertir neg. a cot.
+							//var id = $.unserialize(params.data()).id;
+							confirm(MSG.get("CONFIRM_NEGOCIO_CONVERT")).done(function (
+								data
+							) {
+								if (data) {
+									unaBase.ui.block();
+									let ids = [];
+									let ids_nulo = [];
+									let ids_con_proyectos = [];
+
+									$('#viewport tbody.ui-selectable tr[data-id] td:first-of-type input.selected:checked').each(function() {
+										ids.push($(this).closest('tr').data('id'));
+										
+									});
+
+
+									let config = {
+										headers: {
+										'Accept': 'application/json',
+										'Content-Type': 'application/json'
+										},
+										method: 'post',
+										url: `${nodeUrl}/convertir-cotizacion?hostname=${window.location.origin}`,
+										data: {
+											sid: unaBase.sid.encoded(),
+											status: false,
+											ids
+										},
+							
+									};
+									axios(config)
+										.then(function (response) {
+											
+											if (response.data.success) {
+												toastr.success(NOTIFY.get("SUCCESS_NEGOCIO_CONVERT"));
+												unaBase.ui.unblock();
+												
+												$("#version").html(response.data.index);
+												
+
+												// // Notificación "Ha convertido a cotización el negocio" / "Ha convertido a cotización el negocio facturado"
+												var sid = unaBase.sid.encoded();
+											
+
+												var textFacturado = " facturado";
+												
+												var cotizacionId = response.data.id;
+												var module = $(".sidebar li.active").data("name");
+
+												unaBase.inbox.send(
+													{
+														subject:
+														"Ha convertido a cotización el negocio" +
+														textFacturado +
+														" Nº " +
+														response.data.index +
+														" / " +
+														$("section.sheet")
+															.find(
+															'input[name="cotizacion[titulo][text]"]'
+															)
+															.val(),
+														into: "viewport",
+														href:
+														"/v3/views/cotizaciones/content.shtml?id=" +
+														response.data.id,
+														tag: "avisos",
+														attach: true // boolean
+													},
+													async function () {
+														unaBase.loadInto.viewport(
+														"/v3/views/negocios/list.shtml"
+														);
+													}
+												);
+
+												//unaBase.loadInto.viewport("/v3/views/negocios/index.shtml");
+											} else {
+												if (response.data.opened) {
+													if (response.data.readonly)
+														toastr.error(
+														NOTIFY.get("ERROR_RECORD_READONLY", "Error")
+														);
+												}
+											}
+							
+										}).catch(function (error) {
+											unaBase.ui.unblock();
+											
+											toastr.warning(
+												"Error al convertir en negocio"
+											);
+											console.log(error);
+										});
+
+
+								}
+							});
+							} else {
+							var url =
+								"/v3/views/negocios/sol_convert_cotizacion.shtml?id=" + id;
+							unaBase.loadInto.dialog(
+								url,
+								"AUTORIZACIÓN MODIFICACIÓN DEL NEGOCIO",
+								"small"
+							);
+							}
+
+					});
+
+					htmlObject.find('a.export-resumen').click(function (event) {
+						confirm("EXPORTAR RESUMEN DE NEGOCIOS SELECCIONADOS").done(function (data) {
+							if(data){
+								let ids = [];
+								let ids_nulo = [];
+								let ids_con_proyectos = [];
+	
+								$('#viewport tbody.ui-selectable tr[data-id] td:first-of-type input.selected:checked').each(function () {
+									ids.push($(this).closest('tr').data('id'));
+	
+								});
+
+								ids.forEach(val => {
+									let config = {
+										headers: {
+											'Accept': 'application/json',
+											'Content-Type': 'application/json'
+										},
+										method: 'get',
+										url: `${nodeUrl}/export-negocio-masivo-new?hostname=${window.location.origin}&sid=${unaBase.sid.encoded()}`,
+										data: {
+											sid: unaBase.sid.encoded(),
+											status: false,
+											val
+										},
+		
+									};
+		
+									axios(config)
+										.then(function (response) {
+		
+											if (response.data.success) {
+		
+											}
+		
+										}).catch(function (error) {
+											unaBase.ui.unblock();
+											toastr.warning(
+												"Error al convertir en negocio"
+											);
+											console.log(error);
+										});
+
+								})
+
+
+							}
+						});
+					});
+
+
+					htmlObject.menu().hide();
+
+					$('#dropdown_launcher').parentTo('header').before(htmlObject);
+					$('#dropdown_launcher').css('float', 'left');
+
+					$('#dropdown_launcher').click(function() {
+						var element = this;
+						$('#dropdown_menu').toggle();
+					});
+				})();
+
+				// -- ini -- verifica opciones filtro por proyecto
+				$('.show.por_proyecto').hide();
+				$('#autocomplete_por_proyecto').addClass('style_por_proyecto');
+				if (cant_proyectos_registrados == 0) {
+					$('input[name="por_proyecto"]').hide();
+				}
+				// -- fin -- verifica opciones filtro por proyecto
+
+				// -- ini -- verifica opciones filtro por campos personalizados, g, 26-04-18
+				let  placeholderParam1 = '<!--#4DTEXT placeholderParam1-->';
+				let  placeholderParam2 = '<!--#4DTEXT placeholderParam2-->';
+				let  placeholderParam3 = '<!--#4DTEXT placeholderParam3-->';
+				$('#autocomplete_personalizadoUno').attr('placeholder', placeholderParam1);
+				$('#autocomplete_personalizadoDos').attr('placeholder', placeholderParam2);
+				$('#autocomplete_personalizadoTres').attr('placeholder', placeholderParam3);
+				if (placeholderParam1 == '') {
+					$('#autocomplete_personalizadoUno').closest('label.autocomplete').hide();
+				}
+				if (placeholderParam2 == '') {
+					$('#autocomplete_personalizadoDos').closest('label.autocomplete').hide();
+				}
+				if (placeholderParam3 == '') {
+					$('#autocomplete_personalizadoTres').closest('label.autocomplete').hide();
+				}
+				// -- fin -- verifica opciones filtro por campos personalizados, g, 26-04-18
+
+				document.title = '<!--#4DTEXT _V3_nombre_empresa--> / NEGOCIOS - Lista';
+
+				// para mostrar filtro pro emisor en el caso que el para,etro este activado
+				<!--#4DIF (v3_mostrar_columna_emisor)-->
+					$('input[name="por_emisor"]').closest('.autocomplete').show();
+				<!--#4DELSE-->
+					$('input[name="por_emisor"]').closest('.autocomplete').hide();
+				<!--#4DENDIF-->
+
+				// agregado 29-8-19, by gin, modo peru, tribeca
+				if (currency.code == "PEN" && access._658) { // modo peru y con permiso de ver reporte consolidado
+					$('#menu ul').find('li[data-name="export_list_cot_consolidadoPE"]').show();
+				}
+				
+			});
+		</script>
+		<style type="text/css">
+			.notice{
+				font-weight: bold;
+				padding: 5px;
+				color:gray;
+				text-transform: uppercase;
+			}
+
+			<!--#4DIF v3_margen_compra_res_nuevos-->
+			.old-margen::after {
+				content: ' *';
+			}
+			<!--#4DENDIF-->
+
+			/* Botón descargar Adjuntos OC Clientes */
+			.btn-clip{
+				padding: 2px 6px !important;
+				line-height: 1 !important;
+				font-size: 10px !important;
+				border-radius: 6px !important;
+				display: inline-flex !important;
+				align-items: center !important;
+				justify-content: center !important;
+				vertical-align: middle;
+				margin-left: 6px;
+			}
+
+			.btn-clip i{
+				font-size: 11px;
+				line-height: 1;
+			}
+
+
+			/*.totales tr th{
+				border:1px solid lightgray;
+			}*/
+
+			table thead tr th{
+				text-align: center!important;
+			}
+
+			table.fixed{
+				min-width: 900px !important;
+				width: 100% !important;
+				overflow-x: auto;
+				white-space: nowrap;
+			}
+
+			.w-small{
+				width:3%!important;
+			}
+			.w-medium{
+				width:5%!important;
+			}
+			.w-large{
+				width:5%!important;
+			}
+			.w-extra-large{
+				width:3%!important;
+			}
+
+			/* ===== Paginador estilo botones ===== */
+			.pagination{
+			margin: -30px 0px 0px 10px;
+			text-align: center;
+			font-size: 12px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 6px;
+			flex-wrap: wrap;
+			}
+
+			.pagination a,
+			.pagination span{
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+
+			padding: 6px 10px;
+			min-width: 30px;
+			height: 28px;
+
+			border-radius: 8px;
+			border: 1px solid #d0d5dd;
+			background: #ffffff;
+
+			color: #344054;
+			text-decoration: none;
+			user-select: none;
+
+			box-shadow: 0 1px 2px rgba(16, 24, 40, 0.06);
+			transition: background .15s ease, border-color .15s ease, transform .05s ease, box-shadow .15s ease;
+			}
+
+			.pagination a:hover{
+			background: #f9fafb;
+			border-color: #cbd5e1;
+			}
+
+			.pagination a:active{
+			transform: translateY(1px);
+			box-shadow: 0 0 0 rgba(16, 24, 40, 0);
+			}
+
+			.pagination a:focus-visible{
+			outline: 2px solid rgba(0, 169, 114, 0.35);
+			outline-offset: 2px;
+			}
+
+			.pagination span.current,
+			.pagination a.current{
+			background: #00a972;
+			border-color: #00a972;
+			color: #ffffff;
+			font-weight: 700;
+			}
+
+			.pagination span.disabled{
+			background: #f2f4f7;
+			border-color: #eaecf0;
+			color: #98a2b3;
+			cursor: not-allowed;
+			box-shadow: none;
+			}
+
+			.pagination span:not(.current):not(.disabled){
+			background: transparent;
+			border-color: transparent;
+			box-shadow: none;
+			cursor: default;
+			min-width: auto;
+			padding: 0 6px;
+			height: 28px;
+			}
+
+			.table-wrap{
+			height: calc(100vh - 250px);
+			overflow: auto;
+			min-height: 0;
+			padding-bottom: 0px;
+			margin-bottom: 0px;
+			}
+
+
+		
+		</style>
+		</head>
+		
+		<body style="min-width: 900px !important; overflow:hidden">
+			<span class="view-active" style="display: none;">Negocios > Listado</span>
+			<div class="list-layout">
+				<div class="table-wrap">
+					<!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->
+					<table class="padre results fixed">
+						<thead>
+							<tr>
+								<!--#4DIF _V3_verifica_permisos_web(_V3_data_username;494)-->
+								<th class="center w-small">
+									<div style="padding:2px"></div>
+									<div><input class="selected" type="checkbox" name="selected_all"></div>
+								</th>
+								<th></th>
+								<th class="w-medium" data-sort-by="folio" data-sort-default="desc">Número</th>
+								<!--#4DIF (show_codigo_column)-->
+								<th class="w-medium" data-sort-by="codigo" data-sort-default="desc">Código</th><!--#4DENDIF-->
+								<th class="w-medium" data-sort-by="occ" data-sort-default="desc">OC Cliente</th>
+								<th class="w-medium" data-sort-by="fecha_asignacion" data-sort-default="desc">F. Asignación</th>
+								<th class="w-medium" data-sort-by="fecha_realizacion" data-sort-default="desc">F. Realización
+								</th>
+								<!--#4DIF (v3_mostrar_columna_emisor)-->
+								<th class="w-medium" data-sort-by="emisor" data-sort-default="desc">Emisor</th><!--#4DENDIF-->
+								<th class="w-medium" data-sort-by="ejecutivo" data-sort-default="desc">Ejecutivo</th>
+								<th class="w-large" data-sort-by="alias" data-sort-default="asc">
+									<!--#4DIF mostrar_marca_nocliente-->Marca<!--#4DELSE-->Cliente<!--#4DENDIF--></th>
+								<th class="w-extra-large" data-sort-by="text" data-sort-default="asc">Referencia</th>
+								<th class="w-medium" data-sort-by="total_neto" data-sort-default="desc">Total Neto</th>
+								<th class="w-medium" data-sort-by="gasto_p" data-s ort-default="desc">Gasto P.</th>
+								<th class="w-medium" data-sort-by="gasto_r" data-sort-default="desc"
+									title="click para ver formula" class="links-ver-formula">Gasto R.</th>
+		
+								<!--#4DIF _V3_difGastoListNegocios-->
+								<th class="w-medium" data-sort-by="por_gastar" data-sort-default="desc" class="">Dif. gasto</th>
+								<!--#4DELSE-->
+								<th class="w-medium" data-sort-by="por_gastar" data-sort-default="desc"
+									title="click para ver formula" class="links-ver-formula">Por Gastar</th>
+								<!--#4DENDIF-->
+		
+		
+								<th class="w-small"
+									title="<!--#4DIF _V3_difGastoListNegocios-->(presupuestado - real) / presupuestado<!--#4DELSE-->(presupuestado - real - por gastar) / presupuestado<!--#4DENDIF-->">
+									Eficiencia</th>
+		
+								<!--#4DIF v3_sobrecargos_cinemagica-->
+								<th class="w-medium">Util. Neta</th>
+								<!--#4DENDIF-->
+		
+								<!--#4DIF Not(hideUtilPres)-->
+								<th class="w-medium">Util. presup.</th>
+								<!--#4DENDIF-->
+		
+								<!--#4DIF _V3_difGastoListNegocios-->
+								<th class="w-medium">Util. real</th>
+								<th class="w-small">% Util. real</th>
+								<!--#4DELSE-->
+								<th class="w-medium">Util. final</th>
+								<th class="w-small">% Util. final</th>
+								<!--#4DENDIF-->
+								<th class="w-medium">Facturado</th>
+								<th class="w-medium">Por Facturar</th>
+		
+		
+								<!--#4DIF v3_sobrecargos_cinemagica-->
+		
+								<th class="w-medium">C.Agencia</th>
+								<th class="w-medium">Costos directos</th>
+								<th class="w-medium">Com. PE</th>
+								<th class="w-medium">Otros Gastos</th>
+								<!--#4DENDIF-->
+		
+								<!--#4DIF v3_mostrar_totales_extendidos-->
+								<th class="w-medium">Cobrado</th>
+								<th class="w-medium">Por cobrar</th>
+								<th class="w-medium">Justificado</th>
+								<th class="w-medium">Por justificar</th>
+								<th class="w-medium">Pagado</th>
+								<th class="w-medium">Por pagar</th>
+								<!--#4DENDIF-->
+		
+								<!--#4DELSE-->
+								<th class="center w-small" width="2%">
+									<div style="padding:2px">Todo</div>
+									<div><input class="selected" type="checkbox" name="selected_all"></div>
+								</th>
+								<th class="w-medium" data-sort-by="folio" data-sort-default="desc">Número</th>
+								<!--#4DIF (show_codigo_column)-->
+								<th class="w-medium" data-sort-by="codigo" data-sort-default="desc">Código</th><!--#4DENDIF-->
+								<th class="w-medium" data-sort-by="fecha_asignacion" data-sort-default="desc">F. Asignación</th>
+								<th class="w-medium" data-sort-by="fecha_realizacion" data-sort-default="desc">F. Realización
+								</th>
+								<!--#4DIF (v3_mostrar_columna_emisor)-->
+								<th class="w-medium" data-sort-by="emisor" data-sort-default="desc">Emisor</th><!--#4DENDIF-->
+								<th class="w-medium" data-sort-by="ejecutivo" data-sort-default="desc">Ejecutivo</th>
+								<th class="w-large" data-sort-by="alias" data-sort-default="asc">
+									<!--#4DIF mostrar_marca_nocliente-->Marca<!--#4DELSE-->Cliente<!--#4DENDIF--></th>
+								<th class="w-extra-large" data-sort-by="text" data-sort-default="asc">Referencia</th>
+								<!--#4DIF Not(no_mostrar_total_neto_neg)-->
+								<th class="w-medium" data-sort-by="total_neto" data-sort-default="asc">Total Neto</th>
+								<!--#4DENDIF-->
+		
+								<!--#4DENDIF-->
+							</tr>
+						</thead>
+						<tfoot class="totales">
+							<tr>
+								<!--#4DIF _V3_verifica_permisos_web(_V3_data_username;494)-->
+								<th class="w-small"></th>
+								<th class="w-small"></th>
+								<th class="w-medium"></th>
+								<!--#4DIF (show_codigo_column)-->
+								<th class="w-medium"></th><!--#4DENDIF-->
+								<th class="w-medium"></th>
+								<th class="w-medium"></th>
+								<th class="w-medium"></th>
+								<!--#4DIF (v3_mostrar_columna_emisor)-->
+								<th class="w-medium"></th><!--#4DENDIF-->
+								<th class="w-medium"></th>
+								<th class="w-large"></th>
+								<th class="w-extra-large"></th>
+								<th class="center w-medium"><span data-name="total-neto" class="label2">$0</span></th>
+								<th class="center w-medium"><span data-name="gasto-p" class="label2">$0</span></th>
+								<th class="center w-medium"><span data-name="gasto-r" class="label2">$0</span></th>
+								<th class="center w-medium"><span data-name="por-gastar" class="label2">$0</span></th>
+								<th class="center w-small"></th>
+								<!--#4DIF v3_sobrecargos_cinemagica-->
+								<th class="center w-medium"><span data-name="utilidad-neta" class="label2">$0</span></th>
+								<!--#4DENDIF-->
+								<!--#4DIF Not(hideUtilPres)-->
+								<th class="center w-medium"><span data-name="utilidad-value-pres" class="label2">$0</span></th>
+								<!--#4DENDIF-->
+		
+		
+								<th class="center w-medium"><span data-name="utilidad-final" class="label2">$0</span></th>
+								<th class="center w-small"><span data-name="utilidad-percent" class="label2">$0</span></th>
+		
+								<th class="center w-medium"><span data-name="total_facturado" class="label2">$0</span></th>
+								<th class="center w-medium"><span data-name="por_facturar" class="label2">$0</span></th>
+		
+								<!--#4DIF v3_mostrar_totales_extendidos-->
+								<th class="center w-medium"><span data-name="total_cobrado" class="label2">$0</span></th>
+								<th class="center w-medium"><span data-name="total_por_cobrar" class="label2">$0</span></th>
+								<th class="center w-medium"><span data-name="total_justificado" class="label2">$0</span></th>
+								<th class="center w-medium"><span data-name="total_por_justificar" class="label2">$0</span></th>
+								<th class="center w-medium"><span data-name="total_pagado" class="label2">$0</span></th>
+								<th class="center w-medium"><span data-name="total_por_pagar" class="label2">$0</span></th>
+								<!--#4DENDIF-->
+		
+								<!--#4DELSE-->
+								<th class="center w-small"></th>
+								<th class="center w-medium"></th>
+								<th class="center w-medium"></th>
+								<th class="center w-medium"></th>
+								<th class="center w-medium"></th>
+								<!--#4DIF (v3_mostrar_columna_emisor)-->
+								<th class="center w-medium"></th><!--#4DENDIF-->
+								<th class="center w-medium"></th>
+								<th class="center w-large"></th>
+								<th class="center w-extra-large"></th>
+								<!--#4DIF Not(no_mostrar_total_neto_neg)-->
+								<th class="center w-medium"></th><!--#4DENDIF-->
+								<!--#4DENDIF-->
+							</tr>
+						</tfoot>
+						<tbody></tbody>
+					</table>
+					<div id="dialog-confirm" style="font-size: 14px;" title="Solicitar edición" hidden="">
+						<p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>El negocio
+							está siendo modificada por <span id="userBlock"></span><br /> ¿Deseas solicitar el desbloqueo de
+							esta cotización?</p>
+					</div>
+					<div id="dialog-confirm-sameUser" style="font-size: 14px;" title="Solicitar edición" hidden="">
+						<p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>Este negocio
+							esta bloqueado ya que anteriormente estabas trabajando en él, si deseas seguir editándolo verifica
+							que no lo tengas abierto en otra pestaña, de no ser así, desbloquealo acá.</p>
+					</div>
+				</div>
+				<div id="pagination" class="pagination"></div>
+			</div>
+		</body>
+		
+		<script>
+			// Modal para modificar nombre y valor neto del proyecto
+			$(document)
+				.off('click.projectSettings')
+  				.on('click.projectSettings', '.project-settings', function (e) {
+					e.preventDefault();
+					e.stopPropagation();
+
+					const $btn = $(this);
+					const id = Number($btn.data('projectid'));
+					const nombreIni = $btn.data('name') || '';
+					const valorIni = $btn.data('value') ?? '';
+
+					const $html = $(`
+						<section style="font-size:14px;">
+						<div style="margin-bottom:12px;">
+							<label style="display:block;margin-bottom:4px;font-weight:600;">
+							Nombre Proyecto
+							</label>
+							<input type="text" name="nombre_proyecto"
+								style="width:100%;border:1px solid #d0d5dd;border-radius:6px;padding:6px 8px;"
+								autocomplete="off">
+						</div>
+
+						<div>
+							<label style="display:block;margin-bottom:4px;font-weight:600;">
+							Valor Proyecto
+							</label>
+							<input type="number" name="valor_proyecto"
+								style="width:100%;border:1px solid #d0d5dd;border-radius:6px;padding:6px 8px;"
+								min="0" step="0.01">
+						</div>
+						</section>
+					`);
+
+					$html.find('input[name="nombre_proyecto"]').val(nombreIni);
+					$html.find('input[name="valor_proyecto"]').val(valorIni);
+					// Abre modal
+					const closePrompt = () => {
+						const $dlg = $html.closest('.ui-dialog-content'); // jQuery UI dialog content
+						if ($dlg.length && typeof $dlg.dialog === 'function') $dlg.dialog('close');
+					};
+					prompt($html, 'Guardar', 'Cancelar').done(function (ok) {
+						if (ok === false) return; // cancelado
+
+						const nombre = String($html.find('input[name="nombre_proyecto"]').val() || '').trim();
+						const valorStr = $html.find('input[name="valor_proyecto"]').val();
+						const valor = Number(valorStr);
+
+						if (!nombre) {
+							toastr?.warning?.('Falta el nombre del proyecto.') ?? alert('Falta el nombre del proyecto.');
+							return;
+						}
+						if (Number.isNaN(valor)) {
+							toastr?.warning?.('Valor de proyecto inválido.') ?? alert('Valor de proyecto inválido.');
+							return;
+						} else if (valor<=0){
+							toastr?.warning?.('Valor de proyecto no puede ser cero o negativo.') ?? alert('Valor de proyecto no puede ser cero o negativo.');
+							return;
+						}
+
+						const payload = { id_proyecto: id, nombre, valor };
+
+						axios.get('/4DACTION/_V3_setProyecto', {
+							params: { text: nombre, id: id, neto: valor }
+						})
+							.then(res => {
+								closePrompt();
+								unaBase.toolbox.search.save();
+    							unaBase.toolbox.search.restore();})
+							.catch(err => console.error(err));
+					});
+				});
+		</script>
+		
+		</html>

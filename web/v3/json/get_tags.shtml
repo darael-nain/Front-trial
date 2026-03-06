@@ -1,0 +1,11 @@
+{
+	"rows": [
+<!--#4DLOOP aIdTag-->
+		{
+			"id": <!--#4DTEXT aIdTag{aIdTag}-->,
+			"tag_name": "<!--#4DTEXT _V3_escapeString(aNameTag{aIdTag})-->",
+			"text": "<!--#4DTEXT _V3_escapeString(aNameTag{aIdTag})-->"			
+		}<!--#4DIF NOT(aIdTag{aIdTag} = aIdTag{Size of array(aIdTag)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

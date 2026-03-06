@@ -1,0 +1,40 @@
+<div class="letras">
+      <div class="letra" id="letra-a">    
+        <a href="/4DACTION/W_BUSCADOR">
+            <div class="boton">BUSCAR</div>
+        </a>
+      </div>
+      
+      <div class="letra" id="letra-a">    
+        <a href="/4DACTION/W_LISTA_OC">
+            <div class="boton">LISTAR OC</div>
+        </a>
+      </div>
+      
+      <div class="letra" id="letra-a">    
+        <a href="/4DACTION/W_LISTA_SOL">
+            <div class="boton">LISTAR SOL</div>
+        </a>
+      </div>
+      
+      <div class="letra" id="letra-a">    
+        <a href="/4DACTION/W_CREA_CONT">
+            <div class="boton">CREAR PROV</div>
+        </a>
+      </div>
+      
+      <div class="letra" id="letra-a">    
+        <a href="/4DACTION/W_LISTA_NEG">
+            <div class="boton">LISTAR NEGOCIOS</div>
+        </a>
+      </div>
+      
+      
+      
+      
+      
+      
+   
+  
+</div>
+

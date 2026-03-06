@@ -1,0 +1,22 @@
+{
+	"rows": [
+		{
+		  	"id":"pagado",
+		  	"text":"pagado"
+		},
+		{
+			"id":"por_pagar",
+			"text":"por_pagar"
+		},
+
+		{
+			"id":"por_revisar",
+			"text":"por_revisar"
+		},
+
+		{
+			"id":"nulo",
+			"text":"nulo"
+		}
+	]
+}

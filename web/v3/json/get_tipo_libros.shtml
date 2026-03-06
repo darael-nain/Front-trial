@@ -1,0 +1,12 @@
+{
+	"rows": [
+		{
+		  	"id":"lc",
+		  	"text":"Libro de compras"
+		},
+		{
+			"id":"lr",
+			"text":"Libro de retenciones"
+		}
+	]
+}

@@ -1,0 +1,76 @@
+<!--#4DIF vCantOt>1-->
+    <div style="text-align:left;font-weight:bold;font-size:13px;color:gray"><!--#4DVAR vCantOt--> encontradas.</div>
+<!--#4DELSE-->
+    <div style="text-align:left;font-weight:bold;font-size:13px;color:gray"><!--#4DVAR vCantOt--> encontrada.</div>
+<!--#4DENDIF-->
+
+  <table id="myTable" border="0" cellspacing="0" cellspadding="0" >
+    <thead>
+        <tr>
+            <th class="center">Folio</th>
+            <th class="left">Emision</th>
+            <th class="left headerSortUp">F.Vcto</th>
+            <th class="left">H.Vcto</th>
+            <th class="left">Horas</th>
+            <th class="left">Cliente</th>
+            <th class="left">Origen</th>
+            <th class="left">Referencia</th>
+            <th class="left">Responsable</th>
+            <th class="left">Emisor</th>
+            <th class="left">Estado</th>
+        </tr>
+    </thead>
+    <tbody>        
+    <!--#4dif Size of array(aIdOT)>0-->
+        <!--#4DLOOP aIdOT-->            
+        <tr class="table-items" id="<!--#4DVAR aIdOT{aIdOT}-->">
+            <td class="center color-negrita">
+                <a target="_blank" href="/ot.shtml?i=<!--#4DVAR aIdOT{aIdOT}-->&r=<!--#4DVAR String(Milliseconds+Random)-->"><!--#4DVAR aFolioOT{aIdOT}--></a>
+            </td>
+            <td class="center small-size">
+                <a target="_blank" href="/ot.shtml?i=<!--#4DVAR aIdOT{aIdOT}-->&r=<!--#4DVAR String(Milliseconds+Random)-->"><!--#4DVAR aFechaEmiOT{aIdOT}--></a>
+            </td>
+            <td class="center small-size">
+                <a target="_blank" href="/ot.shtml?i=<!--#4DVAR aIdOT{aIdOT}-->&r=<!--#4DVAR String(Milliseconds+Random)-->"><!--#4DVAR aFechaVctoOT{aIdOT}--></a>
+            </td>
+            <td class="center small-size">
+                <a target="_blank" href="/ot.shtml?i=<!--#4DVAR aIdOT{aIdOT}-->&r=<!--#4DVAR String(Milliseconds+Random)-->"><!--#4DVAR aHoraVctoOT{aIdOT}--></a>
+            </td>
+            <td class="center">
+                <a target="_blank" href="/ot.shtml?i=<!--#4DVAR aIdOT{aIdOT}-->&r=<!--#4DVAR String(Milliseconds+Random)-->"><!--#4DVAR aHrsAsignadasOT{aIdOT}--></a>
+            </td>
+            <td class="left">
+                <a target="_blank" href="/ot.shtml?i=<!--#4DVAR aIdOT{aIdOT}-->&r=<!--#4DVAR String(Milliseconds+Random)-->"><!--#4DVAR uppercase(aClienteProvOT{aIdOT})--></a>
+            </td>
+            <td class="left">
+                <a target="_blank" href="/ot.shtml?i=<!--#4DVAR aIdOT{aIdOT}-->&r=<!--#4DVAR String(Milliseconds+Random)-->"><!--#4DVAR uppercase(aRefProyOT{aIdOT})--></a>
+            </td>                        
+            <td class="left">
+                <a target="_blank" href="/ot.shtml?i=<!--#4DVAR aIdOT{aIdOT}-->&r=<!--#4DVAR String(Milliseconds+Random)-->"><!--#4DVAR uppercase(aReferenciaOT{aIdOT})--></a>
+            </td>
+            <td class="center">
+                <a target="_blank" href="/ot.shtml?i=<!--#4DVAR aIdOT{aIdOT}-->&r=<!--#4DVAR String(Milliseconds+Random)-->"><!--#4DVAR uppercase(aResponsableOT{aIdOT})--></a>
+            </td>
+            <td class="center">
+                <a target="_blank" href="/ot.shtml?i=<!--#4DVAR aIdOT{aIdOT}-->&r=<!--#4DVAR String(Milliseconds+Random)-->"><!--#4DVAR uppercase(aEmitidoPorOT{aIdOT})--></a>
+            </td>            
+            <td class="center <!--#4DVAR aStyleColor{aIdOT}-->"><!--#4DVAR uppercase(aEstadoOT{aIdOT})--></td>         
+        </tr>       
+        <!--#4DENDLOOP-->
+    <!--#4DELSE-->
+         <tr><td colspan="11"><span class="not-result">No se encontraron resultados!</span></td>
+    <!--#4DENDIF-->
+    </tbody>
+    
+    <!--#4dif Size of array(aIdOT)>0-->
+    <tfoot>
+        <tr>
+            <td></td><td></td><td></td><td></td>
+            <td><!--#4DVAR vSumaHrs--> Hrs.</td>
+            <td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+    </tfoot>
+    <!--#4dendif-->
+    
+</table>  
+

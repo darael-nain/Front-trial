@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+	<!--#4DSCRIPT/_V3_proxy-->
+	<head>
+		<title>Resumen financiero</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/views/reportes/script/content.js"></script>
+		<script src="/v3/script/sorttable.js"></script>
+		<script>
+
+			const formatValues = (values) => {
+				return currency.symbol + " " + $.number(values, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+			}
+
+			getInfoReport = () => {
+				$.ajax({
+					url: '/4DACTION/_V3_getReportResumenFinanzas',
+					data: {
+						"date_from" : document.querySelector('#select-date-report').value,
+						"v_facturado_con_respecto" : document.querySelector('[name="v_facturado_con_respecto"]').value,
+						"c_facturado_con_respecto" : document.querySelector('[name="c_facturado_con_respecto"]').value,
+						"v_cobrado_con_respecto" : document.querySelector('[name="v_cobrado_con_respecto"]').value,
+						"c_pagado_con_respecto" : document.querySelector('[name="c_pagado_con_respecto"]').value
+					},
+					dataType: 'json',
+					success: function(data) {
+
+					document.querySelector('.ventas-por-aprobar > span.value').innerHTML = formatValues(data.ventas.negocios_por_aprobar);
+					document.querySelector('.ventas-aprobadas > span.value').innerHTML = formatValues(data.ventas.ventas_aprobadas);
+
+					document.querySelector('.ventas-facturadas-neto > span.value').innerHTML = formatValues(data.ventas.total_facturado_neto);
+					document.querySelector('.ventas-por-facturar-neto > span.value').innerHTML = formatValues(data.ventas.total_por_facturar_neto);
+
+					document.querySelector('.ventas-cobrado > span.value').innerHTML = formatValues(data.ventas.total_cobrado);
+					document.querySelector('.ventas-por-cobrar > span.value').innerHTML = formatValues(data.ventas.total_por_cobrar);
+					
+					document.querySelector('.compras-por-aprobar > span.value').innerHTML = formatValues(data.compras.compras_por_aprobar);
+					document.querySelector('.compras-aprobadas > span.value').innerHTML = formatValues(data.compras.compras_aprobadas);
+
+					document.querySelector('.compras-facturadas-neto > span.value').innerHTML = formatValues(data.compras.total_facturado_neto);
+					document.querySelector('.compras-por-facturar-neto > span.value').innerHTML = formatValues(data.compras.total_por_facturar_neto);
+					
+					document.querySelector('.compras-pagado > span.value').innerHTML = formatValues(data.compras.total_pagado);
+					document.querySelector('.compras-por-pagar > span.value').innerHTML = formatValues(data.compras.total_por_pagar);
+
+					//document.querySelector('.banco-saldo > span.value').innerHTML = formatValues(data.bancos.total_saldo_banco);
+
+					//document.querySelector('.ventas-facturadas-imp').innerHTML = data.ventas.total_facturado_mas_imp;
+					//document.querySelector('.ventas-por-facturar-imp').innerHTML = data.ventas.total_por_facturar_mas_imp;
+					//document.querySelector('.compras-facturadas-imp').innerHTML = data.compras.total_facturado_mas_imp;
+					//document.querySelector('.compras-por-facturar-neto').innerHTML = data.compras.total_por_facturar_neto;
+					//document.querySelector('.compras-por-facturar-imp').innerHTML = data.compras.total_por_facturar_mas_imp;
+
+					},
+					error: function(xhr, text, error) {
+						toastr.error(NOTIFY.get('ERROR_INTERNAL', 'Error'));
+					}
+				});
+			}
+
+			$(document).ready(function(){
+				getInfoReport();
+
+				$("#select-date-report").monthpicker({
+					changeMonth: true,
+					changeYear: true,
+					yearRange: "c-10:c+3",
+					onSelect: function(event) {
+						getInfoReport();
+					},
+					onChangeYear : function(event) {
+						setTimeout(function() {
+							getInfoReport();
+						}, 1000);
+					}
+				});
+
+			});
+
+			/*(function() {				
+			})();*/
+
+		</script>
+
+		<style>
+
+			.container-report-resumen{
+				position: relative;
+			}
+
+			.container-report-resumen table{
+				margin-top:70px;
+				zoom:90%;
+				position: absolute;
+			}
+
+			.container-report-resumen table tr{
+				background-color: white!important;
+			}
+
+			.container-report-resumen table tr td{
+				text-align: left;
+				vertical-align: bottom;
+			}
+
+			.container-report-resumen .report-subtitle{
+				font-size: 13px;
+				font-weight: bold;
+				text-decoration: underline;
+				color: black;
+				text-align: left;
+				margin:10px;
+			}
+
+			.container-report-resumen .report-subtitle2{
+				font-size: 12px;
+				font-weight: bold;
+				text-align: left;
+				margin:10px;
+			}
+
+			.container-report-resumen .report-subtitle3{
+				font-size: 12px;
+				font-weight: bold;
+				color: black;
+				text-align: left;
+				margin:10px;
+			}
+
+			.mini-text{
+				color: gray;
+				font-size: 9px;
+			}
+
+			span.value{
+				font-size: 15px;
+				font-weight: bold;
+			}
+
+			.link-detail{
+				color: green;
+				font-size: 8px;
+				vertical-align: middle;
+				margin-left: 10px;
+				display: inline-block;
+			}
+
+			.box-date{
+				border: 1px solid lightgray;
+				border-radius: 5px;
+				width:60px!important;
+				padding: 2px;
+				font-weight: bold!important;
+			}
+
+			.box-compras{
+				border:1px solid #ff7b74;
+				border-radius: 5px;
+				padding: 5px;
+			}
+
+			.box-ventas{
+				border:1px solid #00a96c;
+				border-radius: 5px;
+				padding: 5px;
+			}
+
+			.box-banco{
+				border:2px solid lightgray;
+				border-radius: 5px;
+				padding: 5px;
+			}
+
+			.box-filter{
+				position: absolute;
+				top: 27px;
+				left: 10px;
+			}
+
+			.container-report-resumen .report-title{
+				font-weight:bold;
+				font-size:13px;
+				text-decoration:underline;
+				color: gray;
+				text-align: center;
+				position: absolute;
+				top: 5px;
+				left: 10px;
+			}
+
+			.con-respecto{
+				float:right;
+				border:1px solid lightgray;
+				font-weight:bold;
+				color:gray;"
+			}
+
+		</style>
+
+	</head>
+	<body>
+		<section class="container-report-resumen">
+			<h1 class="report-title">RESUMEN FINANCIERO</h1>
+			<div class="box-filter">
+				<label style="font-weight: bold;">Fecha: </label>
+				<input id="select-date-report" class="box-date" type="text" autocomplete="off" >
+			</div>
+			<table>
+				<tr>
+					<td>
+						<div class="report-subtitle">VENTAS</div>
+					</td>
+					<td>
+						<div class="report-subtitle">COMPRAS</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div class="box-ventas">
+							<div class="report-subtitle2">COTIZACIONES POR APROBAR <a class="link-detail" href="/4DACTION/INF_COT_PEND" target="_blank">Ver detalle</a></div>
+							<div class="ventas-por-aprobar report-subtitle3"><span class="value">Cargando...</span> <span class="mini-text">(monto neto)</span></div>
+						</div>
+					</td>
+					<td>
+						<div class="box-compras">
+							<div class="report-subtitle2">COMPRAS POR APROBAR <span class="mini-text">(oc y fxr por aprobar, monto neto)</span></div>
+							<div  class="compras-por-aprobar report-subtitle3"><span class="value">Cargando...</span></div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div class="box-ventas">
+							<div class="report-subtitle2">VENDIDO <span class="mini-text">(cotizaciones aprobadas)</span></div>
+							<div class="ventas-aprobadas report-subtitle3"><span class="value">Cargando...</span> <span class="mini-text">(monto neto)</span></div>
+						</div>
+					</td>
+					<td>
+						<div class="box-compras">
+							<div class="report-subtitle2">COMPRADO <span class="mini-text">(oc y fxr aprobados, monto neto)</span></div>
+							<div class="compras-aprobadas report-subtitle3"><span class="value">Cargando...</span></div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<div class="box-ventas">
+							<select name="v_facturado_con_respecto" class="con-respecto" onchange="getInfoReport();">
+								<option value="respecto_a_la_venta" selected="">Con respecto a lo vendido</option>
+								<option value="respecto_a_la_fecha_facturacion">Con respecto a fecha factura</option>
+							</select>
+							<div class="report-subtitle2">FACTURADO <span class="mini-text">(documentos de venta, monto neto)</span></div>
+							<div class="ventas-facturadas-neto report-subtitle3"><span class="value">Cargando...</span></div>
+							<div class="report-subtitle2">POR FACTURAR <a class="link-detail" href="/4DACTION/INFO_NV_X_FACTURAR" target="_blank">Ver detalle</a></div>
+							<div class="ventas-por-facturar-neto report-subtitle3"><span class="value">Cargando...</span></div>
+						</div>
+					</td>
+					<td>
+						<div class="box-compras">
+							<select name="c_facturado_con_respecto" class="con-respecto" onchange="getInfoReport();">
+								<option value="respecto_a_la_compra" selected>Con respecto a lo comprado</option>
+								<option value="respecto_a_la_fecha_facturacion">Con respecto a fecha factura</option>
+							</select>
+							<div class="report-subtitle2">FACTURADO <span class="mini-text">(oc y fxr justificados)</div>
+							<div class="compras-facturadas-neto report-subtitle3"><span class="value">Cargando...</span></div>
+							<div class="report-subtitle2">POR FACTURAR <span class="mini-text">(oc y fxr por justificar)<a style="display:none;" class="link-detail" href="#">Ver detalle</a></div>
+							<div class="compras-por-facturar-neto report-subtitle3"><span class="value">Cargando...</span></div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td> 
+						<div class="box-ventas">
+							<select name="v_cobrado_con_respecto" class="con-respecto" onchange="getInfoReport();">
+								<option value="respecto_a_facturado" selected>Con respecto a lo facturado</option>
+								<option value="respecto_a_fecha_cobro">Con respecto a fecha cobro</option>
+							</select>
+							<div class="report-subtitle2">COBRADO <span class="mini-text">(ingresos, monto con impuesto)</span></div>
+							<div class="ventas-cobrado report-subtitle3"><span class="value">Cargando...</span></div>
+							<div class="report-subtitle2">POR COBRAR <a class="link-detail" href="/4DACTION/INFO_FAC_X_COBRAR" target="_blank">Ver detalle</a></div>
+							<div class="ventas-por-cobrar report-subtitle3"><span class="value">Cargando...</span></div>
+						</div>
+					</td>
+					<td>
+						<div class="box-compras">
+							<select name="c_pagado_con_respecto" class="con-respecto" onchange="getInfoReport();">
+								<option value="respecto_a_facturado" selected>Con respecto a lo facturado</option>
+								<option value="respecto_a_fecha_pago">Con respecto a fecha pago</option>
+							</select>
+							<div class="report-subtitle2">PAGADO <span class="mini-text">(pagos, monto con impuesto)</span></div>
+							<div class="compras-pagado report-subtitle3"><span class="value">Cargando...</span></div>
+							<div class="report-subtitle2">POR PAGAR <a style="display:none;" class="link-detail" href="#">Ver detalle</a></div>
+							<div class="compras-por-pagar report-subtitle3"><span class="value">Cargando...</span></div>
+						</div>
+					</td>
+				</tr>
+				<!--<tr>
+					<td>
+						<div class="box-banco">
+							<div class="report-subtitle2">SALDO EN BANCO</div>
+							<div class="banco-saldo report-subtitle3"><span class="value">S/ 0</span></div>
+						</div>
+					</td>
+					<td></td>
+				</tr>-->
+			</table> 
+		</section>
+		<script>
+			//Fecha Actual
+			const dateInput = document.getElementById('select-date-report');	
+			const currentYear = new Date().getFullYear(); 
+			dateInput.value = currentYear
+		</script>
+	</body>
+</html>

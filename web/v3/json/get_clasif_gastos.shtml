@@ -1,0 +1,10 @@
+{	
+	"rows": [
+	<!--#4DLOOP [clasificacion_gastos_generales]-->
+		{
+			"id": "<!--#4DHTML [clasificacion_gastos_generales]id_cgg-->",
+			"des": "<!--#4DHTML _V3_escapeString([clasificacion_gastos_generales]descripcion_cgg)-->"			
+		}<!--#4DIF Selected record number([clasificacion_gastos_generales])<Records in selection([clasificacion_gastos_generales])-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

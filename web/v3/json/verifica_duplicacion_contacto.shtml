@@ -1,0 +1,11 @@
+{
+	"success": <!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"contactos": [
+	<!--#4DLOOP aIdContacto-->
+			{
+				"id": "<!--#4DTEXT aIdContacto{aIdContacto}-->",
+				"nombre_completo": "<!--#4DHTML _V3_escapeString(aNombreContacto{aIdContacto})-->"			
+			}<!--#4DIF NOT(aIdContacto{aIdContacto} = aIdContacto{Size of array(aIdContacto)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

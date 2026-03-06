@@ -1,0 +1,609 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <!--#4DSCRIPT/_v3_print_cheque-->
+    <meta charset="utf-8"/>
+    <script src="/v3/script/jquery/jquery.js"></script>
+    <!-- <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700' rel='stylesheet' type='text/css'> -->
+    <link rel="stylesheet" media="print" href="/v3/design/print.css"/>
+    <title>Comprobante de pago Nro <!--#4DTEXT [Orden_Pago]Folio_OPago--></title>
+
+    <!--#4DIF opcionPrint="1"-->
+
+    <style>
+      @media print {
+        body {
+          font-family: 'Open Sans', sans-serif !important;
+          font-size:18px;
+        }
+      }
+
+      html{
+        overflow-x: hidden;
+      }
+
+      header, section, article, footer{
+        display:block;
+        padding:0px;
+        margin:10px;
+        position: relative;
+      }
+
+      table {
+          border-collapse: collapse;
+      }
+        th, td {
+          padding:5px;
+          border: 1px solid lightgray;
+          vertical-align: middle;
+        }
+
+      .address{
+        text-transform: uppercase;
+        color:gray;
+        margin: 5px 0 0 10px;
+      }
+
+      section > article{
+        border-top: 2px solid lightgray;
+      }
+        section > article > h2{
+          font-size:17px;
+        }
+
+      h1, h2, h3, h4, h5{
+        text-decoration: underline;
+        text-transform: uppercase;
+      }
+
+      hr{
+         color: #0056b2!important;
+      }
+
+      footer{
+        text-align: center;
+      }
+        footer > div{
+          display: inline-block;
+          text-align: auto;
+          margin: 10px;
+        }
+          footer > div hr{
+            width: 300px!important;
+          }
+          footer > div > table{
+            width:300px!important;
+          }
+            footer > div > table td{
+              text-align:left!important;
+            }
+        footer > article{}
+            footer article div.monto-normal{ /* monto */
+              position:absolute!important;
+              top:299px!important;
+              right:-95px!important;
+              font-size: 23px;
+            }
+            footer article div.fecha-normal{ /* fecha */
+              position:absolute!important;
+              top:165px!important;
+              right:15px!important;
+              font-size: 15px;
+              text-transform: uppercase;
+            }
+
+            /* --ini-- ajustado 03-07-17 por gin formati fecha nueva */
+            footer article div.fecha-normal_separada{ /* fecha */
+              position:absolute!important;
+              top:360px!important;
+              right:-5px!important;
+              text-transform: uppercase;
+            }
+
+              footer article div.fecha-normal_separada span.date-ciudad-separada { /* fecha ciudad */
+                position:absolute!important;
+                left:-160px!important;
+                top:0px!important;
+                text-transform: uppercase;
+              }
+              footer article div.fecha-normal_separada span.date-dia-separada { /* fecha dia */
+                position:absolute!important;
+                left:-10px!important;
+                top:0px!important;
+                text-transform: uppercase;
+              }
+              footer article div.fecha-normal_separada span.date-mes-separada { /* fecha mes */
+                position:absolute!important;
+                display: inline-block;
+                right:-70px!important;
+                text-transform: uppercase;
+              }
+              footer article div.fecha-normal_separada span.date-ano-separada { /* fecha ano*/
+                position:absolute!important;
+                display: inline-block;
+                right:-180px!important;
+                text-transform: uppercase;
+              }
+              /* --fin-- ajustado 03-07-17 por gin formati fecha nueva */
+              
+            footer article div.razon-normal{ /* razon */
+              position:absolute!important;
+              top:415px!important;
+              left:440px!important;
+              text-transform: uppercase;
+            }
+            footer article div.cadena-normal{ /* cadena */
+              position:absolute!important;
+              top:465px!important;
+              left:430px!important;
+              text-transform: uppercase;
+            }
+            footer article > div.line{
+              position:absolute!important;
+              border:1px solid black;
+              width:500px;
+              webkit-transform:rotate(-45deg);
+            }
+            /*footer article div:nth-child(5){
+              top:250px!important;
+              left:200px!important;
+            }
+            footer article div:nth-child(6){
+              top:300px!important;
+              left:200px!important;
+            }*/
+
+      header{}
+         header > h1{
+          font-weight:normal;
+          text-align:center;
+          text-transform: uppercase;
+          font-size:20px;
+        }
+        header > .logo{
+          max-width:150px!important;
+          max-height:150px!important;
+          padding:10px;
+          position:absolute;
+          top:10px!important;
+          right:100px!important;
+        }
+
+      label {
+        font-weight:bold!important;
+        text-align: right;
+      }
+
+      .info{
+        margin-top:5px;
+      }
+        .info td:nth-child(1), .info td:nth-child(3){
+          font-weight: bold!important;
+          text-align:right!important;
+          border: none;
+        }
+        .info td:nth-child(2), .info td:nth-child(4){
+          text-align:left;
+          text-transform: uppercase;
+          border: none;
+        }
+
+      .list{
+        border: 1px solid lightgray;
+        height:220px;
+      }
+        .list table{
+          width: 100%;
+        }
+          .list > table th{
+            background-color: lightgray;
+            color:black;
+            text-align: center;
+          }
+          .list > table td {
+             font-size: 15px;
+          }
+          .list > table tbody > tr > td {
+             text-align: center;
+          }
+          .list > table tbody td:nth-child(5),
+          .list > table tbody td:nth-child(6),
+          .list > table tbody td:nth-child(7) {
+             text-align:right!important;
+          }
+
+          .dinamico{
+            height: 300px;
+          }
+
+    </style>
+
+    <!--#4DELSE-->
+
+    <style>
+      @media print {
+        body {
+          font-family: 'Open Sans', sans-serif !important;
+          font-size:18px;
+        }
+      }
+
+      html{
+        overflow-x: hidden;
+      }
+
+      header, section, article, footer{
+        display:block;
+        padding:0px;
+        margin:10px;
+        position: relative;
+      }
+
+      table {
+          border-collapse: collapse;
+      }
+        th, td {
+          padding:5px;
+          border: 1px solid lightgray;
+          vertical-align: middle;
+        }
+
+      .address{
+        text-transform: uppercase;
+        color:gray;
+        margin: 5px 0 0 10px;
+      }
+
+      section > article{
+        border-top: 2px solid lightgray;
+      }
+        section > article > h2{
+          font-size:17px;
+        }
+
+      h1, h2, h3, h4, h5{
+        text-decoration: underline;
+        text-transform: uppercase;
+      }
+
+      hr{
+         color: #0056b2!important;
+      }
+
+      footer{
+        text-align: center;
+      }
+        footer > div{
+          display: inline-block;
+          text-align: auto;
+          margin: 10px;
+        }
+          footer > div hr{
+            width: 300px!important;
+          }
+          footer > div > table{
+            width:300px!important;
+          }
+            footer > div > table td{
+              text-align:left!important;
+            }
+        footer > article{}
+            footer article div.monto-sant{ /* monto */
+              width:600px!important;
+              position:absolute!important;
+              top:165px!important;
+              left:480px!important;
+            }
+            footer article div.monto-sant span{ /* monto */
+                float: right;
+            }
+            footer article div.fecha-sant{ /* fecha sant */
+              position:absolute!important;
+              top:220px!important;
+              right:-35px!important;
+              text-transform: uppercase;
+              width:500px;
+            }
+              footer article div.fecha-sant span.date-dia-sant { /* fecha dia */
+                position:absolute!important;
+                left:10px!important;
+                display: inline-block;
+                text-transform: uppercase;
+              }
+              footer article div.fecha-sant span.date-mes-sant { /* fecha mes */
+                position:absolute!important;
+                display: inline-block;
+                right:100px!important;
+                text-transform: uppercase;
+              }
+              footer article div.fecha-sant span.date-ano-sant { /* fecha ano*/
+                position:relative;!important;
+                display: ;
+                right:-105px!important;
+                text-transform: uppercase;
+              }
+
+            footer article div.razon-sant{ /* razon */
+              position:absolute!important;
+              top:300px!important;
+              left:410px!important;
+              text-transform: uppercase;
+            }
+            footer article div.cadena-sant{ /* cadena */
+              position:absolute!important;
+              top:360px!important;
+              left:390px!important;
+              text-transform: uppercase;
+            }
+            footer article > div.line{
+              border:1px solid black;
+              width:500px;
+              webkit-transform:rotate(-45deg);
+            }
+
+           /* footer article div:nth-child(5){
+              top:250px!important;
+              left:200px!important;
+            }
+            footer article div:nth-child(6){
+              top:300px!important;
+              left:200px!important;
+            }*/
+
+      header{}
+         header > h1{
+          font-weight:normal;
+          text-align:center;
+          text-transform: uppercase;
+          font-size:20px;
+        }
+        header > .logo{
+          max-width:150px!important;
+          max-height:150px!important;
+          padding:10px;
+          position:absolute;
+          top:10px!important;
+          right:100px!important;
+        }
+
+      label {
+        font-weight:bold!important;
+        text-align: right;
+      }
+
+      .info{
+        margin-top:5px;
+      }
+        .info td:nth-child(1), .info td:nth-child(3){
+          font-weight: bold!important;
+          text-align:right!important;
+          border: none;
+        }
+        .info td:nth-child(2), .info td:nth-child(4){
+          text-align:left;
+          text-transform: uppercase;
+          border: none;
+        }
+
+      .list{
+        border: 1px solid lightgray;
+        height:220px;
+      }
+        .list table{
+          width: 100%;
+        }
+          .list > table th{
+            background-color: lightgray;
+            color:black;
+            text-align: center;
+          }
+          .list > table td {
+             /*color:gray;*/
+             font-size: 15px;
+          }
+          .list > table tbody > tr > td {
+             text-align: center;
+          }
+          .list > table tbody td:nth-child(5),
+          .list > table tbody td:nth-child(6),
+          .list > table tbody td:nth-child(7) {
+             text-align:right!important;
+          }
+
+        /*  .maximotam{
+            max-width:500px;
+          }*/
+
+          .dinamico{
+            /*border: 1px solid red;*/
+            height: 300px;
+          }
+
+    </style>
+
+
+    <!--#4DENDIF-->
+
+
+</head>
+<body>
+<div id="ch">
+
+  <header>
+    <h1>COMPROBANTE DE PAGO </h1>
+    <div class="address">
+      <div><!--#4DTEXT razonPropietaria--></div>
+      <div><!--#4DTEXT direccionPropietaria-->, <!--#4DTEXT comunaPropietaria--></div>
+      <div><!--#4DTEXT telefonoPropietaria--></div>
+    </div>
+    <table class="info">
+      <tr>
+        <td>Fecha emisión:</td>
+        <td><!--#4DTEXT fecha_emision--></td>
+      </tr>
+      <tr>
+        <td>Emisor:</td>
+        <td><!--#4DTEXT emisor--></td>
+      </tr>
+    </table>
+    <img class="logo" src="<!--#4DTEXT vUrlImagenLogo-->" width="<!--#4DTEXT Num(vAnchoPicture)*2-->">
+  </header>
+
+  <section>
+    <article class="dinamico">
+      <h2>Datos del pago</h2>
+      <table class="info">
+        <tr>
+          <td>Nro. Cheque:</td>
+          <td><!--#4DTEXT numero_cheque--></td>
+          <td>Monto cheque:</td>
+          <td><!--#4DTEXT total_pago--></td>
+        </tr>
+        <tr>
+          <td>Fecha documento:</td>
+          <td colspan="3"><!--#4DTEXT String(fecha_emision;5)--></td>
+        </tr>
+        <tr>
+          <td>A la orden de:</td>
+          <td colspan="3"><div class="maximotam"><!--#4DTEXT a_la_orden_de--></div></td>
+        </tr>
+        <tr>
+          <td>Proveedor:</td>
+          <td><!--#4DIF ((proveedor#"") & (proveedor#"-") )--><!--#4DTEXT proveedor--><!--#4DELSE-->SIN PROV.<!--#4DENDIF--></td>
+          <td>Rut</td>
+          <td><!--#4DIF ((rut_empresa#"") & (rut_empresa#"-") )--><!--#4DTEXT rut_empresa--><!--#4DELSE-->SIN RUT<!--#4DENDIF--></td>
+        </tr>
+        <tr>
+          <td>Proyecto:</td>
+          <td colspan="3"><!--#4DIF vProyectoOrigenOP#""-->Nro. <!--#4DTEXT vProyectoOrigenOPNumber--> / <!--#4DTEXT vProyectoOrigenOP--><!--#4DELSE-->SIN PROYECTO (G.G)<!--#4DENDIF--></td>
+        </tr>
+        <tr>
+          <td>Orden de pago</td>
+          <td><!--#4DTEXT folio_OP--></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+    </article>
+
+    <article>
+      <h2>Origen del pago</h2>
+      <table class="info">
+        <tr>
+          <td>Origen:</td>
+          <td><!--#4DTEXT vTipoOrigenOP--><!--#4DIF Not(Undefined(vOCTipoDoc))--> / <!--#4DTEXT vOCTipoDoc--><!--#4DENDIF--></td>
+          <td>Nro.:</td>
+          <td><!--#4DTEXT vFolioOrigenOP--></td>
+        </tr>
+        <tr>
+          <td>Referencia:</td>
+          <td><!--#4DTEXT vReferenciaOrigenOP--></td>
+          <td>Emisor:</td>
+          <td><!--#4DTEXT vEmisorOrigenOP--></td>
+        </tr>
+        <tr>
+          <td>Fecha emisión:</td>
+          <td colspan="3"><!--#4DTEXT vFechaOrigenOP--></td>
+        </tr>
+      </table>
+    </article>
+
+    <article>
+      <h2>Documentos del proveedor</h2>
+      <div class="list">
+          <table>
+            <thead>
+              <tr>
+                <th>Tipo</th>
+                <th>Numero</th>
+                <th>Fecha</th>
+                <th>Referencia</th>
+                <th>Total Neto</th>
+                <th>Impuesto</th>
+                <th>Total</th>
+                <th>Pagado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!--#4DIF Size of array(a_dtc_id)>5-->
+                <tr><td colspan="7" style="color:gray">Existe más de 5 documentos asociados al egreso. Esto podría desornedar el formato de impresión de cheques.</td></tr>
+              <!--#4DELSE-->
+                <!--4DLOOP a_dtc_id-->
+                <tr>
+                  <td><!--#4DTEXT a_dtc_des{a_dtc_id}--></td>
+                  <td><!--#4DTEXT a_dtc_folio{a_dtc_id}--></td>
+                  <td><!--#4DTEXT a_dtc_emision{a_dtc_id}--></td>
+                  <td><!--#4DTEXT a_dtc_ref{a_dtc_id}--></td>
+                  <td><!--#4DTEXT String(a_dtc_neto{a_dtc_id};"$ ###.###.##0")--></td>
+                  <td><!--#4DTEXT String(a_dtc_impuesto{a_dtc_id};"$ ###.###.##0")--></td>
+                  <td><!--#4DTEXT String(a_dtc_total{a_dtc_id};"$ ###.###.##0")--></td>
+                  <td><!--#4DTEXT String(a_dtc_abono{a_dtc_id};"$ ###.###.##0")--></td>
+                </tr>
+                <!--4DENDLOOP-->
+              <!--#4DENDIF-->
+            </tbody>
+          </table>
+      </div>
+    </article>
+  </section>
+
+  <footer>
+    <div>
+      <hr/>
+      <strong>Firma</strong>
+    </div>
+
+    <div>
+      <table>
+        <tr><td>Nombre:</td></tr>
+        <tr><td>Rut:</td></tr>
+        <tr><td>Fecha:</td></tr>
+      </table>
+    </div>
+
+    <!--#4DIF opcionPrint="1"-->
+      <!--#4DIF isFechaSeparada-->
+        <article>
+          <div class="monto-normal"><!--#4DTEXT total_pago2--></div>
+          <div class="fecha-normal_separada">
+            <span class="date-ciudad-separada">SANTIAGO</span>
+            <span class="date-dia-separada"><!--#4DTEXT vFecha2_dia_solo--></span>
+            <span class="date-mes-separada"><!--#4DTEXT vFecha2_mes_nueva--></span>
+            <span class="date-ano-separada"><!--#4DTEXT vFecha2_ano_nueva--></span>
+          </div>
+          <div class="razon-normal"><!--#4DTEXT razon_empresa--></div>
+          <div class="cadena-normal"><!--#4DTEXT vCadena--></div>
+        </article>
+      <!--#4DELSE-->
+         <article>
+          <div class="monto-normal"><!--#4DTEXT total_pago2--></div>
+          <div class="fecha-normal">Santiago <!--#4DTEXT vFecha2--></div>
+          <div class="razon-normal"><!--#4DTEXT razon_empresa--></div>
+          <div class="cadena-normal"><!--#4DTEXT vCadena--></div>
+          <!--<div class="line">sdsdfdfdsg</div>
+          <div class="line">gdgsfgfdgfdg</div> -->
+        </article>
+      <!--#4DENDIF-->
+
+    <!--#4DELSE-->
+      <article>
+        <div class="monto-sant"><span><!--#4DTEXT total_pago2--></span></div>
+        <div class="fecha-sant">
+            <span class="date-dia-sant"><!--#4DTEXT vFecha2_dia--></span>
+            <span class="date-mes-sant"><!--#4DTEXT vFecha2_mes--></span>
+            <span class="date-ano-sant"><!--#4DTEXT vFecha2_ano--></span>
+        </div>
+        <div class="razon-sant"><!--#4DTEXT razon_empresa--></div>
+        <div class="cadena-sant"><!--#4DTEXT vCadena--></div>
+        <!--<div class="line">sdsdfdfdsg</div>
+        <div class="line">gdgsfgfdgfdg</div> -->
+      </article>
+    <!--#4DENDIF-->
+
+
+
+  </footer>
+
+</div>
+</body>
+</html>

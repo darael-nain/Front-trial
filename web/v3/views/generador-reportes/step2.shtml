@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getReporteTemplate-->
+		<title>Selección de módulo y datos</title>
+		<meta charset="utf-8">
+		<style>
+		  	label.checkbox {
+				width: calc(25% - 10px) !important;
+			}
+
+			label.checkbox input {
+				margin-right: -60px !important;
+				vertical-align: middle !important;
+			}
+
+			label.checkbox span {
+				width: calc(100% - 30px) !important;
+				vertical-align: middle !important;
+			}
+
+			.custom-checkbox-container {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+				gap: 10px 20px; 
+				align-items: center;
+			}
+
+			.custom-checkbox {
+				display: flex;
+				align-items: center;
+				gap: 10px; 
+				padding: 5px;
+				white-space: nowrap;
+			}
+
+			.custom-checkbox input {
+				flex-shrink: 0;
+				width: 16px;
+				height: 16px;
+				margin: 0;
+			}
+
+			.custom-checkbox span {
+				font-size: 14px;
+				line-height: 1.2;
+				display: inline-block;
+			}
+
+
+		</style>
+		<link href="/v3/views/generador-reportes/jquery-plugins/multiple-select/multiple-select.css" rel="stylesheet"/>
+		<script>
+			$(document).ready(function() {
+				var id = <!--#4DVAR id-->;
+				$('[name="id"]').val(id);
+
+        /* INICIO: Lógica de botonera integrada */
+				var saveTemplate = function(callback) {
+					var valid = true;
+					$('.ui-dialog-content').find('input[required], select[required]').each(function(index) {
+						if ($(this).val() === '') {
+							valid = false;
+							$(this).addClass('invalid');
+						} else {
+							$(this).removeClass('invalid');
+						}
+					});
+					if (valid) {
+						$.ajax({
+							url: '/4DACTION/_V3_setReporteTemplate',
+							data: $('.ui-dialog-content').serializeAnything(),
+							dataType: 'json',
+							success: function(data) {
+								if (data.success) {
+									$('[name="id"]').val(data.id);
+									toastr.success('Guardado con éxito.');
+									if (typeof callback !== 'undefined') {
+										callback();
+									}
+								} else {
+									toastr.error('Se produjo un error interno al guardar los datos.');
+								}
+							}
+						});
+					} else {
+						toastr.warning('Faltan datos por completar.');
+					}
+				};
+        unaBase.toolbox.init();
+        var menu = $('#dialog-menu');
+				menu.parentTo('.ui-dialog').find('header').show();
+
+        var buttons = [];
+        buttons.push({
+          name: 'back', icon: 'ui-icon-circle-arrow-w', caption: 'Volver',
+          action: function() {
+            unaBase.loadInto.dialog('/v3/views/generador-reportes/index.shtml', 'Crear reporte desde una plantilla', 'large');
+          }
+        });
+				buttons.push({
+          name: 'save', icon: 'ui-icon-disk', caption: 'Guardar',
+          action: function() {
+						saveTemplate();
+          }
+        });
+				// Botón descargar
+				buttons.push({
+          name: 'download', icon: 'ui-icon-circle-arrow-s', caption: 'Descargar',
+					action: function() {
+						saveTemplate(function() {
+							var id = $('[name="id"]').val();
+							// Descargar Excel
+							var sid = '';
+							$.each($.cookie(),function(clave,valor) {sid+= (valor + ' '); });
+							var url = nodeUrl + '/export-reporte-template/?id=' + id + '&sid=' + encodeURIComponent(sid) + '&hostname=' + window.location.origin;
+							var download = window.open(url).blur();
+							window.focus();
+							download.close();
+							toastr.info('La descarga puede demorar un tiempo. Por favor espere a que la descarga se inicie.');
+						});
+					}
+				});
+
+
+        menu.find('ul > li').remove();
+				menu.parentTo('header').find('button').not(':first-of-type').not('.date').not('.search-button').not('.close-button').remove();
+
+				var button;
+
+				for (i in buttons) {
+					button = $('<li data-name="' + buttons[i].name + '"><button>' + buttons[i].caption + '</button></li>');
+					menu.find('ul').append(button);
+					menu.find('ul > li:last-of-type > button').button({
+						icons: ((typeof buttons[i].icon != 'undefined')? {
+							primary: buttons[i].icon
+						} : buttons[i].icons )
+					}).click(buttons[i].action);
+				}
+
+				button = $('<button id="dropdown_launcher" class="dropdown-button more" style="display: inline-block; float: right;">Más...</button>');
+				button.button({
+					icons: {
+						primary: "ui-icon-gear",
+						secondary: "ui-icon-triangle-1-s"
+					},
+					text: false
+				}).hide();
+				menu.parentTo('header').append(button);
+				menu.show();
+        /* FIN: Lógica de botonera integrada */
+
+				// Selector de módulo
+				$.ajax({
+					url: '/4DACTION/_V3_getReporteModulo',
+					dataType: 'json',
+					success: function(data) {
+						var selectObject = $('[name="reporte[modulo]"]');
+						selectObject.find('option').remove();
+						selectObject.append('<option value="">[Seleccionar]</option>');
+						for (var i = 0, len = data.rows.length; i < len; i++) {
+							selectObject.append('<option value="' + data.rows[i].id + '">' + data.rows[i].name + '</option>');
+						}
+						$('fieldset.filtros').find('label').remove();
+					}
+				});
+
+				$('[name="reporte[modulo]"]').change(function(event) {
+					$.ajax({
+						url: '/4DACTION/_V3_getReporteFiltro',
+						data: {
+							id: $(event.target).val(),
+							range: $('[name="reporte[fecha]"]').val(),
+							range_from: $('[name="reporte[fecha][from]"]').val(),
+							range_to: $('[name="reporte[fecha][to]"]').val()
+						},
+						dataType: 'json',
+						async: false,
+						success: function(data) {
+							var fieldsetObject = $('fieldset.filtros');
+							fieldsetObject.find('label').remove();
+							for (var i = 0, len = data.rows.length; i < len; i++) {
+								var labelObject = $('<label><span>' + data.rows[i].name + '</span></label>');
+								if (data.rows[i].list === '') {
+									//labelObject.
+								} else {
+									var selectObject = $('<select multiple name="reporte[filtro][' + data.rows[i].id + ']"></select>'); // bug
+									// var selectObject = $('<select name="reporte[filtro][' + data.rows[i].id + ']"></select>');
+									$.ajax({
+										url: '/4DACTION/_V3_getReporteFiltroList',
+										data: {
+											list: data.rows[i].list
+										},
+										dataType: 'json',
+										async: false,
+										success: function(subdata) {
+											//selectObject.append('<option value="">[Todos]</option>');
+											for (var j = 0, len = subdata.rows.length; j < len; j++) {
+												var optionObject = $('<option value="' + subdata.rows[j].id + '">' + subdata.rows[j].name + '</option>');
+												selectObject.append(optionObject);
+											}
+										}
+									});
+									labelObject.append(selectObject);
+								}
+								fieldsetObject.append(labelObject);
+							}
+							$('select[multiple]').multipleSelect();
+						}
+					});
+
+					$.ajax({
+						url: '/4DACTION/_V3_getReporteColumna',
+						data: {
+							id: $(event.target).val()
+						},
+						dataType: 'json',
+						async: false,
+						success: function(data) {
+							var fieldsetObject = $('fieldset.columnas');
+							fieldsetObject.find('.custom-checkbox').remove(); // Eliminamos checkboxes anteriores
+							
+							if (!fieldsetObject.hasClass("custom-checkbox-container")) {
+								fieldsetObject.addClass("custom-checkbox-container"); // Aseguramos la clase de estilo
+							}
+
+							for (var i = 0, len = data.rows.length; i < len; i++) {
+								var checkboxObject = $('<div class="custom-checkbox">' +
+									'<input type="checkbox" name="reporte[columna][' + data.rows[i].id + ']">' +
+									'<span>' + data.rows[i].name + '</span>' +
+									'</div>');
+								fieldsetObject.append(checkboxObject);
+							}
+						}
+					});
+
+				});
+
+				$('label.date-from').hide();
+				$('label.date-to').hide();
+
+				$('[name="reporte[fecha]"]').change(function(event) {
+					$('[name="reporte[modulo]"]').trigger('change');
+					if ($(event.target).val() === 'custom_date') {
+						$('label.date-from').show();
+						$('label.date-to').show();
+					} else {
+						$('label.date-from').hide().val(null);
+						$('label.date-to').hide().val(null);
+					}
+				});
+
+				$('[name="reporte[fecha][from]"]').change(function(event) {
+					$('[name="reporte[modulo]"]').trigger('change');
+				});
+
+				$('[name="reporte[fecha][to]"]').change(function(event) {
+					if ($(event.target).val() < $('[name="reporte[fecha][from]"]').val()) {
+						$(event.target).val($('[name="reporte[fecha][from]"]').val());
+					} else {
+						$('[name="reporte[modulo]"]').trigger('change');
+					}
+				});
+
+				// Cargar plantilla de reporte
+				setTimeout(function() {
+					unaBase.ui.block();
+				}, 1);
+				setTimeout(function() {
+					if (id > 0) {
+						$.ajax({
+							url: '/4DACTION/_V3_getReporteTemplateContent',
+							data: {
+								id: id
+							},
+							dataType: 'json',
+							success: function(data) {
+								$('[name="reporte[nombre]"]').val(data.nombre);
+								$('[name="reporte[modulo]"]').val(data.modulo.id).trigger('change');
+								$('[name="reporte[fecha]"]').val(data.fecha.range).trigger('change');
+								if (data.fecha.range === 'custom_date') {
+									$('label.date-from').show().find('input').val(data.fecha.from);
+									$('label.date-to').show().find('input').val(data.fecha.to);
+								}
+								var filtrosObject = $('fieldset.filtros');
+								for (var i = 0, len = data.filtros.length; i < len; i++) {
+									// filtrosObject.find('select[name="reporte[filtro][' + data.filtros[i].id + ']"]').val(data.filtros[i].value);
+									var values = data.filtros[i].value.split(',');
+									var selectObject = filtrosObject.find('select[name="reporte[filtro][' + data.filtros[i].id + ']"]');
+									for (var j = 0, sublen = values.length; j < sublen; j++) {
+										var value = values[j];
+										selectObject.find('option[value="' + value + '"]').prop('selected', true);
+									}
+									selectObject.multipleSelect('refresh');
+								}
+								var columnasObject = $('fieldset.columnas');
+								for (var i = 0, len = data.columnas.length; i < len; i++) {
+									columnasObject.find('input[name="reporte[columna][' + data.columnas[i].id + ']"]')[0].checked = data.columnas[i].status;
+								}
+								unaBase.ui.unblock();
+							}
+						});
+					} else {
+						unaBase.ui.unblock();
+					}
+				}, 2000);
+
+			});
+		</script>
+	</head>
+	<body>
+		<input type="hidden" name="id">
+		<fieldset>
+			<legend>Datos generales</legend>
+			<label>
+				<span>Nombre</span>
+				<input type="text" name="reporte[nombre]" required>
+			</label>
+			<label>
+				<span>Modulo</span>
+				<select name="reporte[modulo]" required>
+					  <option>[Seleccionar]</option>
+						<option value="negocios">Negocios</option>
+				</select>
+			</label>
+		</fieldset>
+		<fieldset>
+			<legend>Rango de fecha</legend>
+			<label style="margin-right: 50%;">
+				<span>Fecha</span>
+				<select name="reporte[fecha]" required>
+						<option>[Todos]</option>
+						<option value="current_year">Año actual</option>
+						<option value="current_month">Mes actual</option>
+						<option value="current_week">Semana actual</option>
+						<option value="custom_date">Fecha personalizada...</option>
+				</select>
+			</label>
+			<label class="date-from">
+				<span>Desde</span>
+				<input type="date" name="reporte[fecha][from]">
+			</label>
+			<label class="date-to">
+				<span>Hasta</span>
+				<input type="date" name="reporte[fecha][to]">
+			</label>
+		</fieldset>
+		<fieldset class="filtros">
+			<legend>Filtros</legend>
+		</fieldset>
+		<fieldset class="columnas">
+			<legend>Columnas <a style="color: yellow; text-decoration: underline" href="#" onclick="$('.columnas').find('input').each(function() { $(this).prop('checked', true); }); return false;">[Seleccionar todo]</a></legend>
+		</fieldset>
+		<script src="/v3/views/generador-reportes/jquery-plugins/multiple-select/multiple-select.js"></script>
+    <script>
+			$(document).ready(function() {
+				/*setTimeout(function() {
+					$('select[multiple]').multipleSelect();
+				}, 1);*/
+			});
+
+    </script>
+	</body>
+</html>

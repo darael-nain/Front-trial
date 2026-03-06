@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<style type="text/css">
+			body{
+				margin:auto;
+				text-align:center;				
+			}
+			h1{
+				margin:0px 20px 0px 20px;
+				padding:10px;
+				text-align:left;
+				font-size:15px;
+				color:#2E9AFE;
+			}
+			h1 span{
+				margin-left:5px;
+				text-transform:capitalize;		
+			}
+			p{
+				margin:0px 20px 0px 50px;
+				padding:0;
+				text-align:left;
+				font-size:17px;
+				font-weight:bold;
+				color:black;
+				text-transform: uppercase;
+			}
+			.contiene{
+				background-color:#E0F2F7;
+				height:auto;
+				width:auto;
+				padding:5px
+			}
+			.descripcion{
+				margin:5px 20px 0px 50px;
+				text-align:left;
+				font-size:13px;
+				font-weight:normal;
+				font-style:italic;
+				text-transform:none;
+			}
+			.descripcion span{				
+				font-size:15px;
+				font-weight:normal;
+				font-style:none;
+				text-transform:none;
+			}
+			.visualizar{
+				text-align:left;				
+				margin:10px 20px 0px 50px;
+			}
+			.visualizar a{
+				font-size:15px;
+				color:#0080FF;
+			}
+			.visualizar a:hover{				
+				color:#5FB404;
+			}
+			.fechas{
+				text-align:left;
+				margin:10px 20px 0px 50px;
+				color:#848484;
+			}
+			.invitado{
+				font-size:15px;
+				color:#0080FF;
+				text-align: left;
+				margin:10px 20px 5px 50px;
+				font-weight: bold;
+			}
+
+			.responsable{
+				font-size:15px;
+				color:#088A08;
+				text-align: left;
+				margin:10px 20px 5px 50px;
+				font-weight: bold;
+			}
+
+			.integrante{
+				font-size:15px;
+				color:#FF8000;
+				text-align: left;
+				margin:10px 20px 5px 50px;
+				font-weight: bold;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="contiene">
+			<h1>
+				<img src="/imagenes/disk.png" border="0" />
+				<span>Orden de trabajo creada por JORGE JOFRE:</span>
+			</h1>
+			<p>Retoque la polar</p>
+			<p class="descripcion">
+				<span>Jorge comento: </span>revisar las imagenes subidas y por favor comentar!
+				lo antes posible! plis...
+			</p>
+			<div class="visualizar"><a target="_black" href="/4DACTION/ot/488/e/173">Visualizar</a></div>
+			<div class="invitado">Has sido invitado</div>			
+			<div class="fechas">sabado 24 de marzo del 2012 a las 09:00</div>
+		</div>
+
+		<br/>
+		<div class="contiene">
+			<h1>
+				<img src="/imagenes/page_white_edit.png" border="0" />
+				Orden de trabajo editada por JORGE JOFRE:
+			</h1>
+			<p>Retoque la polar</p>
+			<div class="visualizar"><a href="#">Visualizar</a></div>
+			<div class="responsable">Has sido asignado responsable</div>
+			<div class="fechas">sabado 24 de marzo del 2012 a las 09:00</div>
+		</div>
+
+		<br/>
+		<div class="contiene">
+			<h1>
+				<img src="/imagenes/comment.png" border="0" />
+				Orden de trabajo comentada por JORGE JOFRE:
+			</h1>
+			<p>Retoque la polar</p>
+			<div class="visualizar"><a href="#">Visualizar</a></div>
+			<div class="integrante">Has sido copiado</div>			
+			<div class="fechas">sabado 24 de marzo del 2012 a las 09:00</div>
+		</div>
+
+		<br/>
+		<div class="contiene">
+			<h1>
+				<img src="/imagenes/book_open.png" border="0" />
+				Orden de trabajo abierta por JORGE JOFRE:
+			</h1>
+			<p>Retoque la polar</p>
+			<div class="visualizar"><a href="#">Visualizar</a></div>
+			<div class="fechas">sabado 24 de marzo del 2012 a las 09:00</div>
+		</div>
+
+		<br/>
+		<div class="contiene">
+			<h1>
+				<img src="/imagenes/book.png" border="0" />
+				Orden de trabajo cerrada por JORGE JOFRE:
+			</h1>
+			<p>Retoque la polar</p>
+			<div class="visualizar"><a href="#">Visualizar</a></div>
+			<div class="fechas">sabado 24 de marzo del 2012 a las 09:00</div>
+		</div>
+
+		<br/>
+		<div class="contiene">
+			<h1>
+				<img src="/imagenes/cancel.png" border="0" />
+				Orden de trabajo anulada por JORGE JOFRE:
+			</h1>
+			<p>Retoque la polar</p>
+			<div class="visualizar"><a href="#">Visualizar</a></div>
+			<div class="fechas">sabado 24 de marzo del 2012 a las 09:00</div>
+		</div>
+
+	</body>
+</html>
+

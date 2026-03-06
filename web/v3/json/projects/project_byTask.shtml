@@ -1,0 +1,5 @@
+{
+	"id": <!--#4DHTML $project_id-->,
+	"number": <!--#4DHTML $next_folio-->,
+	"name": "<!--#4DHTML $name-->"
+}

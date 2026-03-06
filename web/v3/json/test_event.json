@@ -1,0 +1,15 @@
+{
+"events": [
+				{
+					"title": "All Day Event",
+					"start": "01-02-14"
+				},
+				{
+					"title": "Long Event",
+					"start": "01-02-14",
+					"end": "02-02-14",
+					"color": "#C0F7FE",
+    				"textColor": "black"
+				}
+			]
+}

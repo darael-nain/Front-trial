@@ -1,0 +1,129 @@
+<!--#4DINCLUDE headgreen.shtml-->
+
+<body>
+
+<!--#4DINCLUDE menu_superior_green_guest.shtml-->
+
+<div id="bg-ver-planner" class="bg-popup">
+    <div id="modal-ver-planner" class="modal-popup">       
+        <div class="box-lightBox">
+            <!--#4DINCLUDE pop_ver_planner.shtml-->            
+        </div>           
+    </div>
+</div>
+
+<div id="bgtransparent" class="bgtransparent">
+    <div id="bgmodal" class="bgmodal">       
+        <div class="pop-partipantes">
+            <!--#4DINCLUDE  pop_asignandos.shtml-->            
+        </div>           
+    </div>
+</div>
+
+
+<div id="bgtransparent2" class="bgtransparent">
+
+    <div id="bgmodal2" class="bgmodal">       
+
+        <div class="pop-partipantes">
+
+            <!--#4DINCLUDE  pop_upload_file.shtml-->            
+
+        </div>           
+
+    </div>
+
+</div>
+
+
+<div id="bgtransparent3" class="bgtransparentFile">
+    <div id="bgmodal3" class="bgmodalFile"></div>
+</div>
+
+<input id="desdedonde" type="hidden" value="<!--#4DVAR vTabs-->"/>
+<input id="folioot" type="hidden" value="<!--#4DVAR vFolioOt-->"/>
+<input id="idNotify" type="hidden" value="<!--#4DVAR vNotify-->"/>
+
+
+
+<!--#4dscript/datos_generales_ot-->
+<section>   	
+    <article>
+
+        <form name="frmnuevaot" id="frmnuevaot" action="#" method="post" enctype="multipart/form-data" >
+            
+            <input id="id-ot" name="idot" type="hidden" value="<!--#4DVAR vIdot-->"/>
+            <input id="login-ot" name="login-ot" type="hidden" value="<!--#4DVAR vLogin-->"/>
+            <input id="send-notifyx" name="send-notifyx" type="hidden" value="no"/>        
+
+            <h2 class="sub-titulo">
+                <!--#4dif vFolioOt="S/N"-->Nueva OT<!--#4dendif-->
+                <!--#4dif vReferencia#""-->
+                <span class="reference-ot">"<!--#4dvar lowercase(vReferencia)-->"</span>
+                <!--#4delse-->
+                <span class="reference-ot"><!--#4dvar lowercase(vReferencia)--></span>
+                <!--#4dendif-->                
+            </h2>
+
+            <ul class="tabs">             
+                <li id="li-tabs-datos-ot" class="uno"><a href="#tab1">Datos de la OT</a></li>     
+                             
+
+
+
+            </ul>                        
+            <div class="tab_container">  
+                <div id="tab1" class="tab_content"><!--#4DINCLUDE ot_tabs_datos_guest.shtml--></div>
+
+
+            </div>            
+            
+        </form>       
+
+     </article>         
+</section>
+<script type="text/javascript">
+$(document).ready(function(){   
+   
+    
+    fn_setTimeout_comment_show();
+
+    $('html,body').animate({
+        scrollTop: $("#scrollToHere").offset().top
+    },500);
+
+    $("#miBoton").click(function () {
+        var value = $(this).val();
+        if(value == 'Subir'){
+            $(this).val("bajar");
+            $('html,body').animate({
+                scrollTop: $("body").offset().top
+            }, 500);
+        }else{
+            $(this).val("Subir");
+            $('html,body').animate({                
+                scrollTop: $("#scrollToHere").offset().top
+            }, 500);
+            fn_setTimeout_comment_show();
+        }       
+    });
+});
+
+
+function fn_setTimeout_comment_show(){
+    $('.box-bottom-2-').fadeIn(function(){
+        $(this).css({'background-color':'#F7F8E0','border-radius':'5px'});
+    }); 
+    setTimeout("fn_setTimeout_comment()",3000); 
+}
+
+function fn_setTimeout_comment(){
+    $('.box-bottom-2-').css({'background-color':'white','border-radius':'none'});
+}
+
+
+</script>
+
+
+</body>
+</html>

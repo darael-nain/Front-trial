@@ -1,0 +1,19 @@
+{
+	"rows": [
+	<!--#4DLOOP aIdDoc -->
+		{
+			"folio": "<!--#4DVAR aFolio{aIdDoc}-->",
+			"fecha": "<!--#4DVAR aFecha{aIdDoc}-->",
+			"tipoDoc": "<!--#4DVAR aTipoDoc{aIdDoc}-->",
+			"proveedor": "<!--#4DVAR aProveedor{aIdDoc}-->",
+			"referencia": "<!--#4DVAR _V3_escapeString(aReferencia{aIdDoc})-->",
+			"estado": "<!--#4DVAR aEstado{aIdDoc}-->",
+			"neto": "<!--#4DVAR aNeto{aIdDoc}-->",
+			"exento": "<!--#4DVAR aExento{aIdDoc}-->",
+			"impuesto": "<!--#4DVAR aImpuesto{aIdDoc}-->",
+			"adicional": "<!--#4DVAR aAdicional{aIdDoc}-->",
+			"total": "<!--#4DVAR aTotal{aIdDoc}-->"
+		}<!--#4DIF NOT(aIdDoc{aIdDoc} = aIdDoc{Size of array(aIdDoc)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

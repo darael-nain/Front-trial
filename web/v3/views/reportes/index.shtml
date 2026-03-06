@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!--#4DSCRIPT/_V3_proxy-->
+	<meta charset="utf-8">
+	<title>Reportes</title>
+	<style>
+		.options > h1 {
+			font-size: 14px;
+		}
+		.options > ul {
+			margin-top: 15px;
+			font-size: 12px;
+		}
+		.options > ul > li {
+			margin-bottom: 5px;
+			border:1px solid lightgray;
+			background-color:white;
+			color:#00a96c;
+			padding:5px;
+			margin:2px;
+			width:400px;
+			cursor: pointer;
+			font-weight: bold;
+			border-radius:2px;
+		}
+		.options > ul > li div {
+			color:black;
+			font-weight:normal;
+		}
+
+	</style>
+
+	<script>
+		$(document).ready(function() {
+			document.title = nombreEmpresa + ' / Reportes';
+		});
+	</script>
+</head>
+<body>
+	<section class="options">
+		<ul>
+
+			<li style="background-color:#3da865;color:white"><h2>Varios</h2></li>
+
+			<li onclick="unaBase.loadInto.viewport('/v3/views/reportes/resumen_general.shtml'); return false;"><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/reportes/resumen_general.shtml'); return false;">Resumen general</a></li>
+
+			<li onclick="unaBase.loadInto.viewport('/v3/views/reportes/reportes.shtml'); return false;">
+				<a href="#" onclick="unaBase.loadInto.viewport('/v3/views/reportes/reportes.shtml'); return false;">Reportes gráficos</a>
+				<div style="display:none">
+					<div>- Ventas por clientes, historico</div>
+					<div>- Ventas por servicios año en curso</div>
+					<div>- Ventas por mes , año en curso</div>
+					<div>- Gastos por mes , año en curso</div>
+					<div>- Facturacion por mes</div>
+					<div>- Ventas y Gastos , año en curso</div>
+					<div>- Utilidad Proyectada vs Utilidad Real</div>
+					<div>- Comparativo venta x año</div>
+
+					<div>- Ventas por año</div>
+					<div>- Ventas vs gastos por año</div>
+				</div>
+			</li>
+
+			<li onclick="unaBase.loadInto.viewport('/v3/views/reportes/reportes_por_servicio.shtml'); return false;"><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/reportes/reportes_por_servicio.shtml'); return false;">Reportes por Servicios</a></li>
+			
+			<li onclick="unaBase.loadInto.viewport('/v3/views/reportes/reportes_por_servicio2.shtml'); return false;"><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/reportes/reportes_por_servicio2.shtml'); return false;">Reporte gasto por servicios x fecha de compra</a></li>
+
+			<!--<li onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_online.shtml'); return false;"><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_online.shtml'); return false;">Reporte Online</a></li>-->
+
+			<li onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_facturacion_por_cliente.shtml'); return false;"><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_facturacion_por_cliente.shtml'); return false;">Reporte Facturación por Cliente</a></li>
+
+			<li  onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_pagos_por_proveedor.shtml'); return false;"><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_pagos_por_proveedor.shtml'); return false;">Reporte pagos por proveedor</a></li>
+
+			<li style="display:none" style="background-color:#3da865;color:white"><h2>Proyección</h2></li>
+
+			<li style="display:none" onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_proyeccion_cotizacion.shtml'); return false;"><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_proyeccion_cotizacion.shtml'); return false;">Reporte proyección de cotizaciones</a></li>
+
+			<li style="display:none" onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_proyeccion_ventas.shtml'); return false;"><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_proyeccion_ventas.shtml'); return false;">Reporte proyección de ventas</a></li>
+
+			<li style="display:none" onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_proyeccion_costos_gastos.shtml'); return false;"><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_proyeccion_costos_gastos.shtml'); return false;">Reporte proyección de costos y gastos</a></li>
+
+			<li style="background-color:#3da865;color:white"><h2>Cotizaciones</h2></li>
+
+			<li onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_cotizaciones_por_ejecutivo.shtml'); return false;"><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_cotizaciones_por_ejecutivo.shtml'); return false;">Reporte Cotizaciones por Ejecutivo</a></li>
+
+			<li onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_cotizaciones_por_cliente.shtml'); return false;"><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_cotizaciones_por_cliente.shtml'); return false;">Reporte Cotizaciones por Cliente</a></li>
+
+			<li style="background-color:#3da865;color:white"><h2>Negocios</h2></li>
+
+			<li onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_ventas_por_ejecutivo.shtml'); return false;"><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_ventas_por_ejecutivo.shtml'); return false;">Reporte Ventas por Ejecutivo</a></li>
+
+			<li onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_ventas_por_areanegocio.shtml'); return false;"><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_ventas_por_areanegocio.shtml'); return false;">Reporte Ventas por Área de Negocio</a></li>
+
+			<li onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_ventas_por_cliente.shtml'); return false;"><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_ventas_por_cliente.shtml'); return false;">Reporte Ventas por Cliente</a></li>
+
+			<!--#4DIF _V3_marcaEnabled-->
+			<li onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_ventas_por_marca.shtml'); return false;"><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_ventas_por_marca.shtml'); return false;">Reporte Ventas por Marca</a></li>
+			<!--#4DENDIF-->	
+
+			<!-- <li><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_cotizaciones_con_gastos_o_facturas.shtml'); return false;">Reporte Cotizaciones con gastos o facturas</a></li> -->
+
+			<li style="background-color:#3da865;color:white"><h2>Financieros</h2></li>
+
+			<!--<li onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_estado_resultado.shtml'); return false;"><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_estado_resultado.shtml'); return false;">Reporte estado resultado proyectado</a></li>-->
+
+			<li onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_estado_resultado.shtml'); return false;"><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_estado_resultado.shtml'); return false;">Reporte de desembolsos</a></li>
+
+			<li onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_cuentas_por_pagar_cobrar.shtml'); return false;"><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/reportes/reporte_cuentas_por_pagar_cobrar.shtml'); return false;">Reportes de cuentas por cobrar y pagar</a></li>
+
+			<li style="background-color:#3da865;color:white"><h2><span style="font-size:12px">Reportes programables vía email</span></h2></li>
+			<li><a href="/4DACTION/INF_COT_PEND" target="_blank">Cotizaciones en proceso</a></li>
+			<li><a href="/4DACTION/INFO_NV_X_FACTURAR" target="_blank">Negocios por facturar</a></li>
+			<li><a href="/4DACTION/rep_negxfactcliente" target="_blank">Negocios por facturar por cliente</a></li>
+			<li><a href="/4DACTION/rep_negxfactejecutivo" target="_blank">Negocios por facturar por ejecutivo</a></li>
+			<li><a href="/4DACTION/INFO_FAC_X_COBRAR" target="_blank">Facturas de venta por cobrar</a></li>
+			<li><a href="/4DACTION/INF_FACT_POR_VENCER" target="_blank">Facturas de venta por vencer</a></li>
+			<li><a href="/4DACTION/INF_FAC_POR_PROVEEDOR" target="_blank">Facturar por pagar por proveedor</a></li>
+			<li><a href="/4DACTION/INFO_RF_VENCIDAS" target="_blank">Rendiciones de fondo vencidas a la fecha</a></li>
+		</ul>
+	</section>
+	<script type="text/javascript">
+					unaBase.ui.unblock();
+
+	</script>
+</body>
+</html>

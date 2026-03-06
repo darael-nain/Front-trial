@@ -1,0 +1,11 @@
+{
+"rows": [
+<!--#4DLOOP aProyectoId -->
+{
+"id": <!--#4DHTML aProyectoId{aProyectoId}-->,
+"folio": <!--#4DHTML aProyectoFolio{aProyectoId}-->,
+"id_sap": "<!--#4DHTML aIdSap{aProyectoId}-->"
+}<!--#4DIF NOT(aProyectoId{aProyectoId} = aProyectoId{Size of array(aProyectoId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+]
+}

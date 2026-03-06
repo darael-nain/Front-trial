@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getCotizacionContent-->
+		<!--#4DSCRIPT/_V3_proxy_getListGastos-->
+		<meta charset="utf-8">
+		<title>Compras</title>
+		<script>
+
+		var saldoPorFacturarNormal = parseFloat('<!--#4DTEXT saldoPorFacturarNormal-->');
+		var saldoPorFacturarExchange = parseFloat('<!--#4DTEXT saldoPorFacturarExchange-->');
+		var exchangeType = '<!--#4DTEXT exchangeType-->';
+		var excederPorFacturar = <!--#4DIF excederPorFacturar -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+		$(document).ready(function() {
+			$('.country-label-rut').text(country.label_rut);
+			var container = $('section.sheet-list-facturas');
+			var id = container.data('id');
+			var detail = container.data('detail');
+			var tbody = container.find('table > tbody');
+			var tfoot = container.find('table > tfoot');
+			
+
+			var totales = {
+				//'costoempresa' : 0
+			}
+
+			var iniTotalesSumTotal = function(){
+				totales.costoempresa = 0;
+			}
+
+			var loadTotalesFoot = function(totales){
+				var htmlObject;
+				htmlObject = $('<tr>'+
+						'<th></th>' +
+						'<th></th>' +
+						'<th></th>' +
+						'<th></th>' +
+						'<th></th>' +
+						'<th class="exchange-currency" style="display:none"></th>' +
+						'<th></th>' +
+						'<th></th>' +
+						'<th></th>' +
+						'<th></th>' +
+						'<th></th>' +
+						'<th></th>' +
+						'<th></th>' +
+						'<th></th>' +
+						'</tr>');
+				return htmlObject;
+			}
+
+			var loadComprasNegocio = function(data) {
+				// Elimina todas las oc de la tabla
+				tbody.find("*").remove();
+
+				iniTotalesSumTotal();
+				var htmlObject;
+				const totals = {
+					neto: 0,
+					exento: 0,
+					iva: 0,
+					cobrado: 0
+				};
+
+				const openDialog = (id) => {
+					const row = document.querySelector(`.facturas tbody tr[data-id="${id}"]`);
+					if (!row) {
+						console.error(`No se encontró la fila con ID: ${id}`);
+						return;
+					}
+
+					const diferenciaCambiaria = parseFloat(row.dataset.diffcambio || 0); // Obtener el valor actualizado
+					const tipoCambioDefault = unaBase.moneyDefault.codigo;
+					const saldoPorCobrarOriginal = parseFloat(row.dataset.total);
+					// Moneda base
+					const moneyCode = row.dataset.moneda;
+					// Calcular el monto final considerando la comisión bancaria
+					let comisionBancaria = parseFloat(row.dataset.comision ? row.dataset.comision.replace(',', '.') : 0);
+					const totalCobrado = row.dataset.cobrado
+					// Eliminar cualquier diálogo previo
+					$(`#dialog-${id}`).remove();
+					
+					// Crear el contenido del diálogo dinámicamente
+					const dialogContent = $(`
+						<div id="dialog-${id}" title="Información">
+							<p class="ingreso">Total a cobrar según factura (${tipoCambioDefault}): <span>${$.number(saldoPorCobrarOriginal, currency.decimals, currency.decimals_sep, currency.thousands_sep)}</span></p>
+							<p class="ingreso">Total cobrado (${tipoCambioDefault}): <span>${$.number(totalCobrado, currency.decimals, currency.decimals_sep, currency.thousands_sep)}</span></p>
+							<p class="ingreso">Diferencia Tipo de Cambio (${tipoCambioDefault}): <span class="diff-cambiaria">${$.number(diferenciaCambiaria, currency.decimals, currency.decimals_sep, currency.thousands_sep)}</span></p>
+							<p class="ingreso">Comisión bancaria (${tipoCambioDefault}): <span class="diff-cambiaria">${$.number(comisionBancaria, currency.decimals, currency.decimals_sep, currency.thousands_sep)}</span></p>
+							<p class="ingreso">Monto final cobrado (${tipoCambioDefault}): <span id="monto-final-${id}">${$.number(totalCobrado, currency.decimals, currency.decimals_sep, currency.thousands_sep)}</span></p>
+						</div>
+					`);
+
+					dialogContent.find(`#comision-bancaria-${id}`).val(comisionBancaria);
+					dialogContent.find(`#comision-bancaria-${id}`).number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+					
+					let montoFinal = 0
+					// Manejar el cambio dinámico del input de comisión bancaria
+					dialogContent.on('input', `#comision-bancaria-${id}`, function () {
+						comisionBancaria = parseFloat($(this).val().replace(',', '.')) || 0;
+						montoFinal = totalCobrado - (comisionBancaria * nuevoTipoCambio);
+						$(`#monto-final-${id}`).text($.number(montoFinal, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+					});
+
+					// Inicializar el diálogo
+					dialogContent.dialog({
+						modal: true,
+						close: function () {
+							$(this).dialog("destroy").remove(); // Elimina el diálogo del DOM
+						}
+					});
+				};
+
+				$.each(data.rows, function(key, item) {
+					
+					if(item.negocios.startsWith("/")) item.negocios = item.negocios.slice(1) 
+					const negocios = item.negocios.split("/");
+					const index = negocios.indexOf(unaBase.doc.id.toString());
+					if(!item.is_nc){
+						totals.neto += item.totalNeto_raw
+						totals.exento += item.totalExento_raw
+						totals.iva += item.iva_raw
+						totals.cobrado += item.cobrado_raw
+					}else if(item.is_nc && index >= 0){
+
+						totals.neto -= item.totalNeto_raw
+						totals.exento -= item.totalExento_raw
+						totals.iva -= item.iva_raw
+						totals.cobrado -= item.cobrado_raw
+					}else if(item.is_nc && index >= 0){
+
+					}
+
+				
+					var check_nc = "";
+					var check_nd = "";
+							if(item.nc==true){
+								check_nc='<input name="nc[check]" class="check" type="checkbox" disabled checked>';
+							}else{
+
+								check_nc='<input name="nc[check]" class="check" type="checkbox" disabled>';
+
+							}
+
+							if(item.nd==true){
+								check_nd='<input name="nd[check]" class="check" type="checkbox" disabled checked>';
+							}else{
+
+								check_nd='<input name="nd[check]" class="check" type="checkbox" disabled>';
+
+							}
+
+					
+					htmlObject = $(`
+					<tr data-total="${item.totalFactura_raw}"
+						data-cobrado="${item.cobrado_raw}" 
+						data-comision="${item.comision}" 
+						data-diffCambio="${item.diff_cambio}" 
+						data-id-ref="${item.id_ref}" 
+						data-is-nc="${item.is_nc ? 'true' : 'false'}" 
+						data-is-nd="${item.is_nd ? 'true' : 'false'}" 
+						data-id="${item.id}" 
+						data-estado="${item.estado}">
+						<td>${item.folio}</td>
+						<td>${item.tipoDocumentoVentaAbrev}</td>
+						<td>${item.fechaEmision}</td>
+						<td>${item.rut}</td>
+						<td>${item.cliente}</td>
+						<td class="exchange-currency" style="display:none">${item.exchange_monto_facturado}</td>
+						<td>${item.totalNeto}</td>
+						<td>${item.totalExento}</td>
+						<td>${item.iva}</td>
+						<td>${item.totalFactura}</td>
+						<td ${item.estado == "ANULADA" ? 'style="color:#FF7575;font-weight:bold"' : ''}>${item.estado}</td>
+						<td>${item.responsable}</td>
+						<td>${item.cobrado}</td>
+						<td>${item.porCobrar}</td>
+						<td>
+							<button class="detail-dialog${item.id}" data-id="${item.id}" style="cursor: pointer; color: #007bff; font-size: 18px;">
+								<i class="fas fa-info-circle"></i>
+							</button>
+						</td>
+					</tr>
+					`);
+
+
+					// Event handlers for dialog
+					htmlObject.find(`.detail-dialog${item.id}`).on('click', function (event) {
+						event.preventDefault(); // Evita el comportamiento por defecto del evento
+						event.stopPropagation(); // Detiene la propagación del evento a otros elementos
+
+						const id = $(this).data('id');
+						openDialog(id); // Abre el diálogo
+					});
+
+					tbody.append(htmlObject);
+				});
+				tfoot.html(loadTotalesFoot(totales));
+				formatCurrency();
+
+				if (data.exchange.type !="") {
+					$('.exchange-currency').show();
+					$('span[name="negocio[total_neto]"]').text($.number(data.totales.total_neto_raw, 2, ',', '.'));
+					$('span[name="negocio[total_facturas]"]').text($.number(data.totales.total_facturas_raw, 2, ',', '.'));
+					$('span[name="negocio[total_nota_de_credito]"]').text($.number(data.totales.total_nota_de_credito_raw, 2, ',', '.'));
+					$('span[name="negocio[total_Facturado]"]').text($.number(data.totales.total_Facturado_raw, 2, ',', '.'));
+					$('span[name="negocio[total_por_facturar]"]').text($.number(data.totales.total_por_facturar_raw, 2, ',', '.'));
+				}else{
+					$('span[name="negocio[total_neto]"]').text($.number(data.totales.total_neto_raw, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+					$('span[name="negocio[total_facturas]"]').text($.number(data.totales.total_facturas_raw, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+					$('span[name="negocio[total_nota_de_credito]"]').text($.number(data.totales.total_nota_de_credito_raw, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+					$('span[name="negocio[total_Facturado]"]').text($.number(data.totales.total_Facturado_raw, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+					$('span[name="negocio[total_por_facturar]"]').text($.number(data.totales.total_por_facturar_raw, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+				}
+
+				// $('span[name="negocio[saldo_por_cobrar]"]').text($.number(data.totales.saldo_por_cobrar_raw, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+				// $('span[name="negocio[total_cobrado]"]').text($.number(data.totales.total_cobrado_raw, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+				// $('span[name="negocio[total_a_cobrar]"]').text($.number(data.totales.total_a_cobrar_raw, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+				$('span[name="negocio[saldo_por_cobrar]"]').text($.number(data.totales.saldo_por_cobrar_raw, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+				$('span[name="negocio[total_cobrado]"]').text($.number(data.totales.totalCobrado, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+				$('span[name="negocio[total_a_cobrar]"]').text($.number(data.totales.total_a_cobrar_raw, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+				if (data.exchange.type !="") {
+					$('.exchange_label').text(data.exchange.type);
+				}
+
+				$('.section-total-facturas').hide();
+
+				// agrupar visualmente facturas y ncnd
+				var position = 0;
+				tbody.find('tr[data-id-ref="0"]').each(function(key, item) {
+					var current_id = $(item).data('id');
+					var htmlGroup = $(item).nextUntil('tr[data-id-ref!="' + current_id + '"]').andSelf();
+					if (htmlGroup.length) {
+						position++;
+					}
+					htmlGroup.each(function(subkey, subitem) {
+						if (position % 2 == 0) {
+							$(subitem).css('border-left', '5px solid lightgreen');
+						} else {
+							$(subitem).css('border-left', '5px solid darkgreen');
+						}
+					});
+				});
+
+			};
+
+			$.ajax({
+				url: '/4DACTION/_V3_getFacturasByNegocio',
+				dataType: 'json',
+				async: false, // para que no avance hasta que la llamada se complete
+				cache: false,
+				data: {
+					id: id,
+					detail: detail
+				},
+				success: loadComprasNegocio
+			}).fail(function(a, b, c) {
+
+			});
+
+			formatCurrency();
+
+
+			// al buscar por estado
+			$('select.by-status').change(function(event) {
+				var status = $(this).val();
+
+				// disabled checked
+				$('input.show-hide-null').prop('checked', false);
+
+				$('table.facturas tbody').find('tr').show();
+
+				switch(status) {
+					case 'PAGADA':
+						$('table.facturas tbody').find('tr[data-estado!="PAGADA"]').hide();
+						break;
+					case 'POR EMITIR':
+						$('table.facturas tbody').find('tr[data-estado!="POR EMITIR"]').hide();
+						break;
+					case 'EMITIDA':
+						$('table.facturas tbody').find('tr[data-estado!="EMITIDA"]').hide();
+						break;
+					case 'NULA':
+						$('table.facturas tbody').find('tr[data-estado!="NULA"]').hide();
+						break;
+					case '':
+						$('table.facturas tbody').find('tr[data-estado="NULA"]').hide();
+						break;
+				}
+
+				iniTotalesSumTotal();
+				if (status=="") {
+					tbody.find('tr:not(:hidden)').each(function() {
+						var item = $(this);
+						if (item.is(':visible') && item.find('td.status') != 'ANULADA'){
+							totales.costoempresa += item.data('costoempresa');
+						}
+					});
+				}else{
+					tbody.find('tr:not(:hidden)').each(function() {
+						var item = $(this);
+						totales.costoempresa += item.data('costoempresa');
+					});
+				}
+
+				tfoot.html(loadTotalesFoot(totales));
+				formatCurrency();
+
+			});
+
+			//Ingresar a una factura, dando doble click
+		    tbody.find('tr').unbind('click').bind('click', function(event) {
+				// unaBase.loadInto.viewport('/v3/views/dtv/content.shtml?id=' + $(this).data('id'));
+				if ($(event.target).closest('tr').data('is-nc') || $(event.target).closest('tr').data('is-nd')) {
+					window.open('/4DACTION/wbienvenidos#dtv/nc/content.shtml?id=' + $(this).data('id'));
+				} else {
+					window.open('/4DACTION/wbienvenidos#dtv/content.shtml?id=' + $(this).data('id'));
+				}
+			});
+
+			// viene de la lista de neogcio y cotizacion
+			$(".titulofinal").text($("#main-container").data("titulofinal"));
+
+
+		});
+		</script>
+		<style>
+            div.totales {
+            	position: absolute;
+            	right: 15px;
+            	bottom: 30px;
+            	z-index: 1000;
+            	width: 350px;
+            	height: 138px !important;
+            	padding: 3px;
+
+            	opacity: 0.9;
+            	background-color: darkgrey;
+            	color: black;
+            	font-size: 14px;
+            	cursor: move;
+            	border-radius: 4px;
+            	box-shadow: -4px 4px 8px 1px rgba(48, 48, 48, 0.75);
+            }
+
+            div.totales > span {
+            	display: block;
+            }
+
+            div.totales > span > span {
+            	display: inline-block;
+            }
+
+            div.totales > span > span:first-of-type {
+            	width: 180px;
+            }
+
+            div.totales > span > span:nth-of-type(2) {
+            	width: 150px;
+            }
+
+            div.totales > span > span:nth-of-type(3) {
+            	width: 90px;
+            }
+
+            div.totales > span > span.numeric {
+            	text-align: right;
+            }
+
+			span.real {
+				-webkit-filter: hue-rotate(270deg);
+			}
+
+			p.ingreso{
+				color: black;
+				padding: 5px;
+			}
+
+		</style>
+
+		<script>
+			$(document).ready(function() {				
+
+				$('div.totales').draggable({ containment: "parent" });
+				
+				$('button.create.dtv').button({icons: { primary: 'ui-icon-document'}, text: true }).click(function() {					
+						if (access._518 && unaBase.defaulCurrencyCode != exchangeType) {
+							if (saldoPorFacturarExchange > 0 || excederPorFacturar) {
+								unaBase.loadInto.dialog('/v3/views/dtv/dialog/factura_parcial.shtml?negocios=' + <!--#4DTEXT id-->, 'Factura parcial', 'x-large');
+							}else{
+								alert("Sin saldo por facturar");
+							}
+						}else{
+							if (saldoPorFacturarNormal > 0 || excederPorFacturar) {
+								unaBase.loadInto.dialog('/v3/views/dtv/dialog/factura_parcial.shtml?negocios=' + <!--#4DTEXT id-->, 'Factura parcial', 'x-large');
+							}else{
+								alert("Sin saldo por facturar");
+							}
+						}					
+				});			
+				
+				$(".ocultar-temp").hide();
+
+			});
+		</script>
+
+	</head>
+	<body>
+		<article></article>
+		<section class="sheet-list-facturas sheet" data-id="<!--#4DTEXT id-->" data-detail="<!--#4DTEXT detail-->">
+			<!--4DINCLUDE infogeneral.shtml-->
+			<section>
+				<div class="button-create-dtv"><button style="margin:5px 5px 10px 5px" class="create dtv">Crear factura</button></div>
+				<label style="float:left;">
+					Estado
+					<select class="by-status" style="border:1px solid gray;margin:2px">
+						<option value="">Todos</option>
+						<option value="PAGADA">Pagada</option>
+						<option value="POR EMITIR">Por Emitir</option>
+						<option value="EMITIDA">Emitida</option>
+						<option value="NULA">Anulada</option>
+					</select>
+					<span><input class="show-hide-null" type="checkbox" value="NULA">Anuladas</span>
+				</label>
+			</section>
+			<table class="facturas">
+				<thead>
+					<tr>
+						<th>Número</th>
+						<th>Tipo</th>
+						<th>F. Emisión</th>
+						<th class="country-label-rut">Ruc</th>
+						<th>Cliente</th>
+						<th class="exchange-currency" style="display:none">Monto <span class="exchange_label"></span></th>
+						<th>T. Neto [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th>T. Exento [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th><!--#4DVAR <>_V3_IVAName--> [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th>Total [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th>Estado</th>
+						<th>Responsable</th>
+						<th>Cobrado</th>
+						<th>Por cobrar</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody class="ui-selectable"></tbody>
+			  	<tfoot></tfoot>
+			</table>
+		</section>
+
+		<div class="totales">
+			<span style="display: block; padding: 5px !important; background-color: black !important; color: white !important; font-weight: bold; font-size: 12px !important;">
+				<span>Total a Cliente</span>
+				<span class="total_neto"><label class="exchange_label"><!--#4DTEXT _V3_defaultCurrencySymbol--></label> <span style="text-align: right; display: inline-block; width: 110px;" name="negocio[total_neto]"></span></span>
+			</span>
+			<span class="section-total-facturas" style="display: block; padding: 5px !important; background-color: rgb(118,118,118) !important; color: white !important; font-weight: bold; font-size: 12px !important;">
+				<span>Total Facturas</span>
+				<span class="total_facturas"><label class="exchange_label"><!--#4DTEXT _V3_defaultCurrencySymbol--></label> <span style="text-align: right; display: inline-block; width: 110px;" name="negocio[total_facturas]"></span></span>
+			</span>
+			<span style="display: block; padding: 5px !important; background-color: rgb(118,118,118) !important; color: white !important; font-weight: bold; font-size: 12px !important;">
+				<span>Total Nota de Crédito</span>
+				<span class="total_nota_de_credito"><label class="exchange_label"><!--#4DTEXT _V3_defaultCurrencySymbol--></label> <span style="text-align: right; display: inline-block; width: 110px;" name="negocio[total_nota_de_credito]"></span></span>
+			</span>
+			<span style="display: block; padding: 5px !important; background-color: rgb(118,118,118) !important; color: white !important; font-weight: bold; font-size: 12px !important;">
+				<span>Total Facturado</span>
+				<span class="total_Facturado" style="border-bottom: 1px solid white; padding-bottom: 2px;"><label class="exchange_label"><!--#4DTEXT _V3_defaultCurrencySymbol--></label> <span style="text-align: right; display: inline-block; width: 110px;" name="negocio[total_Facturado]"></span></span>
+			</span>
+			<span style="display: block; padding: 5px !important; background-color: rgb(118,118,118) !important; color: white !important; font-weight: bold; font-size: 12px !important;">
+				<span>Saldo Por Facturar</span>
+				<span class="total_por_facturar"><label class="exchange_label"><!--#4DTEXT _V3_defaultCurrencySymbol--></label> <span style="text-align: right; display: inline-block; width: 110px;" name="negocio[total_por_facturar]"></span></span>
+			</span>
+			<span style="display: block; padding: 5px !important; background-color: rgb(212,179,124) !important; color: black !important; font-weight: bold; font-size: 12px !important;">
+				<span>Cobrado</span>
+				<span class="total_cobrado" style="padding-bottom: 2px;"><!--#4DTEXT _V3_defaultCurrencySymbol--> <span style="text-align: right; display: inline-block; width: 110px;margin-left:8px;" name="negocio[total_cobrado]"></span></span>
+			</span>
+			<span style="display: block; padding: 5px !important; background-color: rgb(212,179,124) !important; color: black !important; font-weight: bold; font-size: 12px !important;">
+				<span>Por cobrar</span>
+				<span class="saldo_por_cobrar"><!--#4DTEXT _V3_defaultCurrencySymbol--> <span style="text-align: right; display: inline-block; width: 110px;margin-left:8px;" name="negocio[saldo_por_cobrar]"></span></span>
+			</span>
+		</div>
+	</body>
+</html>

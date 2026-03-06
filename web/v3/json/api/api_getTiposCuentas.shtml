@@ -1,0 +1,10 @@
+{
+    "total": <!--#4DHTML $total-->,
+    "rows": [
+<!--#4DLOOP aTipoContacto -->
+{
+    "text": "<!--#4DHTML UPPERCASE(aTipoContacto{aTipoContacto})-->"
+}<!--#4DIF NOT(aTipoContacto{aTipoContacto} = aTipoContacto{Size of array(aTipoContacto)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+]
+}

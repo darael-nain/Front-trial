@@ -1,0 +1,113 @@
+{
+	"user": {
+		"current": {
+			"total": <!--#4DHTML $user_totalMesActual-->,
+			"approved": <!--#4DHTML $user_aprobadasMesActual-->
+		},
+		"last": {
+			"total": <!--#4DHTML $user_totalMesAnterior-->,
+			"approved": <!--#4DHTML $user_aprobadasMesAnterior-->
+		},
+		"all": {
+			"nullified": {
+				"total": <!--#4DHTML $user_anuladas-->,
+				"detail": [
+	<!--#4DLOOP $user_MotivosAnulacion-->
+					{
+						"text": "<!--#4DHTML _V3_escapeString($user_MotivosAnulacion{$user_MotivosAnulacion})-->",
+						"total": <!--#4DHTML $user_CantidadesAnulacion{$user_MotivosAnulacion}-->
+					}<!--#4DIF NOT($user_MotivosAnulacion{$user_MotivosAnulacion} = $user_MotivosAnulacion{Size of array($user_MotivosAnulacion)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+				]
+			},
+			<!--#4DIF Not(Undefined($user_clientes))-->
+			"customers": {
+				"total": <!--#4DHTML $user_clientes-->,
+				"detail": [
+	<!--#4DLOOP $user_IdClientes-->
+					{
+						"text": "<!--#4DHTML _V3_escapeString($user_AliasClientes{$user_IdClientes})-->",
+						"total": <!--#4DHTML $user_CantidadesClientes{$user_IdClientes}-->
+					}<!--#4DIF NOT($user_IdClientes{$user_IdClientes} = $user_IdClientes{Size of array($user_IdClientes)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+				]
+			},
+			<!--#4DENDIF-->
+			<!--#4DIF Not(Undefined($user_proveedores))-->
+			"providers": {
+				"total": <!--#4DHTML $user_proveedores-->,
+				"detail": [
+	<!--#4DLOOP $user_IdProveedores-->
+					{
+						"text": "<!--#4DHTML _V3_escapeString($user_AliasProveedores{$user_IdProveedores})-->",
+						"total": <!--#4DHTML $user_CantidadesProveedores{$user_IdProveedores}-->
+					}<!--#4DIF NOT($user_IdProveedores{$user_IdProveedores} = $user_IdProveedores{Size of array($user_IdProveedores)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+				]
+			},
+			<!--#4DENDIF-->
+			"expired": <!--#4DHTML $user_vencidas-->
+		}
+	},
+	"global": {
+		"current": {
+			"total": <!--#4DHTML $global_totalMesActual-->,
+			"approved": <!--#4DHTML $global_aprobadasMesActual-->
+		},
+		"last": {
+			"total": <!--#4DHTML $global_totalMesAnterior-->,
+			"approved": <!--#4DHTML $global_aprobadasMesAnterior-->
+		},
+		"all": {
+			"nullified": {
+				"total": <!--#4DHTML $global_anuladas-->,
+				"detail": [
+	<!--#4DLOOP $global_MotivosAnulacion-->
+					{
+						"text": "<!--#4DHTML _V3_escapeString($global_MotivosAnulacion{$global_MotivosAnulacion})-->",
+						"total": <!--#4DHTML $global_CantidadesAnulacion{$global_MotivosAnulacion}-->
+					}<!--#4DIF NOT($global_MotivosAnulacion{$global_MotivosAnulacion} = $global_MotivosAnulacion{Size of array($global_MotivosAnulacion)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+				]
+			},
+			<!--#4DIF Not(Undefined($global_clientes))-->
+			"customers": {
+				"total": <!--#4DHTML $global_clientes-->,
+				"detail": [
+	<!--#4DLOOP $global_IdClientes-->
+					{
+						"text": "<!--#4DHTML _V3_escapeString($global_AliasClientes{$global_IdClientes})-->",
+						"total": <!--#4DHTML $global_CantidadesClientes{$global_IdClientes}-->
+					}<!--#4DIF NOT($global_IdClientes{$global_IdClientes} = $global_IdClientes{Size of array($global_IdClientes)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+				]
+			},
+			<!--#4DENDIF-->
+			<!--#4DIF Not(Undefined($global_proveedores))-->
+			"providers": {
+				"total": <!--#4DHTML $global_proveedores-->,
+				"detail": [
+	<!--#4DLOOP $global_IdProveedores-->
+					{
+						"text": "<!--#4DHTML _V3_escapeString($global_AliasProveedores{$global_IdProveedores})-->",
+						"total": <!--#4DHTML $global_CantidadesProveedores{$global_IdProveedores}-->
+					}<!--#4DIF NOT($global_IdProveedores{$global_IdProveedores} = $global_IdProveedores{Size of array($global_IdProveedores)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+				]
+			},
+			<!--#4DENDIF-->
+			"expired": <!--#4DHTML $global_vencidas-->
+		}
+	},
+	"validacion": {
+		"no_validadas": <!--#4DHTML $no_validados-->,
+		"solicitadas_sin_validar": <!--#4DHTML $solicitadas_sin_validar-->,
+		"no_solicitadas_sin_validar": <!--#4DHTML $no_solicitadas_sin_validar-->,
+		"rechazadas": <!--#4DHTML $rechazadas-->
+	},
+	"compartido": {
+		"validados": <!--#4DHTML $validados-->,
+		"compartidos": <!--#4DHTML $compartidos-->,
+		"por_compartir": <!--#4DHTML $por_compartir-->
+	}
+}

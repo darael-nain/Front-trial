@@ -1,0 +1,5 @@
+{
+	"vLogin": "<!--#4DHTML _V3_escapeString(vLogin)-->",
+	"email": "<!--#4DHTML _V3_escapeString(email)-->",
+	"name": "<!--#4DHTML _V3_escapeString(name)-->"
+}

@@ -1,0 +1,14 @@
+[
+	<!--#4DLOOP aCalendarId-->
+	{
+		"id":"<!--#4DHTML aCalendarId{aCalendarId}-->",
+		"title":"<!--#4DHTML aCalendarFolio{aCalendarId}-->\n<!--#4DHTML aCalendarReferencia{aCalendarId}-->\n<!--#4DHTML aCalendarResp{aCalendarId}-->",
+		"start":"<!--#4DHTML Substring(String(aCalendarStartDate{aCalendarId};ISO Date);1;10)--> <!--#4DHTML aCalendarStartTime{aCalendarId}-->",
+		"end":"<!--#4DHTML Substring(String(aCalendarEndDate{aCalendarId};ISO Date);1;10)--> <!--#4DHTML aCalendarEndTime{aCalendarId}-->",
+		"allDay":<!--#4DHTML aCalendarAllDay{aCalendarId}-->,
+		"url": "<!--#4DHTML aCalendarUrl{aCalendarId}-->",
+		"color": "<!--#4DHTML aCalendarColor{aCalendarId}-->",
+		"textColor": "<!--#4DHTML aCalendarTextColor{aCalendarId}-->"
+		}<!--#4DIF NOT(aCalendarId{aCalendarId} = aCalendarId{Size of array(aCalendarId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+]

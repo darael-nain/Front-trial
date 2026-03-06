@@ -1,0 +1,18 @@
+{
+	
+
+		"sysName": "<!--#4DVAR sysName-->",
+		"sysRazon": "<!--#4DVAR sysRazon-->",
+		"sysRut": "<!--#4DHTML sysRut-->",
+		"sysGiro": "<!--#4DHTML sysGiro-->",
+		"sysDireccion": "<!--#4DHTML sysDireccion-->",
+		"sysCity": "<!--#4DHTML sysCity-->",
+		"sysEmail": "<!--#4DHTML sysEmail-->"
+
+	
+
+	
+}
+
+
+

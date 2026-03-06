@@ -1,0 +1,30 @@
+{
+	"success": <!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"status":<!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"errorMsg": "<!--#4DTEXT errorMsg-->",
+	"records": {
+		"total_records": <!--#4DHTML totalRecords-->
+	},
+	
+
+	"rows": [
+	
+		<!--#4DIF totalRecords > 0-->
+			<!--#4DLOOP aId-->
+			{
+				"id": <!--#4DHTML aId{aId}-->,
+				"name": "<!--#4DHTML aName{aId}-->",
+				"number": "<!--#4DHTML aNumber{aId}-->",
+				"tipo": "<!--#4DHTML aTipo{aId}-->",
+				"i_operacional": <!--#4DIF Not(Undefined(aIs_IOperacional{aId}))--><!--#4DIF aIs_IOperacional{aId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+				"c_operacional": <!--#4DIF Not(Undefined(aIs_COperacional{aId}))--><!--#4DIF aIs_COperacional{aId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+				"i_nooperacional": <!--#4DIF Not(Undefined(aIs_INoOperacional{aId}))--><!--#4DIF aIs_INoOperacional{aId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+				"g_admin": <!--#4DIF Not(Undefined(aIs_GAdmin{aId}))--><!--#4DIF aIs_GAdmin{aId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+				"is_impuesto": <!--#4DIF Not(Undefined(aIs_Impuesto{aId}))--><!--#4DIF aIs_Impuesto{aId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->
+			}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		<!--#4DENDIF-->
+	]
+
+	
+}

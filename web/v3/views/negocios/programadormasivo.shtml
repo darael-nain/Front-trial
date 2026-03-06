@@ -1,0 +1,3553 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Programador masivo — Negocios con saldo</title>
+  <style>
+    /* ====== Layout / tokens ====== */
+    :root {
+      --bg: #f5f7fb;
+      --card: #fff;
+      --ink: #1f2937;
+      --muted: #667085;
+      --line: #e7ebf0;
+      --primary: #0b5fff;
+      --primary-weak: #eaf0ff;
+      --danger: #dc2626;
+      --chip: #eef2f7;
+      --chip-ink: #475569;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+
+    }
+
+    body {
+      overflow: hidden !important;
+    }
+
+    body.programador-masivo {
+      overflow: hidden;
+    }
+
+    #viewport {
+      overflow-y: hidden !important;
+      height: 85vh !important;
+
+    }
+
+    .pm-container {
+      height: 100%;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      padding: 24px 20px;
+    }
+
+    .pm-table-wrap {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: auto;
+      border-radius: 12px;
+      background: #ffffff;
+    }
+
+
+    /* ====== Filters ====== */
+    .pm-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 18px;
+      align-items: flex-end;
+      margin-bottom: 14px;
+    }
+
+    .pm-filters label {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: .04em;
+    }
+
+    .filter-period {
+      position: relative;
+    }
+
+    .pm-filters select,
+    .pm-filters input[type="month"],
+    .pm-filters input[type="number"] {
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      padding: 7px 10px;
+      min-width: 180px;
+      font-size: 12px;
+      color: var(--ink);
+      background: #fff;
+      outline: none;
+    }
+
+    /* ====== Inputs inside table ====== */
+    input[type="text"],
+    .notify-cell input[type="email"],
+    .date-cell input[type="date"] {
+      width: 190px;
+      appearance: none;
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: 10px;
+      outline: none;
+      background: #fff;
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+
+    .date-cell input[type="date"] {
+      width: 160px;
+    }
+
+    .notify-cell input:focus,
+    .date-cell input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-weak);
+    }
+
+    /* Small “status chip” */
+    .status-pill {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: var(--chip);
+      color: var(--chip-ink);
+      font-weight: 600;
+      font-size: 11px;
+    }
+
+    .status-pill--active {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    /* Toggle */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 42px;
+      height: 22px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .switch .slider {
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      background: #e2e6ed;
+      transition: .2s;
+    }
+
+    .switch .slider:before {
+      content: "";
+      position: absolute;
+      height: 18px;
+      width: 18px;
+      left: 2px;
+      bottom: 2px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+      transition: .2s;
+    }
+
+    .switch input:checked+.slider {
+      background: #34d399;
+    }
+
+    .switch input:checked+.slider:before {
+      transform: translateX(20px);
+    }
+
+    /* ====== Loading ====== */
+    .pm-loading {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 16px 0;
+    }
+
+    .pm-loading.visible {
+      display: flex;
+    }
+
+    .pm-loading .spinner {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 4px solid rgba(11, 95, 255, .25);
+      border-top-color: var(--primary);
+      animation: spin .9s linear infinite;
+    }
+
+    /* ========== Tom Initialize ============== */
+    /*  Buscador de Clientes Filas */
+    .pm-table .ts-wrapper.cliente-select {
+      width: 200px;
+      display: inline-block;
+    }
+
+    .pm-table .ts-wrapper.cliente-select .ts-control {
+      border: 1px solid #d0d0d0;
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 11px;
+      line-height: 1.4;
+      color: #111827;
+      background: #fff;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .pm-table .ts-wrapper.cliente-select.single .ts-control>input[type="text"] {
+      width: 2px;
+      min-width: 2px;
+      padding: 0;
+      margin: 0;
+      border: 0;
+      box-shadow: none;
+      background: transparent;
+    }
+
+    .ts-wrapper.cliente-select.single .ts-control>input,
+    .ts-wrapper.cliente-select.single .ts-control>input[type="text"] {
+      width: auto !important;
+      min-width: 60px !important;
+      /* espacio mínimo para ver letras */
+      flex: 1 1 60px !important;
+      /* que tome espacio disponible */
+      color: #111827 !important;
+      /* por si quedaba transparente */
+    }
+
+    .pm-table .ts-wrapper.cliente-select.single .ts-control>.item {
+      font-size: 11px;
+      color: #111827;
+      font-weight: 500;
+      text-align: left;
+    }
+
+    select.cliente-select {
+      display: none !important;
+    }
+
+    .ts-wrapper.cliente-select {
+      display: inline-block !important;
+      width: 200px;
+
+      text-align: left;
+    }
+
+    .ts-wrapper.cliente-select .ts-control {
+
+      display: flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+    }
+
+    .ts-wrapper.cliente-select.single .ts-control {
+      display: flex !important;
+      flex-wrap: nowrap !important;
+      align-items: center !important;
+      min-height: 34px;
+      overflow: hidden !important;
+      padding-right: 28px !important;
+      border-radius: 6px !important;
+      border: 1px solid #d0d0d0 !important;
+    }
+
+    .ts-wrapper.cliente-select.single .ts-control>.item {
+      flex: 0 1 auto !important;
+      max-width: 100% !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+
+    .ts-wrapper.cliente-select.single .ts-control>input {
+      margin: 0 !important;
+      padding: 0 !important;
+      line-height: inherit !important;
+      min-width: 2px;
+    }
+
+    .ts-wrapper.cliente-select.focus.single .ts-control>input,
+    .ts-wrapper.cliente-select.focus.single .ts-control>input[type="text"] {
+      min-width: 60px !important;
+    }
+
+    .ts-wrapper.cliente-select .ts-dropdown .option {
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      line-height: 1.4 !important;
+    }
+
+    .ts-wrapper.cliente-select .ts-control .item {
+      padding: 0 !important;
+      margin: 0 !important;
+      background: transparent !important;
+
+      box-shadow: none !important;
+    }
+
+    .ts-wrapper.cliente-select .ts-control input {
+
+      box-shadow: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    /* Estilo Buscador Superior */
+    .ts-wrapper.filter-cliente-select .ts-control {
+      padding: 4px 8px !important;
+      border-radius: 6px !important;
+      border: 1px solid #d0d0d0 !important;
+      font-size: 12px !important;
+      line-height: 1.4 !important;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    .pm-filters .ts-wrapper {
+      width: 190px;
+    }
+
+    .pm-filters .ts-wrapper.filter-cliente-select.single .ts-control {
+      display: flex !important;
+      flex-wrap: nowrap !important;
+      align-items: center !important;
+
+      overflow: hidden !important;
+      min-height: 34px !important;
+
+      padding-right: 28px !important;
+    }
+
+    .pm-filters .ts-wrapper.filter-cliente-select.single .ts-control>.item {
+      flex: 1 1 auto !important;
+      min-width: 0 !important;
+
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+
+      color: #111827 !important;
+      font-size: 12px !important;
+    }
+
+    .pm-filters .ts-wrapper.filter-cliente-select.single .ts-control>input[type="text"] {
+      width: auto !important;
+      min-width: 80px !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      background: transparent !important;
+    }
+
+    .pm-filters .ts-wrapper.filter-cliente-select .ts-dropdown .option {
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+
+    .pm-filters .ts-wrapper .ts-control {
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: 12px;
+      color: var(--ink);
+      background: #fff;
+      outline: none;
+      box-shadow: none;
+    }
+
+    .pm-filters .ts-wrapper .ts-control.focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-weak);
+    }
+
+    /* CSS Prueba*/
+    .col-cliente {
+      width: 100px;
+    }
+
+    /* CSS para Crear y Modificar OC */
+    .oc-link {
+      cursor: pointer;
+      color: #20A789;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .oc-link:hover {
+      opacity: .85;
+      background-color: #1821362c;
+
+      /* CSS para link a Negocio*/
+    }
+
+    .nv-link {
+      cursor: pointer;
+      color: #20A789;
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .nv-link:hover {
+      opacity: .85;
+      background-color: #1821362c;
+
+    }
+
+    /* CSS Glosa Input*/
+    .glosa-input {
+      width: 150px !important;
+      font-size: 11px;
+    }
+
+    /* Input Emitir Fecha */
+    .emit-date-input {
+      width: 120px !important;
+    }
+
+    /* Celda programación: select + control a la derecha */
+    .pm-table td.emit-cell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .pm-table .sched-type {
+      width: 130px;
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: 10px;
+      background: #fff;
+    }
+
+
+
+    .pm-table .weekday-select {
+      width: 120px;
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: 10px;
+      background: #fff;
+    }
+
+    .pm-table .emit-date-input {
+      width: 160px;
+    }
+
+    .pm-table thead th.col-periodicidad,
+    .pm-table tbody td.periodicidad-cell {
+      min-width: 210px;
+      width: 210px;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .pm-table td.periodicidad-cell {
+      height: 100%;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pm-table tbody td.periodicidad-cell .periodicidad-ui {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pm-table .sched-type {
+      width: 130px;
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: 10px;
+      background: #fff;
+    }
+
+    .periodicidad-ui {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .periodicidad-ui select {
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      padding: 6px 8px;
+      font-size: 11px;
+      background: #fff;
+    }
+
+    .periodicidad-ui .weekday-select {
+      width: 120px;
+    }
+
+    .is-hidden {
+      display: none !important;
+    }
+
+    /* Fecha (Negocio) */
+    .fecha-Negocio {
+      width: 70px;
+    }
+
+    .period-picker {
+      position: relative;
+      width: 200px;
+    }
+
+    .period-display {
+      width: 100%;
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: 12px;
+      text-align: left;
+      color: var(--ink);
+      background: #fff;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .period-display::after {
+      content: "▾";
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .period-dropdown {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      background: #fff;
+      border: 1px solid #d0d7de;
+      border-radius: 10px;
+      box-shadow: 0 14px 32px rgba(14, 24, 44, 0.18);
+      padding: 12px;
+      width: 240px;
+      display: none;
+      z-index: 5;
+    }
+
+    .period-dropdown.is-open {
+      display: block;
+      width: 260px;
+      z-index: 5;
+    }
+
+    /* Evita que se oculte el dropdown de usuario */
+    .headerUnabase {
+      position: relative;
+      z-index: 100 !important;
+    }
+
+    .period-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .period-header select {
+      flex: 1;
+      border: 1px solid #d0d7de;
+      border-radius: 6px;
+      padding: 4px 8px;
+      font-size: 11px;
+    }
+
+    .period-nav {
+      border: 1px solid #d0d7de;
+      background: #fff;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .period-subtitle {
+      text-align: center;
+      font-weight: 600;
+      font-size: 11px;
+      color: #1f2937;
+      margin-bottom: 8px;
+    }
+
+    .period-body {
+      display: grid;
+      gap: 6px;
+    }
+
+    .period-body.is-month {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .period-body.is-year {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .period-option {
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 6px 8px;
+      background: #f4f6fb;
+      text-align: center;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .period-option:hover {
+      border-color: #bfd3ff;
+      background: #e9f1ff;
+    }
+
+    .period-option.is-active {
+      background: #0b5fff;
+      color: #fff;
+      border-color: #0b5fff;
+      font-weight: 600;
+    }
+
+    .is-hidden {
+      display: none !important;
+    }
+
+    .pm-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin: 8px 0 6px;
+    }
+
+    .pm-secondary {
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      background: #fff;
+      border-radius: 8px;
+      padding: 8px 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s ease;
+    }
+
+    .pm-secondary:hover {
+      box-shadow: 0 0 0 3px var(--primary-weak);
+    }
+
+    .pm-secondary:active {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .pm-secondary:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+    }
+
+    .pm-actions span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .pm-table thead th {
+      position: sticky;
+      top: 0;
+      background: #f0f3f7;
+      z-index: 4;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: #475569;
+      text-align: left;
+      padding: 9px 8px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .pm-table tbody td {
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--line);
+      font-size: 10px;
+      vertical-align: middle;
+      z-index: 1;
+      position: relative;
+    }
+
+    .pm-table tbody .ts-wrapper,
+    .pm-table tbody .ts-control {
+      position: relative;
+      z-index: 2;
+    }
+
+    .pm-table tbody .ts-wrapper.focus,
+    .pm-table tbody .ts-wrapper.dropdown-active {
+      z-index: 3;
+    }
+
+    .pm-table tbody tr.data-row:hover {
+      background: #fafcff;
+    }
+
+    .pm-table .w-checkbox {
+      width: 32px;
+    }
+
+    .pm-table .currency {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .pm-table .group-row td {
+      background: #182136;
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-size: 11px;
+      padding: 10px 8px;
+    }
+
+    /* ====== Table ====== */
+    .pm-table {
+      width: max-content;
+      min-width: 100%;
+      border-collapse: collapse;
+    }
+
+    .pm-table select,
+    .pm-filters select {
+      outline: none !important;
+    }
+
+    /* hover: borde gris suave */
+    .pm-table select:hover,
+    .pm-filters select:hover {
+      border-color: #cbd5e1 !important;
+    }
+
+    /* focus: sin azul, con “ring” gris */
+    .pm-table select:focus,
+    .pm-filters select:focus {
+      outline: none !important;
+      border-color: #94a3b8 !important;
+      box-shadow: 0 0 0 3px rgba(148, 163, 184, .25) !important;
+    }
+
+    .pm-table thead th:nth-child(4),
+    .pm-table tbody td:nth-child(4) {
+      width: 240px !important;
+      max-width: 240px !important;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    .pm-table tbody td:nth-child(4) .ts-wrapper,
+    .pm-table tbody td:nth-child(4) .ts-control {
+      width: 100% !important;
+      max-width: 200px !important;
+    }
+
+    /* Ajustar el tamaño de fecha*/
+    .pm-table thead th.col-fecha,
+    .pm-table tbody td.fecha-Negocio {
+      width: 100px !important;
+      min-width: 100px !important;
+      white-space: nowrap;
+    }
+
+    /* Filas deshabilitadas por Facturacion Agrupada */
+    .pm-table tr.is-locked {
+      opacity: .65;
+    }
+
+    .pm-table tr.is-locked input,
+    .pm-table tr.is-locked select,
+    .pm-table tr.is-locked textarea {
+      background: #f3f4f6 !important;
+      color: #6b7280 !important;
+      cursor: not-allowed !important;
+    }
+
+    .pm-table .ts-wrapper.disabled .ts-control {
+      background: #f3f4f6 !important;
+      color: #6b7280 !important;
+      cursor: not-allowed !important;
+    }
+
+    .pm-table tr.is-locked .oc-link,
+    .pm-table tr.is-locked .nv-link {
+      pointer-events: none;
+      text-decoration: none;
+      opacity: .7;
+    }
+
+    .pm-table td.is-locked-cell {
+      background: #f3f4f6;
+      color: #6b7280;
+    }
+
+    .pm-table tr.is-locked input,
+    .pm-table tr.is-locked select,
+    .pm-table tr.is-locked textarea {
+      background: #f3f4f6 !important;
+      color: #6b7280 !important;
+      cursor: not-allowed !important;
+    }
+
+    /* Tamaño columna OCs*/
+    .pm-table thead th.col-oc,
+    .pm-table tbody td.oc-cell {
+      min-width: 130px !important;
+      width: 130px !important;
+    }
+
+    /* OC como chips */
+    .pm-table tbody td.oc-cell .oc-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .pm-table tbody td.oc-cell .oc-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(32, 167, 137, .25);
+      background: rgba(32, 167, 137, .10);
+      color: #0f766e;
+      font-weight: 700;
+      font-size: 11px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .pm-table tbody td.oc-cell .oc-chip:hover {
+      background: rgba(32, 167, 137, .18);
+    }
+
+    /* Chip "Crear" distinto */
+    .pm-table tbody td.oc-cell .oc-chip.is-add {
+      border-style: dashed;
+      background: #f4f6fb;
+      color: #475569;
+    }
+
+    
+
+    .muted {
+      color: var(--muted);
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+  </style>
+</head>
+
+<body class="programador-masivo">
+  <div class="pm-container">
+    <!-- ===== Filters ===== -->
+    <div class="pm-filters">
+      <label>
+        Cliente
+        <select id="pm-filter-cliente" class="filter-cliente-select" placeholder="Filtrar por cliente...">
+          <option value="">Todos los clientes</option>
+        </select>
+      </label>
+
+      <label class="filter-period">
+        Fecha
+        <div class="period-picker" id="pm-period-picker">
+          <button type="button" class="period-display" id="pm-period-display"></button>
+          <div class="period-dropdown" id="pm-period-dropdown">
+            <div class="period-header">
+              <button type="button" class="period-nav" data-dir="-1">&#8249;</button>
+              <select id="pm-period-mode">
+                <option value="month">Mes</option>
+                <option value="year">Año</option>
+              </select>
+              <button type="button" class="period-nav" data-dir="1">&#8250;</button>
+            </div>
+            <div class="period-subtitle" id="pm-period-subtitle"></div>
+            <div class="period-body" id="pm-period-body"></div>
+          </div>
+          <input id="pm-filter-mes" type="month" class="is-hidden" />
+          <input id="pm-filter-year" type="number" min="2000" max="2100" step="1" class="is-hidden" />
+        </div>
+      </label>
+
+      <label>
+        Estado
+        <select id="pm-filter-estado">
+          <option value="all">Todos</option>
+          <option value="en_proceso">En proceso</option>
+          <option value="cerrado">Cerrado</option>
+        </select>
+      </label>
+
+      <label>
+        Programación
+        <select id="pm-filter-programacion">
+          <option value="all">Todos</option>
+          <option value="programado">Programado</option>
+          <option value="sin_programar">Sin programar</option>
+        </select>
+      </label>
+
+
+
+      <button id="pm-refresh" class="pm-secondary">Actualizar</button>
+      <button id="pm-see-grouped" class="pm-secondary">Revisar Facturas Agrupadas</button>
+      <button id="pm-billing-selected" class="pm-secondary" style="display:none;">Facturar Negocio</button>
+      <button id="pm-billing-selected-grouped" class="pm-secondary" style="display:none;">Facturar Negocios</button>
+      <button id="pm-selected-bills" class="pm-secondary" style="display:none;">Programar Facturas
+        Seleccionadas</button>
+      <span id="pm-selection-counter"></span>
+    </div>
+
+    <!-- ===== Loading ===== -->
+    <div id="pm-loading" class="pm-loading">
+      <div class="spinner"></div>
+    </div>
+
+    <!-- ===== Table ===== -->
+    <div class="pm-table-wrap">
+      <table class="pm-table">
+        <thead>
+          <tr>
+            <th class="col-check"><input type="checkbox" id="pm-select-all" /></th>
+            <th class="col-id">#</th>
+            <th class="col-fecha">Fecha</th>
+            <th class="col-cliente">Cliente</th>
+            <th class="col-glosa">Glosa</th>
+            <th class="col-facturado">Facturado</th>
+            <th class="col-por-facturar">Por facturar</th>
+            <th class="col-monto-facturar">Monto a Facturar</th>
+            <th class="col-oc">OC</th>
+            <th class="col-auto">Auto</th>
+            <th class="col-periodicidad">Periodicidad</th>
+            <th class="col-emitir">Emitir el</th>
+            <th class="col-notificar">Notificar</th>
+            <th class="col-estado">Estado</th>
+          </tr>
+        </thead>
+        <tbody id="programador-masivo-table-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+
+    const FORBIDDEN_GLOSA_WORDS = ["utilidad"];
+    const SERVICES_GLOSA = "SERVICIO PUBLICITARIO";
+
+
+    (async function () {
+      const errors = []
+      if (window.unaBase && window.unaBase.toolbox && typeof window.unaBase.toolbox.init === "function") {
+        window.unaBase.toolbox.init();
+      }
+
+      const MONTH_LABELS = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+
+      const initialMonth = getCurrentMonthParam();
+      const initialYear = initialMonth.split("-")[0];
+
+      const state = {
+        rows: [],
+        filters: {
+          periodType: "month",
+          mes: initialMonth, // YYYY-MM (mes actual al iniciar)
+          year: initialYear,
+          estado: "all",
+          programacion: "all",
+          cliente: "",
+          clienteQuery: "",
+          clienteQueryRaw: ""
+
+        },
+        selected: new Set(),
+        clienteId: {},       // id => id cliente seleccionado
+        rowNotifyDirty: {},  // id => Email si usuario lo edito manualmente
+        rowNotify: {},       // id => email
+        rowGlosa: {},        // id => Glosa / Referencia
+        rowOcCliente: {},    // id => OC Cliente
+        montoFactura: {},    // id => Factura pendiente
+        montoAFacturar: {},  // id => Monto A Facturar (editable por usuario)
+        auto: {},            // id => boolean (estado_programacion)
+        lockedNegocios: {},  // id => bloqueo de Negocios si están agrupados
+        rowScheduleType: {}, // id => "monthly" | "weekly" | "daily"
+        rowDates: {},        // id => 'YYYY-MM-DD' (para el input)
+        rowWeekday: {},      // id => "1".."7" (Lunes..Domingo) si weekly
+        estadoNegocios: {},  // id => estado CERRADO o EN PROCESO de cada negocio 
+        // Currency
+        rowExchangeType: {},
+        rowFacturadoCLP: {},
+        rowPorFacturarCLP: {},
+        rowFacturadoEX: {},
+        rowPorFacturarEX: {},
+
+
+
+
+      };
+
+      const periodState = {
+        viewMode: state.filters.periodType,
+        currentYear: parseInt(state.filters.year, 10),
+        yearPageStart: parseInt(state.filters.year, 10) - 6,
+        isOpen: false
+      };
+
+      init();
+
+      function init() {
+        bindUI();
+        setupPeriodPicker();
+        updateMonthDisplay();
+        updateEstadoDisplay();
+        updateProgramacionDisplay();
+        fetchProgramableNegocios(); // mes actual por defecto
+
+        let _pmRefreshTimer = null;
+
+        $(document)
+          .off("pm:refreshRows")
+          .on("pm:refreshRows", function () {
+            clearTimeout(_pmRefreshTimer);
+            _pmRefreshTimer = setTimeout(function () {
+              fetchProgramableNegocios();
+            }, 150);
+          });
+      }
+
+      // Funciones para obtener ids filas seleccionadas
+      function idsSeleccionadas() {
+        return Array.from(state.selected);
+      }
+      function showFacturarSeleccionadasBtn() {
+        const ids = idsSeleccionadas();
+        const show = ids.length >= 2;
+        $("#pm-selected-bills").toggle(show);
+      }
+
+      function showFacturarNegocioBtn() {
+        const ids = idsSeleccionadas();
+        const show = ids.length === 1;
+        $("#pm-billing-selected").toggle(show);
+      }
+
+      function showFacturarNegociosAgrupadosBtn() {
+        const ids = idsSeleccionadas();
+        const show = ids.length >= 2;
+        $("#pm-billing-selected-grouped").toggle(show);
+      }
+
+      function facturarNegocioSeleccionado() {
+        const id = idsSeleccionadas();
+        facturarNegocio(id)
+      }
+
+      function facturarNegociosAgrupadosSeleccionado() {
+        const id = idsSeleccionadas();
+        facturarNegociosAgrupados(id)
+      }
+
+      function programarFacturasSeleccionadas() {
+        const selectedIds = idsSeleccionadas();
+        if (selectedIds.length < 2) {
+          toastr?.warning?.("Selecciona al menos 2 negocios.");
+          return;
+        }
+
+        const negocios = selectedIds
+          .map((rowId) => {
+            const row = state.rows.find(r => getRowId(r) === String(rowId));
+            return row ? String(getNegocioInternalId(row) || "") : "";
+          })
+          .filter(Boolean);
+
+        if (!negocios.length) {
+          toastr?.warning?.("No se encontraron negocios válidos en la selección.");
+          return;
+        }
+        unaBase.loadInto.dialog(
+          "/v3/views/negocios/facturas_agrupadas/dialog/setting_facturas.shtml?negocios=" + negocios.join("|"),
+          "Programar Facturas Agrupadas",
+          "x-large"
+        );
+      }
+
+      function revisarFacturasAgrupadas() {
+        unaBase.loadInto.dialog(
+          "/v3/views/negocios/facturas_agrupadas/dialog/grouped_bills.shtml?negocios=",
+          "Facturas Agrupadas",
+          "x-large"
+        );
+      }
+
+
+
+      /* ========================= UI bindings ========================= */
+      function bindUI() {
+        $("#pm-filter-mes").on("change", function () {
+          setMonthFilter(this.value, true);
+        });
+
+        // 
+        $("#pm-selected-bills")
+          .off("click.pm")
+          .on("click.pm", programarFacturasSeleccionadas);
+
+        $("#pm-billing-selected")
+          .off("click.pm")
+          .on("click.pm", facturarNegocioSeleccionado);
+
+        $("#pm-billing-selected-grouped")
+          .off("click.pm")
+          .on("click.pm", facturarNegociosAgrupadosSeleccionado);
+
+
+        // Refresh manual
+        $("#pm-refresh").on("click", fetchProgramableNegocios);
+
+        // Select all
+        $(".pm-table")
+          .off("change.pmSelectAll", "#pm-select-all")
+          .on("change.pmSelectAll", "#pm-select-all", function () {
+            const header = this;
+
+            // Solo checkboxes seleccionables (no bloqueados)
+            const $boxes = $("#programador-masivo-table-body .row-select:not(:disabled)");
+            const selectableIds = $boxes
+              .map((_, el) => String($(el).data("id")))
+              .get();
+
+            const totalSelectable = selectableIds.length;
+            const selectedSelectable = selectableIds.filter(id => state.selected.has(id)).length;
+
+            // Si hay selección parcial o total -> deseleccionar TODO
+            if (selectedSelectable > 0) {
+              state.selected.clear();
+              $boxes.prop("checked", false);
+
+              header.checked = false;
+              header.indeterminate = false;
+            } else {
+              // Si no hay nada seleccionado -> seleccionar TODO (solo seleccionables)
+              selectableIds.forEach(id => state.selected.add(id));
+              $boxes.prop("checked", true);
+
+              header.checked = totalSelectable > 0;
+              header.indeterminate = false;
+            }
+
+            updateSelectionCounter();
+            showFacturarSeleccionadasBtn();
+            showFacturarNegocioBtn();
+            showFacturarNegociosAgrupadosBtn();
+          });
+
+
+
+
+        // Traer todos grupos de facturas
+        $(document)
+          .off("click.pmSeeGrouped", "#pm-see-grouped")
+          .on("click.pmSeeGrouped", "#pm-see-grouped", function (e) {
+            e.preventDefault();
+            revisarFacturasAgrupadas();
+          });
+
+
+        // Filter rows if are programated or not or both
+        $("#pm-filter-programacion").on("change", function () {
+          setProgramacionFilter(this.value);
+        });
+
+        $("#pm-filter-estado").on("change", function () {
+          setEstadoFilter(this.value);
+        });
+
+
+        // Permite hacer click al id para ver el negocio
+        if (access._1) {
+          $("#programador-masivo-table-body").on("click", ".nv-cell, .nv-link", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const idnv =
+              $(this).data("idnv") ||
+              $(this).closest("tr").data("id");
+
+            if (!idnv) return;
+
+            const s = String(idnv);
+
+            if (s) {
+              window.open(
+                "http://" + window.location.host + "/4DACTION/wbienvenidos#negocios/content.shtml?id=" + encodeURIComponent(s),
+                "_blank"
+              );
+            }
+          });
+        }
+
+
+
+        // Select individual row
+        $("#programador-masivo-table-body").on("change", ".row-select", function () {
+          const id = String($(this).data("id"));
+          if (this.checked) {
+            state.selected.add(id);
+          } else {
+            state.selected.delete(id);
+          }
+          updateSelectionCounter();
+          showFacturarSeleccionadasBtn();
+          showFacturarNegocioBtn();
+          showFacturarNegociosAgrupadosBtn();
+
+        });
+
+        // Glosa per row
+        $(".pm-table").on("change", ".glosa-input", function () {
+          const $row = $(this).closest("tr");
+          const id = String($row.data("id"));
+          const value = ($(this).val() || "").trim();
+
+          const bad = findForbiddenWord(value, FORBIDDEN_GLOSA_WORDS);
+          if (bad) {
+            toastr?.warning?.(`No puede usarse la palabra "${bad}" en la glosa.`);
+
+            // Se retorna a la anterior Glosa
+            const prev = (state.rowGlosa && typeof state.rowGlosa[id] !== "undefined") ? state.rowGlosa[id] : "";
+            $(this).val(prev);
+
+            return;
+          }
+
+          state.rowGlosa[id] = value;
+
+          // Si estaba en auto y ahora la glosa quedó vacía → apagar auto
+          if (state.auto[id] && !value) {
+            state.auto[id] = false;
+            $row.find(".auto-toggle-input").prop("checked", false);
+            renderTable(state.rows);
+            sendRowUpdate(id);
+            return;
+          }
+
+          sendRowUpdate(id);
+        });
+
+
+        // detecta click en el OC Cliente, ya sea para crear o modificar.
+        $(".pm-table").on("click", ".oc-link", function (e) {
+          e.preventDefault();
+
+          const ocId = String($(this).data("ocid") || "").trim();
+          const negocio4Did = String($(this).data("negocio4did") || "").trim();
+          if (!negocio4Did) return;
+
+          let url = ocId;
+          if (ocId) {
+            // modificar existente
+            url =
+              "/v3/views/occlientes/content.shtml?id=" + encodeURIComponent(ocId) + "&neg=" + encodeURIComponent(negocio4Did);
+          } else {
+            // crear nueva
+            url =
+              "/v3/views/occlientes/content.shtml?neg=" + encodeURIComponent(negocio4Did);
+          }
+          _ocDialogOpen = true;
+          unaBase.loadInto.dialog(url, "OC. Cliente", "x-large");
+
+          setTimeout(function () {
+            // toma el último dialog abierto
+            const $dlg = $(".ui-dialog-content:visible").last();
+            $dlg.one("dialogbeforeclose.pmOcRefresh", function () {
+              _ocDialogOpen = false;
+              scheduleNegocioRefresh();
+            });
+          }, 0);
+        });
+
+        // Email per row
+        $(".pm-table").on("change", ".notify-input", function () {
+          const $row = $(this).closest("tr");
+          const id = String($row.data("id"));
+
+          state.rowNotify[id] = ($(this).val() || "").trim();
+
+          state.rowNotifyDirty[id] = true;
+
+          if (state.auto[id] && !state.rowNotify[id]) {
+            state.auto[id] = false;
+            $row.find(".auto-toggle-input").prop("checked", false);
+            $row.find(".status-pill").text("Sin programación");
+          }
+
+          sendRowUpdate(id);
+        });
+
+        $(".pm-table").on("change", ".monto_a_facturar", function () {
+          const $row = $(this).closest("tr");
+          const id = String($row.data("id"));
+
+          // 1) obtener Por facturar (columna 7 -> index 6)
+          const porFacturarStr = ($row.find("td").eq(6).text() || "").trim();
+          const cleanedPorFact = porFacturarStr.replace(/[^\d]/g, "");
+          const porFacturar = cleanedPorFact ? parseInt(cleanedPorFact, 10) : 0;
+
+          const rawFromInput = ($(this).val() || "").trim();
+          const cleanedInput = rawFromInput.replace(/[^\d]/g, "");
+
+          if (!cleanedInput) {
+            state.montoAFacturar[id] = porFacturar;
+            this.dataset.raw = String(porFacturar);
+            $(this).val(formatCurrencyExchange(porFacturar, state.rowExchangeType[id]));
+            sendRowUpdate(id);
+            return;
+          }
+
+          const montoIngresado = parseInt(cleanedInput, 10) || 0;
+
+          if (montoIngresado > porFacturar) {
+            toastr.warning(
+              `El monto ingresado (${montoIngresado}) excede lo pendiente por facturar (${porFacturar}).`
+            );
+
+            state.montoAFacturar[id] = porFacturar;
+            this.dataset.raw = String(porFacturar);
+            $(this).val(formatCurrencyExchange(porFacturar, state.rowExchangeType[id]));
+
+            this.checked = false;
+
+            sendRowUpdate(id);
+            return;
+          }
+
+          // OK
+          state.montoAFacturar[id] = montoIngresado;
+          this.dataset.raw = String(montoIngresado);
+          $(this).val(formatCurrencyExchange(montoIngresado, state.rowExchangeType[id]));
+
+          sendRowUpdate(id);
+        });
+
+        $(".pm-table").on("change", ".monto_facturar", function () {
+          const $row = $(this).closest("tr");
+          const id = String($row.data("id"));
+
+          // Valor ingresado (raw sin formatear)
+          const rawValue = this.dataset.raw || $(this).val();
+          const montoIngresado = unaBase.utilities.transformNumber(rawValue, "num");
+
+          // Obtener la columna "Por facturar" (8va celda: índice 7)
+          const porFacturarStr = $row.find("td").eq(7).text();
+          const porFacturar = unaBase.utilities.transformNumber(
+            porFacturarStr.replace(/[^0-9.,]/g, ""),
+            "num"
+          );
+          // Guardar el valor en el estado
+          state.montoFactura[id] = rawValue;
+
+          // Validación: No permitir exceder "por facturar"
+          if (montoIngresado > porFacturar) {
+            toastr.warning(`El monto ingresado (${montoIngresado}) excede lo pendiente por facturar (${porFacturar}).`);
+            $(this).val("");
+            this.dataset.raw = "";
+            return;
+          }
+
+          // Enviar actualización
+          sendRowUpdate(id);
+        });
+
+        // Toggle auto por fila
+        $(".pm-table").on("change", ".auto-toggle-input", function () {
+
+          const $row = $(this).closest("tr");
+          const id = String($row.data("id"));
+          const isAuto = !!this.checked;
+          const tipo = state.rowScheduleType[id] || "monthly";
+
+          // Si lo están apagando, deja apagar sin exigir nada
+          if (!isAuto) {
+            state.auto[id] = false;
+            $row.find(".status-pill").text("Sin programación");
+            sendRowUpdate(id);
+            return;
+          }
+
+          // ======= Validaciones SOLO al activar =======
+
+          // monto > 0
+          if ((state.montoAFacturar[id]?.toString() === "") || (state.montoAFacturar[id] <= 0)) {
+            toastr.warning("El por facturar no puede ser 0");
+            this.checked = false;
+            return;
+          }
+
+          // fecha obligatoria
+          if (tipo === "monthly" && !state.rowDates[id]) {
+            toastr.warning("Por favor, añada una fecha");
+            this.checked = false;
+            return;
+          }
+
+          // semanal día obligatorio
+          if (tipo === "weekly" && !state.rowWeekday[id]) {
+            toastr.warning("Por favor, selecciona un día de la semana");
+            this.checked = false;
+            return;
+          }
+
+          // correo obligatorio SOLO al activar
+          const email = String(state.rowNotify[id] || "").trim();
+          if (!email) {
+            toastr.warning("El correo es obligatorio para programar.");
+            this.checked = false;
+            return;
+          }
+
+          // Warning OC 
+          const oc = String(state.rowOcCliente[id] || "").trim();
+          if (!oc || oc === "---------") {
+            alert("<br> Por favor, recuerde añadir un Cliente OC si es necesario.<br><br><br>");
+
+          }
+
+          if (!isValidEmail(email)) {
+            toastr.warning("El correo no tiene un formato válido.");
+            this.checked = false;
+            return;
+          }
+
+          // OK: activar
+          state.auto[id] = true;
+          $row.find(".status-pill").text("Programado (auto)");
+          sendRowUpdate(id);
+        });
+
+        // Cambio tipo de programación (Mensual/Semanal/Diaria)
+        $(".pm-table").on("change", ".sched-type", function () {
+          const $tr = $(this).closest("tr");
+          const id = String($tr.data("id"));
+          const type = String($(this).val() || "monthly");
+
+          state.rowScheduleType[id] = type;
+
+          // Si cambia a weekly, normalmente ya no necesitas fecha mensual
+          if (type !== "monthly") {
+            state.rowDates[id] = "";
+          }
+          // Si cambia y NO es weekly, limpias día semanal
+          if (type !== "weekly") {
+            state.rowWeekday[id] = "";
+          }
+
+          const today = new Date();
+          const minDate = today.toISOString().slice(0, 10);
+          const locked = isRowLockedByFolio(id);
+          const emitDate = state.rowDates[id] || "";
+          $tr.find("td.date-cell").html(renderEmitirCell(id, emitDate, minDate, locked));
+
+          sendRowUpdate(id);
+        });
+
+
+        // Cambio día semanal
+        $(".pm-table").on("change", ".weekday-select", function () {
+          const $tr = $(this).closest("tr");
+          const id = String($tr.data("id"));
+          state.rowWeekday[id] = String($(this).val() || "");
+
+          sendRowUpdate(id);
+          return;
+        });
+
+        // Fecha "emitir el" por fila
+        $(".pm-table").on("change", ".emit-date-input", function () {
+          const $row = $(this).closest("tr");
+          const id = String($row.data("id"));
+
+          state.rowDates[id] = (this.value || "").trim();
+
+          if (state.auto[id] && !state.rowDates[id]) {
+            state.auto[id] = false;
+            $row.find(".auto-toggle-input").prop("checked", false);
+            renderTable(state.rows);
+            sendRowUpdate(id);
+            return;
+          }
+
+          sendRowUpdate(id);
+        });
+
+        // ==== Filtro de cliente con TomSelect ====
+        const filtroClienteEl = document.getElementById('pm-filter-cliente');
+        if (filtroClienteEl) {
+          const tsFiltro = new TomSelect('#pm-filter-cliente', {
+            valueField: 'id',          // será el id de la empresa (cliente)
+            labelField: 'nombre',      // lo que se muestra: nombre | rut
+            searchField: ['nombre'],
+            preload: 'focus',
+            dropdownParent: 'body',
+            allowEmptyOption: true,
+            create: false,
+
+            onInitialize: function () {
+              this.clear(true);
+              this.control_input.placeholder = "Todos los clientes";
+            },
+
+            onType: function (str) {
+              setClienteQuery(str);
+            },
+
+            onChange: function (value) {
+              setClienteFilter(value || "");
+              this.setTextboxValue("");
+            },
+
+            load: function (query, callback) {
+              const params = buildRequestParams();
+              params.results = 500;
+              params.q = query || "";               // texto a buscar (alias / nombre / etc.)
+
+              $.ajax({
+                url: "/4DACTION/_V3_getNegocio",
+                dataType: "json",
+                data: params,
+                success: function (response) {
+                  const rows = Array.isArray(response.rows) ? response.rows : [];
+                  const seen = new Set();
+                  const options = [];
+
+                  rows.forEach(row => {
+                    const empresa = row.empresa || {};
+                    const empresaId =
+                      empresa.id ||
+                      row.empresa_id ||
+                      row.cliente_id;
+
+                    if (!empresaId) return;
+                    if (seen.has(empresaId)) return;
+
+                    const base =
+                      (empresa.alias && empresa.alias.trim()) ||
+                      (empresa.razon_social && empresa.razon_social.trim()) ||
+                      (empresa.nombre && empresa.nombre.trim()) ||
+                      (row.cliente && row.cliente.trim()) ||
+                      "";
+                    const rutRaw = (empresa.rut || row.rutClient || "").trim();
+                    const hasName = !!base;
+                    const hasRut = !!rutRaw;
+                    if (!hasName && !hasRut) return;
+                    let rutFmt = rutRaw;
+                    if (rutRaw && /^[0-9kK]+$/.test(rutRaw) && rutRaw.length > 1) {
+                      rutFmt = rutRaw.slice(0, -1) + "-" + rutRaw.slice(-1);
+                    }
+                    const label = hasName
+                      ? (rutFmt ? `${base} | ${rutFmt}` : base)
+                      : rutFmt;
+                    seen.add(empresaId);
+                    options.push({
+                      id: String(empresaId),
+                      nombre: label
+                    });
+                  });
+
+                  callback(options);
+                },
+
+                error: function () {
+                  callback();
+                }
+              });
+            },
+
+            onChange: function (value) {
+              // value es el id del cliente (empresa.id)
+              setClienteFilter(value || "");
+            }
+          });
+        }
+
+
+
+      }
+
+      /* ========================= Rows Filter ========================= */
+      function getVisibleRows() {
+        let visible = state.rows.slice();
+
+        if (state.filters.estado === "cerrado" || state.filters.estado === "en_proceso") {
+          visible = visible.filter(row => {
+            const id = getRowId(row);
+            const est = (state.estadoNegocios?.[id] || deriveEstadoNegocio(row) || "").toLowerCase();
+            return est === state.filters.estado;
+          });
+        }
+
+        // Filtro por estado 
+        if (state.filters.programacion === "programado") {
+          visible = visible.filter(row => {
+            const id = getRowId(row);
+            return !!state.auto[id];
+          });
+        } else if (state.filters.programacion === "sin_programar") {
+          visible = visible.filter(row => {
+            const id = getRowId(row);
+            return !state.auto[id];
+          });
+        }
+
+        // Filtro por cliente ID
+        const clienteFilterId = (state.filters.cliente || "").trim();
+        const clienteQuery = (state.filters.clienteQuery || "").trim();
+
+
+        if (clienteFilterId) {
+          visible = visible.filter((row) => String(row?.empresa?.id || "") === clienteFilterId);
+        } else if (clienteQuery) {
+          visible = visible.filter((row) => {
+            const nombre = (row?.empresa?.alias || row?.empresa?.razon_social || row?.empresa?.nombre || row?.cliente || "");
+            const rut = (row?.empresa?.rut || row?.rutClient || "");
+            const haystack = (nombre + " " + rut).toLowerCase();
+            return haystack.includes(clienteQuery);
+          });
+        }
+
+        return visible;
+      }
+
+      /* ========================= Period picker ========================= */
+      function setupPeriodPicker() {
+        const $display = $("#pm-period-display");
+        const $dropdown = $("#pm-period-dropdown");
+        const $mode = $("#pm-period-mode");
+
+        $display.on("click", function (event) {
+          event.stopPropagation();
+          if (periodState.isOpen) {
+            closePeriodDropdown();
+          } else {
+            openPeriodDropdown();
+          }
+        });
+
+        $mode.on("change", function () {
+          periodState.viewMode = this.value;
+          renderPeriodBody();
+        });
+
+        $dropdown.on("click", ".period-nav", function (event) {
+          event.preventDefault();
+          const dir = Number($(this).data("dir")) || 0;
+          if (periodState.viewMode === "month") {
+            periodState.currentYear += dir;
+          } else {
+            periodState.yearPageStart += dir * 12;
+          }
+          renderPeriodBody();
+        });
+
+        $(document).on("click", function (event) {
+          if (periodState.isOpen && !$(event.target).closest("#pm-period-picker").length) {
+            closePeriodDropdown();
+          }
+        });
+      }
+
+      function openPeriodDropdown() {
+        periodState.isOpen = true;
+        periodState.viewMode = state.filters.periodType || "month";
+        const referenceYear = parseInt(state.filters.year || (state.filters.mes ? state.filters.mes.split("-")[0] : new Date().getFullYear()), 10);
+        periodState.currentYear = Number.isFinite(referenceYear) ? referenceYear : new Date().getFullYear();
+        periodState.yearPageStart = periodState.currentYear - 6;
+        $("#pm-period-dropdown").addClass("is-open");
+        renderPeriodBody();
+      }
+
+      function closePeriodDropdown() {
+        periodState.isOpen = false;
+        $("#pm-period-dropdown").removeClass("is-open");
+      }
+
+      function renderPeriodDisplay() {
+        const $display = $("#pm-period-display");
+        let text = "Seleccionar";
+        if (state.filters.periodType === "year" && state.filters.year) {
+          text = state.filters.year;
+        } else if (state.filters.mes) {
+          text = formatMonthLabel(state.filters.mes);
+        }
+        $display.text(text);
+      }
+
+      function renderPeriodBody() {
+        const $mode = $("#pm-period-mode");
+        const $body = $("#pm-period-body");
+        const $subtitle = $("#pm-period-subtitle");
+        $mode.val(periodState.viewMode);
+        if (!Number.isFinite(periodState.currentYear)) {
+          periodState.currentYear = new Date().getFullYear();
+        }
+
+        if (periodState.viewMode === "year") {
+          $body.attr("class", "period-body is-year");
+          const selectedYear = Number(state.filters.year) || periodState.currentYear;
+          if (!Number.isFinite(periodState.yearPageStart)) {
+            periodState.yearPageStart = selectedYear - 6;
+          }
+          if (selectedYear < periodState.yearPageStart) {
+            periodState.yearPageStart = selectedYear - 6;
+          } else if (selectedYear >= periodState.yearPageStart + 12) {
+            periodState.yearPageStart = selectedYear - 11;
+          }
+          const start = periodState.yearPageStart;
+          const years = [];
+          for (let i = 0; i < 12; i++) {
+            years.push(start + i);
+          }
+          $subtitle.text(years[0] + " — " + years[years.length - 1]);
+          $body.empty();
+          years.forEach(function (year) {
+            const $btn = $("<button>")
+              .addClass("period-option")
+              .text(year)
+              .on("click", function (e) {
+                e.preventDefault();
+                setYearFilter(year, true);
+                closePeriodDropdown();
+              });
+            if (Number(state.filters.year) === year) {
+              $btn.addClass("is-active");
+            }
+            $body.append($btn);
+          });
+        } else {
+          $body.attr("class", "period-body is-month");
+          const selectedMonth = state.filters.periodType === "month" && state.filters.mes
+            ? parseInt(state.filters.mes.split("-")[1], 10)
+            : null;
+          const selectedYear = Number(state.filters.year);
+          $subtitle.text(periodState.currentYear);
+          $body.empty();
+          MONTH_LABELS.forEach(function (label, index) {
+            const monthIndex = index + 1;
+            const monthValue = String(monthIndex).padStart(2, "0");
+            const $btn = $("<button>")
+              .addClass("period-option")
+              .text(label)
+              .on("click", function (e) {
+                e.preventDefault();
+                setMonthFilter(periodState.currentYear + "-" + monthValue, true);
+                closePeriodDropdown();
+              });
+            if (
+              state.filters.periodType === "month" &&
+              selectedMonth === monthIndex &&
+              selectedYear === periodState.currentYear
+            ) {
+              $btn.addClass("is-active");
+            }
+            $body.append($btn);
+          });
+        }
+      }
+
+      /* ========================= Fetch ========================= */
+      function fetchProgramableNegocios() {
+        setLoading(true);
+        state.selected.clear();
+        $.ajax({
+          url: "/4DACTION/_MASIVO_getNegocios",
+          dataType: "json",
+          data: buildRequestParams()
+        })
+          .done(function (response) {
+            const rows = Array.isArray(response.rows) ? response.rows : [];
+            let filteredRows = rows.filter(hasPendingBalanceToInvoice); // negocios con saldo
+            if (state.filters.periodType === "year" && state.filters.year) {
+              const expectedYear = String(state.filters.year);
+              filteredRows = filteredRows.filter(function (row) {
+                return extractRowYear(row) === expectedYear;
+              });
+            }
+
+            state.rows = filteredRows;
+
+            // Hidratar estado de programación desde el JSON
+            hydrateRowState(state.rows);
+
+            // limpiar selección inválida
+            const validIds = new Set(state.rows.map(getRowId));
+            state.selected = new Set(
+              Array.from(state.selected).filter((id) => validIds.has(id))
+            );
+
+            syncLocksFromGruposFacturacion(function () {
+              renderTable(state.rows);
+            });
+            finalizeLoading();
+          })
+          .fail(function (jqXHR, textStatus, errorThrown) {
+            console.error("AJAX FAIL:", { textStatus, errorThrown, status: jqXHR.status });
+
+  const raw = jqXHR.responseText || "";
+  console.log("Content-Type:", jqXHR.getResponseHeader("content-type"));
+  console.log("RAW (primeros 1500 chars):", raw.slice(0, 1500));
+
+  // Si el problema es coma decimal, esto lo suele pillar altiro:
+  const m = raw.match(/\d+,\d+/);
+  if (m) {
+    console.warn("Encontré decimal con coma:", m[0], "en índice", m.index);
+    console.warn("Contexto:", raw.slice(Math.max(0, m.index - 60), m.index + 60));
+  }
+
+  if (window.toastr?.error) {
+    window.toastr.error(
+      textStatus === "parsererror"
+        ? "La respuesta no es JSON válido (error al parsear)."
+        : "No fue posible cargar los negocios con saldo por facturar."
+    );
+  }
+            renderTable([]);
+            finalizeLoading();
+          });
+      }
+
+      // Parámetros: sort por fecha_asignacion desc y filtro por mes actual en `fecha_asignacion`
+      function buildRequestParams() {
+        const p = {
+          page: 1,
+          results: 500, // más alto para traer todos los negocios del mes actual
+          q: "",
+          q2: "",
+          sort_by: "fecha_asignacion",
+          sort_order: "desc",
+          asignado_at_from: "",
+          asignado_at_to: "",
+          created_at_from: "",
+          created_at_to: "",
+          realizado_at_from: "",
+          realizado_at_to: "",
+          cerrado_at_from: "",
+          cerrado_at_to: "",
+          updated_at_from: "",
+          updated_at_to: "",
+          year: "",
+          estado_en_proceso: true,
+          estado_cerrado: true
+        };
+
+        if (state.filters.periodType === "year" && state.filters.year) {
+          const year = String(state.filters.year).trim();
+          p.asignado_at_from = "";
+          p.asignado_at_to = "";
+          p.fecha_asignacion = "";
+          p.year = state.filters.year;
+        } else if (state.filters.mes && state.filters.mes.trim() !== "") {
+          // ejemplo: "2025-10"
+          p.fecha_asignacion = state.filters.mes.trim();
+        }
+
+
+        if (state.filters.estado === "en_proceso") {
+          p.estado_en_proceso = true;
+          p.estado_cerrado = false;
+        } else if (state.filters.estado === "cerrado") {
+          p.estado_en_proceso = false;
+          p.estado_cerrado = true;
+        } else {
+          p.estado_en_proceso = true;
+          p.estado_cerrado = true;
+        }
+
+        return p;
+      }
+
+      /* ========================= Render ========================= */
+      function renderTable(rows) {
+        const $body = $("#programador-masivo-table-body");
+        $body.empty();
+
+        const visibleRows = getVisibleRows();
+
+        if (!visibleRows.length) {
+          $body.append(
+            '<tr class="pm-empty"><td colspan="14">No hay negocios con saldo pendiente por facturar.</td></tr>'
+          );
+          updateSelectionCounter();
+          return;
+        }
+
+        visibleRows.sort((a, b) => getRowId(a).localeCompare(getRowId(b))).forEach((row) => { $body.append(renderRow(row)); });
+
+        updateSelectionCounter();
+        initClienteTomSelect();
+      }
+
+      function hydrateRowState(rows) {
+
+        state.rowDates = {};
+        state.rowNotify = {};
+        state.montoFactura = {};
+        state.montoAFacturar = {};
+        state.auto = {};
+        state.rowGlosa = {};
+        state.estadoNegocios = {};
+        state.rowOcCliente = {};
+        state.clienteId = {};
+        // Currency
+        state.rowExchangeType = {};
+        state.rowFacturadoCLP = {};
+        state.rowPorFacturarCLP = {};
+        state.rowFacturadoEX = {};
+        state.rowPorFacturarEX = {};
+
+
+        rows.forEach(function (row) {
+          const id = getRowId(row);
+          if (!id) return;
+
+          const estadoProgramacion = !!row.estado_programacion;
+          const correoProgramacion = (row.correo_programacion || "").trim();
+          const fechaProgramacionRaw = row.fecha_programacion || "";
+          const montoFacturacion = row.monto_facturacion || "";
+          const nombreNegocio = row.text || "";
+          const glosaProgramacion = (row.glosa_programacion || buildGlosaProgramacionDefault(nombreNegocio, row.id) || row.text || "").trim();
+          const ocCliente = row.oc_cliente_programacion || row.nro_oc_cliente || "";
+          const clienteId = row.empresa.id || null;
+          const porFacturar = Number(row.saldo_por_facturar || 0);
+          const montoGuardado = Number(row.monto_facturacion || row.monto_facturacion || 0);
+          const tipoEx = String(row.tipo_exchange || "CLP").trim().toUpperCase() || "CLP";
+
+          state.auto[id] = estadoProgramacion;
+          state.rowNotifyDirty[id] = false;
+          state.rowNotify[id] = correoProgramacion;
+          state.montoFactura[id] = montoFacturacion;
+          state.rowGlosa[id] = glosaProgramacion;
+          state.estadoNegocios[id] = deriveEstadoNegocio(row);
+          state.rowOcCliente[id] = ocCliente;
+          state.clienteId[id] = clienteId;
+          state.montoAFacturar[id] = (montoGuardado > 0) ? montoGuardado : porFacturar;
+
+          state.rowExchangeType[id] = tipoEx;
+          state.rowFacturadoCLP[id] = Number(row.total_facturado || 0);
+          state.rowPorFacturarCLP[id] = Number(row.saldo_por_facturar || 0);
+          state.rowFacturadoEX[id] = Number(row.total_facturado_exchange || 0);
+          state.rowPorFacturarEX[id] = Number(row.saldo_por_facturar_exchange || 0);
+
+          // Por defecto: mensual
+          state.rowDates[id] = toInputDate(fechaProgramacionRaw);
+          state.rowScheduleType[id] = (row.programacion_tipo || "monthly").toLowerCase();
+          if (!["monthly", "weekly", "daily"].includes(state.rowScheduleType[id])) {
+            state.rowScheduleType[id] = "monthly";
+          }
+          state.rowWeekday[id] = String(row.programacion_dia_semana || ""); // por defecto vacío
+
+        });
+      }
+
+      function sendRowUpdate(id) {
+        if (isRowLockedByFolio(id)) {
+          console.warn("[Programador masivo] Fila bloqueada por grupo de facturación");
+          return;
+        }
+        if (!id) return;
+        const payload = buildRowPayload(id);
+        if (!payload) {
+          console.warn("[Programador masivo] No se pudo construir payload para el id:", id);
+          return;
+        }
+
+        function getEncodedSid() {
+          if (
+            typeof window !== "undefined" &&
+            window.unaBase &&
+            window.unaBase.sid
+          ) {
+            const encoded = window.unaBase.sid.encoded;
+            return (typeof encoded === "function") ? encoded() : (encoded || null);
+          }
+          return null;
+        }
+
+        function getHostnameOrigin() {
+          if (typeof window === "undefined" || !window.location) {
+            console.warn("[Programador masivo] window.location no está disponible.");
+            return null;
+          }
+          return window.location.origin;
+        }
+
+
+        const sid = getEncodedSid();
+        if (!sid) {
+          console.warn("[Programador masivo] No se pudo obtener SID para guardar la programación.");
+          toastr?.error?.("No es posible guardar porque falta la sesión (SID).");
+          return;
+        }
+
+        const hostname = getHostnameOrigin();
+
+        console.log("hostname: ")
+        if (!hostname) {
+
+          console.warn("[Programador masivo] No se pudo resolver hostname para el guardado.");
+          toastr?.error?.("No es posible guardar porque falta el hostname.");
+          return;
+        }
+
+        const requestBody = {
+          estado_programacion: Boolean(payload.estado_programacion),
+          glosa_programacion: payload.glosa_programacion || "",
+          cliente_id: payload.cliente_id || 1,
+          monto_a_facturar: payload.monto_a_facturar || 0,
+          fecha_programacion: payload.fecha_programacion || "00-00-00",
+          tipo_fecha_programacion: payload.programacion_tipo || "monthly",
+          dia_semanal_programacion: payload.programacion_dia_semana || "",
+          negocio_id: payload.negocio_id || payload.folio || null,
+        };
+        const requestUrl =
+          hostname + "/4DACTION/" +
+          "?sid=" +
+          encodeURIComponent(sid) +
+          "&hostname=" +
+          encodeURIComponent(hostname);
+
+        if (Object.prototype.hasOwnProperty.call(payload, "correo_programacion")) {
+          requestBody.correo_programacion = payload.correo_programacion;
+        }
+
+
+        $.ajax({
+          url: "/4DACTION/_MASIVO_setNegocio",
+          method: "POST",
+          data: requestBody,
+          dataType: "json"
+        })
+          .done(function (response) {
+            console.debug("[Programador masivo] Programación guardada", payload, response);
+            if (window.toastr && typeof window.toastr.success === "function") {
+              window.toastr.success("Se actualizó correctamente.");
+            }
+          })
+          .fail(function (jqXHR) {
+            const message =
+              (jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.message) ||
+              (jqXHR && jqXHR.responseText) ||
+              "No fue posible guardar la programación.";
+            console.error("[Programador masivo] Error guardando programación", message);
+            if (window.toastr && typeof window.toastr.error === "function") {
+              window.toastr.error(message);
+            }
+          });
+      }
+
+      function buildRowPayload(id) {
+        const row = state.rows.find(function (item) {
+          return getRowId(item) === id;
+        });
+        if (!row) return null;
+        const autoFlag = Object.prototype.hasOwnProperty.call(state.auto, id) ? !!state.auto[id] : false;
+        const fechaEmitirValue = state.rowDates[id] || "";
+        const diaEmitirValue = state.rowWeekday[id] || ""
+        const tipoEmitirValue = state.rowScheduleType[id] || "monthly"
+        const notifyValue = state.rowNotify[id] || "";
+        const glosaValue = state.rowGlosa[id] || "";
+        const rowClienteId = (state.clienteId && state.clienteId[id]) || row.empresa_id || (row.empresa && row.empresa.id) || row.cliente_id || null;
+        const montoAuto = (state.montoAFacturar && typeof state.montoAFacturar[id] !== "undefined") ? state.montoAFacturar[id] : 0;
+        const payload = {
+          estado_programacion: autoFlag,
+          glosa_programacion: glosaValue,
+          negocio_id: getNegocioInternalId(row),
+          cliente_id: rowClienteId,
+          monto_a_facturar: montoAuto,
+          folio: id,
+          programacion_tipo: tipoEmitirValue,
+          fecha_programacion: normalizeProgramacionDate(fechaEmitirValue),
+          programacion_dia_semana: diaEmitirValue,
+        };
+
+        // solo si el usuario editó manualmente
+        if (state.rowNotifyDirty[id]) {
+          payload.correo_programacion = (state.rowNotify[id] || "").trim();
+        }
+
+        return payload;
+      }
+
+      const renderRow = (row) => {
+        const id = getRowId(row);
+        const negocio4Did = row.id;
+
+        const locked = isNegocioLocked(String(negocio4Did));
+        const lockGroupId = locked ? getLockedGroupId(String(negocio4Did)) : "";
+        const dis = locked ? "disabled" : "";
+        const rowClass = locked ? "data-row is-locked" : "data-row";
+
+        const isSelected = state.selected.has(id);
+
+        const fecha = formatDate(row.fecha_asignacion_ || row.fecha_asignacion);
+        const glosa = row.glosa_programacion || row.text || "";
+        const ocTipoCliente = row.tipo_oc_cliente || "";
+
+        // Currency
+        const tipoEx = String(row.tipo_exchange || "CLP").trim().toUpperCase() || "CLP";
+        const facturadoCLP = Number(row.total_facturado || 0);
+        const porFacturarCLP = Number(row.saldo_por_facturar || 0);
+        const facturadoEX = Number(row.total_facturado_exchange || 0);
+        const porFacturarEX = Number(row.saldo_por_facturar_exchange || 0);
+        const facturadoShow = (tipoEx !== "CLP" && facturadoEX > 0) ? facturadoEX : facturadoCLP;
+        const porFacturarShow = (tipoEx !== "CLP" && porFacturarEX > 0) ? porFacturarEX : porFacturarCLP;
+
+        const montoAFacturar = (state.montoAFacturar && typeof state.montoAFacturar[id] !== "undefined") ? state.montoAFacturar[id] : Number(row.monto_a_facturar || 0);
+        const porJustificar = Number(row.por_justificar || 0);
+        const ocNumsRaw = row.nro_oc_cliente || row.oc_cliente || "---------";
+        const ocIdsRaw = row.id_oc_cliente || "";
+        const sched = state.rowSchedule?.[id] || { type: "monthly", date: "", weekday: "" };
+        const schedType = sched.type || "monthly";
+        const schedWeekday = sched.weekday || "";
+
+        const nums = splitSlashList(ocNumsRaw);
+        const ids = splitSlashList(ocIdsRaw);
+
+        let ocHtml = '<div class="oc-list">';
+        if (!nums.length) {
+          ocHtml +=
+            '<button type="button" class="oc-chip oc-link is-add" ' +
+            'data-ocid="" data-negocio4did="' + escapeHtml(String(negocio4Did)) + '">' +
+            'Crear</button>';
+        } else {
+          ocHtml += nums.map((n, i) => {
+            const ocId = ids[i] || "";
+            return (
+              '<button type="button" class="oc-chip oc-link" ' +
+              'data-ocid="' + escapeHtml(String(ocId)) + '" ' +
+              'data-negocio4did="' + escapeHtml(String(negocio4Did)) + '">' +
+              escapeHtml(n) +
+              '</button>'
+            );
+          }).join("");
+        }
+
+        ocHtml += "</div>";
+
+        const notify = state.rowNotify[id] || "";
+        const emitDate = state.rowDates[id] || "";
+        const autoChecked = !!state.auto[id];
+        const statusLabel = autoChecked ? "Programado (auto)" : "Sin programación";
+
+        const checkboxAttr = isSelected ? "checked" : "";
+        const autoAttr = autoChecked ? "checked" : "";
+        const glosaAMostrar = (state.rowGlosa && Object.prototype.hasOwnProperty.call(state.rowGlosa, id)) ? state.rowGlosa[id] : ((row.glosa_programacion || "").trim() || buildGlosaProgramacionDefault(row.text || "", row.id) || row.glosa || row.text || "");
+        // min = hoy
+        const today = new Date();
+        const minDate = today.toISOString().slice(0, 10);
+
+        return (
+          '<tr class=' + rowClass + ' data-id="' +
+          id +
+          '">' +
+          '<td class="w-checkbox"><input type="checkbox" class="row-select" data-id="' + id + '"' +
+          checkboxAttr + (locked ? " disabled" : "") +
+          " /></td>" +
+          '<td class="nv-cell" data-idnv="' + escapeHtml(negocio4Did) + '">' +
+          '<span class="nv-link" data-idnv="' + escapeHtml(negocio4Did) + '">' + escapeHtml(id) + '</span>' +
+          '</td>' +
+          "<td class='fecha-Negocio'>" +
+          (fecha || "<span class='muted'>—</span>") +
+          "</td>" +
+          "<td>" +
+          renderClienteCell(row, locked) +
+          "</td >" +
+          editableGlosaCell(glosaAMostrar, locked) +
+          '<td class="currency' + (locked ? ' is-locked-cell' : '') + '">' +
+          formatCurrencyExchange(facturadoShow, tipoEx) +
+          '</td>' +
+          '<td class="currency">' +
+          formatCurrencyExchange(porFacturarShow, tipoEx) +
+          "</td>" +
+          '<td class="currency" style="text-align:center;">' +
+          editableMontoCell(montoAFacturar, tipoEx) +
+          "</td>" +
+          '<td class="oc-cell">' +
+          ocHtml +
+          '</td>' +
+          '<td class="auto-toggle"><label class="switch"><input type="checkbox" class="auto-toggle-input"' + autoAttr + (locked ? " disabled" : "") + '><span class="slider"></span></label></td>' +
+          '<td class="periodicidad-cell">' + renderPeriodicidadCell(id, locked) + '</td>' +
+          '<td class="date-cell">' + renderEmitirCell(id, emitDate, minDate, locked) + '</td>' +
+          '<td class="notify-cell">' + '<input type="email" class="notify-input" placeholder="correo@cliente" value="' + escapeHtml(notify) + '"' + (locked ? ' disabled' : '') + '>' + '</td>' +
+          '<td><span class="status-pill">' + statusLabel + "</span></td>" +
+          "</tr>"
+        );
+      }
+
+      /* ========================= Helpers ========================= */
+      function hasPendingBalanceToInvoice(row) {
+        const value = Number(row && row.saldo_por_facturar || 0);
+        return value > 0;
+      }
+
+      function getNegocioInternalId(row) {
+        if (!row) return "";
+        return (
+          row.id_negocio ||
+          row.negocio_id ||
+          row.idNegocio ||
+          row.id ||
+          row.folio ||
+          row.folio_negocio ||
+          ""
+        );
+      }
+
+      // Retorna valores separados por " / " como lista
+      function splitSlashList(v) {
+        const s = String(v || "").trim();
+        if (!s || s === "---------" || s === "----") return [];
+        return s.split("/").map(x => x.trim()).filter(Boolean);
+      }
+
+
+      function initClienteTomSelect() {
+        $(".cliente-select").each(function () {
+          if (this.tomselect) return;
+
+          const initialAlias = this.dataset.initialAlias || "";
+          const initialId = this.dataset.initialId || "";
+          const initialRut = this.dataset.initialRut || "";
+          const initialEmail = this.dataset.initialEmail || "";
+
+
+          const selectEl = this;
+
+          const ts = new TomSelect(selectEl, {
+            dropdownParent: 'body',
+            valueField: "id",
+            labelField: "nombre",
+            searchField: ["nombre"],
+            preload: false,
+
+            shouldLoad: () => true,
+
+            load: function (query, callback) {
+              const self = this;
+
+              $.ajax({
+                url: "/4DACTION/_V3_getContactos",
+                dataType: "json",
+                data: {
+                  q: query || "",
+                  isClient: 1,
+                },
+                success: function (response) {
+                  const rows = Array.isArray(response.rows) ? response.rows : [];
+
+                  const options = rows
+                    .filter(r => String(r.tipo_empresa || "").trim().toUpperCase() === "CLIENTE")
+                    .filter(r => {
+                      const hasName =
+                        (r.alias && r.alias.trim()) ||
+                        (r.razon && r.razon.trim()) ||
+                        (r.nombre_completo && r.nombre_completo.trim());
+                      const hasRut = r.rut && r.rut.trim();
+                      return !!(hasName || hasRut);
+                    })
+                    .map(r => {
+                      const base =
+                        (r.alias && r.alias.trim()) ||
+                        (r.razon && r.razon.trim()) ||
+                        (r.nombre_completo && r.nombre_completo.trim());
+                      return {
+                        id: String(r.id),
+                        nombre: base ? (r.rut ? `${base} | ${r.rut}` : base) : 'Sin nombre | Sin RUT',
+                        email: (r.email || "").trim()
+                      };
+                    });
+
+                  callback(options);
+
+                  const current = self.getValue();
+                  if (current) {
+                    const fresh = options.find(o => o.id === String(current));
+                    if (fresh) {
+                      self.updateOption(String(current), fresh);
+                      self.refreshOptions(false);
+                    }
+                  }
+                },
+                error: function () {
+                  callback();
+                }
+              });
+            },
+
+            onInitialize: function () {
+              if (selectEl.disabled || selectEl.dataset.locked === "1") {
+                this.disable();
+                this.wrapper.classList.add("disabled");
+              }
+              if (initialId) {
+                const base = initialAlias.trim();
+                const label = base
+                  ? (initialRut ? `${base} | ${initialRut}` : base)
+                  : (initialRut || 'Sin nombre | Sin RUT');
+
+                this.addOption({ id: String(initialId), nombre: label, email: "" });
+                this.setValue(String(initialId), true);
+              }
+              this.wrapper.classList.remove('input-hidden');
+              setTimeout(() => this.blur(), 0);
+            },
+
+            onDropdownOpen: function () {
+              if (this.isDisabled || selectEl.disabled) return;
+              if (typeof this.clearCache === "function") this.clearCache();
+
+              const current = this.getValue();
+              const keep = current ? this.options[String(current)] : null;
+
+              this.clearOptions(); // borra todas las opciones del dropdown
+
+              if (keep) this.addOption(keep);
+
+              // Fuerza fetch en vacío para que traiga email desde el backend (actualizado)
+              this.load("", () => {
+                this.refreshOptions(false);
+                this.open();
+              });
+            },
+
+            onChange: function (value) {
+              const rowId = String($(selectEl).closest("tr").data("id"));
+              const v = String(value || "");
+
+              state.clienteId[rowId] = v;
+
+              const opt = v ? this.options[v] : null;
+              const defaultEmail = (opt && opt.email) ? String(opt.email).trim() : "";
+
+              // Mostrar email según cliente (sin guardar)
+              if (!v) {
+                state.rowNotify[rowId] = "";
+                $(selectEl).closest("tr").find(".notify-input").val("");
+              } else {
+                state.rowNotify[rowId] = defaultEmail;
+                $(selectEl).closest("tr").find(".notify-input").val(defaultEmail);
+              }
+
+              state.rowNotifyDirty[rowId] = false;
+
+              if (state.auto[rowId] && !v) {
+                state.auto[rowId] = false;
+                const $tr = $(selectEl).closest("tr");
+                $tr.find(".auto-toggle-input").prop("checked", false);
+                $tr.find(".status-pill").text("Sin programación");
+              }
+
+              sendRowUpdate(rowId);
+            },
+          });
+
+
+          ts.wrapper.style.display = "block";
+        });
+      }
+
+
+
+      function getClienteNombre(row) {
+        if (!row) return "Cliente sin nombre";
+        if (row.empresa) {
+          if (row.empresa.alias) return row.empresa.alias;
+          if (row.empresa.nombre) return row.empresa.nombre;
+          if (row.empresa.razon_social) return row.empresa.razon_social;
+        }
+        if (row.cliente) return row.cliente;
+        return "Cliente sin nombre";
+      }
+
+      function extractRowYear(row) {
+        if (!row) return "";
+        if (row.fecha_asignacion) {
+          const match = String(row.fecha_asignacion).match(/^(\d{4})/);
+          if (match) return match[1];
+        }
+        if (row.fecha_asignacion_) {
+          const parts = String(row.fecha_asignacion_).split("-");
+          if (parts.length === 3) {
+            return parts[2];
+          }
+        }
+        return "";
+      }
+
+      function getRowId(row) {
+        return String(row.folio || row.id || "");
+      }
+
+      function formatCurrency(n) {
+        const v = Number(n) || 0;
+        if (window.unaBase &&
+          window.unaBase.utilities &&
+          typeof window.unaBase.utilities.transformNumber === "function") {
+          return "$ " + window.unaBase.utilities.transformNumber(v, "int");
+        }
+        return "$ " + v.toLocaleString("es-CL");
+      }
+
+      function formatRutFromClient(rut) {
+        if (!rut) return "";
+        const s = String(rut).replace(/\D/g, ""); // por si acaso vienen cosas raras
+        if (s.length <= 1) return s;
+        const cuerpo = s.slice(0, -1);
+        const dv = s.slice(-1);
+        return cuerpo + "-" + dv;     // ejemplo: "111111111" -> "11111111-1"
+      }
+
+      // funciones falsas para evitar errores de funciones de la carpeta views/occlientes/list.shtml
+      (function () {
+        if (typeof window.refreshOcc === "function") return;
+        window.refreshOcc = function () { };
+        window.loadOcc = function () { };
+      })();
+
+      // Permite actualizar la fila que donde se modifica OC Cliente. 
+      let _ocDialogOpen = false;
+      let _ocRefreshTimer = null;
+      function scheduleNegocioRefresh() {
+        clearTimeout(_ocRefreshTimer);
+        _ocRefreshTimer = setTimeout(function () {
+          fetchProgramableNegocios();
+        }, 200);
+      }
+      // Si se guarda una OC desde el dialog (toolbox -> _V3_setOcc), se refresca
+      $(document).on("ajaxSuccess.pmOcRefresh", function (_e, _xhr, settings) {
+        if (!_ocDialogOpen) return;
+
+        const u = (settings && settings.url) ? String(settings.url) : "";
+        if (u.includes("_V3_setOcc")) {
+          scheduleNegocioRefresh();
+        }
+      });
+
+
+      function formatDate(v) {
+        if (!v || v === "00-00-0000" || v === "00-00-00") return "—";
+        return v;
+      }
+
+      function escapeHtml(s) {
+        return String(s || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function editableGlosaCell(glosa, locked) {
+        const safe = escapeHtml(glosa);
+        return (
+          '<td>' +
+          '<input type="text" class="glosa-input" style="font-size:10px !important" value="' + safe + '"' +
+          (locked ? ' disabled' : '') +
+          '>' +
+          '</td>'
+        );
+      }
+      function editableMontoCell(porFacturar, tipoEx) {
+        // Valor actual que el usuario haya editado antes (si existe en el estado)
+        const rawValue = state.montoFactura && state.montoFactura[id]
+          ? state.montoAFacturar
+          : porFacturar;
+
+        const safeFormatted = escapeHtml(formatCurrencyExchange(rawValue, tipoEx));
+
+        return (
+          '<input ' +
+          'type="text" ' +
+          'class="monto_a_facturar" ' +
+          'value="' + safeFormatted + '" ' +
+          'data-raw="' + rawValue + '"' +
+          'style="text-align:right; max-width: 70%;"' +
+          '>'
+        );
+      }
+
+      function renderPeriodicidadCell(id, locked) {
+        const dis = locked ? "disabled" : "";
+        const type = state.rowScheduleType[id] || "monthly";
+
+        return (
+          '<div class="periodicidad-ui">' +
+          '<select name=perioricidad class="sched-type" data-id="' + escapeHtml(id) + '" ' + dis + '>' +
+          '<option value="monthly" ' + (type === "monthly" ? "selected" : "") + '>Mensual</option>' +
+          '<option value="weekly" ' + (type === "weekly" ? "selected" : "") + '>Semanal</option>' +
+          '<option value="daily" ' + (type === "daily" ? "selected" : "") + '>Diaria</option>' +
+          '</select>' +
+          '</div>'
+        );
+      }
+
+
+      function renderEmitirCell(id, emitDate, minDate, locked) {
+        const dis = locked ? "disabled" : "";
+        const type = state.rowScheduleType[id] || "monthly";
+
+        // Mensual: sigue siendo fecha
+        if (type === "monthly") {
+          return (
+            '<input type="date" class="emit-date-input" value="' +
+            escapeHtml(emitDate) +
+            '" min="' + minDate + '" ' + dis + ">"
+          );
+        }
+
+        // Semanal: ahora se muestra el selector de días AQUÍ
+        if (type === "weekly") {
+          const wd = String(state.rowWeekday[id] || "");
+          return (
+            '<select name=weekDaySelect class="weekday-select" data-id="' + escapeHtml(id) + '" ' + dis + '>' +
+            '<option value="">Seleccione</option>' +
+            '<option value="1" ' + (wd === "1" ? "selected" : "") + '>Lunes</option>' +
+            '<option value="2" ' + (wd === "2" ? "selected" : "") + '>Martes</option>' +
+            '<option value="3" ' + (wd === "3" ? "selected" : "") + '>Miércoles</option>' +
+            '<option value="4" ' + (wd === "4" ? "selected" : "") + '>Jueves</option>' +
+            '<option value="5" ' + (wd === "5" ? "selected" : "") + '>Viernes</option>' +
+            '<option value="6" ' + (wd === "6" ? "selected" : "") + '>Sábado</option>' +
+            '<option value="7" ' + (wd === "7" ? "selected" : "") + '>Domingo</option>' +
+            '</select>'
+          );
+        }
+
+        // Diaria: no requiere fecha/día
+        return "<span class='muted'>Todos los días</span>";
+      }
+
+
+
+
+      function renderClienteCell(row, locked) {
+        const alias =
+          (row.empresa && row.empresa.alias) ||
+          (row.empresa && row.empresa.nombre) ||
+          (row.empresa && row.empresa.razon_social) ||
+          row.cliente ||
+          "Cliente sin nombre";
+
+        const empresaId = row.empresa.id || "";
+        const rutRaw = row.rutClient || "";
+        const rutFormatted = formatRutFromClient(rutRaw);
+        const emailIni = (row.empresa && row.correo_programacion) ? row.correo_programacion : "";
+
+        return (
+          '<select ' +
+          'class="cliente-select" ' +
+          (locked ? 'disabled ' : '') +
+          'data-locked="' + (locked ? "1" : "0") + '" ' +
+          'data-initial-alias="' + escapeHtml(alias) + '" ' +
+          'data-initial-id="' + escapeHtml(String(empresaId)) + '" ' +
+          'data-initial-rut="' + escapeHtml(String(rutFormatted)) + '" ' +
+          'data-initial-email="' + escapeHtml(String(emailIni)) + '"' +
+          '></select>'
+        );
+      }
+
+      // Filtros por nombres de clientes.
+      function setClienteQuery(q) {
+        const raw = String(q || "");
+        state.filters.clienteQueryRaw = raw;
+        state.filters.clienteQuery = raw.trim().toLowerCase();
+        if (!state.filters.cliente) renderTable(state.rows);
+      }
+      function setClienteFilter(value) {
+        state.filters.cliente = String(value || "").trim();
+        state.filters.clienteQuery = "";
+        renderTable(state.rows);
+      }
+
+
+
+      function updateSelectionCounter() {
+        const total = state.selected.size;
+        $("#pm-selection-counter").text(total ? total + " seleccionados" : "");
+        setHeaderCheckboxState(state.rows.length);
+
+        const visibleRows = getVisibleRows();
+        setHeaderCheckboxState(visibleRows.length);
+      }
+
+      function setHeaderCheckboxState(totalRows) {
+        const checkbox = document.getElementById("pm-select-all");
+        if (!checkbox) return;
+        if (!totalRows) {
+          checkbox.checked = false;
+          checkbox.indeterminate = false;
+          return;
+        }
+        const selectedCount = state.selected.size;
+        checkbox.checked = selectedCount === totalRows;
+        checkbox.indeterminate = selectedCount > 0 && selectedCount < totalRows;
+      }
+
+      function setLoading(flag) {
+        $("#pm-loading").toggleClass("visible", !!flag);
+      }
+
+      function finalizeLoading() {
+        setLoading(false);
+        if (window.unaBase && window.unaBase.ui && typeof window.unaBase.ui.unblock === "function") {
+          window.unaBase.ui.unblock();
+        }
+        if (typeof $(".loading, #loading").hide === "function") {
+          $(".loading, #loading").hide();
+        }
+      }
+
+      function getCurrentMonthParam() {
+        const now = new Date();
+        const m = String(now.getMonth() + 1).padStart(2, "0");
+        return now.getFullYear() + "-" + m;
+      }
+
+      function setMonthFilter(value, triggerFetch) {
+        const normalized = value ? String(value).slice(0, 7) : "";
+        state.filters.periodType = "month";
+        state.filters.mes = normalized;
+        if (normalized) {
+          state.filters.year = normalized.split("-")[0];
+          periodState.currentYear = Number(state.filters.year);
+        }
+        periodState.viewMode = "month";
+        updateMonthDisplay();
+        if (triggerFetch) fetchProgramableNegocios();
+      }
+
+      function setYearFilter(year, triggerFetch) {
+        const normalizedYear = Number(year);
+        if (!Number.isFinite(normalizedYear)) return;
+        state.filters.periodType = "year";
+        state.filters.year = String(normalizedYear);
+        state.filters.mes = "";
+        periodState.currentYear = normalizedYear;
+        periodState.yearPageStart = normalizedYear - 6;
+        periodState.viewMode = "year";
+        updateMonthDisplay();
+        if (triggerFetch) fetchProgramableNegocios();
+      }
+
+      function setEstadoFilter(value) {
+        state.filters.estado = value || "all";
+        updateEstadoDisplay();
+        renderTable(state.rows);
+      }
+
+      function updateMonthDisplay() {
+        $("#pm-filter-mes").val(state.filters.mes || "");
+        $("#pm-filter-year").val(state.filters.year || "");
+        renderPeriodDisplay();
+      }
+
+      function updateEstadoDisplay() {
+        $("#pm-filter-estado").val(state.filters.estado || "all");
+      }
+
+      function setProgramacionFilter(value) {
+        state.filters.programacion = value || "all";
+        updateProgramacionDisplay();
+        renderTable(state.rows);
+      }
+
+      function setClienteFilter(value) {
+        state.filters.cliente = String(value || "").trim();
+        renderTable(state.rows);
+      }
+
+
+      function updateProgramacionDisplay() {
+        $("#pm-filter-programacion").val(state.filters.programacion || "all");
+      }
+
+
+      function formatMonthLabel(value) {
+        if (!value || value.length < 7) return value;
+        const parts = value.split("-");
+        const year = parts[0];
+        const monthIndex = Number(parts[1]) - 1;
+        const label = MONTH_LABELS[monthIndex] || parts[1];
+        return label + " " + year;
+      }
+
+      // Convierte de input date (YYYY-MM-DD) a formato 4D (DD-MM-YYYY)
+      function normalizeProgramacionDate(value) {
+        if (!value) return "00-00-00";
+        const str = String(value).slice(0, 10);
+        if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+          const parts = str.split("-");
+          return parts[2] + "-" + parts[1] + "-" + parts[0];
+        }
+        if (/^\d{2}-\d{2}-\d{4}$/.test(str)) {
+          return str;
+        }
+        return "00-00-00";
+      }
+
+      // Convierte de formato 4D (DD-MM-YYYY / 00-00-00) o ISO a formato input date (YYYY-MM-DD)
+      function toInputDate(value) {
+        if (!value) return "";
+        const str = String(value).trim();
+        if (str === "00-00-00" || str === "00-00-0000") return "";
+        if (/^\d{4}-\d{2}-\d{2}/.test(str)) {
+          return str.slice(0, 10);
+        }
+        if (/^\d{2}-\d{2}-\d{4}$/.test(str)) {
+          const parts = str.split("-");
+          return parts[2] + "-" + parts[1] + "-" + parts[0];
+        }
+        return "";
+      }
+
+      /* Deshabilitar filas por Agrupacion */
+      function splitPipe(v) {
+        return String(v || "").split("|").map(s => s.trim()).filter(Boolean);
+      }
+
+      function syncLocksFromGruposFacturacion(done) {
+        $.ajax({
+          url: "/4DACTION/_MASIVO_getGruposFacturacion",
+          dataType: "json"
+        })
+          .done(function (data) {
+            const grupos = (data && (data.rows || data.grupo || [])) || [];
+            const map = {};
+
+            grupos.forEach(g => {
+              const gid = String(g.id_grupo || "").trim();
+              splitPipe(g.id_negocios_programacion).forEach(idNeg => {
+                map[String(idNeg)] = gid;
+              });
+            });
+
+            state.lockedNegocios = map;
+            if (typeof done === "function") done();
+          })
+          .fail(function () {
+            state.lockedNegocios = {};
+            if (typeof done === "function") done();
+          });
+      }
+
+      function isNegocioLocked(negocio4Did) {
+        return !!state.lockedNegocios[String(negocio4Did)];
+      }
+
+      function getLockedGroupId(negocio4Did) {
+        return state.lockedNegocios[String(negocio4Did)] || "";
+      }
+
+      function isRowLockedByFolio(folio) {
+        const row = state.rows.find(r => getRowId(r) === String(folio));
+        const negocioId = row ? String(row.id || "") : "";
+        return negocioId ? isNegocioLocked(negocioId) : false;
+      }
+
+      function deactivateRow(id, $row) {
+        state.auto[id] = false;
+
+        const $tr = ($row && $row.length)
+          ? $row
+          : $('#programador-masivo-table-body').find('tr[data-id="' + id + '"]');
+
+        $tr.find(".auto-toggle-input").prop("checked", false);
+        $tr.find(".status-pill").text("Sin programación");
+      }
+
+      function isValidEmail(email) {
+        const s = String(email || "").trim();
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s);
+      }
+
+      function normalizeTextForMatch(s) {
+        return String(s || "")
+          .toLowerCase()
+          .normalize("NFD")              // separa acentos
+          .replace(/[\u0300-\u036f]/g, "") // quita acentos
+          .trim();
+      }
+
+      function findForbiddenWord(text, forbiddenList) {
+        const t = normalizeTextForMatch(text);
+
+        for (const w of forbiddenList) {
+          const word = normalizeTextForMatch(w);
+          if (!word) continue;
+
+          // match por palabra completa (evita errores de "inutilidad" por ejemplo)
+          const re = new RegExp(`\\b${escapeRegExp(word)}\\b`, "i");
+          if (re.test(t)) return w;
+        }
+        return null;
+      }
+
+      function escapeRegExp(s) {
+        return String(s).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      }
+      async function facturarNegocio(idNegocio) {
+
+        if (!idNegocio) {
+          errors.push({ idNegocio: null, message: "No se encontró ID de negocio" });
+
+        }
+
+        
+
+        // Check si correo y monto por facturar válidos
+        const tipoEx = String(state.rowExchangeType[idNegocio] || "CLP").trim().toUpperCase();
+        const correo = String(state.rowNotify[idNegocio] || "").trim();
+        if (!correo) {
+          toastr.error("Debe haber Correo para facturar");
+          return;
+        }
+        let monto, porFacturar;
+        monto = Number(state.montoAFacturar[idNegocio] ?? state.montoAFacturar[idNegocio] ?? 0);
+        if (tipoEx === "CLP") {
+          porFacturar = Number(state.rowPorFacturarCLP[idNegocio] ?? 0);
+        } else {
+          porFacturar = Number(state.rowPorFacturarEX[idNegocio] ?? 0);
+        }
+        if (!(monto > 0)) {
+          toastr.error("Monto a facturar inválido");
+          return;
+        }
+        if (monto > porFacturar) {
+          toastr.error("El monto a facturar no puede ser mayor que el por facturar");
+          return;
+        }
+
+
+        try {
+
+          const negocio = await fetchNegocioById(idNegocio);
+          if (!negocio) {
+            errors.push({ idNegocio, message: "No se encontró el negocio en _V3_getNegocio" });
+          }
+
+
+          // sacas datos desde "negocio"
+          const correo = negocio.correo_programacion;
+          const monto = negocio.monto_facturacion;
+          const fecha = negocio.fecha_programacion;
+          const porFacturar = negocio.saldo_por_facturar;
+
+          const ex = pickExchangeFromNegocio(negocio);
+
+          if ((porFacturar - monto) < 0) {
+            toastr.error("Salto por facturar es menor al Monto a facturar. Intente con un valor menor.")
+            state.auto[idNegocio] = false;
+            return;
+          }
+
+          const payloadFactura = {
+            id_negocio: negocio.id,
+            negocio_id: negocio.id,
+            folio: negocio.folio,
+            correo_programacion: correo,
+            monto: monto,
+            fecha: normalizeFechaProgramacion(fecha),
+            exchange_x_neg: ex.exchange_x_neg,
+            exchange_type: ex.exchange_type,
+            exchange_rate: ex.exchange_rate
+          };
+
+          const facturaResp = await createFactura(payloadFactura);
+
+          const payloadComprobante= {
+            id: facturaResp?.id_dtv,
+            folio: parseInt(facturaResp?.folio),
+            fecha: normalizeFechaProgramacionFromDate(new Date()),
+            tipo_factura: "FACTURA ELECTRONICA",
+          }
+
+          if (!facturaResp?.success) {
+            errors.push({ idNegocio, message: facturaResp?.errorMsg || "Error al crear factura en 4D", raw: facturaResp });
+          } else {
+            createComprobante(payloadComprobante);
+            toastr.success(`Factura Creada Exitosamente. Factura número: ${facturaResp?.folio}`)
+          }
+
+
+
+          if (correo && correo.trim() !== "") {
+            const today = normalizeFechaProgramacionFromDate(new Date());
+            enviarCorreoFacturaEmitida({
+              correo: "darael@unabase.com",//negocio.email_programacion.trim() ?? "",
+              cliente: negocio.empresa.razon_social ?? "",
+              idNegocio: idNegocio,
+              monto: state.montoAFacturar[idNegocio],
+              folio: negocio.folio || "",
+              fecha: today,
+              hostname: window.location.host,
+              agenteEmail: v3_data_username_email,
+              agenteName: v3_data_username_name
+            });
+          }
+
+        } catch (err) {
+          errors.push({ idNegocio, message: err?.message || String(err) });
+        }
+        fetchProgramableNegocios()
+      }
+
+      async function facturarNegociosAgrupados(negociosSeleccionados) {
+        function buildGrupoDesdeSeleccion(negociosSeleccionados) {
+          
+          const errors = [];
+
+          const folios = (negociosSeleccionados || []).map(String).filter(Boolean);
+          if (!folios.length) {
+            toastr.error("No hay folios seleccionados.");
+            return null;
+          }
+
+          const negocioIds = [];
+          const montos = [];
+          const clienteIds = [];
+
+          for (const folio of folios) {
+            // 1) encontrar row en state.rows
+            const row = (state.rows || []).find(r => String(getRowId(r)) === String(folio) || String(r.folio) === String(folio));
+            if (!row) {
+              toastr.error(`No se encontró el folio ${folio} en la grilla.`);
+              return null;
+            }
+            
+            // 2) idNegocio (interno)
+            const idNegocio = String(getNegocioInternalId(row) || row.id || "");
+            if (!idNegocio) {
+              toastr.error(`No se pudo resolver idNegocio para folio ${folio}.`);
+              return null;
+            }
+
+            // 3) clienteId desde state.clienteId (como pediste)
+            //    fallback por si no existe
+            const clienteId = Number(state.clienteId?.[folio] ?? row.empresa?.id ?? row.empresa_id ?? 0);
+            if (!clienteId) {
+              toastr.error(`No se pudo resolver clienteId para folio ${folio}.`);
+              return null;
+            }
+
+            // 4) monto a facturar desde state.montoAFacturar[folio]
+            const monto = Number(state.montoAFacturar?.[folio] ?? 0);
+            if (!(monto > 0)) {
+              toastr.error(`Monto inválido para folio ${folio}.`);
+              return null;
+            }
+
+            negocioIds.push(idNegocio);
+            montos.push(String(monto));
+            clienteIds.push(clienteId);
+          }
+
+          // Validación: todos los clienteId iguales
+          const uniqueCliente = Array.from(new Set(clienteIds.map(String)));
+          if (uniqueCliente.length > 1) {
+            toastr.error("No se pudo facturar: el cliente es diferente entre los seleccionados.");
+            return null;
+          }
+
+          const idCliente = Number(uniqueCliente[0]);
+
+          // “grupo” con el shape que necesitas
+          return {
+            id_negocios_programacion: negocioIds.join("|"),
+            id_clientes_programacion: idCliente,
+            monto_facturar_programacion: montos.join("|"),
+
+            // opcionales por consistencia con tu backend (puedes dejarlos o sacarlos)
+            estado_programacion: true,
+            tipo_fecha_programacion: "manual",
+            fecha_programacion: "",      // o today si quieres
+            dia_semanal_programacion: "",
+            exchange_rate: 0,
+            exchange_type: "",
+            exchange_x_neg: false,
+            id_grupo: null
+          };
+        }
+
+
+        const errors = [];
+
+        if (!Array.isArray(negociosSeleccionados) || !negociosSeleccionados.length) {
+          toastr?.warning?.("Selecciona al menos 1 negocio.");
+          return { success: false, errors };
+        }
+
+
+        // Negocios Validos para facturar
+        for (const negocioRaw of negociosSeleccionados) {
+          const folio = String(negocioRaw);
+          const tipoEx = String(state.rowExchangeType?.[folio] || "CLP").trim().toUpperCase();
+          const correo = String(state.rowNotify?.[folio] || "").trim();
+          if (!correo) {
+            toastr?.error?.(`No se puede facturar: falta correo en Negocio ${folio}.`);
+            return { success: false, errors };
+          }
+          const row = (state.rows || []).find(r => String(getRowId(r)) === folio);
+          let monto = 0;
+          let porFacturar = 0;
+          monto = Number(state.montoAFacturar?.[folio] ?? state.montoAFacturar?.[folio] ?? 0);
+          if (tipoEx === "CLP") {
+            porFacturar = Number( state.rowPorFacturarCLP?.[folio] ?? row?.saldo_por_facturar ?? 0 );
+          } else {
+            porFacturar = Number( state.rowPorFacturarEX?.[folio] ?? row?.saldo_por_facturar_exchange ?? row?.saldo_por_facturar ?? 0 );
+          }
+          if (!(monto > 0)) {
+            toastr?.error?.(`No se puede facturar: monto inválido en folio ${folio}.`);
+            return { success: false, errors };
+          }
+
+          if (monto > porFacturar) {
+            toastr?.error?.(`No se puede facturar: monto (${monto}) > por facturar (${porFacturar}) en folio ${folio}.`);
+            return { success: false, errors };
+          }
+        }
+
+
+
+        // 1) Armar "grupo virtual" desde la selección
+        const grupoVirtual = buildGrupoDesdeSeleccion(negociosSeleccionados);
+        if (!grupoVirtual) return { success: false, errors };
+
+        const negocioIds = parsePipe(grupoVirtual.id_negocios_programacion);
+        const montos = parsePipe(grupoVirtual.monto_facturar_programacion).map(Number);
+
+        // 2) Validar en backend
+        const negocios = [];
+        const exList = [];
+        for (let i = 0; i < negocioIds.length; i++) {
+          const idNegocio = negocioIds[i];
+          const monto = Number(montos[i] || 0);
+
+          if (!(monto > 0)) {
+            toastr?.error?.(`Monto inválido para negocio ${idNegocio}.`);
+            errors.push({ idNegocio, message: "Monto inválido", raw: { monto } });
+            return { success: false, errors };
+          }
+
+          const row = (state.rows || []).find(r =>
+            String(getNegocioInternalId(r) || r.id || "") === String(idNegocio)
+          );
+
+          const folio = row ? String(getRowId(row) || row.folio || "") : "";
+
+          // Si no pude resolver folio desde la grilla, intento igual con el id (por si coincide)
+          const negocio = await fetchNegocioById(folio || idNegocio);
+
+          if (!negocio) {
+            toastr?.error?.(`No se encontró el negocio en _V3_getNegocio (folio: ${folio || "?"}).`);
+            errors.push({ idNegocio, folio, message: "No se encontró el negocio en _V3_getNegocio" });
+            return { success: false, errors };
+          }
+          if (!negocio) {
+            toastr?.error?.(`No se encontró el negocio ${idNegocio} en _V3_getNegocio.`);
+            errors.push({ idNegocio, message: "No se encontró negocio en _V3_getNegocio" });
+            return { success: false, errors };
+          }
+
+          const saldo = Number(negocio.saldo_por_facturar || 0);
+          if ((saldo - monto) < 0) {
+            toastr?.error?.(`Saldo por facturar menor al Monto a facturar (Negocio ${idNegocio}).`);
+            errors.push({ idNegocio, message: "Saldo < monto", raw: { saldo, monto } });
+            return { success: false, errors };
+          }
+
+          const ex = pickExchangeFromNegocio(negocio, row);
+          exList.push(ex);
+          negocios.push(negocio);
+        }
+
+        // 3) Validar mismo cliente
+        const clienteIds = new Set(
+          negocios.map(n => String(n?.empresa?.id ?? n?.empresa_id ?? ""))
+            .filter(Boolean)
+        );
+
+        if (clienteIds.size > 1) {
+          toastr?.error?.("No se puede facturar agrupado: los negocios seleccionados tienen distinto Cliente ID.");
+          errors.push({ message: "Múltiples cliente_id", raw: Array.from(clienteIds) });
+          return { success: false, errors };
+        }
+
+        // 4) Construir payload agrupado
+        const idsPipe = negocioIds.join("|");
+        const montosPipe = montos.map(v => String(Number(v) || 0)).join("|");
+
+        // correo/fecha
+        const correo = (negocios.map(n => safeStr(n.correo_programacion)).find(Boolean) || "");
+        const fecha = normalizeFechaProgramacion(new Date())
+
+        const anyXNeg = exList.some(e => !!e.exchange_x_neg);
+        const typeSet = new Set(exList.map(e => String(e.exchange_type || "")));
+        const rateSet = new Set(exList.map(e => String(Number(e.exchange_rate || 0))));
+        const exchange_type = [...typeSet][0] || "CLP";
+        const exchange_rate = [...rateSet][0] || 0;
+        let groupExchange = {
+          exchange_x_neg: anyXNeg,
+          exchange_type: exchange_type,
+          exchange_rate: exchange_rate
+        };
+
+
+        const payloadAgrupado = {
+          ...grupoVirtual,
+
+          // asegura pipes consistentes
+          id_negocios_programacion: idsPipe,
+          monto_facturar_programacion: montosPipe,
+          correo_programacion: correo,
+          fecha_programacion: fecha,
+
+          // fake Params
+          id_grupo: null,
+          tipo_fecha_programacion: "manual",
+          dia_semanal_programacion: "",
+          // Tipo de Cambio
+          exchange_x_neg: groupExchange.exchange_x_neg,
+          exchange_type: groupExchange.exchange_type,
+          exchange_rate: groupExchange.exchange_rate
+
+        };
+        const params = buildParamsProgramacion(payloadAgrupado).toString();
+        // 5) Crear factura agrupada (una sola petición)
+        let facturaResp;
+        try {
+          facturaResp = await createFacturaAgrupada(params);
+        } catch (e) {
+          toastr?.error?.("Error inesperado al crear factura agrupada.");
+          errors.push({ message: e?.message || String(e), raw: e });
+          return { success: false, errors };
+        }
+
+        if (!facturaResp?.success) {
+          toastr?.error?.(facturaResp?.errorMsg || "Error al crear factura agrupada.");
+          errors.push({ message: "Error creando factura agrupada", raw: facturaResp });
+          return { success: false, errors };
+        }
+        const payloadComprobante= {
+          id: facturaResp?.dtv[0],
+          folio: parseInt(facturaResp?.folio),
+          fecha: normalizeFechaProgramacionFromDate(new Date()),
+          tipo_factura: "FACTURA ELECTRONICA",
+        }
+        
+        createComprobante(payloadComprobante);
+        toastr?.success?.(`Factura agrupada creada exitosamente. Folio: ${facturaResp?.folio || "—"}`);
+
+        // 6) Email (si hay correo)
+        if (correo) {
+          const montoTotal = montos.reduce((s, v) => s + (Number(v) || 0), 0);
+          const clienteName =
+            negocios[0]?.empresa?.razon_social ||
+            negocios[0]?.empresa?.alias ||
+            "";
+
+          enviarCorreoFacturaEmitida({
+            correo: 'darael@unabase.com',//,
+            cliente: clienteName,
+            idNegocio: idsPipe, // muestra que fue agrupada
+            monto: montoTotal,
+            folio: facturaResp?.folio || "",
+            fecha: normalizeFechaProgramacionFromDate(new Date()),
+            hostname: window.location.origin,
+            agenteEmail: window.v3_data_username_email,
+            agenteName: window.v3_data_username_name
+          });
+        }
+        fetchProgramableNegocios()
+      }
+
+      // Helper: si todas las fechas vienen iguales => úsala, si no => vacío (que backend decida) o hoy
+      function pickFechaProgramacion(negocios) {
+        const fechas = negocios
+          .map(n => normalizeFechaProgramacion(n.fecha_programacion))
+          .filter(Boolean);
+
+        if (!fechas.length) return "";
+        const first = fechas[0];
+        return fechas.every(f => f === first) ? first : "";
+      }
+
+      function enviarCorreoFacturaEmitida({ correo, cliente, idNegocio, monto, folio, fecha, hostname, agenteName, agenteEmail }) {
+        const fmtMoney = (n) =>
+          Number(n || 0).toLocaleString("es-CL", {
+            style: "currency",
+            currency: "CLP",
+            maximumFractionDigits: 0
+          });
+
+        const html = `
+    <html>
+      <head>
+        <meta charset="utf-8" />
+        <style>
+          body { font-family: Arial, Helvetica, sans-serif; color:#111; padding:20px; }
+          .card { max-width:600px; margin:auto; border-radius:10px; border:1px solid #e5e7eb; padding:20px; }
+          h2 { margin-top:0; color:#1f2937; }
+          .info { margin: 14px 0; }
+          .label { color:#6b7280; font-size:12px; }
+          .value { font-size:12px; font-weight:600; }
+          .footer { font-size:12px; color:#6b7280; margin-top:20px; }
+        </style>
+      </head>
+
+      <body>
+        <div class="card">
+          <h2>Factura emitida automáticamente</h2>
+          <p>Estimado(a),</p>
+          <p>Le informamos que su factura del negocio fue emitida exitosamente.</p>
+
+          <div class="info">
+            <div class="label">Cliente:</div>
+            <div class="value">${cliente || "Sin nombre"}</div>
+          </div>
+
+          <div class="info">
+            <div class="label">Negocio ID:</div>
+            <div class="value">${idNegocio}</div>
+          </div>
+
+          <div class="info">
+            <div class="label">Monto facturado:</div>
+            <div class="value">${fmtMoney(monto)}</div>
+          </div>
+
+          <div class="info">
+            <div class="label">Folio Factura:</div>
+            <div class="value">${folio || "Sin folio"}</div>
+          </div>
+
+          <div class="info">
+            <div class="label">Fecha emisión:</div>
+            <div class="value">${fecha}</div>
+          </div>
+
+          <div class="info">
+            <div class="label">Ejecutivo emisor:</div>
+            <div class="value">${agenteName} - ${agenteEmail}</div>
+          </div>
+
+          <p class="footer">
+            Este mensaje fue generado automáticamente por el programador de Unabase.<br/>
+            Host: ${hostname}
+          </p>
+        </div>
+      </body>
+    </html>
+  `;
+
+        const toReal = (correo || "").trim();
+        if (!toReal) {
+          console.warn("[EMAIL] No se envió: correo destinatario vacío.");
+          return $.Deferred().resolve({ success: false, message: "Destinatario vacío" }).promise();
+        }
+
+        // si no te pasan hostname, usa el actual
+        const host = (window.location.origin || "").trim();
+        if (!host) {
+          console.warn("[EMAIL] No se envió: hostname vacío.");
+          return $.Deferred().resolve({ success: false, message: "Hostname vacío" }).promise();
+        }
+
+        const payload = {
+          template: "bill_facturation",
+          to: toReal,
+          subject: `Factura emitida automaticamente - Negocio #${idNegocio}`,
+          msg: html,
+          hostname: host,
+          username: "programador_masivo"
+        };
+
+        return $.ajax({
+          url: `https://${window.location.host}/node/generic-email-interno`,
+          method: "POST",
+          contentType: "application/json; charset=utf-8",
+          dataType: "json",
+          data: JSON.stringify(payload)
+        })
+          .done(function (resp) {
+            console.log("[EMAIL] Enviado OK:", resp);
+            console.log(`[EMAIL] Notificación enviada a ${toReal}`);
+          })
+          .fail(function (jqXHR) {
+            const msg =
+              (jqXHR && jqXHR.responseJSON && (jqXHR.responseJSON.message || jqXHR.responseJSON.error)) ||
+              (jqXHR && jqXHR.responseText) ||
+              "Error enviando correo";
+            console.error("[EMAIL] FAIL:", msg);
+          });
+      }
+
+      console.log(errors);
+
+    })();
+
+    async function fetchNegocioById(idNegocio) {
+      const id = Array.isArray(idNegocio) ? idNegocio[0] : idNegocio;
+      const resp = await $.ajax({
+        url: "/4DACTION/_V3_getNegocio",
+        dataType: "json",
+        method: "POST",
+        data: {
+          q: String(id || ""),
+        }
+      });
+
+      const rows = Array.isArray(resp?.rows) ? resp.rows : [];
+      return rows[0] || null;
+    }
+
+    async function createFactura(payloadFactura) {
+      const resp = await $.ajax({
+        url: `/4DACTION/_MASIVO_creaFactura`,
+        method: "POST",
+        dataType: "json",
+        data: payloadFactura,
+      });
+
+      return resp || null;
+    }
+
+    async function createComprobante(payloadComprobante) {
+      const resp = await $.ajax({
+        url: `/4DACTION/_V3_generadtv_manual`,
+        method: "POST",
+        dataType: "json",
+        data: payloadComprobante,
+      });
+
+      return resp || null;
+    }
+
+    const normalizeFechaProgramacion = (value) => {
+      const str = safeStr(value);
+      if (!str || str === '00-00-00' || str === '00-00-0000') return '';
+      // 4D: DD-MM-YYYY
+      if (/^\d{2}-\d{2}-\d{4}$/.test(str)) return str;
+      // ISO: YYYY-MM-DD
+      if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+        const [y, m, d] = str.split('-');
+        return `${d}-${m}-${y}`;
+      }
+      return '';
+    };
+
+    const normalizeFechaParaElectronico = (value) => {
+      const str = safeStr(value);
+
+      const [y, m, d] = str.split('-');
+      return `${d}/${m}/${y}`;
+    };
+
+    const normalizeFechaProgramacionFromDate = (date) => {
+      if (!(date instanceof Date)) return ""; 
+      if (Number.isNaN(date.getTime())) return "";   // Date inválido
+
+      const dd = String(date.getDate()).padStart(2, "0");
+      const mm = String(date.getMonth() + 1).padStart(2, "0");
+      const yyyy = date.getFullYear();
+
+      return `${yyyy}-${mm}-${dd}`;
+    };
+
+    const safeStr = (val) => {
+      if (val === undefined || val === null) return '';
+      if (typeof val === 'string') return val.trim();
+      if (typeof val === 'number' && Number.isFinite(val)) return String(val);
+      const s = String(val).trim();
+      if (!s || s.toLowerCase() === 'nan' || s.toLowerCase() === 'undefined') return '';
+      return s;
+    };
+
+    /* Helpers para grupoFacturacion */
+    const getContacto = async (id) => {
+      const url = `${baseUrl}/4DACTION/_V3_getContacto?q=${id}&filter=id`;
+      const resp = await fetch(url);
+      return resp.json();
+    };
+
+
+    const parsePipe = (v) => String(v ?? "").split("|").map(s => s.trim()).filter(Boolean);
+
+    async function createFacturaAgrupada(payload) {
+      const resp = await $.ajax({
+        url: `/4DACTION/_MASIVO_creaFacturaAgrupada`,
+        method: "POST",
+        dataType: "json",
+        data: payload
+      });
+      return resp || null;
+    }
+
+    function buildParamsProgramacion(row) {
+      const params = new URLSearchParams();
+      params.set("exchange_x_neg", String(row.exchange_x_neg ?? "false"));
+
+      params.set(`cliente_1`, String(row.id_clientes_programacion ?? ""));
+      params.set(`fecha_1`, String(row.fecha_programacion ?? ""));
+      params.set(`recepcion_fecha_1`, String(row.recepcion_fecha_programacion ?? row.fecha_programacion ?? ""));
+      params.set(`negocios_1`, String(row.id_negocios_programacion ?? ""));
+      params.set(`montos_1`, String(row.monto_facturar_programacion ?? ""));
+      params.set(`exchange_type_1`, String(row.exchange_type ?? "CLP"));
+      params.set(`exchange_rate_1`, String(row.exchange_rate ?? 1));
+
+
+      return params;
+
+    }
+
+    function buildGlosaProgramacionDefault(nombreNegocio, id) {
+
+      // Guard “estático” dentro de la función (una vez por id)
+      buildGlosaProgramacionDefault._savedIds ??= new Set();
+
+      const raw = String(nombreNegocio || "").trim();
+      if (!raw) return "";
+
+      const parts = raw.split(/\s*\/\/\s*/).map(p => p.trim()).filter(Boolean);
+      if (parts.length < 2) return raw;
+
+      const cliente = parts[0];
+      const referencia = parts[1];
+
+      let glosa = "";
+      if (parts.length >= 3) {
+        const lugar = parts.slice(2).join(" // ");
+        glosa = `${SERVICES_GLOSA} PARA ${cliente} PARA ${referencia} EN ${lugar}`;
+      } else {
+        glosa = `${SERVICES_GLOSA} PARA ${cliente} PARA ${referencia}`;
+      }
+
+      // === POST aquí mismo ===
+      const idNegocio = String(id || "").trim();
+      if (idNegocio && glosa && !buildGlosaProgramacionDefault._savedIds.has(idNegocio)) {
+        buildGlosaProgramacionDefault._savedIds.add(idNegocio);
+        
+        $.ajax({
+          url: "/4DACTION/_MASIVO_setNegocio",
+          method: "POST",
+          dataType: "json",
+          data: {
+            id_negocio: idNegocio,
+            glosa_programacion: glosa
+          }
+        }).fail(function () {
+          // si falló, permite reintentar más adelante
+          buildGlosaProgramacionDefault._savedIds.delete(idNegocio);
+        });
+      }
+
+      return glosa;
+    }
+
+    function pickExchangeFromNegocio(negocio, fallbackRow) {
+      const type = safeStr( negocio?.exchange?.type ?? "CLP" );
+      const xNeg = (type !== "CLP");
+      const rate = Number( negocio?.exchange?.rate ?? 1 ) || 1;
+      return { exchange_x_neg: xNeg, exchange_type: type || "CLP", exchange_rate: rate };
+    }
+
+
+    const formatDateToday = (date) => {
+        const d = String(date.getDate()).padStart(2, '0');
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const y = date.getFullYear();
+        return `${d}-${m}-${y}`; // DD-MM-YYYY
+    };
+
+    function formatCurrencyExchange(n, tipo) {
+      const code = String(tipo || "CLP").trim().toUpperCase() || "CLP";
+      const v = Number(n) || 0;
+
+      let formatted = "";
+      if (
+        window.unaBase &&
+        window.unaBase.utilities &&
+        typeof window.unaBase.utilities.transformNumber === "function"
+      ) {
+        formatted = window.unaBase.utilities.transformNumber(v, "int");
+      } else {
+        formatted = v.toLocaleString("es-CL");
+      }
+
+      // tipo a la izquierda del signo $
+      return code + " $ " + formatted;
+    };
+
+    function deriveEstadoNegocio(row) {
+      // 1) Si viene explícito como string
+      const raw = String(row?.estado || "").toLowerCase();
+      if (raw.includes("cerrado")) return "cerrado";
+      if (raw.includes("proceso")) return "en_proceso";
+
+    }
+
+    
+
+    
+
+
+  </script>
+</body>
+
+</html>

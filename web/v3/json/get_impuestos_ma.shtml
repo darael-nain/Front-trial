@@ -1,0 +1,26 @@
+{	
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([impuestos]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"sort": {
+		"by": "<!--#4DTEXT sort_by-->",
+		"order": "<!--#4DTEXT sort_order-->"
+	},
+	"rows": [
+<!--#4DLOOP aIdImp -->
+		{
+			"id": <!--#4DTEXT aIdImp{aIdImp}-->,
+			"valor": <!--#4DHTML string(aValorImp{aIdImp};"&xml")-->,
+			"tipo": "<!--#4DHTML _V3_escapeString(aTipoImp{aIdImp})-->",
+			"descripcion": "<!--#4DHTML _V3_escapeString(aDesImp{aIdImp})-->",
+			"estado": <!--#4DIF aEstadoImp{aIdImp}-->true<!--#4DELSE -->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aIdImp{aIdImp} = aIdImp{Size of array(aIdImp)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

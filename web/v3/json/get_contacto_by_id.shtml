@@ -1,0 +1,13 @@
+{
+	"id": <!--#4DHTML [Contacto]Id_Cont-->,
+	"nombre" : "<!--#4DHTML _V3_escapeString([Contacto]Nombre_Cont)-->",
+	"paterno" : "<!--#4DHTML _V3_escapeString([Contacto]Paterno_Cont)-->",
+	"materno" : "<!--#4DHTML _V3_escapeString([Contacto]Materno_cont)-->",
+	"nombre_completo" : "<!--#4DHTML _V3_escapeString([Contacto]nombre_completo)-->",
+	"razon" : "<!--#4DHTML _V3_escapeString([Contacto]Razon_Cont)-->",
+	"giro" : "<!--#4DHTML _V3_escapeString([Contacto]Giro_Cont)-->",
+	"telefono_1" : "<!--#4DHTML _V3_escapeString([Contacto]Telefono1_Cont)-->",
+	"telefono_2" : "<!--#4DHTML _V3_escapeString([Contacto]Telefono2_Cont)-->",
+	"email" : "<!--#4DHTML _V3_escapeString([Contacto]Email_Cont)-->",
+	"relacionados": []
+}

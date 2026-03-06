@@ -1,0 +1,62 @@
+{
+	"exchange": {
+		"type": "<!--#4DTEXT exchange_type-->",
+		"rate": <!--#4DHTML String(exchange_rate;"&xml")-->
+	},
+	"totales": {
+		"total_neto": "<!--#4DHTML _V3_formatCurrency(totalNetoNegocio)-->",
+		"total_facturas": "<!--#4DHTML _V3_formatCurrency(totalfacturas)-->",
+		"total_nota_de_credito": "<!--#4DHTML _V3_formatCurrency(totalNC)-->",
+		"total_Facturado": "<!--#4DHTML _V3_formatCurrency(totalFacturado)-->",
+		"total_por_facturar": "<!--#4DHTML _V3_formatCurrency(totalPorFacturar)-->",
+		"saldo_por_cobrar": "<!--#4DHTML _V3_formatCurrency(saldoPorCobrar)-->",
+		"total_cobrado": "<!--#4DHTML _V3_formatCurrency(totalCobrado)-->",
+		"total_a_cobrar": "<!--#4DHTML _V3_formatCurrency(totalACobrar)-->",
+		"total_neto_raw": "<!--#4DHTML String(totalNetoNegocio;"&xml")-->",
+		"total_facturas_raw": "<!--#4DHTML String(totalfacturas;"&xml")-->",
+		"total_nota_de_credito_raw": "<!--#4DHTML String(totalNC;"&xml")-->",
+		"total_Facturado_raw": "<!--#4DHTML String(totalFacturado;"&xml")-->",
+		"total_por_facturar_raw": "<!--#4DHTML String(totalPorFacturar;"&xml")-->",
+		"saldo_por_cobrar_raw": "<!--#4DHTML String(saldoPorCobrar;"&xml")-->",
+		"total_cobrado_raw": "<!--#4DHTML String(totalCobrado;"&xml")-->",
+		"total_a_cobrar_raw": "<!--#4DHTML String(totalACobrar;"&xml")-->"
+	},
+	"rows": [
+<!--#4DLOOP aIdFactListaNV-->
+		{
+			"id": <!--#4DHTML aIdFactListaNV{aIdFactListaNV}-->,
+			"folio": "<!--#4DHTML aFolioFactListaNV{aIdFactListaNV}-->",
+			"descripcion" : <!--#4DIF (Not(Undefined(aDescripcionItemDtvs)) & Not(Undefined(aDescripcionItemDtvs{aIdFactListaNV})))-->"<!--#4DHTML _V3_escapeString(aDescripcionItemDtvs{aIdFactListaNV})-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+			"referencia": "<!--#4DHTML _V3_escapeString(aReferenciaDtvs{aIdFactListaNV})-->",
+			"tipoDocumentoVentaAbrev": "<!--#4DHTML tipoDocumentoVentaAbrev{aIdFactListaNV}-->",
+			"fechaEmision": "<!--#4DHTML aFEmiFactListaNV{aIdFactListaNV}-->",
+			"rut": "<!--#4DHTML _V3_escapeString(aRutFactListaNV{aIdFactListaNV})-->",
+			"cliente": "<!--#4DHTML _V3_escapeString(aClienteFactListaNV{aIdFactListaNV})-->",
+			"exchange_monto_facturado": "<!--#4DTEXT aExchangeNetoFactListaNV{aIdFactListaNV})-->",
+			"totalNeto": "<!--#4DHTML _V3_formatCurrency(aNetoFactListaNV{aIdFactListaNV})-->",
+			"totalNeto_raw": "<!--#4DHTML String(aNetoFactListaNV{aIdFactListaNV};"&xml")-->",
+			"totalExento": "<!--#4DHTML _V3_formatCurrency(aExentoFactListaNV{aIdFactListaNV})-->",
+			"totalExento_raw": "<!--#4DHTML String(aExentoFactListaNV{aIdFactListaNV};"&xml")-->",
+			"iva": "<!--#4DHTML _V3_formatCurrency(aIvaFactListaNV{aIdFactListaNV})-->",
+			"iva_raw": "<!--#4DHTML String(aIvaFactListaNV{aIdFactListaNV};"&xml")-->",
+			"totalFactura": "<!--#4DHTML _V3_formatCurrency(aTotalFactListaNV{aIdFactListaNV})-->",
+			"totalFactura_raw": "<!--#4DHTML String(aTotalFactListaNV{aIdFactListaNV};"&xml")-->",
+			"porCobrar": "<!--#4DHTML _V3_formatCurrency(aPorCobrarListaNV{aIdFactListaNV})-->",
+			"porCobrar_raw": "<!--#4DHTML String(aPorCobrarListaNV{aIdFactListaNV};"&xml")-->",
+			"cobrado": "<!--#4DHTML _V3_formatCurrency(aCobradoListaNV{aIdFactListaNV})-->",
+			"cobrado_raw": "<!--#4DHTML String(aCobradoListaNV{aIdFactListaNV};"&xml")-->",
+			"diff_cambio": "<!--#4DHTML aDiffCambio{aIdFactListaNV}-->",
+			"comision": "<!--#4DHTML aComisionBancaria{aIdFactListaNV}-->",
+			"estado": "<!--#4DHTML aEstFactListaNV{aIdFactListaNV}-->",
+			"responsable": "<!--#4DHTML aResFactListaNV{aIdFactListaNV}-->",
+			"negocios": "<!--#4DHTML $idsNvss{aIdFactListaNV}-->",
+			"nc": "<!--#4DHTML aNCFactListaNV{aIdFactListaNV}-->",
+			"nd": "<!--#4DHTML aNDFactListaNV{aIdFactListaNV}-->",
+			"is_nc": <!--#4DIF aIsNCListaNV{aIdFactListaNV}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"is_nd": <!--#4DIF aIsNDListaNV{aIdFactListaNV}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	
+			"id_ref": <!--#4DHTML aIdFactRefListaNV{aIdFactListaNV}-->
+		}<!--#4DIF NOT(aIdFactListaNV{aIdFactListaNV} = aIdFactListaNV{Size of array(aIdFactListaNV)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

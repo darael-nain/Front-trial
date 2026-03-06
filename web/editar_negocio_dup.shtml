@@ -1,0 +1,107 @@
+<!--#4DINCLUDE head.shtml-->
+<body>
+<!--#4DIF vSesion>0-->
+<!--#4DINCLUDE mensajes.shtml-->
+<!--#4DINCLUDE menuSuperior.shtml-->
+<section>
+<input id="type-comision1" type="hidden" value="<!--#4DVAR typeComision1-->" />
+<input id="type-comision2" type="hidden" value="<!--#4DVAR typeComision2-->" />
+<input id="type-comision3" type="hidden" value="<!--#4DVAR typeComision3-->" />
+
+<h1>Editar proyecto</h1>
+    <article>
+        <form  name="frmeditarnegocio" id="frmeditarnegocio" action="/4DACTION/W_ACTUALIZA_NEG" method="post">
+            <input name="id_nv" type="hidden" value="<!--#4DVAR id_nv-->" />
+            <input id="accion" name="accion" type="hidden" value="ACTUALIZAR" />
+            <fieldset>
+                <legend>DATOS DEL CLIENTE</legend>
+                <div><span>Razon social :</span><span><!--#4DVAR v_razon--></span></div>
+                <div><span>Rut :</span><span><!--#4DVAR v_rut--></span></div>
+                <div><span>Alias :</span><span><!--#4DVAR v_alias--></span></div>
+                <div><span>Giro :</span><span><!--#4DVAR v_giro--></span></div>
+                                        
+                <div>            
+                    <label>Contactos : </label>
+                    <!--#4DIF vcant_contactos>0-->
+                    <select id="cboContacto" name="cboContacto">
+                        <option selected="selected" value="<!--#4DVAR v_id_contacto_sel-->"><!--#4DVAR v_nombre_contacto_sel--></option>
+                        <!--#4DLOOP w_a_id_relacionado-->
+                        <!--#4DIF v_id_contacto_sel#w_a_id_relacionado{w_a_id_relacionado}-->
+                        <option value="<!--#4DVAR w_a_id_relacionado{w_a_id_relacionado}-->">
+                        <!--#4DVAR w_a_nom_relacionado{w_a_id_relacionado}-->
+                        </option>
+                        <!--#4DENDIF-->
+                        <!--#4DENDLOOP-->         			               
+                    </select>
+                    <!--#4DELSE-->
+                    <span>No se encontraron contactos asociados!</span>
+                    <!--#4DENDIF-->
+                </div>
+                     
+            </fieldset>
+                        
+            <fieldset>                              
+                <legend>DATOS DEL NEGOCIO</legend>
+                <div><span>Proyecto :</span><span><input class="referencias" id="referencianeg" name="referencianeg" type="text" value="<!--#4DVAR v_proyecto-->"></span></div>                               
+                <div><span>Id Negocio :</span><span><!--#4DVAR v_id_negocio--></span></div>
+                <div><span>Estado :</span><span><!--#4DVAR v_estado--></span></div> 
+                <div><span>Emisor :</span><span><!--#4DVAR v_emisor--></span></div>
+                <div><span>Fecha Emision :</span><span><!--#4DVAR v_fecha_emision--></span></div>                                    
+            </fieldset>
+                        
+            <fieldset>                              
+                <legend>ITEMS DEL NEGOCIO</legend>
+                <div style= "overflow:auto; height:400px;"><!--#4DINCLUDE item_negocio.shtml--></div>                                           
+            </fieldset>           
+            <!--#4DINCLUDE totales_negocio.shtml-->                                      
+            <fieldset>
+                <legend>CONDICIONES GENERALES</legend>
+                <div id="condiciones-necogio">
+                    <label for="condicionespago">Condiciones de pago : </label>           
+                    <select id="formapago" name="formapago">
+                      <option selected="selected" value="<!--#4DVAR v_id_fpago-->"><!--#4DVAR v_nombre_fpago--></option>
+                            <!--#4DLOOP aIdFormas_1-->
+                            <!--#4DIF v_id_fpago#aIdFormas_1{aIdFormas_1}-->
+                            <option value="<!--#4DVAR aIdFormas_1{aIdFormas_1}-->">
+                            <!--#4DVAR aFormas_pago1{aIdFormas_1}-->
+                            </option>
+                            <!--#4DENDIF-->
+                            <!--#4DENDLOOP-->         			               
+                  </select>         
+                <label for="notas">Notas : </label>
+                <textarea name="notas"  id="notas" cols="10" rows="10"><!--#4DVAR v_nota--></textarea>
+                </div>
+                       
+            </fieldset>           
+            <p>
+           
+            	<button title="GUARDAR" class="button-inf" onClick="enviarEditarNeg()" type="button">
+                	<img src="/imagenes/disk.png" border="0" />
+                	<span>Guardar</span>
+                </button> 
+                <button title="LIMPIAR" class="button-inf" type="reset">
+                	<img src="/imagenes/arrow_undo.png" border="0" />
+                	<span>Deshacer</span>
+                </button>
+                <button title="CANCELAR" class="button-inf" type="button" onClick="confirmCancelarNeg()">
+                	<img src="/imagenes/cancel.png" border="0" />
+                	<span>Cancelar</span>
+                </button>
+                <button title="IMPRIMIR" class="button-inf" type="button" onClick="window.open('/4DACTION/outEmailNeg/<!--#4DVAR id_nv-->/<!--#4DVAR vLogin-->');">
+                	<img src="/imagenes/printer.png" border="0" />
+                	<span>Imprimir</span>
+                </button>
+               
+                                                 
+            </p>
+        </form>                          
+    </article>         
+</section>
+<!--#4DELSE-->
+<p>
+    LA SESI&Oacute;N HA EXPIRADO...!!!
+    <a class="enlaces" href="index.shtml?t=<!--#4DVAR String(Milliseconds+Random(2))-->">VOLVER A INICIAR</a>
+</p>
+<!--#4DENDIF-->       
+</body>
+</html>

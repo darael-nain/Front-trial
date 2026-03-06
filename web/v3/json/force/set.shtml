@@ -1,0 +1,7 @@
+{
+	
+	"success": <!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+	"id_version": <!--#4DIF Not(Undefined($id_version))-->"<!--#4DTEXT $id_version-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+	"errorMsg": "<!--#4DTEXT errorMsg-->"
+	
+}

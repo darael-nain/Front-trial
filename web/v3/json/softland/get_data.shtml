@@ -1,0 +1,9 @@
+{
+	"rows": [
+        <!--#4DLOOP idSoftlandLines -->
+		{
+			"line": "<!--#4DHTML _V3_escapeString(a{idSoftlandLines})-->"
+		}<!--#4DIF NOT(idSoftlandLines{idSoftlandLines} = idSoftlandLines{Size of array(idSoftlandLines)})-->,<!--#4DENDIF-->
+        <!--#4DENDLOOP-->
+	]
+}

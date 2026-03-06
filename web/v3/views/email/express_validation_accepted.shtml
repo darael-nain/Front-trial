@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html>
+	<!--#4DSCRIPT/_V3_serverInfo-->
+	<!--#4DSCRIPT/_V3_proxy_getValidaExpressOK-->
+	<head>
+		<script>
+		var existeRegla = <!--#4DIF existeRegla-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+		var criterioAprobado = <!--#4DIF criterioAprobado-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+		var modulo = "<!--#4DTEXT modulo-->";
+		var tabla = "<!--#4DTEXT tabla-->";
+		var template ="print"
+		var documentoEstaValidado = <!--#4DIF documentoEstaValidado -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+		var textoValidacion = "<!--#4DHTML textoValidacion-->";
+
+		var userEmisor = "<!--#4DTEXT userEmisor-->";
+		var username ="<!--#4DHTML userName-->";
+		var userValidador = "<!--#4DHTML userValidador-->";
+		var nameValidador = "<!--#4DHTML nameValidador-->";
+		var emailValidador = "<!--#4DHTML emailValidador-->";
+		var motivo="";
+
+		var envioCorreoAutomatico = <!--#4DIF Not(Undefined(envioCorreoAutomatico))--><!--#4DIF envioCorreoAutomatico-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DENDIF-->;
+
+		var id = "<!--#4DTEXT id-->";
+		var index = "<!--#4DTEXT index-->";
+		var iddoc = "<!--#4DTEXT iddoc-->";
+		var tipoGasto = "OC";
+
+
+		let nameContacto = "<!--#4DTEXT nameContacto-->";
+		let emailContacto = "<!--#4DTEXT emailContacto-->";
+		let userEmisorEmail= "<!--#4DTEXT userEmisorEmail-->";
+
+		// files names cot, oc , fxr
+		var file_name_internal_cot = '<!--#4DTEXT file_name_internal_cot-->';
+		var file_name_oficial_cot = '<!--#4DTEXT file_name_oficial_cot-->';
+		var file_name_oficial_oc = '<!--#4DTEXT file_name_oficial_oc-->';
+		var file_name_oficial_fxr = '<!--#4DTEXT file_name_oficial_fxr-->';
+		</script>
+
+		<title>Validación aceptada</title>
+		<meta charset="utf-8">
+		<script src="/v3/script/jquery/jquery.js"></script>
+		<script src="/v3/script/jquery/plugins/jquery-ui/js/jquery-ui.js"></script>
+		<script src="/v3/script/jquery/plugins/jquery-cookie/jquery.cookie.js"></script>
+		<script src="/v3/script/unabase.js?<!--#4DTEXT _V3_version-->"></script>
+		<script src="/v3/script/jquery/plugins/bindWithDelay/bindWithDelay.js"></script>
+		<script src="/v3/script/jquery/plugins/tooltipster/js/jquery.tooltipster.js"></script>
+		<script src="/v3/script/help.js?<!--#4DTEXT _V3_version-->"></script>
+		<script src="/v3/script/jquery/plugins/toastr/toastr.js"></script>
+		<script src="/v3/script/sprintf.js"></script>
+		<script  type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+		<script>
+
+			window.onbeforeunload = undefined;
+
+			var hash = '<!--#4DHTML _V3_hash-->';
+			var nodejs_port = "<!--#4DHTML _V3_nodejs_port-->";
+			var nodejs_public_ipaddr = "<!--#4DHTML _V3_nodejs_public_ipaddr-->";
+			var serviceNode = "<!--#4DHTML serviceNode-->";
+			var serviceNodeUrl =true;
+
+			var nodeUrl = `https://frank.unabase.com/node`;
+			//var nodeUrl = `https://v3dev.unabase.com/node`;
+			console.log(nodeUrl);
+
+
+			var refreshLogValidacion = function() {
+				
+				const target = $('ul.steps');
+				var mostrarStatusIntermedio = true;
+				
+				$.ajax({
+					url: '/4DACTION/_V3_setLogValidacion',
+					data: {
+						id: id,
+						approved: true
+					},
+					async:false,
+					dataType: 'json',
+					success: function(data) {
+
+						console.warn(data);
+						if (data.success) {
+							$(".wait").text("Espere mientras se valida, favor no cerrar la ventana!");
+							
+							$.ajax({
+								url: '/4DACTION/_V3_getLogValidacionByIndex',
+								data: {
+									id: iddoc,
+									index: index,
+									tablita: 'Nota_de_venta'
+								},
+								async:false,
+								dataType: 'json',
+								success: function(data) {
+									
+									var max_jerarquia = 0;
+									var max_priority = 0;
+
+									for (var i = 0; i < data.rows.length; i++)
+										max_jerarquia = (data.rows[i].jerarquia > max_jerarquia)? data.rows[i].jerarquia : max_jerarquia;
+
+									for (var i = 0; i < data.rows.length; i++)
+										max_priority = (data.rows[i].priority > max_priority)? data.rows[i].priority : max_priority;
+
+									var valid_rules = 0;
+									var approved_rules = 0;
+									var rejected_rules = 0;
+
+									var valid_steps = 0;
+									var approved_steps = 0;
+									var rejected_steps = 0;
+
+									for (var z = 0; z <= max_priority; z++) { // 35	
+
+										for (var i = 1; i <= max_jerarquia; i++) { // 1
+											var htmlObject = $('<li><ul></ul></li>');
+											
+											var results = [];
+											for (var k = 0; k < data.rows.length; k++) {
+												if (data.rows[k].jerarquia == i && data.rows[k].priority == z) {
+													results.push(data.rows[k]);
+												}
+											}
+
+											if (results.length > 0) {
+
+												var current = results[0];
+												if (current.required)
+													htmlObject.find('ul').addClass('and');
+												else
+													htmlObject.find('ul').addClass('or');
+
+												var required = false;
+												var local_valid_steps = 0;
+												var local_passed_steps = 0;
+												var local_approved_steps = 0;
+												var local_rejected_steps = 0;
+
+												if (data.rows.length > 0)
+													$('ul.steps').closest('article').show();
+
+												for (var j = 0; j < results.length; j++) { // 
+													var current = results[j];		
+													if (current.jerarquia === i) {
+
+														local_valid_steps++;
+
+														subHtmlObject = $('<li style="text-align: left;"><div style="display: inline-block;"><div class="motivo" style="display: inline-block; font-style: italic; width: 450px;"></div> <span class="name" style="text-transform: capitalize; display: inline-block; width: 200px;"></span></div><span class="indicator ui-icon"></span><button class="approve" style="vertical-align middle; width: auto; font-size: 10px !important; height: 24px !important;">Validar</button><button class="reject" style="width: auto; font-size: 10px !important; height: 24px !important; vertical-align: middle;">Rechazar</button><small class="action" style="margin-left: 10px;font-size: 10px;"></small></li>');
+
+														subHtmlObject.data('id', current.id);
+														subHtmlObject.data('username', current.username);
+														subHtmlObject.data('observacion', current.observacion);
+														subHtmlObject.data('updated-at', current.updated_at);
+														subHtmlObject.find('span.name').text(current.full_name);
+														subHtmlObject.find('div.motivo').text(current.motivo);		
+
+														if (current.approved === true) {
+															subHtmlObject.find('span.indicator').addClass('ui-icon-check');
+															local_passed_steps++;
+															local_approved_steps++;
+														} if (current.updated_at === null) {
+															subHtmlObject.find('span.indicator').addClass('ui-icon-help');
+														} if (current.approved === false && current.updated_at !== null) {
+															subHtmlObject.find('span.indicator').addClass('ui-icon-closethick');
+															local_passed_steps++;
+															local_rejected_steps++;
+														}
+
+														if (current.username.toLowerCase() == current.username.toLowerCase()) {
+
+															subHtmlObject.find('button.approve').button({
+																icons: {
+																	primary: 'ui-icon-check'
+																}
+															}).click(function(event) {
+																// Acciones al aprobar validación
+																var that = event.target;
+																var validate_id = $(this).parentTo('li').data('id');
+																$.ajax({
+																	url: '/4DACTION/_V3_setLogValidacion',
+																	data: {
+																		id: $(this).parentTo('li').data('id'),
+																		approved: true
+																	},
+																	async:false,
+																	dataType: 'json',
+																	success: function(data) {
+																		if (data.success) {
+
+																			toastr.success(NOTIFY.get('SUCCESS_VALIDACION_ACCEPT'));
+																			$('#menu > ul > li[data-name^="validate_"]').hide();
+
+																			refreshLogValidacion(true);
+
+																		} else{
+																			toastr.error(NOTIFY.get('ERROR_RECORD_READONLY'));
+																		}
+																	}
+																});
+															});
+
+															subHtmlObject.find('button.reject').button({
+																icons: {
+																	primary: 'ui-icon-closethick'
+																}
+															}).click(function(event) {
+																var that = event.target;
+																// Acciones al rechazar validación
+																var htmlObject = $('<section> \
+																	<span>Ingrese motivo de rechazo</span> \
+																	<textarea name="response" required placeholder="Requerido..."></textarea> \
+																</section>');
+																htmlObject.find('textarea').on('blur change', function() {
+																	htmlObject.data('response', $(this).val());
+																});
+																prompt(htmlObject).done(function(data) {
+																	var promptData = data;
+																	console.log('promptData', promptData);
+																	if (promptData !== false)
+																		$.ajax({
+																			url: '/4DACTION/_V3_setLogValidacion',
+																			data: {
+																				id: $(that).parentTo('li').data('id'),
+																				approved: false,
+																				observacion: promptData
+																			},
+																			async:false,
+																			dataType: 'json',
+																			success: function(data) {
+																				if (data.success) {
+																					toastr.success(NOTIFY.get('SUCCESS_VALIDACION_REJECT'));
+																					$('#menu > ul > li[data-name^="validate_"]').hide();
+																					// Enviar correo validación rechazada
+																					var username = $('.sheet').data('username');
+																					var current_username = $('html > body.menu.home > aside > div > div > h1').data('username');
+																					//var record_name = $('input[name="oc[tipo_gastos][des]"]').val();
+																					var record_name = 'Gasto';
+																					var index = $('.sheet').data('index');
+																					var text = '[' + $(that).parentTo('li').find('div.motivo').text().substring(9) + '] / ' + $('input[name="oc[referencia]"]').val();
+
+																					var usernames = [];
+
+
+
+																					// if ($('.sheet').data('username') != current_username)
+																					//	usernames.push($('.sheet').data('username'));
+																					// FIX: correos dobles
+																					usernames.push(username);
+
+																					/* $('ul.steps > li > ul > li').each(function() {
+																						if ($(this).data('username') != current_username) {
+																							var username = $(this).data('username');
+																							if (usernames.indexOf(username) == -1)
+																								usernames.push(username);
+																						}
+																					}); */
+
+																					for (k in usernames) {
+
+																						if (compras.tipoGasto == "OC") {
+																							record_name = "Orden de Compra"
+																						}else{
+																							record_name = "Rendición de fondos"
+																						}
+
+																						unaBase.inbox.send({
+																							to: usernames[k],
+																							subject: 'Rechazó validar ' + record_name + ' Nº ' + index + ' / ' + text,
+																							into: 'viewport',
+																							href: '/v3/views/compras/content.shtml?id=' + $('.sheet').data('id'),
+																							tag: 'avisos'
+																						});
+
+																						compras.saveLogsFromWeb({
+																							'id' : compras.id,
+																							'folio' : index,
+																							'descripcion' : 'Ha rechazado validar el gasto',
+																							'modulo' :  'gastos',
+																							'descripcion_larga' : ''
+																						});
+
+																					}
+
+																					refreshLogValidacion(true);
+
+																				} else
+																					toastr.error(NOTIFY.get('ERROR_RECORD_READONLY'));
+																			}
+																		});
+																});
+															});
+
+														} else {
+															subHtmlObject.find('button.approve').remove();
+															subHtmlObject.find('button.reject').remove();
+															
+															if (subHtmlObject.find('span.indicator').hasClass('ui-icon-help'))
+																subHtmlObject.find('small.action').text('Esperando acción del usuario');
+														}
+
+														htmlObject.find('ul').append(subHtmlObject);
+
+														if (current.required)
+															required|= current.required;
+																																					
+													}
+												}
+
+												if (required) {
+													if (local_valid_steps == local_approved_steps)
+														htmlObject.find('ul').addClass('approved');
+													if (local_valid_steps == local_rejected_steps)
+														htmlObject.find('ul').addClass('rejected');
+												} else {
+													if (local_passed_steps > 0)
+														htmlObject.find('ul').addClass('approved');
+													if (local_rejected_steps > 0)
+														htmlObject.find('ul').addClass('rejected');
+												}
+
+												target.append(htmlObject);
+											} 
+
+										}
+
+										var valid_steps = target.find('> li').length;
+										var approved_steps = target.find('> li').has('ul.approved').length;
+										var rejected_steps = target.find('> li').has('ul.rejected').length;
+										
+										valid_rules++;
+
+										if (valid_steps == approved_steps || valid_steps == rejected_steps) {
+											if (valid_steps == approved_steps) {
+												approved_rules++;
+											}
+											if (valid_steps == rejected_steps) {
+												rejected_rules++;
+											}
+										}
+
+									}
+
+									if (valid_rules == approved_rules || valid_rules == rejected_rules) {
+										if (valid_rules == approved_rules) {
+
+											if (tabla == "nota_de_venta") {
+												$.ajax({
+													url: '/4DACTION/_V3_setCotizacion',
+													data: {
+														id: iddoc,
+														'cotizacion[approved_email]': true
+													},
+													async:false,
+													dataType: 'json',
+													success: function(data) {
+														if (data.success) {
+															// $(".status").text("El documento ha sido completamente validado.");
+															
+
+															mostrarStatusIntermedio = false;
+
+															var record_name = "Cotización";
+															var moduleName = "cotizaciones";	
+
+															
+																let paramsData = {
+																	to: username,
+																	toName: username,
+																	userValidator: userValidador,
+																	nameValidator: nameValidador,
+																	emailValidator: emailValidador,
+																	toEmail: userEmisorEmail,
+																	template: 'validation_accepted',
+																	document: record_name,
+																	index: data.index,
+																	title: data.text,
+																	motivo: motivo,
+																	extra: undefined,
+																	detail_uri: 'cotizaciones/content.shtml',
+																	id_item: data.id,
+																	attach: true,
+																	moduleName
+																}
+																const email = import("../../script/unabase/email.js?"+ String(Math.random + 1234));
+																email.then(functions => {	
+																functions.notifyRequestValidationOC(paramsData);
+																});
+
+												        
+
+																//to,
+															  //template,
+															  //document,
+															  //index,
+															  //title,
+															  //extra,
+															  //detail_uri,
+															  //id_item,
+															  //attach,
+															  //userValidator,
+															  //nameValidator,
+															  //emailValidator,
+															  //print_negocio,
+															  //msgBody,
+															  //isEjecutivoResponsable,
+															  //moduleName,
+															  //id_usuario_notificacion
+
+														
+														// unaBase.inbox.send({
+														// 	to: entry.username,
+														// 	subject:'Aceptó validar ' + record_name + ' Nº ' + data.index + ' / ' + data.text,
+														// 	into: 'viewport',
+														// 	href: '/v3/views/cotizaciones/content.shtml?id=' + data.id,
+														// 	tag: 'avisos',
+														// 	current_username : userValidador
+														// });
+
+													
+															//text: htmlObject.find('div')[0].outerHTML + msg 
+
+
+															// unaBase.email.notify(userEmisor, 'validation_accepted', record_name, data.index, data.text, null, 'cotizaciones/content.shtml', data.id, true, userValidador, nameValidador, emailValidador, undefined, undefined, undefined, moduleName, undefined);
+
+															// unaBase.inbox.send({
+															// 	to: userEmisor,
+															// 	subject: 'Aceptó validar ' + record_name + ' Nº ' + data.index + ' / ' + data.text,
+															// 	into: 'viewport',
+															// 	href: '/v3/views/cotizaciones/content.shtml?id=' + data.id,
+															// 	tag: 'avisos',
+															// 	current_username : userValidador
+															// });
+
+														}
+													}
+												});
+
+											}else{
+												
+												$.ajax({
+													url: '/4DACTION/_V3_setCompras',
+													data: {
+														id: iddoc,
+														'oc[approved_email]': true
+													},
+													async:false,
+													dataType: 'json',
+													success: function(data) {
+														if (data.success) {
+															// $(".status").text("El documento ha sido completamente validado.");
+
+															mostrarStatusIntermedio = false;
+
+															var moduleName = "";
+
+															if (data.tipoGasto == "OC") {
+																record_name = "Orden de Compra";
+																moduleName = "compras";
+															}else{
+																record_name = "Rendición de fondos";
+																moduleName = "compras";
+															}
+
+															 const email = import("../../script/unabase/email.js?"+ String(Math.random + 1323234442234));
+															
+															 var paramsData2;
+															 var paramsData3;
+															 var paramsData;
+															 //Enviar oc al portal de proveedores
+															//  const compras = import("../../script/unabase/email.js?"+ String(Math.random + 1234));
+														    //  compras.sendToPortalProveedores()
+															
+															paramsData = {
+																to: userEmisorEmail,
+																toName: "",
+																userValidator: userValidador,
+																nameValidator: nameValidador,
+																emailValidator: emailValidador,
+																toEmail: userEmisorEmail,
+																template: 'validation_accepted',
+																document: record_name,
+																index: data.index,
+																title: data.referencia,
+																extra: undefined,
+																detail_uri: 'compras/content.shtml',
+																id_item: data.id,
+																attach: true,
+																moduleName
+															}
+												       
+												       
+															if (envioCorreoAutomatico)  {
+
+
+																paramsData = {
+																	to: userEmisorEmail,
+																	toName: "",
+																	userValidator: userValidador,
+																	nameValidator: nameValidador,
+																	emailValidator: emailValidador,
+																	toEmail: userEmisorEmail,
+																	template: 'validation_accepted',
+																	document: record_name,
+																	index: data.index,
+																	title: data.referencia + "/          Ha sido enviada al correo de proveedor : " + emailContacto,
+																	extra: undefined,
+																	detail_uri: 'compras/content.shtml',
+																	id_item: data.id,
+																	attach: true,
+																	moduleName
+																}
+
+																	// Correo automatico al contacto al validar
+																paramsData2 = {
+																	to: emailContacto,
+																	toName: userEmisor,
+																	userValidator: userEmisor,
+																	nameValidator: userEmisor,
+																	emailValidator: emailValidador,
+																	toEmail: emailContacto,
+																	nameContacto:nameContacto,
+																	emailContacto:emailContacto,
+																	template: 'envio_gasto',
+																	document: record_name,
+																	index: data.index,
+																	title: data.referencia,
+																	motivo: motivo,
+																	extra: undefined,
+																	detail_uri: 'compras/content.shtml',
+																	id_item: data.id,
+																	attach: true,
+																	moduleName
+																}
+												       
+												        		
+
+												        //correo automatico de confirmacion al validador
+												        		paramsData3 = {
+																	to: emailValidador,
+																	toName: nameValidador,
+																	userValidator: nameValidador,
+																	nameValidator: nameValidador,
+																	emailValidator: emailValidador ,
+																	toEmail: emailValidador,
+																	nameContacto:"",
+																	emailContacto:emailValidador,
+																	template: 'validation_accepted',
+																	document: record_name,
+																	index: data.index,
+																	title: data.referencia + "/          Ha sido enviada al correo de proveedor : "+emailContacto,
+																	motivo: motivo,
+																	extra: undefined,
+																	detail_uri: 'compras/content.shtml',
+																	id_item: data.id,
+																	attach: true,
+																	moduleName
+																}
+
+															}
+													
+
+
+												         
+												        email.then(functions => {
+												        	functions.notifyRequestValidationOC(paramsData);
+												        	if (envioCorreoAutomatico) {
+												        			var logCE='Se ha validado el gasto y enviado a correo de proveedor : '+ emailContacto;
+
+												        		functions.notifyRequestValidationOC(paramsData2);	
+												          		functions.notifyRequestValidationOC(paramsData3);
+												          		unaBase.log.save(logCE, 'gastos', data.index, data.id);
+												        	}
+												        	
+												        });
+
+
+
+															// unaBase.email.notify(userEmisor, 'validation_accepted', record_name, data.index, data.referencia, null, 'compras/content.shtml', data.id, true, userValidador, nameValidador, emailValidador, undefined, undefined, undefined, moduleName, undefined);
+															
+														
+
+															// unaBase.inbox.send({
+															// 	to: usernames[k],
+															// 	subject: 'Aceptó validar ' + record_name + ' Nº ' + index + ' / ' + text,
+															// 	into: 'viewport',
+															// 	href: '/v3/views/compras/content.shtml?id=' + $('section.sheet').data('id'),
+															// 	tag: 'avisos'
+															// });
+
+
+															unaBase.inbox.send({
+																to: userEmisor,
+																subject: 'Aceptó validar ' + record_name + ' Nº ' + data.index + ' / ' + data.referencia,
+																into: 'viewport',
+																href: '/v3/views/compras/content.shtml?id=' + data.id,
+																tag: 'avisos',
+																current_username : userValidador
+															});
+															
+
+														}
+													}
+												});
+
+											}
+
+										}
+
+									}
+									
+									
+									
+									setTimeout(function(){
+										$(".wait").text("");
+										$(".status").text("Validación realizada con éxito.");
+									}, 2500);
+									
+
+
+									setTimeout(function(){
+										window.close();
+									}, 5000);
+
+								}
+
+							});
+						
+						} else{
+							if(data.estado === 'ANULADA'){
+								toastr.error('No es posible validar, este documento se encuentra anulado.');
+							}else{
+								toastr.error(NOTIFY.get('ERROR_RECORD_READONLY'));
+							}
+						}
+					}
+				});
+				
+			};
+			
+			$(document).ready(function(){
+				if (existeRegla) {
+					if (!documentoEstaValidado) {
+						if (!criterioAprobado) {
+							// setTimeout(function(){
+								
+							// refreshLogValidacion();
+							// }, 5000);
+									
+
+							refreshLogValidacion();
+								
+						}else{
+							$(".status").html("<div class='caution'>El criterio ya fue validado.</div><div style='color:black;font-size:18px'>"+ textoValidacion +"</div>");
+							setTimeout(function(){
+								window.close();
+							}, 4000);
+						}
+					}else{
+						$(".status").html("<div class='caution'>El documento ya se encuentra validado.</div><div style='color:black;font-size:18px;display:none'>"+ textoValidacion +"</div>");
+						setTimeout(function(){
+							window.close();
+						}, 4000);
+					}
+				}else{
+					$(".status").html("<div class='caution'>¡Ups! El criterio no existe. <div>Posiblemente la validación fue reiniciada.</div></div>");
+					setTimeout(function(){
+						window.close();
+					}, 4000);
+				}
+			});
+		</script>
+
+		<style type="text/css">
+			body{
+				font-size:20pt!important;
+			}
+
+			div.status, div.sendmail,div.wait {
+				text-align:center;
+			}
+
+			div.status{
+				color:green;
+				font-size: 1em;
+				font-weight:bold;
+			}	
+			div.wait{
+				color: orange;
+				font-size: 1em;
+				font-weight:bold;
+			}
+
+			.caution{
+				text-align:center;
+				color:#FF800D;
+				font-size: 1em;
+				font-weight:bold;
+			}
+			.cautionv{
+				text-align:center;
+				color:green;
+				font-size: 1em;
+				font-weight:bold;
+			}
+			h1{
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		
+		<article class="sheet" style="display:none">
+			<article id="scrollval">
+				<h1>Validaciones</h1>
+				<h2><strong>Estado</strong> <span></span> <span></span></h2>
+				<ul class="steps"></ul>
+				<a class="css-link" href="#" onclick="javascript:unaBase.loadInto.dialog('/v3/views/comentarios/content.shtml?id=<!--#4DTEXT [Orden_de_compra]Id_OCompra-->&mod=compras', 'Mensajes registrados', 'small');">Ver mensajes de validación</a>
+			</article>
+		</article>
+
+		<h1><img src="/v3/design/html/body.menu/nav/h1.png"></h1>
+		<div class="status"></div>
+		<div class="wait"></div>
+		<div class="actions" style="display:none">
+			<a style="font-size: inherit !important; display: inline-block !important; padding: 10px!important; background-color: rgb(67,175,124) !important; border: 1px solid rgb(67,175,124) !important; border-radius: 3px !important; margin: 5px 10px 5px 10px!important; color: white; text-decoration: none" href="http://' + window.location.hostname + ':' + window.location.port + '/v3/views/email/express_validation_accepted.shtml?i=' + validaciones[i]['ids'][j] + '&v=666">Validar</a>
+			<a style="font-size: inherit !important; display: inline-block !important; padding: 10px!important; background-color: rgb(204,51,0) !important; border: 1px solid rgb(204,51,0) !important; border-radius: 3px !important; margin: 5px 10px 5px 10px!important; color: white; text-decoration: none" href="http://' + window.location.hostname + ':' + window.location.port + '/v3/views/email/express_validation_rejected.shtml?i=' + validaciones[i]['ids'][j] + '&v=666">Rechazar</a>
+		</div>
+		<div class="sendmail" style="display: none;">
+			<a style="font-size: inherit !important; display: inline-block !important; padding: 10px!important; background-color: rgb(96,96,96) !important; border: 1px solid rgb(96,96,96) !important; border-radius: 3px !important; margin: 5px 10px 5px 10px!important; color: white; text-decoration: none" href="#">Enviar por email a <span></span></a>
+		</a>
+		<div id="test"></div>
+	</body>
+</html>

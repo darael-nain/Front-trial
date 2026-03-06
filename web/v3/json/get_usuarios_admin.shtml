@@ -1,0 +1,10 @@
+{	
+	"rows": [
+<!--#4DLOOP alogin-->
+		{
+			"id": "<!--#4DTEXT alogin{alogin}-->",
+			"text": "<!--#4DHTML _V3_escapeString(anombre{alogin})-->"
+		}<!--#4DIF NOT(alogin{alogin} = alogin{Size of array(alogin)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

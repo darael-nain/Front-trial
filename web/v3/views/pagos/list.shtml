@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_serverInfo-->
+<html>
+	<head>
+		<title>Pagos</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="/v3/views/compras/lista.css?54656gg4gdfdfs">
+		<style>
+			
+				.totales div.totalseleccionado{
+					position: absolute;
+					left:0px;
+					top:7px;
+				}
+
+				table.padre {
+					width: 100% !important;
+				}
+
+				.u-color-green{
+					color:#00a972;
+				}
+
+		</style>
+
+		<script>
+
+			$(document).ready(function() {
+				document.title = nombreEmpresa + ' / Pagos';
+				if (!enabledBankCards) {
+					$('.u-use-bankcards').hide();
+				}
+
+				var selectedSum = function(){
+					var finalValue = 0;
+					var target = $("table.listpayout").find("input.selected.each:checked");
+					target.each(function(){
+						var currentValue = parseFloat($(this).data("total"));
+						finalValue = finalValue + currentValue;
+					});
+					$('.totalseleccionado span').html(currency.symbol + " <strong>" + finalValue + "</strong>");
+					$('span.numeric.currency > strong').number(true, 0, ',', '.');
+				}
+
+				unaBase.toolbox.init();
+
+				// Inicializamos un buscador
+				var params = {
+					searchOff: true,
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/_V3_getPago' },
+					entity: 'Pago',
+					callback: function(data) {
+
+						// Totales
+						$('.especial .totales').find('span[data-total]').text(data.totales.total);
+
+						// Fijar header y footer
+						$('#viewport .fht-table-init').fixedHeaderTable('destroy');
+						$('#viewport table.fixed').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false });
+
+					},
+					row: {
+						html: function(i, rows) {
+
+
+							var forma_pago = '';
+							if (rows[i].FormaPago != "") {
+								forma_pago = rows[i].FormaPago;
+							}else{
+								forma_pago = '----------';
+							}
+
+							var nummero_pago = '';
+							if (rows[i].NumeroPago != "") {
+								nummero_pago = rows[i].NumeroPago;
+							}else{
+								nummero_pago = '----------';
+							}
+
+							var htmlData = '';
+							if (rows[i].folio != '')
+
+								var totalOP = currency.symbol + ' ' + $.number(rows[i].total_raw, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+								if (rows[i].monedaTipo != '') {
+									totalOP = rows[i].monedaTipo + ' ' + $.number(rows[i].total_raw/rows[i].monedaValorCambio, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+								}
+
+								htmlData = '<tr data-id="' + rows[i].id + '"' + ((rows[i].contabilizado)? ' data-contabilizado="true"' : '') + ' data-libro="'+rows[i].libro + '"' + '" data-username="' + rows[i].username + '" data-status="' + rows[i].status + '" data-estado="' + rows[i].estado + '" data-forma-pago="' + rows[i].FormaPago + '">' +
+									'<td data-goto="false" width="5%"><input class="selected each" data-total="'+rows[i].total+'" data-saldo="' + rows[i].saldo + '" type="checkbox" name="selected_one"></td>' +
+									'<td data-goto="true">' + ((rows[i].contabilizado) ? "SI" : "NO") + '</td>' +
+									'<td data-goto="true">' + ((rows[i].conciliado) ? "SI" : "NO") + '</td>' +
+									'<td data-goto="true">' + rows[i].folio + '</td>' +
+									'<td data-goto="true">' + rows[i].param4 + '</td>' +
+									'<td data-goto="true">' + rows[i].created_at + '</td>' +
+									'<td data-goto="true">' + rows[i].expires_at + '</td>' +
+									'<td data-goto="true">' + rows[i].estado + '</td>' +
+									'<td data-goto="true">' + rows[i].username + '</td>' +
+									'<td data-goto="true" class="left">' + rows[i].empresa.razon_social.trim() + '</td>' +
+									'<td data-goto="true" width="200" class="text">' + ((rows[i].text.trim() != '')? rows[i].text : 'N/A') + '</td>' +
+									'<td data-goto="true"><span>' + forma_pago + '</span>'+ ((rows[i].bankcardsConciliado)? '<i class="fa fa-check-circle fa-lg u-color-green u-use-bankcards" aria-hidden="true" style="margin-left:5px;font-size:15px;vertical-align:middle;"></i>' : '') +'</td>' +
+									'<td data-goto="true">' + nummero_pago + '</td>' +
+									'<td data-goto="true">' + totalOP + '</td>' +
+								'</tr>';
+							return htmlData;
+						}
+					},
+					detail: {
+						url: function(id) { return '/v3/views/pagos/content2.shtml?id=' + id },
+						iframe: false
+					},
+					inflection: {
+						singular: 'cotización',
+						plural: 'cotizaciones',
+						none: 'ninguna'
+					},
+					// Filtros
+					filters: [
+						{ name: 'created_at', type: 'month', caption: 'Fecha de creación', range: true },
+						{ name: 'expires_at', type: 'month', caption: 'Fecha de pago', range: true, currentMonth: true},
+						
+						{ name: 'origen', type: 'autocomplete', caption: 'Origen', dataObject: [
+							{ id: "PROYECTO", text: 'NEGOCIOS'},
+							{ id: "GASTO GENERAL", text: 'GASTOS GENERALES'},
+							{ id: "PRESUPUESTO GASTO", text: 'PRESUPUESTOS DE GASTOS'}
+						] },
+						{ name: 'por_negocio', type: 'autocomplete', caption: 'Por negocio', dataSource: 'getNegociosActivos' },
+						{ name: 'por_clasificacion', type: 'autocomplete', caption: 'Por Clasificación', dataSource: 'getClasificacionGG' },
+						{ name: 'por_presupuesto', type: 'autocomplete', caption: 'Por Presupuesto de gasto', dataSource: 'getClasificacionGG' },
+
+						{ name: 'ejecutivo_responsable', type: 'autocomplete', caption: 'Creado por', dataSource: 'getUsuariosAdmin' },
+
+						{ name: 'cuenta_cte', type: 'autocomplete', caption: 'Cuenta Corriente', dataSource: 'getCuentaCorriente' },
+
+						{ name: 'estado', type: 'checkbox', caption: 'Estado de los pagos', options: [
+							// { caption: 'En proceso', name: 'estado_en_proceso', value: true },
+							{ caption: 'Emitida', name: 'estado_emitida', value: true },
+							{ caption: 'Pagada', name: 'estado_pagada', value: false },
+							{ caption: 'Anulada', name: 'estado_nulo', value: false }
+						] },
+
+						{ name: 'tipo_pago', type: 'autocomplete', caption: 'Tipo de pago', dataSource: 'getTiposEgresos' },
+						
+				
+
+						{ name: 'contabilizado', type: 'autocomplete', caption: 'Contabilizado', dataObject: [
+							{ id: "True", text: 'Contabilizado'},
+							{ id: "False", text: 'No contabilizado'}
+						] },
+
+
+						{ name: 'tiene_pago', type: 'autocomplete', caption: '¿Tiene Pago?', dataObject: [
+							{ id: 'true', text: 'CON PAGO' },
+							{ id: 'false', text: 'SIN PAGO' }
+						]},
+
+						//{ name: 'cuenta_corriente', type: 'autocomplete', caption: 'Creado por', dataSource: 'get_cta_cte' },
+
+
+					]
+					// doubleSearch: true,
+					// secondarySearchCaption: 'Buscar por Nº de pago'
+				};
+
+
+				/*$.ajax({
+					url: '/4DACTION/_V3_getDato',
+					dataType: 'json',
+					async: false,
+					success: function(data) {
+						$.each(data.rows, function(key, item) {
+							if (item.enabled && item.options.length > 0)
+								params.filters.push({
+									name: item.nombre.replace(/ |\(|\)|\/|\?/g,"_"),
+									type: 'autocomplete',
+									caption: item.nombre,
+									dataObject: item.options
+								});
+							//if (item.enabled && item.options.length == 0)
+							//	params.filters.push({
+							//		name: item.nombre.replace(/ |\(|\)|\/|\?/g,"_"),
+							//		type: 'text',
+							//		caption: item.nombre,
+							//		dataObject: item.options
+							//	});
+							//
+						});
+					}
+				});*/
+
+				unaBase.toolbox.search.init(params);
+				unaBase.toolbox.menu.init({
+					entity: 'Pago',
+					buttons: [ 'searchOff','export_list', 'export_softland', 'export_nomina', 'list_nomina']
+				});
+
+				// Permiso usar nómina
+				if (!access._597) {
+					$('#menu ul').find('li[data-name="export_nomina"]').remove();
+					$('#menu ul').find('li[data-name="list_nomina"]').remove();
+				}
+
+				// Permiso para ver movimientos bancarios
+				/*if (!access._626) {
+					$('#menu ul').find('li[data-name="list_bank"]').remove();
+				}*/
+
+				$('#menu ul').find('li[data-name="export_softland"]').hide();
+				$('#menu ul').find('li[data-name="export_nomina"]').hide();
+
+				$('body').off('click.list-select', "**");
+				$("body").on("click.list-select", "input.selected", function(){
+					
+					var input = $(this);
+					if (input.attr('name') == "selected_all" ) {
+						if (input.prop("checked")) {
+							$('table tbody input[name="selected_one"]').prop("checked", true);
+							if(access._661){
+								$('#menu ul').find('li[data-name="export_softland"]').show();
+
+							}
+							$('#menu ul').find('li[data-name="export_nomina"]').show();
+							
+						}else{
+							$('table tbody input[name="selected_one"]').prop("checked", false);
+							$('#menu ul').find('li[data-name="export_softland"]').hide();
+							$('#menu ul').find('li[data-name="export_nomina"]').hide();
+						}
+						selectedSum();
+					}else{
+						var cantSelect = $('table > tbody > tr > td > input:checked').length;
+						if (input.prop("checked")) {
+							if(access._661){
+								$('#menu ul').find('li[data-name="export_softland"]').show();
+
+							}
+							$('#menu ul').find('li[data-name="export_nomina"]').show();
+						}else{
+							if(cantSelect == 0){
+								$('#menu ul').find('li[data-name="export_softland"]').hide();
+								$('#menu ul').find('li[data-name="export_nomina"]').hide();
+							}
+						}
+						selectedSum();
+					}
+				});
+
+				$('#search').find('input[name="por_negocio"]').closest('.autocomplete').hide();
+				$('#search').find('input[name="por_clasificacion"]').closest('.autocomplete').hide();
+				$('#search').find('input[name="por_presupuesto"]').closest('.autocomplete').hide();
+				$('#search').find('input[name="origen"]').blur(function(){
+					switch($(this).val()){
+						case '' :
+							$('#search').find('input[name="por_negocio"]').closest('.autocomplete').hide();
+							$('#search').find('input[name="por_clasificacion"]').closest('.autocomplete').hide();
+							$('#search').find('input[name="por_presupuesto"]').closest('.autocomplete').hide();
+							break;
+						case 'NEGOCIOS' :
+							$('#search').find('input[name="por_negocio"]').closest('.autocomplete').show();
+							$('#search').find('input[name="por_clasificacion"]').closest('.autocomplete').hide();
+							$('#search').find('input[name="por_presupuesto"]').closest('.autocomplete').hide();
+							break;
+						case 'GASTOS GENERALES' :
+							$('#search').find('input[name="por_negocio"]').closest('.autocomplete').hide();
+							$('#search').find('input[name="por_clasificacion"]').closest('.autocomplete').show();
+							$('#search').find('input[name="por_presupuesto"]').closest('.autocomplete').hide();
+							break;
+						case 'PRESUPUESTOS DE GASTOS' :
+							$('#search').find('input[name="por_negocio"]').closest('.autocomplete').hide();
+							$('#search').find('input[name="por_clasificacion"]').closest('.autocomplete').hide();
+							$('#search').find('input[name="por_presupuesto"]').closest('.autocomplete').show();
+							break;
+					}
+				});
+				
+			});
+		</script>
+	</head>
+	<body>
+		<!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->
+		<table class="padre listpayout results especial fixed">
+			<thead>
+				<tr>
+					<th width="5%" class="center"><div style="padding:2px">Todo</div><div><input class="selected" type="checkbox" name="selected_all"></div></th>
+					<th width="5%" >Contabilizado</th>
+					<th width="5%" >Conciliado</th>
+					<th width="5%" data-sort-by="folio" data-sort-default="desc">Número</th>
+					<th width="5%" data-sort-by="codigo" data-sort-default="desc">Codigo</th>
+					<th width="10%" data-sort-by="created_at" data-sort-default="desc">Fecha Creación</th>
+					<th width="10%" data-sort-by="expires_at" data-sort-default="desc">Fecha de pago</th>
+					<th width="10%" data-sort-default="desc">Estado</th>
+					<th width="10%">Emisor</th>
+					<th width="15%">Proveedor</th>
+					<th width="15%">Referencia</th>
+					<th width="5%">Tipo de Pago</th>
+					<th width="5%">N° Pago</th>
+					<th width="10%" data-sort-by="total" data-sort-default="desc">Total Pagado</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+			<tfoot class="totales">
+				<tr>
+					<th  width="5%"><div class="totalseleccionado"><label>Total seleccionado </label><span class="numeric currency label2"><strong>0</strong></span></div>
+					</th>
+					<th width="5%"></th>
+					<th width="5%"></th>
+					<th width="5%"></th>
+					<th width="5%"></th>
+					<th width="10%"></th>
+		            <th width="10%"></th>
+		           	<th width="5%"></th>
+		           	<th width="5%"></th>
+		            <th width="15%"></th>
+					<th width="15%"></th>
+					<th width="5%"></th>
+		            <th width="5%"></th>
+		           	<th width="10%" class="center"><span data-total="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+		        </tr>
+			</tfoot>
+		</table>
+	</body>
+
+</html>

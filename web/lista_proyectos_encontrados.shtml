@@ -1,0 +1,69 @@
+<table id="myTable" border="0" cellspacing="0" cellspadding="0" >
+	<thead>
+		<tr>
+			<th></th>
+			<th>Nro</th>
+			<th class="headerSortUp">Fecha</th>
+			<th>Nombre proyecto</th>
+			<th>Cliente</th>
+			<th>Emisor</th>
+			<th>Estado</th>         
+		</tr>
+	</thead>
+	<tbody>
+		<!--#4dloop aIdProyecto_-->
+		<tr class="table-items">
+			<td class="center">
+				<!--#4dif aPlantillaProyecto_{aIdProyecto_}-->
+					<a class="p-plantilla" rel="Plantilla">P</a>
+				<!--#4dendif-->				
+			</td>
+			<td class="center">						
+				<a target="_blank" href="/editar_proyecto.shtml?i=<!--#4DVAR aIdProyecto_{aIdProyecto_}-->&r=<!--#4DVAR String(Milliseconds+Random)-->">
+					<!--#4DVAR aFolioProyecto_{aIdProyecto_}-->
+				</a>
+			</td>
+			<td class="center">
+				<a target="_blank" href="/editar_proyecto.shtml?i=<!--#4DVAR aIdProyecto_{aIdProyecto_}-->&r=<!--#4DVAR String(Milliseconds+Random)-->">
+					<!--#4DVAR aFechaProyecto_{aIdProyecto_}-->
+				</a>
+			</td>     
+			<td class="left">
+				<a target="_blank" href="/editar_proyecto.shtml?i=<!--#4DVAR aIdProyecto_{aIdProyecto_}-->&r=<!--#4DVAR String(Milliseconds+Random)-->">
+					<!--#4DVAR uppercase(aNombreProyecto_{aIdProyecto_})-->
+				</a>
+			</td>
+			<td class="left">
+				<a target="_blank" href="/editar_proyecto.shtml?i=<!--#4DVAR aIdProyecto_{aIdProyecto_}-->&r=<!--#4DVAR String(Milliseconds+Random)-->">
+					<!--#4DVAR uppercase(aClienteProyecto_{aIdProyecto_})-->
+				</a>
+			</td>
+			<td class="center">
+				<a target="_blank" href="/editar_proyecto.shtml?i=<!--#4DVAR aIdProyecto_{aIdProyecto_}-->&r=<!--#4DVAR String(Milliseconds+Random)-->">
+					<!--#4DVAR uppercase(aLoginProyecto_{aIdProyecto_})-->
+				</a>
+			</td>
+			<td class="center">
+				<a target="_blank" href="/editar_proyecto.shtml?i=<!--#4DVAR aIdProyecto_{aIdProyecto_}-->&r=<!--#4DVAR String(Milliseconds+Random)-->">	
+					<!--#4dif aEstadoProyecto_{aIdProyecto_}=""-->
+						<span class="color-green">EN PROCESO</span>
+					<!--#4delse-->
+						<!--#4dif aEstadoProyecto_{aIdProyecto_}="EN PROCESO"-->
+							<span class="color-green"><!--#4DVAR uppercase(aEstadoProyecto_{aIdProyecto_})--></span>
+						<!--#4delse-->
+							<!--#4dif aEstadoProyecto_{aIdProyecto_}="CERRADA"-->
+								<span class="color-blue"><!--#4DVAR uppercase(aEstadoProyecto_{aIdProyecto_})--></span>
+							<!--#4delse-->
+								<span class="color-gray"><!--#4DVAR uppercase(aEstadoProyecto_{aIdProyecto_})--></span>
+							<!--#4dendif-->	
+						<!--#4dendif-->						
+					<!--#4dendif-->					
+				</a>
+			</td>                       
+		</tr>
+		<!--#4dendloop-->
+		<!--#4dif Size of array(aIdProyecto_)=0-->
+		<tr><td colspan="7"><h3 style="font-size:15px;font-weight:bold">No se encontraron resultados.</h3></td>
+		<!--#4dendif-->
+	</tbody>
+</table>

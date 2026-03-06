@@ -1,0 +1,30 @@
+{	
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Email_Reportes]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"sort": {
+		"by": "<!--#4DTEXT sort_by-->",
+		"order": "<!--#4DTEXT sort_order-->"
+	},
+	"rows": [
+<!--#4DLOOP aIdreporte -->
+		{
+			"descripcion": "<!--#4DHTML _V3_escapeString(aDescripcion{aIdreporte})-->",
+			"origen": "<!--#4DHTML _V3_escapeString(aOrigen{aIdreporte})-->",
+			"periocidad": "<!--#4DHTML _V3_escapeString(aPeriocidad{aIdreporte})-->",
+			"id": <!--#4DTEXT aIdreporte{aIdreporte}-->,
+			"totalUsuarios": <!--#4DTEXT aTotalUsuarios{aIdreporte}-->,
+			"copiara": "<!--#4DTEXT aCopiara{aIdreporte}-->",
+			"enviara": "<!--#4DTEXT aEnviara{aIdreporte}-->",
+			"hora": "<!--#4DHTML aHora{aIdreporte}-->",
+			"estado": <!--#4DIF aEstado{aIdreporte}-->true<!--#4DELSE -->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aIdreporte{aIdreporte} = aIdreporte{Size of array(aIdreporte)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

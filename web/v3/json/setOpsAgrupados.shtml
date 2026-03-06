@@ -1,0 +1,18 @@
+{
+	"success": <!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"errorMsg":  "<!--#4DHTML errorMsg-->",
+	"total":  "<!--#4DHTML total-->",
+	"ops": [
+<!--#4DLOOP aIdOpCreadas-->
+		{
+			"id": <!--#4DHTML aIdOpCreadas{aIdOpCreadas}-->,
+			"folio": "<!--#4DHTML aFoliosOpCreadas{aIdOpCreadas}-->",
+			"prov": "<!--#4DHTML _V3_escapeString(aProvOpCreadas{aIdOpCreadas})-->",
+			"referencia": "<!--#4DHTML _V3_escapeString(aRefOpCreadas{aIdOpCreadas})-->",
+			"aNumeroDoc": "<!--#4DHTML _V3_escapeString(aNumeroDoc{aIdOpCreadas})-->",
+			"numeroComp": <!--#4DHTML aNumeroComp{aIdOpCreadas}-->,
+			"monto": <!--#4DHTML String(aMontosOpCreadas{aIdOpCreadas};"&xml")-->
+		}<!--#4DIF NOT(aIdOpCreadas{aIdOpCreadas} = aIdOpCreadas{Size of array(aIdOpCreadas)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

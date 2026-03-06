@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Compras disponibles</title>
+		<meta charset="utf-8">
+		<style type="text/css">
+			.dialog{
+				position: relative;
+			}
+			.dialog #dialog-menu li[data-name="assign_accounting_dtc"] > button{
+				position: absolute!important;
+				top: 50px!important;
+				right:20px!important;
+				border: 2px solid gray!important;
+			}
+				.dialog #dialog-menu li[data-name="assign_accounting_dtc"] > button > .ui-button-text{
+					font-weight: bold;
+				}
+
+				
+		</style>
+
+		<!--<nav class="toolbox" id="dialog-menu" style="display: inline-block;">
+			<ul>
+				<li data-name="create_dtc_cero"><button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" role="button" aria-disabled="false"><span class="ui-button-icon-primary ui-icon ui-icon-document"></span><span class="ui-button-text">crear desde cero</span></button></li>
+				<li data-name="crear_dtc_asociado_oc"><button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" role="button" aria-disabled="false"><span class="ui-button-icon-primary ui-icon ui-icon-document"></span><span class="ui-button-text">Crear</span></button></li>
+			</ul>																								
+		</nav>-->
+
+		<script>
+			$(document).ready(function() {
+				
+				localStorage.setItem("id_detalle_cont",  $(`tr[data-id="${localStorage.getItem("id_detalle_comp")}"] td.contacto `)[0]?.dataset.idcont)
+
+				const id_detalle_comp = localStorage.getItem("id_detalle_comp")
+				document.getElementById("dtcs-por-asignar").dataset.iddetallecomp = id_detalle_comp;
+				
+				document.getElementById("dtcs-por-asignar").dataset.iddetallecomp = id_detalle_comp;
+				var containerdtc = $('#sheet-dtc');
+
+				unaBase.toolbox.init();
+				// Inicializamos un buscador
+				var params = {
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/_V3_viewTipoDoc' },
+					entity: 'dtc',
+					searchOff: true,
+					data: {
+						'idproveedor' : localStorage.getItem("id_detalle_cont"),
+					},
+					row: {
+						html: function(i, rows) {	
+							let tipo_registro = ""
+							if(rows[i].libro=="LIBRO_NV")
+							tipo_registro="NV"
+							else if(rows[i].libro=="LIBRO_COMPRA_OC")
+							tipo_registro="OC"
+							else if(rows[i].libro=="LIBRO_COMPRA_FXR")
+							tipo_registro="FXR"
+							else if(rows[i].libro=="PAGOS")
+							tipo_registro="OP"
+							else if(rows[i].libro=="COBROS")
+							tipo_registro="OCB"
+							else
+							 tipo_registro = typeof rows[i].libro  != 'undefined' && rows[i].libro  == 'LIBRO_V' ?  rows[i].tipoDocumentoVenta.toUpperCase().includes('NOTA')  ? 'NCV': 'DTV' : rows[i].doc.toUpperCase().includes('NOTA') ? 'NC': 'DTC'
+
+							return '<tr class="ocLine" data-id="' + rows[i].id + '" data-number="' + ((typeof rows[i].numero != 'undefined') ? rows[i].numero : rows[i].folio) + '" data-hasdtc="' + rows[i].hasDtc + '"  data-proveedor="' + rows[i].id_proveedor + '" data-doc="' + rows[i].id_tipo_doc + '">' + 
+								'<td name="numero">' + ((typeof rows[i].numero != 'undefined') ? rows[i].numero : rows[i].folio)  + '</td>' +
+								'<td >' + ((typeof rows[i].emision != 'undefined') ? rows[i].emision : rows[i].fechaEmision) + '</td>' +
+								'<td>' + ((typeof rows[i].doc != 'undefined') ? rows[i].doc : rows[i].tipoDocumentoVenta) + '</td>' +
+								//'<td class="left">' + rows[i].proveedor + '</td>' +
+								'<td class="left">' + ((typeof rows[i].referencia != 'undefined') ? rows[i].referencia : rows[i].refnegocio) + '</td>' +
+								'<td>' + rows[i].total + '</td>' +
+								'<td><input style="width:20px!important;height:20px!important" class="select" name="ocselect[id]'+rows[i].id+'" value="'+rows[i].id+'" data-doctype="'+ tipo_registro +'" type="checkbox" onchange="verifyCheck(event)"></td>' +						
+							'</tr>'
+						}
+					},
+					inflection: {
+						singular: 'negocio',
+						plural: 'negocios',
+						none: 'ningún'
+					},									
+					filters: [
+						{ name: 'created_at', type: 'month', caption: 'Fecha de emisión', range: true, currentMonth: true},
+						// { name: 'responsable', type: 'autocomplete', caption: 'Responsable', dataSource: 'getUsuario' },
+						// { name: 'area_negocio', type: 'autocomplete', caption: 'Área de negocio', dataSource: 'getAreaNegocio' },
+						
+						// { name: 'por_negocio', type: 'autocomplete', caption: 'Por negocio', dataSource: 'getNegociosActivos' },
+						// { name: 'tipo_doc', type: 'autocomplete', caption: 'Tipo Doc.', dataSource: 'getTiposDocDeVentas' },
+						// { name: 'contabilizado', type: 'autocomplete', caption: '¿Contabilizado?', dataObject: [
+						// 	{ id: false, text: 'Sin contabilizar' },
+						// 	{ id: true, text: 'Contabilizado' },
+						// ] },
+						// { name: 'estado', type: 'autocomplete', caption: 'Estado del documento', dataObject: [
+						// 	{ text: 'Por emitir', id: 'estado_por_emitir' },
+						// 	{ text: 'Emitida', id: 'estado_emitida'},
+						// 	{ text: 'Pagada', id: 'estado_pagado' },
+						// 	{ text: 'Anulada', id: 'estado_anulada'}
+						// ] },
+						// { name: 'tiene_pago', type: 'autocomplete', caption: '¿Tiene Ingreso?', dataObject: [
+						// 	{ id: 'true', text: 'CON INGRESO' },
+						// 	{ id: 'false', text: 'SIN INGRESO' }
+						// ]},
+						// { name: 'por_cobrar', type: 'checkbox', caption: 'Por cobrar', options: [
+						// 	{ caption: 'Por cobrar', name: 'por_cobrar', value: false },
+						// ] },
+						{ name: 'type_doc', type: 'autocomplete', caption: 'Tipo doc', dataObject: [
+						{ id: "doc_dtc", text: 'Doc compra'},	
+						{ id: "doc_dtv", text: 'Doc venta'},
+						{ id: "doc_neg", text: 'Negocio'},
+						{ id: "doc_oc", text: 'OC'},
+						{ id: "doc_fxr", text: 'FXR'},
+						{ id: "doc_op", text: 'Pagos'},
+						{ id: "doc_ocb", text: 'Cobros'}
+						]}
+					]
+				};
+
+ 
+
+
+				unaBase.toolbox.search.init(params);
+
+				unaBase.toolbox.menu.init({
+					entity: 'dtc_compras',
+					buttons: ['searchOff', "assign_accounting_dtc"]					  
+				});
+
+
+			
+				$(`tr.ocLine input.select[type="checkbox"]`).on("change", function(){
+					console.log(this);
+					let th = this;
+				});
+
+
+			});
+		</script>
+	</head>
+	<body>		
+		<section id="dtcs-por-asignar" class="sheet" data-iddetallecomp="">
+			<table class="results">
+				<thead>
+					<tr>
+						<th width="5%">Número</th>
+						<th width="10%">Emisión</th>
+						<th width="10%">Documento</th>
+						<!-- <th width="25%">Proveedor</th> -->
+						<th width="30%">Referencia</th>						
+						<th width="10%">Total [$]</th>
+						<th width="3%">Seleccionar</th>						
+					</tr>
+				</thead>
+				<tbody></tbody>
+				<tfoot></tfoot>
+			</table>
+		</section>
+	</body>
+</html>

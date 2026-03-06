@@ -1,0 +1,31 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML $total - 1-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP Id_OCompra-->
+		{
+			"id": <!--#4DTEXT Id_OCompra{Id_OCompra}-->,
+			"id_proveedor": <!--#4DTEXT Id_Empresa{Id_OCompra}-->,
+			"version": "<!--#4DTEXT Version_{Id_OCompra}-->",
+			"folio": "<!--#4DTEXT Folio_OC{Id_OCompra}-->",
+			"emision": "<!--#4DTEXT String(Fecha{Id_OCompra};7)-->",
+			"id_tipo_doc": "<!--#4DTEXT ID_TipoDocumento{Id_OCompra}-->",
+			"tipo": "<!--#4DHTML _V3_escapeString(FacturaTipo{Id_OCompra})-->",
+			"proveedor": "<!--#4DHTML _V3_escapeString(Razon_Proveedor{Id_OCompra})-->",
+			"referencia": "<!--#4DHTML _V3_escapeString(Referencia{Id_OCompra})-->",			
+			"total": "<!--#4DTEXT _V3_formatCurrency(Total_OC{Id_OCompra})-->",
+			"estado": "<!--#4DTEXT Estado_OC{Id_OCompra}-->",
+			"hasDtc" : <!--#4DIF hasDtc{Id_OCompra}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"saldo_por_justificar": "<!--#4DTEXT _V3_formatCurrency(Saldo_Consolidar{Id_OCompra})-->"
+		}<!--#4DIF NOT(Id_OCompra{Id_OCompra} = Id_OCompra{Size of array(Id_OCompra)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}
+

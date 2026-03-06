@@ -1,0 +1,43 @@
+{
+	"success": <!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"status":<!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"errorMsg": "<!--#4DTEXT errorMsg-->",
+	"records": {
+		"total_records": <!--#4DHTML totalRecords-->
+	},
+	
+
+	"rows": [
+	
+		<!--#4DIF totalRecords > 0-->
+			<!--#4DLOOP aId-->
+			{
+				"id": <!--#4DHTML aId{aId}-->,
+				"valor": "<!--#4DHTML aValue{aId}-->",
+				"porcentaje": "<!--#4DHTML aPercent{aId}-->",
+				"name": "<!--#4DHTML aName{aId}-->",
+				"tipo": "<!--#4DHTML aType{aId}-->",
+				"tipo_sc": "<!--#4DHTML aTypeSc{aId}-->",
+				"to_other": "<!--#4DHTML aToOther{aId}-->",
+				"to_other_value":  "<!--#4DHTML aToOtherValue{aId}-->",
+				"id_categoria": "<!--#4DHTML aCategoria{aId}-->",
+				"id_reparto" : "<!--#4DHTML aReparto{aId}-->",
+				"is_hide": <!--#4DIF Not(Undefined(aIsHide{aId}))--><!--#4DIF aIsHide{aId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+				"is_percent_hide": <!--#4DIF Not(Undefined(aIsPercentHide{aId}))--><!--#4DIF aIsPercentHide{aId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+				"is_info": <!--#4DIF Not(Undefined(aIsInfo{aId}))--><!--#4DIF aIsInfo{aId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+				"is_real": <!--#4DIF Not(Undefined(aIsReal{aId}))--><!--#4DIF aIsReal{aId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+				"is_close": <!--#4DIF Not(Undefined(aIsClose{aId}))--><!--#4DIF aIsClose{aId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+				"is_writable": <!--#4DIF Not(Undefined(aIsWritable{aId}))--><!--#4DIF aIsWritable{aId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+				"ajuste": <!--#4DIF Not(Undefined(aIsAjuste{aId}))--><!--#4DIF aIsAjuste{aId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+				"formula_inversa": <!--#4DIF Not(Undefined(aIsFormulaInversa{aId}))--><!--#4DIF aIsFormulaInversa{aId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+				"formula":  "<!--#4DHTML aIsFormula{aId}-->",
+				"is_total": <!--#4DIF Not(Undefined(aIsTotal{aId}))--><!--#4DIF aIsTotal{aId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+				"is_subtotal": <!--#4DIF Not(Undefined(aIsSubTotal{aId}))--><!--#4DIF aIsSubTotal{aId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+				"is_subtotal_continuo": <!--#4DIF Not(Undefined(aIsSubTotalContinuo{aId}))--><!--#4DIF aIsSubTotalContinuo{aId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->
+			}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		<!--#4DENDIF-->
+	]
+
+	
+}

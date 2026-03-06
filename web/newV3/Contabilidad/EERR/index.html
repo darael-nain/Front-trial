@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <title>Estado de Resultados · Unabase</title>
+
+    <!-- Dependencias originales -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <script src="https://kit.fontawesome.com/ce6248a3c0.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href='/css/tom-select.css?v=43534434335'>
+    <script type='text/javascript' src='/script/tom-select.js?v=43534434335'></script>
+
+    <style>
+        /* ── RESET + VARS ── */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --teal: #1dba8e;
+            --teal2: #0de8a2;
+            --teal-dim: rgba(29, 186, 142, 0.08);
+            --teal-mid: rgba(29, 186, 142, 0.18);
+            --bg: #f3f6f9;
+            --surface: #ffffff;
+            --surface2: #f8fafc;
+            --border: #e8ecf1;
+            --border2: #f1f4f8;
+            --text: #0f172a;
+            --text2: #475569;
+            --text3: #94a3b8;
+            --red: #ef4444;
+            --red-dim: rgba(239, 68, 68, 0.08);
+            --green: #22c55e;
+            --green-dim: rgba(34, 197, 94, 0.08);
+            --amber: #f59e0b;
+            --amber-dim: rgba(245, 158, 11, 0.08);
+            --blue: #3b82f6;
+            --blue-dim: rgba(59, 130, 246, 0.08);
+            --mono: 'JetBrains Mono', monospace;
+            --sans: 'Instrument Sans', sans-serif;
+            --serif: 'Instrument Serif', serif;
+        }
+
+        html,
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 13px;
+        }
+
+        /* ── LAYOUT ── */
+        .page {
+            padding: 28px 28px 80px;
+        }
+
+        /* ── HEADER ── */
+        .page-header {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            padding-bottom: 22px;
+            border-bottom: 1px solid var(--border);
+            animation: fadeDown 0.4s ease both;
+        }
+
+        @keyframes fadeDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-eyebrow {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--teal);
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            margin-bottom: 5px;
+        }
+
+        .header-eyebrow::before {
+            content: '';
+            display: inline-block;
+            width: 16px;
+            height: 2px;
+            background: var(--teal);
+            border-radius: 2px;
+        }
+
+        .header-title {
+            font-family: var(--serif);
+            font-size: 28px;
+            font-weight: 400;
+            color: var(--text);
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .header-title em {
+            color: var(--teal);
+        }
+
+        .header-subtitle {
+            font-size: 12px;
+            color: var(--text3);
+            font-weight: 500;
+            margin-top: 3px;
+        }
+
+        .period-badge {
+            background: linear-gradient(135deg, var(--teal-dim), rgba(13, 232, 162, 0.06));
+            border: 1px solid rgba(29, 186, 142, 0.2);
+            color: var(--teal);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-family: var(--mono);
+        }
+
+        /* ── KPI ROW ── */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 22px;
+            animation: fadeUp 0.4s ease 0.1s both;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .kpi-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+            transition: box-shadow 0.2s, transform 0.2s;
+            cursor: default;
+        }
+
+        .kpi-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+            transform: translateY(-2px);
+        }
+
+        .kpi-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            border-radius: 14px 14px 0 0;
+        }
+
+        .kpi-card.c-green::after {
+            background: linear-gradient(90deg, var(--teal), var(--teal2));
+        }
+
+        .kpi-card.c-red::after {
+            background: linear-gradient(90deg, #ef4444, #f87171);
+        }
+
+        .kpi-card.c-amber::after {
+            background: linear-gradient(90deg, #f59e0b, #fcd34d);
+        }
+
+        .kpi-card.c-blue::after {
+            background: linear-gradient(90deg, #3b82f6, #93c5fd);
+        }
+
+        .kpi-label {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text3);
+        }
+
+        .kpi-value {
+            font-family: var(--mono);
+            font-size: 20px;
+            font-weight: 600;
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .kpi-card.c-green .kpi-value {
+            color: var(--teal);
+        }
+
+        .kpi-card.c-red .kpi-value {
+            color: var(--red);
+        }
+
+        .kpi-card.c-amber .kpi-value {
+            color: var(--amber);
+        }
+
+        .kpi-card.c-blue .kpi-value {
+            color: var(--blue);
+        }
+
+        .kpi-bar {
+            height: 3px;
+            background: var(--border2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .kpi-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            animation: growBar 1s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+            transform-origin: left;
+            transform: scaleX(0);
+        }
+
+        @keyframes growBar {
+            to {
+                transform: scaleX(1);
+            }
+        }
+
+        .kpi-card.c-green .kpi-bar-fill {
+            background: linear-gradient(90deg, var(--teal), var(--teal2));
+        }
+
+        .kpi-card.c-red .kpi-bar-fill {
+            background: linear-gradient(90deg, #ef4444, #f87171);
+        }
+
+        .kpi-card.c-amber .kpi-bar-fill {
+            background: linear-gradient(90deg, #f59e0b, #fcd34d);
+        }
+
+        .kpi-card.c-blue .kpi-bar-fill {
+            background: linear-gradient(90deg, #3b82f6, #93c5fd);
+        }
+
+        /* ── FILTERS BAR ── */
+        .filters-bar {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            animation: fadeUp 0.4s ease 0.15s both;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .filter-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            white-space: nowrap;
+        }
+
+        .filter-input {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 7px 11px;
+            font-size: 12px;
+            font-family: var(--sans);
+            color: var(--text);
+            background: var(--surface2);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            min-width: 120px;
+        }
+
+        .filter-input:focus {
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px var(--teal-mid);
+        }
+
+        .filter-input.sm {
+            min-width: 68px;
+            text-align: center;
+            max-width: 80px;
+        }
+
+        /* TomSelect override */
+        .ts-wrapper {
+            min-width: 160px;
+        }
+
+        .ts-control {
+            border: 1px solid var(--border) !important;
+            border-radius: 8px !important;
+            min-height: 36px !important;
+            padding: 5px 10px !important;
+            font-size: 12px !important;
+            font-family: var(--sans) !important;
+            background: var(--surface2) !important;
+            box-shadow: none !important;
+        }
+
+        .ts-wrapper.focus .ts-control {
+            border-color: var(--teal) !important;
+            box-shadow: 0 0 0 3px var(--teal-mid) !important;
+        }
+
+        .filter-sep {
+            width: 1px;
+            height: 26px;
+            background: var(--border);
+            flex-shrink: 0;
+        }
+
+        .btn-apply {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 16px;
+            background: var(--teal);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: var(--sans);
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 3px 10px rgba(29, 186, 142, 0.3);
+        }
+
+        .btn-apply:hover {
+            background: #18a87e;
+            transform: translateY(-1px);
+            box-shadow: 0 5px 14px rgba(29, 186, 142, 0.38);
+        }
+
+        .btn-export {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            background: var(--surface2);
+            color: var(--text2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: var(--sans);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-export:hover {
+            border-color: var(--teal);
+            color: var(--teal);
+            background: var(--teal-dim);
+        }
+
+        /* ── TABLE CARD ── */
+        .table-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+            animation: fadeUp 0.4s ease 0.2s both;
+        }
+
+        .table-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border2);
+            background: var(--surface2);
+        }
+
+        .tch-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tch-icon {
+            width: 26px;
+            height: 26px;
+            border-radius: 7px;
+            background: var(--teal-dim);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+        }
+
+        /* ── LOADING BAR ── */
+        .loading-bar {
+            height: 3px;
+            background: var(--border2);
+            overflow: hidden;
+            display: none;
+        }
+
+        .loading-bar.active {
+            display: block;
+        }
+
+        .loading-bar-fill {
+            height: 100%;
+            width: 40%;
+            background: linear-gradient(90deg, var(--teal), var(--teal2));
+            border-radius: 3px;
+            animation: loadingMove 1s ease-in-out infinite;
+        }
+
+        @keyframes loadingMove {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            50% {
+                width: 80%;
+                transform: translateX(100%);
+            }
+
+            100% {
+                transform: translateX(300%);
+            }
+        }
+
+        /* ── TABLE ── */
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table.eerr {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table.eerr thead tr {
+            background: var(--surface2);
+            border-bottom: 2px solid var(--border);
+        }
+
+        table.eerr thead th {
+            padding: 10px 12px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--text3);
+            text-align: right;
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            background: var(--surface2);
+            z-index: 2;
+        }
+
+        table.eerr thead th:first-child {
+            text-align: left;
+            min-width: 260px;
+            max-width: 300px;
+            padding-left: 20px;
+        }
+
+        table.eerr thead th:last-child {
+            font-weight: 800;
+            color: var(--text2);
+            background: rgba(29, 186, 142, 0.06);
+        }
+
+        table.eerr tbody tr {
+            border-bottom: 1px solid var(--border2);
+        }
+
+        table.eerr tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        /* ── ROW TYPES ── */
+        tr.row-section-header td {
+            background: #f1f5f9;
+            padding: 9px 12px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+            color: #64748b;
+            border-top: 2px solid var(--border);
+        }
+
+        tr.row-section-header td:first-child {
+            padding-left: 20px;
+        }
+
+        /* ← These match original class names for JS compatibility */
+        tr.header-totales td,
+        tr.header-total-utilidad-operacional td {
+            padding: 10px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            background: #f0fdf9;
+            border-top: 1px solid rgba(29, 186, 142, 0.2);
+            border-bottom: 1px solid rgba(29, 186, 142, 0.2);
+            color: var(--teal);
+        }
+
+        tr.header-totales td:first-child,
+        tr.header-total-utilidad-operacional td:first-child {
+            padding-left: 20px;
+        }
+
+        tr.header_totales_antes_impuesto td,
+        tr.header_totales_impuesto td {
+            padding: 10px 12px;
+            font-size: 12px;
+            font-weight: 700;
+            background: rgba(245, 158, 11, 0.05);
+            color: var(--amber);
+            border-top: 1px solid rgba(245, 158, 11, 0.15);
+        }
+
+        tr.header_totales_antes_impuesto td:first-child,
+        tr.header_totales_impuesto td:first-child {
+            padding-left: 20px;
+        }
+
+        tr.header_totales_resultado td {
+            padding: 13px 12px;
+            font-size: 13px;
+            font-weight: 800;
+            background: linear-gradient(135deg, rgba(29, 186, 142, 0.15), rgba(13, 232, 162, 0.06));
+            border-top: 2px solid rgba(29, 186, 142, 0.3);
+            color: var(--teal);
+        }
+
+        tr.header_totales_resultado td:first-child {
+            padding-left: 20px;
+            font-family: var(--serif);
+            font-size: 16px;
+        }
+
+        /* Account rows */
+        tr.i-operacional td,
+        tr.c-operacional td,
+        tr.g-admin td,
+        tr.i-nooperacional td {
+            padding: 8px 12px;
+            font-size: 12px;
+            color: var(--text2);
+            cursor: pointer;
+        }
+
+        tr.i-operacional td:first-child,
+        tr.c-operacional td:first-child,
+        tr.g-admin td:first-child,
+        tr.i-nooperacional td:first-child {
+            padding-left: 32px;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        tr.i-operacional:hover td,
+        tr.c-operacional:hover td,
+        tr.g-admin:hover td,
+        tr.i-nooperacional:hover td {
+            background: #f0fdf9 !important;
+        }
+
+        tr.i-operacional:hover td:first-child,
+        tr.c-operacional:hover td:first-child,
+        tr.g-admin:hover td:first-child,
+        tr.i-nooperacional:hover td:first-child {
+            color: var(--teal);
+        }
+
+        /* Numeric cells */
+        td.num,
+        table.eerr td[style*="text-align: right"],
+        table.eerr td[style*="text-align:right"] {
+            font-family: var(--mono) !important;
+            font-size: 11.5px !important;
+            font-variant-numeric: tabular-nums;
+            text-align: right;
+        }
+
+        /* Acumulado column */
+        table.eerr td:last-child:not(:first-child),
+        table.eerr th:last-child {
+            background: rgba(29, 186, 142, 0.04);
+            border-left: 1px solid rgba(29, 186, 142, 0.1) !important;
+        }
+
+        /* Color values from JS (keep original) */
+        table.eerr td[style*="color: #4EC275"] {
+            color: var(--teal) !important;
+        }
+
+        table.eerr td[style*="color: #F47975"] {
+            color: var(--red) !important;
+        }
+
+        /* Collapse arrow */
+        .fas.fa-angle-down,
+        .fas.fa-angle-right {
+            color: var(--teal) !important;
+            transition: transform 0.2s;
+        }
+
+        /* ── MODALS ── */
+
+        /* Override Bootstrap modal with our styles */
+        .modal-content {
+            border: 1px solid var(--border) !important;
+            border-radius: 18px !important;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.15) !important;
+            font-family: var(--sans) !important;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 18px 22px !important;
+            border-bottom: 1px solid var(--border) !important;
+            background: var(--surface2) !important;
+        }
+
+        .modal-body {
+            padding: 0 !important;
+        }
+
+        .modal-title-custom {
+            font-family: var(--serif);
+            font-size: 18px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-title-badge {
+            font-family: var(--sans);
+            font-style: normal;
+            font-size: 11px;
+            font-weight: 700;
+            background: var(--teal-dim);
+            color: var(--teal);
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        .btn-close-custom {
+            width: 28px;
+            height: 28px;
+            border-radius: 7px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: var(--text3);
+            transition: all 0.15s;
+            flex-shrink: 0;
+        }
+
+        .btn-close-custom:hover {
+            background: var(--red-dim);
+            color: var(--red);
+            border-color: var(--red);
+        }
+
+        /* Tables inside modal */
+        .modal .table thead tr {
+            background: var(--surface2);
+        }
+
+        .modal .table thead th {
+            font-size: 10px !important;
+            font-weight: 700 !important;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--text3) !important;
+            border-bottom: 2px solid var(--border) !important;
+            padding: 10px 14px !important;
+        }
+
+        .modal .table tbody tr {
+            border-bottom: 1px solid var(--border2);
+        }
+
+        .modal .table tbody tr:hover td {
+            background: #f0fdf9 !important;
+        }
+
+        .modal .table tbody td {
+            padding: 9px 14px !important;
+            font-size: 12px !important;
+            color: var(--text2);
+        }
+
+        .modal .table tbody td:first-child {
+            color: var(--text) !important;
+        }
+
+        /* Loader line (original) */
+        .loader-line {
+            width: 100%;
+            height: 3px;
+            background: var(--teal);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .loader-line::before {
+            content: '';
+            position: absolute;
+            left: -50%;
+            height: 3px;
+            width: 40%;
+            background: #E4E7EC;
+            animation: lineAnim 1s linear infinite;
+            border-radius: 20px;
+        }
+
+        @keyframes lineAnim {
+            0% {
+                left: -40%;
+            }
+
+            50% {
+                left: 20%;
+                width: 80%;
+            }
+
+            100% {
+                left: 100%;
+                width: 100%;
+            }
+        }
+
+        /* Link style in modal */
+        .asiento-link {
+            color: var(--teal) !important;
+            cursor: pointer;
+            font-family: var(--mono);
+            font-size: 11px;
+        }
+
+        .asiento-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ── MISC ── */
+        .search-input {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 0 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface2);
+        }
+
+        .search-input input {
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 12px;
+            font-family: var(--sans);
+            color: var(--text);
+            padding: 7px 0;
+            width: 150px;
+        }
+
+        .search-input input::placeholder {
+            color: var(--text3);
+        }
+
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text3);
+        }
+
+        /* Empty state */
+        #loading-screen {
+            background-color: rgba(25, 25, 25, 0.65);
+            height: 100%;
+            width: 100%;
+            position: fixed;
+            z-index: 9999;
+            top: 0;
+            text-align: center;
+            backdrop-filter: blur(3px);
+        }
+
+        #loading-screen img {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            margin-top: -40px;
+            margin-left: -40px;
+            top: 50%;
+        }
+
+        /* btn-custom compatibilidad */
+        .btn-custom {
+            font-size: 11px;
+            background: var(--teal);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-family: var(--sans);
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-custom:hover {
+            background: #18a87e;
+        }
+
+        /* Expand row icon transition */
+        .fa-angle-down {
+            transform: rotate(0deg);
+            transition: transform 0.2s;
+        }
+
+        .fa-angle-right {
+            transform: rotate(-90deg);
+            transition: transform 0.2s;
+        }
+
+        /* ===============================
+   TomSelect - dropdown al frente
+   =============================== */
+
+        /* Asegura que el dropdown no se corte por el contenedor de filtros */
+        .filters-bar,
+        .filter-group {
+            overflow: visible !important;
+        }
+
+        /* Cuando el select está abierto, levanta TODO el stack */
+        .ts-wrapper.dropdown-active {
+            position: relative;
+            z-index: 2147483647 !important;
+        }
+
+        /* El control también por si hay overlays */
+        .ts-wrapper.dropdown-active .ts-control {
+            position: relative;
+            z-index: 2147483647 !important;
+        }
+
+        /* El dropdown es el que debe quedar arriba */
+        .ts-wrapper.dropdown-active .ts-dropdown {
+            z-index: 2147483647 !important;
+        }
+
+        /* Opcional: si te aparece detrás de la tabla sticky header */
+        .table-card,
+        .table-wrap,
+        table.eerr thead th {
+            z-index: 1;
+            /* tu thead ya usa 2; esto evita competir con 2147483647 */
+        }
+
+        /* ===== FIX TomSelect detrás de la tabla (stacking contexts por transform/animation) ===== */
+
+        /* Asegura que TODA la barra de filtros quede por encima de la tabla */
+        .filters-bar {
+            position: relative;
+            z-index: 1000 !important;
+        }
+
+        /* Baja la tabla para que no tape overlays de arriba */
+        .table-card {
+            position: relative;
+            z-index: 1 !important;
+        }
+
+        /* TomSelect: mantén dropdown arriba (por si el css del plugin trae z-index negativo) */
+        .ts-wrapper.dropdown-active {
+            position: relative;
+            z-index: 2000 !important;
+        }
+
+        .ts-wrapper.dropdown-active .ts-dropdown {
+            z-index: 2001 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content-wrapper page">
+
+        <!-- ── PAGE HEADER ── -->
+        <div class="page-header">
+            <div>
+                <div class="header-eyebrow">Contabilidad · Reportes</div>
+                <h1 class="header-title">Estado de Resultados</h1>
+                <div class="header-subtitle" id="companySubtitle">Período acumulado al mes seleccionado</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+                <div class="period-badge" id="periodBadge">—</div>
+                <button class="btn-export" onclick="downloadExcel()">
+                    <i class="fas fa-file-excel"></i> Exportar XLS
+                </button>
+            </div>
+        </div>
+
+        <!-- ── KPI ROW ── -->
+        <div class="kpi-row" id="kpiRow">
+            <div class="kpi-card c-green">
+                <div class="kpi-label">Ingreso Operacional</div>
+                <div class="kpi-value" id="k-ioper">—</div>
+                <div class="kpi-bar">
+                    <div class="kpi-bar-fill" style="width:70%"></div>
+                </div>
+            </div>
+            <div class="kpi-card c-red">
+                <div class="kpi-label">Costos Operacionales</div>
+                <div class="kpi-value" id="k-coper">—</div>
+                <div class="kpi-bar">
+                    <div class="kpi-bar-fill" style="width:50%"></div>
+                </div>
+            </div>
+            <div class="kpi-card c-amber">
+                <div class="kpi-label">Gastos Administración</div>
+                <div class="kpi-value" id="k-gadm">—</div>
+                <div class="kpi-bar">
+                    <div class="kpi-bar-fill" style="width:40%"></div>
+                </div>
+            </div>
+            <div class="kpi-card c-blue">
+                <div class="kpi-label">Resultado del Ejercicio</div>
+                <div class="kpi-value" id="k-result">—</div>
+                <div class="kpi-bar">
+                    <div class="kpi-bar-fill" id="k-result-bar" style="width:60%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── FILTERS BAR ── -->
+        <div class="filters-bar">
+            <div class="filter-group">
+                <span class="filter-label">Ver hasta</span>
+                <i class="fa-solid fa-arrow-right" style="color:var(--text3);font-size:11px"></i>
+                <input type="month" name="dateTo" id="dateTo" class="filter-input">
+            </div>
+
+            <div class="filter-sep"></div>
+
+            <div class="filter-group">
+                <span class="filter-label">Impuesto EERR</span>
+                <input type="text" id="percent_eerr" class="filter-input sm" onchange="onChangePercent(this)"
+                    onkeyup="onKeyUp(this)" onkeypress="return checkNumber(event)" placeholder="27%">
+            </div>
+
+            <div class="filter-sep"></div>
+
+            <div class="filter-group">
+                <span class="filter-label">Centro de costo</span>
+                <select name="centro_costo" id="centro_costo" class="filter-input">
+                    <option value="">Selecciona</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <span class="filter-label">Centro 2</span>
+                <select name="centro_costo_2" id="centro_costo_2" class="filter-input">
+                    <option value="">Selecciona</option>
+                </select>
+            </div>
+
+            <div class="filter-sep"></div>
+
+            <div class="search-input">
+                <i class="fas fa-search" style="color:var(--text3);font-size:11px"></i>
+                <input type="text" placeholder="Buscar cuenta..." id="searchInput" oninput="filterTableRows()">
+            </div>
+
+            <div style="margin-left:auto;display:flex;gap:8px">
+                <button class="btn-apply" onclick="setTableMain()">
+                    <i class="fas fa-sync-alt"></i> Actualizar
+                </button>
+            </div>
+        </div>
+
+        <!-- ── MAIN TABLE ── -->
+        <div class="table-card">
+            <div class="table-card-header">
+                <div class="tch-title">
+                    <div class="tch-icon">📊</div>
+                    Detalle por cuenta
+                </div>
+                <div style="display:flex;align-items:center;gap:8px">
+                    <div id="loading-modal"></div>
+                </div>
+            </div>
+
+            <!-- Loading bar -->
+            <div class="loading-bar" id="uiLoadingBar">
+                <div class="loading-bar-fill"></div>
+            </div>
+
+            <!-- Loader line original (hidden by default, shown during modal loads) -->
+            <div style="padding:0 20px;display:none;" id="loader-line">
+                <div class="loader-line" style="position:relative;"></div>
+            </div>
+
+            <div class="table-wrap">
+                <table class="table table-hover eerr" cellspacing="0" width="100%" id="tables">
+                    <thead class="table-light" id="table-head">
+                        <tr style="text-align:center">
+                            <th scope="col" style="max-width:350px;min-width:260px;text-align:left;padding-left:20px">
+                                Cuenta</th>
+                            <th>Enero</th>
+                            <th>Febrero</th>
+                            <th>Marzo</th>
+                            <th>Abril</th>
+                            <th>Mayo</th>
+                            <th>Junio</th>
+                            <th>Julio</th>
+                            <th>Agosto</th>
+                            <th>Septiembre</th>
+                            <th>Octubre</th>
+                            <th>Noviembre</th>
+                            <th>Diciembre</th>
+                            <th>Acumulado</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-data"></tbody>
+                    <tfoot id="table-footer"></tfoot>
+                </table>
+            </div>
+        </div>
+
+    </div><!-- /page -->
+
+
+    <!-- ── MODAL: LIBRO MAYOR ── -->
+    <div class="modal fade" id="modalDocs" aria-hidden="true" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title-custom">
+                        Libro Mayor
+                        <span class="modal-title-badge" id="account-detail">Cuenta</span>
+                    </div>
+                    <button type="button" class="btn-close-custom close_modal" data-bs-dismiss="modal">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div style="padding:0 20px;display:none;position:relative" id="loader-line-modal">
+                        <div class="loader-line"></div>
+                    </div>
+                    <div class="table-responsive" style="padding:0">
+                        <table class="table table-hover" cellspacing="0" width="100%">
+                            <thead>
+                                <tr class="text-center">
+                                    <th style="text-align:left;width:150px">Fecha Contab.</th>
+                                    <th>N° Asiento</th>
+                                    <th>Debe</th>
+                                    <th>Haber</th>
+                                    <th>Acumulado</th>
+                                    <th>Obligación</th>
+                                    <th>Más info.</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-details"></tbody>
+                            <tfoot></tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── MODAL: DETALLE DE ASIENTO ── -->
+    <div class="modal fade" id="modalDetails" aria-hidden="true" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-title-custom">
+                        Detalle de asiento
+                        <span class="modal-title-badge" id="detail-asiento">—</span>
+                    </div>
+                    <button type="button" class="btn-close-custom close_modal" data-bs-dismiss="modal">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive" style="padding:0">
+                        <table class="table table-striped table-hover" cellspacing="0" width="100%">
+                            <thead>
+                                <tr class="text-center">
+                                    <th style="text-align:left">Cuenta</th>
+                                    <th>Debe</th>
+                                    <th>Haber</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-detalle-asiento"></tbody>
+                            <tfoot id="table-detalle-asiento-footer"></tfoot>
+                        </table>
+                    </div>
+                    <div style="padding:16px 20px;text-align:right">
+                        <button type="button" class="btn-custom" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ── SCRIPTS ORIGINALES ── -->
+    <script src="/v3/script/jquery/jquery.js"></script>
+    <script src="/v3/script/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/jszip.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="../../../base_object/general_template.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="../../script/general_functions.js" data-from="from-eerr"></script>
+</body>
+
+</html>

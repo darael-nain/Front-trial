@@ -1,0 +1,18 @@
+{
+	"rows": [
+<!--#4DLOOP aItemId -->
+		{
+			"id": "<!--#4DHTML aItemId{aItemId}-->",
+			"id_line_income": "<!--#4DHTML aIdLineIncome{aItemId}-->",
+			"text": "<!--#4DHTML _V3_escapeString(aItemText{aItemId})-->",
+			"nombre_categoria": "<!--#4DHTML _V3_escapeString(aDescripcionCategoria{aItemId})-->",
+			"index": <!--#4DHTML aItemIndex{aItemId}-->,
+			"costo": {
+				"real": {
+					"subtotal": <!--#4DHTML String(aItemSubtotalCostoReal{aItemId};"&xml")-->
+				}
+			}
+		}<!--#4DIF NOT(aItemId{aItemId} = aItemId{Size of array(aItemId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_serverInfo-->
+<html>
+	<head>
+		<title>Compras</title>
+		<meta charset="utf-8">		
+		<script>
+
+			/*var views_gastos = function(param){	
+				var target = $('#search > label, html > body.menu > section > header').find('[data-name="views"]').find('.ui-button-text');
+				var table = $('.fht-tbody .especial');
+				var table2 = $('.fht-thead .especial');
+				if (target.text() == 'Vista admin') {
+					if (param) {
+						target.text('Vista básica');
+						table2.find('thead > tr > th.admin').show();
+						table.find('tbody > tr > td.admin').show();
+						table2.find('thead > tr > th.basico').hide();
+						table.find('tbody > tr > td.basico').hide();
+						//table2.find('tfoot > tr > th:first-of-type').attr('colspan', 12);
+					}else{
+						var table2 = $('.especial');
+						var table = $('.especial');
+						table2.find('thead > tr > th.admin').hide();
+						table.find('tbody > tr > td.admin').hide();
+						table2.find('thead > tr > th.basico').show();
+						table.find('tbody > tr > td.basico').show();
+						//table2.find('tfoot > tr > th:first-of-type').attr('colspan', 10);
+					}
+				}else{
+					if (param) {
+						target.text('Vista admin');
+						table2.find('thead > tr > th.admin').hide();
+						table.find('tbody > tr > td.admin').hide();
+						table2.find('thead > tr > th.basico').show();
+						table.find('tbody > tr > td.basico').show();
+						//table2.find('tfoot > tr > th:first-of-type').attr('colspan', 10);
+					}else{
+						var table2 = $('.especial');
+						var table = $('.especial');
+						table2.find('thead > tr > th.admin').show();
+						table.find('tbody > tr > td.admin').show();
+						table2.find('thead > tr > th.basico').hide();
+						table.find('tbody > tr > td.basico').hide();
+						//table2.find('tfoot > tr > th:first-of-type').attr('colspan', 12);
+					}					
+				}
+			}*/					
+
+			$(document).ready(function() {
+
+				unaBase.toolbox.init();
+
+				// Inicializamos un buscador
+				var params = {
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/_V3_getCompras2' },
+					entity: 'Compras',
+					callback : function(){
+						//views_gastos(false);
+					},
+					// Función que genera cada fila de la tabla, dado el valor de i (índice de posición)
+					// y el valor de rows (array con todos los resultados)
+					// El contenido de rows corresponde al objeto de mismo nombre generado mediante la llamada
+					// a la api JSON. Ver /v3/json/xxxxx.shtml para conocer el formato.
+					row: {
+						html: function(i, rows) {
+							var v2 = "";
+							var title = "";
+							if (rows[i].version=="") {
+								//v2 = '<strong style="font-size:8px!important;font-weight:bold">V2</strong>';
+								v2 = '<strong title="oc creada en versión antigua" style="font-size:11px!important;font-weight:bold">*</strong>';
+								title = "oc creada en versión antigua";
+							}
+
+							return '<tr title="'+ title +'" data-id="' + rows[i].id + '">' +											
+								'<td class="ambos" width="5%">' + v2 + ' ' + rows[i].folio + '</td>' +
+								'<td class="ambos" width="1%">' + rows[i].tipo + '</td>' +
+								'<td class="ambos center" width="5%">' + rows[i].doc + '</td>' +
+								'<td class="ambos" width="5%">' + rows[i].fecha + '</td>' +
+								'<td class="ambos" width="5%">' + rows[i].estado + '</td>' +											
+								'<td class="ambos left" width="25%">' + rows[i].referencia + '</td>' +							
+								'<td class="ambos left" width="15%">' + rows[i].proveedor + '</td>' +						
+								'<td class="basico right" width="5%" style="background-color:#BBDAFF;font-weight:bold">' + rows[i].neto + '</td>' +
+								'<td class="ambos right" width="5%" style="background-color:#BBDAFF;font-weight:bold">' + rows[i].total + '</td>' +
+								'<td class="basico right" width="5%" style="background-color:#FF9797;font-weight:bold">' + rows[i].justificado + '</td>' +
+								'<td class="basico center" width="5%">' + rows[i].validado + '</td>' +
+								'<td class="admin right" width="5%" style="background-color:#A5DBEB;font-weight:bold">' + rows[i].pago + '</td>' +
+								'<td class="admin right" width="5%" style="background-color:#B8E2EF;font-weight:bold">' + rows[i].saldo_a_pagar + '</td>' +
+								'<td class="admin right" width="5%" style="background-color:#FFD7B3;font-weight:bold">' + rows[i].saldo_a_justificar + '</td>' +				
+								'<td class="admin right" width="5%" style="background-color:#FFC895;font-weight:bold">' + rows[i].deposito + '</td>' +
+								'<td class="admin right '+rows[i].color+'" width="5%" style="background-color:#6CA870;font-weight:bold">' + rows[i].saldo_real + '</td>' +
+							'</tr>'
+						}
+					},
+					detail: {
+						url: function(id) { return '/v3/views/compras/content.shtml?id=' + id +'&from=self'},
+						iframe: false
+					},
+					// Inflexiones
+					inflection: {
+						singular: 'gasto',
+						plural: 'gastos',
+						none: 'ningún'
+					},									
+					filters: [
+						{ name: 'created_at', type: 'month', caption: 'Fecha de creación', range: true },			
+						{ name: 'tipo_gasto', type: 'autocomplete', caption: 'Tipo de gastos', dataSource: 'get_tipo_gasto' },
+						{ name: 'validacion_gasto', type: 'autocomplete', caption: 'Según validación', dataSource: 'get_validacion' },
+						{ name: 'estado', type: 'checkbox', caption: 'Estado de la compra', options: [
+							{ caption: 'Emitida', name: 'estado_emitida', value: true },
+							{ caption: 'Pagada', name: 'estado_pagada', value: false },							
+							{ caption: 'Cerrada', name: 'estado_cerrada', value: false },
+							{ caption: 'Anulada', name: 'estado_nulo', value: false }					
+						]}
+					]
+				};
+
+				unaBase.toolbox.search.init(params);
+				unaBase.toolbox.menu.init({
+					entity: 'Compras', // especifica entidad sobre la cual se almacenan los datos
+										  // y nombre para referenciar los views
+					/*buttons: [ 'new', 'clone', 'print' ]*/
+					buttons: [ 'create_oc2', 'views' ]
+				});
+
+				setTimeout(function(){
+					$('.especial').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false });
+				}, 1);
+				
+				//$('.especial').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false });
+				/*$('.especial').fixedHeaderTable({ 
+					footer: false,
+					cloneHeadToFoot: false,
+					altClass: 'odd',
+					autoShow: true					
+				});*/
+
+			});
+		</script>
+		<style type="text/css">		
+		.especial thead tr th{
+			vertical-align: middle!important;			
+		}
+		.red{
+			color:red;
+		}
+		.blue{
+			color:blue;
+		}		
+		</style>
+	</head>
+	<body>
+		<!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->		
+			<table class="especial">						
+				<thead>
+					<tr>									
+						<th class="ambos">Número</th>
+						<th class="ambos">Tipo</th>
+						<th class="ambos">Doc.</th>
+						<th class="ambos">Fecha</th>
+						<th class="ambos">Estado</th>		
+						<th class="ambos">Referencia</th>
+						<th class="ambos">Proveedor</th>									
+						<th class="basico">Neto [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th class="ambos">Total [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th class="basico">Justificado [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th class="basico">Validado</th>
+						<th class="admin">Pagado [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th class="admin">Por pagar [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>					
+						<th class="admin">Por justificar [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>							
+						<th class="admin">Depositado [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th class="admin">Saldo [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>					
+					</tr>
+				</thead>
+				<tfoot>
+					<tr>									
+						<th class="ambos"></th>
+						<th class="ambos"></th>
+						<th class="ambos"></th>
+						<th class="ambos"></th>
+						<th class="ambos"></th>		
+						<th class="ambos"></th>
+						<th class="ambos"></th>									
+						<th class="basico"><!--#4DVAR _V3_defaultCurrencySymbol-->10000</th>
+						<th class="ambos"><!--#4DVAR _V3_defaultCurrencySymbol-->10000</th>
+						<th class="basico"><!--#4DVAR _V3_defaultCurrencySymbol-->10000</th>
+						<th class="basico"><!--#4DVAR _V3_defaultCurrencySymbol-->10000</th>
+						<th class="admin"><!--#4DVAR _V3_defaultCurrencySymbol-->10000</th>
+						<th class="admin"><!--#4DVAR _V3_defaultCurrencySymbol-->10000</th>					
+						<th class="admin"><!--#4DVAR _V3_defaultCurrencySymbol-->10000</th>							
+						<th class="admin"><!--#4DVAR _V3_defaultCurrencySymbol-->10000</th>
+						<th class="admin"><!--#4DVAR _V3_defaultCurrencySymbol-->10000</th>					
+					</tr>
+				</tfoot>
+				<tbody></tbody>			
+			</table>
+	</body>
+</html>

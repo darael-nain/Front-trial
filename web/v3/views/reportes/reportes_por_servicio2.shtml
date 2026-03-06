@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Reportes de servicio</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/views/reportes/script/content.js"></script>
+		<script src="/v3/script/sorttable.js"></script>
+		<script>
+		var container = $('#container-reportes');
+		var tbody = container.find('table.reportes > tbody');
+
+		var ExistInfo = false;
+
+		var getCategorias = function(){
+			unaBase.ui.block();
+			$.ajax({
+				url: '/4DACTION/_V3_getCategoriasReporte2',
+				data: $('#search').serializeAnything(),
+				dataType: 'json',
+				success: function(data) {
+
+						tbody.find("*").remove();
+
+						let rowsCategorias = '';
+						//let totalVentas = 0;
+						let totalCompras = 0;
+					//	let totalUtilidad = 0;
+
+						data.categorias.push({"id":"010101", "descripcion":"SIN CATEGORÍA"});
+						$.each(data.categorias, function(key, item){
+
+							var idCategoria = item.id;
+
+							var rowsCategorias = '';
+
+							var class_ = "name";
+							if (item.id == "010101") {
+								class_ = "name_rojo";
+							};
+
+							// verifica si categoria tiene servicios
+							var cantServicios = 0;
+							var categoriaAgregada = false;
+
+							//var ventasPorCategoria = 0;
+							var comprasPorCategoria = 0;
+							//var utilidadPorCategoria = 0;
+
+							for (var key2 in data.servicios) {
+								if (idCategoria == data.servicios[key2].id_categoria) {
+									cantServicios++;
+								//	ventasPorCategoria += data.servicios[key2].ventas;
+									comprasPorCategoria += data.servicios[key2].compras;
+									//utilidadPorCategoria += data.servicios[key2].utilidad;
+								}
+							}
+
+							rowsCategorias += '<tr class="title" data-id="'+ item.id +'" data-categoria="'+ item.id +'">';
+							rowsCategorias += '<th></th>';
+							rowsCategorias += '<th><button class="ui-icon toggle categoria ui-icon-folder-open" title="Contraer o expandir título"></button></th>';
+							rowsCategorias += '<th></th>';
+							rowsCategorias += '<th></th>';
+							rowsCategorias += '<th class="'+class_+'">'+ item.descripcion +' '+ ((item.id != "010101") ? '<span style="vertical-align:top">('+ cantServicios + " " + ((cantServicios > 1) ? 'Ítems' : 'Ítem') +')</span>' : '') +'</th>';
+							//rowsCategorias += '<th class="ventas numeric currency">'+ currency.symbol +' <span style="display: inline-block; width: 60px;">' + $.number(ventasPorCategoria, currency.decimals, currency.decimals_sep, currency.thousands_sep) +'</span></th>';
+							rowsCategorias += '<th class="compras numeric currency">'+ currency.symbol +' <span style="display: inline-block; width: 60px;">' + $.number(comprasPorCategoria, currency.decimals, currency.decimals_sep, currency.thousands_sep) +'</span></th>';
+						//	rowsCategorias += '<th class="utilidad numeric currency">'+ currency.symbol +' <span style="display: inline-block; width: 60px;">' + $.number(utilidadPorCategoria, currency.decimals, currency.decimals_sep, currency.thousands_sep) +'</span></th>';
+							rowsCategorias += '</tr>';
+
+							if (cantServicios > 0) {
+								tbody.append(rowsCategorias);
+								categoriaAgregada = true;
+							}
+
+							// agrega filas de servicios para cada categoria
+							if (categoriaAgregada) {
+								for (var key3 in data.servicios) {
+
+									ExistInfo = true;
+
+									var class_ = "";
+									if (data.servicios[key3].id_categoria == 0) {
+										data.servicios[key3].id_categoria = "010101";
+										data.servicios[key3].descripcion = "Servicios no clasificados";
+										class_ = "name_rojo";
+									};
+
+									var rowsServicios = '';
+									if (idCategoria == data.servicios[key3].id_categoria) {
+										rowsServicios += '<tr class="title2" data-id="'+ data.servicios[key3].id +'" data-categoria="'+ idCategoria +'">';
+										rowsServicios += '<td><input style="display:none" name="usuario[check]" class="check" type="checkbox"></td>';
+										rowsServicios += '<td></td>';
+										rowsServicios += '<td style="text-align: left;">'+ data.servicios[key3].codigo +'</td>';
+										rowsServicios += '<td>'+ data.servicios[key3].cuenta +'</td>';
+										rowsServicios += '<td class="'+class_+'">'+ data.servicios[key3].descripcion +'</td>';
+										//rowsServicios += '<td class=" ventas numeric currency">'+ currency.symbol +' <span style="display: inline-block; width: 60px;">' + $.number(data.servicios[key3].ventas, currency.decimals, currency.decimals_sep, currency.thousands_sep)  + '</span><button id="detalle_compras" class="ui-icon ui-icon-document detail item" title="Detalle" onclick="unaBase.loadInto.dialog(\'/v3/views/servicios/content.shtml?id=' + data.servicios[key3].id + '&tipo=ventas\', \'Detalle del servicio\', \'large\');">Detalle</button></td>';
+										rowsServicios += '<td class="compras numeric currency">'+ currency.symbol +' <span style="display: inline-block; width: 60px;">' + $.number(data.servicios[key3].compras, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</span><button id="detalle_compras" class="ui-icon ui-icon-document detail item" title="Detalle" onclick="unaBase.loadInto.dialog(\'/v3/views/servicios/content2.shtml?id=' + data.servicios[key3].id + '&tipo=compras\', \'Detalle del servicio\', \'large\');">Detalle</button></td>';
+									//	rowsServicios += '<td class="numeric currency" '+ ((data.servicios[key3].utilidad < 0)? 'style="color:red"' : 'style="color:#03a76b;font-weight:bold"') +'><label style="vertical-align:middle">'+ currency.symbol +'</label> <span style="vertical-align:middle">'+ $.number(data.servicios[key3].utilidad, currency.decimals, currency.decimals_sep, currency.thousands_sep) +'</span></td>';
+										rowsServicios += '</tr>';
+
+										tbody.append(rowsServicios);
+
+									//	totalVentas += data.servicios[key3].ventas;
+									 	totalCompras += data.servicios[key3].compras;
+									//	totalUtilidad += data.servicios[key3].utilidad;
+
+									}
+								}
+							}
+
+						});
+
+						$(".numero_servicios").text('(' + data.servicios.length + ' ítems)');
+
+						// totales suma servicio
+						//$("#total_ventas").html($.number(totalVentas, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+						$("#total_compras").html($.number(totalCompras, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+					//	$("#total_utilidad").html($.number(totalUtilidad, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+						// totales comisiones y descuentos
+						$("#comision_ventas").html($.number(data.totales.comision_venta, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+						$("#descuento_ventas").html($.number(data.totales.descuento_venta, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+						$("#descuento_compras").html($.number(data.totales.descuento_compra, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+						$("#diferencia_ventas").html($.number(data.totales.diferencia_venta, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+						// comisiones
+						$("#nombre_comision1").text(data.totales.nombre_comision1);
+						$("#comision1").text($.number(data.totales.comision1, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+						if(data.totales.comision1 >= 0){
+							if(data.totales.check_comision1 == true){
+								$(".tr_comision1").show();	
+							}
+							else{
+								$(".tr_comision1").hide();
+							}
+							
+						}
+
+						$("#nombre_comision2").text(data.totales.nombre_comision2);
+						$("#comision2").text($.number(data.totales.comision2, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+						if(data.totales.comision2 >= 0){
+							if(data.totales.check_comision2 == true){
+								$(".tr_comision2").show();	
+							}
+							else{
+								$(".tr_comision2").hide();
+							}
+							
+						}
+						
+						$("#nombre_comision3").text(data.totales.nombre_comision3);
+						$("#comision3").text($.number(data.totales.comision3, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+						if(data.totales.comision3 >= 0){
+							if(data.totales.check_comision3 == true){
+								$(".tr_comision3").show();	
+							}
+							else{
+								$(".tr_comision3").hide();
+							}
+							
+						}
+
+						$("#nombre_comision4").text(data.totales.nombre_comision4);
+						$("#comision4").text($.number(data.totales.comision4, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+						if(data.totales.comision4 >= 0){
+							if(data.totales.check_comision4y5 == true){
+								$(".tr_comision4").show();	
+							}
+							else{
+								$(".tr_comision4").hide();
+							}
+							
+						}
+
+						$("#nombre_comision5").text(data.totales.nombre_comision5);
+						$("#comision5").text($.number(data.totales.comision5, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+						if(data.totales.comision5 >= 0){
+							if(data.totales.check_comision4y5 == true){
+								$(".tr_comision5").show();	
+							}
+							else{
+								$(".tr_comision5").hide();
+							}
+							
+						}
+
+						// totales finales
+					//	let sumaTotalesVentas = (totalVentas - data.totales.descuento_venta + data.totales.comision_venta + data.totales.diferencia_venta);
+						let sumaTotalesCompras = (totalCompras - data.totales.descuento_compra);
+						//let sumaTotalesUtilidad = (sumaTotalesVentas - sumaTotalesCompras);
+
+					//	$("#sumaTotalesVentas").html($.number(sumaTotalesVentas, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+						$("#sumaTotalesCompras").html($.number(sumaTotalesCompras, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+						//$("#sumaTotalesUtilidad").html($.number(sumaTotalesUtilidad, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+					unaBase.ui.unblock();		
+				}
+			});			
+		}
+		$(document).ready(function() {
+
+			var times = 0;
+					
+			// seleccionar check y mostrat u ocultar fusionar
+			tbody.on('click', 'tr > td input[name="usuario[check]"]', function(){
+				if (tbody.find('input:checked').length > 1) {
+					$('#menu ul li[data-name="merge_report"]').show();				
+				}else{
+					$('#menu ul li[data-name="merge_report"]').hide();	
+				}					
+			});
+
+			// Expandir y contraer títulos
+			$('section.sheet table > thead button.toggle.all').click(function() {
+				if ($(this).hasClass('ui-icon-folder-open')) {
+					$(this).removeClass('ui-icon-folder-open');
+					$(this).addClass('ui-icon-folder-collapsed');
+					$(this).attr('title', 'Contraer todo');
+					$('section.sheet table > tbody > tr.title button.toggle.categoria.ui-icon-folder-open').each(function() {
+						$(this).trigger('click');
+					});
+				} else {
+					$(this).removeClass('ui-icon-folder-collapsed');
+					$(this).addClass('ui-icon-folder-open');
+					$(this).attr('title', 'Expandir todo');
+					$('section.sheet table > tbody > tr.title button.toggle.categoria.ui-icon-folder-collapsed').each(function() {
+						$(this).trigger('click');
+					});
+				}
+			});
+
+			$('section.sheet table > tbody').on('click', 'button.toggle.categoria', function(event) {
+				if ($(event.target).hasClass('ui-icon-folder-collapsed')) {
+					$(event.target).closest('tr').nextUntil('tr.title').show();
+					$(event.target).removeClass('ui-icon-folder-collapsed').addClass('ui-icon-folder-open');
+				} else {
+					$(event.target).closest('tr').nextUntil('tr.title').hide();
+					$(event.target).removeClass('ui-icon-folder-open').addClass('ui-icon-folder-collapsed');
+				}
+			});
+
+			unaBase.toolbox.init();
+			unaBase.toolbox.search.init({
+				callback: function() {
+					var status = $('#search').find('*').prop('disabled');
+					if (!status) {
+						getCategorias();
+					}
+					return false;
+				},
+				inflection: {
+					singular: 'categoria',
+					plural: 'categorias',
+					none: 'ninguna'
+				},
+				filters: [
+					{ name: 'fecha_from', type: 'month', caption: 'Fecha desde', range: true, currentMonth: true },
+					{ name: 'fecha_to', type: 'month', caption: 'Fecha hasta', range: true, currentMonth: true },
+					{ name: 'categoria', type: 'autocomplete', caption: 'Categoria', dataSource: 'getCategorias' },
+					{ name: 'estado_compras', type: 'autocomplete', caption: 'Estado de las compras', dataObject: [
+						{
+							id: true,
+							text: 'Abiertas para compras'
+						},
+						{
+							id: false,
+							text: 'Cerradas para compras'
+						}
+					]},		
+				]
+			});
+
+			unaBase.toolbox.menu.init({
+				entity: 'CategoriasReporte',
+				buttons: [ 'exit']
+
+			});
+
+			$('input[name="q"]').attr('placeholder', 'Buscar por nombre servicio');
+			
+		});		
+		</script>
+		<style type="text/css">
+
+
+		.name{color: black;}
+		.name_rojo{color: red;}
+		.name > span{color: #AF6D44;}
+		.ventas{color: black;}
+		.ventas > span{color: black;}
+		.compras{color: black;}
+		.compras > span{color: black;}
+		.utilidad{color: black;}
+		.utilidad > span{color: black;}
+
+		div.totales {
+            	position: absolute;
+            	right: 15px;
+            	bottom: 30px;
+            	z-index: 1000;
+            	width: 515px;
+            	height: 190px;
+            	padding: 3px;
+
+            	opacity: 0.9;
+            	background-color: darkgrey;
+            	color: black;
+            	font-size: 14px;
+            	cursor: move;
+            	border-radius: 4px;
+            	box-shadow: -4px 4px 8px 1px rgba(48, 48, 48, 0.75);
+            }
+
+            div.totales > span {
+            	display: block;
+            }
+
+            div.totales > span > span {
+            	display: inline-block;
+            }
+
+            div.totales > span > span:first-of-type {
+            	width: 85px;
+            }
+
+            div.totales > span > span:nth-of-type(2) {
+            	width: 135px;
+            }
+
+            div.totales > span > span:nth-of-type(3) {
+            	width: 135px;
+            }
+
+            div.totales > span > span:nth-of-type(4) {
+            	width: 145px;
+            }
+
+
+
+
+            div.totales > span > span.numeric {
+            	text-align: right;
+            }
+
+            span.total_comisiones {
+				/* color: #CF8D64; */
+				background-color: #2DC800;
+				color: black;
+				margin-top: 10px;
+			}
+
+			span.total_ventas {
+				/* color: #64CF8D; */
+				background-color: #FFFF11;
+				color: black;
+				text-align: left!important;
+			}
+
+			span.total_descuentos {
+				background-color: #FF3333;
+				color: black;
+			}
+
+			span.total_Facturado {
+				background-color: #F781BE;
+				color: black;
+			}
+
+			span.total_diferencia {
+				background-color: #22FF22;
+				color: black;
+			}
+
+			span.sumaTotalesVentas {
+				background-color: #8258FA;
+				color: black;
+			}
+
+			span.saldo_por_cobrar {
+				background-color: #FFFF11;
+				color: black;
+			}
+
+			span.real {
+				-webkit-filter: hue-rotate(270deg);
+			}
+
+			section.sheet table.items{
+				width: 100% !important;
+				margin-left: auto; 
+				margin-right: auto;
+			}
+
+			.label{
+				color:black!important;
+				font-weight:bold!important;
+				padding:3px!important;;
+				border-radius:2px!important;
+				display:inline-block!important;
+				min-width:80px!important;
+			}
+
+			.fn_blue{
+				background-color: #2F74D0
+			}
+			.fn_yellow{
+				background-color: #fde601
+				
+			}
+
+			.fn_green{
+				background-color: #3bc372
+			}
+
+			.fn_red{
+				background-color: #ff6961
+			}
+
+			.fn_orange{
+				background-color: #FFB347
+			}
+
+			.uno{
+				display:none; 
+			}
+
+
+			/* -- ini -- modificado para mostrar boton volver arriba y los filtros abajo, gin, 09-04-18 */
+			li[data-name="exit"]{
+				top: 10px;
+			    left: 0;
+			    position: absolute;
+			}
+			#search{
+			    display: inline-block;
+			    margin: 30px 0 0 0px;
+			}
+			#search input[name="estado_compras"]{
+			   width: 110px!important;
+			}
+
+			div.labels-dates{
+				position: absolute;
+			    top: 48px;
+			    left: 155px;
+			    width: 165px;
+			}
+				div.labels-dates > span:nth-child(1){
+    				margin-left: 0px;
+				}
+				div.labels-dates > span:nth-child(2){	
+    				margin-left: 53px;
+				}
+			/* -- fin -- modificado para mostrar boton volver arriba y los filtros abajo, gin, 09-04-18 */
+
+		
+			
+		</style>
+
+		<script>
+			$(document).ready(function() {
+				$('div.totales').draggable({ containment: "parent" });
+				let buttonExport = $('<button class="export-report">Exportar a excel</button>');
+				$('.full-height').append(buttonExport);
+				buttonExport.click(function(){
+					if (ExistInfo) {
+						let sid = '';
+						$.each($.cookie(),function(clave,valor) { if (clave == hash && valor.match(/UNABASE/g)) sid = valor; });
+						let filters = $('#search').serializeAnything(true);
+						let url = nodeUrl + '/export-list-reporte-por-servicio/?download=true&sid=' + encodeURIComponent(sid) + '&' + filters + '&hostname=' + window.location.origin;
+						unaBase.log.save('Ha exportado el reporte por servicio', 'reportes');
+						let download = window.open(url);
+						download.blur();
+						window.focus();
+					}else{
+						alert("No existe información a exportar");
+					}
+				});
+				$('button.export-report').button({icons: { primary: 'ui-icon-calculator'}, text: true });
+
+				$('.currency-symbol').text(currency.symbol);
+			});			      
+		</script>
+		
+	</head>
+	<body>
+		<section class="sheet items" id="container-reportes" style="overflow:auto;max-height:120px;">
+			<div class="labels-dates">
+				<span>Desde</span>
+				<span>Hasta</span>
+			</div>
+			<table class="items reportes">
+				<thead>
+					<tr>
+						<th style="background-color: <!--#4DVAR vColorCorporativoCSS--> !important; width: 30px !important;"></th>
+						<th><div><button style="-webkit-filter: invert(100%);" class="ui-icon ui-icon-folder-open toggle all" title="Contraer todo"></button></div></th>
+						<!--<th style="text-align: left;">Categoria</th>-->
+						<th style="text-align: left;">Código</th>
+						<th style="text-align: left;">Cta. contable</th>
+						<th style="text-align: left; width: 300PX !important;">Servicios <span class="numero_servicios" style="vertical-align:top; font-color: red !important;"></span></th>
+						<!--<th style="text-align: left;">Ventas</th>-->
+						<th style="text-align: left;">Compras</th>
+						<!--<th style="text-align: left;">Utilidad</th>	-->					
+					</tr>
+				</thead>
+				<tfoot>
+					<tr>  
+				        <th colspan="5"></th>
+				       <!-- <th style="text-align: left;"><span>Total Ventas</span></th>-->
+				        <th style="text-align: left;"><span>Total Compras</span></th>
+				       <!-- <th style="text-align: left;"><span>Total Utilidad</span></th>-->
+			        </tr>
+		           	<tr>  
+			            <th colspan="4"></th>
+			           	<th style="text-align: right;"><span></span></th>
+			        <!--     	<th style="text-align: left;"><span class="label fn_yellow"><label class="currency-symbol"></label> <span id="total_ventas">0</span></th>-->
+			           	<th style="text-align: left;"><span class="label fn_yellow"><label class="currency-symbol"></label> <span id="total_compras">0</span></th>
+			          
+		           	</tr>
+		           		          
+				</tfoot>
+				<tbody></tbody>		
+			</table>					
+		</section>			
+	</body>
+</html>
+

@@ -1,0 +1,30 @@
+{
+	"total": <!--#4DHTML $total-->,
+	"error":  "<!--#4DHTML error-->",
+	"rows": [
+		<!--#4DLOOP id_pago -->
+		{
+			"id": <!--#4DHTML id_pago{id_pago}-->,
+			"cuenta_origen": "<!--#4DHTML aCuentaOrigen{id_pago}-->",
+			"cuenta_destino": "<!--#4DHTML aCuentaDestino{id_pago}-->",
+			"moneda_origen": "CLP",
+			"moneda_destino": "CLP",
+			"cod_banco_destino": "<!--#4DHTML aCodBancoDestino{id_pago}-->",
+			"nombre_banco": "<!--#4DHTML aBanco{id_pago}-->",
+			"tipo_cuenta": "<!--#4DHTML aTipoCuenta{id_pago}-->",
+			"nro_cuenta": "<!--#4DHTML aNroCuenta{id_pago}-->",
+			"rut_beneficiario": "<!--#4DHTML _V3_escapeString(aRutBeneficiario{id_pago})-->",
+			"rut_beneficiario_dv": "<!--#4DHTML _V3_escapeString(aRutBeneficiarioDv{id_pago})-->",
+			"nombre_beneficiario": "<!--#4DHTML _V3_escapeString(aNameBeneficiario{id_pago})-->",
+			"correo_beneficiario": "<!--#4DHTML _V3_escapeString(aCorreoBeneficiario{id_pago})-->",
+			"msj_correo_beneficiario":  "<!--#4DTEXT _V3_escapeString(aMsjCorreo{id_pago})-->",
+			"glosa_cartola_beneficiario":  "<!--#4DTEXT _V3_escapeString(aGlosaCartolaOrigen{id_pago})-->",
+			"glosa_cartola_originador":  "<!--#4DTEXT _V3_escapeString(aGlosaCartolaBeneficiario{id_pago})-->",
+			"monto": "<!--#4DHTML aMonto{id_pago}-->",
+			"folio_dtc": "<!--#4DHTML aFolioDTC{id_pago}-->",
+			"folio_oc": "<!--#4DHTML aFolioOC{id_pago}-->",
+			"glosa_personalizada": "<!--#4DTEXT _V3_escapeString(aGlosaP{id_pago})-->"
+		}<!--#4DIF NOT(id_pago{id_pago} = id_pago{Size of array(id_pago)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	]
+}

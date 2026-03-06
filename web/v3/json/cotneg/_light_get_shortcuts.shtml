@@ -1,0 +1,20 @@
+{
+	"total":"<!--#4DHTML total-->",
+	"records": {
+			"total_records": <!--#4DHTML totalRecords-->
+	}
+	
+		<!--#4DIF totalRecords > 0-->
+
+		,"rows": [
+			<!--#4DLOOP aId-->
+			{
+				"id": <!--#4DHTML aId{aId}-->,
+				"name": "<!--#4DHTML aName{aId}-->",
+				"valor": "<!--#4DHTML aValor{aId}-->"
+			}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		]
+		<!--#4DENDIF-->
+
+}

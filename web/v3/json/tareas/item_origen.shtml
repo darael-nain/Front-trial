@@ -1,0 +1,11 @@
+{
+	"items": [
+	<!--#4DLOOP a_item_id-->
+		{	
+			"id": "<!--#4DTEXT a_item_id{a_item_id}-->",
+			"correlativo": <!--#4DTEXT a_item_correlativo{a_item_id}-->,
+			"nombre": "<!--#4DTEXT _V3_escapeString(a_item_nombre{a_item_id})-->"
+		}<!--#4DIF NOT(a_item_id{a_item_id} = a_item_id{Size of array(a_item_id)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

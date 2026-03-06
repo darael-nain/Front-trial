@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--#4DSCRIPT/_V3_proxy_getOtsUsuarios-->    
+    <title>Usuario</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="/v3/views/usuarios/script/content.js"></script>
+  </head>
+  <body>
+    <section class="sheet sheet-usuarios css-main notificacion">
+      <div style="margin:10px;">
+           <label>Valor HH unitario en pesos:</label>
+           <input style="width:100px;display:block" type="text" class="currency" name="ots_valor_hh_recursos_aux" value="<!--#4DTEXT ots_valor_hh_recursos-->">
+      </div>
+    </section>
+  </body>
+</html>

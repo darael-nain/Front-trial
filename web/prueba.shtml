@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Curso de jQuery. AJAX</title>
+    <!--<link rel="stylesheet" href="comunes.css" type="text/css" media="screen" />-->
+    <link rel="stylesheet" href="css/estilos.css" type="text/css" media="screen" />
+    <script src="script/jquery.js" type="text/javascript"></script>
+    <script src="script/script.js" type="text/javascript"></script>
+</head>
+
+
+<body>
+<div class="letras">
+  <div class="letra" id="letra-a">   
+    <div class="boton">Crear OC.</div>
+  </div>
+  <div class="letra" id="letra-b">   
+    <div class="boton">Listar OC.</div>
+  </div>
+  <div class="letra" id="letra-c">
+    <div class="boton">Cear Solicitud Fondos</div>
+  </div>
+  <div class="letra" id="letra-d">
+    <div class="boton">Cear Solicitud Fondos</div>
+  </div>
+</div>
+
+<div id="diccionario">
+</div>
+
+</body>
+</html>

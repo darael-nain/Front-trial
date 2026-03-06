@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html>
+	<!--#4DSCRIPT/_V3_proxy-->
+	<!--#4DSCRIPT/_V3_proxy_getCotizacion-->
+	<head>
+		<title>Negocios</title>
+		<meta charset="utf-8">
+
+		<script src="/v3/script/idle.js"></script>
+		<style>
+
+			td.currency {
+				text-align: right !important;
+			}
+
+			td.closed-compras{
+				text-align: left !important;
+			}
+
+			table.symbol{
+				text-align: left !important;
+			}
+
+			tr:not([data-closed-compras="true"]) .closed-compras span {
+				display: none;
+			}
+
+			.u-cot-block{
+				background-color: #ffb2ae !important;
+				color: white;
+				/*pointer-events: none;*/
+				cursor: default;
+				
+			}
+			.u-cot-block:active{
+				/*background-color: #ffb2ae !important;
+				color: white;*/
+				/*pointer-events: none;*/
+				/*cursor: default;*/
+				
+			}
+			.u-cot-block input[type="checkbox"]{
+				display: none;
+
+			}
+			.ui-tooltip *{
+				font-size: 14px;
+			}
+			#userBlock{
+				font-weight: bold;
+			}
+
+			.style_por_proyecto{
+				width:150px!important;
+				border-radius: 3px;
+				margin-right: 2px;
+				height:22px;
+			}
+
+		</style>
+
+		<link rel="stylesheet" href="/v3/views/compras/lista.css?7474848334748474847">
+		<script>
+
+			<!--#4DIF _V3_param_margenCompraInverso-->
+			var margen_desde_compra_inverso = true;
+			<!--#4DELSE-->
+			var margen_desde_compra_inverso = false;
+			<!--#4DENDIF-->
+
+			var mostrar_marca_nocliente = <!--#4DTEXT mostrar_marca_nocliente-->;
+
+			let cant_proyectos_registrados = <!--#4DTEXT cant_proyectos_registrados-->;
+
+			$(document).ready(function() {
+
+				socketNew.on('negocios', function(data) {
+					var container = $('table.results tbody');
+					for(var i = 0; i < data.length; i++){
+						data[i].id = String(data[i].id);
+						var exchange = $;
+						if( data[i].exchange == "Peso chileno"){
+							exchange = "$";
+						}else if(data[i].exchange == "UF"){
+							exchange = "CLF";
+						}else if(data[i].exchange == "DOLARES"){
+							exchange = "USD";
+						} 
+						if(data[i].block == "true" || data[i].block){							
+							container.find('tr[data-id='+ data[i].id +']').addClass('u-cot-block').attr({'id':data[i].id, 'data-block': true, 'data-blockUserName':data[i].name, 'data-blockUserEmail': data[i].user_email, 'data-blockUser': data[i].user});
+		
+						}else{
+							// var oldTitle = container.find('tr[data-id='+data[i].id+']').attr('data-title');
+							container.find('tr[data-id='+ data[i].id +']').removeClass('u-cot-block').attr({'id':data[i].id, 'data-block': false, 'data-blockUserName':"", 'data-blockUserEmail': "", 'data-blockUser': ""});
+							// container.find('tr[data-id='+data[i].id+']').find('td.currency').text($.number(data[i].totalNeto, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+							// container.find('tr[data-id='+data[i].id+']').find('td.currency').append('<span style="position: absolute; left: 10px;">'+ exchange + '</span> ');
+							// container.find('tr[data-id='+data[i].id+']').find('td.text').text(data[i].description);
+						}
+					}
+				});
+
+				
+				unblockDisconnected(socketNew);
+
+				$('.results').find('.links-ver-formula').click(function(){
+					alert();
+					window.open('https://docs.google.com/document/d/1Ga3Ars9JuHjHIOFEZBMtRrmwHivI-J29QiiIc6pvSF0/edit?usp=sharing');
+				});
+
+				var showCurrentAll = <!--#4DTEXT _V3_showAllNegociosTodo-->;
+				var showCurrentYear = <!--#4DTEXT _V3_showAllNegociosAnio-->;
+				var showCurrentMonth = <!--#4DTEXT _V3_showAllNegociosMes-->;
+
+				unaBase.toolbox.init();
+				unaBase.toolbox.search.init({
+					url: function() { return '/4DACTION/_V3_getNegocio' },
+					entity: 'Negocio',
+					callback : function(data){
+
+						$('tfoot.totales').find('span[data-name="total-neto"]').text(data.totales.neto);
+						$('tfoot.totales').find('span[data-name="gasto-p"]').text(data.totales.gasto_p);
+						$('tfoot.totales').find('span[data-name="gasto-r"]').text(data.totales.gasto_r);
+						$('tfoot.totales').find('span[data-name="por-gastar"]').text(data.totales.por_gastar);
+						$('tfoot.totales').find('span[data-name="utilidad-value-pres"]').text(data.totales.utilidad_value);
+						$('tfoot.totales').find('span[data-name="utilidad-percent"]').text(data.totales.utilidad_percent);
+						$('tfoot.totales').find('span[data-name="utilidad-final"]').text(data.totales.utilidad_final);
+						
+						$('tfoot.totales').find('span[data-name="total_facturado"]').text(data.totales.totales_total_facturado);
+						$('tfoot.totales').find('span[data-name="por_facturar"]').text(data.totales.totales_saldo_por_facturar);
+
+						$('tfoot.totales').find('span[data-name="total_cobrado"]').text(data.totales.total_cobrado);
+						$('tfoot.totales').find('span[data-name="total_por_cobrar"]').text(data.totales.total_por_cobrar);
+						
+						$('tfoot.totales').find('span[data-name="total_justificado"]').text(data.totales.total_justificado);
+						$('tfoot.totales').find('span[data-name="total_por_justificar"]').text(data.totales.total_por_justificar);
+
+						$('tfoot.totales').find('span[data-name="total_pagado"]').text(data.totales.total_pagado);
+						$('tfoot.totales').find('span[data-name="total_por_pagar"]').text(data.totales.total_por_pagar);
+
+						// para probar con cifras de mil millones
+						/*$('tfoot.totales').find('span[data-name="total-neto"]').text("$ 2.812.427.572");
+						$('tfoot.totales').find('span[data-name="gasto-p"]').text("$ 2.054.582.972");
+						$('tfoot.totales').find('span[data-name="gasto-r"]').text("$ 1.587.415.489");
+						$('tfoot.totales').find('span[data-name="por-gastar"]').text("$ 467.167.483");
+						$('tfoot.totales').find('span[data-name="utilidad-value-pres"]').text("$ 757.844.600");
+						$('tfoot.totales').find('span[data-name="utilidad-final"]').text("$ 1.225.012.083");
+						$('tfoot.totales').find('span[data-name="utilidad-percent"]').text("43,55 %");
+						$('tfoot.totales').find('span[data-name="por_facturar"]').text("$ 2.374.379.572");
+						$('tfoot.totales').find('span[data-name="total_facturado"]').text("$ 438.048.001");*/
+
+						// Fijar header y footer
+						$('#viewport .fht-table-init').fixedHeaderTable('destroy');
+						//$('#viewport table.fixed').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false });
+						// --ini-- corrección para ordenar - V3_212
+						$('#viewport table.fixed').fixedHeaderTable({
+							footer: true,
+							cloneHeadToFoot: false,
+							fixedColumn: false,
+							create: function() {
+								$('[data-sort-by]').removeClass('sort-order-desc').removeClass('sort-order-asc').removeData('sort-order');
+								$('[data-sort-by="' + data.sort.by + '"]').addClass('sort-order-' + data.sort.order).data('sort-order', data.sort.order);
+							}
+						});
+						// --fin-- corrección para ordenar - V3_212
+
+						$('#search input[name="parametro"]').attr('placeholder', data.parametros.nombre_param1.toLowerCase()).css('text-transform', 'capitalize');
+						
+						for(var i = 0; i < $('tbody.ui-selectable tr').length; i ++ ){ 
+							var dataBlock = $('tbody.ui-selectable tr')[i].dataset.block;
+							var dataUser = $('tbody.ui-selectable tr')[i].dataset.blockuser;
+							if(dataBlock == "true"){								
+								$('tbody.ui-selectable tr')[i].className += " block_by_use u-cot-block";
+							}
+						}
+
+					},
+					row: {
+						html: function(i, rows) {
+
+							var nombre_cliente = rows[i].empresa;
+							if (mostrar_marca_nocliente) {
+								if (rows[i].param1_valor != "") {
+									nombre_cliente = rows[i].param1_valor;
+								}else{
+									nombre_cliente = ((rows[i].empresa !== undefined)? rows[i].empresa.alias : 'N/A');
+								}
+							}else{
+								nombre_cliente = ((rows[i].empresa !== undefined)? rows[i].empresa.alias : 'N/A');
+							}
+
+
+							var title = "Área de negocio: " + rows[i].area_negocio + " / Emisor: " + rows[i].username.toUpperCase() + " / Fecha estimada de cierre: " + rows[i].fecha_estimada_cierre;
+
+							var utilidad_presupuestada_ratio = 0;
+							var utilidad_real_ratio = 0;
+							if (rows[i].margen_compra_resumenes) {
+								if (margen_desde_compra_inverso) {
+									utilidad_presupuestada_ratio = (1 - (rows[i].total_neto - rows[i].costo.presupuestado) / rows[i].total_neto) * 100;
+									utilidad_real_ratio = (1 - (rows[i].total_neto - (rows[i].costo.real + rows[i].por_gastar)) / rows[i].total_neto) * 100;
+								} else {
+									utilidad_presupuestada_ratio = (rows[i].total_neto - rows[i].costo.presupuestado) / rows[i].costo.presupuestado * 100;
+									utilidad_real_ratio = (rows[i].total_neto - (rows[i].costo.real + rows[i].por_gastar)) / rows[i].costo.real * 100;
+								}
+							} else {
+								utilidad_presupuestada_ratio = (rows[i].total_neto - rows[i].costo.presupuestado) / rows[i].total_neto * 100;
+								utilidad_real_ratio = (rows[i].total_neto - (rows[i].costo.real + rows[i].por_gastar)) / rows[i].total_neto * 100;
+							}
+
+							return '<tr data-id="' + rows[i].id + '"  data-index="' + rows[i].folio + '" data-username="' + rows[i].username + '" data-status="' + rows[i].status + '" data-closed="' + rows[i].closed + '" data-closed-compras="' + rows[i].closed_compras + '" title="' + title + '" data-por-facturar="' + rows[i].saldo_por_facturar + '" data-block="'+rows[i].block_by_use+'"  data-blockUser="'+rows[i].block_user+'" data-blockUserEmail="'+rows[i].block_user_email+'" data-blockUserName="'+rows[i].block_user_name+'" data-id-proyecto="' + rows[i].id_proyecto + '" data-text-proyecto="' + rows[i].text_proyecto + '">' +
+
+								'<td data-disabled=true><input class="selected" type="checkbox" name="selected_one"></td>' +
+
+							<!--#4DIF _V3_verifica_permisos_web(_V3_data_username;494)-->
+
+									// 1. numero
+								'<td width="5%">' + rows[i].folio + ' <span class="ui-icon ui-icon-locked" style="vertical-align: middle; margin-top: -2px; display: inline-block; visibility: ' + ((rows[i].closed_compras)? 'visible' : 'hidden' ) + ';"></span>'+ ((rows[i].text_proyecto !="Sin proyecto") ? '<span class="label-info-proyecto" style="color:rgb(67,165,24);font-size:9px;">'+ rows[i].text_proyecto +'</span>' : '') +'</td>' +
+
+								<!--#4DIF (show_codigo_column)-->
+								'<td width="5%">' + rows[i].param4_valor + '</td>' +
+								<!--#4DENDIF-->
+
+								// 2. f.asignación
+								'<td width="5%">' + '<time datetime="' + Date.parse(rows[i].fecha_asignacion).toISOString() + '">' + $.datepicker.formatDate('dd-mm-yy', Date.parse(rows[i].fecha_asignacion)) + '</time></td>' +
+
+								// 3. f.realización
+								'<td width="5%">' + rows[i].fecha_realizacion + '</td>' +
+
+								// 4. f.cliente
+								// '<td width="15%" class="left">' + ((rows[i].empresa !== undefined)? rows[i].empresa.alias : 'N/A') + '</td>' +
+
+								'<td width="15%" class="left">' + nombre_cliente + '</td>' +
+
+								// 5. referencia
+								'<td width="15%" class="left"' + ((rows[i].closed)? ' style="color: blue !important;"' : '') + '>' + rows[i].text + '</td>' +
+
+								// 6. neto
+								(
+									(rows[i].exchange !== undefined && rows[i].exchange.type != currency.code)?
+									'<td width="5%" style="text-align: right; position: relative;"><span style="position: absolute; left: 5px;">'+ rows[i].exchange.type + '</span> ' + (rows[i].total_neto / rows[i].exchange.rate).numberFormat(2, ',', '.') + '</td>'
+									:
+									'<td width="5%" class="currency">' + rows[i].total_neto + '</td>'
+								) +
+
+								// 7. gp
+								'<td width="5%" class="currency">' + rows[i].costo.presupuestado + '</td>' +
+
+								// 8. gr
+								'<td width="5%" class="extended currency">' + rows[i].costo.real + '</td>' +
+
+								<!--#4DIF _V3_difGastoListNegocios-->
+								// 9. diferencia gasto
+								'<td width="5%" class="currency" style="color: ' + ( ( (rows[i].costo.presupuestado - rows[i].costo.real) >= 0)? 'green' : 'red'  ) + ';">' + (rows[i].costo.presupuestado - rows[i].costo.real) + '</td>' +
+								<!--#4DELSE-->
+								// 10. por gastar
+								'<td width="5%" class="currency" style="color: ' + ( (rows[i].por_gastar >= 0)? 'inherit' : 'inherit'  ) + ';">' + ((rows[i].por_gastar > 0)? rows[i].por_gastar : 0) + '</td>' +
+								<!--#4DENDIF-->
+
+								// 11. eficiencia
+								<!--#4DIF _V3_difGastoListNegocios-->
+									'<td width="5%" class="extended percent" style="color: ' + ( (((rows[i].costo.presupuestado != 0)? (((rows[i].costo.presupuestado - rows[i].costo.real) / rows[i].costo.presupuestado) * 100.00) : 0) >= 0)? 'green' : 'red'  ) + ';">' +  ( (rows[i].costo.presupuestado != 0)? (((rows[i].costo.presupuestado - rows[i].costo.real) / rows[i].costo.presupuestado) * 100.00) : 0) + '</td>' +
+								<!--#4DELSE-->
+									'<td width="5%" class="extended percent" style="color: ' + ( (((rows[i].costo.presupuestado != 0)? (((rows[i].costo.presupuestado - rows[i].costo.real - rows[i].por_gastar) / rows[i].costo.presupuestado) * 100.00) : 0) >= 0)? 'green' : 'red'  ) + ';">' +  ( (rows[i].costo.presupuestado != 0)? (((rows[i].costo.presupuestado - rows[i].costo.real - rows[i].por_gastar) / rows[i].costo.presupuestado) * 100.00) : 0) + '</td>' +
+
+								<!--#4DENDIF-->
+
+								// 12. utilidad presupuestada
+								'<td width="5%" class="extended currency">' + (rows[i].total_neto - rows[i].costo.presupuestado) + '</td>' +
+
+								<!--#4DIF _V3_difGastoListNegocios-->
+									// 13. utilidad real monto
+									'<td width="5%" class="extended currency">' + (rows[i].total_neto - rows[i].costo.real) + '</td>' +
+
+									// 14. utilidad real porcentaje
+									'<td width="5%" class="extended percent' + (!rows[i].margen_compra_resumenes? ' old-margen' : '') + '"' + ((rows[i].total_neto > 0)? (' style="color: ' + ( (  ((rows[i].total_neto - rows[i].costo.real) / rows[i].total_neto) * 100.00 >= ((rows[i].total_neto - rows[i].costo.presupuestado) / rows[i].total_neto) * 100.00  )? 'green' : 'red' ) + ';"') : '') + '>' + ((rows[i].total_neto > 0)? ((rows[i].total_neto - rows[i].costo.real) / rows[i].total_neto) * 100.00 : 'N/A') + '</td>' +
+								<!--#4DELSE-->
+									// 15. utilidad final monto
+									'<td width="5%" class="extended currency">' + (rows[i].total_neto - rows[i].costo.real - ((rows[i].por_gastar > 0)? rows[i].por_gastar : 0)) + '</td>' +
+
+									// 16. utilidad final porcentaje
+									//'<td width="5%" class="extended percent"' + ((rows[i].total_neto > 0)? (' style="color: ' + ( (  ((rows[i].total_neto - (rows[i].costo.real + rows[i].por_gastar)) / rows[i].total_neto) * 100.00 >= ((rows[i].total_neto - rows[i].costo.presupuestado) / rows[i].total_neto) * 100.00  )? 'green' : 'red' ) + ';"') : '') + '>' + ((rows[i].total_neto > 0)? ((rows[i].total_neto - (rows[i].costo.real + rows[i].por_gastar)) / rows[i].total_neto) * 100.00 : 'N/A') +
+									'<td width="5%" class="extended percent' + (!rows[i].margen_compra_resumenes? ' old-margen' : '') + '"' + ((rows[i].total_neto > 0 && isFinite(utilidad_real_ratio))? ' style="color: ' + ( (  (utilidad_real_ratio >= utilidad_presupuestada_ratio )? 'green' : 'red' ) + ';"') : '') + '>' + ((rows[i].total_neto > 0 && isFinite(utilidad_real_ratio))? utilidad_real_ratio : 'N/A') +
+									'</td>' +
+								<!--#4DENDIF-->
+
+								// 17. facturado
+								(
+									(rows[i].exchange !== undefined && rows[i].exchange.type != currency.code)?
+									'<td width="5%" style="text-align: right; position: relative;"><span style="position: absolute; left: 5px;">'+ rows[i].exchange.type + '</span> ' + rows[i].exchange_facturado.numberFormat(2, ',', '.') + '</td>'
+									:
+									'<td width="5%" class="currency">' + rows[i].total_facturado + '</td>'
+								) +
+
+								// 18. por facturar
+								(
+									(rows[i].exchange !== undefined && rows[i].exchange.type != currency.code)?
+									'<td width="5%" style="text-align: right; position: relative;"><span style="position: absolute; left: 5px;">'+ rows[i].exchange.type + '</span> ' + rows[i].exchange_porfacturar.numberFormat(2, ',', '.') + '</td>'
+									:
+									'<td width="5%" class="currency">' + rows[i].saldo_por_facturar + '</td>'
+								) +
+
+								<!--#4DIF v3_mostrar_totales_extendidos-->
+								// 19. cobrado
+								'<td width="5%" class="extended currency">' + rows[i].total_cobrado + '</td>' +
+
+								// 20. por cobrar
+								'<td width="5%" class="extended currency">' + rows[i].total_por_cobrar + '</td>' +
+
+								// 21. Justificado
+								'<td width="5%" class="extended currency">' + rows[i].costo.total_justificado + '</td>' +
+
+								// 22. por justificar
+								'<td width="5%" class="extended currency">' + rows[i].costo.total_por_justificar + '</td>' +
+
+								// 23. Pagado
+								'<td width="5%" class="extended currency">' + rows[i].costo.total_pagado + '</td>' +
+
+								// 24. por pagar
+								'<td width="5%" class="extended currency">' + rows[i].costo.total_por_pagar + '</td>' +
+								<!--#4DENDIF-->
+
+
+							<!--#4DELSE-->
+
+								// 1. numero
+								'<td width="10%">' + rows[i].folio + ' <span class="ui-icon ui-icon-locked" style="vertical-align: middle; margin-top: -2px; display: inline-block; visibility: ' + ((rows[i].closed_compras)? 'visible' : 'hidden' ) + ';"></span></td>' +
+
+								<!--#4DIF (show_codigo_column)-->
+								'<td width="5%">' + rows[i].param4_valor + '</td>' +
+								<!--#4DENDIF-->
+
+								// 2. f.asignación
+								'<td width="10%">' + '<time datetime="' + Date.parse(rows[i].fecha_asignacion).toISOString() + '">' + $.datepicker.formatDate('dd-mm-yy', Date.parse(rows[i].fecha_asignacion)) + '</time></td>' +
+
+								// 3. f.realización
+								'<td width="10%">' + rows[i].fecha_realizacion + '</td>' +
+
+								// 4. f.cliente
+								'<td width="30%" class="left">' + nombre_cliente + '</td>' +
+
+								// 5. referencia
+								'<td width="30%" class="left"' + ((rows[i].closed)? ' style="color: blue !important;"' : '') + '>' + rows[i].text + '</td>' +
+
+								<!--#4DIF (Not(no_mostrar_total_neto_neg))-->
+
+								// 5. neto
+								'<td width="5%" class="currency">' + rows[i].total_neto + '</td>' +
+
+								<!--#4DENDIF-->
+
+							<!--#4DENDIF-->
+
+							'</tr>'
+						}
+					},
+					// detail: {
+					// 	url: function(id) { return '/v3/views/negocios/content.shtml?id=' + id },
+					// 	iframe: false
+					// },
+					inflection: {
+						singular: 'negocio',
+						plural: 'negocios',
+						none: 'ningun'
+					},
+
+					// Filtros
+					filters: [
+						{ name: 'fecha_asignacion', type: 'month', caption: 'Fecha de asignación', range: true, currentMonth: ((showCurrentMonth) ? true : false) , currentYear: ((showCurrentYear) ? true : false) },
+						//{ name: 'updated_at', type: 'month', caption: 'Fecha últ. modificación', range: true },
+						// Pendiente: agregar datasource remoto y convertir a checkbox
+						// con jquery ui autocomplete
+						{ name: 'area_negocio', type: 'autocomplete', caption: 'Área de negocio', dataSource: 'getAreaNegocio' },
+						{ name: 'ejecutivo_responsable', type: 'autocomplete', caption: 'Ejecutivo responsable', dataSource: 'getUsuarioPerfilEjecutivo' },
+						{ name: 'estado', type: 'checkbox', caption: 'Estado del negocio', options: [
+							{ caption: 'En proceso', name: 'estado_en_proceso', value: true },
+							{ caption: 'Cerrado', name: 'estado_cerrado', value: false },
+							{ caption: 'Anulado', name: 'estado_nulo', value: false }
+						] },
+						{ name: 'estado_compras', type: 'autocomplete', caption: 'Estado de las compras', dataObject: [
+							{
+								id: true,
+								text: 'Abiertas para compras'
+							},
+							{
+								id: false,
+								text: 'Cerradas para compras'
+							}
+						]},
+
+
+						{ name: 'estado_factura', type: 'autocomplete', caption: 'Estado de la factura', dataObject: [
+
+							{
+								id: true,
+								text: 'facturado'
+							},
+							{
+								id: false,
+								text: 'por facturar'
+							}
+
+
+						] },
+
+						{ name: 'por_proyecto', type: 'autocomplete', caption: 'Por proyecto', dataSource: 'getProyectosActivos' },
+
+						// { name: 'parametro', type: 'autocomplete', caption: '', dataSource: 'Param1' },
+
+						{ name: 'personalizadoUno', type: 'autocomplete', caption: 'campo1', dataSource: 'getParamForSearch1' },
+						{ name: 'personalizadoDos', type: 'autocomplete', caption: 'campo2', dataSource: 'getParamForSearch2' },
+						{ name: 'personalizadoTres', type: 'autocomplete', caption: 'campo3', dataSource: 'getParamForSearch3' },
+
+						{ name: 'more', caption: 'Más', type: 'date_advanced', options: [
+							{ caption: 'Fecha de asignación', name: 'asignado_at', default: true, currentMonth: ((showCurrentMonth) ? true : false) , currentYear: ((showCurrentYear) ? true : false) },
+							{ caption: 'Fecha de creación', name: 'created_at' },
+							{ caption: 'Fecha de realización', name: 'realizado_at' },
+							{ caption: 'Fecha de cierre de negocio', name: 'cerrado_at' },
+							{ caption: 'Fecha de última modificación', name: 'updated_at' }
+						] }
+
+
+					]
+				});
+
+				unaBase.toolbox.menu.init({
+					entity: 'Negocios',
+					buttons: [ 'export_list', 'export_list_items_doc' ]
+				});
+
+				$("body").on("click", "input.selected", function(){
+					var input = $(this);
+					if (input.attr('name') == "selected_all" ) {
+						if (input.prop("checked")) {
+							$('table tbody input[name="selected_one"]').prop("checked", true);
+							$('#dropdown_launcher').show();
+						}else{
+							$('table tbody input[name="selected_one"]').prop("checked", false);
+							$('#dropdown_launcher').hide();
+						}
+					}else{
+						var cantSelect = $('table tbody td input:checked').length;
+						if (input.prop("checked")) {
+							$('#dropdown_launcher').show();
+						}else{
+							if(cantSelect == 0){
+								$('#dropdown_launcher').hide();
+							}
+						}
+					}
+				});
+
+// $('tr[data-id="21878"]').find('td[data-disable]').hide()
+				//ir a detalle
+				$('table.padre tbody').on('click', 'td', function() {
+					var idCot = $(this).parent('tr').data("id");
+					var number = $(this).parent('tr').data("index");
+					var disb = $(this).attr('data-disabled');
+					var trBlocked = $(this).closest("tr").attr('data-block');
+					var trBlockedUser = $(this).closest("tr").attr('data-blockuser');
+					if(trBlocked == 'false' && !disb){
+						unaBase.loadInto.viewport('/v3/views/negocios/content.shtml?id=' + idCot+'&from=self');
+					}else if(trBlockedUser == $('html > body.menu.home > aside > div > div > h1').data('username') ){
+	
+
+						confirm('Este negocio esta bloqueado ya que anteriormente estabas trabajando en él, si deseas seguir editándolo verifica que no lo tengas abierto en otra pestaña, de no ser así, desbloquealo acá.').done(function(data) {
+							if (data) {
+								window.open(nodeUrl+'/unblockSameUser/'+idCot+'/'+ $('.sidebar li.active').data('name')+'/'+$(this).attr('data-blockuser'), '_blank');								
+								// $(this).remove();
+								unaBase.history.back();
+							}
+						});
+					}else if (!disb){
+						var block_user = $(this).parent('tr').attr('data-blockuser');
+						var block_user_email = $(this).parent('tr').attr('data-blockuseremail');
+						var block_user_name = camelWord($(this).parent('tr').attr('data-blockUserName'));
+						var reqName = camelWord($('html > body.menu.home > aside > div > div > h1').text());
+						var reqEmail = $('html > body.menu.home > aside > div > div > h1').data('email');
+						// var number = $(this).attr('data-index');
+						// var cotId = $(this).attr('data-id');
+
+
+						confirm('El negocio está siendo modificada por   <span id="userBlock">'+block_user_name+'</span><br/> ¿Deseas solicitar el desbloqueo de esta cotización?').done(function(data) {
+							if (data) {
+								var htmlText = 'Estimado <b style="color: rgb(4,167,107);">'+block_user_name+'</b>,<br>    Actualmente estás trabajando en el negocio Nro.'+number+', <b>'+reqName+'</b> ha solicitado trabajar en el mismo. Si aún continuas trabajando y deseas habilitar el acceso debes guardar y salir del negocio. <br><br> De lo contrario puedes desbloquear haciendo<br><br> <a class="u-internal" href="'+nodeUrl+'/unblock/'+idCot+'/'+number+'/negocios/'+block_user+'/'+reqName+'/'+reqEmail+'">Desbloquear</a><br><br>';
+								window.open(nodeUrl+'/unblock?subject='+reqName+' ha solicitado desbloquear el negocio Nro.'+number+'&msg='+htmlText+'&email='+block_user_email, '_blank');
+								$(this).remove();
+							}
+						});
+					}
+				});
+
+				// Opciones para listado
+				(function() {
+					var htmlObject;
+
+					htmlObject = $('\
+						<ul id="dropdown_menu" class="dropdown-menu" style="position: absolute; top: 95px; left: 11px; z-index: 1000;"> \
+							<li><a href="#" '+ ((!access._488)? 'style="color:gray"':'') +' class="close-negocios" data-size="small"><span class="ui-icon ui-icon-locked"></span>Cerrar negocios</a></li>	\
+							<li><a href="#" '+ ((!access._490)? 'style="color:gray"':'') +' class="close-compras" data-size="small"><span class="ui-icon ui-icon-locked"></span>Cerrar compras</a></li>	\
+							<li><a href="#" '+ ((!access._580)? 'style="color:gray"':'') +' class="asociar-proyectos" data-size="small"><span class="ui-icon ui-icon-link"></span>Asociar a proyecto</a></li>	\
+							</ul> \
+					');
+
+					htmlObject.find('a.close-negocios').click(function(event) {
+						if (access._488) {
+							var ids = [];
+							var ids_nulo = [];
+							var ids_cerrado = [];
+							var ids_cerrado_compras = [];
+							var ids_facturado = [];
+
+							$('#viewport tbody.ui-selectable tr[data-id] td:first-of-type input.selected:checked').each(function() {
+								ids.push($(this).closest('tr').data('id'));
+								if (!$(this).closest('tr').data('status')) {
+									ids_nulo.push($(this).closest('tr').data('id'));
+								}
+								if ($(this).closest('tr').data('closed')) {
+									ids_cerrado.push($(this).closest('tr').data('id'));
+								}
+								if ($(this).closest('tr').data('closed-compras')) {
+									ids_cerrado_compras.push($(this).closest('tr').data('id'));
+								}
+								if (!$(this).closest('tr').data('por-facturar')) {
+									ids_facturado.push($(this).closest('tr').data('id'));
+								}
+							});
+
+							var nulo = (ids_nulo.length > 0);
+							var cerrado = (ids_cerrado.length > 0);
+							var cerrado_compras = (ids_cerrado_compras.length > 0);
+							var facturado = (ids_facturado.length > 0);
+
+							if (!nulo && !cerrado) {
+								confirm(MSG.get('CONFIRM_NEGOCIO_CLOSE_BATCH')).done(function(data) {
+									if (data) {
+										$.ajax({
+											url: '/4DACTION/_V3_batchCierreByNegocio',
+											data: {
+												ids: ids.join('|'),
+												close: true
+											},
+											dataType: 'json',
+											success: function(data) {
+												if (typeof data.detail != 'undefined') {
+													if (data.detail.result) {
+														toastr.success(NOTIFY.get('SUCCESS_NEGOCIO_CLOSE_BATCH'));
+													} else {
+														toastr.warning(sprintf(NOTIFY.get('WARNING_NEGOCIO_CLOSE_BATCH'), data.detail.data.replace("\n", '<br>')));
+													}
+												} else {
+													if (data.success) {
+														toastr.success(NOTIFY.get('SUCCESS_NEGOCIO_CLOSE_BATCH'));
+														setTimeout(function() {
+															unaBase.toolbox.search.save();
+															unaBase.toolbox.search.restore();
+														}, 1000);
+													} else {
+														if (data.opened) {
+															if (data.readonly)
+																toastr.error(NOTIFY.get('ERROR_RECORD_READONLY_BATCH', 'Error'));
+														}
+													}
+												}
+											}
+										});
+									}
+								});
+							} else {
+								var msg = "No es posible hacer cierre masivo de negocios porque se han seleccionado:<br>";
+								msg+= cerrado? "- Negocios que ya fueron cerrados.<br>" : '';
+								msg+= nulo? "- Negocios anulados.<br>" : '';
+								toastr.warning(msg);
+							}
+						}else{
+							alert("No cuentas con permiso para realizar esta acción.");
+						}
+					});
+
+					htmlObject.find('a.close-compras').click(function(event) {
+						if (access._490) {
+							var ids = [];
+							var ids_nulo = [];
+							var ids_cerrado = [];
+							var ids_cerrado_compras = [];
+
+							$('#viewport tbody.ui-selectable tr[data-id] td:first-of-type input.selected:checked').each(function() {
+								ids.push($(this).closest('tr').data('id'));
+								if (!$(this).closest('tr').data('status')) {
+									ids_nulo.push($(this).closest('tr').data('id'));
+								}
+								if ($(this).closest('tr').data('closed')) {
+									ids_cerrado.push($(this).closest('tr').data('id'));
+								}
+								if ($(this).closest('tr').data('closed-compras')) {
+									ids_cerrado_compras.push($(this).closest('tr').data('id'));
+								}
+							});
+
+							var nulo = (ids_nulo.length > 0);
+							var cerrado = (ids_cerrado.length > 0);
+							var cerrado_compras = (ids_cerrado_compras.length > 0);
+
+							if (!nulo && !cerrado && !cerrado_compras) {
+								confirm(MSG.get('CONFIRM_NEGOCIO_CLOSE_COMPRAS_BATCH')).done(function(data) {
+									if (data) {
+										$.ajax({
+											url: '/4DACTION/_V3_batchCierreComprasNeg',
+											data: {
+												ids: ids.join('|'),
+												close: true
+											},
+											dataType: 'json',
+											success: function(data) {
+												if (data.success) {
+													toastr.success(NOTIFY.get('SUCCESS_NEGOCIO_CLOSE_COMPRAS'));
+													setTimeout(function() {
+														unaBase.toolbox.search.save();
+														unaBase.toolbox.search.restore();
+													}, 1000);
+												} else {
+													if (data.opened) {
+														if (data.readonly)
+															toastr.error(NOTIFY.get('ERROR_RECORD_READONLY_BATCH', 'Error'));
+													}
+												}
+											}
+										});
+									}
+								});
+							} else {
+								var msg = "No es posible hacer cierre masivo de compras porque se han seleccionado:<br>";
+								msg+= cerrado? "- Negocios que ya fueron cerrados.<br>" : '';
+								msg+= nulo? "- Negocios anulados.<br>" : '';
+								msg+= cerrado_compras? "- Negocios que ya fueron cerrados para compra.<br>" : '';
+								toastr.warning(msg);
+							}
+						}else{
+							alert("No cuentas con permiso para realizar esta acción.");
+						}
+					});
+
+					htmlObject.find('a.asociar-proyectos').click(function(event) {
+						if (access._580) {
+							let ids = [];
+							let ids_nulo = [];
+							let ids_con_proyectos = [];
+
+							$('#viewport tbody.ui-selectable tr[data-id] td:first-of-type input.selected:checked').each(function() {
+								ids.push($(this).closest('tr').data('id'));
+								if (!$(this).closest('tr').data('status')) {
+									ids_nulo.push($(this).closest('tr').data('id'));
+								}
+								if ($(this).closest('tr').data('id-proyecto')) {
+									ids_con_proyectos.push($(this).closest('tr').data('id'));
+								}
+							});
+
+							let nulo = (ids_nulo.length > 0);
+							let asociado_a_proyecto = (ids_con_proyectos.length > 0);
+							if (!nulo && !asociado_a_proyecto) {
+
+								let htmlObject = $('<section> \
+										<!--<span>Buscar proyecto para asociar:</span>--> \
+										<form autocomplete="on" target="the_iframe" action="about:blank"> \
+											<input data-id-seleccionado="0" placeholder="Buscar proyecto para asociar..." style="border: 1px solid lightgray;width:250px;margin:5px 0 0 0;border-radius:3px;padding:2px;background-color:yellow;" required type="text" name="buscar_proyectos_selected"> \
+											<div style="margin-top:5px;">ó <a href="#" class="newproject" style="color:green;!important;font-size:8px;!important">+ Crear nuevo proyecto para asociar</a></div>\
+											<iframe style="display: none;" id="the_iframe" name="the_iframe" src="about:blank"></iframe> \
+										</form> \
+									</section>');
+
+								// buscar proyectos
+								htmlObject.find('input[name="buscar_proyectos_selected"]').autocomplete({
+								  source: function(request,response) {
+									$.ajax( {
+									 	url: '/4DACTION/_V3_getProyectosActivos',
+									  dataType: "json",
+									  type: 'POST',
+									  data: {
+										q: request.term
+									  },
+									  success: function(data) {
+										response($.map(data, function(item) {
+											return item;
+										}));
+									  }
+									});
+								  },
+								  minLength: 2,
+								  select: function(event,ui) {
+								 	htmlObject.find('input[name="buscar_proyectos_selected"]').val(ui.item.text);
+								 	htmlObject.find('input[name="buscar_proyectos_selected"]').data('id-seleccionado', ui.item.id);
+									return false;
+								  }
+								}).data('ui-autocomplete')._renderItem = function(ul, item) {
+									return $(`<li><a class="u-show-list"> ${item.text}</a></li>`).appendTo(ul);
+								};
+
+								confirm(htmlObject, 'Asociar','Cancelar').done(function(data) {
+									let id = $('input[name="buscar_proyectos_selected"]').data('id-seleccionado');									
+									if (data) {
+										if (parseFloat(id) > 0) {
+											$.ajax({
+												url: '/4DACTION/_V3_batchAsociarProyectos',
+												data: {
+													ids: ids.join('|'),
+													idproyecto: $('input[name="buscar_proyectos_selected"]').data('id-seleccionado')											},
+												dataType: 'json',
+												success: function(data) {
+													if (data.success) {
+														toastr.success('Negocios asociados con éxito.');
+														setTimeout(function() {
+															unaBase.toolbox.search.save();
+															unaBase.toolbox.search.restore();
+														}, 1000);
+													} else {
+														if (data.opened) {
+															if (data.readonly)
+																toastr.error(NOTIFY.get('ERROR_RECORD_READONLY', 'Error'));
+														}
+													}
+												}
+											});
+										}else{
+											toastr.warning('Falta seleccionar proyecto.');
+											callback(data)
+										}										
+									}
+								});
+
+								htmlObject.find('.newproject').click(function(){
+									var htmlObject2 = $('<section> \
+										<span>Ingrese nombre del nuevo proyecto:</span> \
+										<form autocomplete="on" target="the_iframe" action="about:blank"> \
+											<input type="hidden" name="express" value="ok"> \
+											<input style="border-bottom: 1px solid black;" required type="text" name="nombre_nuevo_proyecto"> \
+										</form> \
+										<iframe style="display: none;" id="the_iframe" name="the_iframe" src="about:blank"></iframe> \
+									</section>');
+									htmlObject2.find('input').on('blur change', function() {
+										htmlObject2.data('response', $(this).val());
+									});
+									prompt(htmlObject2, 'Guardar','Cancelar').done(function(data) {
+										if (data !== false) {											
+											if (data != "") {
+												htmlObject2.find('form')[0].submit();
+												$.ajax({
+													url: '/4DACTION/_V3_setProyecto_responsive',
+													data: {
+														nombre_express : data,
+														express: true
+													},
+													dataType: 'json',
+													success: function(data) {
+														if (data.success) {
+															toastr.success('Proyecto creado con éxito.');
+															htmlObject.find('input[name="buscar_proyectos_selected"]').val(data.index + " - " + data.text);
+									 						htmlObject.find('input[name="buscar_proyectos_selected"]').data('id-seleccionado', data.id);
+														} else {
+															if (data.opened) {
+																if (data.readonly)
+																	toastr.error(NOTIFY.get('ERROR_RECORD_READONLY', 'Error'));
+															}
+														}
+													}
+												});
+											}else{
+												toastr.warning('Falta ingresar nombre proyecto.');
+												callback(data);
+											}
+										}
+									});
+								});								
+
+							} else {
+								let msg = "No es posible asociar a proyecto porque se han seleccionado:<br>";
+								msg+= nulo? "- Negocios anulados.<br>" : '';
+								msg+= asociado_a_proyecto? "- Negocios que ya están asociados a proyectos.<br>" : '';
+								toastr.warning(msg);
+							}
+
+						}else{
+							alert("No cuentas con permiso para realizar esta acción.");
+						}
+					});
+
+					htmlObject.menu().hide();
+
+					$('#dropdown_launcher').parentTo('header').before(htmlObject);
+					$('#dropdown_launcher').css('float', 'left');
+
+					$('#dropdown_launcher').click(function() {
+						var element = this;
+						$('#dropdown_menu').toggle();
+					});
+				})();
+
+				// -- ini -- verifica opciones filtro por proyecto
+				$('.show.por_proyecto').hide();
+				$('#autocomplete_por_proyecto').addClass('style_por_proyecto');
+				if (cant_proyectos_registrados == 0) {
+					$('input[name="por_proyecto"]').hide();
+				}
+				// -- fin -- verifica opciones filtro por proyecto
+
+				// -- ini -- verifica opciones filtro por campos personalizados, g, 26-04-18
+				let  placeholderParam1 = '<!--#4DTEXT placeholderParam1-->';
+				let  placeholderParam2 = '<!--#4DTEXT placeholderParam2-->';
+				let  placeholderParam3 = '<!--#4DTEXT placeholderParam3-->';
+				$('#autocomplete_personalizadoUno').attr('placeholder', placeholderParam1);
+				$('#autocomplete_personalizadoDos').attr('placeholder', placeholderParam2);
+				$('#autocomplete_personalizadoTres').attr('placeholder', placeholderParam3);
+				if (placeholderParam1 == '') {
+					$('#autocomplete_personalizadoUno').closest('label.autocomplete').hide();
+				}
+				if (placeholderParam2 == '') {
+					$('#autocomplete_personalizadoDos').closest('label.autocomplete').hide();
+				}
+				if (placeholderParam3 == '') {
+					$('#autocomplete_personalizadoTres').closest('label.autocomplete').hide();
+				}
+				// -- fin -- verifica opciones filtro por campos personalizados, g, 26-04-18
+
+
+			});
+		</script>
+		<style type="text/css">
+			.notice{
+				font-weight: bold;
+				padding: 5px;
+				color:gray;
+				text-transform: uppercase;
+			}
+
+			<!--#4DIF v3_margen_compra_res_nuevos-->
+			.old-margen::after {
+				content: ' *';
+			}
+			<!--#4DENDIF-->
+
+			/*.totales tr th{
+				border:1px solid lightgray;
+			}*/
+
+			table thead tr th{
+				text-align: center!important;
+			}
+
+		</style>
+	</head>
+	<body style="min-width: 900px !important;">
+		<!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->
+		<table class="padre results fixed" style="min-width: 900px !important; width: 100% !important;">
+			<thead>
+				<tr>
+					<!--#4DIF _V3_verifica_permisos_web(_V3_data_username;494)-->
+						<th class="center" width="2%"><div style="padding:2px">Todo</div><div><input class="selected" type="checkbox" name="selected_all"></div></th>
+						<th width="5%" data-sort-by="folio" data-sort-default="desc">Número</th>
+						<!--#4DIF (show_codigo_column)--><th width="5%" data-sort-by="codigo" data-sort-default="desc">Código</th><!--#4DENDIF-->
+						<th width="5%" data-sort-by="fecha_asignacion" data-sort-default="desc">F. Asignación</th>
+						<th width="5%" data-sort-by="fecha_realizacion" data-sort-default="desc">F. Realización</th>
+						<th width="13%" data-sort-by="alias" data-sort-default="asc"><!--#4DIF mostrar_marca_nocliente-->Marca<!--#4DELSE-->Cliente<!--#4DENDIF--></th>
+						<th width="15%" data-sort-by="text" data-sort-default="asc">Referencia</th>
+						<th width="5%" data-sort-by="total_neto" data-sort-default="desc">Total Neto</th>
+						<th width="5%" data-sort-by="gasto_p" data-s ort-default="desc">Gasto P.</th>
+						<th width="5%" data-sort-by="gasto_r" data-sort-default="desc" title="click para ver formula" class="links-ver-formula">Gasto R.</th>
+
+						<!--#4DIF _V3_difGastoListNegocios-->
+							<th width="5%" data-sort-by="por_gastar" data-sort-default="desc" class="">Dif. gasto</th>
+						<!--#4DELSE-->
+							<th width="5%" data-sort-by="por_gastar" data-sort-default="desc" title="click para ver formula" class="links-ver-formula">Por Gastar</th>
+						<!--#4DENDIF-->
+
+
+						<th width="5%" title="<!--#4DIF _V3_difGastoListNegocios-->(presupuestado - real) / presupuestado<!--#4DELSE-->(presupuestado - real - por gastar) / presupuestado<!--#4DENDIF-->">Eficiencia</th>
+						<th width="5%">Util. presup.</th>
+
+						<!--#4DIF _V3_difGastoListNegocios-->
+							<th width="5%">Util. real</th>
+							<th width="5%">% Util. real</th>
+						<!--#4DELSE-->
+							<th width="5%">Util. final</th>
+							<th width="5%">% Util. final</th>
+						<!--#4DENDIF-->
+
+						<th width="5%">Facturado</th>
+						<th width="5%">Por Facturar</th>
+
+						<!--#4DIF v3_mostrar_totales_extendidos-->
+						<th width="5%">Cobrado</th>
+						<th width="5%">Por cobrar</th>
+						<th width="5%">Justificado</th>
+						<th width="5%">Por justificar</th>
+						<th width="5%">Pagado</th>
+						<th width="5%">Por pagar</th>
+						<!--#4DENDIF-->
+
+					<!--#4DELSE-->
+						<th class="center" width="2%"><div style="padding:2px">Todo</div><div><input class="selected" type="checkbox" name="selected_all"></div></th>
+						<th width="10%" data-sort-by="folio" data-sort-default="desc">Número</th>
+						<!--#4DIF (show_codigo_column)--><th width="5%" data-sort-by="codigo" data-sort-default="desc">Código</th><!--#4DENDIF-->
+						<th width="10%" data-sort-by="fecha_asignacion" data-sort-default="desc">F. Asignación</th>
+						<th width="10%" data-sort-by="fecha_realizacion" data-sort-default="desc">F. Realización</th>
+						<th width="28%" data-sort-by="alias" data-sort-default="asc"><!--#4DIF mostrar_marca_nocliente-->Marca<!--#4DELSE-->Cliente<!--#4DENDIF--></th>
+						<th width="30%" data-sort-by="text" data-sort-default="asc">Referencia</th>
+						<!--#4DIF Not(no_mostrar_total_neto_neg)--><th width="5%" data-sort-by="total_neto" data-sort-default="asc">Total Neto</th><!--#4DENDIF-->
+
+					<!--#4DENDIF-->
+				</tr>
+			</thead>
+			<tfoot class="totales">
+				<tr>
+		            <!--#4DIF _V3_verifica_permisos_web(_V3_data_username;494)-->
+						<th width="2%"></th>
+			            <th width="5%"></th>
+			            <!--#4DIF (show_codigo_column)--><th width="5%"></th><!--#4DENDIF-->
+			            <th width="5%"></th>
+			            <th width="5%"></th>
+			            <th width="13%"></th>
+			            <th width="15%"></th>
+			            <th width="5%" class="center"><span data-name="total-neto" class="label2">$0</span></th>
+			           	<th width="5%" class="center"><span data-name="gasto-p" class="label2">$0</span></th>
+			            <th width="5%" class="center"><span data-name="gasto-r" class="label2">$0</span></th>
+			  			<th width="5%" class="center"><span data-name="por-gastar" class="label2">$0</span></th>
+			            <th width="5%"></th>
+			            <th width="5%" class="center"><span data-name="utilidad-value-pres" class="label2">$0</span></th>
+			            <th width="5%" class="center"><span data-name="utilidad-final" class="label2">$0</span></th>
+				        <th width="5%" class="center"><span data-name="utilidad-percent" class="label2">$0</span></th>
+			            
+			            <th width="5%" class="center" ><span data-name="total_facturado" class="label2">$0</span></th>
+			            <th width="5%" class="center"><span data-name="por_facturar" class="label2" >$0</span></th>
+
+			            <!--#4DIF v3_mostrar_totales_extendidos-->
+			            <th width="5%" class="center"><span data-name="total_cobrado" class="label2" >$0</span></th>
+			            <th width="5%" class="center"><span data-name="total_por_cobrar" class="label2" >$0</span></th>
+			            <th width="5%" class="center"><span data-name="total_justificado" class="label2" >$0</span></th>
+			            <th width="5%" class="center"><span data-name="total_por_justificar" class="label2" >$0</span></th>
+			            <th width="5%" class="center"><span data-name="total_pagado" class="label2" >$0</span></th>
+			            <th width="5%" class="center"><span data-name="total_por_pagar" class="label2" >$0</span></th>
+			            <!--#4DENDIF-->
+
+		            <!--#4DELSE-->
+						<th width="2%"></th>
+			            <th width="10%"></th>
+			            <th width="5%"></th>
+			            <th width="10%"></th>
+			            <th width="10%"></th>
+			            <th width="28%"></th>
+			            <th width="30%"></th>
+			            <!--#4DIF Not(no_mostrar_total_neto_neg)--><th width="5%"></th><!--#4DENDIF-->
+		            <!--#4DENDIF-->
+	       		</tr>
+			</tfoot>
+			<tbody></tbody>
+		</table>
+		<div id="dialog-confirm" style="font-size: 14px;" title="Solicitar edición" hidden="">
+  <p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>El negocio está siendo modificada por   <span id="userBlock"></span><br/> ¿Deseas solicitar el desbloqueo de esta cotización?</p>
+</div>
+		<div id="dialog-confirm-sameUser" style="font-size: 14px;" title="Solicitar edición" hidden="">
+  <p><span class="ui-icon ui-icon-alert" style="float:left; margin:12px 12px 20px 0;"></span>Este negocio esta bloqueado ya que anteriormente estabas trabajando en él, si deseas seguir editándolo verifica que no lo tengas abierto en otra pestaña, de no ser así, desbloquealo acá.</p>
+</div>
+	</body>
+	<script>
+	</script>
+</html>

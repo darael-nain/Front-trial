@@ -1,0 +1,27 @@
+
+{
+	
+	"records": {
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP ids -->
+		{
+			"id": <!--#4DIF Not(Undefined(ids{ids}))--><!--#4DIF Type(ids{ids})=Is Text-->"<!--#4DVAR ids{ids}-->"<!--#4DELSE--><!--#4DVAR ids{ids}--><!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+			"descripcion_centrocosto": "<!--#4DHTML _V3_escapeString(descripcion_centrocosto{ids})-->",
+			"default": <!--#4DIF default{ids}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"estado": <!--#4DIF estado{ids}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(ids{ids} = ids{Size of array(ids)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	] ,
+	
+	"byUser": [
+		<!--#4DLOOP areaByUser-->
+		{
+			"id": <!--#4DTEXT String(areaByUser{areaByUser};"&xml")-->,
+			"default": <!--#4DIF areaByUserDefault{areaByUser}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(areaByUser{areaByUser} = areaByUser{Size of array(areaByUser)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	]
+
+}

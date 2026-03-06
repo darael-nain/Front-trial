@@ -1,0 +1,11 @@
+{
+    "otros_gastos": 0,
+        "rows": [
+        <!--#4DLOOP Llave_NV -->
+    {
+        "id": "<!--#4DHTML Llave_NV{Llave_NV}-->",
+        "text": "<!--#4DHTML _V3_escapeString(Nombre_Producto{Llave_NV})-->"
+    }<!--#4DIF Not(Llave_NV{Llave_NV} = Llave_NV{Size of array(Llave_NV)})-->,<!--#4DENDIF-->
+    <!--#4DENDLOOP-->
+    ]
+}

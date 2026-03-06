@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!--#4DSCRIPT/_V3_proxy_getInfoPlanning-->
+	<meta charset="utf-8">	
+	<title>Planificador</title>
+	<script src="/script/jquery-ui-1.10.2.custom/js/jquery.ui.datepicker-es.js?<!--#4DTEXT String(Milliseconds+Random)-->"></script>	
+	<script src="/v3/views/ots/planning.js?<!--#4DTEXT String(Milliseconds+Random)-->"></script>
+	<link rel="stylesheet" href="/v3/views/ots/planning.css?<!--#4DTEXT String(Milliseconds+Random)-->"/>
+</head>
+<body>
+	<input type="text" class="invisible">	
+	<form id="frmPlanner" class="popup-planner">
+		<input type="hidden" name="planner[id_ot]" value="<!--#4DTEXT id-->">
+		<input type="hidden" name="planner[fechaDesdeCalendar]" value="<!--#4DTEXT vFechaActualCalendar-->">
+		<input type="hidden" name="planner[fechaHastaCalendar]" value="<!--#4DTEXT vFechaHastaCalendar-->">
+		<input type="hidden" name="planner[prioridad]" value="<!--#4DTEXT vPrioridad-->">
+		<input type="hidden" name="planner[estado]" value="<!--#4DTEXT vEstado-->">
+		<input type="hidden" name="planner[responsable]" value="<!--#4DTEXT vResponsable-->">
+		<input type="hidden" name="planner[folio]" value="<!--#4DTEXT vFolio-->">			
+		<div class="container-in">
+			<div class="table-planned">
+				<div class="asignadas">
+					<label>Asignadas</label>
+					<span><!--#4DTEXT horasAsignadas--></span>
+				</div>
+				<div class="trabajadas">
+					<label>Planificadas</label>
+					<span><!--#4DTEXT horasRegistradas--></span>
+				</div>
+				<div class="pendientes">
+					<label>Pendientes</label>
+					<span><!--#4DTEXT Remaining--></span>
+				</div>
+			</div>			
+			<div class="dates">
+				<span>
+					<label>Fecha Inicio</label>
+					<input name="date[from]" class="datepicker" type="text" value="<!--#4DTEXT currenDay-->"/>
+				</span>
+				<span>
+					<label>Hora/Minuto Inicio</label>
+					<select name="time[star_hours]"  title="horas">
+						<option value="00" selected>00</option>					
+						<!--#4DLOOP aHoraList-->
+							<option value="<!--#4DTEXT aHoraList{aHoraList}-->"><!--#4DTEXT aHoraList{aHoraList}--></option>
+						<!--#4DENDLOOP-->			
+					</select> :
+					<select name="time[star_minutes]" title="minutos">
+						<option value="00" selected>00</option>					
+						<!--#4DLOOP aMinutoList-->
+							<option value="<!--#4DTEXT aMinutoList{aMinutoList}-->"><!--#4DTEXT aMinutoList{aMinutoList}--></option>
+						<!--#4DENDLOOP-->			
+					</select>
+				</span>		
+			</div>
+
+			<div class="dates">
+				<span>
+					<label>Fecha Fin</label>
+					<input name="date[to]" class="datepicker" type="text" value="<!--#4DTEXT currenDay-->"/>
+				</span>
+				<span>
+					<label>Hora/Minuto Fin</label>
+					<select name="time[end_hours]" title="horas">
+						<option selected>00</option>					
+						<!--#4DLOOP aHoraList-->
+							<option><!--#4DTEXT aHoraList{aHoraList}--></option>
+						<!--#4DENDLOOP-->			
+					</select> :
+					<select name="time[end_minutes]" title="minutos">
+						<option selected>00</option>					
+						<!--#4DLOOP aMinutoList-->
+							<option><!--#4DTEXT aMinutoList{aMinutoList}--></option>
+						<!--#4DENDLOOP-->			
+					</select>
+				</span>	
+			</div>
+
+			<div>
+				<button name="planner[save]" type="button" class="save">Guardar</button>
+				<!--<button name="planner[cancel]" type="button" class="cancel">Cancelar</button>-->
+			</div>
+		</div>
+
+		<div class="detail-planned">
+			<h2>Detalle planificado</h2>
+			<table>
+				<thead>
+					<tr style="text-align:center!important">
+						<th>Inicio</th>
+						<th>Fin</th>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</div>
+
+	</form>
+</body>
+</html>
+
+
+
+

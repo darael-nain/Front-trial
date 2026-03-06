@@ -1,0 +1,10 @@
+{
+	"rows": [
+<!--#4DLOOP aUnidadId -->
+		{
+			"id": "<!--#4DHTML _V3_escapeString(aUnidadId{aUnidadId})-->",
+			"text": "<!--#4DHTML _V3_escapeString(aUnidadId{aUnidadId})-->"
+		}<!--#4DIF NOT(aUnidadId{aUnidadId} = aUnidadId{Size of array(aUnidadId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

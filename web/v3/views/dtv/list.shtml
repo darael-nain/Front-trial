@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>dtv</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="/v3/views/compras/lista.css?564676767hhghjgj67">
+
+		<script>
+
+			var dtv = {
+				get_por_cobrar: function(button){
+					$('input[name="por_cobrar"]').trigger("click");
+					if ($('input[name="por_cobrar"]').prop('checked')) {
+						button.css('border','2px double gray');
+					}else{
+						button.css('border','');
+					}
+				}
+			}
+
+			let mostrarFechaRecepcion = false;
+
+			$(document).ready(function() {
+
+				document.title = nombreEmpresa + ' / DTV - Lista';
+
+				$('.country-label-rut').text(country.label_rut);
+
+				unaBase.toolbox.init();
+
+				// Inicializamos un buscador
+				var params = {
+					searchOff: true,
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/_V3_getDocumentoDeVenta' },
+					entity: 'dtv',
+
+					callback : function(data) {
+						
+						mostrarFechaRecepcion = data.vctoDesdeFechaRecepcion;
+
+						$('tfoot.totales').find('span[data-neto]').text(data.totalesFacturas.neto);
+						$('tfoot.totales').find('span[data-exento]').text(data.totalesFacturas.exento);
+						$('tfoot.totales').find('span[data-impuesto]').text(data.totalesFacturas.impuesto);
+						$('tfoot.totales').find('span[data-adicional]').text(data.totalesFacturas.adicional);
+						$('tfoot.totales').find('span[data-total]').text(data.totalesFacturas.total);
+						$('tfoot.totales').find('span[data-abono]').text(data.totalesFacturas.abono);
+						$('tfoot.totales').find('span[data-saldo]').text(data.totalesFacturas.saldo);
+
+						$('tfoot.totales').find('span[data-netonc]').text(data.totalesNotas.neto);
+						$('tfoot.totales').find('span[data-exentonc]').text(data.totalesNotas.exento);
+						$('tfoot.totales').find('span[data-impuestonc]').text(data.totalesNotas.impuesto);
+						$('tfoot.totales').find('span[data-totalnc]').text(data.totalesNotas.total);
+
+						$('tfoot.totales').find('span[data-netot]').text(data.totales.neto);
+						$('tfoot.totales').find('span[data-exentot]').text(data.totales.exento);
+						$('tfoot.totales').find('span[data-impuestot]').text(data.totales.impuesto);
+						$('tfoot.totales').find('span[data-adicionalt]').text(data.totales.adicional);
+						$('tfoot.totales').find('span[data-totalt]').text(data.totales.total);
+
+						// --Fijar header y footer
+						$('#viewport .fht-table-init').fixedHeaderTable('destroy');
+						//$('#viewport table.fixed').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false });
+						// --ini-- corrección para ordenar - V3_212
+						$('#viewport table.fixed').fixedHeaderTable({
+							footer: true,
+							cloneHeadToFoot: false,
+							fixedColumn: false,
+							create: function() {
+								$('[data-sort-by]').removeClass('sort-order-desc').removeClass('sort-order-asc').removeData('sort-order');
+								$('[data-sort-by="' + data.sort.by + '"]').addClass('sort-order-' + data.sort.order).data('sort-order', data.sort.order);
+							}
+						});
+						// --fin-- corrección para ordenar - V3_212
+
+						$('.cant-facturas').text("("+data.cantidades.facturas+")");
+						$('.cant-nc').text("("+data.cantidades.notas+")");
+						$('.cant-total').text("("+data.cantidades.total+")");
+						var btnnv = $('td.nv');
+						// 
+						var idnv = $(this).attr("data-idnv");
+				
+						if(access._1){
+							btnnv.on("click","span",function() {									
+								var idnv = $(this).attr("data-idnv");
+								if(idnv.length<=5){
+									window.open("http://" + window.location.host + "/4DACTION/wbienvenidos#negocios/content.shtml?id="+ idnv , '_blank');					
+								}
+							});
+						}
+
+						if ((!access._677)) { // emitir electrónico
+							$('[data-name="fact_masivo"]').remove();
+                		}
+
+
+
+					},
+
+					row: {
+
+						html: function(i, rows) {
+
+							var color = "";
+
+							/*if (rows[i].tipoDocumentoVenta == "NOTA DE CREDITO" || rows[i].tipoDocumentoVenta == "NOTA DE CREDITO ELECTRONICA") {
+								color = "color_red";
+							}*/
+
+							if (rows[i].estado == "ANULADA") {
+								color = "color_red";
+							}
+							
+							if (parseFloat(rows[i].idnegocio) > 0) {
+								desOrigen = rows[i].idnegocio +' - '+ rows[i].refnegocio;
+							}else{
+								desOrigen = rows[i].refnegocio;
+							}
+							if(parseFloat(rows[i].idfactoring) > 0){
+								desOrigenFact = rows[i].idfactoring +' - '+ rows[i].reffactoring;
+							}else{
+								desOrigenFact = rows[i].reffactoring;
+							}
+							
+
+							// set moneda / ej: num = Math.round(num * 100) / 100 = 2 decimales
+							let netDTV = currency.symbol + ' ' + $.number(rows[i].neto_raw, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+							let exeDTV = currency.symbol + ' ' + $.number(rows[i].exento, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+							let impDTV = currency.symbol + ' ' + $.number(rows[i].impuesto_raw, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+							let adiDTV = currency.symbol + ' ' + $.number(rows[i].adicional_raw, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+							let totDTV = currency.symbol + ' ' + $.number(rows[i].total_raw, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+							let aboDTV = currency.symbol + ' ' + $.number(rows[i].abono_raw, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+							
+							let salDTV = currency.symbol + ' ' + $.number(rows[i].saldo_raw, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+							
+							if (rows[i].exchangeType != '' && currency.code == "PEN") {
+								let rate = rows[i].exchangeRate;
+								if (rate == 0) {
+									rate = 1
+								}
+								netDTV = rows[i].exchangeType + ' ' + $.number(rows[i].neto_raw/rate, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+								exeDTV = rows[i].exchangeType + ' ' + $.number(rows[i].exento/rate, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+								impDTV = rows[i].exchangeType + ' ' + $.number(rows[i].impuesto_raw/rate, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+								adiDTV = rows[i].exchangeType + ' ' + $.number(rows[i].adicional_raw/rate, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+								totDTV = rows[i].exchangeType + ' ' + $.number(rows[i].total_raw/rate, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+								aboDTV = rows[i].exchangeType + ' ' + $.number(rows[i].abono_raw/rate, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+								salDTV = rows[i].exchangeType + ' ' + $.number(rows[i].saldo_raw/rate, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+							}
+
+							return '<tr data-id="' + rows[i].id + '"' + ((rows[i].contabilizado)? ' data-contabilizado="true"' : '') + ' data-libro="'+rows[i].libro+'" data-estado="' + rows[i].estado + '" data-tipo="'+rows[i].tipoDocumentoVenta+'">' +
+								'<td data-goto="false" width="5%"><input class="selected" data-saldo="' + rows[i].saldo + '" type="checkbox" name="selected_one"></td>' +
+								'<td data-goto="true" width="5%">' + rows[i].folio + '</td>' +
+								'<td data-goto="true" width="2%" title="' + rows[i].tipoDocumentoVenta + '" class="center">' + rows[i].tipoDocumentoVentaAbrev + '</td>' +
+								//'<td data-goto="true" width="4%">' + rows[i].emisor + '</td>' +
+								'<td data-goto="true" width="4%">' + rows[i].formaPago + '</td>' +
+								'<td data-goto="true" width="3%">' + rows[i].fechaEmision + '</td>' +
+								'<td class="fecha-recepcion" data-goto="true" width="3%">' + rows[i].fechaRecepcion + '</td>' +
+								'<td data-goto="true" width="3%">' + rows[i].fechaVencimiento + '</td>' +
+								'<td data-goto="false" class="nv" width="4%"><span title="'+ (rows[i].idnv.length>8 ? 'Posee varios negocios asociados' : '') +'" data-idnv="' + rows[i].idnv + '">' + desOrigen + '</span></td>' +
+								'<td data-goto="false" class="fac" width="4%"><span title="'+ (rows[i].idfact.length>8 ? 'Posee varios factoring asociados' : '') +'" data-idfac="' + rows[i].idfact + '">' + desOrigenFact + '</span></td>' +
+								'<td data-goto="true" width="5%" style="white-space: nowrap;">' + (rows[i].contable == '00-00-00'? 'N/A' : rows[i].contable) + '</td>' +
+								'<td data-goto="true" width="2%">' + (rows[i].contabilizado? 'Sí' : 'No') + '</td>' +
+
+								'<td data-goto="true" width="6%" class=" '+color+'">' + rows[i].estado + '</td>' +
+								'<td data-goto="true" width="6%" class="left">' + rows[i].areaNegocio + '</td>' +
+								'<td data-goto="true" width="10%" class="left">' + rows[i].cliente + '</td>' +
+								'<td data-goto="true" width="5%">' + rows[i].rutCliente + '</td>' +
+
+								'<td data-goto="true" width="7%" class="right"> ' + netDTV + ' </td>' +
+								'<td data-goto="true" width="7%" class="right"> ' + exeDTV + '</td>' +
+								'<td data-goto="true" width="7%" class="right"> ' + impDTV + '</td>' +
+								'<td data-goto="true" width="7%" class="right"> ' + adiDTV + '</td>' +
+								'<td data-goto="true" width="7%" class="right"> ' + totDTV + '</td>' +
+								'<td data-goto="true" width="7%" class="right"> ' + aboDTV + '</td>' +
+								'<td data-goto="true" width="7%" class="right"> ' + salDTV + '</td>' +
+
+								/*'<td data-goto="true" width="7%" class="right">'+ rows[i].neto + '</td>' +
+								'<td data-goto="true" width="7%" class="right">' + currency.symbol +' '+ $.number(rows[i].exento, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</td>' +
+								'<td data-goto="true" width="7%" class="right">' + rows[i].impuesto + '</td>' +
+								'<td data-goto="true" width="7%" class="right">' + rows[i].adicional + '</td>' +
+								'<td data-goto="true" width="7%" class="right">' + rows[i].total + '</td>' +
+								'<td data-goto="true" width="7%" class="right">' + rows[i].abono + '</td>' +
+								'<td data-goto="true" width="7%" class="right">' + rows[i].saldo + '</td>' +*/
+
+
+							'</tr>'
+						}
+					},
+					/*detail: {
+						url: function(id) { return '/v3/views/dtv/content.shtml?id=' + id},
+						iframe: false
+					},*/
+					// Inflexiones
+					inflection: {
+						singular: 'gasto',
+						plural: 'gastos',
+						none: 'ningún'
+					},
+					filters: [
+						{ name: 'created_at', type: 'month', caption: 'Fecha de emisión', range: true, currentMonth: true},
+						{ name: 'date_vencimiento', type: 'month', caption: 'Fecha de vencimiento', range: true, currentMonth: false},
+						{ name: 'responsable', type: 'autocomplete', caption: 'Responsable', dataSource: 'getUsuario' },
+						{ name: 'area_negocio', type: 'autocomplete', caption: 'Área de negocio', dataSource: 'getAreaNegocio' },
+						
+						{ name: 'por_negocio', type: 'autocomplete', caption: 'Por negocio', dataSource: 'getNegociosActivos' },
+						{ name: 'tipo_doc', type: 'autocomplete', caption: 'Tipo Doc.', dataSource: 'getTiposDocDeVentas' },
+						{ name: 'tipo_doc_exportacion', type: 'autocomplete', caption: 'NOTA DE CREDITO', dataObject: [
+							{ id: 'NCEEX', text: 'NOTA DE CREDITO EXPORTACION' },
+							{ id: 'NCE', text: 'NOTA DE CREDITO ELECTRONICA' },
+							{ id: 'NC', text: 'NOTA DE CREDITO' }
+						] },
+						{ name: 'contabilizado', type: 'autocomplete', caption: '¿Contabilizado?', dataObject: [
+							{ id: false, text: 'Sin contabilizar' },
+							{ id: true, text: 'Contabilizado' },
+						] },
+						{ name: 'estado', type: 'checkbox', caption: 'Estado del documento', options: [
+							{ caption: 'Por emitir', name: 'estado_por_emitir', value: true },
+							{ caption: 'Emitida', name: 'estado_emitida', value: true },
+							// { caption: 'Por cobrar', name: 'por_cobrar', value: true },
+							{ caption: 'Pagada', name: 'estado_pagado', value: false },
+							{ caption: 'Anulada', name: 'estado_anulada', value: false }
+						] },
+						{ name: 'tiene_pago', type: 'autocomplete', caption: '¿Tiene Ingreso?', dataObject: [
+							{ id: 'true', text: 'CON INGRESO' },
+							{ id: 'false', text: 'SIN INGRESO' }
+						]},
+						{ name: 'por_cobrar', type: 'checkbox', caption: 'Por cobrar', options: [
+							{ caption: 'Por cobrar', name: 'por_cobrar', value: false },
+						] },
+					]
+				};
+
+				
+
+				unaBase.toolbox.search.init(params);
+				unaBase.toolbox.menu.init({
+					entity: 'dtv',
+					//buttons: [ 'searchOff','create_dtv', 'dtv_charge_selection', 'export_list', 'export_softland', 'dtv_por_cobrar', 'send_dtv_mail', 'send_dtv_charge', "export_ventas_pe"]
+					//buttons: [ 'searchOff','create_dtv', 'dtv_charge_selection', 'export_list', 'export_softland', 'dtv_por_cobrar', 'send_dtv_mail', 'send_dtv_charge', 'export_ventas_pe']
+					buttons: [ 'searchOff','create_dtv', 'dtv_charge_selection', 'export_list', 'export_softland', 'dtv_por_cobrar', 'send_dtv_mail', 'send_dtv_charge', 'export_ventas_pe', 'fact_masivo', 'export_sap']
+				});
+
+				$('#menu ul').find('li[data-name="dtv_charge_selection"]').hide();
+				$('#menu ul').find('li[data-name="export_softland"]').hide();
+				$('#menu ul').find('li[data-name="send_dtv_mail"]').hide();
+				$('#menu ul').find('li[data-name="send_dtv_charge"]').hide();
+				$('#menu ul').find('li[data-name="export_sap"]').hide();
+
+				$("body").on("click", "input.selected", function(){
+					var input = $(this);
+					
+					if (input.attr('name') == "selected_all" ) {
+						if (input.prop("checked")) {
+							$('table tbody input[name="selected_one"]').prop("checked", true);
+							$('#menu ul').find('li[data-name="dtv_charge_selection"]').show();
+							if(access._661){
+								$('#menu ul').find('li[data-name="export_softland"]').show();
+       
+							}
+							$('#menu ul').find('li[data-name="send_dtv_mail"]').show();
+							$('#menu ul').find('li[data-name="send_dtv_charge"]').show();
+
+							if (access._660) {
+								$('#menu ul').find('li[data-name="export_sap"]').show();
+							}
+
+							//$('#dropdown_launcher').show();
+						}else{
+							$('table tbody input[name="selected_one"]').prop("checked", false);
+							$('#menu ul').find('li[data-name="dtv_charge_selection"]').hide();
+							$('#menu ul').find('li[data-name="export_softland"]').hide();
+							$('#menu ul').find('li[data-name="send_dtv_mail"]').hide();
+							$('#menu ul').find('li[data-name="send_dtv_charge"]').hide();
+							$('#menu ul').find('li[data-name="export_sap"]').hide();
+
+							//$('#dropdown_launcher').hide();
+						}
+					}else{
+						let inputSelected = 0;
+						document.querySelectorAll('input.selected').forEach((item)=>{
+							if(item.checked) inputSelected += 1
+						});
+
+						if(inputSelected === 1) $('#dropdown_launcher').css('display', 'flex');
+						else $('#dropdown_launcher').css('display', 'none');
+
+						if (inputSelected) {
+							$('#menu ul').find('li[data-name="dtv_charge_selection"]').show();
+							if(access._661){
+								$('#menu ul').find('li[data-name="export_softland"]').show();
+
+							}
+							$('#menu ul').find('li[data-name="send_dtv_mail"]').show();
+							$('#menu ul').find('li[data-name="send_dtv_charge"]').show();
+							if (access._660) {
+								$('#menu ul').find('li[data-name="export_sap"]').show();
+							}
+
+							//$('#dropdown_launcher').show();
+						}else{
+							$('#menu ul').find('li[data-name="dtv_charge_selection"]').hide();
+							$('#menu ul').find('li[data-name="export_softland"]').hide();
+							$('#menu ul').find('li[data-name="send_dtv_mail"]').hide();
+							$('#menu ul').find('li[data-name="send_dtv_charge"]').hide();
+							if(inputSelected == 0){
+								$('#menu ul').find('li[data-name="export_sap"]').hide();
+							}
+							//$('#dropdown_launcher').hide();
+						}
+					}
+				});
+
+
+				// ir a detalle
+				$('table.results tbody').on('click', 'tr > td[data-goto="true"]', function() {
+				  	var id = $(this).closest("tr").data("id");
+				  	var doc = $(this).closest("tr").data("tipo");
+				  	if (doc == "NOTA DE CREDITO" || doc == "NOTA DE CREDITO ELECTRONICA") {
+				  		unaBase.loadInto.viewport('/v3/views/dtv/nc/content.shtml?id=' + id);
+					}else{
+						unaBase.loadInto.viewport('/v3/views/dtv/content.shtml?id=' + id);
+					}
+				});
+
+				// escondido
+				//$('.dropdown-button.more').remove();
+				$('input[name="por_cobrar"]').closest('label').hide();
+
+
+				//$('input[name="searchCheckbox"]').hide();
+
+
+				// Opciones para listado
+				(function() {
+					var htmlObject;
+
+					htmlObject = $('\
+						<ul id="dropdown_menu" class="dropdown-menu" style="position: absolute; top: 95px; left: 95px; z-index: 1000;"> \
+							<li><a href="#" class="new-nc" data-size="small"><span class="ui-icon ui-icon-locked"></span>Nueva nota de crédito</a></li>	\
+					');
+
+					htmlObject.find('a.new-nc').click(function(event) {
+						//if (access._488) {
+							var ids = [];
+							var ids_nulo = [];
+							var ids_cerrado = [];
+							var ids_cerrado_compras = [];
+							var ids_facturado = [];
+
+							$('#viewport tbody.ui-selectable tr[data-id] td:first-of-type input.selected:checked').each(function() {
+								ids.push($(this).closest('tr').data('id'));
+								if (!$(this).closest('tr').data('status')) {
+									ids_nulo.push($(this).closest('tr').data('id'));
+								}
+								if ($(this).closest('tr').data('closed')) {
+									ids_cerrado.push($(this).closest('tr').data('id'));
+								}
+								if ($(this).closest('tr').data('closed-compras')) {
+									ids_cerrado_compras.push($(this).closest('tr').data('id'));
+								}
+								if (!$(this).closest('tr').data('por-facturar')) {
+									ids_facturado.push($(this).closest('tr').data('id'));
+								}
+							});
+
+							var nulo = (ids_nulo.length > 0);
+							var cerrado = (ids_cerrado.length > 0);
+							var cerrado_compras = (ids_cerrado_compras.length > 0);
+							var facturado = (ids_facturado.length > 0);
+
+							if (!nulo && !cerrado) {
+								confirm(MSG.get('CONFIRM_NEGOCIO_CLOSE_BATCH')).done(function(data) {
+									if (data) {
+										$.ajax({
+											url: '/4DACTION/_V3_batchCierreByNegocio',
+											data: {
+												ids: ids.join('|'),
+												close: true
+											},
+											dataType: 'json',
+											success: function(data) {
+												if (typeof data.detail != 'undefined') {
+													if (data.detail.result) {
+														toastr.success(NOTIFY.get('SUCCESS_NEGOCIO_CLOSE_BATCH'));
+													} else {
+														toastr.warning(sprintf(NOTIFY.get('WARNING_NEGOCIO_CLOSE_BATCH'), data.detail.data.replace("\n", '<br>')));
+													}
+												} else {
+													if (data.success) {
+														toastr.success(NOTIFY.get('SUCCESS_NEGOCIO_CLOSE_BATCH'));
+														setTimeout(function() {
+															unaBase.toolbox.search.save();
+															unaBase.toolbox.search.restore();
+														}, 1000);
+													} else {
+														if (data.opened) {
+															if (data.readonly)
+																toastr.error(NOTIFY.get('ERROR_RECORD_READONLY_BATCH', 'Error'));
+														}
+													}
+												}
+											}
+										});
+									}
+								});
+							} else {
+								var msg = "No es posible hacer cierre masivo de negocios porque se han seleccionado:<br>";
+								msg+= cerrado? "- Negocios que ya fueron cerrados.<br>" : '';
+								msg+= nulo? "- Negocios anulados.<br>" : '';
+								toastr.warning(msg);
+							}
+						//}else{
+							//alert("No cuentas con permiso para realizar esta acción.");
+						//}
+					});
+
+					htmlObject.menu().hide();
+
+					$('#dropdown_launcher').parentTo('header').before(htmlObject);
+					$('#dropdown_launcher').css('float', 'left');
+					$('#dropdown_launcher').css('height', '22px');
+					$('#dropdown_launcher').css('background', '#fff');
+
+					$('#dropdown_launcher').click(function() {
+						var element = this;
+						$('#dropdown_menu').toggle();
+					});
+
+					// agregado el 9-7-19, gin
+					/*if (mostrarFechaRecepcion) {
+						$('.fecha-recepcion').show();
+					}else{
+						$('.fecha-recepcion').hide();
+					}*/
+					
+				})();
+
+				$('#menu ul').find('li[data-name="export_ventas_pe"]').hide();
+				if (currency.code == "PEN") {
+					$('#menu ul').find('li[data-name="export_ventas_pe"]').show();
+				}
+
+			});
+		</script>
+
+		<style type="text/css">
+			.totales tr{
+				padding:0px!important;
+				margin:0px!important;
+				height:0px!important;
+			}
+			.totales tr th{
+				padding:0px!important;
+				margin:0px!important;
+				height:0px!important;
+			}
+			.totales tr th span{
+				margin:1px;
+			}
+			.gray{
+				color:gray;
+			}
+			.dropdown-button {
+				padding: 5px 5px;
+			}
+			.selected{
+				width:20px!important;
+				height:20px!important;
+				vertical-align:middle!important;
+			}
+
+			table thead {
+				border-collapse: separate;
+				border-spacing: 0;
+				border-top-right-radius: 10px;
+				border-top-left-radius: 10px;
+				overflow: hidden; 
+			}
+			
+			/* ===== Paginador estilo botones ===== */
+			.pagination{
+			margin: 10px 0px 0px 10px;
+			text-align: center;
+			font-size: 12px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 6px;
+			flex-wrap: wrap;
+			}
+
+			.pagination a,
+			.pagination span{
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+
+			padding: 6px 10px;
+			min-width: 30px;
+			height: 28px;
+
+			border-radius: 8px;
+			border: 1px solid #d0d5dd;
+			background: #ffffff;
+
+			color: #344054;
+			text-decoration: none;
+			user-select: none;
+
+			box-shadow: 0 1px 2px rgba(16, 24, 40, 0.06);
+			transition: background .15s ease, border-color .15s ease, transform .05s ease, box-shadow .15s ease;
+			}
+
+			.pagination a:hover{
+			background: #f9fafb;
+			border-color: #cbd5e1;
+			}
+
+			.pagination a:active{
+			transform: translateY(1px);
+			box-shadow: 0 0 0 rgba(16, 24, 40, 0);
+			}
+
+			.pagination a:focus-visible{
+			outline: 2px solid rgba(0, 169, 114, 0.35);
+			outline-offset: 2px;
+			}
+
+			.pagination span.current,
+			.pagination a.current{
+			background: #00a972;
+			border-color: #00a972;
+			color: #ffffff;
+			font-weight: 700;
+			}
+
+			.pagination span.disabled{
+			background: #f2f4f7;
+			border-color: #eaecf0;
+			color: #98a2b3;
+			cursor: not-allowed;
+			box-shadow: none;
+			}
+
+			.pagination span:not(.current):not(.disabled){
+			background: transparent;
+			border-color: transparent;
+			box-shadow: none;
+			cursor: default;
+			min-width: auto;
+			padding: 0 6px;
+			height: 28px;
+			}
+
+			
+		</style>
+
+
+	</head>
+	<body>
+		<div style="width: 100%; height: calc(100% - 40px); overflow-x: scroll; overflow-y: scroll">
+			<table width="100%" class="results especial listincome fixed">
+				<thead>
+					<tr>
+						<th class="center" width="5%"><div style="padding:2px"></div><div><input class="selected" type="checkbox" name="selected_all"></div></th>
+						<th width="5%" class="center" data-sort-by="folio" data-sort-default="desc">Número</th>
+						<th width="2%" class="center" data-sort-by="tipoDocumentoVenta" data-sort-default="asc">Doc.</th>
+						<!--<th width="4%" class="center" data-sort-by="emisor" data-sort-default="asc">emisor</th>-->
+						<th width="4%" class="center" data-sort-by="emisor" data-sort-default="asc">F. Pago</th>
+						<th width="3%" class="center" data-sort-by="fechaEmision" data-sort-default="desc">F.Emisión</th>
+						<th width="3%" class="center fecha-recepcion" data-sort-by="fechaRecepcion" data-sort-default="desc">F.Recepción</th>
+						<th width="3%" class="center" data-sort-by="fechaVencimiento" data-sort-default="desc">F.Vencimiento</th>
+						<th width="4%" class="center" data-sort-by="negocio" data-sort-default="desc">Neg</th>
+						<th width="4%" class="center" data-sort-by="factoring" data-sort-default="desc">Factoring</th>
+						<th class="center" width="5%" data-sort-by="contable" data-sort-default="desc">F. Contable</th>
+						<th class="center" width="2%" data-sort-by="contabilizado" data-sort-default="desc">Contabiliz.</th>
+						<th width="6%" class="center" data-sort-by="estado" data-sort-default="asc">estado</th>
+						<th width="6%" class="center" data-sort-by="areaNegocio" data-sort-default="asc">Area de Negocio</th>
+						<th width="10%" class="center" data-sort-by="cliente" data-sort-default="asc">Cliente</th>
+						<th width="5%" class="center country-label-rut" data-sort-by="rutCliente" data-sort-default="asc">Rut</th>
+						<th width="7%" class="center" data-sort-by="neto" data-sort-default="desc">neto</th>
+						<th width="7%" class="center" data-sort-by="neto" data-sort-default="desc">exento</th>
+						<th width="7%" class="center" data-sort-by="impuesto" data-sort-default="desc">impuesto</th>
+						<th width="7%" class="center" data-sort-by="adicional" data-sort-default="desc">Adicional</th>
+						<th width="7%" class="center" data-sort-by="total" data-sort-default="desc">total</th>
+						<th width="7%" class="center" data-sort-by="abono" data-sort-default="desc">cobrado</th>
+						<th width="7%" class="center" data-sort-by="saldo" data-sort-default="desc">saldo a cobrar</th>
+					</tr>
+				</thead>
+				<tfoot class="totales">
+					<tr>
+						<th width="65%" colspan="15" class="right gray"><label class="cant-facturas">(0)</label>&nbsp;Factura&nbsp;&nbsp;</th>
+			            <th width="7%" class="right"><span data-neto="" class="label2">$0</span></th>
+			            <th width="7%" class="right"><span data-exento="" class="label2">$0</span></th>
+			            <th width="7%" class="right"><span data-impuesto="" class="label2">$0</span></th>
+			            <th width="7%" class="right"><span data-adicional="" class="label2">$0</span></th>
+			           	<th width="7%" class="right"><span data-total="" class="label2">$0</span></th>
+			           	<th width="7%" class="right"><span data-abono="" class="label2">$0</span></th>
+			           	<th width="7%" class="right"><span data-saldo="" class="label2">$0</span></th>
+		           	</tr>
+		           	<tr>
+						<th width="65%" colspan="15" class="right red"><label class="cant-nc">(0)</label>&nbsp;Nota de crédito&nbsp;&nbsp;</th>
+			            <th width="7%" class="right"><span data-netonc="" class="label2">$0</span></th>
+			            <th width="7%" class="right"><span data-exentonc="" class="label2">$0</span></th>
+			            <th width="7%" class="right"><span data-impuestonc="" class="label2">$0</span></th>
+			           	<th width="7%" class="right"><span data-totalnc="" class="label2">$0</span></th>
+			           	<th width="7%" class="right"></th>
+			           	<th width="7%" class="right"></th>
+		           	</tr>
+		           	<tr>
+						<th width="65%" colspan="15" class="right gray"><label class="cant-total">(0)</label>&nbsp;Total&nbsp;&nbsp;</th>
+			            <th width="7%" class="right"><span data-netot="" class="label2">$0</span></th>
+			            <th width="7%" class="right"><span data-exentot="" class="label2">$0</span></th>
+			            <th width="7%" class="right"><span data-impuestot="" class="label2">$0</span></th>
+			            <th width="7%" class="right"><span data-adicionalt="" class="label2">$0</span></th>
+			           	<th width="7%" class="right"><span data-totalt="" class="label2">$0</span></th>
+			           	<th width="7%" class="right"></th>
+			           	<th width="7%" class="right"></th>
+		           	</tr>
+				</tfoot>
+				<tbody></tbody>
+			</table>
+		</div>
+		<div id="pagination" class="pagination"></div>
+	</body>
+</html>

@@ -1,0 +1,5 @@
+{
+	"lastMonth": <!--#4DIF Not(Undefined(lastMonth))--><!--#4DHTML lastMonth--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"lastWeek": <!--#4DIF Not(Undefined(lastWeek))--><!--#4DHTML lastWeek--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"lastSemester": <!--#4DIF Not(Undefined(lastSemester))--><!--#4DHTML lastSemester--><!--#4DELSE-->null<!--#4DENDIF-->
+}

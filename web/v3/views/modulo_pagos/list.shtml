@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_serverInfo-->
+<html>
+	<head>
+		<title>Documentos</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="/v3/views/compras/lista.css?r=<!--#4DTEXT Random-->">
+		<script>
+			$(document).ready(function() {
+				unaBase.toolbox.init();
+				var params = {
+					url: function() { return '/4DACTION/_V3_getDtc' },
+					entity: 'Pagos',
+					callback : function(data){		
+						$('.especial .totales').find('span[data-afecto]').text(data.totales.afecto);
+						$('.especial .totales').find('span[data-exento]').text(data.totales.exento);
+						$('.especial .totales').find('span[data-impuesto]').text(data.totales.impuesto);						
+						$('.especial .totales').find('span[data-total]').text(data.totales.total);
+						$('.especial .totales').find('span[data-abono]').text(data.totales.abono);
+						$('.especial .totales').find('span[data-saldo]').text(data.totales.saldo);
+						$('#viewport .fht-table-init').fixedHeaderTable('destroy');
+						$('#viewport > table').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false });
+					},				
+					row: {
+						html: function(i, rows) {		 			
+							return '<tr data-id="' + rows[i].id + '">' +
+								'<td class="left">' + rows[i].proveedor + '</td>' +
+								'<td class="right color_blue">' + rows[i].total + '</td>' +
+							'</tr>'
+						}
+					},
+					detail: {						
+						url: function(id) { return '/v3/views/modulo_pagos/content.shtml?id=0'},	
+						iframe: false
+					},
+					inflection: {
+						singular: 'Documento',
+						plural: 'Documentos',
+						none: 'ninguna'
+					},
+					filters: [						
+						{ name: 'created_at', type: 'month', caption: 'Fecha de emisión', range: true, currentMonth: true },
+						{ name: 'tipo_doc', type: 'autocomplete', caption: 'Tipo Doc.', dataObject: [
+							{ id: 'OC', text: 'ORDEN DE COMPRA' },
+							{ id: 'DTC', text: 'DOCUMENTO DE COMPRA' },
+							{ id: 'PAGO', text: 'ORDEN DE PAGO' }
+						]},
+						{ name: 'estado', type: 'checkbox', caption: 'Estado del documento', options: [
+							{ caption: 'Atrasadas', name: 'atrasadas', value: false }
+						] },
+					]
+				};
+				unaBase.toolbox.search.init(params);
+
+
+			});
+		</script>
+		<style type="text/css">
+				.dropdown-button {
+				padding: 5px 5px;
+				}
+		</style>
+	</head>
+	<body style="min-width: 900px !important;">
+
+		<!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->
+		<table style="min-width:900px !important; width:100% !important;" class="especial batch">
+			<thead>
+				<tr>
+					<th width="15%" data-sort-by="proveedor" data-sort-default="asc" class="left">Proveedor</th>
+					<th width="8%" data-sort-by="total" data-sort-default="desc" class="right">Total [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+				</tr>
+			</thead>
+			<tfoot class="totales">
+					<th></th>
+		           	<th class="right"><span data-saldo="" class="label fn_red"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>         
+				</tfoot>
+			<tbody></tbody>			
+		</table>
+	</body>
+</html>

@@ -1,0 +1,47 @@
+{
+	"id": <!--#4DIF Not(Undefined(id))--><!--#4DIF Type(id)=Is Text-->"<!--#4DVAR id-->"<!--#4DELSE--><!--#4DVAR id--><!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"llave_titulo": <!--#4DIF Not(Undefined(llave_titulo))-->"<!--#4DHTML llave_titulo-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"llave_subtitulo": <!--#4DIF Not(Undefined(llave_subtitulo))-->"<!--#4DHTML llave_subtitulo-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"index": <!--#4DIF Not(Undefined(index))-->"<!--#4DHTML index-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"estado": <!--#4DIF Not(Undefined(estado))-->"<!--#4DHTML estado-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"errorMsg": <!--#4DIF Not(Undefined(errorMsg))-->"<!--#4DHTML errorMsg-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"updated_at": <!--#4DIF Not(Undefined(version_fecha))-->"<!--#4DHTML Substring(String(version_fecha;8);1;10)--> <!--#4DHTML version_hora-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"text": <!--#4DIF Not(Undefined(text))-->"<!--#4DHTML _V3_escapeString(text)-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"folio": <!--#4DIF Not(Undefined(folio))-->"<!--#4DHTML folio-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"v3_origenCom":<!--#4DIF Not(Undefined(v3_origenCom))-->"<!--#4DHTML v3_origenCom-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"success": <!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,<!--#4DIF Not(Undefined(computer))-->
+	"computer": "<!--#4DTEXT _V3_escapeString(computer)-->",
+	"process": "<!--#4DTEXT _V3_escapeString(process)-->",<!--#4DENDIF-->
+	"new": <!--#4DIF Not(Undefined(new))--><!--#4DIF new-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"activo": <!--#4DIF Not(Undefined($activo))--><!--#4DIF $activo-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"opened": <!--#4DIF Not(Undefined(opened))--><!--#4DIF opened-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"valid": <!--#4DIF Not(Undefined(valid))--><!--#4DIF valid-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->true<!--#4DENDIF-->,
+	"readonly": <!--#4DIF Not(Undefined(readonly))--><!--#4DIF readonly-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"exists": <!--#4DIF Not(Undefined(exists))--><!--#4DIF exists-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"pass":<!--#4DIF Not(Undefined(changesPass))--><!--#4DIF changesPass-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"reload": <!--#4DIF Not(Undefined(reload))--><!--#4DIF reload-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+	"unique": <!--#4DIF Not(Undefined(unique))--><!--#4DIF unique-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF--><!--#4DIF Not(Undefined(detail_result))-->,
+	"detail": {
+		"result": <!--#4DIF detail_result-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+		"data": "<!--#4DHTML _V3_escapeString(detail_data)-->"
+	}<!--#4DENDIF-->
+	<!--#4DIF Not(Undefined(aFoliosFinales))-->,
+	"rows": [
+    <!--#4DLOOP aFoliosFinales-->
+		{
+			"folio2": "<!--#4DHTML aFoliosFinales{aFoliosFinales}-->"
+		}<!--#4DIF NOT(aFoliosFinales{aFoliosFinales} = aFoliosFinales{Size of array(aFoliosFinales)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]<!--#4DENDIF-->,
+	"id_tipo_gasto": <!--#4DIF Not(Undefined(idTipoGasto))-->"<!--#4DTEXT idTipoGasto-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"valida_user_emisor": <!--#4DIF Not(Undefined(validaUserEmisor))-->"<!--#4DTEXT validaUserEmisor-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"valida_record_name": <!--#4DIF Not(Undefined(validaRecordName))-->"<!--#4DTEXT validaRecordName-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"valida_index": <!--#4DIF Not(Undefined(validaIndex))-->"<!--#4DTEXT validaIndex-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"valida_text": <!--#4DIF Not(Undefined(validaText))-->"<!--#4DTEXT validaText-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"valida_id": <!--#4DIF Not(Undefined(validaId))--><!--#4DTEXT validaId--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"valida_user_validador": <!--#4DIF Not(Undefined(validaUserValidador))-->"<!--#4DTEXT validaUserValidador-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"valida_name_validador": <!--#4DIF Not(Undefined(validaNameValidador))-->"<!--#4DTEXT validaNameValidador-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"valida_email_validador": <!--#4DIF Not(Undefined(validaEmailValidador))-->"<!--#4DTEXT validaEmailValidador-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"id_negocio": <!--#4DIF Not(Undefined(id_negocio))-->"<!--#4DTEXT id_negocio-->"<!--#4DELSE-->null<!--#4DENDIF--><!--#4DIF Not(Undefined(result_ids))-->,
+	"result_ids": [ <!--#4DLOOP result_ids-->"<!--#4DHTML _V3_escapeString(result_ids{result_ids})-->"<!--#4DIF NOT(result_ids{result_ids} = result_ids{Size of array(result_ids)})-->,<!--#4DENDIF--><!--#4DENDLOOP--> ]<!--#4DENDIF-->
+}

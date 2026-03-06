@@ -1,0 +1,13 @@
+{	
+	"rows":[
+	<!--#4DLOOP aIndex-->
+		{
+			"id":<!--#4DHTML aIndex{aIndex}-->,
+			"numero":<!--#4DHTML aIdAcceso{aIndex}-->,
+			"modulo":"<!--#4DHTML _V3_scapeString(aModulo{aIndex})-->",
+			"permiso":"<!--#4DHTML _V3_scapeString(aPermiso{aIndex})-->",
+			"usuarios":"<!--#4DHTML _V3_scapeString(aUsuarios{aIndex})-->"
+		}<!--#4DIF NOT(aIndex{aIndex} = aIndex{Size of array(aIndex)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

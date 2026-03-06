@@ -1,0 +1,155 @@
+<input id="globalSession" type="hidden" value="<!--#4DVAR vSesion-->">
+<input id="globalLogin" type="hidden" value="<!--#4DVAR vLogin-->">
+
+<div id="content-header">
+
+<header>
+
+    <div class="logo">
+        <a href="/4DACTION/wbienvenidos">
+        	<!--<img src="/imagenes/logo_empresa.jpg" width="40" height="40" border="0" />-->
+        	<img src="<!--#4DVAR vUrlImagenLogo-->" width="<!--#4DVAR vAnchoPicture-->" height="<!--#4DVAR vAltoPicture-->" border="0"/>
+        </a>
+    </div> 
+  <nav>  
+
+    <!--#4DIF aCheckPermiso{1}=true-->
+      <!--#4DIF current="ne"-->
+        <li class="current"><a href="/4DACTION/W_LISTA_NEG">Negocios</a></li>
+      <!--#4DELSE-->
+        <li><a href="/4DACTION/W_LISTA_NEG">Negocios</a></li>
+      <!--#4DENDIF-->
+    <!--#4DENDIF--> 
+
+		<!--#4DIF aCheckPermiso{2}=true-->
+      <!--#4DIF current="ned"-->
+        <li class="current"><a href="/4DACTION/W_LISTA_NEGOCIOS_DUP">Crear Cotizacion</a></li>
+      <!--#4DELSE-->
+        <li><a href="/4DACTION/W_LISTA_NEGOCIOS_DUP">Crear Cotizacion</a></li>
+      <!--#4DENDIF--> 
+    <!--#4DENDIF-->
+
+    <!--#4DIF aCheckPermiso{3}=true-->
+      <!--#4DIF current="bu"-->
+        <li class="current"> <a href="/4DACTION/W_BUSCADOR">Crear OC</a></li>
+      <!--#4DELSE-->
+        <li> <a href="/4DACTION/W_BUSCADOR">Crear OC</a></li>
+      <!--#4DENDIF-->
+    <!--#4DENDIF-->
+
+    <!--#4DIF aCheckPermiso{4}=true-->
+      <!--#4DIF current="oc"-->
+        <li class="current"><a href="/4DACTION/W_LISTA_OC/e">Buscar OC</a></li>
+      <!--#4DELSE-->
+        <li><a href="/4DACTION/W_LISTA_OC/e">Buscar OC</a></li>
+      <!--#4DENDIF-->
+    <!--#4DENDIF-->         
+
+    <!--#4DIF aCheckPermiso{5}=true-->
+      <!--#4DIF current="so"-->
+        <li class="current"><a href="/4DACTION/W_LISTA_SOL/ln/0">Rendiciones</a></li>
+      <!--#4DELSE-->
+        <li> <a href="/4DACTION/W_LISTA_SOL/ln/0">Rendiciones</a></li>
+      <!--#4DENDIF-->
+    <!--#4DENDIF-->
+
+    <!--#4DIF aCheckPermiso{6}=true-->
+      <!--#4DIF current="pa"-->
+        <li class="current"><a href="/4DACTION/W_LISTA_PAGOS">Pagos</a></li>
+      <!--#4DELSE-->
+        <li> <a href="/4DACTION/W_LISTA_PAGOS">Pagos</a></li>
+      <!--#4DENDIF-->
+    <!--#4DENDIF-->
+
+
+    <!--#4DIF aCheckPermiso{15}=true-->
+      <li><a href="/lista_ot.shtml?r=<!--#4DVAR Random-->">OT</a></li>      
+    <!--#4DELSE-->
+      <li><a class="link-sin-acceso" href="#">OT</a></li>
+    <!--#4DENDIF-->
+
+    <!--#4DIF aCheckPermiso{37}=true-->  
+      <li><a href="/proyectos.shtml?r=<!--#4DVAR Random-->">PROYECTOS</a></li>      
+    <!--#4DELSE-->
+      <li><a class="link-sin-acceso" href="#">PROYECTOS</a></li>   
+    <!--#4DENDIF--> 
+    
+     
+  </nav>   
+</header>
+
+<div class="container-user">
+  <div class="info-usuario">
+
+      <div class="nombre">        
+
+        <!--#4DIF vTratamiento="SRTA."-->
+        <span><img src="/imagenes/user_black_female.png" border="0" /></span>
+        <!--#4DENDIF-->
+
+        <!--#4DIF vTratamiento="SRTA"-->
+        <span><img src="/imagenes/user_black_female.png" border="0" /></span>
+        <!--#4DENDIF-->
+
+        <!--#4DIF vTratamiento="SRA"-->
+        <span><img src="/imagenes/user_black_female.png" border="0" /></span>
+        <!--#4DENDIF-->
+
+         <!--#4DIF vTratamiento="SRA."-->
+        <span><img src="/imagenes/user_black_female.png" border="0" /></span>
+        <!--#4DENDIF-->
+
+        <!--#4DIF vTratamiento="SR."-->
+        <span><img src="/imagenes/user_business.png" border="0" /></span>
+        <!--#4DENDIF-->
+
+        <!--#4DIF vTratamiento="SR"-->
+        <span><img src="/imagenes/user_business.png" border="0" /></span>
+        <!--#4DENDIF-->
+
+        <!--#4DIF vTratamiento=""-->
+        <span><img src="/imagenes/user_silhouette.png" border="0" /></span>
+        <!--#4DENDIF-->  
+       
+        <!--#4DVAR vNomUsr-->
+      </div>
+
+      <div class="cerrar">      
+      <a href="/4DACTION/W_CERRAR_SESION">
+        <img src="/imagenes/disconnect.png" border="0" />
+        <span>Salir</span>
+      </a>      
+      </div>
+
+      <div class="cerrar">      
+      <a target="_blank" href="/4DACTION/W_CAMBIAR_PASSWORD">
+        <img src="/imagenes/password.png" border="0" />
+        <span>Cambiar Contraseña</span>
+      </a>      
+      </div>  
+  </div>
+</div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

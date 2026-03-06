@@ -1,0 +1,62 @@
+{
+	"records": {
+			"total_records": <!--#4DHTML totalRecords-->
+	},
+	"data":{
+			<!--#4DIF totalRecords > 0-->
+
+		"rows": [
+			<!--#4DLOOP aIdDoc-->
+			{
+				"id": <!--#4DHTML aIdDoc{aIdDoc}-->,
+				"folio": "<!--#4DHTML aFolio{aIdDoc}-->",
+				"neto": "<!--#4DHTML aNeto{aIdDoc}-->",
+				"exento": "<!--#4DHTML aExento{aIdDoc}-->",
+				"attachment_xml": "<!--#4DHTML aAttachmentXml{aIdDoc}-->",
+				"impuesto": "<!--#4DHTML aImpuesto{aIdDoc}-->",
+				"impuesto_porc": "<!--#4DHTML aImpPorc{aIdDoc}-->",
+				"total": "<!--#4DHTML aTotal{aIdDoc}-->",
+				"fecha": "<!--#4DHTML aFecha{aIdDoc}-->",
+				"fecha_recepcion": "<!--#4DHTML aFechaRecepcion{aIdDoc}-->",
+				"receptor" :  "<!--#4DHTML aReceptor{aIdDoc}-->",
+				"tipo": "<!--#4DHTML aTipo{aIdDoc}-->",
+				"rut": "<!--#4DHTML  _V3_escapeString(aRut{aIdDoc})-->",
+				"id_doc": "<!--#4DHTML  _V3_escapeString(aIdTipoDoc{aIdDoc})-->",
+				"xml": "<!--#4DHTML  _V3_escapeString(aXml{aIdDoc})-->",
+				"pdf": "<!--#4DHTML  _V3_escapeString(aPdf{aIdDoc})-->",
+				"description": "<!--#4DHTML  _V3_escapeString(aDesc{aIdDoc})-->",
+				"dv": "<!--#4DHTML  _V3_escapeString(aDv{aIdDoc})-->",
+				"proveedor": "<!--#4DHTML  _V3_escapeString(aProveedor{aIdDoc})-->",
+				"pendiente": <!--#4DIF Not(Undefined(aPendiente))--><!--#4DIF aPendiente{aIdDoc}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+				"pagado": "<!--#4DIF Not(Undefined(aPendiente))--><!--#4DIF aPendiente{aIdDoc}-->Si<!--#4DELSE-->No<!--#4DENDIF--><!--#4DELSE--><!--#4DENDIF-->",
+				"estado_doc": "<!--#4DHTML aEstadoDoc{aIdDoc}-->",
+				"status": <!--#4DIF Not(Undefined(aStatus))--><!--#4DIF aStatus{aIdDoc}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+				"blocked": <!--#4DIF Not(Undefined(aIsblocked))--><!--#4DIF aIsblocked{aIdDoc}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+				"recordsMatch": <!--#4DHTML recordsMatch{aIdDoc}-->
+			}<!--#4DIF NOT(aIdDoc{aIdDoc} = aIdDoc{Size of array(aIdDoc)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		],
+		"impuestos_docs": [
+			<!--#4DLOOP aImpuestoId-->
+			{
+				"id": "<!--#4DHTML aImpuestoId{aImpuestoId}-->",
+				"id_doc": "<!--#4DHTML aImpuestoIdDoc{aImpuestoId}-->",
+				"id_impuesto": "<!--#4DHTML aIdImpuesto{aImpuestoId}-->",
+				"valor": "<!--#4DHTML aImpuestoValor{aImpuestoId}-->",
+				"name": "<!--#4DHTML aImpuestoName{aImpuestoId}-->",
+				"namefull": "<!--#4DHTML aImpuestoNameFull{aImpuestoId}-->"
+			}<!--#4DIF NOT(aImpuestoId{aImpuestoId} = aImpuestoId{Size of array(aImpuestoId)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		]
+
+
+		<!--#4DENDIF-->
+
+	}
+	
+	
+}
+
+
+
+

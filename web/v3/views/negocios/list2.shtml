@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+	<!--#4DSCRIPT/_V3_proxy-->
+	<head>
+		<title>Negocios</title>
+
+		<!-- agregado 18-06-16
+		<link href="/v3/script/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+		<script src="/v3/script/bootstrap/js/bootstrap.min.js"></script> -->
+		<!-- agregado 18-06-16 -->
+
+
+		<meta charset="utf-8">
+		<style>
+
+			td.currency {
+				text-align: right !important;
+			}
+
+			td.closed-compras{
+				text-align: left !important;
+			}
+
+			table.symbol{
+				text-align: left !important;
+			}
+
+			tr:not([data-closed-compras="true"]) .closed-compras span {
+				display: none;
+			}
+
+			/* clases bootstrap */
+			.table{
+				margin-bottom:0px!important;
+				/*zoom: 90%!important;*/
+			}
+			.table .text-left{
+				text-align: left!important;
+			}
+			.table .text-right{
+				text-align: right!important;
+			}
+			.table .text-center{
+				text-align: center!important;
+			}
+
+			/* labels */
+			.label {
+				background-color: #818a91!important;
+			    color: #fff!important;
+			    display: inline-block;
+			    padding: .25em .4em;
+			    font-size: 100%;
+			    font-weight: 700;
+			    line-height: 1;
+			    text-align: center;
+			    white-space: nowrap;
+			    vertical-align: baseline;
+			    border-radius: .25rem;
+			}
+
+
+		</style>
+
+		<script>
+
+			/*var preferenceuser = {
+				init : function(){
+					// $( ".dropdown-menu-preference" ).menu("destroy");
+
+					// crea lista de opciones
+					var htmlPreferenceUser;
+					htmlPreferenceUser = $('\
+					    <ul class="dropdown-menu-preference" style="position: absolute; top: 25px; right: 0; z-index: 1000!important; min-width: 150px; text-align: left;"> \
+					      <li><a style="color:black!important" href="#" class="create-dtc items"><span class="ui-icon ui-icon-document"></span>Crear documento de compra</a></li> \
+					    </ul> \
+					');
+					htmlPreferenceUser.appendTo('.table thead tr th:last-of-type').menu().hide();
+
+					// habilita botón
+					$('button.preferenceuser').button({icons: { primary: 'ui-icon-calculator',  secondary: 'ui-icon-triangle-1-s'}, text: false }).click(function() {
+						$('.table thead tr th:last-of-type .dropdown-menu-preference').toggle();
+					});
+				}
+			}*/
+
+			$(document).ready(function() {
+				
+				// current_tab = 0;
+				unaBase.toolbox.init();
+				unaBase.toolbox.search.init({
+					url: function() { return '/4DACTION/_V3_getNegocio' },
+					entity: 'Negocio',
+					callback : function(data){
+						$('tfoot.totales').find('span[data-name="total-neto"]').text(data.totales.neto);
+						$('tfoot.totales').find('span[data-name="gasto-p"]').text(data.totales.gasto_p);
+						$('tfoot.totales').find('span[data-name="gasto-r"]').text(data.totales.gasto_r);
+						$('tfoot.totales').find('span[data-name="por-gastar"]').text(data.totales.por_gastar);
+						$('tfoot.totales').find('span[data-name="por-diferencia"]').text(data.totales.por_gastar);
+						$('tfoot.totales').find('span[data-name="utilidad-value"]').text(data.totales.utilidad_value);
+						$('tfoot.totales').find('span[data-name="utilidad-percent"]').text(data.totales.utilidad_percent);
+						$('tfoot.totales').find('span[data-name="utilidad-final"]').text(data.totales.utilidad_final);
+						$('tfoot.totales').find('span[data-name="por_facturar"]').text(data.totales.totales_saldo_por_facturar);
+						$('tfoot.totales').find('span[data-name="total_facturado"]').text(data.totales.totales_total_facturado);
+
+						// Fijar header y footer
+						$('#viewport .fht-table-init').fixedHeaderTable('destroy');
+						$('#viewport table.fixed').fixedHeaderTable({
+							footer: true,
+							cloneHeadToFoot: false,
+							fixedColumn: false,
+							create: function() {
+								$('[data-sort-by]').removeClass('sort-order-desc').removeClass('sort-order-asc').removeData('sort-order');
+								$('[data-sort-by="' + data.sort.by + '"]').addClass('sort-order-' + data.sort.order).data('sort-order', data.sort.order);
+							}
+						});
+
+						$('#search input[name="parametro"]').attr('placeholder', data.parametros.nombre_param1.toLowerCase()).css('text-transform', 'capitalize');
+
+						//preferenceuser.init();
+
+					},
+					row: {
+						html: function(i, rows) {
+							
+							return '<tr data-id="' + rows[i].id + '" data-username="' + rows[i].username + '" data-status="' + rows[i].status + '" data-closed-compras="' + rows[i].closed_compras + '">' +
+								'<td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">' + rows[i].folio + ' <span class="ui-icon ui-icon-locked" style="vertical-align: middle; margin-top: -2px; display: inline-block; visibility: ' + ((rows[i].closed_compras)? 'visible' : 'hidden' ) + ';"></span></td>' +
+
+								'<td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">' + '<time datetime="' + Date.parse(rows[i].fecha_asignacion).toISOString() + '">' + $.datepicker.formatDate('dd-mm-yy', Date.parse(rows[i].fecha_asignacion)) + '</time></td>' +
+
+								'<td class="col-xs-1 col-sm-1 col-md-1 col-lg-1">' + rows[i].fecha_realizacion + '</td>' +
+
+								'<td class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-left">' + ((rows[i].empresa !== undefined)? rows[i].empresa.alias : 'N/A') + '</td>' +
+
+								'<td class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-left" ' + ((rows[i].closed)? ' style="color: blue !important;"' : '') + '>' + rows[i].text + '</td>' +
+
+								(
+									(rows[i].exchange !== undefined && rows[i].exchange.type != currency.code)?
+									'<td class="col-xs-1 col-sm-1 col-md-1 col-lg-1" style="text-align: right; position: relative;"><span style="position: absolute; left: 5px;">'+ rows[i].exchange.type + '</span> ' + (rows[i].total_neto / rows[i].exchange.rate).numberFormat(2, ',', '.') + '</td>'
+									:
+									'<td class="currency col-xs-1 col-sm-1 col-md-1 col-lg-1">' + rows[i].total_neto + '</td>'
+								) +
+
+								'<td class="currency col-xs-1 col-sm-1 col-md-1 col-lg-1">' + rows[i].costo.presupuestado + '</td>' +
+
+								'<td class="currency col-xs-1 col-sm-1 col-md-1 col-lg-1">' + rows[i].costo.real + '</td>' +
+
+								// diferencia de gasto
+								'<td class="currency col-xs-1 col-sm-1 col-md-1 col-lg-1" style="color: ' + ( ( (rows[i].costo.presupuestado - rows[i].costo.real) >= 0)? 'green' : 'red'  ) + ';">' + (rows[i].costo.presupuestado - rows[i].costo.real) + '</td>' +
+
+								// por gastar
+								/*'<td class="currency col-xs-1 col-sm-1 col-md-1 col-lg-1" style="color: ' + ( (rows[i].por_gastar >= 0)? 'inherit' : 'inherit'  ) + ';">' + ((rows[i].por_gastar > 0)? rows[i].por_gastar : 0) + '</td>' +*/
+
+								// % eficiencia
+								'<td class="percent col-xs-1 col-sm-1 col-md-1 col-lg-1" style="color: ' + ( (((rows[i].costo.presupuestado != 0)? (((rows[i].costo.presupuestado - rows[i].costo.real) / rows[i].costo.presupuestado) * 100.00) : 0) >= 0)? 'green' : 'red'  ) + ';" width="83">' +  ( (rows[i].costo.presupuestado != 0)? (((rows[i].costo.presupuestado - rows[i].costo.real) / rows[i].costo.presupuestado) * 100.00) : 0) + '</td>' +
+
+								// % utilidad presupuestada
+								/*'<td class="percent col-xs-1 col-sm-1 col-md-1 col-lg-1" style="color: ' + ( (((rows[i].costo.presupuestado != 0)? (((rows[i].costo.presupuestado - rows[i].costo.real - rows[i].por_gastar) / rows[i].costo.presupuestado) * 100.00) : 0) >= 0)? 'green' : 'red'  ) + ';" width="83">' +  ( (rows[i].costo.presupuestado != 0)? (((rows[i].costo.presupuestado - rows[i].costo.real - rows[i].por_gastar) / rows[i].costo.presupuestado) * 100.00) : 0) + '</td>' + */
+
+								// utilidad presupuestada
+								'<td class="currency col-xs-1 col-sm-1 col-md-1 col-lg-1">' + (rows[i].total_neto - rows[i].costo.presupuestado) + '</td>' +
+
+								// utilidad real
+								'<td class="currency col-xs-1 col-sm-1 col-md-1 col-lg-1">' + (rows[i].total_neto - rows[i].costo.real) + '</td>' +
+
+								'<td class="percent col-xs-1 col-sm-1 col-md-1 col-lg-1"' + ((rows[i].total_neto > 0)? (' style="color: ' + ( (  ((rows[i].total_neto - rows[i].costo.real) / rows[i].total_neto) * 100.00 >= ((rows[i].total_neto - rows[i].costo.presupuestado) / rows[i].total_neto) * 100.00  )? 'green' : 'red' ) + ';"') : '') + '>' + ((rows[i].total_neto > 0)? ((rows[i].total_neto - rows[i].costo.real) / rows[i].total_neto) * 100.00 : 'N/A') + '</td>' +
+
+								/*'<td class="currency col-xs-1 col-sm-1 col-md-1 col-lg-1">' + (rows[i].total_neto - rows[i].costo.real - ((rows[i].por_gastar > 0)? rows[i].por_gastar : 0)) + '</td>' +
+
+								'<td class="percent col-xs-1 col-sm-1 col-md-1 col-lg-1"' + ((rows[i].total_neto > 0)? (' style="color: ' + ( (  ((rows[i].total_neto - (rows[i].costo.real + rows[i].por_gastar)) / rows[i].total_neto) * 100.00 >= ((rows[i].total_neto - rows[i].costo.presupuestado) / rows[i].total_neto) * 100.00  )? 'green' : 'red' ) + ';"') : '') + '>' + ((rows[i].total_neto > 0)? ((rows[i].total_neto - (rows[i].costo.real + rows[i].por_gastar)) / rows[i].total_neto) * 100.00 : 'N/A') + '</td>' +*/
+
+								// facturado
+								'<td class="currency col-xs-1 col-sm-1 col-md-1 col-lg-1">' + rows[i].total_facturado + '</td>' +
+
+								// por facturar
+								'<td class="currency col-xs-1 col-sm-1 col-md-1 col-lg-1">' + rows[i].saldo_por_facturar + '</td>' +
+
+								// dropdown
+								// '<td class="col-xs-1 col-sm-1 col-md-1 col-lg-1"></td>' +
+
+							'</tr>'
+						}
+					},
+					detail: {
+						url: function(id) { return '/v3/views/negocios/content.shtml?id=' + id }
+					},
+					inflection: {
+						singular: 'negocio',
+						plural: 'negocios',
+						none: 'ningún'
+					},
+					// Filtros
+					filters: [
+						{ name: 'fecha_asignacion', type: 'month', caption: 'Fecha de asignación', range: true, currentMonth: false, currentYear: <!--#4DIF _V3_showAllNegocios-->false<!--#4DELSE-->true<!--#4DENDIF--> },
+						//{ name: 'updated_at', type: 'month', caption: 'Fecha últ. modificación', range: true },
+						// Pendiente: agregar datasource remoto y convertir a checkbox
+						// con jquery ui autocomplete
+						{ name: 'area_negocio', type: 'autocomplete', caption: 'Área de negocio', dataSource: 'getAreaNegocio' },
+						{ name: 'ejecutivo_responsable', type: 'autocomplete', caption: 'Ejecutivo responsable', dataSource: 'getUsuarioPerfilEjecutivo' },
+						{ name: 'estado', type: 'checkbox', caption: 'Estado del negocio', options: [
+							{ caption: 'En proceso', name: 'estado_en_proceso', value: true },
+							{ caption: 'Cerrado', name: 'estado_cerrado', value: false },
+							{ caption: 'Anulado', name: 'estado_nulo', value: false }
+						] },
+						{ name: 'estado_compras', type: 'autocomplete', caption: 'Estado de las compras', dataObject: [
+							{
+								id: true,
+								text: 'Abiertas para compras'
+							},
+							{
+								id: false,
+								text: 'Cerradas para compras'
+							}
+						]},
+
+
+						{ name: 'estado_factura', type: 'autocomplete', caption: 'Estado de la factura', dataObject: [
+
+							{
+								id: true,
+								text: 'facturado'
+							},
+							{
+								id: false,
+								text: 'por facturar'
+							}
+
+
+						] },
+
+						{ name: 'parametro', type: 'autocomplete', caption: '', dataSource: 'Param1' }
+
+
+					]
+				});
+
+				unaBase.toolbox.menu.init({
+					entity: 'Negocios', // especifica entidad sobre la cual se almacenan los datos
+										  // y nombre para referenciar los views
+					buttons: [ 'export_list', 'export_list_items_doc' ]
+				});
+
+
+				// preferenceuser.init();
+
+
+			});
+		</script>
+	</head>
+	<body style="min-width: 900px !important;">
+		<table class="results fixed">
+			<thead>
+				<tr>
+					<th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" data-sort-by="folio" data-sort-default="desc">Número</th>
+					<th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" data-sort-by="fecha_asignacion" data-sort-default="desc">Fecha Asignación</th>
+					<th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" data-sort-by="fecha_realizacion" data-sort-default="desc">Fecha Realización</th>
+					<th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" data-sort-by="alias" data-sort-default="asc">Cliente</th>
+					<th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" data-sort-by="text" data-sort-default="asc">Referencia</th>
+					<th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" data-sort-by="total_neto" data-sort-default="desc">Total Neto</th>
+					<th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" data-sort-by="gasto_p" data-s ort-default="desc">Gasto P.</th>
+					<th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" data-sort-by="gasto_r" data-sort-default="desc">Gasto R.</th>
+					<th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" data-sort-by="por_gastar" data-sort-default="desc">Dif. gasto</th>
+					<!--<th class="col-xs-1 col-sm-1 col-md-1 col-lg-1" data-sort-by="por_gastar" data-sort-default="desc">Por Gastar</th>-->
+					<th class="col-xs-1 col-sm-1 col-md-1 col-lg-1">Eficiencia</th>
+					<th class="col-xs-1 col-sm-1 col-md-1 col-lg-1">Util. presup.</th>
+					<th class="col-xs-1 col-sm-1 col-md-1 col-lg-1">Util. real</th>
+					<th class="col-xs-1 col-sm-1 col-md-1 col-lg-1">% Util. real</th>
+					<!--<th class="col-xs-1 col-sm-1 col-md-1 col-lg-1">Util. final</th>
+					<th class="col-xs-1 col-sm-1 col-md-1 col-lg-1">% Util. final</th>-->
+					<th class="col-xs-1 col-sm-1 col-md-1 col-lg-1">Facturado</th>
+					<th class="col-xs-1 col-sm-1 col-md-1 col-lg-1">Por Facturar</th>
+					<!--<th class="col-xs-1 col-sm-1 col-md-1 col-lg-1"><button class="dropdown-button preferenceuser">Opciones de visualización</button></th>-->
+				</tr>
+			</thead>
+			<tfoot class="totales">
+				<tr>
+		            <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1"></th>
+
+		            <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1"></th>
+
+		            <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1"></th>
+
+		            <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1"></th>
+
+		            <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1"></th>
+
+		            <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center"><h6 class="text-right"><span data-name="total-neto" class="label label-default">$0</span></h6></th>
+
+		            <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center"><h6><span data-name="gasto-p" class="label label-default">$0</span></h6></th>
+
+		            <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-center"><h6><span data-name="gasto-r" class="label label-default">$0</span></h6></h6></th>
+
+		            <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-right"><h6><span data-name="por-diferencia" class="label label-default">$0</span></h6></th>
+
+		            <!--<th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-right"><h6><span data-name="por-gastar" class="label label-default">$0</span></h6></th>-->
+
+		            <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-right">&nbsp;&nbsp;&nbsp;</th>
+
+		            <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-right"><h6><span data-name="utilidad-value" class="label label-default"></span></h6></th>
+
+		            <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-right"><h6><span data-name="utilidad-value" class="label label-default"></span></h6></th>
+
+		            <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-right">&nbsp;&nbsp;&nbsp;</th>
+
+		           <!-- <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-right"><h6><span data-name="utilidad-final" class="label label-default">$0</span></h6></th>
+
+		            <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-right"><h6><span data-name="utilidad-percent" class="label label-default">$0</span></h6></th>-->
+
+		            <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-right"><h6><h6><span data-name="total_facturado" class="label label-default">$0</span></h6></th>
+
+		            <th class="col-xs-1 col-sm-1 col-md-1 col-lg-1 text-right"><h6><span data-name="por_facturar" class="label label-default">$0</span></h6></th>
+
+		            <!--<th class="col-xs-1 col-sm-1 col-md-1 col-lg-1">&nbsp;&nbsp;&nbsp;</th>-->
+	       		</tr>
+			</tfoot>
+			<tbody></tbody>
+		</table>
+	</body>
+</html>

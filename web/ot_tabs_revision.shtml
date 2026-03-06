@@ -1,0 +1,148 @@
+<div class="pest-lista-rev">
+
+<a id="nueva-revision" href="#">+ Nueva Revisi&oacute;n</a>
+
+  <form id="frmrevision">
+    <div class="bloque-revisiones">
+      <div class="marco-ingreso-revision">
+        <input id="idotrev" name="idotrev" type="hidden" value="<!--#4DVAR vIdot-->"/>
+        <input id="loginotrev" name="loginotrev" type="hidden" value="<!--#4DVAR vLogin-->"/>
+        <input id="idrevision" name="idrevision" type="hidden" value=""/>
+        <input id="idrevision-temporal" name="idrevision-temporal" type="hidden" value=""/>
+        <input id="selected-participants" name="selected-participants" type="hidden">
+
+        <div class="items-bloque">
+            <!--<img id="status-save-rev" src='/imagenes_green/ajaxloader.gif'><br/>-->
+            <label>Asunto :</label>
+            <input class="input-block bordes-redondeados-input disabled" id="asuntorevision" name="asunto-revision" type="text"/>    
+        </div>
+
+        <div class="blocks-inline">
+          <label>Fecha</label>
+          <input id="date-rev" name="date-rev" class="datepicker input-medium disabled" type="text" value="" />         
+        </div>
+
+         <div class="blocks-inline">
+          <label>Hora</label>
+          <select id="hora-rev" name="horarev" class="combos-medium2">
+              <option selected="selected" value="00:00:00">00:00:00</option>
+              <!--#4dloop aHora-->
+                  <!--#4dif aHora{aHora}#vHoraId-->    
+                      <option value="<!--#4dvar aHora{aHora}-->"><!--#4dvar aHora{aHora}--></option>
+                  <!--#4dendif-->
+              <!--#4dendloop-->
+          </select>
+        </div>
+
+        <div class="items-bloque">
+          <label>Comentario :</label>
+          <textarea class="textarearevision bordes-redondeados-input disabled" id="contenidorevision" name="contenidorevision"></textarea>  
+        </div>
+
+        <div class="items-bloque">
+          <button title="REVISION" type="button" class="btn-subir-archivo disabled">Adjuntar archivo</button>
+        </div>
+
+        <div id="lista_de_archivos_rev"></div>
+
+      </div>
+
+                  
+      <div class="items-bloque">
+        <label>Participantes :</label>
+
+        <a class="link-select-all" id="select-all-part-rev" href="#">Seleccionar todo</a>
+        <a class="link-not-select-all" id="not-select-all-part-rev" href="#">Ninguno</a>
+        <a class="link-add-guest-rev" id="add-guest-rev" href="#">+ Invitado</a>        
+
+        <div id="box-participantes-revision">
+          <!--#4dloop aLoginAsig-->
+            <!--#4dif aTipoAsig{aLoginAsig}="RESPONSABLE"-->
+              <input
+                class="check-revision disabled"
+                type="checkbox" 
+                name="<!--#4dvar aNombreAsig{aLoginAsig}-->" 
+                value="res/<!--#4dvar aLoginAsig{aLoginAsig}-->"
+              />
+              <span class="part-responsable"><!--#4dvar Lowercase(aNombreAsig{aLoginAsig})--></span>
+            <!--#4dendif-->
+
+            <!--#4dif aTipoAsig{aLoginAsig}="INTEGRANTE"-->
+              <input
+                class="check-revision disabled"
+                type="checkbox" 
+                name="<!--#4dvar aNombreAsig{aLoginAsig}-->" 
+                value="int/<!--#4dvar aLoginAsig{aLoginAsig}-->"
+              />
+              <span class="part-integrante"><!--#4dvar Lowercase(aNombreAsig{aLoginAsig})--></span>
+            <!--#4dendif-->
+
+            <!--#4dif aTipoAsig{aLoginAsig}="INVITADO"-->
+              <input
+                class="check-revision disabled"
+                type="checkbox" 
+                name="<!--#4dvar aNombreAsig{aLoginAsig}-->" 
+                value="inv/<!--#4dvar aLoginAsig{aLoginAsig}-->"
+              />
+              <span class="part-invitado"><!--#4dvar Lowercase(aNombreAsig{aLoginAsig})--></span>
+            <!--#4dendif-->
+
+          <!--#4dendloop-->
+        </div>                   
+         
+      </div>
+      <hr/>
+      <div class="botones-link">
+        <button id="save-rev" class="btn-general disabled" type="button">                       
+            <span>Guardar</span>
+        </button>
+        <button id="cancelar-rev" class="btn-general disabled" type="button">                       
+            <span>Cancelar</span>
+        </button>
+        <!-- <a href="#" id="save-rev">Guardar</a>
+         <a href="#" id="cancelar-rev">Cancelar</a>-->
+      </div>
+              
+    </div>
+  </form>
+
+  <div class="list-revisiones">
+    <!--#4dloop aRevLogin--> 
+    <div class="items-revision" id="<!--#4DVAR aRevIdRev{aRevLogin}-->">
+      <span
+        style="<!--#4DVAR aRevIdRev{aRevLogin}-->" 
+        class="click subject"><!--#4DVAR aRevAsunto{aRevLogin}-->
+      </span>
+      <span 
+        style="<!--#4DVAR aRevIdRev{aRevLogin}-->" 
+        class="click photo">
+          <img src="<!--#4DVAR aRevLogoResp{aRevLogin}-->">
+      </span>
+      <span 
+        style="<!--#4DVAR aRevIdRev{aRevLogin}-->" 
+        class="click name"><!--#4DVAR aRevNombreResp{aRevLogin}-->
+      </span>
+      <span 
+        style="<!--#4DVAR aRevIdRev{aRevLogin}-->" 
+        class="click comment"><!--#4DVAR aRevComentario{aRevLogin}-->
+      </span>
+      <span 
+        style="<!--#4DVAR aRevIdRev{aRevLogin}-->" 
+        class="click date">
+        <!--#4DVAR string(aRevFechaVcto{aRevLogin})--> a las <!--#4DVAR string(aRevHoraVcto{aRevLogin};5)-->
+      </span>
+      <span 
+        style="<!--#4DVAR aRevIdRev{aRevLogin}-->" 
+        class="click number-comment"><!--#4DVAR aRevCantCommentResp{aRevLogin}--> Comentarios.
+      </span>
+      <a name="<!--#4DVAR aRevIdRev{aRevLogin}-->" class="delete-revision" href="#">x</a>
+    </div>    
+    <!--#4dendloop-->   
+  </div>
+
+</div>
+
+<div class="pest-det-rev">
+    <a id="ver-all-revisiones" href="#">Ver todas las revisiones</a>
+    <div class="detalle"></div>
+</div>

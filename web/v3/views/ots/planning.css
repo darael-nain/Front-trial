@@ -1,0 +1,90 @@
+	.popup-planner .days{			
+		padding:5px;
+		border:1px solid lightgray;
+		border-radius:3px;
+		margin:5px;
+	}		
+	.popup-planner .days h3{
+		font-weight:bold;
+		display:inline-block;
+	}
+	.popup-planner .days button{
+		margin:5px;
+		display:inline-block;
+		font-weight:bold;			
+	}
+	.popup-planner .days > div > div > input{
+		width:70px;
+	}		
+			
+	.container-in{
+		margin:5px;
+		border:1px solid lightgray;	
+		border-radius:3px;
+		padding:5px;
+	}
+	.text{
+		margin:10px;
+	}
+	.dates{
+		margin:5px;
+	}
+	.text label{				
+		font-weight:bold;
+		display: block;
+		width:20px;
+		text-align:right;
+		color: gray;
+	}
+	.text textarea{
+		margin:5px;
+		border:1px solid lightgray;
+		width:70%;
+		height:50px;
+		border-radius:3px;	
+	}			
+	.dates label{				
+		font-weight:bold;
+		display: inline-block;
+		width:20px;
+		text-align:right;
+		color: gray;
+	}
+	.dates input{			
+		border:1px solid lightgray;
+		border-radius:3px;			
+		font-size:13px!important;			
+		text-align:left;
+		padding:5px;
+	}
+	.dates input[data-types="dates"]{			
+		width:70px;			
+	}
+	.dates input[data-types="times"]{			
+		width:50px;			
+	}
+
+	.detail-planned{
+		margin-top:10px;
+	}
+		.detail-planned h2{
+			font-weight:bold;
+		}
+		.detail-planned table tbody tr td{
+			text-align:left;
+			font-weight:bold;
+		}
+
+	.invisible{
+		width:0px!important;
+		height:0px!important;
+		border:none!important;
+	}
+
+	#list-times div label{
+		color:gray;
+		display:inline-block;
+		text-align:left!important;
+	}
+	
+	

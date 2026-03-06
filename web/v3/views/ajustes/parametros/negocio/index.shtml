@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Parametros Negocio y cotización</title>
+		<script type="text/javascript" src="/v3/views/ajustes/parametros/negocio/negocio.js"></script>
+
+    	<link href="/css/form1.css" rel="stylesheet">
+    	<link href="/v3/views/ajustes/parametros/css/params.css" rel="stylesheet">
+</head>
+<script type="text/javascript">
+	$(document).ready(function(){
+
+	  	unaBase.ui.block();    
+	  	negocioParam.menu();
+	  	negocioParam.init();
+	  	unaBase.ui.unblock();
+	  	unaBase.ui.expandable.init();
+	});
+
+</script>
+<body>
+	<section class="sheet" id="negocioParam">
+		<footer>
+				<article class="article-half">
+					<h1>Negocio y Cotización</h1>
+					<ul class="editable">
+						<li>
+								<label for="v3_modo_offline_cantidad_items">Cant. items modo offline</label>
+								<input class="item" type="number" name="v3_modo_offline_cantidad_items" id="v3_modo_offline_cantidad_items">	
+						</li>
+						<li>
+								<label for="param4">Param 4</label>
+								<input class="item" type="text" name="param4" id="param4">	
+						</li>
+						<li>
+								<label for="noIncluyeCotizacion">Observación <b>OCULTA</b> cotización</label>
+								<textarea class="item" type="text" name="noIncluyeCotizacion" id="noIncluyeCotizacion">	</textarea>
+						</li>
+						<li>
+								<label for="condicion_negocio">Observación cotización</label>
+								<textarea class="item" type="text" name="condicion_negocio" id="condicion_negocio">	</textarea>
+						</li>
+						<li>
+								<label for="itemLoadByCategoria">Items a cargar en "Añadir todos los ítems de la categoría"</label>
+								<input class="item" type="text" name="itemLoadByCategoria" id="itemLoadByCategoria">	
+						</li>
+			
+						
+					</ul>
+					<ul class="editable">
+						<li>				
+								<label for="paramc4">Activo param 4</label>
+								<input class="item" type="checkbox" name="paramc4" id="paramc4">	
+						</li>		
+						<li>
+							<label for="calculoSubcategoria">Calculo subcategoría</label>
+							<input class="item" type="checkbox" name="calculoSubcategoria" id="calculoSubcategoria">
+						</li>
+						<li>
+							<label for="v3_no_cambiar_ejecutivo_dup" title="mantiene el ejecutivo responsable, de lo contrario sera el usuario que duplica la cot/neg">Duplicar ejecutivo responsable</label>
+							<input class="item" type="checkbox" name="v3_no_cambiar_ejecutivo_dup" id="v3_no_cambiar_ejecutivo_dup">
+						</li>
+						<li>
+							<label for="disBusquedaGastoFijo">Diferencia Busqueda Gasto Fijo</label>
+							<input class="item" type="checkbox" name="disBusquedaGastoFijo" id="disBusquedaGastoFijo">
+						</li>
+						<li>
+							<label for="v3_sobrecargos_cinemagica">Modo sobrecargos</label>
+							<input class="item" type="checkbox" name="v3_sobrecargos_cinemagica" id="v3_sobrecargos_cinemagica">
+						</li>
+						<li>
+							<label for="v3_block_cot_neg">Desactivar bloqueo de cotización y negocio</label>
+							<input class="item" type="checkbox" name="v3_block_cot_neg" id="v3_block_cot_neg">
+						</li>
+						<li>
+							<label for="v3_ejecutivos_inluir_historicos">Filtrar ejecutivos historicos</label>
+							<input class="item" type="checkbox" name="v3_ejecutivos_inluir_historicos" id="v3_ejecutivos_inluir_historicos">
+						</li>
+						<li>
+							<label for="v3_MostrarRut_Cotizacion">Mostrar Rut en Cotización</label>
+							<input class="item" type="checkbox" name="v3_MostrarRut_Cotizacion" id="v3_MostrarRut_Cotizacion">
+						</li>
+						<li>				
+								<label for="v3_usar_siempre_modo_offline">Activar modo offline</label>
+								<input class="item" type="checkbox" name="v3_usar_siempre_modo_offline" id="v3_usar_siempre_modo_offline">	
+						</li>	
+						<li>				
+								<label for="sobrecargosPlantilla">Sobrecargos desde plantilla</label>
+								<input class="item" type="checkbox" name="sobrecargosPlantilla" id="sobrecargosPlantilla">	
+						</li>		
+					</ul>
+				</article>
+
+			
+				
+			
+		</footer>
+		
+	</section>
+</body>
+</html>

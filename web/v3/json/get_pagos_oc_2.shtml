@@ -1,0 +1,22 @@
+{
+	"rows": [
+<!--#4DLOOP aOCOP_id -->
+		{
+			"id": <!--#4DHTML aOCOP_id{aOCOP_id}-->,
+			"origen": "<!--#4DHTML aOCOP_origen{aOCOP_id}-->",
+			"origenModulo":  <!--#4DIF Not(Undefined($id_servicio))-->"<!--#4DHTML aOCOP_origenModulo{aOCOP_id}-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+			"folio": "<!--#4DHTML aOCOP_folio{aOCOP_id}-->",
+			"emision": "<!--#4DHTML aOCOP_fechaemision{aOCOP_id}-->",
+			"vencimiento": "<!--#4DHTML aOCOP_fechavencimiento{aOCOP_id}-->",
+			"documento": "<!--#4DHTML _V3_escapeString(aOCOP_documento{aOCOP_id})-->",
+			"tipo": "<!--#4DHTML aOCOP_tipo{aOCOP_id}-->",
+			"proveedor": "<!--#4DHTML _V3_escapeString(aOCOP_proveedor{aOCOP_id})-->",
+			"abono": <!--#4DHTML  String(aOCOP_abono{aOCOP_id};"&xml")-->,
+			"total_pago": <!--#4DHTML  String(aOCOP_Total_pago{aOCOP_id};"&xml")-->,
+			"estado": "<!--#4DHTML aOCOP_estado{aOCOP_id}-->",
+			"monedaTipo": "<!--#4DHTML aMonedaTipoOP{aOCOP_id}-->",
+			"monedaValorCambio": <!--#4DHTML  String(aMonedaValorCambioOP{aOCOP_id};"&xml")-->
+		}<!--#4DIF NOT(aOCOP_id{aOCOP_id} = aOCOP_id{Size of array(aOCOP_id)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

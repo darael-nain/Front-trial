@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Catálogo</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="/v3/design/tooltipster-custom.css?<!--#4DTEXT random-->">
+		<script>
+
+			$(document).ready(function() {
+				document.title = nombreEmpresa + ' / Catálogo';
+				$('.credencial tbody').on("click", "tr > td > div.chk > input", function(event){
+					var cantChecked = $('.credencial > tbody > tr > td > div.chk > input:checked').length;
+					var buttonDisable = $('#menu ul li[data-name="disable_from_list"]');
+					var buttonMerge = $('#menu ul li[data-name="merge"]');
+					var buttonTag = $('#menu ul li[data-name="tag"]');
+
+					if (cantChecked == 0 ) {
+						buttonDisable.hide();
+						buttonTag.hide();
+						buttonMerge.hide();
+					}else{
+						if (cantChecked == 1) {
+							buttonDisable.show();
+							buttonTag.show();
+							buttonMerge.hide();
+						}else{
+							if (cantChecked > 1) {
+								buttonDisable.show();
+								buttonTag.show();
+								buttonMerge.show();
+							}
+						}
+					}
+				});
+
+				unaBase.toolbox.init();
+
+				// Inicializamos un buscador
+				var params = {
+					searchOff: true,
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/_V3_getProducto?all=true' },
+					entity: 'Producto',
+					// Función que genera cada fila de la tabla, dado el valor de i (índice de posición)
+					// y el valor de rows (array con todos los resultados)
+					// El contenido de rows corresponde al objeto de mismo nombre generado mediante la llamada
+					// a la api JSON. Ver /v3/json/get_cotizacion.shtml para conocer el formato.
+					row: {
+						html: function(i, rows) {
+							var htmlData = '';
+							htmlData = '<tr data-id="' + rows[i].id + '" data-username="' + rows[i].username + '" data-status="' + rows[i].status + '"' + ((rows[i].is_group)? ' data-group' : '') + ((rows[i].parent != null)? ' data-parent="' + rows[i].parent + '"' : '') + '>' +
+								'<td style="text-align: center;"><div class="chk" style="' + ((rows[i].parent != null)? 'display: none;' : '') + '"><input type="checkbox" name="producto[id]" value="' + rows[i].id + '" /></div></td>' +
+								'<td style="text-align: center;">' + ((rows[i].text.length > 22)? rows[i].text.toLowerCase().substring(0, 22) + '...' : rows[i].text.toLowerCase()) + '</td>' +
+								'<td style="text-align: center;">' + rows[i].categoria.text + '</td>' +
+								'<td style="text-align: center;">' + rows[i].costo + '</td>' +
+								'<td style="text-align: center;">' + rows[i].precio + '</td>' +
+								'</tr>';
+							return htmlData;
+						}
+					},
+					detail: {
+						// Función que genera una URL de detalle, dado el id (identificador de item)
+						url: function(id) { return '/v3/views/catalogo/content.shtml?id=' + id },
+						iframe: false,
+						dialog: true,
+						size: 'large'
+					},
+					// Inflexiones
+					inflection: {
+						singular: 'producto',
+						plural: 'productos',
+						none: 'ningún'
+					},
+					// Filtros
+					filters: [
+						{ name: 'tags', type: 'autocomplete', caption: 'Etiquetas', dataSource: 'getTags' },
+						{ name: 'categoria', type: 'autocomplete', caption: 'Categoria', dataSource: 'getCategorias' },
+						{ name: 'estado', type: 'checkbox', caption: 'Estado', options: [
+							{ caption: 'Activo', name: 'estado_activo', value: true },
+							{ caption: 'Inactivo', name: 'estado_inactivo', value: false }
+						] }
+					]
+				};
+
+
+				/*$.ajax({
+					url: '/4DACTION/_V3_getDato',
+					dataType: 'json',
+					async: false,
+					success: function(data) {
+						$.each(data.rows, function(key, item) {
+							if (item.enabled && item.options.length > 0)
+								params.filters.push({
+									name: item.nombre.replace(/ |\(|\)|\/|\?/g,"_"),
+									type: 'autocomplete',
+									caption: item.nombre,
+									dataObject: item.options
+								});
+							//if (item.enabled && item.options.length == 0)
+							//	params.filters.push({
+							//		name: item.nombre.replace(/ |\(|\)|\/|\?/g,"_"),
+							//		type: 'text',
+							//		caption: item.nombre,
+							//		dataObject: item.options
+							//	});
+							//
+						});
+					}
+				});*/
+
+				unaBase.toolbox.search.init(params);
+
+				unaBase.toolbox.menu.init({
+					entity: 'Producto', // especifica entidad sobre la cual se almacenan los datos
+										  // y nombre para referenciar los views
+					/*buttons: [ 'new', 'clone', 'print' ]*/
+					// buttons: [ 'new' ]
+					//buttons: ['searchOff', 'new', 'disable_from_list', 'merge', 'tag' , "export_list", "import_list_catalogo"]
+				});
+
+				$('#menu ul li[data-name="disable_from_list"]').hide();
+				$('#menu ul li[data-name="merge"]').hide();
+				$('#menu ul li[data-name="tag"]').hide();
+
+				// Agregar evento para el checkbox "Seleccionar todo"
+				$('#selectAll').on('change', function() {
+					var isChecked = $(this).prop('checked');
+					$('.results tbody input[type="checkbox"]').prop('checked', isChecked);
+					
+					// Actualizar visibilidad de botones según selección
+					var buttonDisable = $('#menu ul li[data-name="disable_from_list"]');
+					var buttonMerge = $('#menu ul li[data-name="merge"]');
+					var buttonTag = $('#menu ul li[data-name="tag"]');
+					
+					if (isChecked) {
+						buttonDisable.show();
+						buttonTag.show();
+						buttonMerge.show();
+					} else {
+						buttonDisable.hide();
+						buttonTag.hide();
+						buttonMerge.hide();
+					}
+				});
+
+			});
+		</script>
+		<style type="text/css">
+		.results {
+			width: 100%;
+			border-collapse: collapse;
+			border: 1px solid #dee2e6;
+		}
+		.results thead th {
+			background-color: #28a745;
+			color: white;
+			font-weight: normal;
+			padding: 8px;
+			text-transform: uppercase;
+			text-align: center !important;
+			border: 1px solid #dee2e6;
+			vertical-align: middle;
+		}
+		.results tbody td {
+			padding: 6px 8px;
+			border: 1px solid #dee2e6;
+			text-align: center !important;
+			vertical-align: middle;
+			height: 32px;
+			line-height: 32px;
+		}
+		.results tbody tr {
+			height: 32px;
+		}
+		.results input[type="checkbox"] {
+			margin: 0;
+			width: 16px;
+			height: 16px;
+			vertical-align: middle;
+			position: relative;
+			top: -1px;
+		}
+		.results thead th:first-child,
+		.results tbody td:first-child {
+			width: 30px;
+			padding: 0;
+			text-align: center !important;
+		}
+		.results .chk {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 100%;
+		}
+		.results td * {
+			text-align: center !important;
+		}
+		</style>
+	</head>
+	<body>
+		<!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->
+		<table class="results listindex">
+			<thead>
+				<tr>
+					<th><input type="checkbox" id="selectAll" /></th>
+					<th>Nombre</th>
+					<th>Categoria</th> 
+					<th>Costo</th>
+					<th>Precio</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+			<tfoot style="display: none !important;"></tfoot>
+		</table>
+	</body>
+
+</html>

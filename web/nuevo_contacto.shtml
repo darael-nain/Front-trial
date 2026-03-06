@@ -1,0 +1,130 @@
+<!--#4DINCLUDE head.shtml-->
+<body>
+<div id="content">
+<!--#4DINCLUDE menuSuperior.shtml-->
+<!--#4DINCLUDE mensajes2.shtml-->
+    <section id="crear-contacto">       	
+    	<h1>Nuevo contacto</h1>
+         <article>
+                 <form id="frm-contacto" action="/4DACTION/W_NUEVO_CONTACTO" method="post">                
+                        <fieldset>
+                        		<legend>Datos generales :</legend>
+                        		<p>
+                                    <label for="tipo">Tipo : </label>                                         
+                                    <select name="tipo" id="tipo">                                    	
+                                    		<option selected value="PROVEEDOR">PROVEEDOR</option> 
+                                    		<option value="CLIENTE">CLIENTE</option>                                             
+                                    </select>
+                                </p>
+                                <p>
+                                    <label for="alias">Alias : </label>                                         
+                                    <input autofocus name="alias" type="text" id="alias" /><span>*</span>
+                                    <div style="color:green">Ingresar Rut sin puntos = 14750645</div>
+                                    <label for="rut">Rut : </label> 
+                                    <input placeholder="rut..." name="rut" type="text" id="rutxxx"  />-
+                                    <input placeholder="dv..." maxlength="1" class="chk-validar-rut" name="dv" type="text" id="dv"  /><span>*</span>
+                                    <input value="" type="checkbox" id="validarut" checked  />validar
+                                                                   
+                                </p>                      
+                                <p>
+                                    <label for="razon">Razon : </label> 
+                                    <input class="txt-razon-cont" name="razon" type="text" id="razon"  /><span>*</span>
+                                </p>
+                               <p>
+                                    <label for="giro">Giro : </label> 
+                                    <input class="txt-giro-cont" name="giro" type="text" id="giro"/><span>*</span>
+                                </p>
+                        </fieldset>
+                        		
+                        <fieldset>                              
+                        		<legend>Direcci&#243;n :</legend>
+                                <p>
+                                    <label for="direccion">Direcci&#243;n : </label> 
+                                    <input class="txt-fondo-cont txt-dir-cont" name="direccion" type="text" id="direccion"/>
+                                    <label for="nro">#</label> 
+                                    <input class="txt-fondo-cont txt-nro-cont" name="nro" type="text" id="nro"/>
+                                    <label for="depto">Depto : </label> 
+                                    <input class="txt-fondo-cont txt-depto-cont" name="depto" type="text" id="depto"/>
+                                </p>
+                                <p>                                	
+                                    <label for="piso">Piso : </label> 
+                                    <input class="txt-fondo-cont txt-piso-cont" name="piso" type="text" id="piso"/>
+                                    <label for="ciudad">Ciudad : </label> 
+                                    <input class="txt-fondo-cont txt-ciudad-cont" name="ciudad" type="text" id="ciudad"/>
+                                    <label for="comuna">Comuna : </label>                                         
+                                    <select class="cbo-comuna-cont" name="comuna" id="comuna">
+                                    				<option selected value="1">SANTIAGO</option>                          		
+                                    		<!--#4DLOOP w_a_id_comuna-->
+                                            		<option value="<!--#4DVAR w_a_id_comuna{w_a_id_comuna}-->">
+                                                    <!--#4DVAR w_a_des_comuna{w_a_id_comuna}-->
+                                                    </option> 
+                                            <!--#4DENDLOOP--> 		                                          
+                                    </select>                            
+                                </p>
+                                <p></p>
+                        </fieldset>
+                        		
+                        <fieldset>                              
+                        		<legend>Contacto :</legend>
+                                 <p>
+                                    <label for="fono1">Telefono 1 : </label> 
+                                    <input class="txt-fondo-cont txt-cjs-cont" name="fono1" type="text" id="fono1"/>
+                                    <label for="fax">Fax : </label> 
+                                    <input class="txt-fondo-cont txt-cjs-cont" name="fax" type="text" id="fax"/>
+                                </p>
+                                <p>
+                                	<label for="fono2">Telefono 2 : </label> 
+                                    <input class="txt-fondo-cont txt-cjs-cont" name="fono2" type="text" id="fono2"/>                                  
+                                    <label for="celular">Celular : </label> 
+                                    <input class="txt-fondo-cont txt-cjs-cont" name="celular" type="text" id="celular"/>
+                                </p>
+                                <p>
+                                	<label for="email">Email : </label> 
+                                    <input class="txt-fondo-cont txt-cjs-cont" name="email" type="text" id="email"/>                                  
+                                    <label for="sitio">Sitio : </label> 
+                                    <input class="txt-fondo-cont txt-cjs-cont" name="sitio" type="text" id="sitio"/>
+                                </p>
+                        </fieldset>
+                        <fieldset>                              
+                        		<legend>Bancarios :</legend>
+                                 <p>
+                                 	<label for="ctacte">Tipo Cuenta : </label> 
+                                    <select class="cbo-comuna-cont" name="ctacte" id="ctacte">
+                                        <option selected value="<!--#4DVAR waTCuentai{1}-->"><!--#4DVAR waTCuentai{1}--></option>
+                                        <option value="<!--#4DVAR waTCuentai{2}-->"><!--#4DVAR waTCuentai{2}--></option> 
+                                        <option value="<!--#4DVAR waTCuentai{3}-->"><!--#4DVAR waTCuentai{3}--></option>                                 		                                          
+                                    </select>
+                                    <label for="nrocuenta">Nro Cuenta : </label> 
+                                    <input class="txt-fondo-cont txt-cjs-cont" name="nrocuenta" type="text" id="nrocuenta"/>    
+                                </p>
+                                <p>
+                                <label for="banco">Banco : </label>
+                                <select class="cbo-comuna-cont" name="banco" id="banco">
+                                    <option selected value="-1">[Seleccione banco]</option>                          		
+                                    <!--#4DLOOP waIdbancosi-->
+                                     <option value="<!--#4DVAR waIdbancosi{waIdbancosi}-->"><!--#4DVAR waBancosi{waIdbancosi}--></option> 
+                                    <!--#4DENDLOOP--> 		                                          
+                                </select>                               
+                                </p>                               
+                        </fieldset>
+                        
+                        <p>
+                           <input name="opcioncrear" type="hidden" value="<!--#4DVAR vOpcionCrear-->" />
+                           <input name="validarut_2" id="validarut_2" type="hidden" value="SI" />
+
+                            <button title="Guardar" class="button-inf" onClick="validate_send_contacto()" type="button">
+                                <img src="/imagenes/disk.png" border="0" />
+                                <span style="font-size:9px;color:#FFFFFF">Guardar</span>
+                            </button>
+                            <button title="Deshacer" class="button-inf letras-botton" type="reset">
+                                <img src="/imagenes/arrow_undo.png" border="0" />
+                                <span style="font-size:9px;color:#FFFFFF">Deshacer</span>
+                            </button>
+                        </p>
+
+                </form>                          
+         </article>         
+    </section>
+</div>         
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<!--#4DSCRIPT/_V3_proxy_getParametros-->
+	<head>
+		<title>Solicitud de autorización para modificar negocio</title>
+	</head>
+	<body style="font-family: sans-serif; color: rgb(51,51,68);">
+		<img alt="UNA Base" src="cid:empresa.jpg" width="150" style="max-height: 90px;">
+		<p style="color: rgb(153,153,153); font-size: 12px;">IMPORTANTE: La información entregada en este email se encuentra actualizada al <span data-date></span>, a las <span data-time></span> horas, la cual puede cambiar con futuras modificaciones.</p>
+		<header style="height: 110px; background-color: rgb(95,202,118); border: 1px solid lightgrey;">
+			<h1 style="margin-left: 15px; padding-top: 55px; font-size: 26px; color: white; font-weight: normal;">Solicitud de autorización para modificar el negocio Nº <span data-index></span></h1>
+			<h2 data-subject style="display: none;"><span data-document></span></h2>
+		</header>
+		<section style="padding: 5px 30px; border: 1px solid lightgrey; border-top: none;">
+			<p>Hola <span data-to-name></span>,</p>
+			<p>El usuario <span data-from-name></span> solicita autorización para realizar cambios en este negocio:</p>
+			<div data-content></div>
+			<!--4DIF [Parametros]v3_activar_envio_link_correo--><p>Para revisar el negocio, <a style="color: rgb(112,202,118); text-decoration: none;" data-href>haz clic aquí</a>.</p><!--4DENDIF-->
+		</section>
+		<footer style="color: rgb(153,153,153); font-size: 12px; padding-top: 5px;">
+			Email generado vía UnaBase - <span style="text-transform: capitalize;"><!--#4DTEXT Lowercase([Parametros]Nombre_empresa;*)--></span>
+		</footer>
+	</body>
+</html>

@@ -1,0 +1,70 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([log_validacion]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP aLogValidacionId -->
+		{
+			"id": <!--#4DHTML aLogValidacionId{aLogValidacionId}-->,
+			"index": "<!--#4DHTML aLogValidacionIndex{aLogValidacionId}-->",
+			"username": "<!--#4DHTML aLogValidacionUsername{aLogValidacionId}-->",
+			"full_name": "<!--#4DHTML aLogValidacionFullName{aLogValidacionId}-->",
+
+			"email": <!--#4DIF Not(Undefined(aLogValidacionEmailValidator{aLogValidacionId}))-->"<!--#4DHTML aLogValidacionEmailValidator{aLogValidacionId}-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+			"priority": <!--#4DHTML aLogValidacionpriority{aLogValidacionId}-->,
+			"jerarquia": <!--#4DHTML aLogValidacionJerarquia{aLogValidacionId}-->,
+			"required": <!--#4DIF aLogValidacionRequired{aLogValidacionId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"block_email": <!--#4DIF aLogValidacionBlockEmail{aLogValidacionId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"approved": <!--#4DIF aLogValidacionApproved{aLogValidacionId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"record": {
+				
+				"id": <!--#4DHTML aLogValidacionRecordId{aLogValidacionId}-->,
+				"index": <!--#4DHTML aLogValidacionRecordIndex{aLogValidacionId}-->,
+				"name": "<!--#4DHTML aLogValidacionRecordName{aLogValidacionId}-->",
+				"username": "<!--#4DHTML aLogValidacionResponsable{aLogValidacionId}-->",
+				"text": "<!--#4DHTML _V3_escapeString(aLogValidacionReferencia{aLogValidacionId})-->"
+			},
+			"jerarquia_email": <!--#4DIF aLogValidacionJerarquiaEmail{aLogValidacionId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"motivo": "<!--#4DHTML _V3_escapeString(aLogValidacionMotivo{aLogValidacionId})-->",
+			"observacion": "<!--#4DHTML _V3_escapeString(aLogValidacionObservacion{aLogValidacionId})-->",
+			"detalle": "<!--#4DHTML _V3_escapeString(aLogValidacionDetalle{aLogValidacionId})-->",
+			"reply": <!--#4DIF aLogValidacionReply{aLogValidacionId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"updated_at_new": "<!--#4DHTML aLogValidacionCreatedAtDate{aLogValidacionId}-->",
+			"updated_at_time_new": "<!--#4DHTML aLogValidacionUpdatedAtTime{aLogValidacionId}-->",
+			"created_at": "<!--#4DHTML Substring(String(aLogValidacionCreatedAtDate{aLogValidacionId};8);1;10)-->T<!--#4DHTML aLogValidacionCreatedAtTime{aLogValidacionId}-->-04:00",
+			"updated_at": <!--#4DIF (Substring(String(aLogValidacionUpdatedAtDate{aLogValidacionId};8);1;10)#"0000-00-00")-->"<!--#4DHTML Substring(String(aLogValidacionUpdatedAtDate{aLogValidacionId};8);1;10)-->T<!--#4DHTML aLogValidacionUpdatedAtTime{aLogValidacionId}-->-04:00"<!--#4DELSE-->null<!--#4DENDIF-->
+		}<!--#4DIF NOT(aLogValidacionId{aLogValidacionId} = aLogValidacionId{Size of array(aLogValidacionId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	],
+	<!--#4DIF Not(Undefined(aIndexItemsVal))-->
+	"items": [
+<!--#4DLOOP aIndexItemsVal-->
+		{
+			"nombre": "<!--#4DHTML _V3_escapeString(aNombreItemsVal{aIndexItemsVal})-->",
+			"codigo": "<!--#4DHTML _V3_escapeString(aCodItemsVal{aIndexItemsVal})-->",
+			"venta": "<!--#4DHTML _V3_formatCurrency(aVentatemsVal{aIndexItemsVal})-->",
+			"presupuestado": "<!--#4DHTML _V3_formatCurrency(aPresupuestadotemsVal{aIndexItemsVal})-->",
+			"gasto": "<!--#4DHTML _V3_formatCurrency(aGastoItemsVal{aIndexItemsVal})-->",
+			"realAntes": "<!--#4DHTML _V3_formatCurrency(aAntesRealItemsVal{aIndexItemsVal})-->",
+			"porGastarAntes": "<!--#4DHTML _V3_formatCurrency(aAntesPorGastarItemsVal{aIndexItemsVal})-->",
+			"porGastarAntes_": <!--#4DHTML String(aAntesPorGastarItemsVal{aIndexItemsVal};"&xml")-->,
+			"realDespues": "<!--#4DHTML _V3_formatCurrency(aDespuesRealItemsVal{aIndexItemsVal})-->",
+			"porGastarDespues": "<!--#4DHTML _V3_formatCurrency(aDespuesPorGastarItemsVal{aIndexItemsVal})-->",
+			"porGastarDespues_": <!--#4DHTML String(aDespuesPorGastarItemsVal{aIndexItemsVal};"&xml")-->,
+			"infoNeg": "<!--#4DHTML _V3_escapeString(aInfoNegItemsVal{aIndexItemsVal})-->"
+		}<!--#4DIF NOT(aIndexItemsVal{aIndexItemsVal} = aIndexItemsVal{Size of array(aIndexItemsVal)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	],
+	<!--#4DENDIF-->
+	"origen_gasto" : <!--#4DIF Not(Undefined(origenGasto))-->"<!--#4DTEXT origenGasto-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"validateBy" : <!--#4DIF Not(Undefined(validateBy))-->"<!--#4DTEXT validateBy-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"dateValidate": <!--#4DIF Not(Undefined(dateValidate))-->"<!--#4DHTML Substring(String(dateValidate;8);1;10)-->T<!--#4DHTML timeValidate-->-04:00"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"adminValidate": <!--#4DIF Not(Undefined(adminValidate))--><!--#4DIF adminValidate-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"isAdminValidate": <!--#4DIF Not(Undefined(isAdminValidate))--><!--#4DIF isAdminValidate-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->
+}

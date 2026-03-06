@@ -1,0 +1,46 @@
+{
+	"rows": [
+	<!--#4DLOOP aUnico -->
+		{
+			"id": <!--#4DHTML aIdDtc{aUnico}-->,
+			"id_sap": <!--#4DHTML aIdSap{aUnico}-->,
+			"folio": "<!--#4DHTML _V3_escapeString(folio{aUnico})-->",
+
+			"fechaEmision": "<!--#4DHTML fechaEmision{aUnico}-->",
+			"fechaRecepcion": "<!--#4DHTML fechaRecepcion{aUnico}-->",
+			"fechaRegistro": "<!--#4DHTML fechaRegistro{aUnico}-->",
+			"fechaContable": "<!--#4DHTML fechaContable{aUnico}-->",
+			"fechaVencimiento": "<!--#4DHTML fechaVencimiento{aUnico}-->",
+			"fechaPago": "<!--#4DHTML _V3_escapeString(fechaPago{aUnico})-->",
+
+			"estado": "<!--#4DHTML _V3_escapeString(estado{aUnico})-->",
+			"contabilizado": <!--#4DIF contabilizadoDtc{aUnico}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+
+			"tipoDocumentoCompra": "<!--#4DHTML _V3_escapeString(tipoDocumentoCompra{aUnico})-->",
+			"tipoDocumentoCompraAbrev": "<!--#4DHTML _V3_escapeString(tipoDocumentoCompraAbrev{aUnico})-->",
+			"libro": "<!--#4DHTML _V3_escapeString(libro{aUnico})-->",
+
+			"proveedor": "<!--#4DHTML _V3_escapeString(proveedor{aUnico})-->",
+			"rutProveedor": "<!--#4DHTML _V3_escapeString(rutProveedor{aUnico})-->",
+
+			"neto": <!--#4DHTML neto{aUnico}-->,
+			"exento": <!--#4DHTML exento{aUnico}-->,
+			"impuesto": <!--#4DHTML impuesto{aUnico}-->,
+			"total": <!--#4DHTML total{aUnico}-->,
+			"abono": <!--#4DHTML abono{aUnico}-->,
+			"saldo": <!--#4DHTML saldo{aUnico}-->,
+
+			"formaPago": "<!--#4DHTML _V3_escapeString(formaPago{aUnico})-->",
+			"moneda": "<!--#4DHTML _V3_escapeString(moneda{aUnico})-->",
+			"tipoCambio": <!--#4DHTML tipoCambio{aUnico}-->,
+
+			"origenGasto": "<!--#4DHTML _V3_escapeString(origenGasto{aUnico})-->",
+			"idOcAsociada": <!--#4DHTML idOcAsociada{aUnico}-->,
+			"ocFolio": "<!--#4DHTML _V3_escapeString(ocFolio{aUnico})-->",
+			"tipoGasto": "<!--#4DHTML _V3_escapeString(tipoGasto{aUnico})-->",
+
+			"itemResumen": "<!--#4DHTML _V3_escapeString(itemResumen{aUnico})-->"
+		}<!--#4DIF NOT(aUnico{aUnico} = aUnico{Size of array(aUnico)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

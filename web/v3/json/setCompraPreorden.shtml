@@ -1,0 +1,7 @@
+{
+	"id": <!--#4DHTML id-->,
+	"folio": "<!--#4DHTML folio-->",
+	"success": <!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"opened": <!--#4DIF opened-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"readonly": <!--#4DIF readonly-->true<!--#4DELSE-->false<!--#4DENDIF-->
+}

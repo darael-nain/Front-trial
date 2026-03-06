@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getComentValidacion-->
+		<title>Comentarios</title>
+		<meta charset="utf-8">		
+		<link rel="stylesheet" href="/v3/design/grays.css?<!--#4DTEXT Random-->">
+	</head>
+	<body>
+		<section class="sheet-comentarios css-grays">
+			<article class="css-section-comments">
+				<ul>
+					<!--#4DLOOP aIdMensaje-->
+						<li>
+							<div><a href="#"><!--#4DTEXT Lowercase(aNombreMensaje{aIdMensaje};*)--></a><time><!--#4DTEXT aFechaMensaje{aIdMensaje}--> <!--#4DTEXT aHoraMensaje{aIdMensaje}--></time></div>
+							<p><!--#4DTEXT aComentarioMensaje{aIdMensaje}--></p>
+							<strong><!--#4DTEXT aTipoMensaje{aIdMensaje}--></strong>
+						</li>
+					<!--#4DENDLOOP-->					
+				</ul>
+			</article>
+		</section>		
+	</body>
+</html>

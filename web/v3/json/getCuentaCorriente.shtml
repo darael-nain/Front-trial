@@ -1,0 +1,22 @@
+	{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Orden_de_compra]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP aIdCte -->
+		{
+			"id": "<!--#4DHTML aIdCte{aIdCte}-->",
+			"text": "<!--#4DHTML _V3_escapeString(aTextBanco{aIdCte})-->",
+			"nombre_banco": "<!--#4DHTML _V3_escapeString(aNombreBanco{aIdCte})-->",
+			"moneda": "<!--#4DHTML _V3_escapeString(aMonedaBanco{aIdCte})-->",
+			"nro_cta_cte": "<!--#4DHTML _V3_escapeString(aNroCtaCteBanco{aIdCte})-->"
+		}<!--#4DIF NOT(aIdCte{aIdCte} = aIdCte{Size of array(aIdCte)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

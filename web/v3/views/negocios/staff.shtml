@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getCotizacionContent-->
+		<!--#4DSCRIPT/_V3_proxy_getNegocioContent-->
+		<meta charset="utf-8">
+		<title>Staff / Equipo</title>
+		<script>
+		$(document).ready(function() {
+			$('input[name="negocio[usuario][]"]').change(function(event) {
+				$.ajax({
+					url: '/4DACTION/_V3_setUsuarioByNegocio',
+					data: {
+						id: $('section.sheet').data('id'),
+						fk: $(this).parentTo('tr').data('id'),
+						enabled: $(this).prop('checked') 
+					},
+					dataType: 'json',
+					async: false,
+					success: function(data) {
+						if (!data.success) {
+							event.preventDefault();
+							toastr.error('Error al asignar el usuario al negocio. Tal vez el registro esté bloqueado.');
+						}
+					}
+				}).fail(function() {
+					event.preventDefault();
+					toastr.error('Error al asignar el usuario al negocio. Error de red.');
+				});
+			});
+
+			$('button.staff.item').button({
+				icons: {
+					primary: 'ui-icon-tag'
+				},
+				text: false
+			}).click(function(event) {
+				var id = $(this).parentTo('tr').data('id');
+				unaBase.loadInto.dialog('/v3/views/cotizaciones/staff_items.shtml?id=' + id + '&fk=' + $('section.sheet').data('id'), 'Seleccionar ítems del negocio', 'large');
+			});
+
+
+			// viene de la lista de neogcio y cotizacion
+			$(".titulofinal").text($("#main-container").data("titulofinal"));
+			
+		});
+		</script>
+
+
+		<style>
+			table.staff-data tbody tr {
+				background-color: white!important;
+			}
+
+			table.staff-data tbody tr:hover {
+				background-color: #F6FFFD;
+			}
+		</style>
+	</head>
+	<body>
+		<section class="sheet" data-id="<!--#4DVAR [Nota_de_venta]id_nv-->" data-index="<!--#4DVAR [Nota_de_venta]id_negocio-->"<!--#4DIF [Nota_de_venta]id_negocio=""--> data-new="true"<!--#4DENDIF--><!--#4DIF [Nota_de_venta]Estado="ANULADA"--> data-readonly="true"<!--#4DENDIF-->>
+			<!--4DINCLUDE infogeneral.shtml-->
+			<footer>
+				<article>
+					<h1>Usuarios</h1>
+					<table class="staff-data">
+						<thead>
+							<tr>
+								<th>Usuario</th>
+								<th>Nombre</th>
+								<th>Activo</th>
+								<th></th>			
+							</tr>		
+						</thead>
+						<tbody>
+							<!--#4DLOOP aUsuarioNegocioUsername-->
+							<tr data-id="<!--#4DVAR aUsuarioNegocioUsername{aUsuarioNegocioUsername}-->">
+								<td><!--#4DVAR aUsuarioNegocioUsername{aUsuarioNegocioUsername}--></td>
+								<td><!--#4DVAR aUsuarioNegocioNombre{aUsuarioNegocioUsername}--></td>
+								<td><input type="checkbox" name="negocio[usuario][]"<!--#4DIF aUsuarioNegocioEnabled{aUsuarioNegocioUsername}--> checked<!--#4DENDIF--><!--#4DIF Not(_V3_verifica_permisos_web(_V3_data_username;493))--> disabled<!--#4DENDIF-->></td>
+								<td><button class="staff item">Asignar ítems del negocio</button></td>
+							</tr>
+							<!--#4DENDLOOP-->
+						</tbody>
+					  	<tfoot></tfoot>
+					</table>
+				</article>
+			</footer>
+		</section>
+	</body>
+</html>

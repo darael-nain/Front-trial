@@ -1,0 +1,46 @@
+{
+	"records": {
+			"total_records": <!--#4DHTML totalRecords-->
+	},
+	"data":{
+		<!--#4DIF totalRecords >0-->
+		"totales": {
+			"subtotal": "<!--#4DHTML _V3_formatCurrency(totalesSubtotalVentas)-->",
+			"totales_justificado": "<!--#4DHTML _V3_formatCurrency(totalesJustificados)-->",
+			"totales_por_justificar": "<!--#4DHTML _V3_formatCurrency(totalesPorJustificar)-->",
+			"totales_pagado": "<!--#4DHTML _V3_formatCurrency(totalesPagado)-->",
+			"totales_por_pagar": "<!--#4DHTML _V3_formatCurrency(totalesPorPagar)-->",
+			"totales_neto": "<!--#4DHTML _V3_formatCurrency(totalesNeto)-->",
+			"totales_iva": "<!--#4DHTML _V3_formatCurrency(totalesIva)-->",
+			"totales_retencion": "<!--#4DHTML _V3_formatCurrency(totalesIva)-->",
+			"totales_oc": "<!--#4DHTML _V3_formatCurrency(totalesNV)-->"
+		},
+		"rows": [
+			<!--#4DLOOP aIdOC -->
+			{
+				"id": <!--#4DHTML aIdOC{aIdOC}-->,
+				"folio": "<!--#4DHTML aFolio{aIdOC}-->",
+				"tipo_gasto": "<!--#4DHTML aTipoGasto{aIdOC}-->",
+				"tipo_doc": "<!--#4DHTML aTipoDoc{aIdOC}-->",
+				"fecha": "<!--#4DHTML String(aFecha{aIdOC})-->",
+				"fecha_vencimiento": "<!--#4DHTML String(aFechaVencimiento{aIdOC})-->",
+				"referencia": "<!--#4DHTML _V3_escapeString(aReferencia{aIdOC})-->",
+				"rut_cliente": "<!--#4DHTML String(aRutCliente{aIdOC})-->",
+				"razon_cliente": "<!--#4DHTML _V3_escapeString(aRazonCliente{aIdOC})-->",
+				"user_name": "<!--#4DHTML _V3_escapeString(aUserName{aIdOC}-->",
+				"total_justificado": "<!--#4DHTML   aTotalJustificado{aIdOC}-->",
+				"total_por_justificar": "<!--#4DHTML  aTotalPorJustificar{aIdOC}-->",
+				"total_pagado": "<!--#4DHTML   aTotalPagado{aIdOC}-->",
+				"estadooc": "<!--#4DTEXT aEstadoOC{aIdOC}-->",
+				"estado": "<!--#4DTEXT aEstado{aIdOC}-->",
+				"subtotal": "<!--#4DHTML  aTotalSubtotal{aIdOC}-->",
+				"total_neto": "<!--#4DHTML aTotalNeto{aIdOC}-->"
+			}<!--#4DIF NOT(aIdOC{aIdOC} = aIdOC{Size of array(aIdOC)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		]
+		<!--#4DENDIF-->
+	}
+}
+
+
+

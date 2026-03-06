@@ -1,0 +1,16 @@
+{
+	"page": 1,
+	"total": <!--#4DVAR -INT((Size of array(aFeesId)/8)* -1)-->,
+	"records": <!--#4DVAR Size of array(aFeesId)-->,
+	"rows": [
+<!--#4DLOOP aFeesId-->
+		{
+			"id": <!--#4DVAR aFeesId{aFeesId}-->,
+			"descripcion": "<!--#4DVAR aFeesName{aFeesId}-->",
+			"porcentaje": <!--#4DVAR aFeesPercent{aFeesId}/100-->,
+			"monto": <!--#4DVAR Round(aFeesValue{aFeesId};0)-->,
+			"enabled": <!--#4DIF aFeesEnabled{aFeesId}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+		}<!--#4DIF (NOT(aFeesId{aFeesId}=aFeesId{Size of array(aFeesId)})))-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getCotizacionContent-->
+		<title>Cotizaciones</title>
+		<meta charset="utf-8">
+		<style>
+			article.half {
+				width: calc(50% - 20px) !important;
+				display: inline-block !important;
+				vertical-align: top !important;
+			}
+
+			table.resumen > caption {
+				margin-bottom: 5px;
+				font-size: 14px;
+			}
+
+			table.resumen td.costo,
+			table.resumen th.costo,
+			table.resumen td > span.costo,
+			table.resumen th > span.costo {
+				color: red;
+			}
+
+			table.resumen td.utilidad,
+			table.resumen th.utilidad,
+			table.resumen td > span.utilidad,
+			table.resumen th > span.utilidad {
+				color: green;
+			}
+
+			table.resumen td.diferencia {
+				color: blue;
+			}
+
+			table.resumen tr {
+				height: 24px !important;
+			}
+			button.print.resumen{
+			    position: absolute;
+			    /* right: 23px; */
+			    right: 10px;
+			    top: 23px;
+			    display: inline-block;
+			    margin: 0 !important;
+			    padding: 0 !important;
+			    width: 18px !important;
+			    height: 18px !important;
+			
+			}
+
+		</style>
+		<script>
+			$(document).ready(function() {
+				$('button.print.summary').button({
+					icons: {
+						primary: 'ui-icon-print'
+					},
+					text: false
+				}).click(function() {
+					window.print();
+				});
+
+				// viene de la lista de neogcio y cotizacion
+				$(".titulofinal").text($("#main-container").data("titulofinal"));
+
+			});
+		</script>
+	</head>
+	<body>
+		<section class="sheet" data-id="<!--#4DVAR vid_nv-->" data-index="<!--#4DVAR vid_negocio-->" data-readonly="true">
+			<footer>
+				<article>
+					<h1>Información general</h1>
+					<h2><span id="index"><!--#4DIF vid_negocio=0-->Borrador<!--#4DELSE--><!--#4DIF vid_negocio=-1-->Plantilla<!--#4DELSE-->Nº <!--#4DVAR vid_negocio--><!--#4DENDIF--><!--#4DENDIF--></span> <strong><!--#4DTEXT etiqueta_negocio--></strong> <span class="titulofinal"><!--#4DVAR vreferencia--></span></h2>
+					<button class="print resumen summary">Imprimir</button>
+					<p><!--#4DVAR vestado--> - Creada por <!--#4DVAR vDeEmisor--> el <!--#4DVAR vFechaEmi1--> a las <!--#4DVAR vHoraEmi1--></p>
+					<ul class="editable">
+						<li><span>Área de negocio</span> <span><input required readonly type="search" name="cotizacion[area_negocio]" data-id="<!--#4DVAR vid_areanegocio-->" value="<!--#4DVAR vareanegocio-->" placeholder="Buscar..."></span></li>
+					</ul>
+					<ul class="editable">
+						<li><span>Ejec. Responsable</span> <span><input id="ejecutivo" readonly required type="search" name="cotizacion[ejecutivo][id]" data-id="<!--#4DVAR vDeLogin-->" value="<!--#4DVAR vEjecutivoDefaultNombre-->" placeholder="Buscar por Alias, Nombre o Apellidos..."></span></li>
+					</ul>
+				</article>
+				<article class="half">
+					<table class="resumen">
+						<caption>Presupuestado</caption>
+						<thead>
+							<tr>
+								<th>Concepto</th>
+								<th>Valor</th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<th class="left">Precio de venta (100,00 %)</th>
+								<th class="right"><!--#4DTEXT _V3_formatCurrency([Nota_de_venta]Total_Neto)--></th>
+							</tr>
+							<tr>
+								<th class="left">Gasto P. <span class="costo">(<!--#4DTEXT String(Round([Nota_de_venta]Porc_GP;2);"#####0,00 %")-->)</span></th>
+								<th class="right costo"><!--#4DTEXT _V3_formatCurrency(Round([Nota_de_venta]TotalGastoPresupuestado;0))--></th>
+							</tr>
+							<tr>
+								<th class="left">Utilidad P. <span class="utilidad">(<!--#4DTEXT String(Round([Nota_de_venta]Porc_UP;2);"#####0,00 %")-->)</span></th>
+								<th class="right utilidad"><!--#4DTEXT _V3_formatCurrency(Round([Nota_de_venta]TotalUtilidadPresupuestada;0))--></th>
+							</tr>
+							<tr style="visibility: hidden;">
+								<th class="left">Diferencia Utilidad</th>
+								<td class="right diferencia"><!--#4DTEXT _V3_formatCurrency([Nota_de_venta]UtilidadRealFinal - Round([Nota_de_venta]TotalUtilidadPresupuestada;0))--></td>
+							</tr>
+						</tfoot>
+						<tbody>
+							<tr>
+								<td class="left">Gastos directos Producción</td>
+								<td class="right costo"><!--#4DTEXT _V3_formatCurrency([Nota_de_venta]vGastoPresup)--></td>
+							</tr>
+							<!--#4DIF [Nota_de_venta]gastos_internos_enabled-->
+							<tr>
+								<td class="left">Gastos internos Producción</td>
+								<td class="right costo"><!--#4DTEXT _V3_formatCurrency([Nota_de_venta]gastos_interno)--></td>
+							</tr>
+							<!--#4DENDIF-->
+							<tr>
+								<td class="left">Utilidad Producción</td>
+								<td class="right utilidad"><!--#4DTEXT _V3_formatCurrency([Nota_de_venta]vUtilidadPresup)--></td>
+							</tr>
+							<!--#4DSCRIPT/_V3_proxy_getSobrecargoContent-->
+							<!--#4DLOOP aSobrecargoId-->
+							<!--#4DIF (aSobrecargoValor{aSobrecargoId} > 0)-->
+							<tr>
+								<td class="left"><!--#4DIF aSobrecargoAjuste{aSobrecargoId}--><!--#4DTEXT aSobrecargoNombre{aSobrecargoId}--><!--#4DELSE--><!--#4DTEXT aSobrecargoNombre{aSobrecargoId}--> <span class="<!--#4DIF aSobrecargoCosto{aSobrecargoId}-->costo<!--#4DELSE-->utilidad<!--#4DENDIF-->">(<!--#4DTEXT String(Round(aSobrecargoPorcentaje{aSobrecargoId};2);"#####0,00 %")-->)</span><!--#4DENDIF--></td>
+								<td class="right <!--#4DIF aSobrecargoCosto{aSobrecargoId}-->costo<!--#4DELSE-->utilidad<!--#4DENDIF-->"><!--#4DTEXT _V3_formatCurrency(Round(aSobrecargoValor{aSobrecargoId};0))--></td>
+							</tr>
+							<!--#4DENDIF-->
+							<!--#4DENDLOOP-->
+							<!--#4DSCRIPT/_V3_proxy_getCotizacionContent-->
+							<tr style="visibility: hidden;">
+								<td class="left">Otros gastos</td>
+								<td class="right costo">$ 0</td>
+							</tr>
+							<tr style="visibility: hidden;">
+								<td class="left">Otras utilidades</td>
+								<td class="right utilidad"><!--#4DTEXT _V3_formatCurrency(Round([Nota_de_venta]TotalUtilidadPresupuestada;0)-sobrecargo_utilidad-[Nota_de_venta]vUtilidadPresup)--></td>
+							</tr>
+						</tbody>
+					</table>
+				</article>
+				<article class="half">
+					<table class="resumen">
+						<caption>Real</caption>
+						<thead>
+							<tr>
+								<th>Concepto</th>
+								<th>Valor</th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<th class="left">Precio de venta (100,00 %)</th>
+								<th class="right"><!--#4DTEXT _V3_formatCurrency([Nota_de_venta]Total_Neto)--></th>
+							</tr>
+							<tr>
+								<th class="left">Gasto R. <!--#4DIF (String([Nota_de_venta]Porc_GR)#"INF")--><span class="costo">(<!--#4DTEXT String(Round([Nota_de_venta]Porc_GR;2);"#####0,00 %")-->)</span><!--#4DENDIF--></th>
+								<th class="right costo"><!--#4DTEXT _V3_formatCurrency([Nota_de_venta]TotalGastoReal)--></th>
+							</tr>
+							<tr>
+								<th class="left">Utilidad R. <!--#4DIF (String([Nota_de_venta]Porc_GR)#"INF")--><span class="utilidad">(<!--#4DTEXT String(Round([Nota_de_venta]Porc_UR;2);"#####0,00 %")-->)</span><!--#4DENDIF--></th>
+								<th class="right utilidad"><!--#4DTEXT _V3_formatCurrency([Nota_de_venta]UtilidadRealFinal)--></th>
+							</tr>
+							<tr>
+								<th class="left">Diferencia Utilidad <!--#4DIF ([Nota_de_venta]Total_Neto#0)--><span class="diferencia">(<!--#4DTEXT String(Round((( [Nota_de_venta]UtilidadRealFinal - Round([Nota_de_venta]TotalUtilidadPresupuestada;0) ) / [Nota_de_venta]Total_Neto) * 100;2);"#####0,00 %")-->)</span><!--#4DENDIF--></th>
+								<td class="right diferencia"><!--#4DTEXT _V3_formatCurrency([Nota_de_venta]UtilidadRealFinal - Round([Nota_de_venta]TotalUtilidadPresupuestada;0))--></td>
+							</tr>
+						</tfoot>
+						<tbody>
+							<tr>
+								<td class="left">Gastos directos Producción</td>
+								<td class="right costo"><!--#4DTEXT _V3_formatCurrency([Nota_de_venta]gastos_directos_oc+[Nota_de_venta]gastos_directos_fxr)--></td>
+							</tr>
+							<!--#4DIF [Nota_de_venta]gastos_internos_enabled-->
+							<tr>
+								<td class="left">Gastos internos Producción</td>
+								<td class="right costo"><!--#4DTEXT _V3_formatCurrency([Nota_de_venta]gastos_interno)--></td>
+							</tr>
+							<!--#4DENDIF-->
+							<tr>
+								<td class="left">Utilidad Producción</td>
+								<td class="right utilidad"><!--#4DTEXT _V3_formatCurrency([Nota_de_venta]Subtotal - ([Nota_de_venta]gastos_directos_oc+[Nota_de_venta]gastos_directos_fxr))--></td>
+							</tr>
+							<!--#4DSCRIPT/_V3_proxy_getSobrecargoContent-->
+							<!--#4DLOOP aSobrecargoId-->
+							<!--#4DIF (aSobrecargoValor{aSobrecargoId} > 0)-->
+
+							<!--#4DIF (Size of array(aSobrecargoReal) > 0)-->
+							<tr<!--#4DIF Not(aSobrecargoReal{aSobrecargoId})--> style="visibility: hidden;"<!--#4DENDIF-->>
+								<td class="left"><!--#4DIF aSobrecargoAjuste{aSobrecargoId}--><!--#4DTEXT aSobrecargoNombre{aSobrecargoId}--><!--#4DELSE--><!--#4DTEXT aSobrecargoNombre{aSobrecargoId}--> <span class="<!--#4DIF aSobrecargoCosto{aSobrecargoId}-->costo<!--#4DELSE-->utilidad<!--#4DENDIF-->">(<!--#4DTEXT String(Round(aSobrecargoPorcentaje{aSobrecargoId};2);"#####0,00 %")-->)</span><!--#4DENDIF--></td>
+								<td class="right <!--#4DIF aSobrecargoCosto{aSobrecargoId}-->costo<!--#4DELSE-->utilidad<!--#4DENDIF-->"><!--#4DIF aSobrecargoReal{aSobrecargoId}--><!--#4DTEXT _V3_formatCurrency(aSobrecargoValorReal{aSobrecargoId})--><!--#4DELSE-->$ 0<!--#4DENDIF--></td>
+							</tr>
+							<!--#4DELSE-->
+							<tr style="visibility: hidden;">
+								<td></td>
+								<td></td>
+							</tr>
+							<!--#4DENDIF-->
+							<!--#4DENDIF-->
+							<!--#4DENDLOOP-->
+							<!--#4DSCRIPT/_V3_proxy_getCotizacionContent-->
+							<tr>
+								<td class="left">Otros gastos</td>
+								<td class="right costo"><!--4DTEXT _V3_formatCurrency([Nota_de_venta]gastos_otros_oc + [Nota_de_venta]gastos_otros_fxr)--></td>
+							</tr>
+							<tr>
+								<td class="left">Otras utilidades</td>
+								<td class="right utilidad"><!--#4DTEXT _V3_formatCurrency([Nota_de_venta]UtilidadRealFinal - ([Nota_de_venta]Subtotal - ([Nota_de_venta]gastos_directos_oc+[Nota_de_venta]gastos_directos_fxr)))--></td>
+							</tr>
+						</tbody>
+					</table>
+				</article>
+
+			</footer>
+		</section>
+	</body>
+
+</html>

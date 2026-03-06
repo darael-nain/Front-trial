@@ -1,0 +1,58 @@
+<!--#4DINCLUDE headgreen.shtml-->
+<body>
+<!--#4DINCLUDE menu_superior_green.shtml-->
+
+<div id="bg-preferences" class="bg-popup">
+    <div id="modal-preferences" class="modal-popup">       
+        <div class="box-lightBox">
+            <!--#4DINCLUDE pop_preferencias.shtml-->            
+        </div>           
+    </div>
+</div>
+
+<div id="main-container">
+	<div class="box-button">
+	    <!--#4DIF aCheckPermiso{19}=true-->
+	    <button id="btn-new-ot-" type="button" class="buttonBkn">
+	        Nueva OT
+	    </button>
+	    <!--#4DENDIF-->
+	    
+	    <!--#4DIF aCheckPermiso{30}=true-->
+	    <button id="btn-pend-ot" type="button" class="buttonBkn">
+	        Pendientes
+	    </button>    
+	    <!--#4DENDIF-->
+
+	    <!--#4DIF aCheckPermiso{16}=true-->
+	    <button id="btn-planner-ot" type="button" class="buttonBkn">
+	        Planificador
+	    </button>          
+	    <!--#4DENDIF-->
+
+	    <!--#4DIF aCheckPermiso{25}=true-->
+	    <button id="btn-mycalendar-ot" type="button" class="buttonBkn">
+	        Mi Calendario
+	    </button>
+	    <!--#4DENDIF-->
+	    
+	    <!--#4DIF aCheckPermiso{27}=true-->
+	    <button id="btn-preferences-ot" type="button" class="buttonBkn">
+	        Preferencias
+	    </button>
+	    <!--#4DENDIF-->
+	</div>
+
+    <h2 class="sub-title">
+        <img class="img-title-calendar" src="/imagenes_green/list_work.png">
+        Ordenes de Trabajo
+    </h2>
+
+	<a href="/4DACTION/listaot">ver mis OT</a>	
+    <div id="content-list-ot" class="content">
+        <!--#4DINCLUDE lista_ot_encontradas.shtml-->
+    </div>
+
+</div>
+</body>
+</html>

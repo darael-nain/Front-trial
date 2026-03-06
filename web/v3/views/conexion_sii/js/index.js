@@ -1,0 +1,13 @@
+
+(function init() {
+    
+    isConnected('index');
+
+})();
+
+
+
+
+
+
+

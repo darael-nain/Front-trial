@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Ajustes del Sistema</title>
+	<style>
+		.options > h1 {
+			font-size: 14px;
+		}
+		.options > ul {
+			margin-top: 15px;
+			font-size: 12px;
+		}
+		.options > ul > li {
+			margin-bottom: 5px;
+		}
+	</style>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$('section.options > ul > li > a.accesos').click(function() {
+			unaBase.loadInto.dialog('/v3/views/ajustes/accesos/list2.shtml', 'ACCESOS', 'medium');
+		});
+	});
+	</script>
+</head>
+<body>
+	<section class="options">
+		<!--<h1>Ajustes del Sistema</h1>-->
+		<ul>
+			<li><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/ajustes/validaciones/list.shtml'); return false;">Reglas de validación</a></li>
+			<!--<li><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/ajustes/accesos/list.shtml'); return false;">Acceso a módulos</a></li>-->
+			<li><a href="#" class="accesos">Acceso a módulos</a></li>
+			<li><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/ajustes/parametros/index.shtml'); return false;">Parámetros</a></li>
+		</ul>
+	</section>
+</body>
+</html>4

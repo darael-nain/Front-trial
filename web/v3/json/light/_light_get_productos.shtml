@@ -1,0 +1,15 @@
+{
+	"records": {
+		"total": <!--#4DVAR $total-->
+	},
+	"rows": [
+<!--#4DLOOP aProductoId -->
+		{
+			"id_servicio": <!--#4DVAR aProductoId{aProductoId}-->,
+			"index": "<!--#4DVAR aProductoIndex{aProductoId}-->",
+			"text": "<!--#4DHTML _V3_escapeString(aProductoNombre{aProductoId})-->"
+		}<!--#4DIF NOT(aProductoId{aProductoId} = aProductoId{Size of array(aProductoId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+
+}

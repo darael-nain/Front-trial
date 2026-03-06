@@ -1,0 +1,39 @@
+.orangeLine{
+	color: #FF6103;
+}
+.greenLink{
+	/*color: #43af7c;*/
+	/*font-size: 10px;*/
+	/*font-weight: bold !important;*/
+	text-decoration: underline;
+}
+.nombreNv{				
+	font-size: 10px;
+}
+/*.porvalidar{
+	background-color : #FF6103 ;
+	color : black ;
+	padding : 7px ; 
+	margin: 3px ; 
+	-webkit-border-radius: 5px;
+	border-radius:5px;
+	font-weight: bold
+}
+.porvalidar:hover{
+	background-color: #ffb347;
+	cursor: pointer;
+	color: white;
+}
+.porvalidar:active{
+	background-color: #D98B1C;
+	cursor: pointer;
+	color: grey;
+}*/
+.toolbox.bound{
+	padding-bottom: 5px;
+	width: 100%;
+}
+.checkboxes{
+	margin-top: 10px !important;
+	margin-bottom: 5px !important;
+}

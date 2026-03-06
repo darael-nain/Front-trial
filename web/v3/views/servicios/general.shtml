@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getDetalleServicios-->
+		<title>Nueva oc cliente</title>
+		<meta charset="utf-8">
+		<style type="text/css">
+			.general-items textarea{
+				height: 100px;
+				width: calc(100% - 10px)!important;
+			}
+		</style>
+	</head>
+	<body>
+		<section class="general-items">
+			<fieldset>
+				<legend>Información general del servicio</legend>
+				<label>
+					<span>Código</span>
+					<input readonly type="text" value="<!--#4DTEXT Uppercase([Servicio]Codigo_Servicio;*)-->">
+				</label><br>
+				<label>
+					<span>Nombre</span>
+					<input readonly type="text" value="<!--#4DTEXT Uppercase([Servicio]Nombre_Servicio;*)-->">
+				</label>
+			</fieldset>
+		</section>	
+	</body>
+</html>

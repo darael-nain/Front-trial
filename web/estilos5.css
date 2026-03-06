@@ -1,0 +1,23 @@
+@charset "utf-8";
+article, footer, header, nav, section
+{
+	display:block;	
+}
+body
+{
+	/*background-color:#663300;*/
+	font-size:16px;
+	text-align:center;
+}
+header, footer, section 
+{
+	background:#FFF;
+	border-radius:0.5em;
+	-webkit-border-radius:0.5em; /*motor render grohme y safari*/
+	-moz-border-radius:0.5em; 	/*motor render mozilla*/
+	-o-border-radius:0.5em; 	/*motor render opera*/
+	-ms-border-radius:0.5em; 	/*motor render ie*/
+	margin:1em auto;
+	padding:1em;
+	width:90%;
+}

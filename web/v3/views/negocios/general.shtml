@@ -1,0 +1,1726 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getCotizacionContent/light-->
+		<title>Negocios</title>
+		<meta charset="utf-8">
+		<script>
+
+		<!--#4DIF v3_nro_automatico_solo_neg-->
+		var v3_nro_automatico_solo_neg = true;
+		<!--#4DELSE-->
+		var v3_nro_automatico_solo_neg = false;
+		<!--#4DENDIF-->
+
+		
+		<!--#4DIF _V3_verifica_permisos_web(_V3_data_username;485)-->
+		var convertir_en_cotizacion = true;
+		<!--#4DENDIF-->
+
+		<!--#4DIF compartir_totales_titulos-->
+		var compartir_totales_titulos = true;
+		<!--#4DELSE-->
+		var compartir_totales_titulos = false;
+		<!--#4DENDIF-->
+
+		<!--#4DIF compartir_items-->
+		var compartir_items = true;
+		<!--#4DELSE-->
+		var compartir_items = false;
+		<!--#4DENDIF-->
+
+		<!--#4DIF compartir_totales_items-->
+		var compartir_totales_items = true;
+		<!--#4DELSE-->
+		var compartir_totales_items = false;
+		<!--#4DENDIF-->
+
+		<!--#4DIF compartir_totales_cotizacion-->
+		var compartir_totales_cotizacion = true;
+		<!--#4DELSE-->
+		var compartir_totales_cotizacion = false;
+		<!--#4DENDIF-->
+
+		<!--#4DIF compartir_ocultar_items_cero-->
+		var compartir_ocultar_items_cero = true;
+		<!--#4DELSE-->
+		var compartir_ocultar_items_cero = false;
+
+		<!--#4DENDIF-->
+
+		<!--#4DIF compartir_fecha_creacion-->
+		var compartir_fecha_creacion = true;
+		<!--#4DELSE-->
+		var compartir_fecha_creacion = false;
+		<!--#4DENDIF-->
+
+
+		var editCodigoItems = <!--#4DIF _V3_editCodigoItems-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+		<!--#4DIF v3_negocioCerradoFinal-->
+		var negocioCerradoFinal = true;
+		<!--#4DELSE-->
+		var negocioCerradoFinal = false;
+		<!--#4DENDIF-->;
+
+
+		
+		unaBase.doc.emisor = '<!--#4DVAR vDeEmisor-->',
+		unaBase.doc.fecha = '<!--#4DVAR vFechaEmi1-->',
+		unaBase.doc.hora = '<!--#4DVAR vHoraEmi1-->',
+		unaBase.doc.state = '<!--#4DVAR vestado-->',
+		unaBase.doc.ref = '<!--#4DVAR vreferencia-->',
+		unaBase.doc.budgetTag = '<!--#4DTEXT _V3_escapeString(etiqueta_negocio)-->'
+
+
+
+		</script>
+		
+	
+		<script>
+
+			// ini -- 16-08-16 - gin
+			/*var building_codeauto = function(change){
+				if (change) {
+					var consultado = $('#main-container').data("codconsultado");
+					var area = $('input[name="cotizacion[area_negocio]"]').data("codigo");
+					var marca = $('input[name="dato[1][valor]"]').data("codigo");
+					var actualText = $('input[name="dato[1][valor]"]').data("correlativo");
+					var actual = parseFloat(actualText) + 1;
+					var correlativo = "000";
+					if (actual > 0 && area !="" && marca !="") {
+						if (actual > 0 && actual < 10) {
+									correlativo = "00" + actual;
+						}else{
+							if (actual > 9 && actual < 99) {
+								correlativo = "0" + actual;
+							}else{
+								correlativo = actual;
+							}
+						}
+						var codigo = marca +"-"+ area + "-"+ correlativo;
+						if (consultado == "true") {
+							$('input[name="dato[4][valor]"]').val(codigo);
+						}else{
+							if ($('input[name="dato[4][valor]"]').val() == "") {
+								$('input[name="dato[4][valor]"]').val(codigo);
+								$('#main-container').data("codconsultado", "true");
+							}else{
+								confirm('¿Está seguro de modificar la marca? Esta acción también modificará el código?').done(function(data) {
+									if (data) {
+										$('input[name="dato[4][valor]"]').val(codigo);
+										$('#main-container').data("codconsultado", "true");
+									}
+								});
+							}
+						}
+					}
+				}
+			}*/
+			// fin -- 16-08-16 - gin
+
+			$(document).ready(function() {
+
+				if (!access._519)
+					$('[data-name="share"]').hide();
+
+				if (access._606)
+					$('[data-name="preview"]').hide();
+
+				if (access._607)
+					$('[data-name="save"]').hide();
+
+				if (!access._530)
+					$('#menu [data-name="template"]').hide();
+
+				if ($('input[name="cotizacion[ejecutivo][id]"]').length > 0)
+					$('input[name="cotizacion[ejecutivo][id]"]').autocomplete({
+						source: function(request, response) {
+							$.ajax({
+								url: '/4DACTION/_V3_' + 'getUsuario',
+								dataType: 'json',
+								data: {
+									q: request.term,
+									ejecutivo: true
+								},
+								success: function(data) {
+									response($.map(data.rows, function(item) {
+										return item;
+									}));
+								}
+							});
+						},
+						minLength: 0,
+						autoFocus: true,
+						delay: 5,
+						position: { my: "left top", at: "left bottom", collision: "flip" },
+						open: function() {
+							$(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+						},
+						close: function() {
+							$(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+						},
+						focus: function(event, ui) {
+							//$(this).val(ui.item.text);
+							return false;
+						},
+						response: function(event, ui) {
+						},
+						select: function(event, ui) {
+							$('input[name="cotizacion[ejecutivo][id]"]').val(ui.item.nombres + ' ' + ui.item.ap_pat + ((ui.item.ap_mat)? ' ' + ui.item.ap_mat : ''));
+							$('input[name="cotizacion[ejecutivo][id]"]').data('id', ui.item.id);
+							return false;
+						}
+
+					}).data('ui-autocomplete')._renderItem = function(ul, item) {
+						return $('<li><a><strong class="highlight">' +  item.ap_pat + ((item.ap_mat)? ' ' + item.ap_mat : '') + ', ' + item.nombres + '</strong><em>' + item.cargo + '</em><span>' + item.email + '</span></a></li>').appendTo(ul);
+					};
+
+				$('button.show.proyecto').click(function() {
+					var target = $(this).parentTo('ul');
+					target.find('input[name="cotizacion[proyecto]"][type="search"]').autocomplete('search', '@').focus();
+				});
+
+				$('button.show.ejecutivo').click(function() {
+					var target = $(this).parentTo('ul');
+					target.find('input[name="cotizacion[ejecutivo][id]"][type="search"]').autocomplete('search', '@').focus();
+				});
+
+				/* ini - comentado temporalmente 22.08.16 - gin */
+				/*$.ajax({
+					url: '/4DACTION/_V3_getDatoByCotizacion',
+					data: {
+						id: $('section.sheet').data('id')
+					},
+					dataType: 'json',
+					success: function(data) {
+						var htmlObject;
+						var i = 0;
+						$.each(data.rows, function(key, item) {
+							if (item.enabled && i < 2) {
+								i++;
+								if (item.options.length > 0) {
+									htmlObject = $(' \
+										<ul class="editable" style="margin-top: 0 !important;"> \
+											<li> \
+												<span>' + item.nombre + '</span> \
+												<span><input readonly data-preguntado="0" data-codigo="' + item.codigo + '" data-correlativo="' + item.correlativo + '" type="search" name="dato[' + item.id + '][valor]" value="' + item.valor + '"></span> \
+												<button class="show dato_' + item.id + '">Ver</button> \
+											</li> \
+										</ul> \
+									');
+									htmlObject.find('input').autocomplete({
+										source: function(request, response) {
+											response($.map(item.options, function(jtem) {
+												return jtem;
+											}));
+										},
+										minLength: 0,
+										delay: 5,
+										position: { my: "left top", at: "left bottom", collision: "flip" },
+										open: function() {
+											$(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+										},
+										close: function() {
+											$(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+										},
+										focus: function(event, ui) {
+											$(this).val(ui.item.text);
+											return false;
+										},
+										select: function(event, ui) {
+											$(this).val(ui.item.text);
+											$(this).data("codigo", ui.item.cod);
+											$(this).data("correlativo", ui.item.correlativo_actual);
+											building_codeauto(true);
+											return false;
+										}
+
+									}).data('ui-autocomplete')._renderItem = function(ul, item) {
+										return $('<li><a>' + item.text + '</a></li>').appendTo(ul);
+									};
+									$('article.general-data').append(htmlObject);
+									$('article.general-data').find('button.show.dato_' + item.id).button({
+										icons: {
+											primary: 'ui-icon-carat-1-s'
+										},
+										text: false
+									}).click(function() {
+										$('article.general-data').find('input[name="dato[' + item.id + '][valor]"]').autocomplete('search', '@').focus();
+									});
+								} else {
+									htmlObject = $(' \
+										<ul class="editable" style="margin-top: 0 !important;"> \
+											<li> \
+												<span>' + item.nombre + '</span> \
+												<span><input type="text" readonly data-preguntado="0" data-codigo="' + item.codigo + '" data-correlativo="' + item.correlativo + '" name="dato[' + item.id + '][valor]" value="' + item.valor + '"' + ((item.required)? ' required' : '') + ((typeof item.maxlength != 'undefined')? ' maxlength="' + item.maxlength + '"' : '') + ((item.unique)? ' data-unique="true"' : '') +  '></span> \
+											</li> \
+										</ul> \
+									');
+									$('article.general-data').append(htmlObject);
+								}
+							}
+						});
+					},
+					complete: function(){
+				    	// .....
+				   	}
+				});*/
+				/* fin - comentado temporalmente 22.08.16 - gin */
+
+				/* ini - nuevo - carga de datos personalizados - 22.08.16 - gin - realizado para meojarar la rapidez d ela carga */
+
+				$.ajax({
+					url: '/4DACTION/_V3_getDatoByCotizacion2',
+					data: {
+						id: $('section.sheet').data('id')
+					},
+					dataType: 'json',
+					async:false,
+					success: function(data) {
+						var htmlObject;
+						var i = 0;
+						$.each(data.rows, function(key, item) {
+							if (item.enabled) {
+								if (item.options.length > 0) {
+								//if (item.id == 1) {
+									var htmlObject = $(
+										'<ul class="editable" style="margin-top: 0 !important;">' +
+											'<li>' +
+												'<span>' + item.nombre + '</span>' +
+												'<span>' +
+													'<input ' + 
+														(item.isDate ? 'class="datepicker-personalizados" ' : 'class="inputCustom"') +
+														'data-name="' + item.nombre + '" ' +
+														'readonly ' +
+														'placeholder="Seleccione desde la lista" ' +
+														'data-id="' + item.id + '" ' +
+														'data-preguntado="0" ' +
+														'data-codigo="' + item.codigo + '" ' +
+														'data-correlativo="' + item.correlativo + '" ' +
+														'type="' + (item.isDate ? 'text' : 'search') + '" ' +
+														'name="dato[' + item.id + '][valor]" ' +
+														'value="' + item.valor + '" ' +
+														(item.required ? 'required' : '') +
+													'style="max-width: none;">' +
+												'</span>' +
+												'<button data-id="' + item.id + '" class="show dato_personalizado">Ver</button>' +
+											'</li>' +
+										'</ul>'
+									);
+
+
+									/*if (access._565){
+										htmlObject.find('span.param-marca').after('<button data-id="'+ item.id + '" class="show dato_personalizado">Ver</button>');
+									}*/
+
+									if (campos_personalizados_abajo) {
+										// modo touch peru
+										$('article.general-data-touch-peru').append(htmlObject);
+									}else{
+										// normal
+										$('article.general-data').append(htmlObject);
+										$('article.general-data-touch-peru').hide();
+									}
+
+									htmlObject.find('.datepicker-personalizados').datepicker({
+										dateFormat: 'dd-mm-yy',
+										altField: '',
+										altFormat: 'yy-mm-dd'
+									});
+
+									htmlObject.find('input[name*="[valor]"]').autocomplete({
+										source: function(request, response) {
+											$.ajax({
+												url: '/4DACTION/_V3_getDatoOptions2',
+												dataType: 'json',
+												data: {
+													q: request.term,
+													id: item.id
+												},
+												success: function(data) {
+													response($.map(data.rows, function(item) {
+														return item;
+													}));
+												}
+											});
+										},
+
+										minLength: 0,
+										autoFocus: true,
+										// delay: 5,
+										position: { my: "left top", at: "left bottom", collision: "flip" },
+										open: function() {
+											$(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+										},
+										close: function() {
+											$(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+										},
+										focus: function(event, ui) {
+											/*if (ui.item.text != "Nueva...") {
+												$(this).val(ui.item.text);
+											}
+											return false;*/
+										},
+										response: function(event, ui) {
+										},
+										select: function(event, ui) {
+											if (ui.item.text == "Nueva...") {
+												$(this).val("");
+												create_marca();
+											}else{
+												$(this).val(ui.item.text);
+												$(this).data("codigo", ui.item.cod);
+												$(this).data("correlativo", ui.item.correlativo_actual);
+											}
+											return false;
+										}
+
+									}).data('ui-autocomplete')._renderItem = function(ul, item) {
+										return $('<li><a>' + item.text + '</a></li>').appendTo(ul);
+									};
+
+									/*$('article.general-data').find('button.show.dato_personalizado').button({
+										icons: {
+											primary: 'ui-icon-carat-1-s'
+										},
+										text: false
+									}).click(function() {
+										$('article.general-data').find('input[name="dato[1][valor]"]').autocomplete('search', '@').focus();
+									});*/
+
+									//$('article.general-data').find('button.show.dato_personalizado').button({
+									htmlObject.find('button.show.dato_personalizado').button({
+										icons: {
+											primary: 'ui-icon-carat-1-s'
+										},
+										text: false
+									}).click(function(event) {
+										//$('article.general-data').find('input[name="dato[1][valor]"]').autocomplete('search', '@').focus();
+										$(event.target).closest('li').find('input[name*="[valor]"]').autocomplete('search', '@').focus();
+									});
+
+								}else{
+									if (item.id == 4) {
+										htmlObject = $(' \
+											<ul data-id="'+ item.id + '" class="editable" style="margin-top: 0 !important;"> \
+												<li> \
+													<span>' + item.nombre + '</span> \
+													<span class="param4"><input '+ ((item.isDate)? 'class="datepicker-personalizados"' : 'class="inputCustom"') +' <!--#4DIF Not(_V3_verifica_permisos_web (_V3_data_username;644))-->readonly  placeholder="Generación de código automático al convertir a negocio"<!--#4DENDIF-->  data-preguntado="0" data-codigo="' + item.codigo + '" data-correlativo="' + item.correlativo + '" type="'+ ((item.isDate)? 'text' : 'search') +'" name="dato[' + item.id + '][valor]" value="' + item.valor + '" ' + ((typeof item.maxlength != 'undefined')? ' maxlength="' + item.maxlength + '"' : '') + ((item.unique)? ' data-unique="true"' : '') +  <!--#4DIF Not(generar_codigo_automatico)--> ((item.required)? 'required' : '') + <!--#4DENDIF--> ' style="max-width: none;"></span> \
+												</li> \
+											</ul> \
+										');
+									}else{
+										htmlObject = $(' \
+											<ul data-id="'+ item.id + '" class="editable" style="margin-top: 0 !important;"> \
+												<li> \
+													<span>' + item.nombre + '</span> \
+													<span><input '+ ((item.isDate)? 'class="datepicker-personalizados"' : 'class="inputCustom"') +' data-preguntado="0" data-codigo="' + item.codigo + '" data-correlativo="' + item.correlativo + '" type="'+ ((item.isDate)? 'text' : 'search') +'" name="dato[' + item.id + '][valor]" value="' + item.valor + '" ' + ((typeof item.maxlength != 'undefined')? ' maxlength="' + item.maxlength + '"' : '') + ((item.unique)? ' data-unique="true"' : '') +  ((item.required)? 'required' : '') + 'style="max-width: none;"></span> \
+												</li> \
+											</ul> \
+										');
+									}
+
+									if (campos_personalizados_abajo) {
+										// modo touch peru
+										$('article.general-data-touch-peru').append(htmlObject);
+									}else{
+										// normal
+										$('article.general-data').append(htmlObject);
+										$('article.general-data-touch-peru').hide();
+									}
+
+									htmlObject.find('.datepicker-personalizados').datepicker({
+										dateFormat: 'dd-mm-yy',
+										altField: '',
+										altFormat: 'yy-mm-dd'
+									});
+
+								}
+							}
+
+						});
+						// building_codeauto (false);
+
+						// borrar codigo si tiene permiso
+						/*$('article.general-data').find('button.borrar.codigo').button({ icons: { primary: 'ui-icon-close' }, text: false }).click(function(){
+							alert("borrado");
+						});*/
+
+					}
+				});
+
+				// setTimeout(function(){
+				if ($('article.general-data').find('input[name="dato[1][valor]"]').length > 0) {
+					$('article.general-data').find('input[name="dato[1][valor]"]').autocomplete({
+						source: function(request, response) {
+							$.ajax({
+								url: '/4DACTION/_V3_getDatoOptions2',
+								dataType: 'json',
+								data: {
+									q: request.term,
+									id: $('article.general-data').find('input[name="dato[1][valor]"]').data("id")
+								},
+								success: function(data) {
+									response($.map(data.rows, function(item) {
+										return item;
+									}));
+								}
+							});
+						},
+						minLength: 0,
+						autoFocus: true,
+						delay: 5,
+						position: { my: "left top", at: "left bottom", collision: "flip" },
+						open: function() {
+							$(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+						},
+						close: function() {
+							$(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+						},
+						focus: function(event, ui) {
+							$(this).val(ui.item.text);
+							return false;
+						},
+						response: function(event, ui) {
+						},
+						select: function(event, ui) {
+							$(this).val(ui.item.text);
+							$(this).data("codigo", ui.item.poto);
+							$(this).data("correlativo", ui.item.correlativo);
+							// building_codeauto(true);
+							return false;
+						}
+
+					}).data('ui-autocomplete')._renderItem = function(ul, item) {
+						return $('<li><a>' + item.text + '</a></li>').appendTo(ul);
+					};
+				}else{
+					// alert("no cargó");
+				}
+				// }, 1000);
+
+
+				// valida codigo repetido (agregado 01-08-16 by gin para sud)
+				/*$('section.sheet article.general-data').on('focusout mouseleave', 'input[data-unique="true"]', function() {
+					var input = $(this);
+					if (input.val().length > 0) {
+						// verificar si el campo es único
+						var dato_id = input.prop('name').match(/dato\[([0-9]+)\]\[valor\]/)[1];
+
+						$.ajax({
+							url: '/4DACTION/_V3_verificaDatoDuplicado',
+							data: {
+								id: dato_id,
+								idnv: $('section.sheet').data('id'),
+								value: input.val()
+							},
+							dataType: 'json',
+							success: function(data) {
+								if (!data.success) {
+									// toastr.warning('El dato ingresado está duplicado.');
+
+									var registro = "";
+									var link = "";
+									var refMsg = "";
+									if (data.estadoneg == "COTIZACION") {
+										refMsg = "Ver Cotización nro. " + data.idneg;
+										registro = "a la Cotización nro. " + data.idneg;
+										link = '/4DACTION/wbienvenidos#cotizaciones/content.shtml?id=' + data.idnv;
+									}else{
+										refMsg = "Ver Negocio nro. " + data.idneg;
+										registro = "al Negocio nro. " + data.idneg;
+										link = '/4DACTION/wbienvenidos#negocios/content.shtml?id=' + data.idnv;
+									}
+
+									if(input.val() != ""){
+										var msj = "El código ingresado ("+ input.val() +") ya se encuentra asociado "+ registro +".";
+										confirm(msj, refMsg, "OK").done(function(data) {
+											if (data) {
+												window.open(link);
+											}
+										});
+									}
+
+									input.val('');
+
+								}
+							}
+						});
+
+					}
+				});*/
+
+				// para guardar la referencia al modificar
+				$(".titulofinal").blur(function(){
+					$("#main-container").data("titulofinal", $(this).val());
+				});
+
+				$('input.titulofinal').on('keyup', function() {
+					// Tomar el valor actual del input
+					let value = $(this).val();
+
+					// Permitir solo letras (incluyendo ñ y Ñ), números, espacios, guiones (-), puntos (.), comas (,) y barras (/)
+					value = value.replace(/[^a-zA-Z0-9\s\u00F1\u00D1.,-/]/g, '');
+
+					$(this).val(value);
+				});
+
+
+				// --ini-- por gin el 16-01-18 para verifica estados del negocios para ocultar, bloquear, mostrar objetos
+				negocios.display();
+				// --ini-- por gin el 16-01-18 para verifica estados del negocios para ocultar, bloquear, mostrar objetos
+
+
+				document.title = 'NEG. Nº <!--#4DVAR vid_negocio--> / <!--#4DTEXT _V3_nombre_empresa-->';
+
+
+				if(accountingMode && unaBase.parametros.accounting_anticipos_contactos){
+
+					
+					document.getElementById('section_cuenta_contable_nv').style.display = ''
+					$.ajax({
+						url: window.origin + "/4DACTION/_force_getPlanAccounts",
+						data: {
+							only_accounts: true
+						},
+						dataType: "json",
+						success: function (data) {
+							let account = document.querySelector('#cuenta_contable_nv_input').value;
+							let select = document.getElementById('cuenta_contable_nv');
+							
+							// Crear opción "Seleccione cuenta contable" y agregarla al principio
+							let defaultOption = document.createElement('option');
+							defaultOption.text = "Seleccione cuenta contable";
+							defaultOption.value = "0"; // Sin valor
+							select.appendChild(defaultOption);
+							
+							// Añadir las otras opciones desde data.rows
+							data.rows.forEach(v => {
+								let option = document.createElement('option');
+								option.text = v.number + ' / ' + v.name;
+								option.value = v.number;
+								select.appendChild(option);
+							});
+
+							// Inicializar Tom Select
+							let settings = {
+								sortField: {
+									field: "text",
+									direction: "asc"
+								},
+								render:{
+									no_results: function( data, escape ){
+										return '<div class="no-results">Sin resultados</div>';
+									},
+								},
+							};
+							let tomSelect = new TomSelect(select, settings);
+							if (account === "") {
+								tomSelect.setValue("0"); // Establecer la opción "Seleccione cuenta contable"
+							} else {
+								tomSelect.setValue(account, true);
+							}
+							
+							if (access._682 == 0) {
+								tomSelect.disable();
+								select.parentNode.addEventListener('click', async function (e) {
+								let res = await unaBase.utilities.getUserByPermiso(682)
+								let names = ''
+								res.data.row.forEach((v,index) => {
+									names += '- ' + v.nombre;
+									if (index < res.data.row.length - 1) {
+										names += ' SL '; 
+									}
+								})
+								
+								toastr.warning(String(`No tienes permiso para seleccionar una cuenta contable.SL Favor contactate con:SLSL ${names}`).replaceAll(/SL/g, '<br>'));
+								}, true);
+							} 
+						},
+						error: function (xhr, text, error) {
+							toastr.error(
+								NOTIFY.get("ERROR_INTERNAL", "Error")
+							);
+						}
+					});
+
+				}
+
+
+				//Para el control de versiones
+				document.getElementById('section_control_version_nv').style.display = ''
+				$.ajax({
+					url: window.origin + "/4DACTION/_force_getControlVersiones",
+					dataType: "json",
+					success: function (data) {
+						let account = document.querySelector('#control_version_nv_input').value;
+						let select = document.getElementById('control_version_nv');
+
+						if (!access._644) {
+							select.disabled = true
+						}
+						// Crear opción "Seleccione cuenta contable" y agregarla al principio
+						let defaultOption = document.createElement('option');
+						defaultOption.text = "Seleccione una version";
+						defaultOption.value = ""; // Sin valor
+						select.appendChild(defaultOption);
+						
+						// Añadir las otras opciones desde data.rows
+						data.rows.forEach(v => {
+							let option = document.createElement('option');
+							option.text = v.name;
+							option.value = v.id;
+							select.appendChild(option);
+						});
+
+						// Inicializar Tom Select
+						let settings = {
+							sortField: {
+								field: "text",
+								direction: "asc"
+							},
+							render:{
+									no_results: function( data, escape ){
+										return '<div class="no-results">Sin resultados</div>';
+									},
+								}
+						};
+						
+						let tomSelect = new TomSelect(select, settings);
+						tomSelect.setValue(account);
+
+						// Deshabilitar si `access._644` es falso
+						
+						if (!access._644 && tomSelect) {
+							//tomSelect.setDisabled(true);
+						}
+
+						tomSelect.on('item_add', async function(value, item) {
+							
+							nv.id_version = value
+							await negocios.changeVersion()
+						});
+						
+						
+					},
+					error: function (xhr, text, error) {
+						toastr.error(
+							NOTIFY.get("ERROR_INTERNAL", "Error")
+						);
+					}
+				});
+
+
+				// let fecha_emision = document.getElementById('input_fecha_emision').value
+				const transformDate = (inputDate) => {
+					const months = [
+						"enero", "febrero", "marzo",
+						"abril", "mayo", "junio",
+						"julio", "agosto", "septiembre",
+						"octubre", "noviembre", "diciembre"
+					];
+
+					const [day, month, year] = inputDate.split("-").map(Number);
+					const monthName = months[month - 1];
+
+					return `${day} de ${monthName} del ${year}`;
+				};
+
+				// document.getElementById('fecha_emision_formateada').textContent = transformDate(fecha_emision)
+
+
+			});
+		</script>
+		<style>
+			.automatic_clone {
+				background-color: #f2f2f3;
+			}
+
+			.sectionForm {
+				width: 800px;
+				padding: 40px 20px;
+				box-sizing: border-box;
+				margin: 0px;
+			}
+
+			.containerForm {
+				padding: 0px;
+				margin: 0px;
+				display: flex;
+				flex-direction: column;
+				gap: 5px;
+			}
+
+			.containerForm li {
+				list-style: none;
+				display: grid;
+				grid-template-columns: 200px 1fr;
+				gap: 10px;
+				height: 25px;
+			}
+
+			.containerForm li div {
+				display: flex;
+				align-items: center;
+				height: 100%;
+				font-weight: 700;
+				text-transform: uppercase;
+			}
+
+
+			.inputCustom {
+				width: 100%;
+				max-width: 200px;
+				outline: none;
+				border-radius: 4px;
+				background-color: #fff;
+				padding: 2px 10px;
+				box-sizing: border-box;
+				box-shadow: #939393 0px 0px 0px 1px;
+				transition: 0.3s;
+				caret-color: #2c3f4d;
+				border: 1px solid transparent;
+				color: #2c3f4d;
+				transition: 0.3s;
+			}
+
+			.titulofinal {
+				background-color: #fff !important;
+				padding: 0 10px !important;
+				border-radius: 4px !important;
+				transition: 0.3s !important;
+			}
+
+			.titulofinal:hover {
+				border-bottom: 1px solid #69dfc0 !important;
+				transition: 0.3s !important;
+			}
+
+			.titulofinal:active, .titulofinal:focus {
+				caret-color: #3ac7a5 !important;
+				border-bottom: 1px solid #3ac7a5 !important;
+				transition: 0.3s !important;
+			}
+
+			.inputCustom::placeholder {
+				color: #98a2b3;
+				transition: 0.3s;
+			}
+
+			.inputCustom:hover {
+				box-shadow: #93939300 0px 0px 0px 1px;
+				border: 1px solid #69dfc0;
+				transition: 0.3s;
+			}
+
+			.inputCustom:active,
+			.inputCustom:focus {
+				caret-color: #3ac7a5;
+				border: 1px solid #3ac7a5;
+				box-shadow: #3ac7a5 0px 0px 0px 1px;
+			}
+
+			input.inputCustom:disabled,
+			input.inputCustom:disabled:active {
+				cursor: not-allowed;
+				border: 1px solid #d0d5dd;
+				box-shadow: transparent 0px 0px 0px 1px;
+				}
+
+			input.inputCustom:disabled,
+			input.inputCustom:disabled::placeholder {
+				color: #d0d5dd;
+				}
+
+			input.inputCustom:disabled:hover {
+				border: 1px solid #d0d5dd;
+			}
+
+			.checkboxCustom {
+				transform: scale(1.3);
+				margin-left: 2px;
+			}
+		
+			table.items > tbody {
+				counter-reset: item;
+			}
+
+			table.items.cotizacion > tbody > tr:not(.title) > td:nth-of-type(2):before {
+				counter-increment: item;
+				content: counter(item);
+				font-weight: bold;
+			}
+
+			/* Segunda cantidad */
+			<!--#4DIF NOT(vUsarsegunda_cantidad)-->
+			.segunda-cantidad {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/* 458	Ver sección utilidades y gastos */
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;458))-->
+			.block-utilidades-gastos {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/* 612	Ver sección check list */
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;612))-->
+			.block-check-list {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/* 459	Ver sección resúmenes */
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;459))-->
+			.block-resumenes {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/* Márgenes según parámetro */
+
+			<!--#4DIF _V3_param_showMargenDesdeCompra-->
+			table .margen-desde-venta {
+				display: none;
+			}
+			<!--#4DELSE-->
+			table .margen-desde-compra {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			section.sheet table .collapsed {
+				display: none;
+			}
+
+			table .moving-src, table .moving-dst {
+				outline: 1px dashed black;
+				opacity: .3;
+			}
+
+			section.sheet table th:last-of-type {
+				width: 28px;
+			}
+
+			/* Nuevo */
+
+			input.movimiento {
+				background-color: #94BDFF;
+			}
+
+			input.indicador {
+				background-color: #ADAD84;
+			}
+
+			.checklist > li > span:first-of-type {
+				width: calc(40% - 2px) !important;
+				font-size: 14px;
+				font-weight: normal !important;
+			}
+
+			.checklist > li > span:first-of-type > em {
+				/* color: #84ADEF;*/
+				color: #648DCF;
+			}
+
+			li.strikeout > span {
+				text-decoration: line-through !important;
+			}
+
+			
+			.short{
+				width: 200px !important;
+			}
+
+			
+			.ts-control{
+				font-size: 10px!important;
+				border-radius: 5px!important;
+				padding: 2px!important;
+			}
+
+			.ts-dropdown-content{
+				font-size: 10px;
+			}
+
+
+			
+			/* Costo según permiso */
+
+			/*
+			<!--#4DIF NOT(_V3_permission_showCosto)-->
+			.costo {
+				display: none;
+			}
+			<!--#4DENDIF-->
+			*/
+
+			/* Utilidad según permiso */
+			/*
+			<!--#4DIF NOT(_V3_permission_showUtilidad)-->
+			.utilidad {
+				display: none;
+			}
+			<!--#4DENDIF-->
+			*/
+
+
+
+			.buscador-wrapper {
+				position: relative;
+				
+			}
+
+			.buscador-results {
+				position: absolute;
+				z-index: 1000;
+				background-color: white;
+				border: 1px solid #ccc;
+				width: 100%;
+				display: none;
+				max-height: 200px;
+				overflow-y: auto;
+				top: 100%; 
+				left: 0;
+			}
+
+			.buscador-results.active {
+				display: block;
+				border-bottom-left-radius: 8px;
+				border-bottom-right-radius: 8px;
+				height: 200px;
+				overflow-y: auto;
+			}
+
+			.buscador-result {
+				padding: 5px;
+				cursor: pointer;
+			}
+
+			.buscador-result:hover {
+				background-color: #F4FDFA;
+				border-radius: 8px;
+			}
+
+			.custom-select-icon {
+				position: absolute;
+				right: 10px;
+				top: calc(50% + 1px);
+				transform: translateY(-50%);
+				cursor: pointer;
+				z-index: 2; 
+			}
+
+			.custom-select-icon.rotated {
+				transform: rotate(180deg);
+				top: calc(50% - 5px);
+			}
+
+			.buscador-wrapper input {
+				padding-right: 30px; 
+				flex-grow: 1; 
+				transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+				border-radius: 5px;
+				padding: 2px 80px 2px 10px !important;
+				border: 1px solid #98A2B3;
+				background-color: white;
+				width: 100% !important;
+			}
+
+			.save-button {
+				padding: 2px 4px;
+				border: 1px solid #3AC7A5;
+				border-radius: 5px;
+				font-size: 10px;
+				z-index: 1; 
+				position: absolute;
+				top: 2px;
+				right: 25px;
+				display: none;
+				color:#3AC7A5;
+			}
+
+			.buscador-wrapper > .save-button {
+				display: none !important;
+				pointer-events: none !important;
+			}
+
+			.save-button:hover {
+				background-color: #20A789;
+				color: white;
+			}
+
+			.buscador-wrapper input:active, .buscador-wrapper input:focus {
+				border: 1px solid #3AC7A5;
+				background-color: #bef0e4;
+			}
+
+			.btn-edit-custom{
+				background-color: 1px solid #3AC7A5;
+				color: #3AC7A5;
+				border-radius: 5px;
+				background-color: white;
+			}
+
+			.btn-edit-custom:hover{
+				background-color: #3AC7A5;
+				color: white;
+				border-radius: 5px;
+				transition: 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+			}
+
+			.btn-edit-custom i{
+				font-size: 8px;
+			}
+			
+			.search-option {
+				display: flex;
+				justify-content: space-between;
+				height: 30px;
+				border: 1px solid #F1F2FD;
+				border-radius: 5px;
+			}
+
+			.idNumber-span{
+				color: #98A2B3;
+			}
+
+		</style>
+	</head>
+	<body>
+		<!-- Formularios de contenido -->
+		<section class="sheet u-doc-data" data-id="<!--#4DVAR vid_nv-->" data-index="<!--#4DVAR vid_negocio-->"<!--#4DIF vNuevo--> data-new="true"<!--#4DENDIF--><!--#4DIF vAnulada--> data-readonly="true"<!--#4DENDIF-->>
+			<footer>
+				<article class="general-data">
+					<h1>Información general</h1>
+					<input value="<!--#4DTEXT [Nota_de_venta]Fecha_emision-->" id="input_fecha_emision" type="text" style="display: none">
+					<h2><span id="index"><!--#4DIF vid_negocio=0-->Borrador<!--#4DELSE--><!--#4DIF vid_negocio=-1-->Plantilla<!--#4DELSE-->Nº <!--#4DVAR vid_negocio--><!--#4DENDIF--><!--#4DENDIF--></span> <strong><!--#4DTEXT _V3_escapeString(etiqueta_negocio)--></strong> <input class="titulofinal" data-text placeholder="Ingresa el nombre del proyecto..." type="text" name="cotizacion[titulo][text]" value="<!--#4DVAR vreferencia-->"></h2>
+					<p><!--#4DVAR vestado--> - Creada por <!--#4DVAR vDeEmisor--> el <!--#4DTEXT [Nota_de_venta]Fecha_emision--> a las <!--#4DVAR vHoraEmi1--><!--#4DIF vCerradaCompras--><span class="closed-compras-tag"><br>
+					<span class="ui-icon ui-icon-locked" style="display: inline-block; vertical-align: bottom; margin-bottom: -2px;"></span>Cerrado para compras<!--#4DENDIF--></p></span>
+					<!--#4DIF vCerradaVentas--><br>
+					<span class="ui-icon ui-icon-locked" style="display: inline-block; vertical-align: bottom; margin-bottom: -2px;"></span>Cerrado para ventas<!--#4DENDIF--></p>
+
+					<!--#4DIF mostrar_seccion_proyectos-->
+					<ul class="editable" style="margin-top: 10px !important; margin-bottom: 0 !important;">
+						<li><span>Proyecto</span> <span><input readonly type="search" name="cotizacion[proyecto]" data-id="<!--#4DVAR vid_proyecto-->" value="<!--#4DVAR vproyecto-->" placeholder="Buscar..."></span><button class="show proyecto">Ver proyectos</button></li>
+					</ul>
+					<!--#4DENDIF-->
+					<!--<ul class="editable"></ul>-->
+
+					<ul class="editable" style="margin-top: 10px !important;">
+						<!-- TODO: Falta permiso para modificar àrea de negocio; el permiso define si es readonly -->
+						<li><span>Área de negocio</span> <span><input class="inputCustom" style="max-width: none; width: 100%;" required data-codigo="<!--#4DVAR cod_areanegocio-->" class="input-custom" type="search"<!--#4DIF Not(_V3_verifica_permisos_web(_V3_data_username;528))-->readonly<!--#4DENDIF--> name="cotizacion[area_negocio]" data-id="<!--#4DVAR vid_areanegocio-->" value="<!--#4DVAR vareanegocio-->" placeholder="Buscar..."></span><!--#4DIF _V3_verifica_permisos_web(_V3_data_username;528)--><button class="show area-negocio">Ver mis áreas de negocio</button><!--#4DENDIF--></li>
+
+						
+					</ul>
+					<ul class="editable" style="margin-top: 10px !important;">
+						<li><span>Ejec. Responsable</span> <span><input class="inputCustom" style="max-width: none; width: 100%;" id="ejecutivo" class="input-custom" readonly required type="search" name="cotizacion[ejecutivo][id]" data-id="<!--#4DVAR vEjecutivoDefaultLogin-->" value="<!--#4DVAR vEjecutivoDefaultNombre-->" placeholder="Buscar por Alias, Nombre o Apellidos..."></span><button class="show ejecutivo">Ver todos los ejecutivos</button></li>
+					</ul>
+
+
+					
+					<ul class="editable" style="margin-top: 10px !important; display: none;" id="section_cuenta_contable_nv">
+						<input id="cuenta_contable_nv_input" value="<!--#4DTEXT [Nota_de_venta]cuenta_contable-->" type="text" style="display: none;">
+						<li><span>Cuenta contable</span><span><select class="cuentas_contables" id="cuenta_contable_nv" name="cotizacion[cuenta_contable]"></select></span></li>
+					</ul>
+
+					<ul class="editable" style="margin-top: 10px !important; display: none;" id="section_control_version_nv">
+						<input id="control_version_nv_input" value="<!--#4DTEXT id_control_version-->" type="text" style="display: none;">
+						<li><span>Version</span><span><select class="control_version" id="control_version_nv" name="cotizacion[control_version]"></select></span></li>
+					</ul>
+
+					<button type="button" class="btn btn-primary btn-sm" id="btn-ai-eerr"
+						style="border-radius:999px; background:#2563eb; border-color:#2563eb;">
+						<i class="fa-solid fa-robot me-1"></i>
+					</button>
+
+				</article>
+				<article class="exclude-from-template">
+					<h1><!--#4DIF v3_cot_cliente_como_agencia-->Agencia<!--#4DELSE-->Cliente<!--#4DENDIF--></h1>
+					<button class="expand active"></button>
+					<h2><strong name="cotizacion[empresa][id]"><!--#4DVAR valias--></strong> <span name="cotizacion[empresa][razon_social]"><!--#4DVAR vempresa--></span> <span name="cotizacion[empresa][contacto][id]"><!--#4DVAR vnombrecontacto--></span></h2>
+					<ul class="editable expandable ul-empresa" style="display: inline-flex; flex-direction: column; gap: 5px;">
+						
+						
+						<li><span>Cliente (Alias)</span> <span><input type="text" class="new-search input-empresa inputCustom" style="max-width: none; width: 100%;"  data-id="<!--#4DVAR vid_empresa-->" value="<!--#4DVAR valias-->" placeholder="Buscar por alias,  <!--#4DTEXT documentoIde -->, razón social..." /></span><button class="btn-edit-custom btn-editar-empresa"><i class="fas fa-pencil"></i></button><button class="btn-edit-custom btn-profile"><i class="fas fa-cog"></i></button></li>
+						
+				        <!--#4DIF mostrar_rut_cotizacion-->
+						<li><span class="country-label-rut"><!--#4DVAR documentoIde--></span> <span><input class="inputCustom" style="max-width: none; width: 100%;" readonly required type="text" name="cotizacion[empresa][rut]" value="<!--#4DVAR vrut-->"></span></li>
+						<!--#4DENDIF-->
+						<li><span>Razón social</span> <span><input class="inputCustom" style="max-width: none; width: 100%;" readonly required type="text" name="cotizacion[empresa][razon_social]" value="<!--#4DVAR vempresa-->"></span></li>
+						<li><span>Condiciones de pago</span> <span class="full-width"><input class="inputCustom" style="max-width: none; width: 100%;" required readonly type="search" name="cotizacion[condiciones][forma_pago]" data-id="<!--#4DVAR vIdFormaPago-->" value="<!--#4DVAR vFormaPago-->" placeholder="Seleccionar..."></span><button class="show forma-pago">Ver formas de pago</button></li>
+					</ul>
+					<ul class="editable expandable" style="display: inline-flex; flex-direction: column; gap: 5px;">
+						
+						<li><span>Para</span> <span><input class="new-search input-contact inputCustom" style="max-width: none; width: 100%;" required data-help="Acá ingresas a quien enviarás la cotización, por ejemplo: &laquo;JUAN PÉREZ&raquo;" id="contacto" type="text" data-id="<!--#4DVAR vid_contacto-->" value="<!--#4DVAR vnombrecontacto-->" placeholder="Buscar por Alias, Nombre o Apellidos..."></span><button class="btn-edit-custom btn-editar-contacto"><i class="fas fa-pencil"></i></button><button class="btn-edit-custom btn-profile-contact"><i class="fas fa-cog"></i></button></li>
+						
+						
+						<li><span>Cargo</span> <span><input class="inputCustom" style="max-width: none; width: 100%;" readonly type="text" name="cotizacion[empresa][contacto][cargo]" value="<!--#4DVAR vcargocontacto-->"></span></li>
+						<li><span>E-mail</span> <span><input class="inputCustom" style="max-width: none; width: 100%;" readonly type="email" name="cotizacion[empresa][contacto][email]" value="<!--#4DVAR vemailcontacto-->"></span></li>
+					</ul>
+				</article>
+
+				<article class="exclude-from-template" style="<!--#4DIF Not(v3_cot_cliente_como_agencia)-->display: none !important;<!--#4DENDIF-->">
+					<h1>Cliente</h1>
+					<button class="expand active"></button>
+					<h2><strong name="cotizacion[empresa2][id]"><!--#4DVAR valias2--></strong> <span name="cotizacion[empresa2][razon_social]"><!--#4DVAR vempresa2--></span> <span name="cotizacion[empresa2][contacto][id]"><!--#4DVAR vnombrecontacto2--></span></h2>
+					<ul class="editable expandable">
+						<li><span>Cliente (Alias)</span> <span><input data-help="Acá buscas o creas al cliente, por ejemplo: &laquo;UNA SISTEMAS&raquo;" required id="empresa2" type="search" name="cotizacion[empresa2][id]" data-id="<!--#4DVAR vid_empresa2-->" value="<!--#4DVAR valias2-->" placeholder="Buscar por alias,  <!--#4DTEXT documentoIde -->, razón social..."></span><button class="unlock empresa2">Modificar datos de cliente</button><button class="profile empresa2">Perfil</button></li>
+						<!--<!- -#4DIF mostrar_rut_cotizacion- ->
+						<li><span>Rut</span> <span><input readonly required type="text" name="cotizacion[empresa2][rut]" value="<!- -#4DVAR vrut2- ->"></span><button class="edit save rut">Guardar cambios a datos de cliente</button><button class="edit discard rut">Descartar cambios a datos de cliente</button></li>
+						<!- -#4DENDIF- ->
+				-->
+						<li><span>Razón social</span> <span><input readonly required type="text" name="cotizacion[empresa2][razon_social]" value="<!--#4DVAR vempresa2-->"></span><button class="edit save empresa2">Guardar cambios a datos de cliente</button><button class="edit discard empresa2">Descartar cambios a datos de cliente</button></li>
+						<li><span>Condiciones de pago</span> <span class="full-width"><input required readonly type="search" name="cotizacion[condiciones2][forma_pago]" data-id="<!--#4DVAR vIdFormaPago2-->" value="<!--#4DVAR vFormaPago2-->" placeholder="Seleccionar..."></span><button class="show forma-pago2">Ver formas de pago</button></li>
+					</ul>
+					<ul class="editable expandable">
+						<li><span>Para</span> <span><input required data-help="Acá ingresas a quien enviarás la cotización, por ejemplo: &laquo;JUAN PÉREZ&raquo;" id="contacto" type="search" name="cotizacion[empresa2][contacto][id]" data-id="<!--#4DVAR vid_contacto2-->" value="<!--#4DVAR vnombrecontacto2-->" placeholder="Buscar por Alias, Nombre o Apellidos..."></span><button class="show contacto2">Ver todos los contactos</button><button class="unlock contacto2">Modificar datos de contacto</button><button class="profile contacto2">Perfil</button></li>
+						<li><span>Cargo</span> <span><input readonly type="text" name="cotizacion[empresa][contacto2][cargo]" value="<!--#4DVAR vcargocontacto2-->"></span></li>
+						<li><span>E-mail</span> <span><input readonly type="email" name="cotizacion[empresa][contacto2][email]" value="<!--#4DVAR vemailcontacto2-->"></span><button class="edit save contacto2">Guardar cambios a datos de contacto</button><button class="edit discard contacto">Descartar cambios a datos de contacto</button></li>
+					</ul>
+				</article>
+				<article class="general-data-touch-peru">
+					<h1>Información personalizada</h1>
+				</article>
+				<article class="block-check-list">
+					<h1>Check List</h1>
+					<h2><strong>Estado</strong> <span></span></h2>
+					<button class="expand active"></button>
+					<ul class="editable expandable checklist"></ul>
+					<ul class="editable expandable checklist"></ul>
+				</article>
+				<article class="block-utilidades-gastos">
+					<h1>Utilidades y gastos</h1>
+					<h2>
+						<strong>
+							Total Neto
+							<span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol-->
+								<span data-name="indicador-total-neto-value"></span>
+							</span>
+						</strong>
+						<span class="switchable">
+							Utilidad P.
+							<span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol-->
+								<span data-name="presupuestado-utilidad-value"></span>
+							</span>
+							<span class="numeric percent">
+								<span data-name="presupuestado-utilidad-ratio"></span>
+							%</span>
+						</span>
+						<span class="switchable">
+							Util. Final
+							<span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol-->
+								<span data-name="real-utilidad-value"></span>
+							</span>
+							<span class="numeric percent">
+								<span data-name="real-utilidad-ratio"></span>
+							%</span>
+						</span>
+						<span class="switchable">
+							Por Gastar
+							<span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol-->
+								<span data-name="indicador-diferencia-costos-value"></span>
+							</span>
+							<!--
+							<span class="numeric percent">
+								<span data-name="indicador-diferencia-costos-ratio"></span>
+							%</span>
+							-->
+						</span>
+						<span class="switchable">
+							Utilidad Esperada
+							<span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol-->
+								<span data-name="indicador-utilidad-esperada-value"></span>
+							</span>
+						</span>
+						<span class="switchable">
+							Eficiencia
+							<span class="numeric percent">
+								<span data-name="indicador-eficiencia-ratio"></span>
+							%</span>
+						</span>
+
+					</h2>
+					<section class="third-width" style="display: inline-block;">
+						<ul class="summary">
+							<div class="container mr-10">
+
+								<canvas id="presupuestado-chart" width="500" height="300"></canvas>
+
+							</div>
+						</ul>
+					</section>
+					<section class="third-width" style="display: inline-block;">
+						<ul class="summary">
+							<div class="container mr-10">
+
+								<canvas id="utilidad-chart" width="500" height="300"></canvas>
+
+
+							</div>
+							
+						</ul>
+					</section>
+					<section class="third-width" style="display: inline-block; ">
+						<ul class="summary">
+							<div class="container mr-10">
+								<canvas id="gasto-chart" width="500" height="300" style="max-width:550px; max-height:350px"></canvas>
+								
+							</div>
+						</ul>
+					</section>
+				</article>
+				<article class="block-resumenes">
+					<h1>Resúmenes</h1>
+					<section class="third-width">
+						<h1>Gastos reales</h1>
+						<ul class="summary" style="width: calc(359px * 2);">
+							<li style="display: inline-block !important;"><span class="costo numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="gasto-real-directo-value"></span></span> <span>Gastos directos</span> <span class="costo numeric percent"></span></li>
+							<li style="display: inline-block !important;"><span class="costo numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="gasto-real-interno-value"></span></span> <span>Gastos internos (OT)</span> <!-- <span class="costo numeric percent"></span> --> <label style="position: relative; left: 0px; font-size: small;"><input type="checkbox" name="negocio[gasto_real_interno_enabled]"> ¿Considerado?</label></li>
+							<!-- <li><span class="costo numeric currency">$ <span data-name="gasto-real-interno-value"></span></span> <span>Gastos internos (OT)</span> <label style="position: relative; left: 0px; font-size: small;"><input type="checkbox" name="negocio[gasto_real_interno_enabled]"> ¿Considerado?</label></li> -->
+							<li><span class="costo numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="gasto-real-otros-value"></span></span> <span>Otros gastos</span> <span class="costo numeric percent"></span></li>
+							<li><span class="costo numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="gasto-real-sobrecargos-value"></span></span> <span>Sobrecargos</span> <span class="costo numeric percent"></span></li>
+							<li><span class="total numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="gasto-real-total-value"></span></span> <span>Total</span> <span class="total numeric percent"></span></li>
+						</ul>
+						<!--
+						<h1>Gasto interno</h1>
+						<ul class="summary">
+							<li><span class="costo numeric currency">$ <span data-name="gasto-real-interno-value"></span></span> <span>Gastos internos (OT)</span> <label style="position: relative; left: 0px; font-size: small;"><input type="checkbox" name="negocio[gasto_real_interno_enabled]"> ¿Considerado?</label></li>
+						</ul> -->
+					</section>
+					<section style="display:none" class="third-width">
+						<h1>Justificación de gastos</h1>
+						<ul class="summary">
+							<li><span class="costo numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="justificacion-pending-value"></span></span> <span>Por justificar</span> <span class="costo numeric percent"></span></li>
+							<li><span class="costo numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="justificacion-done-value"></span></span> <span>Justificado</span> <span class="costo numeric percent"></span></li>
+						</ul>
+					</section>
+					<section style="display:none" class="third-width">
+						<h1>Cobros</h1>
+						<ul class="summary">
+							<li><span class="movimiento numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="cobro-pending-value"></span></span> <span>Por cobrar</span> <span class="movimiento numeric percent"></span></li>
+							<li><span class="movimiento numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="cobro-done-value"></span></span> <span>Cobrado</span> <span class="movimiento numeric percent"></span></li>
+						</ul>
+					</section>
+					<section style="display:none" class="third-width">
+						<h1>Pagos</h1>
+						<ul class="summary">
+							<li><span class="movimiento numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="pago-pending-value"></span></span> <span>Por pagar</span> <span class="movimiento numeric percent"></span></li>
+							<li><span class="movimiento numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="pago-done-value"></span></span> <span>Pagado</span> <span class="movimiento numeric percent"></span></li>
+						</ul>
+					</section>
+					<section style="display:none" class="third-width">
+						<h1>Impuestos</h1>
+						<ul class="summary">
+							<li><span class="movimiento numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="impuesto-iva-value"></span></span> <span><!--#4DVAR <>_V3_IVAName--></span> <span class="movimiento numeric percent"></span></li>
+							<li><span class="movimiento numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="impuesto-retenciones-value"></span></span> <span>Retenciones</span> <span class="movimiento numeric percent"></span></li>
+						</ul>
+					</section>
+				</article>
+				<article>
+					<h1>Información adicional</h1>
+					<section>
+						<ul>
+							<li id="tipo_cambio_print">
+ 
+								<div style="margin-right:30px;">
+									<button style="margin-bottom: 5px; padding: initial;width: 100px;" type="button" class="btn btn-success general_params general" id="general_params" title="Conf. de monedas">
+										<img class="sup_icon" src="/v3/design/icons/Exchange.png" alt="exchange" width="30px" height="30px">
+										<span style="margin-right:13px ;">Moneda</span>
+									</button>
+								</div>
+	
+							</li>
+							<li><span>Fecha de asignación</span> <span class="full-width"><input type="text" class="inputCustom" name="cotizacion[condiciones][fecha_proyecto_datepicker]" value="<!--#4DVAR Substring(String(vFechaProyecto);1;10)-->"><input type="hidden" name="cotizacion[condiciones][fecha_proyecto]" value="<!--#4DVAR Substring(String(vFechaProyecto;ISO Date);1;10)-->"></span></li>
+							<script>
+							$(document).ready(function() {
+
+								// access._577 = modificar fecha de asignación y realización en estado negocio
+								// siempre y cuando no este cerrado para ventas y cerrado final
+								if (access._577 ) {
+									$('input[name="cotizacion[condiciones][fecha_proyecto_datepicker]"]').datepicker({
+										dateFormat: 'dd-mm-yy',
+										altField: 'input[name="cotizacion[condiciones][fecha_proyecto]',
+										altFormat: 'yy-mm-dd'
+									});
+								} else {
+									$('[name="cotizacion[condiciones][fecha_proyecto]"]').prop('disabled', true);
+									$('[name="cotizacion[condiciones][fecha_proyecto_datepicker]"]').prop('readonly', true);
+								}
+
+
+							});
+							</script>
+							
+						
+
+							<li><span>Fecha de realización</span> <span class="full-width"><input type="text" class="inputCustom" name="cotizacion[condiciones][fecha_entrega_datepicker]" value="<!--#4DVAR Substring(String(vFechaVencimiento);1;10)-->"><input type="hidden" name="cotizacion[condiciones][fecha_entrega]" value="<!--#4DVAR Substring(String(vFechaVencimiento;ISO Date);1;10)-->"></span></li>
+
+							<script>
+							$(document).ready(function() {
+
+								// modificar fecha de asignación y realización en estado negocio
+								if (access._577 ) {
+									$('input[name="cotizacion[condiciones][fecha_entrega_datepicker]"]').datepicker({
+										dateFormat: 'dd-mm-yy',
+										altField: 'input[name="cotizacion[condiciones][fecha_entrega]',
+										altFormat: 'yy-mm-dd'
+									});
+								} else {
+									$('[name="cotizacion[condiciones][fecha_entrega]"]').prop('disabled', true);
+									$('[name="cotizacion[condiciones][fecha_entrega_datepicker]"]').prop('readonly', true);
+								}
+
+								/*$('input[name="cotizacion[condiciones][fecha_entrega_datepicker]"]').bind( "change", function(event) {
+								  console.log(event);
+								});*/
+
+							});
+							</script>
+
+							<!-- ini agregado para ingreso de fecha facturacion y poder filtrar reportes de vebtas de acuerdo a la fecha, gin, 16-08-18, caso: modo --> 
+							<li><span>Fecha de facturación</span> <span class="full-width"><input readonly type="text" class="inputCustom" name="cotizacion[condiciones][fecha_facturacion_datepicker]" value="<!--#4DVAR Substring(String(vFechaFacturacion);1;10)-->"><input type="hidden" name="cotizacion[condiciones][fecha_facturacion]" value="<!--#4DVAR Substring(String(vFechaFacturacion;ISO Date);1;10)-->" readonly></span></li>
+							<script>
+								/*if (access._577 && !negocioCerradoFinal) {
+									$('input[name="cotizacion[condiciones][fecha_facturacion_datepicker]"]').datepicker({
+										dateFormat: 'dd-mm-yy',
+										altField: 'input[name="cotizacion[condiciones][fecha_facturacion]',
+										altFormat: 'yy-mm-dd'
+									});
+								} else {
+									$('[name="cotizacion[condiciones][fecha_facturacion]"]').prop('disabled', true);
+									$('[name="cotizacion[condiciones][fecha_facturacion_datepicker]"]').prop('readonly', true);
+								}*/
+							</script>
+							 <!-- fin agregado para ingreso de fecha facturacion y poder filtrar reportes de vebtas de acuerdo a la fecha, gin, 16-08-18, caso: modo -->
+
+							<li><span>Fecha estimada de cierre</span> <span class="full-width"><input type="text" class="inputCustom" name="cotizacion[condiciones][fecha_de_cierre_datepicker]" value="<!--#4DVAR Substring(String(vFechaEstimadaDeCierre);1;10)-->"><input type="hidden" name="cotizacion[condiciones][fecha_cierre]" value="<!--#4DVAR Substring(String(vFechaEstimadaDeCierre;ISO Date);1;10)-->"></span></li>
+							
+							<!--#4DIF ver_fecha_estimada_facturacion -->
+								<li><span>Fecha estimada facturacion</span> <span class="full-width"><input type="text" name="cotizacion[condiciones][fecha_de_facturacion_datepicker]" value="<!--#4DVAR Substring(String(vFechaEstimadaDeFacturacion);1;10)-->"><input type="hidden" name="cotizacion[condiciones][fecha_estimada_facturacion]" value="<!--#4DVAR Substring(String(vFechaEstimadaDeFacturacion;ISO Date);1;10)-->"></span></li>
+							<!--#4DENDIF-->
+
+							<script>
+							$(document).ready(function() {
+
+								// modificar fecha de asignación y realización en estado negocio
+								// if (access._577) {
+									$('input[name="cotizacion[condiciones][fecha_de_cierre_datepicker]"]').datepicker({
+										dateFormat: 'dd-mm-yy',
+										altField: 'input[name="cotizacion[condiciones][fecha_cierre]',
+										altFormat: 'yy-mm-dd'
+									});
+
+									$('input[name="cotizacion[condiciones][fecha_de_facturacion_datepicker]"]').datepicker({
+										dateFormat: 'dd-mm-yy',
+										altField: 'input[name="cotizacion[condiciones][fecha_estimada_facturacion]',
+										altFormat: 'yy-mm-dd'
+									});
+								/*} else {
+									$('[name="cotizacion[condiciones][fecha_entrega]"]').prop('disabled', true);
+									$('[name="cotizacion[condiciones][fecha_entrega_datepicker]"]').prop('readonly', true);
+								}*/
+
+							});
+							</script>
+
+
+							<li><span>Observaciones</span> <span class="full-width"><textarea name="cotizacion[condiciones][notas]"><!--#4DVAR vNotas--></textarea></span></li>
+							<li><span>No incluye</span> <span class="full-width"><textarea name="cotizacion[condiciones][no_incluye]"><!--#4DVAR vNoIncluye--></textarea></span></li>
+						</ul>
+
+
+					</section>
+				</article>
+				<article class="automatic_clone" style="background-color: #f2f2f3;">
+					<h1>Duplicación automática</h1>
+					
+
+					<section style="margin-block: 30px;" class="sectionForm">
+						<ul class="containerForm">
+						  <li>
+							<div>Activar Duplicación</div>
+							<div class="">
+							  <input class="autoclone checkboxCustom" id="estado" type="checkbox" <!--#4DIF [proyectos_logs_autoclone]estado--> checked<!--#4DENDIF-->>
+							</div>
+						  </li>
+						 <li><div>Fecha de inicio</div>
+							<div class="short">
+								<input class="autoclone inputCustom" style="width: 200px;" id="fecha" type="date"  value="">
+							</div>
+						 </li>
+						<li>
+							<div>Próxima fecha de clonación</div>
+							<div class="short">
+								<input class="autoclone inputCustom" style="width: 200px;"  readonly id="fecha-proxima" type="text"  value="<!--#4DVAR [proyectos_logs_autoclone]proxima_fecha-->">
+							</div>
+						</li>
+						<li><div>Duración (N° Meses)</div>
+							<div>
+								<input class="autoclone inputCustom" style="width: 200px;" id="duracion" type="number" title="" autocomplete="off"  value="<!--#4DVAR [proyectos_logs_autoclone]duracion_meses-->">
+							</div>
+						</li>
+						<li><div>N° duplicaciones restantes</div>
+							<div>
+								<input class="inputCustom" id="repetirdor" type="number" readonly title="" autocomplete="off"  value="<!--#4DVAR [proyectos_logs_autoclone]repetidor-->">
+							</div>
+						</li>
+						<li><div>Referencia</div>
+							<div class="short">
+								<input class="autoclone  inputCustom" style="width: 200px;" id="referencia" type="text"  value="<!--#4DVAR [proyectos_logs_autoclone]referencia-->">
+							</div>
+						</li>
+						<li><div>Desactivar herencia. **</div>
+							<div >
+								<input class="autoclone checkboxCustom" id="herencia" type="checkbox"  <!--#4DIF [proyectos_logs_autoclone]no_heredable--> checked<!--#4DENDIF-->>
+							</div>
+						</li>
+						</ul>
+
+					
+					
+					</section>
+					<ul>
+						<li><span>**  La duplicacion es siempre desde este negocio. <small></small></span></li>
+						<li><span>*** Duplicacion heredada. <small>La duplicacion automatica de este negocio fue heredada.</small></span></li>
+						
+						
+					</ul>
+				</article>
+			</footer>
+		</section>
+
+		<script type="text/javascript" src="/v3/views/negocios/script/library/general.js"></script>
+		<script type="text/javascript" src="/v3/views/negocios/script/startup/general.js"></script>
+
+		<script type="text/javascript" src="/v3/script/customAutocomplete.js" defer></script>
+
+		<script>
+
+			$(document).ready(function() {
+
+									
+				$('section.sheet').on('click', 'button.general_params.general', function(event) {
+
+					unaBase.loadInto.dialog('/v3/views/cotizaciones/dialog/general_params.shtml?id=' + $('section.sheet').data('id') , 'Monedas', 'xm2-small');
+
+				});
+
+			});
+
+			//PARA EVENTOS DE LA PESTAÑA GENERAL
+				$('section.sheet  footer   article.automatic_clone  input.autoclone').on('change', function(event) {
+					
+					let target = event.currentTarget;
+					let url = `/4DACTION/_light_set_project_autoclone?idnv=${ $('section.sheet').data('id')}`
+					let valor=target.value;
+					let id = target.attributes.id.value;
+					
+					if(id=='fecha')
+					valor =target.value.split('-').reverse().join('-');
+
+					if(target.attributes.type.value == 'checkbox')
+					valor = target.checked
+
+					let data={};
+					data[id] =valor;
+
+
+					$.ajax({
+						url: url,
+						dataType: 'json',
+						async: false,
+						cache: false,
+						data,
+						success: function (data) {
+							console.log('**********autoclone item saved*********')
+
+							
+							$('article.automatic_clone input#repetirdor').val(data.restantes)
+
+							
+							//let next_date= data.nextDate.split('-').reverse().join('-');
+							$('article.automatic_clone input#fecha-proxima').val(data.nextDate)
+
+
+
+
+							toastr.success("Cambio guardado!");
+
+						},
+						error: function (error) {
+							
+							console.log(error);
+						}
+					});
+					
+				});
+			
+			let fecha_clone ='<!--#4DVAR [proyectos_logs_autoclone]fecha_clonacion-->';
+
+		fecha_clone =fecha_clone.split('-').reverse().join('-');
+		$('article.automatic_clone input#fecha').val(fecha_clone)
+		</script>
+
+
+		<!-- IA modal -->
+		<style>
+			#modalAi .modal-dialog {
+				width: 80vw;
+				max-width: 80vw;
+			}
+
+			#modalAi .modal-content {
+				height: 80vh;
+				border-radius: 18px;
+				overflow: hidden;
+			}
+
+			#modalAi .modal-body {
+				height: calc(80vh - 56px);
+			}
+
+			/* 56px aprox header */
+
+			html.ai-no-scroll,
+			body.ai-no-scroll {
+				overflow: hidden !important;
+			}
+
+			.ai-overlay {
+				position: fixed;
+				inset: 0;
+				display: none;
+				align-items: center;
+				justify-content: center;
+				background: rgba(0, 0, 0, .55);
+				z-index: 99999;
+			}
+
+			.ai-overlay.is-open {
+				display: flex;
+			}
+
+			.ai-modal {
+				width: 80vw;
+				height: 80vh;
+				background: #0b1226;
+				border: 1px solid rgba(255, 255, 255, .10);
+				border-radius: 18px;
+				overflow: hidden;
+				box-shadow: 0 25px 80px rgba(0, 0, 0, .55);
+				display: flex;
+				flex-direction: column;
+			}
+
+			.ai-head {
+				height: 54px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0 14px;
+				border-bottom: 1px solid rgba(255, 255, 255, .10);
+				color: rgba(255, 255, 255, .92);
+				background: rgba(255, 255, 255, .02);
+			}
+
+			.ai-title {
+				font-weight: 800;
+			}
+
+			.ai-close {
+				border: 0;
+				background: transparent;
+				color: rgba(255, 255, 255, .85);
+				font-size: 18px;
+				cursor: pointer;
+				width: 38px;
+				height: 38px;
+				border-radius: 999px;
+			}
+
+			.ai-close:hover {
+				background: rgba(255, 255, 255, .06);
+			}
+
+			.ai-body {
+				flex: 1;
+			}
+		</style>
+		<script>
+			function buildAiUrl() {
+				const $sheet = $("section.sheet.u-doc-data").first();
+				const id_neg = $sheet.data("id");
+				const folio = $sheet.data("folio");
+
+				if (!id_neg) {
+					console.warn("No hay cotización seleccionada (checkbox checked sin data-id).");
+					return null;
+				}
+
+				const url = new URL(`${nodeUrl}/analysis-ai/`);
+				url.searchParams.set("download", "true");
+				url.searchParams.set("entity", "cotizaciones");
+				url.searchParams.set("id", String(id_neg));
+				url.searchParams.set("folio", String(folio || ""));
+				url.searchParams.set("sid", unaBase.sid.encoded());
+				url.searchParams.set("preview", "false");
+				url.searchParams.set("nullified", String($("section.sheet").data("readonly") || false));
+				url.searchParams.set("hostname", window.location.origin);
+				url.searchParams.set("presupuestos", "false");
+
+				return url.toString();
+				}
+
+				function openAiDialog() {
+					const url = buildAiUrl();
+					if (!url) return;
+
+					const u = new URL(url);
+					u.searchParams.set("chatSession", String(Date.now()));
+
+					$("#aiIframe").attr("src", u.toString());
+					$("#aiOverlay").addClass("is-open").attr("aria-hidden", "false");
+					$("html, body").addClass("ai-no-scroll");
+				}
+
+				function closeAiDialog() {
+				$("#aiOverlay").removeClass("is-open").attr("aria-hidden", "true");
+				$("html, body").removeClass("ai-no-scroll");
+				$("#aiIframe").attr("src", "about:blank");
+			}
+
+			$(document).ready(function () {
+				$("#btn-ai-eerr").on("click", openAiDialog);
+				$("#aiClose").on("click", closeAiDialog);
+
+				$("#aiOverlay").on("click", function (e) {
+					if (e.target === this) closeAiDialog();
+				});
+
+				$(document).on("keydown", function (e) {
+					if (e.key === "Escape") closeAiDialog();
+				});
+			});
+		</script>
+
+		<div id="aiOverlay" class="ai-overlay" aria-hidden="true">
+			<div class="ai-modal" role="dialog" aria-modal="true" aria-labelledby="aiTitle">
+				<div class="ai-head">
+					<div id="aiTitle" class="ai-title">Asistente IA</div>
+					<button type="button" class="ai-close" id="aiClose" aria-label="Cerrar">✕</button>
+				</div>
+
+				<div class="ai-body">
+					<iframe id="aiIframe" src="about:blank" style="width:100%; height:100%; border:0;"></iframe>
+				</div>
+			</div>
+		</div>
+
+</body>
+
+
+</html>

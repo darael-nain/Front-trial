@@ -1,0 +1,10 @@
+{
+	"rows": [
+<!--#4DLOOP aIndexNoti-->
+		{
+			"id_not": <!--#4DHTML aIdNotUserNoti{aIndexNoti}-->,
+			"login": "<!--#4DHTML aLoginUserNoti{aIndexNoti}-->"		
+		}<!--#4DIF NOT(aIndexNoti{aIndexNoti} = aIndexNoti{Size of array(aIndexNoti)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

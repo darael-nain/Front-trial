@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--<!- -#4DSCRIPT/_V3_proxy_getCotizacionContent- ->-->
+		<title>Versiones</title>
+		<meta charset="utf-8">
+		<script>
+			$(document).ready(function() {
+
+				unaBase.toolbox.init();
+
+				var showVersiones = function(hidden) {
+					$('.ui-dialog table tbody').find('*').remove();
+					$.ajax({
+						url: '/4DACTION/_V3_getVersionByCotizacion',
+						data: {
+							id: $('section.sheet').data('id'),
+							hidden: hidden
+						},
+						dataType: 'json',
+						success: function(data) {
+							var htmlObject;
+							$.each(data.rows, function(key, item) {
+								if(!item.diferencia || access._650){
+									htmlObject = $('<tr data-id="' + item.id + '" data-username="' + item.username + '"' + ((item.current)? ' class="ui-selected"': '') + '>' +
+										'<td>' + item.id + '</td>' +
+										'<td>' + ((item.updated_at !== undefined)? '<time datetime="' + new Date(item.updated_at).toISOString() + '">' + $.datepicker.formatDate('dd-mm-yy', new Date(item.updated_at)) + ' <span>' + new Date(item.updated_at).toTimeString().match( /^([0-9]{2}:[0-9]{2}:[0-9]{2})/ )[0].substring(0, 5) +  '</span></time>' : 'N/A' ) + '</td>' +
+										'<td>' + item.username + '</td>' +
+										'<td>' + item.text + '</td>' +
+										'<td class="currency">' + item.total_neto + '</td>' +
+										'<td class="options">' +
+										'<button class="rollback" ' + (!access._556? ' style="display: none;"' : '') + '></button>' +
+										'<button class="preview"></button>' +
+										'<button class="fork" style="display: none;"></button>' +
+										'</td>' +
+									'</tr>');
+
+									var setVersion = function(item) {
+										$.ajax({
+											url: '/4DACTION/_V3_setVersionByCotizacion',
+											data: {
+												id: $('section.sheet').data('id'),
+												index: item.id
+											},
+											dataType: 'json',
+											success: function(data) {
+												$(element).parentTo('.ui-dialog-content').dialog('close');
+												var modulo = $('html > body.menu.home > aside > div > div > ul > li.active').data('name').toUpperCase();
+												switch(modulo) {
+													case 'COTIZACIONES':
+														toastr.success('La versión de <!--#4DTEXT etiqueta_cotizacion--> ha sido revertida con éxito.');
+														unblockCot();
+														unaBase.loadInto.viewport('/v3/views/cotizaciones/content.shtml?id=' + $('section.sheet').data('id'), 'Cotización');
+														break;
+													case 'NEGOCIOS':
+														toastr.success('La versión del negocio ha sido revertida con éxito.');
+														unblockCot();
+														unaBase.loadInto.viewport('/v3/views/negocios/content.shtml?id=' + $('section.sheet').data('id'), 'Negocio');
+														break;
+												}
+
+											}
+										});
+									};
+
+									if (access._556) {
+										htmlObject.find('button.rollback').button({
+											caption: 'Revertir',
+											icons: {
+												primary: 'ui-icon-arrowreturnthick-1-w'
+											},
+											text: false
+										}).click(function() {
+											element = this;
+
+											// Verificar si la versión tiene montos válidos
+											var isValid = false;
+											$.ajax({
+												url: '/4DACTION/_V3_checkVersionPdf',
+												data: {
+													id: item.id
+												},
+												dataType: 'json',
+												async: false,
+												success: function(data) {
+													isValid = data.valid;
+												}
+											});
+
+											// Verificar si tiene gastos en los ítems
+											var hasGastos = false;
+											$('table.items tbody').find('tr').each(function(key, item) {
+												if ($(item).find('button.remove.item').css('visibility') == 'hidden') {
+													hasGastos = true;
+													return false;
+												}
+											});
+											if (isValid) {
+												if (hasGastos) {
+													confirm('Existen gastos asociados.<br><br>¿Está realmente seguro que desea cambiar a la versión ' + item.id + '?').done(function(data) {
+														if (data)
+															setVersion(item);
+													});
+												} else {
+													confirm('¿Confirma que desea cambiar a la versión ' + item.id + '?<br><br>Luego podrá volver a la versión actual si lo desea.').done(function(data) {
+														if (data)
+															setVersion(item);
+													});
+												}
+											} else {
+
+												confirm('Es posible que la versión tenga algunas diferencias en los montos. Sugerimos revisarla antes de enviar al cliente.<br><br>¿Confirma que desea cambiar a la versión ' + item.id + '?<br><br>Luego podrá volver a la versión actual si lo desea.').done(function(data) {
+													if (data)
+														setVersion(item);
+												});
+
+												// toastr.error('No es posible cambiar a la versión ' + item.id +', debido a que presenta error en los montos. Por favor contactar a Soporte Unabase.');
+											}
+
+										});
+									}
+									htmlObject.find('button.preview').button({
+										caption: 'Vista previa',
+										icons: {
+											primary: 'ui-icon-print'
+										},
+										text: false
+									}).click(function() {
+										var sid = '';
+										$.each($.cookie(),function(clave,valor) { if (clave == hash && valor.match(/UNABASE/g)) sid = valor; });
+										var url = nodeUrl + '/print-version/?entity=cotizaciones&id=' + $(event.target).closest('tr').data('id') + '&id_cotizacion=' + $('#main-container').data('id') + '&folio=' + ((typeof $('#main-container').data('index') != 'undefined')? $('#main-container').data('index') : 'S/N') + '&sid=' + encodeURIComponent(sid) + '&preview=true&nullified=false&hostname=' + window.location.origin;
+										unaBase.loadInto.dialog(url, 'Vista previa de versión', 'large', true);
+									});
+									htmlObject.find('button.fork').button({
+										caption: 'Crear <!--#4DTEXT etiqueta_cotizacion--> a partir de esta versión',
+										icons: {
+											primary: 'ui-icon-copy'
+										},
+										text: false
+									}).click(function() {
+										// hacer el fork
+									});
+									$('.ui-dialog table > tbody').append(htmlObject);
+
+								}
+							});
+
+							formatCurrency();
+						}
+					});
+				}
+				showVersiones();
+
+				$('input[name="hidden"]').change(function(event) {
+					var is_checked = $(event.target).is(':checked');
+					showVersiones(is_checked);
+				});
+
+			});
+		</script>
+	</head>
+	<body>
+		<label><input type="checkbox" name="hidden" value="true"> Mostrar versiones de guardado</label>
+		<table>
+			<thead>
+				<tr>
+					<th>Versión</th>
+					<th>Fecha</th>
+					<th>Usuario</th>
+					<th>Referencia</th>
+					<th>Total neto</th>
+					<th>Acción</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</body>
+</html>

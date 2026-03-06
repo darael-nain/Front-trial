@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <!--#4DSCRIPT/_V3_proxy_getNominaListContent-->
+		<title>Nóminas anteriores</title>
+		<meta charset="utf-8">
+
+		<script>
+
+			$(document).ready(function() {
+				$('.nullify').click(function(){
+					var target = $(this).closest('tr');
+					
+					var html = '';
+					html += '<div>';
+					html += '<input style="border:1px solid red!important;color:blue;" type="checkbox" name="anular_ops" /><span style="margin-left:5px;" class="text_anular_ops">Anular los pagos asociados?</span></div>';
+					html += '</div>';
+
+					confirm("<label style='font-weight:bold;font-size:50px;'>¿Estás seguro(a) de eliminar la nomina? </label><br/><br/>" + html).done(function(data) {
+						if (data) {
+							unaBase.ui.block();
+
+							var anularop = false;
+
+							if ($('input[name="anular_ops"]').prop('checked')) {
+								anularop =  true;
+							}
+
+							$.ajax({
+								url: '/4DACTION/_V3_setAnularNomina',
+								data: {
+									id: target.data('id'),
+									filename : target.data('filename'),
+									anularop : anularop
+								},
+								dataType: 'json',
+								async: false,
+								success: function(data) {
+									unaBase.ui.unblock();
+									if (data.success) {
+										toastr.success("Anulación realizada con éxito!");
+										target.remove();
+									}else{
+										toastr.error("No fue posible anular. Intente nuevamente.");
+									}
+								},
+								error: function(xhr, text, error) {
+									unaBase.ui.unblock();
+									toastr.error("Error interno. Intente nuevamente o comuníquese con soporte.");
+								}
+							});
+						}
+					});
+				});
+			});
+		</script>
+
+	</head>
+	<body>
+		<table>
+			<thead>
+				<tr>
+					<th>Nombre</th>
+					<th>Fecha</th>
+					<th>Hora</th>
+					<th>Acción</th>
+				</tr>
+			</thead>
+			<tbody>
+                <!--#4DLOOP [nomina_egresos]-->
+                <tr data-id="<!--#4DTEXT [nomina_egresos]id-->" data-filename="<!--#4DTEXT [nomina_egresos]filename-->">
+                    <td><!--#4DTEXT [nomina_egresos]filename--></td>
+                    <td><!--#4DTEXT [nomina_egresos]fecha--></td>
+                    <td><!--#4DTEXT [nomina_egresos]hora--></td>
+                    <td>
+						<button title="Descargar en excel" onclick="var download = window.open(nodeUrl+'/export-nomina-excel/?filename=<!--#4DTEXT [nomina_egresos]filename-->&nominaType=<!--#4DTEXT [nomina_egresos]type-->&sid=' +
+							unaBase.sid.encoded() +
+							'&hostname=' +
+							window.location.origin); download.blur(); window.focus();" style="height: 20px;" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title=""><span class="ui-button-icon-primary ui-icon  ui-icon-calculator"></span><span class="ui-button-text"></span></button>
+
+                        <button title="Descargar en formato .txt" onclick="var download = window.open('/4DACTION/_V3_exportNomina?filename=<!--#4DTEXT [nomina_egresos]filename-->&nominaType=<!--#4DTEXT [nomina_egresos]type-->'); download.blur(); window.focus();" style="height: 20px;" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title=""><span class="ui-button-icon-primary ui-icon ui-icon-circle-arrow-s"></span><span class="ui-button-text"></span></button>
+
+						<button title="Descargar nomina en formato pdf" onclick="var sid = '';$.each($.cookie(),function(clave,valor) { if (valor.match(/UNABASE/g)) sid+= (valor + ' '); });var url = nodeUrl + '/print-nomina/?filename=<!--#4DTEXT [nomina_egresos]filename-->&sid=' + encodeURIComponent(sid) + '&hostname=' + window.location.origin;window.open(url,'_blank');" style="height: 20px;" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only" role="button" aria-disabled="false" title=""><span class="ui-button-icon-primary ui-icon ui-icon-print"></span><span class="ui-button-text"></span></button>
+
+						<button title="Anular nomina" style="height: 20px;" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only nullify" role="button" aria-disabled="false" title=""><span class="ui-button-icon-primary ui-icon ui-icon-trash"></span><span class="ui-button-text"></span></button>
+
+                    </td>
+                </tr>
+                <!--#4DENDLOOP-->
+            </tbody>
+		</table>
+	</body>
+</html>

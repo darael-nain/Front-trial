@@ -1,0 +1,36 @@
+{
+	"exchange":{
+		"value": "<!--#4DTEXT current_exchange_rate-->"
+	},
+	"rows": [
+<!--#4DLOOP aIdDtc -->
+		{
+			"id": <!--#4DTEXT aIdDtc{aIdDtc}-->,
+			"numero": "<!--#4DTEXT aNumeroDtc{aIdDtc}-->",
+			"referencia": "<!--#4DHTML _V3_escapeString(aReferenciaDtc{aIdDtc})-->",
+			"glosa_programacion": "<!--#4DHTML _V3_escapeString(aGlosaProgramacion{aIdDtc})-->",
+			"emision": "<!--#4DHTML String(aEmisionDtc{aIdDtc};7)-->",
+			"registro": "<!--#4DHTML String(aRegistroDtc{aIdDtc};7)-->",
+			"contable": "<!--#4DHTML String(aContableDtc{aIdDtc};7)-->",
+			"id_doc": "<!--#4DHTML _V3_escapeString(aIdDocDtc{aIdDtc})-->",
+			"doc": "<!--#4DHTML _V3_escapeString(aDocDtc{aIdDtc})-->",
+			"idproveedor": <!--#4DHTML aIdProveedorDtc{aIdDtc}-->,
+			"proveedor": "<!--#4DHTML _V3_escapeString(aProveedorDtc{aIdDtc})-->",
+			"rut": "<!--#4DHTML _V3_escapeString (aRutClienteDtc{aIdDtc})-->",
+			"neto": "<!--#4DHTML _V3_formatCurrency(aNetoDtc{aIdDtc})-->",
+			"impuesto": "<!--#4DHTML _V3_formatCurrency(aImpuestoDtc{aIdDtc})-->",
+			"total": "<!--#4DHTML _V3_formatCurrency(aTotalDtc{aIdDtc})-->",			
+			"abono": "<!--#4DHTML _V3_formatCurrency(aAbonoDtc{aIdDtc})-->",
+			"saldo": <!--#4DHTML String(aSaldoDtc{aIdDtc};"&xml")-->,
+			"saldoExchange": <!--#4DHTML String(aSaldoNegExchange{aIdDtc};"&xml")-->,
+			"neto_negocio": <!--#4DHTML String(aMontoDtc{aIdDtc};"&xml")-->,
+			"estado": "<!--#4DHTML aEstadoDtc{aIdDtc}-->",
+			"afecto": "<!--#4DHTML _V3_formatCurrency(aAfectoDtc{aIdDtc})-->",
+			"exento": "<!--#4DHTML _V3_formatCurrency(aExentoDtc{aIdDtc})-->",
+			"vencimiento": "<!--#4DHTML aVencimientoDtc{aIdDtc}-->",
+			"exchange_type": "<!--#4DTEXT aMonedaTrabajo{aIdDtc}-->",
+			"exchange_rate": <!--#4DHTML String(aValorCambio{aIdDtc};"&xml")-->
+		}<!--#4DIF NOT(aIdDtc{aIdDtc} = aIdDtc{Size of array(aIdDtc)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<title>SOLICITUD DE PAGO</title>
+	<meta charset="utf-8">
+	<script>
+		$(document).ready(function () {
+			var container = $('#sheet-payment');
+			var containerCompras = $('#sheet-compras');
+			unaBase.toolbox.init();
+			unaBase.toolbox.menu.init({
+				entity: 'Pagos',
+				buttons: ['sending_request'],
+				data: function () {
+					// return $('#sheet-payment').serializeAnything();            
+					return {
+						id: compras.id,
+						folio: compras.folio,
+						tipo: compras.tipoGasto
+					}
+				},
+				validate: function () {
+					return true;
+				}
+			});
+			var folio = containerCompras.data('folio');
+			var tipo = containerCompras.find('input[name="oc[tipo_gastos][des]"]').val();
+			var razon = containerCompras.find('input[name="contacto[info][razon_social]"]').val();
+			var rut = containerCompras.find('input[name="contacto[info][rut]"]').val();
+			var saldoRes = containerCompras.find('input[name="oc[total_por_pagar]"]').val();
+			var fecha = containerCompras.data('currentdate');
+
+			let dtcEntries = Array.from(document.querySelectorAll('.dtcs tbody tr'))
+				.map(row => {
+					let id = row.querySelector('td:nth-child(1)')?.textContent.trim();
+					let dtcTipo = row.querySelector('td:nth-child(4)')?.textContent.trim();
+					return id && dtcTipo ? `Folio: ${id}, Tipo: ${dtcTipo}` : null;
+				})
+				.filter(entry => entry !== null);
+
+			var descripcion = `Solicito pago de la ${tipo} - Número: ${folio} - Proveedor: ${razon} - Rut: ${rut} por el total de $${saldoRes} para el día ${fecha}. 
+			Documentos: ${dtcEntries.join('; ')}`;
+
+
+			container.find('textarea').val(descripcion);
+
+		});
+	</script>
+	<style>
+		#sheet-payment>textarea {
+			width: calc(100% - 10px);
+			height: 200px;
+			font-size: 12px !important;
+		}
+	</style>
+</head>
+
+<body>
+	<section class="sheet" id="sheet-payment">
+		<textarea></textarea>
+	</section>
+</body>
+
+</html>

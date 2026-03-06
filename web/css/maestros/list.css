@@ -1,0 +1,23 @@
+/* 
+		<!-- Simon Gomes UnaBase may/2017 --> */
+table tbody tr td:first-child,table tbody tr td:nth-child(2) {
+	text-align: left !important; 
+	padding-left: 1em !important;
+}
+th:first-child, th:nth-child(2){
+	text-align: left !important;
+	padding-left: 1em !important;
+}
+div.maintitle{
+	font-size: 20px !important;
+	padding-left: 0.2em;
+	text-transform: capitalize;
+	padding-bottom: 0.3em;
+	background-color: #e4e2e4;
+	color: black;
+
+}
+header.full-height{
+	    border-bottom: 0 !important;
+	    padding-bottom: 0 !important;
+}

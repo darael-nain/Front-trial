@@ -1,0 +1,18 @@
+{
+	"general_percent": "<!--#4DHTML vGeneralPercent-->%",
+	"modulo_percent": "<!--#4DHTML vModuloPercent-->%",
+	"rows": [
+	<!--#4DLOOP aIdAccess -->
+		{
+			"id": <!--#4DHTML aIdAccess{aIdAccess}-->,
+			"nombre": "<!--#4DHTML aNombreAccess{aIdAccess}-->",
+			"tag": "<!--#4DHTML aTagAccess{aIdAccess}-->",
+			"inbox": <!--#4DHTML aInboxAccess{aIdAccess}-->,
+			"email": <!--#4DHTML aEmailAccess{aIdAccess}-->,
+			"modulo": "<!--#4DHTML aModuloAccess{aIdAccess}-->",
+			"monto": <!--#4DVAR String(aMontoAccess{aIdAccess};"&xml")-->,
+			"has_monto": <!--#4DIF aHasMontoAccess{aIdAccess}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aIdAccess{aIdAccess} = aIdAccess{Size of array(aIdAccess)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

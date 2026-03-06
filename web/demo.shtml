@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>UNA Base</title>
+		<link rel="stylesheet" href="/v3/design/login.css">
+		<link rel="stylesheet" href="/v3/design/tooltip.css">
+		<link rel="stylesheet" href="/v3/design/testing.css">
+
+		<script src="/v3/script/jquery/jquery.js"></script>
+		<script src="/v3/script/hashref.js"></script>
+
+		<script src="/v3/script/jquery/plugins/toasty/toasty-min.js"></script>
+
+    	<link rel="stylesheet" href="/v3/script/jquery/jquery-plugins.css">
+
+    	<link rel="stylesheet" href="/v3/design/tooltip.css">		
+
+		<script>
+			$.ajax({
+				url: '/4DACTION/_V3_getTooltip',
+				data: {
+					'path': '/index.shtml'
+				},
+				dataType: 'json',
+				success: function(data) {
+					if (typeof data.success != 'undefined') {
+						$().toasty({
+							title: data.title,
+							message: data.text,
+							autoHide: data.time,
+							position: 'tr'
+						});
+					}
+				}
+			});
+		</script>
+	</head>
+	<body class="login">
+		<section>
+			<form class="demo" method="post" action="/4DACTION/W_INICIA_SESION">
+				<fieldset>
+					<legend><span>Bienvenido a UNA Base</span></legend>
+					<label>
+						<span>Su nombre</span>
+						<input type="text" name="txtNombre" required>
+					</label>
+					<label>
+						<span>Su email</span>
+						<input type="email" name="txtEmail" required>
+					</label>
+					<label>
+						<span>Rubro</span>
+						<select name="txtRubro" required>
+							<option value="">Seleccionar</option>
+							<option value="Administración y finanzas">Administración y finanzas</option>
+							<option value="Agencia de comunicación">Agencia de comunicación</option>
+							<option value="Agencia de publicidad y marketing">Agencia de publicidad y marketing</option>
+							<option value="Agencia Digital">Agencia Digital</option>
+							<option value="Asesorías">Asesorías</option>
+							<option value="Arquitectura">Arquitectura</option>
+							<option value="Audiovisual">Audiovisual</option>
+							<option value="Construcción">Construcción</option>
+							<option value="Consultoría">Consultoría</option>
+							<option value="Contabilidad">Contabilidad</option>
+							<option value="Diseño">Diseño</option>
+							<option value="Educación">Educación</option>
+							<option value="Fotografía">Fotografía</option>
+							<option value="Gobierno">Gobierno</option>
+							<option value="Informática y telecomunicaciones">Informática y telecomunicaciones</option>
+							<option value="Industrial">Industrial</option>
+							<option value="Ingeniería">Ingeniería</option>
+							<option value="Productora de cine y TV">Productora de cine y TV</option>
+							<option value="Productora de eventos y BTL">Productora de eventos y BTL</option>
+							<option value="Profesional Independiente">Profesional Independiente</option>
+							<option value="Salud">Salud</option>
+							<option value="Otros">Otros</option>
+						</select>
+					</label>
+					<button type="submit">Ingresar</button>
+				</fieldset>
+			</form>
+		</section>
+		<footer
+			itemscope
+			itemtype="http://schema.org/Organization">
+			&copy; 2013 <span itemprop="name">UNA Sistemas Ltda.</span>
+			Todos los derechos reservados.
+			<address
+				itemprop="address"
+				itemscope
+				itemtype="http://data-vocabulary.org/Address">
+				<span itemprop="street-address">Monseñor Eyzaguirre 660</span>,
+				<span itemprop="locality">Ñuñoa</span>,
+				<span itemprop="region">Santiago</span> -
+				<span itemprop="country">Chile</span>
+			</address>
+			<p itemprop="telephone">
+				<a href="tel:+56222398622">(56 - 2) 2239 8622</a>
+			</p>
+			<nav>
+				<ul>
+					<li class="skype"><a href="callto:soporte.unasistemas"><span>Skype</span></a></li>
+					<li class="email"><a href="mail:soporte@una.cl"><span>Email</span></a></li>
+				</ul>
+			</nav>
+		</footer>
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+			ga('create', 'UA-58262854-1', 'auto');
+			ga('send', 'pageview');
+		</script>
+	</body>
+</html>

@@ -1,0 +1,16 @@
+{
+
+	"rows": [
+		<!--#4DLOOP aAreaId -->
+		{
+			"areaId": <!--#4DVAR aAreaId{aAreaId}-->,
+			"areaName": "<!--#4DVAR aAreaName{aAreaId}-->",
+			"areaCuenta": "<!--#4DHTML aAreaCuenta{aAreaId}-->"
+	}<!--#4DIF NOT(aAreaId{aAreaId} = aAreaId{Size of array(aAreaId)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		]
+	
+}
+
+
+

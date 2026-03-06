@@ -1,0 +1,14 @@
+{
+	"rows": [
+  <!--#4DLOOP aItemId -->
+	  {
+		"id": "<!--#4DHTML aItemId{aItemId}-->",
+		"index": <!--#4DHTML aItemIndex{aItemId}-->,
+		"codigoProducto": "<!--#4DHTML aItemCodigo{aItemId}-->",
+		"nombre": "<!--#4DHTML _V3_escapeString(aItemNombre{aItemId})-->",
+		"isParent": <!--#4DIF $isParent-->true<!--#4DELSE-->false<!--#4DENDIF-->
+	  }<!--#4DIF NOT(aItemId{aItemId} = aItemId{Size of array(aItemId)})-->,<!--#4DENDIF-->
+  <!--#4DENDLOOP-->
+	]
+  }
+  

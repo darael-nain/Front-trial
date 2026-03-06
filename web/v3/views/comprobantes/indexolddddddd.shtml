@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Comprobantes</title>
+	<meta charset="utf-8">
+	<!-- <link rel="stylesheet" type="text/css" href="/css/maestros/list.css"> -->
+
+	<!-- <script type="text/javascript" src="/v3/script/list.js"></script> -->
+	<style type="text/css">
+		.alignLeft {
+			text-align: left;
+		}
+		/* ===== Paginador estilo botones ===== */
+		.pagination{
+		margin: 10px 0px 10px 10px;
+		text-align: center;
+		font-size: 12px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 6px;
+		flex-wrap: wrap;
+		}
+
+		.pagination a,
+		.pagination span{
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+
+		padding: 6px 10px;
+		min-width: 30px;
+		height: 28px;
+
+		border-radius: 8px;
+		border: 1px solid #d0d5dd;
+		background: #ffffff;
+
+		color: #344054;
+		text-decoration: none;
+		user-select: none;
+
+		box-shadow: 0 1px 2px rgba(16, 24, 40, 0.06);
+		transition: background .15s ease, border-color .15s ease, transform .05s ease, box-shadow .15s ease;
+		}
+
+		.pagination a:hover{
+		background: #cccccc;
+		border-color: #cbd5e1;
+		}
+
+		.pagination a:active{
+		transform: translateY(1px);
+		box-shadow: 0 0 0 rgba(16, 24, 40, 0);
+		}
+
+		.pagination a:focus-visible{
+		outline: 2px solid #28A745;
+		outline-offset: 2px;
+		}
+
+		.pagination span.current,
+		.pagination a.current{
+		background: #28A745;
+		border-color: #28A745;
+		color: #ffffff;
+		font-weight: 700;
+		}
+
+		.pagination span.disabled{
+		background: #f2f4f7;
+		border-color: #eaecf0;
+		color: #98a2b3;
+		cursor: not-allowed;
+		box-shadow: none;
+		}
+
+		.pagination span:not(.current):not(.disabled){
+		background: transparent;
+		border-color: transparent;
+		box-shadow: none;
+		cursor: default;
+		min-width: auto;
+		padding: 0 6px;
+		height: 28px;
+		}
+		.contacts-table-area{
+			height: calc(100vh - 350px);
+			overflow: auto;
+		}	
+	</style>
+	
+</head>
+
+<body>
+
+
+	<!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->
+	<div class="contacts-table-area table-responsive">
+	<table class="results">
+		<thead>
+			<tr>
+				<th>Folio</th>
+				<th>Fecha registro</th>
+				<th>Fecha Comprobante</th>
+				<th>Glosa</th>
+				<th>Tipo</th>
+				<th>Conciliado</th>
+				<!-- <th>Documento</th>			 -->
+			</tr>
+		</thead>
+		<tbody></tbody>
+		<tfoot></tfoot>
+	</table>
+	
+	</div>
+	<div id="pagination" class="pagination"></div>
+
+
+	<script>
+
+		$(document).ready(function () {
+			document.title = nombreEmpresa + ' / Contabilidad';
+			unaBase.toolbox.init();
+
+
+			// Inicializamos un buscador
+			var params = {
+				searchOff: true,
+				// Función que genera una URL de listado JSON
+				url: function () { return '/4DACTION/_v3_getComprobantes' },
+				entity: 'comprobantes',
+				callback: function () {
+					//$('table').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false });
+				},
+				// Función que genera cada fila de la tabla, dado el valor de i (índice de posición)
+				// y el valor de rows (array con todos los resultados)
+				// El contenido de rows corresponde al objeto de mismo nombre generado mediante la llamada
+				// a la api JSON. Ver /v3/json/get_cotizacion.shtml para conocer el formato.
+				row: {
+					html: function (i, rows) {
+						let htmlData = `<tr data-id="${rows[i].id}">
+								<td>${rows[i].id}</td>
+								<td>${rows[i].registryDate}</td>
+								<td>${rows[i].docDate}</td>
+								<td class="alignLeft">${rows[i].description}</td>
+								<td>${rows[i].docType}</td>
+								<td style="min-width: 100px;">${rows[i].docType.toUpperCase()!='TRASPASO' ? rows[i].conciliado ? 'SI' : 'NO': '--'}</td>
+							</tr>`
+						return htmlData;
+					}
+				},
+				// <td><a  
+				//  href="${window.location.host}/4DACTION/wbienvenidos#dtc/content.shtml?id=${rows[i].idDoc}" 
+				//  target="_blank" style="cursor:pointer" >Documento</a></td>
+
+
+				detail: {
+					url: function (id) { return '/v3/views/comprobantes/content.shtml?id=' + id },
+					iframe: false
+				},
+				// Inflexiones
+				inflection: {
+					singular: 'comprobante',
+					plural: 'comprobante',
+					none: 'ninguno'
+				},
+				// Filtros
+				filters: [
+
+					/*	{ name: 'created_at', type: 'month', caption: 'Fecha de creación', range: true },*/
+					//{ name: 'updated_at', type: 'month', caption: 'Fecha últ. modificación', range: true },
+					// Pendiente: agregar datasource remoto y convertir a checkbox
+					// con jquery ui autocomplete
+					/*{ name: 'area_negocio', type: 'autocomplete', caption: 'Área de negocio', dataSource: 'getAreaNegocio' },
+					{ name: 'ejecutivo_responsable', type: 'autocomplete', caption: 'Ejecutivo responsable', dataSource: 'getUsuario' },*/
+
+					{ name: 'docDate', type: 'month', caption: 'Fecha de comprobante', range: true, currentMonth: true },
+					{ name: 'registryDate', type: 'month', caption: 'Fecha de registro', range: true, currentMonth: false },
+					{
+						name: 'docType', type: 'autocomplete', caption: 'Tipo comprobante', dataObject: [
+							{ id: 'egreso', text: 'Egreso' },
+							{ id: 'traspaso', text: 'Traspaso' },
+							{ id: 'ingreso', text: 'Ingreso' },
+						]
+					},
+					{
+						name: 'estado', type: 'checkbox', caption: 'Estado', options: [
+							{ caption: 'activo', name: 'activo', value: true },
+							{ caption: 'inactivo', name: 'inactivo', value: false }
+						]
+					},
+					{
+						name: 'automatico', type: 'checkbox', caption: 'Automático', options: [
+							{ caption: 'auto', name: 'auto_', value: true },
+							{ caption: 'manual', name: 'manual_', value: false }
+						]
+					},
+					{
+						name: 'descuadrado', type: 'checkbox', caption: 'Automático', options: [
+							{ caption: 'descuadrado', name: 'desc_', value: false }
+						]
+					}
+
+
+				]
+			};
+
+			unaBase.toolbox.search.init(params);
+			unaBase.toolbox.menu.init({
+				entity: 'comprobantes',
+				buttons: ['searchOff', "new", "accounting_libro_diario", "accounting_libro_mayor", "export_list", 'accounting_balance',"close_accounting_period", "open_accounting_period", "create_accounting_period", "status_accounting_period", "import_remunerations", "import_seats","accounting_lib_cont", "accounting_lib_cont1", "analysis_by_account","accounting_crete_opening",'export_diot', 'auxiliar_report', 'accounting_provision', 'foliador_hojas', 'Importar apertura', 'accounting_create_opening', 'import_seats_provisiones'],
+				buttonsList: [
+					{
+						'accounting_libro_diario':
+						{
+							name: "Libro diario",
+							icon: "ui-icon-document-b",
+							caption: "Libro diario",
+							action: function () {
+
+								let url = nodeUrl + "/libro-diario/?download=true&ids=" + ids.join("|") + "=&sid=" + encodeURIComponent(sid) + "&" + filters + "&hostname=" + window.location.origin;
+								let download = window.open(url);
+								download.blur();
+								window.focus();
+
+							}
+						}
+					}
+
+				],
+
+
+			});
+
+
+
+			if (!access._663) {
+
+				$('#menu [data-name="create_accounting_period"]').remove();
+				$('#menu [data-name="status_accounting_period"]').remove();
+				$('#menu [data-name="close_accounting_period"]').remove();
+				$('#menu [data-name="open_accounting_period"]').remove();
+
+			}
+		});
+
+
+
+	</script>
+</body>
+
+
+</html>

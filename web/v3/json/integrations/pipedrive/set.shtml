@@ -1,0 +1,15 @@
+{
+	"id": <!--#4DIF Not(Undefined(id_nv))--><!--#4DIF Type(id_nv)=Is Text-->"<!--#4DVAR id_nv-->"<!--#4DELSE--><!--#4DVAR id_nv--><!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->,
+	"id_pipedrive": <!--#4DIF Not(Undefined(id))--><!--#4DIF Type(id)=Is Text-->"<!--#4DVAR id-->"<!--#4DELSE--><!--#4DVAR id--><!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->,
+	"estado": <!--#4DIF Not(Undefined(estado))-->"<!--#4DHTML estado-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"errorMsg": <!--#4DIF Not(Undefined(errorMsg))-->"<!--#4DHTML errorMsg-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"success": <!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"new": <!--#4DIF Not(Undefined(new))--><!--#4DIF new-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"opened": <!--#4DIF Not(Undefined(opened))--><!--#4DIF opened-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"valid": <!--#4DIF Not(Undefined(valid))--><!--#4DIF valid-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->true<!--#4DENDIF-->,
+	"readonly": <!--#4DIF Not(Undefined(readonly))--><!--#4DIF readonly-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"exists": <!--#4DIF Not(Undefined(exists))--><!--#4DIF exists-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"pass":<!--#4DIF Not(Undefined(changesPass))--><!--#4DIF changesPass-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"folioToUpdate": <!--#4DIF Not(Undefined(folioToUpdate))--><!--#4DIF Type(folioToUpdate)=Is Text-->"<!--#4DVAR folioToUpdate-->"<!--#4DELSE--><!--#4DVAR folioToUpdate--><!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->,
+	"keysfolio": <!--#4DIF Not(Undefined(keysfolio))-->"<!--#4DHTML keysfolio-->"<!--#4DELSE-->""<!--#4DENDIF-->
+}

@@ -1,0 +1,128 @@
+﻿table{
+	width: 1300px;
+	border-collapse: collapse;
+}
+
+/* TITULO DE HEADER PRINCIPAL EN LA TABLA */
+table th.header-principal{
+	border: 1px solid black;
+	padding: 10px;
+	text-align: left;
+	border-collapse: collapse;
+}
+
+table th.header-principal-2{
+	border: 1px solid black;
+	padding: 10px;
+	text-align: right;
+	border-collapse: collapse;
+}
+
+/* TABLA DETALLE */
+table th.no-border{
+	text-align: right;
+}
+
+.para-cliente {
+text-align: left;
+vertical-align: top;
+font-size: 9pt;
+font-weight: bold
+}
+
+.imagen-header{
+	float: left;
+  	width: 100px;
+  	margin-bottom: 50px;
+}
+/* TERMINO TABLA DETALLE */
+
+table tr th.titulo-categoria{
+	border: 1px solid black;
+	padding: 5px;
+	text-align: left;
+	border-collapse: collapse;
+}
+
+
+/* TITULO DE PRIMER NIVEL EN TABLA SOBRECARGOS*/
+table tr td.titulo-categoria{
+	border: 1px solid black;
+	padding: 5px;
+	text-align: right;
+	border-collapse: collapse;
+}
+
+table tr th.titulo-subnivel{
+	border: 1px solid black;
+	padding: 5px;
+	text-align: left;
+}
+
+table tr td.items{
+	border: 1px solid black;
+	padding: 10px;
+	text-align: right;
+}
+
+table tr th.total-sobrecargos{
+	border: 1px solid black;
+	padding: 10px;
+	text-align: right;
+}
+
+table tr td.items-nombre{
+	border: 1px solid black;
+	padding: 10px;
+	text-align: left;
+}
+
+table tr td.espacio{
+	background-color: white;
+}
+
+/*TABLA DETALLE HEADER PRINCIPAL*/
+table.tabla-detalle{
+	width: auto;
+    margin-right: 0px;
+    margin-left: auto;
+}
+
+table.tabla-detalle tr{
+	border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+}
+
+/*TABLA OBSERVACIONES*/
+table.tabla-condiciones tr{
+	text-align: left;
+}
+
+table.tabla-condiciones{
+	margin-top: -200px;
+}
+
+
+/*IMAGEN FINAL DE DOCUMENTO*/
+div.imagen-header-final{
+	width:200px;
+  text-align:center;
+  display:block;
+  margin-right: 10px;
+  margin-bottom: 1px;
+  float:left;
+  font-weight: bold;
+
+
+}
+
+
+/*DISEÑO DE PRINT.CSS*/
+.tituloSuperior {
+text-align: right;
+margin-top: 5px;
+font-size: 25px;
+color: rgb(67, 175, 124);
+font-weight: bold;
+text-transform: uppercase;
+}

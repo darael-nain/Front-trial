@@ -1,0 +1,12 @@
+{
+	"rows":[
+	<!--#4DLOOP aId -->
+		{
+			"id":  <!--#4DIF Not(Undefined(aId))--><!--#4DHTML aId{aId}--><!--#4DELSE-->0<!--#4DENDIF-->,
+			"name":   <!--#4DIF Not(Undefined(aName))-->"<!--#4DHTML _V3_escapeString(aName{aId})-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+			"folio":   <!--#4DIF Not(Undefined(afolio))-->"<!--#4DHTML String(afolio{aId})-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+			"estado":   <!--#4DIF Not(Undefined(aEstadoNv))--><!--#4DHTML String(aEstadoNv{aId})--><!--#4DELSE-->0<!--#4DENDIF-->
+		}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

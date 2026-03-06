@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getImpuestos-->
+		<title>Impuestos</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/views/ajustes/impuestos/impuestos.js"></script>
+    <script type="text/javascript" src="/v3/views/ajustes/impuestos/content.js"></script>
+
+
+
+  	<style type="text/css">
+  		.newcolor input,textarea{
+  			background-color: #ffffff !important;
+  		}
+      li[data-name="exit"]{
+        display: none !important;
+      }
+      ul.editable, li.li{
+        width: 100%;
+      }
+      input.rise{
+        width: 70%;
+      }
+      input[name=valor]{
+        width: 25px;
+      }
+
+
+  	</style>
+		<link href="/css/form1.css" rel="stylesheet">
+	</head>
+
+	<body>
+    <section class="sheet" id="impuestos" data-id="<!--#4DTEXT id-->">
+      <footer>
+        <article>
+          <h1>Información general - Impuestos</h1>
+          <ul class="editable newcolor">
+
+            <li class="li"> <input name="estado" id="estado" class="checkbox" type="checkbox"><label class="sg-input-title" for="estado">Habilitar Uso</label></li>
+
+
+
+
+            <li class="li"><span class="sg-input-title">Impuesto</span> <br/><span><input class="form-control rise" id="descripcion_imp" type="text" name="descripcion_imp"></span></li>
+
+            <!-- <li class="li"><span class="sg-input-title">Tipo de Impuesto</span> <br/><span><input class="form-control rise" id="tipo" type="text" name="tipo"></span></li> -->
+
+            <select name="tipo">
+              <option value="exento">Exento</option>
+              <option value="iva">Iva</option>
+              <option value="retencion">Retencion</option>
+              <option value="adicional">Adicional</option>
+            </select>
+
+            <input type="checkbox" hidden name="addtipodtc" checked>
+
+            <li class="li"><span class="sg-input-title">Valor</span> <br/><span><input class="form-control rise" id="valor" type="text" name="valor"></span></li>
+            <input type="text" name="origen" value="dtc" hidden="">
+            
+
+
+        
+        </article>
+      </footer>
+    </section>
+
+  <script type="text/javascript">
+
+
+  </script>
+
+	</body>
+</html>

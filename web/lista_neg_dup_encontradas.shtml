@@ -1,0 +1,27 @@
+<table border="1" cellpadding="0" cellspacing="0" hspace="0" vspace="0">
+  <tr bgcolor="#CCCCCC" >
+    <td class="center">NRO</td>
+    <td class="center">EMISION</td>
+    <td class="center">CLIENTE</td>
+    <td class="center">REFERENCIA</td>
+    <td class="center">TOTAL BRUTO</td>
+    <td class="center">ACCION</td>
+  </tr> 		
+  <!--#4DLOOP aID_Negocio2-->
+  <tr>
+    <td class="center"><!--#4DVAR aID_Negocio2{aID_Negocio2}--></td>
+    <td class="center"><!--#4DVAR a_FechaE{aID_Negocio2}--></td>
+    <td class="left"><!--#4DVAR a_Cliente{aID_Negocio2}--></td>
+    <td class="left"><!--#4DVAR a_Referencia{aID_Negocio2}--></td>
+    <td class="right"><!--#4DVAR string(a_Total{aID_Negocio2};"$###.###.###.###")--></td>
+    <td class="center">                
+      <a class="link-crear-lista" title="Duplicar proyecto" href="#" onclick="selecciona_neg2('<!--#4DVAR aID_NV{aID_Negocio2}-->')">
+        <p>
+          <img src="/imagenes/application_double.png" border="0" />
+          <span>Duplicar</span>
+        </p>                        
+      </a>
+    </td>
+  </tr>
+  <!--#4DENDLOOP-->
+</table>

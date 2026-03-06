@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_serverInfo-->
+<html>
+	<head>
+		<title>Pre orden</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="/v3/views/compras/lista.css?<!--#4DTEXT _V3_version-->">
+		<link rel="stylesheet" type="text/css" href="/v3/views/compras/design/list.css">
+		<script>
+
+			function crearOCByPre(){
+				var formItems = '';
+				var ocsSelect = $('table.list-preocs > tbody > tr > td > input:checked');
+
+				if (ocsSelect.length > 0) { 
+					ocsSelect.each(function(key, item) {
+						var row = {
+							'oc[pre][id]': $(item).data('id')
+						};
+						formItems = formItems + $.param(row) + '&';
+					});
+
+					var formData = formItems + $.param({
+						'cantidad': 1
+					});
+
+					$.ajax({
+						'url': '/4DACTION/_V3_setComprasByPreorden',
+						data: formData,
+						dataType: 'json',
+						async: false,
+						success: function(data) {
+							if (data.success) {
+								unaBase.toolbox.search._advancedSearch(true);
+								window.open('/4DACTION/wbienvenidos#compras/content.shtml?id=' + data.id);
+							}else{
+								toastr.error("Hubo un error, intenta nuevamente.");
+							}							},
+						error: function(xhr, text, error) {
+							toastr.error(NOTIFY.get('ERROR_INTERNAL', 'Error'));
+						}
+					});
+				}else{
+					alert("Falta seleccionar pre orden");
+				}
+				
+			}
+
+			$(document).ready(function() {
+				document.title = '<!--#4DTEXT _V3_nombre_empresa--> / OC - Lista';
+
+				unaBase.toolbox.init();
+				var params = {
+					searchOff: true,
+					url: function() { return '/4DACTION/_V3_getPreOrdenesAll' },
+					entity: 'Preorden',
+					data: {
+						'tipo_gasto' : "OC"
+					},
+					callback : function(data){
+						//$('.especial .totales').find('span[data-neto]').text(data.totales.neto);
+
+						// Fijar header y footer
+						$('#viewport .fht-table-init').fixedHeaderTable('destroy');
+						$('#viewport table.fixed').fixedHeaderTable({
+							footer: true,
+							cloneHeadToFoot: false,
+							fixedColumn: false,
+							create: function() {
+								$('[data-sort-by]').removeClass('sort-order-desc').removeClass('sort-order-asc').removeData('sort-order');
+								$('[data-sort-by="' + data.sort.by + '"]').addClass('sort-order-' + data.sort.order).data('sort-order', data.sort.order);
+							}
+						});
+					},
+					row: {
+						html: function(i, rows) {
+							return '<tr data-id="' + rows[i].id + '">' +
+								'<td><input data-id="' + rows[i].id + '" class="selected chk" type="checkbox" name="selected_one"></td>' +
+								'<td data-goto="true" width="5%" class="center">' + rows[i].fecha + '</td>' +									
+								'<td data-goto="true" width="5%" class="center">' + rows[i].emisor + '</td>' +
+								'<td data-goto="true" width="2%" class="center">' + rows[i].nom_ejecutivo + '</td>' +
+								'<td data-goto="true" width="3%" class="center">' + rows[i].folionegpres + " / " + rows[i].nomnegpres + '</td>' +
+								'<td data-goto="true" width="5%" class="center">' + rows[i].nomitem + '</td>' +
+								'<td data-goto="true" width="5%" class="center">' + rows[i].nombreprov + '</td>' +
+								'<td data-goto="true" width="5%" class="right">' + rows[i].nomdoc + '</td>' +
+								'<td data-goto="true" width="3%" class="center numeric currency">' + rows[i].monto + '</td>' +
+								'<td data-goto="true" width="3%" class="center">' + rows[i].estado + '</td>' +
+								'<td data-goto="true" width="3%" class="center">' + rows[i].observacion + '</td>' +
+							'</tr>';
+						}
+					},
+					inflection: {
+						singular: 'gasto',
+						plural: 'gastos',
+						none: 'ningún'
+					},
+					filters: [
+						{ name: 'created_at', type: 'month', caption: 'Fecha de emisión', range: true, currentMonth: true },
+						/*{ name: 'origen', type: 'autocomplete', caption: 'Origen', dataObject: [
+							{ id: "PROYECTO", text: 'NEGOCIOS'},
+							{ id: "PRESUPUESTO DE GASTO", text: 'PRESUPUESTO DE GASTO'},
+						] },*/
+						//{ name: 'por_negocio', type: 'autocomplete', caption: 'Por negocio', dataSource: 'getNegociosActivos' },
+						//{ name: 'por_presupuesto', type: 'autocomplete', caption: 'Por presupuesto', dataSource: 'getPresupuestosActivos' },
+						{ name: 'tipo_dtc', type: 'autocomplete', caption: 'Tipo Doc.', dataSource: 'getTiposDocDeCompras' },
+						{ name: 'estado', type: 'checkbox', caption: 'Estado de la compra', options: [
+							{ caption: 'Emitida', name: 'estado_emitida', value: true },
+							{ caption: 'Cerrada', name: 'estado_cerrada', value: false },
+							{ caption: 'En cotización', name: 'en_cotizacion', value: false }
+						]}
+					],
+					container : "listindex"
+				};
+
+				unaBase.toolbox.search.init(params);
+				unaBase.toolbox.menu.init({
+					entity: 'Preorden',
+					buttons: ['searchOff', 'create_oc_desde_preoc' ]
+				});
+
+			});
+
+
+			$('.numeric.currency').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+
+		</script>
+		<style type="text/css">
+		/* ini --22.07.16 options select */
+	    	.chk{
+				display: inline-block;
+				width: 20px;
+				height: 20px;
+				margin:0px;
+				vertical-align: middle;
+				cursor:pointer;
+			}
+			.container-options{
+				height:30px;
+				margin:5px 0 0 0;
+				padding: 3px;
+				border-color: red;
+			}
+				.container-options > div{
+					display: inline-block;
+				}
+			#selectdtc{
+				height:24px;
+				width:70px;
+				background-color:#e6e6e6;
+			}
+			/* fin --22.07.16 options select */
+
+		</style>
+	</head>
+	<body>
+		<div  class="padre" style="width: 100%; height: calc(100% - 50px); overflow-x: scroll; overflow-y: scroll">
+			<table width="100%" data-tipogasto="OC" class="results especial listindex fixed list-preocs">
+					<thead>
+						<tr>
+							<th class="center" width="2%">
+								<div style="padding:2px;display:none;">Todo</div>
+								<div style="display:none;"><input class="selected chk" type="checkbox" name="selected_all"></div>
+							</th>
+							<th class="center" width="3%" data-sort-by="estado" data-sort-default="asc">Fecha</th>
+							<th class="center" width="5%" data-sort-by="folio" data-sort-default="desc">Emisor</th>
+							<th class="center" width="5%" data-sort-by="folio" data-sort-default="desc">Ejecutivo</th>
+							<th class="center" width="5%" data-sort-by="folio" data-sort-default="desc">Neg./Presp.</th>
+							<th class="center" width="5%" data-sort-by="vencimiento" data-sort-default="desc">Servicio</th>
+							<th class="center" width="5%" data-sort-by="fecha" data-sort-default="desc">Proveedor</th>
+							<th class="center" width="2%" data-sort-by="doc" data-sort-default="desc">Documento</th>
+							<th class="center" width="5%" data-sort-by="origen" data-sort-default="desc">Monto</th>
+							<th class="center" width="3%" data-sort-by="estado" data-sort-default="asc">Estado</th>
+							<th class="center" width="5%" data-sort-by="neto" data-sort-default="desc">Obs.</th>
+						</tr>
+					</thead>
+					<tfoot class="totales">
+						<th colspan="7" width="2%"></th>
+			            <th width="5%" class="center"><span data-neto="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+			            <th colspan="3"></th>
+					</tfoot>
+					<tbody></tbody>
+				</table>
+			</div>
+	</body>
+</html>

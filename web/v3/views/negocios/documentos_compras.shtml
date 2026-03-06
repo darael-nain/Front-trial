@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!--#4DSCRIPT/_V3_proxy_getDetalleItems-->
+    <meta charset="utf-8">
+    <title>Compras - Items</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #mi-marco {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .iframe-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+		#tabs-10 {
+            height: 100vh;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="iframe-container">
+        <input type="hidden" class="sheet-list-dtc-item" data-llave="<!--#4DTEXT [Detalle_NV]Llave_NV-->">
+        <iframe id="mi-marco" name="mi-marco" src="about:blank"></iframe>
+    </div>
+
+    <script type="text/javascript">
+        var miMarco = document.getElementById('mi-marco');
+
+        const sid = () => {
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.match(/UNABASE/g)) {
+                    return c.substring(c.indexOf("UNABASE"));
+                }
+            }
+            return "";
+        }
+
+        const toHomeRedirect = () => {
+            const llave_detalle_nv = document.querySelector('.sheet-list-dtc-item').dataset.llave;
+            let username = 'soporte';
+            miMarco.src = `https://dev-panel.herokuapp.com/files-by-dtc?from=v3&user=${username}&hostname=${window.origin.substring(8)}&sid=${sid()}&llave_item=${llave_detalle_nv}`;
+        }
+
+        (function init() {
+            toHomeRedirect();
+            unaBase.ui.unblock();
+        })();
+    </script>
+</body>
+</html>

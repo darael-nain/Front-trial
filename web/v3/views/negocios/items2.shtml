@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_get_ItemsProyCompras-->
+		<title>Items del negocio</title>
+		<meta charset="utf-8">
+		<script>
+		var permiso_excede_presupuestado = <!--#4DIF vPermisoExcedePresupuestado-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+		var hideTotals = () => {
+			let titles= document.querySelectorAll('table.items tbody tr.title, table.items tbody tr.itemParent');
+			titles.forEach(title => {
+				title.querySelectorAll('th.numeric').forEach(element => {
+					while(element.hasChildNodes()){
+						element.removeChild(element.firstElementChild)
+						element.textContent = ""
+					}
+				});
+
+			});
+		}
+		var menus = function(){
+			unaBase.toolbox.init();
+			unaBase.toolbox.menu.init({
+				entity: 'Proyectos_compras',
+				buttons: ['itemsoc_volver_proyectos2','itemsoc_agregar_items2', 'itemsoc_otros_gastos2'],
+				data: function(){
+				  return $('.ui-dialog section.sheet').serializeAnything();
+				},
+				validate:function(){
+				  return true;
+				}
+			});
+		};
+		var getItemsGastos = function(title){
+			
+			var itemsGastos = $(`#items-gastos tbody tr[data-tipo="ITEM"]`);
+			var cant = 0;
+			// Calcual diferencias en gasto por item, entre lo agregado en la OC y lo que está en el popup
+			itemsGastos.each(function(key,item){
+				var llave = $(this).find('input[name="oc[detalle_item][llave_nv]"]').val();
+				var monto = parseFloat($(this).find('input[name="oc[detalle_item][total]"]').val());
+				var tr = $(`#sheet-items_proyect-select table.items tbody tr[data-llave="${llave}"]`);
+
+				if (tr.length>0 && tr.data('parent') == title.data('id')) {
+
+					var start = parseFloat(tr.find('input[data-diferencia]').val());
+					var end = start - monto;
+					tr.find('input[data-diferencia]').val(end);
+					tr.find('input[type="checkbox"]').attr('disabled', !(end > 0 || access._486));
+				}
+			});
+
+		}
+
+		function todoCheck(){ // Checkbox para seleccionar todos los items de la categoria  Simon jun-2017
+			
+			var itm = $('input[data-llavetit]');
+			for(var i = 0; i<itm.length; i++)
+				{
+					if(!itm[i].disabled){
+						itm[i].checked = event.target.checked
+						
+					}
+				}
+		}
+
+		function todoTituloCheck(parentCheckID){ // Checkbox para seleccionar todos los items del negocio  Simon jun-2017
+			
+			var itm = $('[data-llavetit='+parentCheckID+']');
+			for(var i = 0; i<itm.length; i++)
+				{
+					if(!itm[i].disabled){
+						itm[i].checked = event.target.checked
+					}
+				}
+
+
+		}
+
+		$(document).ready(function() {
+			menus();
+			
+
+			if ($('.ui-dialog section.sheet').data('permiso')) {
+				$('.ui-dialog header nav ul li[data-name="itemsoc_otros_gastos2"]').show();
+			}else{
+				$('.ui-dialog header nav ul li[data-name="itemsoc_otros_gastos2"]').hide();
+			}
+
+			// Formato números
+			$('.ui-dialog .numeric.currency input').number(true, currency.decimals, ',', '.');
+			$('.ui-dialog .percent input').number(true, 2, ',', '.');
+
+			// Expandir y contraer títulos
+			$('.ui-dialog section.sheet table > thead button.toggle.all').click(function() {
+				if ($(this).hasClass('ui-icon-folder-open')) {
+					$(this).removeClass('ui-icon-folder-open');
+					$(this).addClass('ui-icon-folder-collapsed');
+					$(this).attr('title', 'Contraer todo');
+					$('.ui-dialog section.sheet table > tbody > tr.title button.toggle.categoria.ui-icon-folder-open').each(function() {
+						$(this).trigger('click');
+					});
+					//simon itemparent
+					$('.ui-dialog section.sheet table > tbody > tr.itemParent button.toggle.categoria.ui-icon-folder-open').each(function() {
+						$(this).trigger('click');
+					});
+
+					
+				} else {
+					$(this).removeClass('ui-icon-folder-collapsed');
+					$(this).addClass('ui-icon-folder-open');
+					$(this).attr('title', 'Expandir todo');
+					$('.ui-dialog section.sheet table > tbody > tr.title button.toggle.categoria.ui-icon-folder-collapsed').each(function() {
+						$(this).trigger('click');
+					});
+					//simon itemparent
+					$('.ui-dialog section.sheet table > tbody > tr.itemParent button.toggle.categoria.ui-icon-folder-collapsed').each(function() {
+						$(this).trigger('click');
+					});
+				}
+			});
+
+			// $('.ui-dialog section.sheet table > tbody button.toggle.categoria').click(function() {
+			$('.ui-dialog section.sheet table tbody').on('click', 'button.toggle.categoria', function() {
+				
+				console.log('items2')
+				var target = $(this);
+
+				var collapsed = target.hasClass('ui-icon-folder-collapsed');
+				
+				if (collapsed) {
+					target.removeClass('ui-icon-folder-collapsed').addClass('ui-icon-folder-open');
+					var title = target.closest('tr');
+					var tbody = $('.ui-dialog section.sheet table tbody');
+					if (title.data('loaded') !== true) {
+						unaBase.ui.block();
+						$.ajax({
+							url: '/4DACTION/_V3_proxy_get_ItemsProyCompras',
+							data: {
+								'oc[negocio][id]': <!--#4DVAR idNv-->,
+								'oc[id]': <!--#4DVAR idOc-->,
+								from: '<!--#4DVAR from-->',
+								title: title.data('id'),
+								only_used: $('[name="cotizacion[ver_solo_items_usados]"]').is(':checked')
+							},
+							dataType: 'json',
+							success: function(data) {
+								
+
+
+								var exchangeType = data.exchange.type;
+								var exchangeRate = data.exchange.rate;
+						
+								
+								var htmlString = '';
+								var subtotal_costo_real = 0;
+								var diferencia = 0;
+								$.each(data.rows, function(key, item) {
+
+									let symbol = currency.symbol;
+									let subTotalVenta = item.subtotal_venta;
+									let subTotalCosto = item.subtotal_costo;
+									let subTotalCostoReal = item.subtotal_costo_real;
+									let subTotalDiferencia = item.diferencia;
+									if (exchangeType != '' && currency.code == "PEN") {
+										symbol = exchangeType;
+										subTotalVenta = item.subtotal_venta/exchangeRate;
+										subTotalCosto = item.subtotal_costo/exchangeRate;
+										subTotalCostoReal = item.subtotal_costo_real/exchangeRate;
+										subTotalDiferencia = item.diferencia/exchangeRate;
+									}
+
+
+									//subtotal_costo_real+= item.subtotal_costo_real;
+									//diferencia+= item.diferencia;
+
+									subtotal_costo_real+= subTotalCostoReal;
+									diferencia+= subTotalDiferencia;
+
+									
+										subTotalVenta = subTotalVenta.toString().replace(/\./g,',');
+									subTotalCosto = subTotalCosto.toString().replace(/\./g,',');
+									subTotalCostoReal = subTotalCostoReal.toString().replace(/\./g,',');
+
+
+									let porgastar=(subTotalDiferencia > 0 ? subTotalDiferencia : 0).toString().replace('.', ',');
+									subTotalDiferencia = subTotalDiferencia.toString().replace(/\./g,',');
+									let parentClasses = `${item.isParent ? 'itemParent':''} ${item.itemParent !== ""? 'childItem':''}`;
+									var tooltip = (item.observacion != '' || item.comentario != '')? htmlspecialchars('\
+										<ul>																												\
+											<li data-name="observaciones">																					\
+												<strong style="font-weight: bold; display: inline-block; width: 220px;">Descripción larga</strong>			\
+												<pre style="font-size: 11px;">' + ((item.observacion != '')? item.observacion : '-') + '</pre>				\
+											</li>																											\
+											<li data-name="comentarios">																					\
+												<strong style="font-weight: bold; display: inline-block; width: 220px;">Observación</strong>				\
+												<pre style="font-size: 11px;">' + ((item.comentario != '')? item.comentario : '-') + '</pre>				\
+											</li>																											\
+										</ul>																												\
+									') : '';
+									
+										let link =`unaBase.loadInto.dialog('/v3/views/items/content.shtml?id=${item.id}', undefined, undefined, undefined, '/v3/views/negocios/items2.shtml?oc[negocio][id]=<!--#4DTEXT idNv-->&oc[id]=<!--#4DTEXT idOc-->&from=<!--#4DTEXT from-->') `
+										let detailButton= `<button class="ui-icon ui-icon-document" onclick="${link}">Ver gastos</button> `
+
+									htmlString+= '\
+										<tr data-llave="' + item.id + '" data-id="' + item.id + '" data-parent="' + item.parent + '" data-class="collapsed"				\
+											data-observacion="' + item.observacion + '" data-comentario="' + item.comentario + '" data-origen2="origen_negocios" class="'+parentClasses+'">										\
+											<td></td>																													\
+									 		<td class="numeric code"><input style="width:70px;text-align:left" readonly name="item[][codigo]" value="' + item.codigo + '"></td>							\
+									 		<td>																														\
+									 			<input readonly name="item[][nombre]" value="' + item.nombre + '"														\
+									 			style="width: 190px;"><button 																							\
+									 				class="ui-icon ui-icon-notice detail item" title="' + tooltip + '"													\
+									 				' + ((item.observacion == '' && item.comentario == '')? ' style="display: none;"' : '') + '>						\
+									 				Ver detalle del ítem</button>																						\
+									 		</td>																														\
+									 		<td class="center">																											\
+									 			<input readonly name="item[][cant]" value="' + `${item.isParent ? '':item.cantidad}`  + '">														\
+									 		</td>																														\
+									 		<td class="numeric currency pventa adquisicion">' +  `${item.isParent ? '':symbol}` + ' <span>																	\
+									 			<input readonly name="item[][subtotal_venta]" value="' + `${item.isParent ? '':subTotalVenta}` + '"></span>								\
+									 		</td>																														\
+									 		<td class="numeric currency monto-gp costo presupuestado adquisicion">' + `${item.isParent ? '':symbol}` + ' <span>														\
+									 			<input readonly name="item[][subtotal_costo]" value="' + `${item.isParent ? '':subTotalCosto}`  + '"></span>								\
+									 		</td>																														\
+									 		<td class="numeric currency monto-gr costo real adquisicion">' + `${item.isParent ? '':symbol}` + ' <span>																\
+									 			<input readonly name="item[][subtotal_costo_real]" value="' + `${item.isParent ? '':subTotalCostoReal.toString().replace('.', ',')}` + '"></span>'	+ `${item.isParent ? '': detailButton}`+	
+										'</td>																														\
+									 		<td class="numeric currency adquisicion">' + `${item.isParent ? '':symbol}` + ' <span>																			\
+									 			<input data-diferencia="xxxx" class="xgastar" readonly name="item[][diferencia]' + item.id + '" value="' +`${item.isParent ? '':porgastar}`  + '"></span>	\
+									 		</td>																														\
+											<td style="width: 100%; display: flex; justify-content: center; align-items: flex-end; padding: 0px;">																														\
+												<input data-llavetit="' + item.parent + '" name="detalle[check_item][' + item.id + ']" value="' + item.id + '"			\
+													type="checkbox"' + ((subTotalDiferencia <= 0 && !permiso_excede_presupuestado) || item.isParent? ' disabled' : '') + '>					\
+											</td>																														\
+										</tr>';
+
+									
+								});
+								
+
+								$(htmlString).insertAfter(title);
+									
+									
+								title.find('[name="item[][subtotal_costo_real]"]').val(subtotal_costo_real);
+								title.find('[name="item[][diferencia]"]').val(diferencia);
+								$('.ui-dialog section.sheet table > tbody tr ').find('.numeric.currency input').number(true, currency.decimals, ',', '.');
+								title.data('loaded', true);
+
+								title.nextUntil('tr.title').find('button.detail.item').tooltipster({
+									delay: 0,
+									interactiveAutoClose: false,
+									contentAsHTML: true
+								}).bind('hover', function(event) {
+									$(this).tooltipster('show');
+								}).bind('mouseout', function(event) {
+									$(this).tooltipster('hide');
+								});
+
+								//simon itemparent start
+								title.nextUntil('tr.itemParent').find('button.detail.item').tooltipster({
+									delay: 0,
+									interactiveAutoClose: false,
+									contentAsHTML: true
+								}).bind('hover', function(event) {
+									$(this).tooltipster('show');
+								}).bind('mouseout', function(event) {
+									$(this).tooltipster('hide');
+								});
+
+								//simon itemparent end
+
+
+								tbody.find('[data-parent="' + title.data('id') + '"]').removeClass('collapsed');
+
+								// Se actualiza el gasto real respecto a los ìtems que ya están presentes en la OC, con este método
+								getItemsGastos(title);
+								if(!data.showTotals){
+									//hideTotals();								
+								}
+								unaBase.ui.unblock();
+							}
+						});
+					}
+				} else {
+					target.removeClass('ui-icon-folder-open').addClass('ui-icon-folder-collapsed');
+				}
+
+								//simon itemparent start
+				// var parentTitles = target.parentTo('tr').nextUntil('.itemParent');
+
+				// if (collapsed) {
+				// 	parentTitles.removeClass('collapsed');
+				// 	target.parentTo('tr').find('.info').html('');
+
+				// } else {
+				// 	parentTitles.addClass('collapsed');
+				// 	target.parentTo('tr').find('.info').html(parentTitles.length + ' ítem' + ((parentTitles.length > 1)? 's' : ''));
+				// }
+								//simon itemparent end
+
+				var titles = target.parentTo('tr').nextUntil('.title');
+				if (collapsed) {
+					titles.removeClass('collapsed');
+					target.parentTo('tr').find('.info').html('');
+
+				} else {
+					titles.addClass('collapsed');
+					target.parentTo('tr').find('.info').html(titles.length + ' ítem' + ((titles.length > 1)? 's' : ''));
+				}
+			});
+
+			// Mostrar datos del negocio en el título del popup
+
+			/*var titulo = $('.ui-dialog-title').text();
+
+			$('.ui-dialog-title').text('Ítems del negocio Nº <!--#4DTEXT negocio_index--> : <!--#4DTEXT negocio_text--> <!--#4DTEXT negocio_cliente-->');
+
+			$('#dialog-menu button').click(function() {
+				$('.ui-dialog-title').text(titulo);
+			});*/
+
+			$('li[data-name="itemsoc_agregar_items2"] button').addClass('new-position-button');
+
+		});
+
+		// var itm = $('input[data-llavetit]');
+		// 			alert("a");
+		// 			itm.on('click', function(event) {
+		// 			    event.preventDefault();
+		// 			    event.stopPropagation();
+					    
+		// 			    return false;
+					    
+		// 			});
+
+		</script>
+		<link rel="stylesheet" type="text/css" href="/v3/design/negCotCommon/index.css">
+		<style>
+	      /* 
+				// simon itemparent start*/
+			.itemParent{
+				background-color: #98db8c !important;
+			}
+			.itemParent input{
+				font-style: italic !important;
+				font-weight: 900 !important;
+			}
+			.childItem{
+				background-color: #ecfcea !important;
+			}
+			.childItem input{
+				font-style: italic !important;
+			}
+			/* simon itemparent end*/
+				#dialog-viewport table.items > tbody {
+					counter-reset: item;
+				}
+
+				#dialog-viewport table.items > tbody > tr:not(.title) > td:nth-of-type(2):before {
+					counter-increment: item;
+					content: counter(item);
+					font-weight: bold;
+				}
+
+				#dialog-viewport table.items > * > * > * span[name] {
+					display: block;
+					color: black;
+				}
+
+	        /*			/ * Segunda cantidad * /
+				<!--#4DIF NOT(vUsarsegunda_cantidad)-->
+				.segunda-cantidad {
+					display: none;
+				}
+				<!--#4DENDIF-->
+
+				/ * 451	Ver sección totales * /
+				<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;451))-->
+				.block-totales {
+					display: none;
+				}
+				<!--#4DENDIF-->
+
+				/ * 452	Ver precios de venta en ítems * /
+				<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;452))-->
+				table .venta {
+					display: none;
+				}
+				<!--#4DENDIF-->
+
+				/ * 453	Ver utilidad presupuestada en ítems * /
+				<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;453))-->
+				table .utilidad.presupuestado {
+					display: none;
+				}
+				<!--#4DENDIF-->
+
+				/ * 453	Ver utilidad real en ítems * /
+				<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;454))-->
+				table .utilidad.real {
+					display: none;
+				}
+				<!--#4DENDIF-->
+
+				/ * 455	Ver gasto presupuestado en ítems * /
+				<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;455))-->
+				table .costo.presupuestado {
+					display: none;
+				}
+				<!--#4DENDIF-->
+
+				/ * 456	Ver gasto real en ítems * /
+				<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;456))-->
+				table .costo.real {
+					display: none;
+				}
+				<!--#4DENDIF-->
+
+				/ * 457	Ver márgenes en ítems * /
+				<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;457))-->
+				table .margen {
+					display: none;
+				}
+				<!--#4DENDIF-->
+
+				/ * Márgenes según parámetro * /
+
+				<!--#4DIF _V3_param_showMargenDesdeCompra-->
+				table .margen-desde-venta {
+					display: none;
+				}
+				<!--#4DELSE-->
+				table .margen-desde-compra {
+					display: none;
+				}
+				<!--#4DENDIF-->
+	            */
+
+				#dialog-viewport section.sheet table .collapsed {
+					display: none;
+				}
+
+				#dialog-viewport table .moving-src, table .moving-dst {
+					outline: 1px dashed black;
+					opacity: .3;
+				}
+
+				#dialog-viewport section.sheet table th:last-of-type {
+					width: 28px;
+				}
+
+				/* Nuevo */
+
+				#dialog-viewport section.sheet > footer > article {
+					position: relative;
+				}
+
+				#dialog-viewport section.sheet > footer > article > button.expand {
+					position: absolute;
+					right: 23px;
+					top: 23px;
+					display: inline-block;
+					margin: 0 !important;
+					padding: 0 !important;
+					width: 18px !important;
+					height: 18px !important;
+				}
+
+				#dialog-viewport .costo > span > span[name] {
+					color: #AF6D44;
+				}
+
+				#dialog-viewport .utilidad > span > span[name] {
+					color: #44AF6D;
+				}
+
+				#dialog-viewport .numeric.percent > span > span[name] {
+					display: inline;
+				}
+
+				#dialog-viewport .detalle {
+					display: none;
+				}
+
+				/*
+				Solución quick&dirty para poder mostrar correctamente los valores con decimales
+				se usa input en vez de span, y se cambia la apariencia del input en línea
+				*/
+
+				#dialog-viewport table.items input:not([type="checkbox"]) {
+					background: none !important;
+					border: none !important;
+					cursor: default !important;
+					margin: 0 !important;
+					padding: 0 !important;
+					display: inline !important;
+					font: inherit !important;
+				}
+
+				#dialog-viewport table.items .costo > span > input[name] {
+					color: #AF6D44;
+				}
+
+				#dialog-viewport table.items .utilidad > span > input[name] {
+					color: #44AF6D;
+				}
+
+				#dialog-viewport table.items .numeric.percent > span > input[name] {
+					display: inline;
+				}
+
+				.new-position-button{
+					position:absolute;
+					right:20px;
+					top:15px!important
+				}
+
+				/* permiso de ver precio de venta en negocios*/
+				<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;452))-->
+				table .pventa{
+					display: none;
+				}
+				<!--#4DENDIF-->
+
+				/* permiso de ver gasto presup en negocios*/
+				<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;455))-->
+				table .monto-gp{
+					display: none;
+				}
+				<!--#4DENDIF-->
+
+				/* permiso de ver gasto real en negocios*/
+				<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;456))-->
+				table .monto-gr{
+					display: none;
+				}
+				<!--#4DENDIF-->
+
+		</style>
+
+		<script>
+			var loadItems = function(toggle) {
+				unaBase.ui.block();
+				$('#sheet-items_proyect-select table.items tbody').find('tr').remove();
+				$.ajax({
+					url: '/4DACTION/_V3_proxy_get_ItemsProyCompras',
+					data: {
+						'oc[negocio][id]': <!--#4DVAR idNv-->,
+						'oc[id]': <!--#4DVAR idOc-->,
+						from: '<!--#4DVAR from-->',
+						only_titles: true,
+						only_used: $('[name="cotizacion[ver_solo_items_usados]"]').is(':checked')
+					},
+					async: false,
+					dataType: 'json',
+					success: function(data) {
+						
+						var target = $('#sheet-items_proyect-select table.items tbody');
+
+						var exchangeType = data.exchange.type;
+						var exchangeRate = data.exchange.rate;
+						
+
+						$.each(data.rows, function(key, item) {
+
+							let symbol = currency.symbol;
+							let subTotalVenta = item.subtotal_venta;
+							let subTotalCosto = item.subtotal_costo;
+							let subTotalGastoR = item.diferencia
+							let subTotalCostoReal = item.subtotal_costo_real;
+							if (exchangeType != '' && currency.code == "PEN") {
+								symbol = exchangeType;
+								subTotalVenta = item.subtotal_venta/exchangeRate;
+								subTotalCosto = item.subtotal_costo/exchangeRate;
+								subTotalGastoR = item.diferencia/exchangeRate;
+								subTotalCostoReal = item.subtotal_costo_real/exchangeRate;
+							}
+							subTotalVenta = subTotalVenta.toString().replace(/\./g,',');
+							subTotalGastoR = subTotalGastoR.toString().replace(/\./g,',');
+							subTotalCosto = subTotalCosto.toString().replace(/\./g,',');
+							subTotalCostoReal = subTotalCostoReal.toString().replace(/\./g,',');
+
+							var htmlObject = $('\
+								<tr class="title" data-id="' + item.id + '" data-origen2="origen_negocios">																			\
+									<th></th>																											\
+									<th>																												\
+										<button class="ui-icon toggle categoria ui-icon-folder-collapsed"  title="Contraer o expandir título"></button>	\
+									</th>																												\
+									<th>																												\
+										<input readonly name="item[][nombre]" value="' + item.nombre + '">												\
+									</th>																												\
+									<th></th>																											\
+									<th class="numeric currency pventa adquisicion">' + symbol + ' <span>															\
+										<input name="item[][subtotal_venta]" value="' + subTotalVenta + '"></span>								\
+									</th>																												\
+									<th class="numeric currency monto-gp costo presupuestado adquisicion">' + symbol + ' <span>												\
+										<input name="item[][subtotal_costo]" value="' + subTotalCosto + '"></span>								\
+									</th>																												\
+									<th class="numeric currency monto-gr costo real adquisicion">' + symbol + ' <span>														\
+										<input readonly name="item[][subtotal_costo_real2]" value="' + subTotalCostoReal.toString().replace('.', ',') + '"></span>											\
+									</th>																												\
+									<th class="numeric currency adquisicion"><!--$--> <span>																	\
+										<input style="width: 93px;" readonly name="item[][diferencia2]" value="'+subTotalGastoR+'"></span>														\
+									</th>																												\
+									<th style="width: 100%; display: flex; justify-content: center; align-items: flex-end;" ><input data-llavetit="" type="checkbox" name="detalle[check_titulo]['+item.id+']" onclick="todoTituloCheck(\''+item.id+'\');" value="'+item.id+'"></th>																											\
+								</tr>																													\
+							');
+
+
+							
+							target.append(htmlObject);
+							if (toggle) {
+								htmlObject.find('button.toggle.categoria').trigger('click');
+							}
+						});
+						$('.ui-dialog section.sheet table > tbody').find('.numeric.currency input').number(true, currency.decimals, ',', '.');
+				
+						if(!data.showTotals){
+							//hideTotals();								
+						}
+						unaBase.ui.unblock();
+					},
+					fail: function(a, b, c) {
+						console.log(a,b,c);
+					}
+				});
+			};
+			$(document).ready(function() {
+				loadItems();
+
+			});
+		</script>
+
+	</head>
+	<body>
+		<section id="sheet-items_proyect-select" class="sheet" data-idnv="<!--#4DTEXT idNv-->" data-permiso="<!--#4DTEXT vPermisoOtrosGastos-->" data-from="<!--#4DTEXT from-->">
+			<label style="margin-bottom: 10px;">
+				<input type="checkbox" name="cotizacion[ver_solo_items_usados]" value="true" onchange="loadItems(true);"> Ver solo items usados (con venta o gasto mayor a cero)
+			</label>
+			<table class="items items-list">
+				<thead>
+					<tr>
+						<th style="background-color: <!--#4DVAR vColorCorporativoCSS--> !important; width: 1px !important;"></th>
+						<!-- <th style="width: 70px; text-align: left;"><button onclick="noCheckNegativo()" style="-webkit-filter: invert(100%);" class="ui-icon ui-icon-folder-collapsed toggle all" title="Contraer todo"></button> Código</th> -->
+						<th style="width: 70px; text-align: left;"><button  style="-webkit-filter: invert(100%);" class="ui-icon ui-icon-folder-collapsed toggle all" title="Contraer todo"></button> Código</th>
+						<th >Nombre</th>
+						<th>Cant.</th>
+						<th class="pventa">Venta</th>
+						<th class="monto-gp costo presupuestado adquisicion">Gasto P.</th>
+						<th class="monto-gr costo real adquisicion">Gasto R.</th>
+						<th class="adquisicion">Por gastar</th>
+						<!-- <th><button class="dropdown-button actions items"></button></th> -->
+						<th style="width: 100%; height: 21px ;display: flex; justify-content: center; align-items: flex-end; margin-top: 1px;"><input type="checkbox" name="todocheck" onchange="todoCheck();"></th>
+					</tr>
+				</thead>
+
+				<tbody>
+
+				</tbody>
+			</table>
+		</section>
+	</body>
+</html>

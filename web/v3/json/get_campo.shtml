@@ -1,0 +1,22 @@
+{
+	"rows": [
+<!--#4DLOOP aDatoId -->
+		{
+			"id": <!--#4DHTML aDatoId{aDatoId}-->,
+			"fk": <!--#4DHTML aDatoFk{aDatoId}-->,
+			"text": "<!--#4DHTML _V3_escapeString(aDatoText{aDatoId})-->",
+			"value": "<!--#4DHTML _V3_escapeString(aDatovalue{aDatoId})-->",
+			"enabled": <!--#4DIF aDatoEnabled{aDatoId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"selectable": <!--#4DIF aDatoSelectable{aDatoId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DIF aDatoSelectable{aDatoId}--><!--#4DSCRIPT/_V3_proxy_getOpcionContent-->,
+			"options": [
+				<!--#4DLOOP aOpcionId-->
+				{
+					"id": <!--#4DHTML aOpcionId{aOpcionId}-->,
+					"text": "<!--#4DHTML _V3_escapeString(aOpcionValue{aOpcionId})-->"
+				}<!--#4DIF NOT(aOpcionId{aOpcionId} = aOpcionId{Size of array(aOpcionId)})-->,<!--#4DENDIF-->
+				<!--#4DENDLOOP-->
+			]<!--#4DENDIF-->
+		}<!--#4DIF NOT(aDatoId{aDatoId} = aDatoId{Size of array(aDatoId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

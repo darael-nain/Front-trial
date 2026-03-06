@@ -1,0 +1,18 @@
+{	
+	"rows": [
+	<!--#4DLOOP aLlave -->
+		{
+			"aNegocio": "<!--#4DHTML _V3_escapeString(aNegocio{aLlave})-->",
+			"aNegocioID": <!--#4DHTML aNegocioID{aLlave}-->,
+			"aCodigo": "<!--#4DHTML _V3_escapeString(aCodigo{aLlave})-->",
+			"aNombre": "<!--#4DHTML _V3_escapeString(aNombre{aLlave})-->",
+			"aVenta": <!--#4DHTML String(aVenta{aLlave};"&xml")-->,
+			"aItem": <!--#4DHTML String(aItem{aLlave};"&xml")-->,
+			"aPresupuesto": <!--#4DHTML String(aPresupuesto{aLlave};"&xml")-->,
+			"aGastoActual": <!--#4DHTML String(aGastoActual{aLlave};"&xml")-->,
+			"ocValidada": <!--#4DIF ocValidada-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"aLlave": "<!--#4DHTML _V3_escapeString(aLlave{aLlave})-->"
+		}<!--#4DIF NOT(aLlave{aLlave} = aLlave{Size of array(aLlave)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

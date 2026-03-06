@@ -1,0 +1,54 @@
+{
+	"success": <!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"projects": [
+	  <!--#4DLOOP aProyectoId -->
+	  {
+		"project_id": "<!--#4DHTML aProyectoId{aProyectoId}-->",
+		"project_name": "<!--#4DHTML aProyectoNombre{aProyectoId}-->",
+		"businesses": [
+		  <!--#4DLOOP aNegocioId -->
+		  {
+			"business_id": "<!--#4DHTML aNegocioId{aNegocioId}-->",
+			"business_name": "<!--#4DHTML aNegocioNombre{aNegocioId}-->",
+			"associated_project_id": "<!--#4DHTML aNegocioProyectoId{aNegocioId}-->",
+			"business_totals": {
+			  "price_unit": "<!--#4DHTML aNegocioPrecioUnitario{aNegocioId}-->",
+			  "subtotal_price": "<!--#4DHTML aNegocioSubtotalPrecio{aNegocioId}-->",
+			  "cost_paid": "<!--#4DHTML aNegocioCostoPagado{aNegocioId}-->",
+			  "cost_to_pay": "<!--#4DHTML aNegocioCostoXPagar{aNegocioId}-->",
+			  "previous_cost": "<!--#4DHTML aNegocioCostoPrevio{aNegocioId}-->",
+			  "unit_previous_cost": "<!--#4DHTML aNegocioCostoUnitarioPrevio{aNegocioId}-->"
+			},
+			"details": [
+			  <!--#4DLOOP aLlaveNV -->
+			  {
+				"product_name": "<!--#4DHTML aNombreProducto{aLlaveNV}-->",
+				"is_parent": <!--#4DIF aIsParent{aLlaveNV}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+				"product_code": "<!--#4DHTML aCodigoProducto{aLlaveNV}-->",
+				"related_title_key": "<!--#4DHTML aLlaveTituloRelacionado{aLlaveNV}-->",
+				"item_key": "<!--#4DHTML aLlaveNV{aLlaveNV}-->"
+			  }<!--#4DIF NOT(aLlaveNV{aLlaveNV} = aLlaveNV{Size of array(aLlaveNV)})-->,<!--#4DENDIF-->
+			  <!--#4DENDLOOP-->
+			]
+		  }<!--#4DIF NOT(aNegocioId{aNegocioId} = aNegocioId{Size of array(aNegocioId)})-->,<!--#4DENDIF-->
+		  <!--#4DENDLOOP-->
+		],
+		"exchangeType": [
+		  <!--#4DLOOP aExchangeCont -->
+		  {
+			"id": "<!--#4DHTML aExchangeCont{aExchangeCont}-->",
+			"id_nv": "<!--#4DHTML aExchangeIdNv{aExchangeCont}-->",
+			"codigo": "<!--#4DHTML aCodigo{aExchangeCont}-->",
+			"nombre": "<!--#4DHTML aNombre{aExchangeCont}-->",
+			"value": "<!--#4DHTML aValue{aExchangeCont}-->",
+			"asignada": <!--#4DIF Not(Undefined(aAsignada))--><!--#4DIF aAsignada{aExchangeCont}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+			"current_value": "<!--#4DHTML aCurrentValue{aExchangeCont}-->",
+			"asignada_print": <!--#4DIF Not(Undefined(aAsignadaPrint))--><!--#4DIF aAsignadaPrint{aExchangeCont}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->
+		  }<!--#4DIF NOT(aExchangeCont{aExchangeCont} = aExchangeCont{Size of array(aExchangeCont)})-->,<!--#4DENDIF-->
+		  <!--#4DENDLOOP-->
+		]
+	  }<!--#4DIF NOT(aProyectoId{aProyectoId} = aProyectoId{Size of array(aProyectoId)})-->,<!--#4DENDIF-->
+	  <!--#4DENDLOOP-->
+	]
+  }
+  

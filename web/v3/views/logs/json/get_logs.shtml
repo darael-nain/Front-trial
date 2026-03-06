@@ -1,0 +1,27 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML $total - 1-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+	<!--#4DLOOP aidlog -->
+		{
+			"id": <!--#4DHTML aidlog{aidlog}-->,
+			"fecha": "<!--#4DHTML afechalog{aidlog}-->",
+			"hora": "<!--#4DHTML ahoralog{aidlog}-->",
+			"login": "<!--#4DHTML aloginlog{aidlog}-->",
+			"descripcion": "<!--#4DHTML _V3_escapeString(adeslog{aidlog})-->",
+			"modulo": "<!--#4DHTML amodulolog{aidlog}-->",
+			"folio": "<!--#4DHTML afoliolog{aidlog}-->",
+			"ip": "<!--#4DHTML aiplog{aidlog}-->",
+			"url": "<!--#4DHTML _V3_escapeString(aurllog{aidlog})-->",
+			"navegador": "<!--#4DHTML _V3_escapeString(anavegadorlog{aidlog})-->"		
+		}<!--#4DIF NOT(aidlog{aidlog} = aidlog{Size of array(aidlog)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

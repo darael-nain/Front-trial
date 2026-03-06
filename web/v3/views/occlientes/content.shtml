@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getOccContent-->
+		<title>Orden de compra de cliente</title>
+		<meta charset="utf-8">
+		<script>
+			
+			<!--#4DIF Not(Undefined(new))-->
+			var new_occ = true;
+			<!--#4DELSE-->
+			var new_occ = false;
+			<!--#4DENDIF-->
+			var container = $('#sheet-occ');
+			var _validationSave = function(){
+				var state = true;
+				container.find('input').removeClass("invalid");
+				if (container.find('input[name="occ[numero]"]').val()=="" || container.find('input[name="occ[numero]"]').val()=="0") {
+					container.find('input[name="occ[numero]"]').addClass('invalid');
+					state = false;
+				}
+				if (container.find('input[name="occ[total_neto]"]').val()=="" || container.find('input[name="occ[total_neto]"]').val()=="0") {
+					container.find('input[name="occ[total_neto]"]').addClass('invalid');
+					state = false;
+				}
+				if (container.find('input[name="occ[emision]"]').val()=="") {
+					container.find('input[name="occ[emision]"]').addClass('invalid');
+					state = false;
+				}
+				return state;
+			}
+			var menus = function() {
+				unaBase.toolbox.init();
+				unaBase.toolbox.menu.init({
+					entity: 'Occ',
+					buttons: ['save', 'delete'],
+					data: function(){
+					  return $('.ui-dialog section#sheet-occ').serializeAnything();
+					},
+					validate:function(){
+						return _validationSave();
+					}
+				});
+			};
+			$(document).ready(function() {
+				menus();
+
+				$('.ui-dialog fieldset button').button({
+					icons: {
+						primary: 'ui-icon-circle-arrow-n'
+					},
+					text: true
+				});
+				
+				$('.ui-dialog').on('dialogbeforeclose', function() {
+					if (new_occ) {
+						$.ajax({
+							'url': '/4DACTION/_V3_setOcc',
+							data: {
+								'id': $("#sheet-occ").data("id"),
+								'delete': true
+							},
+							dataType: 'json',
+							success: function(data) {}
+						});
+					}
+				});
+
+				container.find('input[name="occ[numero]"]').focus();
+
+				$('#sheet-occ').find('.numeric.currency input').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+      			$('#sheet-occ').find('.numeric.percent input').number(true, 1, ',', '.');
+
+      			$('input[name="file"]').fileupload({
+					dataType: 'json',
+					formData: {
+						index: (function() {
+							return 'OC_NV|' + $('.ui-dialog-content').find('[name="occ[id]"]').val()
+						})(),
+						filename: 'test.file' // $('input[name="file"]')[0].files[0].name
+					},
+					add: function (e, data) {
+						//$('#dialog-menu [data-name="save"]').find('button').triggerHandler('click');
+						if ($('.ui-dialog-content').find('[name="occ[id]"]').val() != 0)
+							data.submit();
+						else {
+							toastr.warning('Es necesario guardar la OC Cliente antes de poder ajuntar un archivo.');
+							$('#sheet-occ').data('pending', true);
+						}
+					},
+					done: function (e, data) {
+						console.log(data);
+						toastr.success('Archivo cambiado!');
+						if ($('figure a').css('display') == 'none') {
+							$('figure div.no-picture').hide();
+							$('figure a').show();
+						}
+						var href = $('figure a').attr('href') + '&_r=' + (Math.random() * 10000);
+						$('figure a').attr('href', href);
+					}
+				});
+
+				$('figure button').button({
+					icons: {
+						primary: 'ui-icon-document'
+					}
+				});
+
+				$('.label-rut').text(country.label_rut);
+
+				$('input[name="occ[total_neto]"]').val(<!--#4DHTML String([OC_NV]Total;"&xml")-->);
+
+			});
+		</script>
+		<style type="text/css">
+			#sheet-occ textarea{
+				height: 100px;
+				width: calc(100% - 10px)!important;
+			}
+		</style>
+	</head>
+	<body>
+		<section id="sheet-occ" data-id="<!--#4DTEXT [OC_NV]Id_OC_NV-->">
+			<input type="hidden" name="occ[id]" value="<!--#4DTEXT [OC_NV]Id_OC_NV-->">
+			<input type="hidden" name="occ[negocio][id]" value="<!--#4DTEXT idnv-->">
+			<input type="hidden" name="occ[factura][id]" value="<!--#4DTEXT idFactura-->">
+			<fieldset>
+				<legend>Archivo adjunto</legend>
+				<figure>
+					<a target="_blank" href="/4DACTION/_V3_getUpload?index=OC_NV|<!--#4DTEXT [OC_NV]Id_OC_NV-->" class="btn btn-outline-success btn-sm">Descargar archivo</a>
+					<div class="no-picture" style="display: none; font-size: 18px; line-height: 112px;">Sin archivo</div>
+					<input style="display: none;" type="file" name="file" data-url="/4DACTION/_V3_setUpload">
+					<a onclick="$('input[name=&quot;file&quot;]').trigger('click');" class="btn btn-outline-success btn-sm">Subir archivo</a>
+				</figure>
+			</fieldset>
+			<fieldset>
+				<legend>Información general</legend>
+				<label>
+					<span>Tipo</span>
+					<select name="occ[tipo]" class="inputCustom">
+						<option selected value="<!--#4DTEXT tiporef-->"><!--#4DTEXT tiporef--></option>
+						<!--#4DIF tiporef#"ORDEN DE COMPRA"-->
+						<option value="ORDEN DE COMPRA">ORDEN DE COMPRA (801)</option>
+						<!--#4DENDIF-->
+						<!--#4DIF tiporef#"HES"-->
+						<option value="HES">HES</option>
+						<!--#4DENDIF-->
+						<!--#4DIF tiporef#"HEM"-->
+						<option value="HEM">HEM</option>
+						<!--#4DENDIF-->
+						<!--#4DIF tiporef#"ROC"-->
+						<option value="ROC">ROC</option>
+						<!--#4DENDIF-->
+						<!--#4DIF tiporef#"RC"-->
+						<option value="RC">RC</option>
+						<!--#4DENDIF-->
+						<!--#4DIF tiporef#"CON"-->
+						<option value="CON">CON</option>
+						<!--#4DENDIF-->
+						<!--#4DIF tiporef#"NOTA DE PEDIDO"-->
+						<option value="NOTA DE PEDIDO">NOTA DE PEDIDO (802)</option>
+						<!--#4DENDIF-->
+					</select>
+				</label><br><br>
+				<label>
+					<span>Referencia</span>
+					<input type="text" class="inputCustom" name="occ[referencia]" value="<!--#4DTEXT referencia-->">
+				</label><br><br>
+				<label>
+					<span>Número</span>
+					<input type="text" class="inputCustom" required name="occ[numero]" value="<!--#4DTEXT [OC_NV]Numero-->">
+				</label>
+				<label>
+					<span>F. Emisión</span>
+					<input type="date"  required class="inputCustom" name="occ[emision]" value="<!--#4DVAR Substring(String([OC_NV]Fecha_Emi;ISO Date);1;10)-->">
+				</label>
+				<label>
+					<span>Total neto <!--#4DVAR _V3_defaultCurrencySymbol--></span>
+					<span class="numeric currency"><input type="text" class="inputCustom" required name="occ[total_neto]" value=""></span>
+				</label>
+			</fieldset>
+
+			<fieldset>
+				<input type="hidden" name="occ[empresa][id]" value="<!--#4DTEXT idEmpresa-->">
+				<input type="hidden" name="occ[contacto][id]" value="<!--#4DTEXT idContacto-->">
+				<legend>Facturación</legend>
+				<label>
+					<span>Alias</span>
+					<input readonly type="text" name="occ[empresa][alias]" class="inputCustom" value="<!--#4DTEXT aliasEmpresa-->">
+				</label><br>
+				<label>
+					<span>Razón social</span>
+					<input readonly type="text" name="occ[empresa][razon]" class="inputCustom" value="<!--#4DTEXT razonEmpresa-->">
+				</label>
+				<label>
+					<span class="label-rut">Rut</span>
+					<input readonly type="text" name="occ[empresa][rut]" class="inputCustom" value="<!--#4DTEXT rutEmpresa-->">
+				</label>
+				<label>
+					<span>Giro</span>
+					<input readonly type="text" name="occ[empresa][giro]" class="inputCustom" value="<!--#4DTEXT giroEmpresa-->">
+				</label>
+				<label>
+					<span>País</span>
+					<input readonly type="text" name="occ[empresa][pais]" class="inputCustom" value="<!--#4DTEXT paisEmpresa-->">
+				</label>
+				<label>
+					<span>Dirección</span>
+					<input readonly type="text" name="occ[empresa][direccion]" class="inputCustom" value="<!--#4DTEXT dirEmpresa-->">
+				</label>
+				<label>
+					<span>Teléfono</span>
+					<input readonly type="tel" name="occ[empresa][fono]" class="inputCustom" value="<!--#4DTEXT fonoEmpresa-->">
+				</label>
+				<label>
+					<span>Tipo moneda</span>
+					<input list="money" type="text" name="occ[tipo_moneda]" class="inputCustom" value="<!--#4DTEXT [OC_NV]tipo_moneda-->">
+					<datalist id="money">
+					  <option value="PESOS">
+					  <option value="DOLAR">
+					  <option value="EURO">
+					</datalist>
+				</label>
+				<label>
+					<span>Condición de pago</span>
+					<input type="text" name="occ[empresa][condicion_pago]" class="inputCustom" value="<!--#4DTEXT [OC_NV]forma_de_pago-->">
+				</label><br><br>
+
+				<label>
+					<span>Contacto</span>
+					<input type="search" class="inputCustom" name="occ[contacto][nombre]" value="<!--#4DTEXT nombreContacto-->">
+				</label>
+			</fieldset>
+
+			<fieldset>
+				<legend>Recepción</legend>
+				<label>
+					<span>Recepcionado por</span>
+					<input type="text" class="inputCustom" name="occ[recepcion][recepcionado_por]" value="<!--#4DTEXT [OC_NV]recepcion_nombre-->">
+				</label>
+				<label>
+					<span>Dirección</span>
+					<input type="text" class="inputCustom" name="occ[recepcion][direccion]" value="<!--#4DTEXT [OC_NV]recepcion_direccion-->">
+				</label>
+				<label>
+					<span>Horario</span>
+					<input type="text" name="occ[recepcion][horario]" class="inputCustom" value="<!--#4DTEXT [OC_NV]recepcion_horario-->">
+				</label>
+				<label>
+					<span>Email</span>
+					<input type="email" required name="occ[recepcion][email]" class="inputCustom" value="<!--#4DTEXT [OC_NV]recepcion_email-->">
+				</label>
+				<label>
+					<span>Teléfono</span>
+					<input type="tel" name="occ[recepcion][fono]" value="<!--#4DTEXT [OC_NV]recepcion_fono-->" class="inputCustom">
+				</label><br><br>
+				<label style="width:calc(100% - 10px)">
+					<span>Observación recepción</span>
+					<textarea name="occ[recepcion][observacion]" placeholder="Ingrese una observación sobre la recepción del documento..."><!--#4DTEXT [OC_NV]recepcion_observacion--></textarea>
+				</label>
+			</fieldset>
+
+			<fieldset>
+				<legend>Observación general</legend>
+				<label style="width:calc(100% - 10px)">
+					<span>Comentario</span>
+					<textarea name="occ[observacion]" placeholder="Ingrese una observación general sobre la oc de cliente..."><!--#4DTEXT [OC_NV]Observaciones--></textarea>
+				</label>
+			</fieldset>
+
+			<fieldset style="display:none">
+				<input type="hidden" name="occ[file][id]" value="<!--#4DTEXT [OC_NV]id_file-->">
+				<legend>Adjuntar un archivo</legend>
+				<label>
+					<span>Nombre</span>
+					<input type="text" name="upload[nombre]" class="inputCustom">
+				</label>
+				<label>
+					<span>Descripción</span>
+					<input type="text" name="upload[descripcion]" class="inputCustom">
+				</label>
+				<label>
+					<span>Archivo (puede subir imágenes o PDF)</span>
+					<input type="file" name="upload[attachment]" class="inputCustom" accept="image/*,application/pdf">
+				</label>
+				<button>Subir</button>
+			</fieldset>
+
+		</section>
+	</body>
+</html>

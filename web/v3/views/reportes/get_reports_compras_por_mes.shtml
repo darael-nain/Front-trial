@@ -1,0 +1,4 @@
+[
+	<!--#4DLOOP ameses-->["<!--#4DTEXT _V3_escapeString(ameses{ameses})-->",<!--#4DHTML String(aventa{ameses};"&xml")-->]<!--#4DIF NOT(ameses{ameses} = ameses{Size of array(ameses)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+]

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_serverInfo-->
+		<!--<!- -#4DSCRIPT/_V3_proxy_getCotizacionContent- ->-->
+		<title>Datos adicionales</title>
+		<meta charset="utf-8">
+		<script>
+
+			var pax = {
+				add : function(){
+					var htmlObject = $(' \
+						<tr data-id="0"> \
+							<td><input type="text" name="pax-name"></td> \
+							<td><input type="text" name="pax-dni"></td> \
+							<td><input type="text" name="pax-age"></td> \
+							<td><input type="text" name="pax-country"></td> \
+							<td>\
+								<button class="save" style="border:1px solid gray;margin:10px 0 10px 0;border-radius:5px"><span style="font-size:10px;font-weight:bold;">Guardar</span></button>\
+								<button class="remove" style="border:1px solid gray;margin:10px 0 10px 0;border-radius:5px"><span style="font-size:10px;font-weight:bold;">Quitar</span></button>\
+								<button class="delete" style="border:1px solid gray;margin:10px 0 10px 0;border-radius:5px"><span style="font-size:10px;font-weight:bold;">Eliminar</span></button>\
+							</td>\
+						</tr> \
+					');
+					$('#pax-container > table').append(htmlObject);
+
+					htmlObject.find('button.save').button({
+						icons: {
+							primary: 'ui-icon-disk'
+						},
+						text: false
+					}).click(function() {
+						var data = {
+							id : $(this).closest('tr').data('id'),
+							name : $(this).closest('tr').find('input[name="pax-name"]').val(),
+							dni : $(this).closest('tr').find('input[name="pax-dni"]').val(),
+							age : $(this).closest('tr').find('input[name="pax-age"]').val(),
+							country : $(this).closest('tr').find('input[name="pax-country"]').val(),
+							idnv : $('section.sheet').data('id')
+						}
+						if (data.name != '' && data.dni != '' && data.age != '' && data.country != '') {
+							var modo = "save";
+							if (parseFloat(data.id) > 0) {
+								modo = "update";
+							}
+							pax.set(data, $(this).closest('tr'), modo);
+						}else{
+							toastr.warning("Falta completar datos.");
+						}
+					});
+
+					htmlObject.find('button.delete').button({
+						icons: {
+							primary: 'ui-icon-trash'
+						},
+						text: false
+					}).click(function() {
+						var row = $(this).closest('tr');
+						confirm("¿Está seguro que desea eliminar el registro?").done(function(datax) {
+						  if (datax) {
+						    var data = {
+						    	id : row.data('id'),
+						    	name : row.find('input[name="pax-name"]').val(),
+						    	dni : row.find('input[name="pax-dni"]').val(),
+						    	age : row.find('input[name="pax-age"]').val(),
+						    	country : row.find('input[name="pax-country"]').val(),
+						    	idnv : $('section.sheet').data('id'),
+						    	delete : true
+						    }
+						    pax.set(data, row, 'delete');
+						  }
+						});
+					});
+					htmlObject.find('button.delete').hide();
+
+					htmlObject.find('button.remove').button({
+						icons: {
+							primary: 'ui-icon-circle-minus'
+						},
+						text: false
+					}).click(function() {
+						this.closest("tr").remove();
+					});
+					
+
+				},
+				get : function(){
+					$.ajax({
+						url: '/4DACTION/_V3_getPax',
+						data: {
+							idnv: $('section.sheet').data('id')
+						},
+						dataType: 'json',
+						success: function(data) {
+							var rows = data.rows;
+							for (var i = 0; i < rows.length; i++) {
+								var htmlObject = $(' \
+									<tr data-id="'+ rows[i].id + '" data-idnv="'+ rows[i].idnv + '"> \
+										<td><input type="text" name="pax-name" value="'+ rows[i].nombre + '"></td> \
+										<td><input type="text" name="pax-dni" value="'+ rows[i].dni + '"></td> \
+										<td><input type="text" name="pax-age" value="'+ rows[i].edad + '"></td> \
+										<td><input type="text" name="pax-country" value="'+ rows[i].nacionalidad + '"></td> \
+										<td>\
+											<button class="save" style="border:1px solid gray;margin:10px 0 10px 0;border-radius:5px"><span style="font-size:10px;font-weight:bold;">Guardar</span></button>\
+											<button class="delete" style="border:1px solid gray;margin:10px 0 10px 0;border-radius:5px"><span style="font-size:10px;font-weight:bold;">Eliminar</span></button>\
+										</td>\
+									</tr> \
+								');
+								$('#pax-container > table').append(htmlObject);
+
+								htmlObject.find('button.save').button({
+									icons: {
+										primary: 'ui-icon-disk'
+									},
+									text: false
+								}).click(function() {
+									var data = {
+										id : $(this).closest('tr').data('id'),
+										name : $(this).closest('tr').find('input[name="pax-name"]').val(),
+										dni : $(this).closest('tr').find('input[name="pax-dni"]').val(),
+										age : $(this).closest('tr').find('input[name="pax-age"]').val(),
+										country : $(this).closest('tr').find('input[name="pax-country"]').val(),
+										idnv : $(this).closest('tr').data('idnv')
+									}
+									if (data.name != '' && data.dni != '' && data.age != '' && data.country != '') {
+										pax.set(data, $(this).closest('tr'), 'update');
+									}else{
+										toastr.warning("Falta completar datos.");
+									}
+								});
+
+								htmlObject.find('button.delete').button({
+									icons: {
+										primary: 'ui-icon-trash'
+									},
+									text: false
+								}).click(function() {
+									var row = $(this).closest('tr');
+									confirm("¿Está seguro que desea eliminar el registro?").done(function(datax) {
+									  if (datax) {
+									    var data = {
+									    	id : row.data('id'),
+									    	name : row.find('input[name="pax-name"]').val(),
+									    	dni : row.find('input[name="pax-dni"]').val(),
+									    	age : row.find('input[name="pax-age"]').val(),
+									    	country : row.find('input[name="pax-country"]').val(),
+									    	idnv : $('section.sheet').data('id'),
+									    	delete : true
+									    }
+									    pax.set(data, row, 'delete');
+									  }
+									});
+								});
+
+							}
+						}
+					});
+				},
+				set : function(data1, targetRow, modo){
+					$.ajax({
+						'url': '/4DACTION/_V3_setPax',
+						data: data1,
+						dataType: 'json',
+						success: function(data) {
+							if (data.success) {
+								if (modo == "save") {
+									toastr.success('Creado con éxito!');
+									targetRow.closest("tr").find('button.remove').remove();
+									targetRow.closest("tr").find('button.delete').show();
+									targetRow.data('id', data.id);
+								}else if(modo == "update"){
+									toastr.success('Actualizado con éxito!');
+								}else{
+									targetRow.closest("tr").remove();
+									toastr.success('Eliminado con éxito!');
+								}
+							}else{
+								toastr.error("No fue posible crear el registro. Intente nuevamente.");
+							}							},
+						error: function(xhr, text, error) {
+							toastr.error(NOTIFY.get('ERROR_INTERNAL', 'Error'));
+						}
+					});
+				},
+				print : function(){
+					var sid = '';
+					$.each($.cookie(),function(clave,valor) { if (clave == hash && valor.match(/UNABASE/g)) sid = valor; });
+					var url = nodeUrl + '/print-manifiesto-pax/?entity=cotizaciones&id=' + $('section.sheet').data('id') + '&folio=' + $('section.sheet').data('index') + '&sid=' + encodeURIComponent(sid) + '&preview=true&nullified=false&hostname=' + window.location.origin;
+					unaBase.loadInto.dialog(url, 'Vista previa manifiesto', 'x-large', true);
+				}
+			}
+
+			$(document).ready(function() {
+
+				unaBase.toolbox.init();
+				unaBase.toolbox.menu.init({
+					entity: 'DatoByCotizacion',
+					buttons: ['save'],
+					data: function() {
+
+						var set = $('.ui-dialog fieldset').serializeAnything();
+
+
+						return $.unserialize('id=' + $('section.sheet').data('id') + '&' + set);
+					},
+					validate: function() {
+						return true;
+					}
+				});
+
+				$.ajax({
+					url: '/4DACTION/_V3_getDatoByCotizacion',
+					data: {
+						id: $('section.sheet').data('id')
+					},
+					dataType: 'json',
+					success: function(data) {
+						var htmlObject;
+						$.each(data.rows, function(key, item) {
+							if (item.enabled) {
+								if (item.options.length > 0) {
+									htmlObject = $(' \
+										<label> \
+											<span>' + item.nombre + '</span> \
+											<input '+ ((item.isDate)? 'class="datepicker-personalizados"' : '') +' type="'+ ((item.isDate)? 'text' : 'search') +'" name="dato[' + item.id + '][valor]" value="' + item.valor + '"> \
+											<button class="show dato_' + item.id + '">Ver</button> \
+										</label> \
+									');
+									htmlObject.find('input').autocomplete({
+										source: function(request, response) {
+											response($.map(item.options, function(jtem) {
+												return jtem;
+											}));
+										},
+										minLength: 0,
+										delay: 5,
+										position: { my: "left top", at: "left bottom", collision: "flip" },
+										open: function() {
+											$(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+										},
+										close: function() {
+											$(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+										},
+										focus: function(event, ui) {
+											$(this).val(ui.item.text);
+											return false;
+										},
+										select: function(event, ui) {
+											$(this).val(ui.item.text);
+											return false;
+										}
+
+									}).data('ui-autocomplete')._renderItem = function(ul, item) {
+										return $('<li><a>' + item.text + '</a></li>').appendTo(ul);
+									};
+									$('.ui-dialog fieldset').append(htmlObject);
+
+									htmlObject.find('.datepicker-personalizados').datepicker({
+										dateFormat: 'dd-mm-yy',
+										altField: '',
+										altFormat: 'yy-mm-dd'
+									});
+									
+									$('.ui-dialog fieldset').find('button.show.dato_' + item.id).button({
+										icons: {
+											primary: 'ui-icon-carat-1-s'
+										},
+										text: false
+									}).click(function() {
+										$('.ui-dialog fieldset').find('input[name="dato[' + item.id + '][valor]"]').autocomplete('search', '@').focus();
+									});
+								} else {
+									htmlObject = $(' \
+										<label> \
+											<span>' + item.nombre + '</span> \
+											<input type="text" name="dato[' + item.id + '][valor]" value="' + item.valor + '"> \
+										</label> \
+									');
+									$('.ui-dialog fieldset').append(htmlObject);
+								}
+							}
+						});
+						if ($('section.sheet').data('index'))
+							$('.ui-dialog fieldset > legend > span').text('Nº ' + $('section.sheet').data('index'));
+					}
+				});
+
+				$('.pax-container-add').button({icons: {primary: 'ui-icon-circle-plus'},text: true });
+				$('.pax-container-print').button({icons: {primary: 'ui-icon-print'},text: false });
+
+				pax.get();
+
+			});
+
+		</script>
+
+		<style>
+			#pax-container > table tr td input{
+				border: 1px solid gray;
+				background-color: yellow;
+				padding: 5px;
+				width:90%;
+				text-transform: uppercase;
+			}
+				#pax-container > table tr{
+					padding:3px;
+				}
+		</style>
+
+	</head>
+	<body>
+		<fieldset>
+			<legend>Datos adicionales para <!--#4DTEXT etiqueta_cotizacion--> <span></span></legend>
+		</fieldset>
+		
+		<!--#4DIF PARAM_PE_mostrarSeccionPax-->
+		<div style="margin-top:20px;" id="pax-container">
+			<h2 style="text-decoration:underline;font-weight:bold;">PASAJEROS</h2>
+			<button class="pax-container-add" style="margin:10px 0 10px 0;" onclick="pax.add();"><span style="font-size:10px;font-weight:bold;">Agregar</span></button>
+			<button class="pax-container-print" style="float:right;margin:10px 10px 10px 0;" onclick="pax.print();"><span style="font-size:10px;font-weight:bold;">Print</span></button>
+			<table>
+				<tr>
+					<td>Nombre y apellido</td>
+					<td>Dni/pasaporte</td>
+					<td>Edad</td>
+					<td>Nacionalidad</td>
+					<td></td>
+				</tr>
+			</table>
+		</div>
+		<!--#4DENDIF-->
+
+	</body>
+</html>

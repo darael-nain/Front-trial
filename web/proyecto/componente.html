@@ -1,0 +1,25 @@
+<div class="box-comp" id="<!--#4DVAR vIdCompCreado-->">						
+	<!--#4dif vTipo="adjunto"-->
+		<label class="label-comp"><!--#4DVAR vNombre--></label>
+		<input class="adjuntos" id="" type="file" name="WU_xb_file" />
+		<div class="file-comp" style="display:inline"></div>
+	<!--#4dendif-->
+
+	<!--#4dif vTipo="campo"-->
+		<label class="label-comp"><!--#4DVAR vNombre--></label>
+		<input class="save-valor-comp" title="campo" type="text" name="<!--#4DVAR vIdCompCreado-->"><span></span>
+	<!--#4dendif-->
+
+	<!--#4dif vTipo="pregunta"-->				
+		<div>									
+			<input class="radio save-valor-comp" value="si" style="width:30px;display:inline-block;vertical-align:middle;" type="radio" name="<!--#4DVAR vIdCompCreado-->">
+			<span class="opcion-radio" title="pregunta">Si</span>
+		</div>
+		<div>									
+			<input checked class="radio save-valor-comp" value="no" style="width:30px;display:inline-block;vertical-align:middle;" type="radio" name="<!--#4DVAR vIdCompCreado-->">
+			<span class="opcion-radio" title="pregunta">No</span>
+		</div>
+	<!--#4dendif-->
+
+	<button type="button" title="Eliminar componente" value="<!--#4DVAR vIdCompCreado-->" class="delete-comp s-btn-d-icono"></button>
+</div>

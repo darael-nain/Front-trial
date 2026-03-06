@@ -1,0 +1,25 @@
+{	
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([tipos_de_cuenta]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"sort": {
+		"by": "<!--#4DTEXT sort_by-->",
+		"order": "<!--#4DTEXT sort_order-->"
+	},
+	"rows": [
+<!--#4DLOOP aIdTipocuenta -->
+		{
+			"id": <!--#4DTEXT aIdTipocuenta{aIdTipocuenta}-->,
+			"descripcion": "<!--#4DHTML _V3_escapeString(aDescripcionTipocuenta{aIdTipocuenta})-->",
+			"activo": <!--#4DIF aEstadoTipocuenta{aIdTipocuenta}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"codigo": "<!--#4DTEXT aCodigoTipocuenta{aIdTipocuenta}-->"
+		}<!--#4DIF NOT(aIdTipocuenta{aIdTipocuenta} = aIdTipocuenta{Size of array(aIdTipocuenta)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

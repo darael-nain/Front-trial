@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_proxy_getJustificarMasivo-->
+<html>
+	<head>
+		<title>JUSTIFICAR MASIVO</title>
+		<script type="text/javascript" src="/v3/script/datepicker_es.js?<!--#4DTEXT _V3_version-->"></script>
+		<meta charset="utf-8">
+		<!--<script>
+			function getItemsJustificarMasivo(){
+				$.ajax({
+				    'url':'/4DACTION/_V3_getItemJustificarMasivo',
+				    data:{
+				      "oc[id]":id
+				    },
+	    			dataType:'json',
+	    			success:function(data){
+
+	    			}
+  				});
+			}
+
+			(function() {
+			  getItemsJustificarMasivo();
+			})();
+
+		</script>-->
+		<style>
+			.text-edit{
+				background-color:yellow;
+				border:1px solid lightgray;
+				padding:2px;
+			}
+		</style>
+	</head>
+	<body>		
+		<section id="container-justificar-masivo" class="sheet">
+			<table class="results">
+				<thead>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td>
+							<select class="text-edit" name="" id="">
+								<option value="">FACTURA ELECTRONICA</option>
+								<option value="">RECIBO POR HONORARIOS</option>
+								<option value="">COMPROBANTE</option>
+								<option value="">BOLETA DE VENTA</option>
+							</select>
+						</td>
+						<td></td>
+						<td></td>
+						<td><input class="datepicker text-edit" type="text"></td>
+						<td><input class="datepicker text-edit" type="text"></td>
+						<td></td>
+					</tr>
+					<tr>
+						<th>Ítem OC</th>
+						<th>Concepto</th>
+						<th>Saldo</th>
+						<th>Monto</th>
+						<th>Proveedor</th>
+						<th>Doc.</th>
+						<th>Nro. Doc.</th>
+						<th>F. Emisión</th>
+						<th>F. Recepción</th>
+						<th>Info. Contable</th>				
+					</tr>
+				</thead>
+				<tbody>
+					<!--#4DLOOP aLlaveItemOC-->
+						<tr>
+							<td><!--#4DTEXT aNombreItemOC{aLlaveItemOC}--></td>
+							<td><input class="text-edit" type="text" value="<!--#4DTEXT aNombreItemOC{aLlaveItemOC}-->"></td>
+							<td><!--#4DTEXT aPorJustificarItemOC{aLlaveItemOC}--></td>
+							<td><input class="text-edit" type="text" value="<!--#4DTEXT aPorJustificarItemOC{aLlaveItemOC}-->"></td>
+							<td><input class="text-edit" type="text" value=""></td>
+							<td>
+								<select class="text-edit" name="" id="">
+									<option value="">FACTURA ELECTRONICA</option>
+									<option value="">RECIBO POR HONORARIOS</option>
+									<option value="">COMPROBANTE</option>
+									<option value="">BOLETA DE VENTA</option>
+								</select>
+							</td>
+							<td><input class="text-edit" type="text"></td>
+							<td><input class="datepicker text-edit" type="text"></td>
+							<td><input class="datepicker text-edit" type="text"></td>
+							<td>
+								<div><input class="text-edit" type="text"></div>
+								<div><input class="text-edit" type="text"></div>
+							</td>				
+						</tr>
+					<!--#4DENDLOOP-->
+				</tbody>
+				<tfoot></tfoot>
+			</table>
+		</section>
+	</body>
+</html>

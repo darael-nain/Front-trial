@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_proxy_getPerfilContacto2-->
+<html>
+	<head>		
+		<title>Perfil</title>
+		<meta charset="utf-8">	
+		<script type="text/javascript">
+			var container = $('.form-contact');			
+			var idContacto = containerContacto.find('input[name="id"]').val();
+
+			// setea valores por defecto
+			if (idContacto == 0) {
+				var busqueda = $('input[name="contacto[info][alias]"]').val();			
+				var srt = busqueda.split(" ");						
+				$('input[name="contact[nombre]"]').val(srt[0]);
+				$('input[name="contact[paterno]"]').val(srt[1]);
+				$('input[name="contact[materno]"]').val(srt[2]);
+				$('input[name="contact[alias]"]').val(busqueda);
+				$('input[name="contact[razon]"]').val(busqueda);
+			}
+
+			var full_fields = function(){				
+				container.find('input:not([type="radio"])').each(function() {
+					if ($(this).val() != "") {						
+						$(this).css("background-color","#FECA40");
+					}
+				});
+				if (container.find('textarea').val() != "") {						
+					container.find('textarea').css("background-color","#FECA40");
+				}
+			}
+
+			var getCity = function(){
+				var optionsObject;
+		        var select1 = $('select[name="contact[ciudad]"]');
+		        $.ajax({
+		          url: '/4DACTION/_V3_' + 'getCiudad',
+		          dataType: 'json',
+		          data:{},
+		          success: function(data) {           
+		            $.each(data.rows, function(key, item){             
+		              optionsObject = $('<option value="'+ item.ciudad +'">'+ item.ciudad +'</option>');
+		              select1.append(optionsObject);
+		            });           
+		          }
+		        });
+			}
+
+			var getComuna = function(){
+				var optionsObject;
+				var select2 = $('select[name="contact[comuna]"]');				
+
+				var city =  $('select[name="contact[ciudad]"]').val();
+			    if (city=="") {
+			    	city = "santiago";
+			    }      
+		        
+		        $.ajax({
+		          url: '/4DACTION/_V3_' + 'getComunas',
+		          dataType: 'json',
+		          data:{
+		          	city: city
+		          },
+		          success: function(data) {           
+		            $.each(data.rows, function(key, item){             
+		              optionsObject = $('<option value="'+ item.id +'">'+ item.comuna +'</option>');
+		              select2.append(optionsObject);
+		            });           
+		          }
+		        });
+			}
+
+			var getTagByContact = function(){
+				var contacto = $('.form-contact').find('input[name="id"]').val();				
+				var ul = $('.tags');				
+				$.ajax({
+		          url: '/4DACTION/_v3_getTagByContacto',
+		          dataType: 'json',
+		          data:{
+		          	"contacto[id]": contacto
+		          },
+		          success: function(data) {		         
+		            $.each(data.rows, function(key, item){             
+		                ul.append('<li data-id="'+ item.id +'" data-contacto="'+ contacto +'" data-tag="'+ item.tag_id +'">#'+ item.tag_name +'</li>');
+		            });           
+		          }
+		        });
+			}			
+
+			var complete_razon = function(){
+				if ($('input[name="contact[razon]"]').val()=="") {
+		    		var nombre = $('input[name="contact[nombre]"]').val();
+		    		var pat = $('input[name="contact[paterno]"]').val();
+		    		var mat = $('input[name="contact[materno]"]').val();
+		    		var cadena = "";
+		    		if (nombre!="") {
+		    			cadena = cadena + nombre+" ";
+		    		}
+		    		if (pat!="") {
+	    				cadena = cadena + pat+" ";
+	    			}
+		    		if (mat!="") {
+    					cadena = cadena + mat+" ";
+    				}    				
+		    		$('input[name="contact[razon]"]').val(cadena.trim());
+		    	}		
+			}			
+
+			$(document).ready(function() {			
+			    $("#radio").buttonset();
+			    $('.hide').hide();
+			    full_fields();
+
+			    $('.form-contact input[name="contact[rut]"]').change(function(){
+			      verifica_duplicacion();
+			    });
+
+			    //remove tag
+			    $(".tags").on('click','li', function(){
+			    	var li = $(this);
+					var tagContactoId = $(this).data('id');
+
+			    	confirm(MSG.get('CONFIRM_TAG_REMOVE')).done(function(data) {
+						if (data) {									    	
+					    	$.ajax({
+				              url: '/4DACTION/_V3_setTagContacto',
+				              dataType: 'json',
+				              data: {
+				              	'tag_contact[delete]': "yes",
+				              	'tag_contact[id]': tagContactoId		              	
+				              },
+				              success: function(data) {
+								if (data.success) {
+									li.fadeOut(function(){
+										$(this).remove;
+									});
+									toastr.success('Etiqueta quitado exitosamente!');	                  
+								}else {
+								  if (data.opened) {
+								    if (data.readonly)
+								      toastr.error(NOTIFY.get('ERROR_RECORD_READONLY', 'Error'));
+								  }                     
+								}
+				              },
+				              error: function(xhr, text, error) {
+				                toastr.error(NOTIFY.get('ERROR_INTERNAL', 'Error'));                
+				              }
+				            });	
+						}
+					});			    			    	
+			    });
+
+			    getCity();
+			    getComuna();
+			    getTagByContact();
+
+			    //select ciudad
+			    $('select[name="contact[ciudad]"]').change(function(){
+			    	var select2 = $('select[name="contact[comuna]"]');
+					select2.find("*").remove();
+			    	select2.append('<option selected="selected" value="">[Seleccionar]</option>');
+			    	getComuna();
+			    });			    
+
+			    // set razon
+			    $('input[name="contact[razon]"]').focus(function(){
+			    	complete_razon();
+			    });
+
+			    // set estado
+			    $('input[name="check[estado]"]').click(function(){			    	
+			    	if ($(this).prop('checked')) {
+			    		$('input[name="contact[estado]"]').val('true');
+			    	}else{
+			    		$('input[name="contact[estado]"]').val('false');
+			    	}
+			    });
+
+			    // set estado validar
+			    $('input[name="check[validar_rut]"]').click(function(){			    	
+			    	if ($(this).prop('checked')) {
+			    		$('input[name="contact[validar_rut]"]').val('true');
+			    	}else{
+			    		$('input[name="contact[validar_rut]"]').val('false');
+			    	}
+			    });
+
+			});
+		</script>		
+	</head>
+	<body>		
+		<section class="sheet">
+
+			<nav style="height:30px;">
+
+				<!--<ul class="tags">
+					<li>#tag1</li>
+					<li>#tag2</li>
+					<li>#tag3</li>
+				</ul>-->
+
+				<ul class="tags"></ul>
+
+				<div style="margin:10px">
+					<!--#4DIF [Contacto]Id_Cont>0-->
+						<!--#4DIF [Contacto]Estado_Cont-->
+							<span style="display:inline-block;vertical-align:middle"><input name="check[estado]" type="checkbox" checked="checked"></span>
+							<input name="contact[estado]" type="hidden" value="true">
+						<!--#4DELSE-->
+							<span style="display:inline-block;vertical-align:middle"><input name="check[estado]" type="checkbox"></span>
+							<input name="contact[estado]" type="hidden" value="false">
+						<!--#4DENDIF-->						
+					<!--#4DELSE-->
+						<span style="display:inline-block;vertical-align:middle"><input name="contact[estado]" type="checkbox" checked="checked"></span>
+						<input name="contact[estado]" type="hidden" value="true">
+					<!--#4DENDIF-->
+					<span style="display:inline-block;vertical-align:middle;font-weight:bold">Activo</span>					
+				</div>
+			</nav>
+
+			<fieldset>
+			<legend><strong>Información básica</strong></legend>
+				<article class="inline">
+					<div><label>Alias:</label><input name="contact[alias]" value="<!--#4DTEXT Uppercase([Contacto]Alias_Cont;*)-->" type="text"></div>				 	
+	                <div><label>Nombre(s):</label><input required name="contact[nombre]" value="<!--#4DTEXT Uppercase([Contacto]Nombre_Cont;*)-->" type="text"><span class="obligatorio">*</span></div> 
+	                <div><label>A. Paterno:</label><input required name="contact[paterno]" value="<!--#4DTEXT Uppercase([Contacto]Paterno_Cont;*)-->" type="text"><span class="obligatorio">*</span></div>
+	                <div><label>A. Materno:</label><input name="contact[materno]" value="<!--#4DTEXT Uppercase([Contacto]Materno_cont;*)-->" type="text"></div>
+	                <div>
+	                	<label>Rut:</label><input placeholder="Ej: 13740690-6" name="contact[rut]" value="<!--#4DTEXT vRut-->" type="text">
+	                	<label></label><span style="display:inline-block">
+	                	<!--#4DIF [Contacto]valida_rut-->
+	                		<input style="vertical-align:middle" name="check[validar_rut]" type="checkbox" checked="checked">
+	                		<input name="contact[validar_rut]" type="hidden" value="true">
+	                	<!--#4DELSE-->
+	                		<input style="vertical-align:middle" name="check[validar_rut]" type="checkbox">
+	                		<input name="contact[validar_rut]" type="hidden" value="false">
+	                	<!--#4DENDIF-->
+	                	<strong style="color:gray">Validación rut Chileno</strong></span>
+	                </div>	              
+	                <div><label>Razón social:</label><input required name="contact[razon]" value="<!--#4DTEXT Uppercase([Contacto]Razon_Cont;*)-->" type="text"><span class="obligatorio">*</span></div>
+	                <div><label>Giro:</label><input name="contact[giro]" value="<!--#4DTEXT Uppercase([Contacto]Giro_Cont;*)-->" type="text"></div>	                	                
+	            </article>
+	            <article class="inline">
+                	<div><label>Email:</label><input name="contact[email]" value="<!--#4DTEXT Uppercase([Contacto]Email_Cont;*)-->" type="email"></div>
+                	<div><label>Teléfono 1:</label><input name="contact[fono_1]" value="<!--#4DTEXT [Contacto]Telefono1_Cont-->" type="tel"></div>
+                	<div><label>Teléfono 2:</label><input name="contact[fono_2]" value="<!--#4DTEXT [Contacto]Telefono2_Cont-->" type="tel"></div>
+                	<div><label>Celular:</label><input name="contact[celular]" value="<!--#4DTEXT [Contacto]Celular_Cont-->" type="tel"></div>
+                	<div><label>País:</label><input name="contact[dir_pais]" value="<!--#4DTEXT [Contacto]v3_pais_des-->" type="text"></div>
+                	<div><label>Región/estado:</label><input name="contact[dir_region]" value="<!--#4DTEXT [Contacto]v3_region_des-->" type="text"></div>
+                	<div><label>Ciudad:</label><input name="contact[ciudad]" value="<!--#4DTEXT [Contacto]ciudad_cont-->" type="text"></div>
+                	<div><label>Comuna/localidad :</label><input name="contact[comuna]" value="<!--#4DTEXT [Contacto]v3_comuna_des-->" type="text"></div>
+                	<div>
+		              <label for="ciudad">Ciudad:</label>
+		              <select name="contact[ciudad]" id="ciudad">
+		                <!--#4DIF [Contacto]ciudad_cont#""--><option selected="selected" value="<!--#4DTEXT [Contacto]ciudad_cont-->"><!--#4DTEXT Uppercase([Contacto]ciudad_cont;*)--></option><!--#4DELSE--><option selected="selected" value="">[Seleccionar]</option><!--#4DENDIF-->      
+		              </select>
+		            </div>
+                	<div>
+		              <label for="comuna">Comuna / localidad:</label>
+		              <select name="contact[comuna]" id="comuna">
+		                <!--#4DIF [Comuna]Des_Comuna#""--><option selected="selected" value="<!--#4DTEXT [Comuna]Id_Comuna-->"><!--#4DTEXT Uppercase([Comuna]Des_Comuna;*)--></option><!--#4DELSE--><option selected="selected" value="">[Seleccionar]</option><!--#4DENDIF-->      
+		              </select>
+		            </div>
+		            <div><label>Dirección:</label><input name="contact[dir_calle]" value="<!--#4DTEXT Uppercase([Contacto]Dir_Calle_Cont;*)-->" type="text"></div>         	
+                	<div><label>Sitio web:</label><input name="contact[sitio_web]" value="<!--#4DTEXT Uppercase([Contacto]Sitio_Cont;*)-->" type="url"></div>
+              	</article>              
+			</fieldset>			
+			<fieldset>
+				<legend><strong>Notas</strong></legend>
+				<div><textarea name="contact[notas]"><!--#4DTEXT Uppercase([Contacto]nota;*)--></textarea></div>			
+			</fieldset>			
+			<!--<fieldset>
+		        <legend><strong>Actividad</strong></legend>
+		        <ul class="activity">
+		        	<li class="venta">Cotización Nº 123 en proceso $120.0</li>
+		        	<li class="compra">Compra Nº 123 emitida $120.0</li>		        		
+		        </ul>		       
+	      	</fieldset>-->
+		</section>			
+	</body>	
+</html>

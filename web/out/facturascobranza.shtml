@@ -1,0 +1,21 @@
+
+<table class="table table-bordered">
+    <tr >
+        <td class="center-c">Folio</td>
+        <td class="center-c">Referencia</td>
+        <td class="center-c">Fecha</td>
+        <!--<td class="center-c">Neto</td>
+        <td class="center-c">Iva</td>-->
+        <td class="center-c">Total</td>
+    </tr>
+     <!--#4DLOOP a_factura_folio-->           
+    <tr>
+        <td class="orden-alfa center"><!--#4DVAR a_factura_folio{a_factura_folio}--></td>
+        <td class="orden-alfa left"><!--#4DVAR aReferenciaFacturas{a_factura_folio}--></td>
+        <td class="center"><!--#4DVAR a_Factura_fecha{a_factura_folio}--></td>
+        <!--<td class="items">#4DVAR a_Facturas_Neto{a_factura_folio}</td>-->
+        <!--<td class="items">#4DVAR a_Factura_IVA{a_factura_folio}</td>-->
+        <td class="items right"><!--#4DVAR string(a_factura_total{a_factura_folio};"$ ###.###.###.##0")--></td>
+    </tr>       
+    <!--#4DENDLOOP--> 
+</table>

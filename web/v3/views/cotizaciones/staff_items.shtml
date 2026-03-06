@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getStaffItemsContent-->
+		<title>Items del negocio</title>
+		<meta charset="utf-8">
+		<script>
+
+
+		$(document).ready(function() {
+
+			$('input[name="item[usuario][]"]').change(function(event) {
+				$.ajax({
+					url: '/4DACTION/_V3_setUsuarioByItem',
+					data: {
+						id: $(this).parentTo('tr').data('id'),
+						fk: '<!--#4DHTML id-->',
+						enabled: $(this).prop('checked')
+					},
+					dataType: 'json',
+					async: false,
+					success: function(data) {
+						if (!data.success) {
+							event.preventDefault();
+							toastr.error('Error al asignar el ítem al usuario. Tal vez el registro esté bloqueado.');
+						} 
+					}
+				}).fail(function() {
+					event.preventDefault();
+					toastr.error('Error al asignar el ítem al usuario. Error de red.');
+				});
+			});
+
+
+			// Expandir y contraer títulos
+			$('.ui-dialog section.sheet table > thead button.toggle.all').click(function() {
+				unaBase.ui.block();
+				(function() {
+					if ($(this).hasClass('ui-icon-folder-open')) {
+						$(this).removeClass('ui-icon-folder-open');
+						$(this).addClass('ui-icon-folder-collapsed');
+						$(this).attr('title', 'Contraer todo');
+						$('.ui-dialog section.sheet table > tbody > tr.title button.toggle.categoria.ui-icon-folder-open').each(function() {
+							$(this).triggerHandler('click');
+						});
+					} else {
+						$(this).removeClass('ui-icon-folder-collapsed');
+						$(this).addClass('ui-icon-folder-open');
+						$(this).attr('title', 'Expandir todo');
+						$('.ui-dialog section.sheet table > tbody > tr.title button.toggle.categoria.ui-icon-folder-collapsed').each(function() {
+							$(this).triggerHandler('click');
+						});
+					}
+					unaBase.ui.unblock();
+				})();
+			});
+
+			// Seleccionar todos los ítems de la categoría
+			$('.ui-dialog section.sheet table > tbody .select-all.items').click(function(event) {
+				
+				unaBase.ui.block();
+				(function() {
+					var title = $(event.target).closest('tr.title');
+
+					if (title.find('button.toggle.categoria').hasClass('ui-icon-folder-collapsed'))
+						title.find('button.toggle.categoria').triggerHandler('click');
+
+					var items = title.nextUntil('tr.title');
+					$.ajax({
+					url: '/4DACTION/_V3_setUsuarioByItem',
+					data: {
+						id: title.data('id'),
+						fk: '<!--#4DHTML id-->',
+						enabled: title.find('input[type="checkbox"]').prop('checked')
+					},
+					dataType: 'json',
+					async: false,
+					success: function(data) {
+						if (!data.success) {
+							event.preventDefault();
+							toastr.error('Error al asignar el ítem al usuario. Tal vez el registro esté bloqueado.');
+						} else{
+							items.each(function(key, item) {
+								if (!$(item).hasClass('hidden')) {
+									$(item).find('[name="item[usuario][]"]').prop('checked', title.find('.select-all.items').prop('checked')).triggerHandler('change');
+								}
+							});
+
+							unaBase.ui.unblock();
+						}
+					}
+					}).fail(function() {
+						event.preventDefault();
+						toastr.error('Error al asignar el ítem al usuario. Error de red.');
+					});
+
+					
+				})();
+			});
+
+			$('.ui-dialog section.sheet table > tbody button.toggle.categoria').click(function() {
+				var target = $(this);
+
+				var collapsed = target.hasClass('ui-icon-folder-collapsed');
+
+				if (collapsed)
+					target.removeClass('ui-icon-folder-collapsed').addClass('ui-icon-folder-open');
+				else
+					target.removeClass('ui-icon-folder-open').addClass('ui-icon-folder-collapsed');
+
+				var titles = target.parentTo('tr').nextUntil('.title');
+
+				if (collapsed) {
+					titles.removeClass('collapsed');
+					target.parentTo('tr').find('.info').html('');
+
+				} else {
+					titles.addClass('collapsed');
+					target.parentTo('tr').find('.info').html(titles.length + ' ítem' + ((titles.length > 1)? 's' : ''));
+				}
+			});
+
+		});
+
+		</script>
+		<style>
+
+			#dialog-viewport table.items > tbody {
+				counter-reset: item;
+			}
+
+			#dialog-viewport table.items > tbody > tr:not(.title) > td:nth-of-type(2):before {
+				counter-increment: item;
+				content: counter(item);
+				font-weight: bold;
+			}
+
+			#dialog-viewport table.items > * > * > * span[name] {
+				display: block;
+				color: black;
+			}
+
+			#dialog-viewport section.sheet table .collapsed {
+				display: none;
+			}
+
+			#dialog-viewport table .moving-src, table .moving-dst {
+				outline: 1px dashed black;
+				opacity: .3;
+			}
+
+			#dialog-viewport section.sheet table th:last-of-type {
+				width: 28px;
+			}
+
+			/* Nuevo */
+
+			#dialog-viewport section.sheet > footer > article {
+				position: relative;
+			}
+
+			#dialog-viewport section.sheet > footer > article > button.expand {
+				position: absolute;
+				right: 23px;
+				top: 23px;
+				display: inline-block;
+				margin: 0 !important;
+				padding: 0 !important;
+				width: 18px !important;
+				height: 18px !important;
+			}
+
+			#dialog-viewport .costo > span > span[name] {
+				color: #AF6D44;
+			}
+
+			#dialog-viewport .utilidad > span > span[name] {
+				color: #44AF6D;
+			}
+
+			#dialog-viewport .numeric.percent > span > span[name] {
+				display: inline;
+			}
+
+			#dialog-viewport .detalle {
+				display: none;
+			}
+
+			/*
+			Solución quick&dirty para poder mostrar correctamente los valores con decimales
+			se usa input en vez de span, y se cambia la apariencia del input en línea
+			*/
+
+			#dialog-viewport table.items input:not([type="checkbox"]) {
+				background: none !important;
+				border: none !important;
+				cursor: default !important;
+				margin: 0 !important;
+				padding: 0 !important;
+				display: inline !important;
+				font: inherit !important;
+			}
+
+			#dialog-viewport table.items .costo > span > input[name] {
+				color: #AF6D44;
+			}
+
+			#dialog-viewport table.items .utilidad > span > input[name] {
+				color: #44AF6D;
+			}
+
+			#dialog-viewport table.items .numeric.percent > span > input[name] {
+				display: inline;
+			}
+
+			.new-position-button{
+				position:absolute;
+				right:20px;
+				top:15px!important
+			}
+
+			/* permiso de ver precio de venta en negocios*/
+			<!--#4DIF NOT(_V3_verifica_permisos_web (_V3_data_username;452))-->
+			table .pventa{
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+		</style>
+	</head>
+	<body>
+		<section class="sheet">
+			<table class="items staff-items">
+				<thead>
+					<tr>
+						<th style="background-color: <!--#4DVAR vColorCorporativoCSS--> !important; width: 1px !important;"></th>
+						<th style="width: 70px; text-align: left;"><button style="-webkit-filter: invert(100%);" class="ui-icon ui-icon-folder-collapsed toggle all" title="Contraer todo"></button> Código</th>
+						<th >Nombre</th>
+						<th><button class="dropdown-button actions items"></button></th>
+					</tr>
+				</thead>
+
+				<tbody>
+				<!--#4DLOOP aUsuarioNegocioId-->
+					<!--#4DIF aUsuarioNegocioTipo{aUsuarioNegocioId}="TITULO"-->
+					<tr data-id="<!--#4DVAR aUsuarioNegocioId{aUsuarioNegocioId}-->" class="title" data-venta="<!--#4DVAR String(aUsuarioNegocioVenta{aUsuarioNegocioId};"&xml")-->" data-gasto-p="<!--#4DVAR String(aUsuarioNegocioGastoP{aUsuarioNegocioId};"&xml")-->">
+						<th></th>
+				 		<th><button class="ui-icon toggle categoria ui-icon-folder-collapsed" title="Contraer o expandir título"></button></th>
+						<th>
+							<input readonly name="item[][nombre]" value="<!--#4DVAR aUsuarioNegocioItem{aUsuarioNegocioId}-->">
+						</th>
+						<th>
+							<input type="checkbox" class="select-all items" style="margin-right: 20px;" <!--#4DIF aUsuarioNegocioEnabled{aUsuarioNegocioId}--> checked<!--#4DENDIF-->>
+						</th>
+					</tr>
+					<!--#4DELSE-->
+					<tr data-id="<!--#4DVAR aUsuarioNegocioId{aUsuarioNegocioId}-->" class="collapsed" data-venta="<!--#4DVAR String(aUsuarioNegocioVenta{aUsuarioNegocioId};"&xml")-->" data-gasto-p="<!--#4DVAR String(aUsuarioNegocioGastoP{aUsuarioNegocioId};"&xml")-->">
+						<td></td>
+				 		<td class="numeric code"><input readonly name="item[][codigo]" value="<!--#4DVAR aUsuarioNegocioCodigo{aUsuarioNegocioId}-->"></td>
+				 		<td>
+				 			<input readonly name="item[][nombre]" value="<!--#4DVAR aUsuarioNegocioItem{aUsuarioNegocioId}-->" style="width: 200px;">
+				 		</td>
+						<td>
+							<input type="checkbox" style="margin-right: 20px;" name="item[usuario][]"<!--#4DIF aUsuarioNegocioEnabled{aUsuarioNegocioId}--> checked<!--#4DENDIF--> >
+						</td>
+					</tr>
+					<!--#4DENDIF-->
+				<!--#4DENDLOOP-->
+				</tbody>
+			</table>
+		</section>
+		<script>
+			$(document).ready(function() {
+				if ($('[name="cotizacion[ver_solo_items_usados]"]').is(':checked')) {
+					$('table.staff-items tbody').find('tr').each(function(key, item) {
+						var venta = $(item).data('venta');
+						var gasto_p = $(item).data('gasto-p');
+						if (venta == 0 && gasto_p == 0) {
+							$(item).hide().addClass('hidden');
+						}
+					});
+				}
+			});
+		</script>
+	</body>
+</html>

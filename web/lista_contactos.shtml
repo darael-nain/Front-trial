@@ -1,0 +1,38 @@
+<table width="100%" border="1" cellpadding="0" cellspacing="0">
+<tbody>
+    <tr bgcolor="#CCCCCC">
+        <th class="center">RAZON SOCIAL</th>
+        <th class="center">RUT</th>
+        <th class="center">ACCION</th>        
+    </tr>
+	
+    <!--#4DLOOP w_a_id_contacto-->
+    <tr>           
+        <td class="left"><!--#4DVAR w_a_razon{w_a_id_contacto}--></td>
+        <td class="center"><!--#4DVAR w_a_rut{w_a_id_contacto}--></td>
+        <td class="center">
+		
+			
+		<!--#4DIF vOpcionCrear="oc"-->
+		<a class="link-crear-lista" title="Crear nueva oc" href="#" onclick="crear_oc('<!--#4DVAR w_a_id_contacto{w_a_id_contacto}-->','oc')">
+			<p>
+				<img src="/imagenes/add2.png" border="0" />
+				<span>Crear OC.</span>
+			</p>
+		</a>
+		<!--#4DELSE-->
+		<a class="link-crear-lista" title="Crear nueva solicitud" href="#" onclick="crear_oc('<!--#4DVAR w_a_id_contacto{w_a_id_contacto}-->','so')">
+			<p>
+				<img src="/imagenes/add2.png" border="0" />
+				<span>Crear Rend.</span>
+			</p>                        
+		</a>
+		<!--#4DENDIF-->
+        
+        </td>
+    </tr>
+    <!--#4DENDLOOP-->
+	
+</tbody>
+</table>
+            

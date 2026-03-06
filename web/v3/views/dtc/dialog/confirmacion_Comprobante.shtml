@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getComprobanteConfirm-->
+		<title>Comprobantes</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/views/dtc/comprobantes.js?<!--#4DTEXT _V3_version-->"></script>
+    <script type="text/javascript" src="/v3/script/datepicker_es.js?<!--#4DTEXT _V3_version-->"></script>
+    <!-- <script type="text/javascript" src="/v3/views/ajustes/impuestos/content.js"></script> -->
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+          // $('button.show.cuentaContable').click(function() {
+          //   console.log(this.dataset.id);
+          //   // $('input[name="select_imp"]').autocomplete('search', '@').focus();
+          // });
+          $( ".datepicker" ).datepicker( "option", "dateFormat", "dd-mm-yy" );
+            let cuentaContableElements = document.querySelectorAll('input[name="cuentaContable"]');
+            for(let item of cuentaContableElements){
+              comprobantes.addAutocomplete(item);
+        
+            }
+      })
+               
+      const confOrigen="comprobantes";
+
+
+    </script>
+
+  	<style type="text/css">
+  		.newcolor input:not([type=checkbox]),textarea{
+  			background-color: #ffffff !important;
+        width: 100%;
+  		}
+      .newcolor {
+        width: 50%;
+      }
+      input[name="cuentaContable"]{
+        width: 80%!important;
+      }
+      .inlineGrid{
+        display: inline-grid;;
+      }
+
+ 
+  	</style>
+		<link href="/css/form1.css" rel="stylesheet">
+	</head>
+
+	<body>
+    <section class="sheet" id="comprobantes" data-id="<!--#4DIF Not(Undefined(id))--><!--#4DHTML id--><!--#4DELSE-->null<!--#4DENDIF-->">
+      <footer>
+        <article>
+          <h1 id="mainTitle">Información general - Comprobantes - <!--#4DIF Not(Undefined(id))-->Nro. <!--#4DHTML id--><!--#4DENDIF--></h1>
+
+          <ol class="newcolor inlineGrid">  
+            <li class="li"><label class="sg-input-title" for="active">Activo<input checked="checked" name="active" id="active" class="checkbox item" type="checkbox"></label>
+              <span class="sg-input-title">Tipo</span>
+
+              <select name="docType" class="item">
+                <option value="ingreso">Ingreso</option>
+                <option value="egreso">Egreso</option>
+                <option value="traspaso">Traspaso</option>
+              </select></li>   
+
+            <li class="li">
+            </li>
+            <li class="li"><span class="sg-input-title">Descripción</span> <span><textarea class="form-control rise item" id="description" type="text" name="description"></textarea> </span></li>
+          </ol>
+          <!-- <ul class="editable newcolor"> -->
+          <ol class="inlineGrid">
+            <li class="li hide" hidden=""> <input name="id" id="id" class="item" type="number"></li>
+
+          
+            <li class="li"><label class="sg-input-title" for="registryDate">Fecha de Registro</label> 
+              <input name="registryDate" id="registryDate" class="item" type="text">
+            </li>        
+
+            <li class="li"> <label class="sg-input-title" for="docDate">Fecha</label>
+              <input name="docDate" id="docDate" class="item"  placeholder="dd-mm-aaaa" type="search">
+            </li>        
+
+          </ol>
+
+     <!--        <li class="li"><span class="sg-input-title">Descripción</span> <span><input class="form-control rise item" id="description" type="text" name="description"></span></li>
+
+            <li class="li"><span class="sg-input-title">Descripción</span> <span><input class="form-control rise item" id="description" type="text" name="description"></span></li>
+
+            <li class="li"><span class="sg-input-title">Descripción</span> <span><input class="form-control rise item" id="description" type="text" name="description"></span></li>
+            
+            <li class="li"><span class="sg-input-title">Descripción</span> <span><input class="form-control rise item" id="description" type="text" name="description"></span></li> -->
+
+        
+        </article>
+
+        <article>
+          <h1>Detalle</h1>
+    <!--       <div>
+            <input type="search" name="detail" placeholder="" >
+            <button  class="show detail"></button>
+          </div> -->
+          <table id="detail"  class="results" style="display: table;" >
+            <thead>
+              <tr>
+                <th >Documento</th>
+                <th >Código</th>
+                <th >Cuenta contable</th>
+                <th >Debe</th>
+                <th >Haber</th>
+                <th >Editar</th>
+                <th >Eliminar</th>
+              </tr>
+            </thead>
+            <tbody name="detail" class="ui-selectable">
+              
+            </tbody>  
+          </table>
+   <!--        <ul>
+           <li class="li"><span class="sg-input-title">Descripción</span> <span><input class="form-control rise item" id="description" type="text" name="description"></span></li>
+           <li class="li"><span class="sg-input-title">Descripción</span> <span><input class="form-control rise item" id="description" type="text" name="description"></span></li>
+           <li class="li"><span class="sg-input-title">Descripción</span> <span><input class="form-control rise item" id="description" type="text" name="description"></span></li>
+          </ul>
+          <ul>
+           <li class="li"><span class="sg-input-title">Descripción</span> <span><input class="form-control rise item" id="description" type="text" name="description"></span></li>
+           <li class="li"><span class="sg-input-title">Descripción</span> <span><input class="form-control rise item" id="description" type="text" name="description"></span></li>
+           <li class="li"><span class="sg-input-title">Descripción</span> <span><input class="form-control rise item" id="description" type="text" name="description"></span></li>
+          </ul> -->
+        </article>
+      </footer>
+    </section>
+
+  <script type="text/javascript">
+
+
+  </script>
+
+	</body>
+</html>

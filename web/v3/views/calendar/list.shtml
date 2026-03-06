@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    	<!--#4DSCRIPT/_V3_proxy_getListCalendar-->
+        <title>Calendar</title>
+        <meta charset="utf-8">
+
+		<!--<link href='/v3/script/jquery/plugins/fullcalendar-1.6.4/fullcalendar/fullcalendar.css' rel='stylesheet' />
+		<link href='/v3/script/jquery/plugins/fullcalendar-1.6.4/fullcalendar/fullcalendar.print.css' rel='stylesheet' media='print' />
+		<script src="/v3/script/jquery/plugins/fullcalendar-1.6.4/fullcalendar/fullcalendar.min.js"></script>-->
+
+		<link href='/v3/script/jquery/plugins/fullcalendar-3.0.1/fullcalendar.css' rel='stylesheet' />
+		<!--<script src="/v3/script/jquery/plugins/fullcalendar-3.0.1/lib/jquery.min.js"></script>-->
+		<script src="/v3/script/jquery/plugins/fullcalendar-3.0.1/lib/moment.min.js"></script>
+		<link href='/v3/script/jquery/plugins/fullcalendar-3.0.1/fullcalendar.print.css' rel='stylesheet' media='print' />
+		<script src="/v3/script/jquery/plugins/fullcalendar-3.0.1/fullcalendar.js"></script>
+		
+        <script>
+
+        	var paramsCalendar = {			
+				format_fecha:'yyyy-mm-dd',
+				timesheet: true,				
+				ot: true,
+				fecha_asig_neg : true,
+				fecha_real_neg : true,
+				finicio: '',
+				ffin: '',	
+				responsable: ""	
+			};
+		
+
+            $(document).ready(function() {
+
+
+            	$('#calendar').fullCalendar({
+					header: {
+						left: 'prev,next,today',
+						center: 'title',
+						right: 'month,agendaWeek,agendaDay'
+					},					
+					defaultView:'agendaDay',
+					buttonText: {today:'Hoy',month:'Mensual', week:'Semanal',day:'Diario'},
+				    dayNames:['Domingo', 'Lunes', 'Martes','Miércoles', 'Jueves', 'Viernes','Sábado'],
+				    dayNamesShort:['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sab'],
+				    monthNames:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio','Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+				    monthNamesShort:['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun','Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+					editable: false,
+					agenda: 'h:mm{ - h:mm}',			
+					allDayText:'Todo el día',
+					timeFormat: 'H:mm{ - H:mm}',
+					axisFormat:'H(:mm)tt',			
+					events: {		      
+				        url: '/4DACTION/_V3_getCalendar',
+				        type: 'POST',		     
+				        data: function() {
+				        	return paramsCalendar;
+				        },
+
+				        cache: false,
+				        error: function() {		       
+				            alert('OCURRIO UN ERROR AL CARGAR LOS DATOS, INTENTE NUEVAMENTE!');
+				        },
+				        color: '#C0F7FE',				      
+				        borderColor: '#3DE4FC',
+				        textColor: 'black'
+				    },				   
+				    eventClick: function(event) {
+				        if (event.url) {
+				            window.open(event.url);
+				            return false;
+				        }
+
+		    		}	
+
+				});
+		$('.fc-button-prev span').click(function(){
+           /*var date1 = $('#calendar').fullCalendar( 'getDate' );
+           var actualDate1 = date1.getMonth();
+     
+           paramsCalendar.finicio = $('#calendar').fullCalendar('getView').start;
+		   paramsCalendar.ffin = $('#calendar').fullCalendar('getView').end;*/
+		   // alert(paramsCalendar.finicio);
+		   // alert(paramsCalendar.ffin);
+
+		  //var view = $('#calendar').fullCalendar('getView');
+			alert("The view's prev is " + $('#calendar').fullCalendar('prev'));
+
+        });
+
+
+        $('.fc-button-next span').click(function(){
+          /*var date = $('#calendar').fullCalendar( 'getDate' );
+           var actualDate = date.getMonth();
+           alert(actualDate);
+           paramsCalendar.finicio = $('#calendar').fullCalendar('getView').start;
+		   paramsCalendar.ffin = $('#calendar').fullCalendar('getView').end;
+		   alert(paramsCalendar.finicio);
+		   alert(paramsCalendar.ffin);*/
+
+		    // var view2 = $('#calendar').fullCalendar('getView');
+			alert("The view's next is " + $('#calendar').fullCalendar('next'));
+        });
+
+            	            	
+            	setTimeout((function() {				
+					$('.fc-button-today').trigger('click');
+					$('#viewport').scrollTo('tr:eq(20)',800);			
+				}), 1000);
+            	
+                unaBase.toolbox.init();    
+                var params = {
+                    callback: function(query) {	
+                    	setTimeout((function() {
+                    		//paramsCalendar.ot = (typeof query.ot != 'undefined')? query.ot : false;
+							//paramsCalendar.timesheet = (typeof query.timesheet != 'undefined')? query.timesheet : false;
+							paramsCalendar.ot = query.ot;
+							paramsCalendar.timesheet = query.timesheet;
+							paramsCalendar.responsable = query.responsable;	
+							paramsCalendar.fecha_asig_neg = query.fecha_asig_neg;	
+							paramsCalendar.fecha_real_neg = query.fecha_real_neg;
+							paramsCalendar.finicio = $('#calendar').fullCalendar('getView').start;
+							paramsCalendar.ffin = $('#calendar').fullCalendar('getView').end;
+					
+
+
+
+							$('#calendar').fullCalendar('refetchEvents');
+						}), 1000);
+                    },
+                    inflection: {
+                        singular: 'Calendar',
+                        plural: 'Calendar',
+                        none: 'ninguna'
+                    },                                  
+                    filters: [
+                        //{ name: 'created_at', type: 'month', caption: 'Fecha de creación', range: true },
+                        //{ name: 'area', type: 'autocomplete', caption: 'Áreas', dataSource: 'get_areas_ots' },
+                        { name: 'responsable', type: 'autocomplete', caption: 'Responsables ', dataSource: 'get_assigned_ots' },                       
+                        { name: 'modulos', type: 'checkbox', caption: 'Modulos', options: [
+							{ caption: 'Timesheet', name: 'timesheet', value: false },
+							{ caption: 'Vencimiento OT', name: 'ot', value: true },
+							{ caption: 'N Asignación', name: 'fecha_asig_neg', value: true },
+							{ caption: 'N Realizacion', name: 'fecha_real_neg', value: false }						
+						]}
+                    ]
+                };
+
+                unaBase.toolbox.search.init(params);
+                unaBase.toolbox.menu.init({
+                    entity: 'Calendar',
+                    buttons: []
+                });
+               
+              	<!--#4DIF (Not(_V3_verifica_permisos_web(_V3_data_username;23)))-->
+              		var user = $(".calendarito").data('username');
+					//alert(user);
+				<!--#4DENDIF-->
+
+				$("#search").css({width: "500px"});
+
+            });
+        </script>
+    </head>
+    <body class="calendarito" data-username="<!--#4DTEXT vLogin-->">       
+        <div id='calendar'></div>
+    </body>
+</html>
+
+
+
+

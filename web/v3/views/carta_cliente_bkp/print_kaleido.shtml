@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--#4DSCRIPT/_V3_proxy_getCotizacionContent-->
+    <meta charset="utf-8"/>
+    <script src="/v3/script/jquery/jquery.js"></script>
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" media="print" href="/v3/design/print_carta.css?_=363654">
+    <title>NRO <!--#4DTEXT vid_negocio--></title>
+    <style>
+    @media print {
+      <!--#4DIF (preview="true") & (nullified#"true") & (vid_negocio#-1)-->
+      html > body:before {
+        display: block;
+        position: absolute;
+        top:180px;
+        left:50px;
+        width:100vw;
+        text-align: center;
+        content: 'COPIA NO VALIDA';
+        color: rgba(0,0,0,.3);
+        font-size:140px;
+        font-weight: bold;
+        -webkit-transform: rotate(-45deg);
+      }
+      <!--#4DENDIF-->
+      <!--#4DIF (preview="true") & (nullified#"true") & (vid_negocio=-1)-->
+      html > body:before {
+        display: block;
+        position: absolute;
+        top: 220px;
+        left: 50px;
+        width: 100vw;
+        text-align: center;
+        content: 'PLANTILLA';
+        color: rgba(0,0,0,.3);
+        font-size: 160px;
+        font-weight: bold;
+        -webkit-transform: rotate(-45deg);
+      }
+      <!--#4DENDIF-->
+      <!--#4DIF nullified="true"-->
+      html > body:before {
+        display: block;
+        position: absolute;
+        top: 215px;
+        left: 120px;
+        width: 100vw;
+        text-align: center;
+        content: 'ANULADO';
+        color: rgba(0,0,0,.3);
+        font-size: 145px;
+        font-weight: bold;
+        -webkit-transform: rotate(-45deg);
+      }
+      <!--#4DENDIF-->
+      body {
+        font-family: 'Open Sans' !important;
+        font-size: 18px !important;
+      }
+      .cuadradito {
+         background-color: <!--#4DVAR vColorCorporativoCSS--> !important;
+      }
+
+      .tabla-detalle, .totales > table, .tabla-condiciones {
+        width: 100% !important;
+      }
+
+      .info-extra{
+        padding:0px;
+        position:absolute;
+        /*right:-100px;
+        top:80px;*/
+        left:155px;
+        top:30px;
+        font-size:22px;
+      }
+      .info-extra > span{
+        display:block;
+        font-weight:bold;
+        text-align: left;
+      }
+
+      .bloque1 td {
+          padding-top: 2px;
+          padding-bottom: 2px;
+      }
+
+      body, div, p, span {
+          font-size: 18px !important;
+      }
+
+    }
+    </style>
+    <script>
+    $(document).ready(function() {
+      $('.imagenes-adjuntas').hide();
+      $('.archivos-enlazados').hide();
+
+      $.ajax({
+        url: '/4DACTION/_V3_getAttachmentByCotizacion',
+        data: {
+          id: <!--#4DVAR vid_nv-->,
+          sid: '<!--#4DVAR sid-->'
+        },
+        async: false,
+        dataType: 'json',
+        success: function(data) {
+          var htmlObject;
+          if (data.rows.length > 0)
+            $('.imagenes-adjuntas').show();
+          for (var i = 0; i < data.rows.length; i++) {
+            htmlObject = '<p style="margin-top: 15px; margin-bottom: 5px;">' + data.rows[i].notas + '</p><img src="/4DACTION/_V3_getAttachment?id=' + data.rows[i].id + '&amp;sid=<!--#4DVAR sid-->" alt="' + data.rows[i].text + '" width="900">';
+            $('.attachments').append(htmlObject);
+          }
+        }
+      });
+
+      $.ajax({
+        url: '/4DACTION/_V3_getLinkByCotizacion',
+        data: {
+          id: <!--#4DVAR vid_nv-->,
+          sid: '<!--#4DVAR sid-->'
+        },
+        async: false,
+        dataType: 'json',
+        success: function(data) {
+          var htmlObject;
+          if (data.rows.length > 0)
+            $('.archivos-enlazados').show();
+          for (var i = 0; i < data.rows.length; i++) {
+              if (data.rows[i].visible) {
+                  htmlObject = '<p style="margin-top: 15px; margin-bottom: 5px;"><a href="' + data.rows[i].href + '">' + data.rows[i].notas + '</a></p>';
+                  $('.links').append(htmlObject);
+              }
+          }
+        }
+      });
+
+      <!--#4DIF print_datos_adicionales_cot-->
+      $.ajax({
+        url: '/4DACTION/_V3_getDatoByCotizacion',
+        data: {
+          id: <!--#4DVAR vid_nv-->,
+          sid: '<!--#4DVAR sid-->'
+        },
+        async: false,
+        dataType: 'json',
+        success: function(data) {
+          var htmlObject;
+          if (data.rows.length > 0)
+            $('.datos-adicionales').show();
+          for (var i = 0; i < data.rows.length; i++) {
+            if (data.rows[i].enabled && data.rows[i].valor != '') {
+              htmlObject = '<p style="font-size: 11px; display: block !important; margin: 0;">' + data.rows[i].nombre + ': ' + data.rows[i].valor + '</p>';
+              $('.datos').append(htmlObject);
+            }
+          }
+          if ($('.datos').text() == '')
+            $('.datos-adicionales').hide();
+        }
+      });
+      <!--#4DENDIF-->
+
+    });
+    </script>
+</head>
+
+<body>
+  <!--#4DIF custom_background-->
+  <img src="/4DACTION/_V3_printBackground" style="display: block; width: 1024px; position: absolute; top: 0; left: 0; z-index: -20;">
+
+  <!--#4DELSE-->
+<img src="<!--#4DTEXT vUrlImagenLogo-->" width="<!--#4DTEXT vAnchoPicture-->" height="<!--#4DTEXT vAltoPicture-->" style="max-width: 500px; max-height: 500px; padding: 10px; margin-left: <!--#4DIF custom_background-->50<!--#4DELSE-->30<!--#4DENDIF-->px;">
+
+  <!--#4DENDIF-->
+
+
+<div class="contenedor" align="center">
+<div class="cuadro">
+
+<div class="new-header">
+
+
+<div style="height: 250px;"></div>
+
+<div style="text-align: right !important; width: 100% !important;font-weight: bold;color: rgb(108,108,108);  font-size: 26px !important;"> N&deg; <!--#4DTEXT idNegocioPrint--><br> <span style="color: rgb(108,108,108);font-size: 18px !important;">Santiago <!--#4DVAR String(Current date;System Date Long)--></span></div>
+
+  <p>
+    <label><!--#4DTEXT razonPropietaria--></label>
+    <label><!--#4DTEXT giroPropietaria--></label>
+    <label><!--#4DTEXT rutPropietaria--></label>
+    <label><!--#4DTEXT direccionPropietaria--></label>
+    <label><!--#4DTEXT telefonoPropietaria--></label>
+    <label><!--#4DTEXT comunaPropietaria--> - <!--#4DTEXT ciudadPropietaria--></label>
+  </p>
+
+</div>
+
+
+<!--#4DIF showInfoArribaInfo--><div class="info-extra" style="font-size: 18px !important;"><span><!--#4DTEXT razon--></span><span><!--#4DTEXT rut--></span></div><!--#4DENDIF-->
+
+<div align="left" class="header-datos" style="/*border: 1px solid blue; */padding-left: 80px !important; height: 1100px !important; position: relative !important;">
+
+    <div style="text-transform: capitalize !important; font-size: 18px !important;"><!--#4DVAR Lowercase(vtratamientocontacto;*)--></div>
+    <div style="text-transform: capitalize !important; font-size: 18px !important;"><!--#4DVAR Lowercase(vnombrecontacto;*)--></div>
+    <div style="text-transform: capitalize !important; font-weight: bold !important; font-size: 18px !important;"><!--#4DVAR Lowercase(vempresa;*)--></div>
+    <div style="text-decoration: underline !important; font-size: 18px !important;"></div>
+
+    <div>&nbsp;</div>
+    <div style="white-space: pre !important; font-size: 18px !important;"><!--#4DVAR vtextocarta-->&nbsp;</div>
+    <div>&nbsp;</div>
+    <div style="font-size: 18px !important;">Cliente: <span style="font-weight: bold !important;"><!--#4DVAR Uppercase(vmarca;*)--></span></div>
+    <div style="font-size: 18px !important;">Director: <span style="font-weight: bold !important;"><!--#4DVAR Uppercase(vdirector;*)--></span></div>
+    <div>&nbsp;</div>
+
+    <p style="font-weight: bold !important; font-size: 22px !important; width: 700px !important; text-transform: uppercase !important;">Valor del proyecto</p>
+    <p style="font-weight: bold !important; font-size: 22px !important;"><!--#4DVAR vtotalneto--></p>
+    <p style="position: absolute; bottom: 350px; font-size: 18px !important;">Valores no incluyen <!--#4DTEXT <>_V3_IVAName-->.</p>
+    <div style="position: absolute; bottom: 210px; right: -50px; width: 300px !important;">
+        <p style="margin: 0 !important; color: rgb(108,108,108); font-size: 26px !important; font-weight: bold; display: block !important;"><!--#4DTEXT _V3_capitalizeString(Lowercase(vDeEmisorNombre;*))--><br><!--#4DTEXT _V3_capitalizeString(Lowercase(vDeEmisorApPat;*))--></p>
+        <p style="margin: 0 !important; font-size: 24px !important; font-weight: bold; display: block !important;"><!--#4DTEXT _V3_capitalizeString(Lowercase(vDeEmisorCargo;*))--></p>
+        <p style="margin: 0 !important; font-size: 16px !important; display: block !important;">Email: <!--#4DTEXT vDeEmisorEmail--></p>
+    </div>
+    <!--#4DIF custom_background_footer-->
+    <img src="/4DACTION/_V3_printBackgroundFooter" style="display: block; width: 1075px !important; position: absolute !important; left: 0 !important; bottom: 0 !important; z-index: 2 !important;">
+    <!--#4DENDIF-->
+</div>
+
+<div align="left" class="header-datos" style="page-break-before: always !important; position: relative !important; height: 1490px !important;">
+    <img src="/4DACTION/_V3_printBackground" style="display: block; width: 1024px; position: absolute; top: 0; left: 0;
+    z-index: -20;">
+    <div style="height: 250px !important;"></div>
+    <div style="font-weight: bold !important; font-size: 18px !important;">INCLUYE:</div>
+    <div>&nbsp;</div>
+    <div style="font-size: 18px !important; white-space: pre !important; word-wrap: break-word !important;">
+<!--#4DLOOP a_tipo_det--><!--#4DIF (a_tipo_det{a_tipo_det}="ITEM") & (a_carta_cliente{a_tipo_det}) & (a_id_producto{a_tipo_det}#0) & (a_cantidad{a_tipo_det}#"0") & (a_cantidad2{a_tipo_det}#"0") & (a_pu1_raw{a_tipo_det}#0)--><!--#4DTEXT a_cantidad{a_tipo_det}--> <!--#4DTEXT _V3_capitalizeString(a_des{a_tipo_det})-->
+<!--#4DENDIF--><!--#4DIF (a_tipo_det{a_tipo_det}="TITULO") & (a_carta_cliente{a_tipo_det}) & (a_subtotal_raw{a_tipo_det}#0)-->
+
+<!--#4DTEXT _V3_capitalizeString(a_des{a_tipo_det})-->:
+
+<!--#4DENDIF--><!--#4DENDLOOP-->
+    </div>
+</div>
+
+<div align="left" class="header-datos" style="page-break-before: always !important; position: relative !important; height: 1490px !important;">
+    <img src="/4DACTION/_V3_printBackground" style="display: block; width: 1024px; position: absolute; top: 0; left: 0;
+    z-index: -20;">
+    <div style="height: 250px !important;"></div>
+    <div>&nbsp;</div>
+    <div style="font-size: 18px !important; white-space: pre !important; word-wrap: break-word !important;">
+<!--#4DVAR vNotas-->
+    </div>
+</div>
+
+<div align="left" class="header-datos" style="page-break-before: always !important; position: relative !important; height: 1490px !important;">
+    <img src="/4DACTION/_V3_printBackground" style="display: block; width: 1024px; position: absolute; top: 0; left: 0;
+    z-index: -20;">
+    <div style="height: 250px !important;"></div>
+    <div style="font-weight: bold !important; font-size: 18px !important;">NO INCLUYE:</div>
+    <div>&nbsp;</div>
+    <div style="font-size: 18px !important; white-space: pre !important; word-wrap: break-word !important;"><!--#4DVAR vnoincluye--></div>
+</div>
+
+</div>
+</div>
+</body>
+</html>

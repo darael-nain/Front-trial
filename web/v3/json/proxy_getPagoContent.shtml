@@ -1,0 +1,6 @@
+{
+	"id": <!--#4DHTML [Orden_Pago]Id_OPago-->,
+	"folio" : "",
+	"fecha_propuesta" : "<!--#4DHTML [Orden_Pago]Fecha_Propuesta-->",
+	"estado" : "<!--#4DHTML vEstado-->"
+}

@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+<html class="no-js" lang="ES">
+	<head>
+		<!--#4DSCRIPT/_V3_serverInfo-->
+		<meta charset="utf-8">
+		<meta name="robots" content="noindex">
+		<title><!--#4DTEXT _V3_nombre_empresa--> - UnaBase</title>
+		<!-- <link rel="icon" href="/favicon.png"> -->
+		<link rel="icon" href="/faviconNew.png">
+		<link rel="stylesheet" href="/v3/design/master_modal.css?<!--#4DTEXT _V3_version-->">
+		<link rel="stylesheet" href="/v3/design/dialog_confirm.css?<!--#4DTEXT _V3_version-->">
+		<link rel="stylesheet" href="/css/welcome.css?<!--#4DTEXT _V3_version-->">
+		<meta http-equiv="Expires" content="0">
+		<meta http-equiv="Last-Modified" content="0">
+		<meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+		<meta http-equiv="Pragma" content="no-cache">
+
+		<link rel="stylesheet" href="/v3/design/icons/fontawesome-free-6.4.0/css/all.min.css">
+		<link rel="stylesheet" href="/v3/styles/dialogModalCustom.css?<!--#4DTEXT _V3_version-->">
+		<link rel="stylesheet" href="/v3/styles/dialogFilter.css?<!--#4DTEXT _V3_version-->">
+		<script type="text/javascript" src="/v3/script/dialogModalCustom.js?<!--#4DTEXT _V3_version-->" defer></script>
+		<script type="text/javascript" src="/v3/script/emitirFacturaGeneral.js?<!--#4DTEXT _V3_version-->" defer></script>
+		<!-- Modal Money -->
+
+		<link rel="stylesheet" href="/v3/styles/dialogMoney.css?<!--#4DTEXT _V3_version-->">
+		<script type="text/javascript" src="/v3/script/dialogMoney.js?<!--#4DTEXT _V3_version-->" defer></script>
+		<script type="text/javascript" src="/v3/script/dialogFilter.js?<!--#4DTEXT _V3_version-->" defer></script>
+		<link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css?<!--#4DTEXT _V3_version-->" rel="stylesheet" />
+		<link rel="preconnect" href="https://fonts.googleapis.com?<!--#4DTEXT _V3_version-->">
+		<link rel="preconnect" href="https://fonts.gstatic.com?<!--#4DTEXT _V3_version-->" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+		<!-- Modal BSale -->
+		<link rel="stylesheet" href="/v3/styles/dialogBsale.css?<!--#4DTEXT _V3_version-->">
+		<script type="text/javascript" src="/v3/script/dialogBsale.js?<!--#4DTEXT _V3_version-->" defer></script>
+
+		<!-- Header -->
+		<link rel="stylesheet" href="/v3/styles/header.css?<!--#4DTEXT _V3_version-->">
+		<script type="text/javascript" src="/v3/script/header.js?<!--#4DTEXT _V3_version-->" defer></script>
+
+
+		<!-- DISEÑO PARA NUEVO MENU -->
+		<link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,600&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="/v3/design/sidebar/fonts/icomoon/style.css">
+		<link rel="stylesheet" href="/v3/design/sidebar/owl.carousel.min.css">
+		<link rel="stylesheet" href="/v3/design/sidebar/bootstrap.min.css">
+
+		<script src="https://jsuites.net/v4/jsuites.js"></script>
+		<link rel="stylesheet" href="https://jsuites.net/v4/jsuites.css?<!--#4DTEXT _V3_version-->" type="text/css" />
+		<link rel="stylesheet" href="/v3/design/sidebar/style.css?<!--#4DTEXT _V3_version-->">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.4.1/axios.min.js" integrity="sha512-Fh/JL4KFgbH0OFN4EMEOvk90MTCjVuTVGFRDc+Kh5PyUFOzSzn/KA6PTOSNywfm5Ruppr40Uj09oGuj5tn6jiQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+		
+		<script>				
+			var uVar = {};
+			var current_username = "<!--#4DHTML vLogin-->";
+			var v3_data_username = "<!--#4DHTML vLogin-->";
+			var v3_data_username_name = "<!--#4DTEXT vNomUsr2-->";
+			var v3_data_username_email = "<!--#4DTEXT vEmail-->";
+
+
+			// function initFreshChat() {
+			// window.fcWidget.init({
+			// 	token: "0d89cc94-7aee-4a03-9778-43d89f978b63",
+			// 	host: "https://unabase-help.freshchat.com",
+			// 	widgetUuid: `f492708b-6685-47ae-92e6-9302a2e81127`,
+			// 	externalId: v3_data_username_email != "" ? v3_data_username_email : v3_data_username,     // user’s id unique to your system
+			// 	firstName: v3_data_username,              // user’s first name
+			// 	lastName: " "
+			// });
+			//   // Copy the below lines under window.fcWidget.init inside initFreshChat function in the above snippet
+
+			// // To set unique user id in your system when it is available
+			// // window.fcWidget.setExternalId('prueba');
+
+			// // // To set user name
+			// // window.fcWidget.user.setFirstName('prueba');
+
+			// // To set user email
+			// window.fcWidget.user.setEmail(v3_data_username_email != "" ? v3_data_username_email : v3_data_username);
+
+			// // To set user properties
+			// window.fcWidget.user.setProperties({
+			// plan: "Pro",                 // meta property 1
+			// status: "Active"                // meta property 2
+			// });
+
+			// }
+			// function initialize(i,t){var e;i.getElementById(t)?
+			// initFreshChat():((e=i.createElement("script")).id=t,e.async=!0,
+			// e.src="https://unabase-help.freshchat.com/js/widget.js",e.onload=initFreshChat,i.head.appendChild(e))}
+			// function initiateCall(){initialize(document,"Freshchat-js-sdk")}
+			// window.addEventListener?window.addEventListener("load",initiateCall,!1):
+			// window.attachEvent("load",initiateCall,!1);
+			
+
+			// var unaBase = {};
+			uVar.ableToDownload = false;
+			uVar.notAskChangePass = <!--#4DIF notAskChangePass -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			uVar.emailMs = <!--#4DIF emailMs -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			uVar.urlEmailMs = "<!--#4DTEXT urlEmailMs-->";
+			uVar.unableChatOnline = <!--#4DIF chatOnline -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			uVar.unableSocket = <!--#4DIF unableSocket -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			uVar.enableChatOnline = <!--#4DIF chatOnline -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			uVar.enableSocket = <!--#4DIF unableSocket -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			uVar.nativePrint = <!--#4DIF nativePrint -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			uVar.experimental = <!--#4DIF experimental -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			uVar.serviceNode = <!--#4DIF serviceNode -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			uVar.serviceNodeUrl = "<!--#4DTEXT serviceNodeUrl-->";
+			var serviceNode = <!--#4DIF serviceNode -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			var serviceNodeUrl = "<!--#4DTEXT serviceNodeUrl-->";
+
+			let mostrarInfoContableDTC = <!--#4DIF param_IngresoInfoContable-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+			// uVar.checkIsLogin = <!--#4DIF checkIsLogin -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			// uVar.timeToCheckLogin = <!--#4DTEXT timeToCheckLogin-->;
+
+			const changeUrl = (url)=>{
+				window.location.replace(url)
+			}
+			
+			var base_url = "<!--#4DTEXT _V3_base_url-->";
+			var idleTime = "<!--#4DTEXT idleTime-->" * 60000;
+			var SourceWeb = "<!--#4DTEXT SourceWeb-->";
+			var vSearchOff = <!--#4DIF vSearchOff -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			var calculoSubcategoria = <!--#4DIF calculoSubcategoria -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			var vResults = <!--#4DTEXT vResults-->;
+			let executeSearch;
+			let stopAutoSearch = vSearchOff;
+			let firstSearch = false;
+			let pdf = {}
+			var nodeRestartTimer  = {
+				date:  new Date(),
+				first: true
+			}
+			pdf.microservice = <!--#4DIF pdfMicroservice -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			pdf.url = "<!--#4DTEXT pdfUrl-->"
+			pdf.apiKey = "<!--#4DTEXT pdfApiKey-->"
+
+
+					
+ 		accountingMode = <!--#4DIF Not(Undefined(accountingMode))--><!--#4DIF accountingMode-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DENDIF-->;
+ 				  
+ 		envioCorreoAutomatico = <!--#4DIF Not(Undefined(envioCorreoAutomatico))--><!--#4DIF envioCorreoAutomatico-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DENDIF-->;
+ 		
+		let nombreEmpresa = "<!--#4DTEXT _V3_nombre_empresa-->";
+
+
+
+		var habilitarCorrelativoNegEnGASTOS = <!--#4DIF habilitarCorrelativoNegEnGASTOS -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+		var notRequestRightNow = <!--#4DIF v3_noShowRequestIni-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+		var enabledBankCards = <!--#4DIF enabledBankCards-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+		var formato_impresion_cotizacion = "<!--4DTEXT formato_impresion_cotizacion-->";
+
+		var ocs_con_valor_cero = <!--#4DIF ocs_con_valor_cero -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+		var g_uso_tareas_easy = <!--#4DIF g_uso_tareas_easy -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+		// datos usuarios
+		var currentUser = {
+			username: "<!--#4DVAR vLogin-->",
+			name: "<!--#4DVAR vNomUsr-->",
+			email: "<!--#4DVAR vEmail-->"
+		}
+		var companyName = "<!--#4DTEXT _V3_nombre_empresa-->";
+		var companyRut = <!--#4DIF Not(Undefined(_V3_rut_empresa))-->"<!--#4DVAR _V3_rut_empresa-->"<!--#4DELSE-->null<!--#4DENDIF-->;
+		//_V3_rut_empresa:=[Parametros]Rut
+		localStorage.setItem('idNumber', companyRut)
+		// Nombres de cotización y negocio
+		var etiqueta_cotizacion = "<!--#4DTEXT etiqueta_cotizacion-->";
+		var etiqueta_cotizaciones = "<!--#4DTEXT etiqueta_cotizaciones-->";
+		var etiqueta_negocio = "<!--#4DTEXT etiqueta_negocio-->";
+		var etiqueta_negocios = "<!--#4DTEXT etiqueta_negocios-->";
+		var etiqueta_rendiciones = "<!--#4DTEXT etiqueta_rendiciones-->";
+
+		var modoOfflineRemember = false;
+		var modoOfflineGlobal = false;
+
+		var hash = '<!--#4DHTML _V3_hash-->';
+		var nodejs_port = <!--#4DHTML _V3_nodejs_port-->;
+		var nodejs_public_ipaddr = "<!--#4DHTML _V3_nodejs_public_ipaddr-->";
+		var nodeUrl_prm= "<!--#4DHTML nodeUrl-->";
+		var webUrl_prm= "<!--#4DHTML webUrl-->";
+		var is_demo = <!--#4DIF _V3_demo -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+		var version_Actual = "<!--#4DTEXT _V3_version_system-->";
+
+		var doc_electronico = <!--#4DIF doc_electronico -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+		// var validar_codigo_al_convertir_a_negocio = <!--#4DIF validar_codigo_al_convertir_a_negocio -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+		// modo touch perú
+		var campos_personalizados_abajo = <!--#4DIF _V3_campos_peronalizados_abajo -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+		// ajuste según pais
+		var country = {
+			label_rut: '<!--#4DTEXT country_label_rut-->',
+			codigo_moneda: '<!--#4DTEXT country_label_rut-->'
+		};
+
+
+		// files names cot, oc , fxr
+		var file_name_internal_cot = '<!--#4DTEXT file_name_internal_cot-->';
+		var file_name_oficial_cot = '<!--#4DTEXT file_name_oficial_cot-->';
+		var file_name_oficial_oc = '<!--#4DTEXT file_name_oficial_oc-->';
+		var file_name_oficial_fxr = '<!--#4DTEXT file_name_oficial_fxr-->';
+
+
+		</script>
+
+
+		<script src="/v3/script/jquery/jquery.js" ></script>
+
+		
+		<!-- <script src="/v3/script/socket-0.9.16.js"></script> -->
+		<!-- <script src="/v3/script/mainSuper.js"></script> -->
+		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.min.js"></script> -->
+
+		<script src="/v3/script/strings.js" ></script>
+
+		<script src="/v3/script/sprintf.js" ></script>
+
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700" rel="stylesheet" type="text/css">
+		<link href="https://fonts.googleapis.com/css?family=Droid+Sans+Mono" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="/v3/design/home.css?<!--#4DTEXT _V3_version-->">
+		<link rel="stylesheet" href="/v3/design/testing.css?<!--#4DTEXT _V3_version-->">
+
+		<script src="/v3/script/jquery/plugins/json.fn/jsonfn.js"></script>
+		<script src="/v3/script/jquery/plugins/jquery-cookie/jquery.cookie.js"></script>
+		<script  src="/v3/script/jquery/plugins/jquery-ui/js/jquery-ui.js"></script>
+
+		<script src="/v3/script/jquery/plugins/highcharts/highcharts.js"></script>
+		<script src="/v3/script/jquery/plugins/highcharts/exporting.js"></script>
+		<script src="/v3/script/jquery/plugins/highcharts/highcharts-3d.js"></script>
+
+		<script src="/v3/script/jquery/plugins/offline/offline.js"></script>
+		<script src="/script/mobileCheck.js"></script>
+		<link rel="stylesheet" href="/v3/script/jquery/plugins/offline/offline-theme-chrome.css">
+		<link rel="stylesheet" href="/v3/script/jquery/plugins/offline/offline-language-spanish.mod.css">
+
+	
+		<!-- comment to check if is necesary -->
+		<script  src="/v3/script/jquery/plugins/jquery-migrate/jquery-migrate.js"></script>
+
+		<!-- comment to check if is necesary -->
+		<script src="/v3/script/jquery/plugins/toastr/toastr.js"></script>
+		<script src="/v3/script/jquery/plugins/tooltipster/js/jquery.tooltipster.js"></script>
+		<!-- prueba con tooltips nueva version -->
+	
+		<script src="/v3/script/jquery/plugins/format-currency/jquery.formatCurrency.js"></script>
+		<script src="/v3/script/jquery/plugins/bindWithDelay/bindWithDelay.js"></script>
+		<script src="/v3/script/jquery/plugins/delayed/jquery.delayed.js"></script>
+
+		<script src="/v3/script/jquery/plugins/emulatetab/emulatetab.joelpurra.js"></script>
+		<script src="/v3/script/jquery/plugins/serializeanything/jquery.serializeanything.js"></script>
+		<script src="/v3/script/jquery/plugins/jquery.qtip/jquery.qtip.js"></script>
+		<script src="/v3/script/jquery/plugins/jquery-number/jquery.number.js"></script>
+		<script src="/v3/script/jquery/plugins/jquery-dropdown/jquery.dropdown.js"></script>
+
+		<script src="/v3/script/jquery/plugins/jquery.fancybox/jquery.fancybox.js"></script>
+		<script src="/v3/script/jquery/plugins/jquery-ui-monthpicker/jquery.ui.monthpicker.js"></script>
+		<script src="/v3/script/jquery/plugins/metrojs.LiveTiles/MetroJs.lt.js"></script>
+
+		<script src="/v3/script/jquery/plugins/Fixed-Header-Table/jquery.fixedheadertable.min.js"></script>
+		<link rel="stylesheet" href="/v3/script/jquery/plugins/Fixed-Header-Table/defaultTheme.css">
+
+		<script src="/v3/script/jquery/plugins/jquery.scrollTo/jquery.scrollTo.js"></script>
+		<script src="/v3/script/jquery/plugins/jQuery-File-Upload/jquery.fileupload.js"></script>
+		<script src="/v3/script/jquery/plugins/toasty/toasty-min.js"></script>
+		<script src="/v3/script/jquery/plugins/enjoyhint/enjoyhint.min.js"></script>
+
+		<script src="/v3/script/chat.js?<!--#4DTEXT _V3_version-->"></script>
+		<script src="/v3/script/currency/index.js?<!--#4DTEXT _V3_version-->"></script>
+
+
+	
+		<script type="text/javascript">
+
+			
+			currency.code = '<!--#4DVAR _V3_defaultCurrencyCode-->',
+			currency.name = '<!--#4DVAR _V3_escapeString(_V3_defaultCurrencyName)-->',
+			currency.symbol = '<!--#4DHTML _V3_escapeString(_V3_defaultCurrencySymbol)-->',
+			currency.is_right = <!--#4DIF _V3_defaultCurrencyRight-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			currency.decimals = <!--#4DHTML String(_V3_defaultCurrencyDecimals;"&xml")-->,
+			currency.thousands_sep = '<!--#4DTEXT _V3_defaultCurrencyThousandSep-->',
+			currency.decimals_sep = '<!--#4DTEXT _V3_defaultCurrencyDecimalSep-->',
+			currency.ufValue = '<!--#4DTEXT ufValue-->',
+			currency.ufUpdate = "<!--#4DHTML ufUpdate-->"
+
+
+
+			var nodeUrl = nodeUrl_prm;
+			var webUrl = webUrl_prm;
+
+			
+			
+
+		</script>
+
+
+		<link rel="stylesheet" href="/v3/script/jquery/jquery-plugins.css">
+
+
+		<script src="/v3/script/unabase.js?<!--#4DTEXT _V3_version-->"></script>
+		
+		<script src="/v3/script/unabase/toolbox-menu-init.js?<!--#4DTEXT _V3_version-->"></script>
+
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.css" integrity="sha512-gp+RQIipEa1X7Sq1vYXnuOW96C4704yI1n0YB9T/KqdvqaEgL6nAuTSrKufUX3VBONq/TPuKiXGLVgBKicZ0KA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+
+		<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+		
+
+		<script  src="/v3/script/access.js?<!--#4DTEXT _V3_version-->"></script>
+		<script  src="/v3/script/home.js?<!--#4DTEXT _V3_version-->"></script>
+
+
+		<script src="/v3/script/hashref.js?<!--#4DTEXT _V3_version-->"></script>
+		<script  src="/v3/script/help.js?<!--#4DTEXT _V3_version-->"></script>
+
+		<link rel="stylesheet" href="/v3/design/tooltip.css?<!--#4DTEXT _V3_version-->">
+		<link rel="stylesheet" href="/v3/script/jquery/plugins/tooltipster/css/themes/tooltipster-sideTip-borderless.min.css?<!--#4DTEXT _V3_version-->">
+
+		<script src="/v3/script/camelWord.js?<!--#4DTEXT _V3_version-->"></script>
+		<script  src="/v3/script/helpers.js?<!--#4DTEXT _V3_version-->"></script>
+		<script  src="/v3/script/statusCheck.js?<!--#4DTEXT _V3_version-->"></script>
+		<script async src="/v3/script/fixedVar.js?<!--#4DTEXT _V3_version-->"></script>
+		<script src="/v3/script/checkType.js?<!--#4DTEXT _V3_version-->"></script>
+		<script src="/v3/script/parseStrToInt.js?<!--#4DTEXT _V3_version-->"></script>
+			
+		<script  type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+		<link rel="stylesheet" href="/v3/design/print_from_browser.css?<!--#4DTEXT _V3_version-->" media="print">
+
+		<!--#4DIF ((_V3_demo) | (_V3_data_isNewUser))-->
+		<script>
+			$(document).ready(function() {
+				$('html > body > header > button.help').click();
+				unaBase.getParams();
+
+
+				currency.update();
+				// Función para reiniciar el juego
+				
+			});
+		</script>
+		<!--#4DENDIF-->
+
+		<script type="text/javascript">
+			
+			let url = new URL(window.location.href);
+			let fromUrl = url.searchParams.get("fromUrl");
+	        let expensesUrl = `${nodeUrl}/expenses/tovalidate?sid=${unaBase.sid.encoded()}`;
+			if(typeof fromUrl != undefined && fromUrl === "validar"){
+				
+	          window.location.href = expensesUrl;
+			}else if(fromUrl == null){
+
+				let state = decodeURIComponent(url.searchParams.toString());
+				if(state.substring(0,8) == "fromUrl=" && state.substring(8,15) == "validar" ){
+	          		window.location.href = expensesUrl;
+
+				}
+			}
+
+
+		var checklogin = {
+			alert: true,
+			check : <!--#4DIF checkIsLogin -->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			time: <!--#4DTEXT timeToCheckLogin--> || 30,
+			interval: null,
+		  func: () => {
+		  	
+		  	console.log("checking sesion");
+		    return new Promise((resolve, reject) => {
+		      $.ajax({
+		        url: "/4DACTION/_v3_checkLogin",
+		        data: {
+		        	nodeUrl
+		        },
+		        async: false,
+		        dataType: "json",
+		        success: function(data) {
+		        	if (data.nodeUrl != nodeUrl) {
+		        		//REAPER --> en caso de actualizar el puerto node, cada dispositivo se actualiza automaticamente, evitando problemas de descarga y tener que recargar la pagina 22-12-2021
+		        		nodeUrl = data.nodeUrl;
+						nodejs_port = data.nodejs_port;
+						nodejs_public_ipaddr = data.nodejs_public_ipaddr;
+						console.log("****************************** PORT NODE UPDATED ******************************");
+						console.log(`****************************** PORT : ${data.nodejs_port} ******************************`);
+
+		        	}
+		          resolve(data);
+		        },
+		        error: function(err) {
+		          reject(err);
+		        }
+		      });
+		    });
+		  },
+
+		  set: (func, time = 60, alert, unblock= false) => {
+		    checklogin.interval = setInterval(() => {
+		      func()
+		        .then(data => {
+		        	
+		          if (!data.isLogin) {
+		            unaBase.ui.block();
+		            
+		            if (checklogin.alert) {
+		 				
+	                  window.open(`${window.location.origin + window.location.pathname}?fromLogout=true`
+	                    ,
+	                    "_blank"
+	                  );
+	                  // window.open(`http://${window.location.host}/login/logout.shtml`
+	                  //   ,
+	                  //   "_blank"
+	                  // );
+		            	checklogin.clearInterval();
+		            	checklogin.alert = false;
+		            }
+	            	if(!checklogin.interval){
+	            		checklogin.set(checklogin.func, 30, false, true);
+	            	}
+		          }else{
+		          	if(unblock){
+		          		
+		            	checklogin.clearInterval();
+		          		unaBase.ui.unblock();
+						checklogin.set(checklogin.func, checklogin.time, true);
+
+		            	checklogin.alert = true;
+		          	}
+		          }
+		        })
+		        .catch(err => {
+		          console.log(err);
+		        });
+		    }, time * 1000);
+		  },
+
+		  clearInterval: () => {
+		    clearInterval(checklogin.interval);
+		    checklogin.interval = null;
+		  }
+		};
+	
+		$(document).ready(function() {
+
+
+
+			$('button.settings').button({icons: { primary: 'ui-icon ui-icon-gear'}, text: false }).click(function() {
+				if ($('.sidebar li.active').attr('data-name') == "negocios") {
+					unaBase.loadInto.dialog('/v3/views/negocios/settings.shtml', 'AJUSTES PARA NEGOCIOS', 'large');
+				}
+			});
+
+			$(`li[data-name="rendir"] a`).click( function(){
+				window.onbeforeunload = null;
+				window.location.href = "/rendir/index.shtml";
+			});
+			// $(`li[data-name="light"] a`).click( function(){
+			// 	window.onbeforeunload = null;
+			// 	window.location.href = "/light/business_list.shtml";
+			// });
+
+			// var companyName = "<!--#4DTEXT _V3_nombre_empresa-->";
+			// window.intercomSettings = {
+			// 		company: {
+			// 			id: companyRut,
+			// 			name: companyName,
+			// 			website: base_url,
+			// 		},
+			// 		website_url: base_url,
+			// 		version: version_Actual,
+			// 		company_name: companyName,
+			// 		app_id: "dtk9r8ip",
+			// 		name: `${currentUser.name} / ${companyName} /`, // Full name
+			// 		email: currentUser.email, // Email address
+			// 		created_at: new Date() // Signup date as a Unix timestamp,
+			// 	};
+			// (function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/dtk9r8ip';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})();
+
+
+			// $('.vernovedades').click(function(){
+			// 	window.open("https://sites.google.com/una.cl/novedades/novedades-v3-214?authuser=0");
+			// });
+
+
+
+		
+
+		
+
+
+
+			try{				
+				checklogin.set(checklogin.func, checklogin.time, true);
+			}catch(err){
+				console.log(err);
+			}
+
+			let isHome = document.querySelectorAll('.sidebar li.active').length;
+
+			if(!isHome && !is_demo && !uVar.notAskChangePass){
+					$.ajax({
+					url: '/4DACTION/_V3_random_access',
+					data: {
+					},
+					async:false,
+					dataType: 'json',
+					success: function(data) {
+						
+						$('div.nav-menu li[data-name="home"] a').click()
+
+						if(data.rand || data.pass_too_old){
+
+							// unaBase.loadInto.dialog('/v3/views/user-profile/passwordChange.shtml?pass_too_old=true', 'Mi Perfil', 'small');
+							//unaBase.loadInto.viewport('/v3/views/user-profile/passwordChange.shtml?pass_too_old=true');
+
+						}
+					}
+				});
+			}
+
+
+			unaBase.ui.unblock();
+
+			$('html > body > header > button.info').click(function(){
+				let modulo = $('.sidebar li.active').attr('data-name');
+				switch(modulo) {
+					case "cotizaciones":
+						window.open("https://intercom.help/unabase/cotizacion-y-negocio");
+						break;
+					case "negocios":
+						window.open("https://intercom.help/unabase/cotizacion-y-negocio");
+						break;
+					case "gastos":
+						window.open("https://intercom.help/unabase/gastos-ordenes-de-compra-y-rendiciones");
+						break;
+					case "rendiciones":
+						window.open("https://intercom.help/unabase/gastos-ordenes-de-compra-y-rendiciones");
+						break;
+					case "dtv":
+						window.open("https://intercom.help/unabase/documentos-de-venta-facturas-de-venta");
+						break;
+					case "dtc":
+						window.open("https://intercom.help/unabase/documento-de-compra-facturas-de-compra");
+						break;
+					case "usuarios":
+						window.open("https://intercom.help/unabase/cuenta-de-usuario-y-permisos");
+						break;
+					case "presupuestos":
+						window.open("https://intercom.help/unabase/presupuesto-de-gastos");
+						break;
+					default:
+					window.open("https://intercom.help/unabase");
+				}
+			});
+
+			$('.goto-tareas > a').click(function(){
+				window.open('http://'+nodejs_public_ipaddr + ':' + nodejs_port + '/tasks/list/pending');
+			});
+
+			/*$('.goto-banco > a').click(function(){
+				window.open('http://'+nodejs_public_ipaddr + ':' + nodejs_port + '/bankcards/list');
+			});*/
+
+			$('.goto-project > a').click(function(){
+				window.open('http://'+nodejs_public_ipaddr + ':' + nodejs_port + '/projects/list');
+			});
+
+			// registra log de ingreso a modulos y acciones - by gin 04-08-16
+			$('.tosavelogs').click(function(){
+				var modulo = $(this).data("logsmodulo");
+				var descripcion = $(this).data("logsdes");
+				unaBase.log.save(descripcion, modulo, 0);
+			});
+
+			// ini --- offline
+			Offline.options = {
+			  // Should we check the connection status immediatly on page load.
+			  checkOnLoad: false,
+
+			  // Should we monitor AJAX requests to help decide if we have a connection.
+			  interceptRequests: false,
+
+			  // Should we automatically retest periodically when the connection is down (set to false to disable).
+			  reconnect: {
+				// How many seconds should we wait before rechecking.
+				initialDelay: 30,
+
+				// How long should we wait between retries.
+				delay: (30)
+			  },
+			  // Should we store and attempt to remake requests which fail while the connection is down.
+				requests: false,
+			  // Should we show a snake game while the connection is down to keep the user entertained?
+			  // It's not included in the normal build, you should bring in js/snake.js in addition to
+			  // offline.min.js.
+				game: false,
+				checks: {
+				  xhr: {
+					url: function() {
+					  return "/favicon.png?_=" + ((new Date()).getTime());
+					},
+					timeout: 2000,
+					type: 'HEAD'
+				  },
+				 //  image: {
+					// url: function() {
+					//   return "/favicon.png?_=" + ((new Date()).getTime());
+					// }
+				 //  },
+				  active: 'xhr'
+				}
+			}		
+			Offline.on("up", unaBase.ui.unblock);
+			Offline.on("down", unaBase.ui.block);
+			setInterval(Offline.check, 30000);
+
+			// end --- offline
+
+			
+
+
+		});
+		</script>
+		
+		<style>
+			body {
+				height: 100vh !important;
+			}
+		</style>
+
+		<link rel="stylesheet" href="/v3/styles/creative.css?<!--#4DTEXT _V3_version-->">
+
+		<link rel="stylesheet" href='/css/tom-select.css?v=34534543'>
+
+	</head>
+
+	<body class="menu home show-sidebar snippet-body" data-ipaddr="<!--#4DHTML <>ipAddr-->" data-username="<!--#4DHTML vLogin-->" id="body-pd">
+		<div id="loading-screen" class="loading-screen" style="display: none;">
+			<img src="/v3/views/cotizaciones/css/image4.gif" alt="" id="img-loading" class="crab">
+		</div>
+
+		<div id="modalJuego" class="modal-game">
+			<div class="modal-content-game">
+				<span class="close">&times;</span>
+				<button id="btnPelota" class="btn-game">Juego de la Pelota</button>
+				<button id="btnSnake" class="btn-game">Juego de la Serpiente</button>
+				<div id="juegoPelota" class="juego">
+					<div id="pelota"><img src="https://getonbrd-prod.s3.amazonaws.com/uploads/users/logo/8952/LOGO.jpg" alt="" class="headerUnabase__settings-logo"></div>
+					<div id="barra"></div>
+				</div>
+				<div id="juegoSnake" class="juego" style="display:none;">
+					<canvas id="canvasSnake"></canvas>
+				</div>
+				<p>Puntos: <span id="puntos">0</span></p>
+			</div>
+		</div>
+
+		<div id="unique-alert" class="unique-alert">
+			<button class="unique-close-btn" onclick="toggleUniqueAlert()">×</button>
+			<div class="unique-alert-content">
+				<div class="unique-loading-circle"></div>
+				<p id="unique-alert-text">Processing... Please wait.</p>
+			</div>
+		</div>
+
+
+		<div class="filter-panel" id="filterPanel">
+			<div class="filter-container">
+			  <div class="filter-header">
+				<span class="filter-title">Filtrar</span>
+				<button class="filter-close" onclick="upModalFilter()">
+				  <span class="mdi mdi-close"></span>
+				</button>
+			  </div>
+			  <div class="filter-active-section">
+				<h4 class="filter-active-title">Filtros Activos</h4>
+				<div id="filterActiveList" class="filter-active-list"></div>
+			  </div>
+			  
+			  <div class="filter-body">
+				
+			  </div>
+			  <div class="filter-footer">
+				<button class="filter-btn cancel" onclick="upModalFilter()">Cancelar</button>
+				<button class="filter-btn confirm" onclick="postMoney()">Confirmar</button>
+			  </div>
+			</div>
+		</div>
+		  
+		<!-- Modal para la configuracion de las monedas -->
+		<div class="spaceModal" id="modalConfigMoney">
+			<div class="containerModal" id="containerModal">
+			  <div class="headerModal">
+				  <span class="titleModal">Monedas</span>
+				  <button class="btn btnCloseModal" id="closedModal" onclick="closedModal()">
+					  <span class="mdi mdi-close"></span>
+				  </button>
+			  </div>
+			  <div class="bodyModal">
+				  <div class="bodyModal__table">
+					  <div class="row row__header">
+						  <div class="bodyModal__table_label" style="text-align: left !important;">Moneda</div>
+						  <div class="bodyModal__table_label">Valor Hoy</div>
+						  <div class="bodyModal__table_label">Valor Asignado</div>
+					  </div>
+				  </div>
+				  <div class="bodyModal__actions">
+					  <div class="group_actions">
+						  <div class="label_action">Moneda Trabajo</div>
+						  <div class="select_action">
+							  <select id="defaultMoney" class="closed"></select>
+						  </div>
+					  </div>
+					  <div class="group_actions">
+						  <div class="label_action">Moneda Impresión</div>
+						  <div class="select_action">
+							  <select id="printMoney" class="closed"></select>
+						  </div>
+					  </div>
+				  </div>
+				  <div class="bodyModal__message">
+					  <div class="bodyModal__message_icon">
+						  <span class="mdi mdi-information-outline"></span>
+					  </div>
+					  <p>Esto permite definir la moneda y el tipo de cambio base del documento y con que moneda se imprimirá.</p>
+				  </div>
+			  </div>
+			  <div class="actionsModal">
+				  <button class="btn btnOutline" onclick="closedModal()">Cancelar</button>
+				  <button class="btn btnMain" onclick="postMoney()">Confirmar</button>
+			  </div> 
+			</div>
+			<button onclick="closedModal()" class="closedModalSpace"></button>
+		</div>
+
+		<!-- Modal BSALE -->
+		<div class="spaceModalBsale" id="modalBsale">
+			<div class="containerModalBsale" id="containerModalBsale">
+				<div class="row">
+					<div class="col-12">
+
+						<span class="label-title-bsale">Emitir a bSale</span>
+
+					</div>
+
+				</div>
+				
+				<div class="row">
+					<div class="col-12" id="formas-pago-dtv">
+
+						<div class="form-group">
+							<span class="label-bsale">Forma de pago:</span>
+							<select id="select_forma_pago" class="form-control mt-2">
+							  <option value="" selected>Seleccione una forma de pago</option>
+							</select>
+						</div>
+
+
+					</div>
+
+					<div class="col-12" style="display: none;" id="confirm-alert-nc">
+
+						<h5 class="label-title-bsale">¿Estás seguro que deseas emitir la nota de credito?</h5>
+
+
+					</div>
+
+				</div>
+
+
+				<div class="row mt-5 d-flex justify-content-between">
+					<div class="auto">
+						<button onclick="closedModalBsale()" class="btn btnOutlineBsale">Cancelar</button>
+					</div>
+
+					<div class="auto">
+						<button onclick="emitirFacturabSale()" class="btn btnMainBsale">Emitir</button>
+					</div>
+
+				</div>
+				
+			</div>
+			<button onclick="closedModalBsale()" class="closedModalSpaceBsale"></button>
+		</div>
+
+		
+		<!-- MODAL CUSTOM -->
+		<div id="modalCustom">
+			<div id="modal-content">
+				<div id="modal-body">
+					<div class="row" style="margin-top: -10px">
+						<div class="col-12">
+							<span id="gray-bar" class="modal-title">&nbsp;Importador de pagos</span>
+						</div>
+					</div>
+	
+					
+	
+					<div class="row">
+						<div class="col-12 mt-5 modal-content-body" >
+							
+	
+						</div>
+	
+					</div>
+	
+					<div class="row">
+						<div class="col-12 mt-5 warning-modal" >
+							
+	
+						</div>
+	
+					</div>
+					
+	
+					
+	
+				</div>
+
+				<div class="row mt-4">
+					<div class="col-6">
+						<button id="modal-custom-cancel" class="hoverBtn">Cancelar</button>
+
+					</div>
+					<div class="col-6">
+						<button type="submit" id="modal-custom-accept" class="hoverBtn">Descargar</button>
+
+					</div>
+
+				</div>
+	
+			</div>
+		</div>
+		
+		<!-- MODAL CUSTOM PAGOS -->
+		<div id="modalImportadorPagos">
+			<div id="modal-content">
+			  <div id="modal-body">
+				<div class="row" style="margin-top: -10px">
+				  <div class="col-12">
+					<span id="gray-bar" class="title-modal">&nbsp;Importador de pagos</span>
+				  </div>
+				</div>
+		  
+				<div class="row mt-4">
+				  <div class="col-12">
+					<span id="green-bar">&nbsp;&nbsp;&nbsp;Paso 1 - Descargar plantilla Excel</span>
+				  </div>
+				</div>
+		  
+				<div class="row" style="background-color: #F4FDFA;">
+				  <div class="col-12 mt-4" style="background-color: #F4FDFA;">
+					<p class="mt-1">Una vez descargada la plantilla Excel, puede reemplazar los datos de prueba con los definitivos.</p>
+					<p>Para cargar y justificar masivo, vuelve aquí y cargue el archivo Excel utilizando el siguiente formulario (paso 2).</p>
+					<button id="download-template-btn" style="float: left;" title="Click para descargar plantilla" class="hoverBtn">
+					  Descargar plantilla <i class="fas fa-download ml-1"></i>
+					</button>
+				  </div>
+				</div>
+		  
+				<div class="row mt-2">
+				  <div class="col-12">
+					<span id="green-bar">&nbsp;&nbsp;&nbsp;Paso 2 - Subir plantilla</span>
+				  </div>
+				</div>
+		  
+				<div class="row" style="background-color: #F4FDFA;">
+				  <div class="col-12 mt-4 d-flex" style="background-color: #F4FDFA;">
+					<input type="file" id="excel-file" accept=".xlsx" style="float: left;">
+					<button type="submit" id="upload-btn" class="hoverBtn">Subir archivo</button>
+				  </div>
+				</div>
+
+				<div class="row separate style="background-color: #F4FDFA;display: none;">
+					<div class="col-12 mt-4 d-flex" style="background-color: #F4FDFA;">
+						<input id="separate" type="checkbox" name="separate">
+						<label for="separate" class="separate-label"></label>
+					</div>
+				</div>
+		  
+				<!-- NUEVA SECCIÓN DE ERRORES -->
+				<div class="row mt-3" id="error-summary-container" style="display: none;">
+					<div class="col-12">
+					  <div class="alert alert-danger p-2" style="font-size: 14px;">
+						<!-- El contenido de esta alerta será reemplazado dinámicamente -->
+					  </div>
+					  <div id="error-detail-list"
+						   style="display: none; max-height: 200px; overflow-y: auto; padding: 10px; background: #fff3f3; border: 1px solid #ffcccc; border-radius: 6px; font-size: 13px;">
+					  </div>
+					</div>
+				  </div>
+				  
+			  </div>
+			</div>
+		</div>
+		  
+		<!-- UNIQUE MODAL -->
+		<div id="uniqueModal" class="unique-modal">
+			<div class="unique-modal-content">
+				<span class="unique-close-button" id="closeUniqueModalBtn">&times;</span>
+				<iframe frameborder="0" id="dynamicIframe" class="unique-iframe"></iframe>
+			</div>
+		</div>
+	
+		<div class="master-modal-container">
+			<div class="master-modal-actions">
+				<a class="btn" type="button">
+					<span class="master-modal-close-button" onclick="document.querySelector('.master-modal-container').style.display='none'"><i style="color: red;" class="fa-solid fa-rectangle-xmark"></i></span>
+				</a>
+
+				<a class="btn" type="button" id="mm-actions-save" target="_blank" title="Guardar" style="display: none;">
+					<span><i style="opacity: 0.1;" class="far fa-save fa-2x"></i></span>
+				</a>
+				<a class="btn" type="button" id="mm-actions-csv"  href="" target="_blank">
+					<span><i class="fa-solid fa-file-csv fa-2x"></i></span>
+				</a>
+				<a class="btn" type="button" id="mm-actions-excel" disabled  target="_blank">
+					<span><i style="opacity: 0.1;"class="far fa-file-excel fa-2x"></i></span>
+				</a>
+				<a class="btn" type="button" id="mm-actions-pdf" disabled  target="_blank">
+					<span><i  style="opacity: 0.1;" class="fa-solid fa-file-pdf fa-2x"></i></span>
+				</a>
+				<a class="btn" type="button" id="mm-actions-mail" disabled  target="_blank">
+					<span><i style="opacity: 0.1;" class="far fa-paper-plane fa-2x"></i></span>
+				</a>
+			</div>
+			<div class="master-modal-box">
+				<div class="container">
+					<div class="row div-reparto mb-2" style="display: none;">
+						<div class="col-12">
+							<span style="font-size: 10px; ">Monto a repartir: </span>
+							<input type="text" id="monto_reparto" class="form-control" style="height: 28px; width: 150px; margin-top: 5px;" readonly>
+
+						</div>
+					</div>
+					<div class="row">
+						
+						<div class="col body">
+						
+							
+						</div>
+					</div>
+				</div>
+			
+			</div>
+		</div>
+
+		<!-- MODAL DE IA -->
+		<div class="chatbot-container">
+			<div id="chatbot-body" class="chatbot-body">
+				<div class="chatbot-header-bar">
+					<span class="close-chat" onclick="toggleChat()">✖</span>
+				</div>
+				<div id="chat-messages" class="chat-messages"></div>
+					<div class="chat-input-container">
+					<input
+						id="chat-input"
+						type="text"
+						placeholder="Escribe tu mensaje..."
+						onkeydown="handleInput(event)"
+					/>
+					<button onclick="sendMessage()">Enviar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Dialogo confirmacion -->
+		<div class="custom-modal-overlay" id="customConfirmationDialog">
+			<div class="custom-modal">
+			  <div class="custom-modal-header">
+				<span class="custom-modal-title">Confirmación</span>
+			  </div>
+			  <div class="custom-modal-body"><img src="" max-height="30" max-width="30" class="icon icon-card mt-2" style="
+				height: 50px;
+			">
+		<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+			<path fill-rule="evenodd" clip-rule="evenodd" d="M33.184 11.36C32.696 10.384 31.304 10.384 30.817 11.36L10.775 51.456C10.335 52.336 10.975 53.372 11.958 53.372H52.042C53.026 53.372 53.665 52.336 53.225 51.456L33.184 11.36ZM26.082 8.992C28.52 4.114 35.48 4.114 37.918 8.992L57.96 49.088C60.159 53.489 56.96 58.667 52.042 58.667H11.958C7.04001 58.667 3.84101 53.489 6.04001 49.089L26.082 8.992Z" fill="#2C3F4D"/>
+			<path fill-rule="evenodd" clip-rule="evenodd" d="M28.747 24.989C28.625 23.523 29.781 22.266 31.252 22.266H32.748C34.219 22.266 35.376 23.523 35.254 24.989L34.506 33.968C34.25 37.043 29.751 37.043 29.495 33.968L28.747 24.989Z" fill="#F47975"/>
+			<path d="M35.176 42.783C35.176 44.537 33.754 45.959 32 45.959C30.246 45.959 28.824 44.537 28.824 42.783C28.824 41.028 30.246 39.606 32 39.606C33.754 39.606 35.176 41.028 35.176 42.783Z" fill="#F47975"/>
+			</svg>
+				
+		</div>
+			  <div class="custom-modal-body custom-modal-body-p">
+				<p></p>
+			  </div>
+			  <div class="custom-modal-footer">
+				<button class="custom-btn custom-cancel">Cancelar</button>
+				<button class="custom-btn custom-accept">Aceptar</button>
+			  </div>
+			</div>
+		</div>
+		  
+		<div class="loader">
+			<div class="unique-content-container">
+				<div class="super-unique-spinner">
+					<div class="super-unique-spinner-content">
+						<img src="/v3/images/logo_transparente_ub.png" alt="Logo">
+					</div>
+				</div>
+				<!-- Sección para datos curiosos -->
+				<div class="trivia">
+					<div id="curiousFact">La escena de la ducha en 'Psicosis' tardó 7 días en filmarse y consta de más de 70 ángulos de cámara diferentes.</div>
+				</div>
+			</div>
+		</div>
+		
+		<!-- Header -->
+		<header class="headerUnabase newheader" id="newheader">
+			<div style="display: none;">
+				<div class="container">
+				<!-- Icono de Notificaciones -->
+				<button id="notification-btn" class="notification-button">
+					<i class="fas fa-bell"></i>
+					<span id="notification-count" class="badge bg-danger">0</span>
+				</button>
+
+				<!-- Panel de Notificaciones -->
+				<div id="notification-panel" class="card notification-panel">
+					<div class="card-header">
+						<h5 class="mb-0">Notificaciones</h5>
+					</div>
+					<ul id="notification-list" class="list-group list-group-flush">
+						<!-- Las notificaciones se agregarán aquí -->
+					</ul>
+					<div class="card-footer text-end">
+						<button id="clear-all" class="btn btn-sm btn-danger">Borrar Todas</button>
+					</div>
+				</div>
+			</div>
+			</div>
+			<div class="headerUnabase__company">
+				<img src='<!--#4DTEXT vUrlImagenLogo-->'
+					alt="" class="headerUnabase__company-logo" onclick="iniciarJuego()">
+				<p class="headerUnabase__company-name">
+					<!--#4DTEXT _V3_nombre_empresa-->
+				</p>
+			</div>
+
+			<div class="headerUnabase__actions">
+				<button class="ia-btn" aria-label="Abrir IA" onclick="toggleChat()">
+					<svg class="ia-sparkle" viewBox="0 0 100 100" width="36" height="36" role="img" aria-hidden="true">
+					<defs>
+						<filter id="ia-glow" x="-50%" y="-50%" width="200%" height="200%">
+						<feGaussianBlur stdDeviation="2" result="blur"/>
+						<feMerge>
+							<feMergeNode in="blur"/>
+							<feMergeNode in="SourceGraphic"/>
+						</feMerge>
+						</filter>
+					</defs>
+				
+					<!-- Figura principal (cóncava, 4 puntas) -->
+					<path
+						d="M50 4
+						Q 56 32 96 50
+						Q 56 68 50 96
+						Q 44 68 4 50
+						Q 44 32 50 4 Z"
+						fill="currentColor"
+						filter="url(#ia-glow)">
+						<!-- Pulso -->
+						<animateTransform attributeName="transform" attributeType="XML"
+						type="scale" values="1;1.08;1" dur="1.8s" repeatCount="indefinite"/>
+						<!-- Rotación suave -->
+						<animateTransform attributeName="transform" additive="sum"
+						type="rotate" values="0 50 50; 8 50 50; 0 50 50" dur="3.2s" repeatCount="indefinite"/>
+					</path>
+				
+					</svg>
+				</button>
+
+				<button class="headerUnabase__settings">
+					<img src="https://getonbrd-prod.s3.amazonaws.com/uploads/users/logo/8952/LOGO.jpg" alt=""
+						class="headerUnabase__settings-logo" />
+					<span class="headerUnabase__settings-text"><!--#4DVAR vLogin--></span>
+					<span id="icon-down" class="mdi mdi-menu-down headerUnabase__settings-icon"></span>
+				</button>
+			</div>
+			<div class="headerUnabase__modal">
+				<ul>
+					<li>
+						<button class="headerUnabase__modal-btn" id="icon-profile">
+							<span class="mdi mdi-account"></span>
+							<span>Perfil</span>
+						</button>
+					</li>
+					<li id="night_mode" style="display: none;">
+						<button class="headerUnabase__modal-btn">
+							<span class="mdi mdi-account"></span>
+							<span>Perfil</span>
+						</button>
+					</li>
+					<li>
+						<button class="headerUnabase__modal-btn" id="icon-notifications">
+							<span class="mdi mdi-bell"></span>
+							<span>Notificaciones</span>
+						</button>
+					</li>
+					<li>
+						<button class="headerUnabase__modal-btn" id="icon-nodeServer">
+							<span class="mdi mdi-wifi"></span>
+							<span>Conexion</span>
+						</button>
+					</li>
+					<li>
+						<button class="headerUnabase__modal-btn" id="icon-intercom">
+							<span class="mdi mdi-chat"></span>
+							<span>Chat de Soporte</span>
+						</button>
+					</li>
+					<li>
+						<button class="headerUnabase__modal-btn" id="icon-permisos">
+							<span class="mdi mdi-book"></span>
+							<span>Permisos</span>
+						</button>
+					</li>
+					<!-- <li>
+						<button class="headerUnabase__modal-btn">
+							<span class="mdi mdi-compare"></span>
+							<span>Tema</span>
+						</button>
+					</li> -->
+					<li>
+						<a  class="headerUnabase__modal-a" href="/4DACTION/W_CERRAR_SESION/<!--#4DVAR vSesion-->">
+							<span class="mdi mdi-power"></span>
+							<span>Cerrar Sesión</span>
+						</a>
+					</li>
+				</ul>
+			</div>
+		</header>
+
+
+		<aside class="sidebar l-navbar show" id="nav-bar" style="max-width: 190px; z-index:50;">
+			
+			<div class="side-inner">
+				<div class="nav_logo">
+					<div class="btn_collapse">
+						<button class="header_toggle" id="header-toggle"><i class="fas fa-bars fa-2x"></i></button>
+					</div>
+					<div class="img_logo">
+						<a href="#" onclick="window.location.href = window.location.href"><img src="/v3/design/sidebar/logo.png" alt="" id="header-toggle" width="90" height="15" style="cursor: pointer;"></a>
+					</div>
+				</div>
+
+
+			   <div class="profile">
+				  <h1 style="text-decoration:underline;cursor:pointer; display: none;" class="u-user-profile" data-sid="<!--#4DVAR vSesion-->" data-username="<!--#4DVAR vLogin-->" data-email="<!--#4DVAR vEmail-->" data-tratamiento="<!--#4DVAR vTratamiento-->" data-organizacion="<!--#4DVAR vOrganizacion-->">
+					 <a class="show user-profile" title="Perfil de usuario">
+						<!--#4DVAR Lowercase(vNomUsr2)-->
+					 </a>
+				  </h1>
+				  <!--<a class="show user-profile" title="Perfil de usuario"><span>Perfil</span></a>-->
+			   </div>
+			   <hr class="new1" style="height: 0.1px;">
+			   <div class="nav-menu">
+
+				<ul>
+   
+					  <!--
+							<!- -#4DIF vLogin="gin"- ->
+							<li data-name="novedades" class="standalone"><a target="_blank" title="Ver novedades de esta versión haciendo click en el enlace" class="tosavelogs vernovedades" data-logsmodulo="novedades" data-logsdes="Ha ingresado al módulo de novedades" href="#">Novedades</a></li>
+							<!- -#4DENDIF- ->  
+						-->
+				
+					<!--#4DIF _V3_verifica_permisos_web (vLogin;472)-->
+						<li class="home standalone" data-name="home" ><a class="unblock-menu tosavelogs" data-logsmodulo="home"  data-logsdes="Ha ingresado al módulo HOME" href="/v3/views/home/index.html"><svg width="15" height="15" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M7.71639 4H11.4695C13.0352 4 14.2899 5.38002 14.2899 7.07325V11.1641C14.2899 12.8681 13.0352 14.2362 11.4695 14.2362H7.71639C6.16184 14.2362 4.896 12.8681 4.896 11.1641V7.07325C4.896 5.38002 6.16184 4 7.71639 4Z" fill="#545F72"/>
+							<path d="M7.71639 17.7638H11.4695C13.0352 17.7638 14.2899 19.1331 14.2899 20.8371V24.928C14.2899 26.62 13.0352 28 11.4695 28H7.71639C6.16184 28 4.896 26.62 4.896 24.928V20.8371C4.896 19.1331 6.16184 17.7638 7.71639 17.7638Z" fill="#545F72"/>
+							<path d="M24.2835 4H20.5304C18.9648 4 17.71 5.38002 17.71 7.07325V11.1641C17.71 12.8681 18.9648 14.2362 20.5304 14.2362H24.2835C25.8381 14.2362 27.1039 12.8681 27.1039 11.1641V7.07325C27.1039 5.38002 25.8381 4 24.2835 4Z" fill="#545F72"/>
+							<path d="M20.5304 17.7638H24.2835C25.8381 17.7638 27.1039 19.1331 27.1039 20.8371V24.928C27.1039 26.62 25.8381 28 24.2835 28H20.5304C18.9648 28 17.71 26.62 17.71 24.928V20.8371C17.71 19.1331 18.9648 17.7638 20.5304 17.7638Z" fill="#545F72"/>
+							</svg>
+							<span style="cursor: pointer !important; ">Home</span></a></li>
+					<!--#4DENDIF-->
+				
+					<!-- <li class="income iframe" data-name="incomes" ><a class="unblock-menu tosavelogs" data-logsmodulo="incomes" data-link="vx" data-logsdes="Ha ingresado al módulo incomes" id="incomevx"><i  title="Negocios" class="fas fa-home"></i><span style="cursor: pointer !important; ">VX</span></a></li> -->
+
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;438)-->
+
+				   		<li style="cursor:pointer;" data-name="inbox"><a class="unblock-menu tosavelogs" data-logsmodulo="inbox" data-logsdes="Ha ingresado al módulo Inbox" href="/v3/views/inbox/list.shtml"><svg width="15" height="15" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M7.71639 4H11.4695C13.0352 4 14.2899 5.38002 14.2899 7.07325V11.1641C14.2899 12.8681 13.0352 14.2362 11.4695 14.2362H7.71639C6.16184 14.2362 4.896 12.8681 4.896 11.1641V7.07325C4.896 5.38002 6.16184 4 7.71639 4Z" fill="#545F72"/>
+							<path d="M7.71639 17.7638H11.4695C13.0352 17.7638 14.2899 19.1331 14.2899 20.8371V24.928C14.2899 26.62 13.0352 28 11.4695 28H7.71639C6.16184 28 4.896 26.62 4.896 24.928V20.8371C4.896 19.1331 6.16184 17.7638 7.71639 17.7638Z" fill="#545F72"/>
+							<path d="M24.2835 4H20.5304C18.9648 4 17.71 5.38002 17.71 7.07325V11.1641C17.71 12.8681 18.9648 14.2362 20.5304 14.2362H24.2835C25.8381 14.2362 27.1039 12.8681 27.1039 11.1641V7.07325C27.1039 5.38002 25.8381 4 24.2835 4Z" fill="#545F72"/>
+							<path d="M20.5304 17.7638H24.2835C25.8381 17.7638 27.1039 19.1331 27.1039 20.8371V24.928C27.1039 26.62 25.8381 28 24.2835 28H20.5304C18.9648 28 17.71 26.62 17.71 24.928V20.8371C17.71 19.1331 18.9648 17.7638 20.5304 17.7638Z" fill="#545F72"/>
+							</svg><span style="cursor: pointer !important; ">Inbox</span></a></li>
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;580)-->
+				   <!--<li data-name="proyectos" class="standalone"><a class="unblock-menu tosavelogs" data-logsmodulo="proyectos" data-logsdes="Ha ingresado al módulo proyectos" href="/v3/views/proyectos/index.shtml">Proyectos</a></li>-->
+				   <!-- <li  class="goto-project" data-name="proyectos"><a class="unblock-menu tosavelogs" data-logsmodulo="proyectos" data-logsdes="Ha ingresado al módulo proyectos" href="#"><i class="far fa-calendar-check"></i><span style="cursor: pointer !important; ">Proyectos</span></a></li> -->
+				   <!--#4DENDIF-->
+   
+				   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;466)-->
+				   <li data-name="cotizaciones" ><a class="unblock-menu tosavelogs"  data-logsmodulo="cotizaciones" data-logsdes="Ha ingresado al módulo cotizaciones" href="/v3/views/cotizaciones/list.shtml"><svg width="15" height="15" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M10.4063 4.06853C10.0875 4.21368 9.88807 4.52662 9.88807 4.88188C9.88807 5.01051 10.1912 5.6608 10.9241 7.10448L11.9601 9.1453H20.035L21.0434 7.16285C21.598 6.07255 22.0671 5.08609 22.0859 4.97082C22.1309 4.69403 21.9656 4.32418 21.7197 4.15178C21.5778 4.05228 21.4655 4.02261 21.23 4.02261C20.9584 4.02261 20.8876 4.04809 20.5909 4.25273C19.95 4.69473 19.427 4.85404 18.6169 4.85404C17.8161 4.85404 17.1743 4.65745 16.6225 4.24318C16.2025 3.92788 15.7974 3.91914 15.4175 4.21722C15.1148 4.45469 14.6334 4.68196 14.2394 4.77326C13.8338 4.86729 13.0097 4.87791 12.6049 4.79434C12.251 4.72128 11.6315 4.43688 11.3229 4.20574C11.0557 4.00566 10.671 3.94805 10.4063 4.06853ZM11.1293 11.2239C8.84334 13.9942 7.17767 17.1752 6.64216 19.793C6.21865 21.8635 6.34751 23.4694 7.0517 24.8965C7.78072 26.3738 9.04318 27.4405 10.5815 27.8789L11.0064 28H20.99L21.4149 27.8789C23.9347 27.1608 25.5999 24.816 25.5999 21.9859C25.5999 18.8543 23.916 14.9948 20.951 11.3312L20.5712 10.8618H11.428L11.1293 11.2239ZM16.4763 12.7216C16.793 12.9542 16.8425 13.0793 16.862 13.6973L16.8802 14.2724L17.2629 14.3317C18.0296 14.4504 18.8343 15.0034 19.1635 15.6379C19.485 16.2576 19.1032 16.9228 18.4259 16.9228C18.089 16.9228 17.8676 16.7985 17.6555 16.4905C17.3433 16.0372 17.3469 16.0381 15.9982 16.0381C14.6861 16.0381 14.6698 16.0419 14.3922 16.4074C14.2345 16.6151 14.2345 17.124 14.3922 17.3317C14.6689 17.6961 14.6777 17.6981 16.1248 17.7308C17.2935 17.7571 17.4766 17.7733 17.7301 17.873C18.6081 18.2182 19.1821 18.8417 19.4083 19.696C19.7854 21.1193 18.7656 22.6078 17.2532 22.8419L16.8802 22.8997L16.862 23.4748C16.8424 24.096 16.7936 24.2175 16.4682 24.4564C16.257 24.6115 15.7395 24.6115 15.5282 24.4564C15.2028 24.2175 15.1541 24.096 15.1345 23.4748L15.1163 22.8997L14.731 22.84C13.9734 22.7227 13.1589 22.1624 12.8329 21.5343C12.5115 20.9145 12.8933 20.2493 13.5705 20.2493C13.9074 20.2493 14.1288 20.3736 14.341 20.6816C14.6531 21.135 14.6495 21.134 15.9982 21.134C17.3104 21.134 17.3266 21.1302 17.6042 20.7647C17.7619 20.557 17.7619 20.0481 17.6042 19.8404C17.3277 19.4763 17.3185 19.4741 15.8717 19.4401C14.8625 19.4164 14.5 19.3893 14.329 19.3247C13.4263 18.9838 12.8165 18.3382 12.5902 17.4842C12.2105 16.0506 13.2265 14.565 14.7478 14.3295L15.1253 14.271V13.7768C15.1253 13.0996 15.2492 12.8306 15.6436 12.651C15.861 12.5521 16.2955 12.5889 16.4763 12.7216Z" fill="#545F72"/>
+					</svg>
+					</i><span style="cursor: pointer !important; "><!--#4DTEXT _V3_capitalizeString(etiqueta_cotizaciones)--></span></a></li>
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;1)-->
+				   <li  data-name="negocios"><a class="unblock-menu tosavelogs" data-logsmodulo="negocios"  data-logsdes="Ha ingresado al módulo negocios" href="/v3/views/negocios/list.shtml"><svg width="15" height="15" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M10.4063 4.06853C10.0875 4.21368 9.88807 4.52662 9.88807 4.88188C9.88807 5.01051 10.1912 5.6608 10.9241 7.10448L11.9601 9.1453H20.035L21.0434 7.16285C21.598 6.07255 22.0671 5.08609 22.0859 4.97082C22.1309 4.69403 21.9656 4.32418 21.7197 4.15178C21.5778 4.05228 21.4655 4.02261 21.23 4.02261C20.9584 4.02261 20.8876 4.04809 20.5909 4.25273C19.95 4.69473 19.427 4.85404 18.6169 4.85404C17.8161 4.85404 17.1743 4.65745 16.6225 4.24318C16.2025 3.92788 15.7974 3.91914 15.4175 4.21722C15.1148 4.45469 14.6334 4.68196 14.2394 4.77326C13.8338 4.86729 13.0097 4.87791 12.6049 4.79434C12.251 4.72128 11.6315 4.43688 11.3229 4.20574C11.0557 4.00566 10.671 3.94805 10.4063 4.06853ZM11.1293 11.2239C8.84334 13.9942 7.17767 17.1752 6.64216 19.793C6.21865 21.8635 6.34751 23.4694 7.0517 24.8965C7.78072 26.3738 9.04318 27.4405 10.5815 27.8789L11.0064 28H20.99L21.4149 27.8789C23.9347 27.1608 25.5999 24.816 25.5999 21.9859C25.5999 18.8543 23.916 14.9948 20.951 11.3312L20.5712 10.8618H11.428L11.1293 11.2239ZM16.4763 12.7216C16.793 12.9542 16.8425 13.0793 16.862 13.6973L16.8802 14.2724L17.2629 14.3317C18.0296 14.4504 18.8343 15.0034 19.1635 15.6379C19.485 16.2576 19.1032 16.9228 18.4259 16.9228C18.089 16.9228 17.8676 16.7985 17.6555 16.4905C17.3433 16.0372 17.3469 16.0381 15.9982 16.0381C14.6861 16.0381 14.6698 16.0419 14.3922 16.4074C14.2345 16.6151 14.2345 17.124 14.3922 17.3317C14.6689 17.6961 14.6777 17.6981 16.1248 17.7308C17.2935 17.7571 17.4766 17.7733 17.7301 17.873C18.6081 18.2182 19.1821 18.8417 19.4083 19.696C19.7854 21.1193 18.7656 22.6078 17.2532 22.8419L16.8802 22.8997L16.862 23.4748C16.8424 24.096 16.7936 24.2175 16.4682 24.4564C16.257 24.6115 15.7395 24.6115 15.5282 24.4564C15.2028 24.2175 15.1541 24.096 15.1345 23.4748L15.1163 22.8997L14.731 22.84C13.9734 22.7227 13.1589 22.1624 12.8329 21.5343C12.5115 20.9145 12.8933 20.2493 13.5705 20.2493C13.9074 20.2493 14.1288 20.3736 14.341 20.6816C14.6531 21.135 14.6495 21.134 15.9982 21.134C17.3104 21.134 17.3266 21.1302 17.6042 20.7647C17.7619 20.557 17.7619 20.0481 17.6042 19.8404C17.3277 19.4763 17.3185 19.4741 15.8717 19.4401C14.8625 19.4164 14.5 19.3893 14.329 19.3247C13.4263 18.9838 12.8165 18.3382 12.5902 17.4842C12.2105 16.0506 13.2265 14.565 14.7478 14.3295L15.1253 14.271V13.7768C15.1253 13.0996 15.2492 12.8306 15.6436 12.651C15.861 12.5521 16.2955 12.5889 16.4763 12.7216Z" fill="#545F72"/>
+					</svg>
+					<span style="cursor: pointer !important; "><!--#4DTEXT _V3_capitalizeString(etiqueta_negocios)--></span></a></li>
+				   <!--#4DENDIF-->
+
+					<!--#4DIF _V3_verifica_permisos_web (vLogin;684)-->
+					<li class="negocios-c standalone" data-name="negocios-c" ><a class="unblock-menu tosavelogs" data-logsmodulo="negocios-c"  data-logsdes="Ha ingresado al módulo HOME" href="/v3/views/negocios_consolidated/businessConsolidated.html"><i  title="NegociosC" class="fas fa-donate"></i><span style="cursor: pointer !important; ">Consolidated</span></a></li>
+					<!--#4DENDIF-->
+
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;667)-->
+					   <li class="iframe" data-name="light"><a class="unblock-menu tosavelogs" data-logsmodulo="light" data-logsdes="Ha ingresado al módulo de light" href="/light/business_list.shtml?r=<!--#4DTEXT Random-->"><i class="fas fa-mobile-alt"></i><span style="cursor: pointer !important; ">Negocios Movil</span></a></li>
+				   <!--#4DENDIF-->
+				   <!--#4DIF vLogin="dsfdsfd"-->
+				   <!--<li data-name="negocios"><a href="/v3/views/negocios/list2.shtml">Negocios new</a></li>-->
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF ((vLogin="soporte") | (vLogin="zvilca") | (vLogin="gin"))-->
+				   <!--<li data-name="preorden"><a class="unblock-menu tosavelogs" data-logsmodulo="preorden" data-logsdes="Ha ingresado al módulo de pre orden" href="/v3/views/preorden/list.shtml"><span style="cursor: pointer !important; ">Pre orden</span></a></li>-->
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;4)-->
+				   <!--<li data-name="gastos"><a href="/v3/views/compras/list_compras.shtml">Órdenes de compra</a></li>-->
+				   <li data-name="gastos"><a class="unblock-menu tosavelogs" data-logsmodulo="gastos"  data-logsdes="Ha ingresado al módulo orden de compras" href="/v3/views/compras/list_compras.shtml"><svg width="15" height="15" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M4.62202 4.70948C3.83667 5.07395 3.78368 6.12534 4.52757 6.58403L4.75698 6.72546L6.05728 6.73981C7.25048 6.75299 7.36406 6.76127 7.43581 6.8403C7.4963 6.90695 7.70479 8.22779 8.35574 12.6683C8.97391 16.8852 9.22907 18.5095 9.31657 18.784C9.61956 19.7351 10.4701 20.5146 11.4585 20.7468C11.8973 20.8499 23.4519 20.85 23.9446 20.7469C24.9575 20.5349 25.8587 19.7016 26.1567 18.7017C26.2593 18.3572 28.0012 9.64659 28 9.48375C27.9987 9.31226 27.8448 8.96191 27.705 8.81249C27.6486 8.75215 27.518 8.6575 27.4148 8.60216L27.2273 8.50154L9.92306 8.4548L9.81886 7.75372C9.65074 6.62227 9.57449 6.27804 9.42049 5.95516C9.22916 5.55401 8.71843 5.04175 8.32878 4.86031C7.84351 4.63433 7.56008 4.60049 6.14803 4.60012C4.89284 4.59979 4.85209 4.60269 4.62202 4.70948ZM12.27 21.8559C11.1616 21.9959 10.1767 22.8847 9.91917 23.9773C9.81647 24.413 9.85098 25.1227 9.99467 25.5312C10.377 26.6179 11.4176 27.3606 12.5578 27.3606C13.3151 27.3606 13.9093 27.1075 14.4736 26.5447C15.0723 25.9475 15.2925 25.4276 15.2925 24.6116C15.2925 24.0842 15.2022 23.7023 14.9824 23.3008C14.7662 22.9059 14.5841 22.6865 14.2664 22.4381C13.6651 21.9682 12.9749 21.7669 12.27 21.8559ZM21.8578 21.8509C20.7614 21.9688 19.8136 22.7683 19.4971 23.8419C19.3035 24.4987 19.3722 25.2161 19.6909 25.865C19.9075 26.306 20.435 26.8513 20.8583 27.0717C21.9434 27.6366 23.2224 27.4624 24.108 26.629C24.4623 26.2956 24.6756 25.965 24.8471 25.4833C25.021 24.995 25.0196 24.3203 24.8435 23.7851C24.4207 22.4999 23.1967 21.7069 21.8578 21.8509Z" fill="#545F72"/>
+					</svg>
+					<span style="cursor: pointer !important;">Órdenes de compra</span></a></li>
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF vLogin="gin"-->
+				   <!--<li data-name="gastos" class="standalone"><a href="/v3/views/compras/index_pro.shtml">OC2</a></li>-->
+				   <!--#4DENDIF-->
+
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;508)-->
+				   <li data-name="rendiciones"  class=""><a class="unblock-menu tosavelogs" data-logsmodulo="rendiciones" data-logsdes="Ha ingresado al módulo de rendiciones" href="/v3/views/compras/list_rendiciones.shtml"><svg width="15" height="15" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M4.62202 4.70948C3.83667 5.07395 3.78368 6.12534 4.52757 6.58403L4.75698 6.72546L6.05728 6.73981C7.25048 6.75299 7.36406 6.76127 7.43581 6.8403C7.4963 6.90695 7.70479 8.22779 8.35574 12.6683C8.97391 16.8852 9.22907 18.5095 9.31657 18.784C9.61956 19.7351 10.4701 20.5146 11.4585 20.7468C11.8973 20.8499 23.4519 20.85 23.9446 20.7469C24.9575 20.5349 25.8587 19.7016 26.1567 18.7017C26.2593 18.3572 28.0012 9.64659 28 9.48375C27.9987 9.31226 27.8448 8.96191 27.705 8.81249C27.6486 8.75215 27.518 8.6575 27.4148 8.60216L27.2273 8.50154L9.92306 8.4548L9.81886 7.75372C9.65074 6.62227 9.57449 6.27804 9.42049 5.95516C9.22916 5.55401 8.71843 5.04175 8.32878 4.86031C7.84351 4.63433 7.56008 4.60049 6.14803 4.60012C4.89284 4.59979 4.85209 4.60269 4.62202 4.70948ZM12.27 21.8559C11.1616 21.9959 10.1767 22.8847 9.91917 23.9773C9.81647 24.413 9.85098 25.1227 9.99467 25.5312C10.377 26.6179 11.4176 27.3606 12.5578 27.3606C13.3151 27.3606 13.9093 27.1075 14.4736 26.5447C15.0723 25.9475 15.2925 25.4276 15.2925 24.6116C15.2925 24.0842 15.2022 23.7023 14.9824 23.3008C14.7662 22.9059 14.5841 22.6865 14.2664 22.4381C13.6651 21.9682 12.9749 21.7669 12.27 21.8559ZM21.8578 21.8509C20.7614 21.9688 19.8136 22.7683 19.4971 23.8419C19.3035 24.4987 19.3722 25.2161 19.6909 25.865C19.9075 26.306 20.435 26.8513 20.8583 27.0717C21.9434 27.6366 23.2224 27.4624 24.108 26.629C24.4623 26.2956 24.6756 25.965 24.8471 25.4833C25.021 24.995 25.0196 24.3203 24.8435 23.7851C24.4207 22.4999 23.1967 21.7069 21.8578 21.8509Z" fill="#545F72"/>
+					</svg><span style="cursor: pointer !important; "><!--#4DTEXT etiqueta_rendiciones--></span></a></li>
+				   <!-- <li data-name="rendiciones" class="standalone"><a href="/v3/views/compras/index_rend.shtml">Rendiciones</a></li>-->
+				   <!--#4DENDIF-->
+				   
+   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;666)-->
+					   <li data-name="rendir"><a class="unblock-menu tosavelogs" data-logsmodulo="rendir" data-logsdes="Ha ingresado al módulo de rendir" href="#">Rendir</a></li>
+				   <!--#4DENDIF-->
+   
+   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;640)-->
+				   <!-- <li data-name="validate" class="standalone"><a class="unblock-menu tosavelogs" data-logsmodulo="validate" data-logsdes="Ha ingresado al módulo validar gastos" href="#"><span style="cursor: pointer !important; ">Validar Gastos</span></a></li> -->
+				   <!--#4DENDIF-->
+   
+ 
+
+
+				   <!--PARTE DEL MENU LATERAL-->
+				   <li style="display:none" id="ajuste_sobrecargos" class="iframe" data-name="ajuste_sobrecargos"><a class="unblock-menu tosavelogs" data-logsmodulo="bandeja_dtc" data-logsdes="Ha ingresado al módulo de ajustes de sobrecargos" 
+				   href="/v3/views/ajustes/sobrecargos/index.shtml">Ajustes sobrecargos</a></li>
+   
+				   
+   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;467)-->
+				   <li data-name="dtc"><a class="unblock-menu tosavelogs" data-logsmodulo="dtc" data-logsdes="Ha ingresado al módulo docs. de compra" href="/v3/views/dtc/list.shtml"><svg width="15" height="15" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M13.8 3.24251V6.96C13.8 7.46405 13.8 7.71607 13.8981 7.90859C13.9844 8.07794 14.1221 8.21562 14.2915 8.30191C14.484 8.4 14.736 8.4 15.24 8.4H18.9575M19.2 10.1894V16.68C19.2 18.1921 19.2 18.9482 18.9058 19.5258C18.6469 20.0338 18.2339 20.4469 17.7258 20.7057C17.1483 21 16.3922 21 14.88 21H9.12005C7.60791 21 6.85184 21 6.27427 20.7057C5.76624 20.4469 5.35319 20.0338 5.09433 19.5258C4.80005 18.9482 4.80005 18.1921 4.80005 16.68V7.32C4.80005 5.80786 4.80005 5.05179 5.09433 4.47423C5.35319 3.96619 5.76624 3.55314 6.27427 3.29428C6.85184 3 7.60791 3 9.12005 3H12.0106C12.671 3 13.0012 3 13.312 3.0746C13.5875 3.14074 13.8508 3.24983 14.0924 3.39787C14.3649 3.56484 14.5984 3.79833 15.0653 4.2653L17.9347 7.1347C18.4017 7.60167 18.6352 7.83516 18.8022 8.10763C18.9502 8.34921 19.0593 8.61258 19.1254 8.88807C19.2 9.19881 19.2 9.52901 19.2 10.1894Z" stroke="#545F72" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+					<span style="cursor: pointer !important; ">Docs. de compra</span></a></li>
+				   <!--#4DENDIF-->
+   
+			   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;526)-->
+				   <li style="display:none" data-name="modulo_pagos"><a class="unblock-menu tosavelogs" data-logsmodulo="modulo_pago" data-logsdes="Ha ingresado al módulo de pago" href="/v3/views/modulo_pagos/list.shtml"><span style="cursor: pointer !important; ">Módulo de pagos</span></a></li>
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;511)-->
+				   <li data-name="dtv"><a class="unblock-menu tosavelogs" data-logsmodulo="dtv" data-logsdes="Ha ingresado al módulo de Docs. de venta" href="/v3/views/dtv/list.shtml"><svg width="15" height="15" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M13.8 3.24251V6.96C13.8 7.46405 13.8 7.71607 13.8981 7.90859C13.9844 8.07794 14.1221 8.21562 14.2915 8.30191C14.484 8.4 14.736 8.4 15.24 8.4H18.9575M19.2 10.1894V16.68C19.2 18.1921 19.2 18.9482 18.9058 19.5258C18.6469 20.0338 18.2339 20.4469 17.7258 20.7057C17.1483 21 16.3922 21 14.88 21H9.12005C7.60791 21 6.85184 21 6.27427 20.7057C5.76624 20.4469 5.35319 20.0338 5.09433 19.5258C4.80005 18.9482 4.80005 18.1921 4.80005 16.68V7.32C4.80005 5.80786 4.80005 5.05179 5.09433 4.47423C5.35319 3.96619 5.76624 3.55314 6.27427 3.29428C6.85184 3 7.60791 3 9.12005 3H12.0106C12.671 3 13.0012 3 13.312 3.0746C13.5875 3.14074 13.8508 3.24983 14.0924 3.39787C14.3649 3.56484 14.5984 3.79833 15.0653 4.2653L17.9347 7.1347C18.4017 7.60167 18.6352 7.83516 18.8022 8.10763C18.9502 8.34921 19.0593 8.61258 19.1254 8.88807C19.2 9.19881 19.2 9.52901 19.2 10.1894Z" stroke="#545F72" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+					<span style="cursor: pointer !important; ">Docs. de venta</span></a></li>
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;579)-->
+				   <li data-name="factoring"><a class="unblock-menu tosavelogs" data-logsmodulo="factoring" data-logsdes="Ha ingresado al módulo de factoring" href="/v3/views/compras/list_factoring.shtml"><i title="Factoring" class="fas fa-file-contract"></i><span style="cursor: pointer !important; ">Factoring</span></a></li>
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;513)-->
+				   <li data-name="ingresos"><a class="unblock-menu tosavelogs" data-logsmodulo="ingresos" data-logsdes="Ha ingresado al módulo de ingresos" href="/v3/views/cobros/list.shtml"><svg width="15" height="15" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M18.1762 4.02215C18.1106 4.0316 17.8957 4.06264 17.6988 4.0911C15.6429 4.38841 13.717 5.84959 12.8608 7.76167C11.8496 10.02 12.2476 12.616 13.889 14.4678C15.6808 16.4896 18.551 17.1803 21.1118 16.2061C23.1239 15.4406 24.6193 13.6967 25.0823 11.5759C25.2045 11.0162 25.2048 9.65633 25.0827 9.09485C24.4981 6.4046 22.343 4.42282 19.6082 4.06049C19.1459 3.99921 18.4626 3.98095 18.1762 4.02215ZM19.102 5.5027C19.3942 5.66697 19.465 5.84697 19.4651 6.42576L19.4652 6.91805L19.7396 7.05675C20.4203 7.40102 20.8926 8.1474 20.8957 8.88419C20.898 9.44422 20.3418 9.78254 19.8461 9.52258C19.6356 9.4122 19.5209 9.22106 19.4658 8.88906C19.4123 8.5669 19.3106 8.42332 19.0443 8.29407C18.4535 8.00739 17.82 8.64241 18.1205 9.22003C18.2585 9.48523 18.4069 9.56177 18.9328 9.63882C19.5272 9.72599 19.8958 9.89386 20.2454 10.2367C20.955 10.9326 21.0966 11.9674 20.5969 12.8038C20.4345 13.0754 20.0129 13.4586 19.7116 13.6083L19.465 13.7309L19.4648 14.2334C19.4647 14.6521 19.4489 14.7612 19.3698 14.8884C19.0786 15.3568 18.3646 15.336 18.1166 14.8519C18.0535 14.7288 18.0326 14.5691 18.0311 14.1975L18.0291 13.7059L17.7804 13.592C17.4535 13.4423 16.9856 12.9798 16.8271 12.6497C16.6737 12.3301 16.5761 11.8376 16.6204 11.6061C16.6652 11.3717 16.8995 11.1208 17.1304 11.0598C17.5688 10.9441 18.033 11.2865 18.033 11.7257C18.033 12.0985 18.3638 12.4186 18.749 12.4186C19.2971 12.4186 19.6329 11.8583 19.365 11.3908C19.2281 11.1519 19.0545 11.0645 18.619 11.015C18.1792 10.9651 17.9036 10.8754 17.5971 10.6826C16.6561 10.0904 16.3414 8.87928 16.8762 7.90805C17.0497 7.59309 17.4345 7.22725 17.765 7.06331L18.033 6.93031V6.45909C18.033 5.86677 18.1255 5.64146 18.4292 5.494C18.6856 5.36952 18.8694 5.37191 19.102 5.5027ZM11.5691 18.088C10.8048 18.1973 9.88652 18.5715 9.29768 19.0137C9.12703 19.1419 8.53632 19.6373 7.98499 20.1147L6.98258 20.9827L6.32385 20.984C5.61577 20.9855 5.50675 21.0127 5.28803 21.2421L5.16869 21.3674L5.14282 27.5225L5.25218 27.683C5.31233 27.7712 5.43629 27.8806 5.52765 27.926C5.68446 28.0039 6.08046 28.0077 12.5913 27.9936C18.8005 27.9802 19.5198 27.971 19.7991 27.9018C20.8679 27.6367 21.7489 27.1475 22.3976 26.459C22.5534 26.2935 23.5891 24.9702 24.6992 23.5183C26.1844 21.5755 26.7383 20.8166 26.7965 20.6447C26.8983 20.3442 26.8685 19.8643 26.7319 19.6044C26.5323 19.2246 26.1175 18.935 25.6555 18.8528C25.3897 18.8056 24.9397 18.9142 24.6964 19.0844C24.4987 19.2227 23.1302 20.6399 21.7754 22.1094C21.0215 22.9271 20.5568 23.3626 20.2712 23.5192C19.8147 23.7694 19.7969 23.7707 16.8551 23.7707C14.1552 23.7707 14.1244 23.7697 13.9911 23.6722C13.5818 23.3731 13.5703 22.7992 13.9677 22.5068C14.0893 22.4173 14.1892 22.4121 16.2191 22.3898L18.3433 22.3663L18.6132 22.2422C19.5709 21.8019 19.7566 20.6189 18.976 19.9307C18.6119 19.6096 18.4677 19.581 17.2153 19.581C16.4513 19.581 16.0884 19.5637 15.9946 19.5227C15.9212 19.4907 15.7187 19.3485 15.5446 19.2067C14.4359 18.3038 12.9613 17.8888 11.5691 18.088Z" fill="#545F72"/>
+					</svg>
+					<span style="cursor: pointer !important; ">Ingresos</span></a></li>
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;512)-->
+				   <li data-name="egresos"><a class="unblock-menu tosavelogs" data-logsmodulo="egresos" data-logsdes="Ha ingresado al módulo de pagos" href="/v3/views/pagos/list.shtml"><svg width="15" height="15" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M18.1762 4.02215C18.1106 4.0316 17.8957 4.06264 17.6988 4.0911C15.6429 4.38841 13.717 5.84959 12.8608 7.76167C11.8496 10.02 12.2476 12.616 13.889 14.4678C15.6808 16.4896 18.551 17.1803 21.1118 16.2061C23.1239 15.4406 24.6193 13.6967 25.0823 11.5759C25.2045 11.0162 25.2048 9.65633 25.0827 9.09485C24.4981 6.4046 22.343 4.42282 19.6082 4.06049C19.1459 3.99921 18.4626 3.98095 18.1762 4.02215ZM19.102 5.5027C19.3942 5.66697 19.465 5.84697 19.4651 6.42576L19.4652 6.91805L19.7396 7.05675C20.4203 7.40102 20.8926 8.1474 20.8957 8.88419C20.898 9.44422 20.3418 9.78254 19.8461 9.52258C19.6356 9.4122 19.5209 9.22106 19.4658 8.88906C19.4123 8.5669 19.3106 8.42332 19.0443 8.29407C18.4535 8.00739 17.82 8.64241 18.1205 9.22003C18.2585 9.48523 18.4069 9.56177 18.9328 9.63882C19.5272 9.72599 19.8958 9.89386 20.2454 10.2367C20.955 10.9326 21.0966 11.9674 20.5969 12.8038C20.4345 13.0754 20.0129 13.4586 19.7116 13.6083L19.465 13.7309L19.4648 14.2334C19.4647 14.6521 19.4489 14.7612 19.3698 14.8884C19.0786 15.3568 18.3646 15.336 18.1166 14.8519C18.0535 14.7288 18.0326 14.5691 18.0311 14.1975L18.0291 13.7059L17.7804 13.592C17.4535 13.4423 16.9856 12.9798 16.8271 12.6497C16.6737 12.3301 16.5761 11.8376 16.6204 11.6061C16.6652 11.3717 16.8995 11.1208 17.1304 11.0598C17.5688 10.9441 18.033 11.2865 18.033 11.7257C18.033 12.0985 18.3638 12.4186 18.749 12.4186C19.2971 12.4186 19.6329 11.8583 19.365 11.3908C19.2281 11.1519 19.0545 11.0645 18.619 11.015C18.1792 10.9651 17.9036 10.8754 17.5971 10.6826C16.6561 10.0904 16.3414 8.87928 16.8762 7.90805C17.0497 7.59309 17.4345 7.22725 17.765 7.06331L18.033 6.93031V6.45909C18.033 5.86677 18.1255 5.64146 18.4292 5.494C18.6856 5.36952 18.8694 5.37191 19.102 5.5027ZM11.5691 18.088C10.8048 18.1973 9.88652 18.5715 9.29768 19.0137C9.12703 19.1419 8.53632 19.6373 7.98499 20.1147L6.98258 20.9827L6.32385 20.984C5.61577 20.9855 5.50675 21.0127 5.28803 21.2421L5.16869 21.3674L5.14282 27.5225L5.25218 27.683C5.31233 27.7712 5.43629 27.8806 5.52765 27.926C5.68446 28.0039 6.08046 28.0077 12.5913 27.9936C18.8005 27.9802 19.5198 27.971 19.7991 27.9018C20.8679 27.6367 21.7489 27.1475 22.3976 26.459C22.5534 26.2935 23.5891 24.9702 24.6992 23.5183C26.1844 21.5755 26.7383 20.8166 26.7965 20.6447C26.8983 20.3442 26.8685 19.8643 26.7319 19.6044C26.5323 19.2246 26.1175 18.935 25.6555 18.8528C25.3897 18.8056 24.9397 18.9142 24.6964 19.0844C24.4987 19.2227 23.1302 20.6399 21.7754 22.1094C21.0215 22.9271 20.5568 23.3626 20.2712 23.5192C19.8147 23.7694 19.7969 23.7707 16.8551 23.7707C14.1552 23.7707 14.1244 23.7697 13.9911 23.6722C13.5818 23.3731 13.5703 22.7992 13.9677 22.5068C14.0893 22.4173 14.1892 22.4121 16.2191 22.3898L18.3433 22.3663L18.6132 22.2422C19.5709 21.8019 19.7566 20.6189 18.976 19.9307C18.6119 19.6096 18.4677 19.581 17.2153 19.581C16.4513 19.581 16.0884 19.5637 15.9946 19.5227C15.9212 19.4907 15.7187 19.3485 15.5446 19.2067C14.4359 18.3038 12.9613 17.8888 11.5691 18.088Z" fill="#545F72"/>
+					</svg>
+					<span style="cursor: pointer !important; ">Pagos</span></a></li>
+				   <!--#4DENDIF-->
+
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;671)-->
+					
+					<li style="" class="iframe" data-name="conexion_sii" id="bandeja_dtc"><a class="unblock-menu tosavelogs" data-logsmodulo="bandeja_dtc" data-logsdes="Ha ingresado al módulo de Bandeja DTC" 
+						href='/v3/views/conexion_sii/index.html'><svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path fill-rule="evenodd" clip-rule="evenodd" d="M3.66468 4.9001C3.24325 4.9001 2.89998 5.24268 2.89998 5.66578V15.4694L4.10925 12.3653C4.10922 12.3653 4.10928 12.3652 4.10925 12.3653C4.61257 11.0703 5.86015 10.2189 7.24767 10.2189H18.9484C18.9483 10.1709 18.9482 10.1203 18.9478 10.0654C18.9434 9.15467 18.2039 8.41818 17.2928 8.41818H11.8418C11.5099 8.41818 11.2051 8.23562 11.0484 7.94313L10.4437 6.8143C10.1085 6.18856 9.70757 5.44033 9.44476 4.95008C9.4283 4.9193 9.39675 4.9001 9.36239 4.9001H3.66468ZM12.3806 6.61818H17.2928C19.1942 6.61818 20.7385 8.1543 20.7478 10.056C20.7478 10.0558 20.7478 10.0562 20.7478 10.056C20.7481 10.1143 20.7483 10.1681 20.7484 10.2189H21.0527C21.66 10.2189 22.2289 10.5176 22.5738 11.0188C22.9192 11.5195 22.9958 12.1584 22.7775 12.7275C22.7774 12.7276 22.7775 12.7274 22.7775 12.7275L20.3763 19.0093C20.3763 19.0093 20.3761 19.0101 19.5354 18.6887L20.3763 19.0093C20.3546 19.0663 20.3267 19.1217 20.2939 19.1732C20.198 19.3232 19.9834 19.6454 19.7781 19.8522L19.777 19.8533C19.1289 20.5041 18.248 20.871 17.3282 20.871H4.5098C2.62713 20.871 1.09998 19.3438 1.09998 17.4612V5.66578C1.09998 4.24926 2.24845 3.1001 3.66468 3.1001H9.36239C10.0609 3.1001 10.7016 3.4842 11.0312 4.09964L12.3806 6.61818ZM18.729 18.2777L21.0969 12.0828C21.1025 12.0682 21.1004 12.0528 21.0921 12.0407L21.0911 12.0393C21.0822 12.0263 21.0679 12.0189 21.0527 12.0189H7.24767C6.60107 12.0189 6.02079 12.4157 5.78703 13.0173L3.55176 18.7547C3.81953 18.9534 4.15103 19.071 4.5098 19.071H17.3282C17.7684 19.071 18.1906 18.8954 18.5016 18.5831L19.1393 19.2182L18.5005 18.5843C18.5163 18.5684 18.5589 18.5184 18.622 18.4318C18.6595 18.3802 18.6964 18.3266 18.729 18.2777Z" fill="#545F72"/>
+							</svg>
+							<span style="cursor: pointer !important; ">Bandeja DTC</span></a></li>
+	
+					<!--#4DENDIF-->
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;654)-->
+				   <li data-name="comprobantes" class="comprobantes menu"><a class="unblock-menu tosavelogs comprobantes" href="#" id="accounting"><svg width="15" height="15" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M5.65095 4.08251C4.87323 4.2917 4.27849 4.89354 4.07421 5.67813C4.00896 5.92876 4 6.95904 4 14.2308C4 20.1718 4.01535 22.5707 4.05446 22.7551C4.21716 23.5215 4.80304 24.1632 5.55345 24.3968C5.83315 24.4839 6.06246 24.4885 10.0735 24.4885H14.2988L14.18 24.1617C13.9602 23.5575 13.8615 22.9711 13.856 22.2369C13.8532 21.864 13.8684 21.4421 13.8897 21.2993L13.9284 21.0395L13.6901 21.3169L12.5888 21.3316C11.0706 21.3519 11.0675 21.3502 11.0675 20.5034C11.0675 19.987 11.07 19.9753 11.209 19.8363L11.3505 19.6947H13.6316L13.7835 19.8305C13.9235 19.9556 13.9383 19.9986 13.971 20.3753C13.9905 20.6002 14.0096 20.7373 14.0134 20.68C14.0259 20.4931 14.3636 19.5838 14.584 19.1436C14.7025 18.907 14.9377 18.4933 15.1069 18.2242L15.4144 17.7348L15.3104 17.589C15.2213 17.464 15.2064 17.3763 15.2064 16.9786C15.2064 16.2273 15.3311 16.1115 16.1397 16.1115H16.6227L17.8919 14.6517L17.5336 14.223H16.5381C15.4318 14.223 15.3775 14.2095 15.2497 13.9034C15.1699 13.7126 15.1616 13.2096 15.2338 12.9494C15.2682 12.8257 15.3356 12.7344 15.4393 12.6711C15.5786 12.5862 15.6883 12.577 16.5657 12.5768L17.5378 12.5766L17.6051 12.4509C17.6421 12.3817 17.7963 12.2104 17.9478 12.0701L18.2232 11.815L17.8625 11.4574C17.4815 11.0795 17.2865 10.7546 17.2252 10.3954L17.1884 10.1797L6.71301 10.1313L6.44459 9.86294L6.43002 8.7284C6.41772 7.77274 6.42741 7.57072 6.49135 7.44705C6.65245 7.1354 6.2861 7.15332 12.5052 7.15351C18.0708 7.15365 18.1617 7.1552 18.3178 7.25035C18.5202 7.37378 18.5707 7.51232 18.5707 7.94333L18.5706 8.29124H18.9458C19.1522 8.29124 19.3973 8.30892 19.4905 8.33046C19.6507 8.36756 19.6649 8.36029 19.7528 8.19629C19.943 7.84106 20.6145 7.34904 20.9112 7.34749C20.9954 7.34705 20.9997 7.29795 20.9838 6.51172L20.9669 5.67643L20.7871 5.29971C20.4846 4.66615 19.9869 4.25403 19.3117 4.07811C18.9014 3.97119 6.04929 3.97535 5.65095 4.08251ZM20.9529 8.13426C20.7135 8.21096 20.4339 8.50968 20.3418 8.78709C20.1844 9.26105 19.9076 9.37571 19.4338 9.16304C19.1841 9.05094 19.0943 9.03414 18.8686 9.05748C18.3468 9.11132 17.9735 9.52742 17.974 10.0546C17.9743 10.4238 18.0665 10.5805 18.6106 11.1361L19.0729 11.6082H23.5386L24.0009 11.1361C24.5467 10.5788 24.6405 10.4211 24.6422 10.0587C24.6446 9.53497 24.2641 9.11127 23.7429 9.05748C23.5173 9.03414 23.4274 9.05094 23.1777 9.16304C22.7039 9.37571 22.4271 9.26105 22.2697 8.78689C22.0868 8.23619 21.5166 7.95359 20.9529 8.13426ZM18.7886 12.4414C18.5466 12.526 18.3444 12.7073 18.2312 12.9411C18.0048 13.409 18.1946 14.0084 18.6433 14.2429C18.8324 14.3417 18.8955 14.344 21.3379 14.344H23.8388L24.0484 14.1967C24.3401 13.9917 24.4747 13.7361 24.4757 13.3858C24.477 12.9237 24.2351 12.5825 23.8037 12.438C23.5849 12.3648 18.9989 12.3678 18.7886 12.4414ZM9.49108 12.6238C9.71211 12.7079 9.80854 12.9388 9.80873 13.3845C9.80893 13.8259 9.76928 13.9722 9.60915 14.1215C9.50488 14.2187 9.45095 14.223 8.34387 14.223H7.18746L7.04596 14.0814C6.90756 13.943 6.90451 13.929 6.90616 13.4398C6.90805 12.9025 6.95389 12.7539 7.15183 12.6442C7.29221 12.5664 9.29416 12.5489 9.49108 12.6238ZM13.7154 12.6714C13.9173 12.7946 13.9897 13.0584 13.9607 13.5652C13.9402 13.9221 13.9281 13.958 13.7851 14.0858L13.6316 14.223H11.3505L11.209 14.0814C11.0704 13.9427 11.0675 13.9296 11.0675 13.4245C11.0675 12.5772 11.0609 12.5811 12.4956 12.5788C13.4682 12.5772 13.5739 12.5852 13.7154 12.6714ZM18.0987 15.5943C16.7915 17.0925 15.7907 18.4715 15.2749 19.4848C14.0873 21.8181 14.516 24.3635 16.3999 26.1637C17.3127 27.0359 18.5668 27.6655 19.8777 27.9096C20.5177 28.0288 22.0902 28.0304 22.7236 27.9127C24.0686 27.6625 25.2493 27.0732 26.1885 26.1833C27.9482 24.5159 28.4547 22.2704 27.5812 20.0094C27.1922 19.0024 26.1152 17.4431 24.6075 15.7042C24.0428 15.053 24.0423 15.0525 23.8846 15.0977C23.6783 15.1569 18.934 15.1571 18.7279 15.098C18.5723 15.0534 18.5668 15.0577 18.0987 15.5943ZM9.49757 16.1823C9.72329 16.2767 9.80893 16.4903 9.80893 16.9588C9.80893 17.4319 9.72378 17.6408 9.49137 17.7379C9.34823 17.7978 9.11796 17.8087 8.25117 17.7967L7.18678 17.782L7.04562 17.6239C6.90897 17.4708 6.90446 17.4498 6.90446 16.9646C6.90446 16.526 6.91739 16.4471 7.00796 16.3319C7.06489 16.2595 7.15749 16.1816 7.21369 16.1589C7.26994 16.1362 7.76864 16.1162 8.32194 16.1145C9.10116 16.1121 9.36619 16.1274 9.49757 16.1823ZM13.6227 16.1635C13.8837 16.2545 13.9478 16.4112 13.9478 16.9588C13.9478 17.5221 13.8796 17.6755 13.5915 17.7609C13.4817 17.7934 13.026 17.8072 12.3826 17.7975L11.3498 17.782L11.2087 17.6239C11.072 17.4708 11.0675 17.4498 11.0675 16.9646C11.0675 16.526 11.0805 16.4471 11.171 16.3319C11.228 16.2595 11.3206 16.1816 11.3768 16.1589C11.5284 16.0977 13.4451 16.1016 13.6227 16.1635ZM21.5891 17.4892C21.6976 17.5897 21.7172 17.6486 21.7172 17.8727V18.1374L21.9714 18.2205C22.3266 18.3368 22.5995 18.5043 22.8535 18.762C23.0765 18.9882 23.3147 19.4011 23.3147 19.5614C23.3147 19.7369 23.1736 19.9279 23.0023 19.9845C22.7849 20.0563 22.6094 19.978 22.4607 19.7431C22.1569 19.2632 21.891 19.0762 21.4477 19.0304C20.9661 18.9807 20.445 19.2036 20.2928 19.5245C20.1718 19.7796 20.1932 20.0953 20.3437 20.2742C20.5313 20.4973 20.7721 20.5997 21.4865 20.7604C22.5243 20.9938 23.0267 21.3121 23.3051 21.9127C23.492 22.3158 23.4897 22.8521 23.2994 23.2404C23.0628 23.7231 22.5622 24.0611 21.8503 24.2188C21.7261 24.2463 21.7171 24.2652 21.7157 24.5016C21.7141 24.7688 21.6636 24.8726 21.4905 24.9649C21.3254 25.0528 21.1539 25.0316 21.0069 24.9052C20.897 24.8106 20.8674 24.7379 20.8469 24.5119L20.8217 24.2346L20.5201 24.1422C19.764 23.9106 19.094 23.1387 19.1423 22.5549C19.1639 22.2933 19.4669 22.1273 19.7452 22.2243C19.8544 22.2624 19.9189 22.3431 20.0222 22.5702C20.1745 22.9054 20.3964 23.1402 20.668 23.2535C20.9625 23.3764 21.4063 23.3981 21.7618 23.307C22.354 23.1552 22.5698 22.9258 22.5282 22.4925C22.4858 22.0513 22.14 21.8125 21.2792 21.6297C20.1977 21.4001 19.7253 21.1137 19.4461 20.5182C19.3432 20.2989 19.3215 20.1828 19.3234 19.8642C19.3281 19.0986 19.7447 18.5456 20.5307 18.2616L20.8217 18.1564L20.8469 17.8795C20.8674 17.6538 20.897 17.581 21.0069 17.4865C21.1862 17.3322 21.421 17.3332 21.5891 17.4892ZM9.64255 19.843C9.77712 19.9835 9.7855 20.0165 9.79905 20.4604C9.8114 20.8645 9.79968 20.9514 9.71429 21.0881C9.65983 21.1753 9.55939 21.2679 9.49108 21.2939C9.42283 21.3198 8.89896 21.3411 8.32692 21.3411C6.92073 21.3411 6.90446 21.3311 6.90446 20.4635C6.90446 19.9913 6.90838 19.9739 7.04596 19.8363L7.18746 19.6947H9.50038L9.64255 19.843Z" fill="#545F72"/>
+					</svg><span style="cursor: pointer !important; ">Contabilidad</span><i class="fas fa-angle-up"></i></a></li>
+				   
+				   <li style="display: none; margin-left: 20px; cursor: pointer !important;" class="submenu-contable" id="submenu-asientos" data-name="comprobantes"><a class="unblock-menu tosavelogs" data-logsmodulo="comprobantes" data-logsdes="Ha ingresado al módulo comprobantes" href="/v3/views/comprobantes/index.shtml"><svg width="15" height="15" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M5.65095 4.08251C4.87323 4.2917 4.27849 4.89354 4.07421 5.67813C4.00896 5.92876 4 6.95904 4 14.2308C4 20.1718 4.01535 22.5707 4.05446 22.7551C4.21716 23.5215 4.80304 24.1632 5.55345 24.3968C5.83315 24.4839 6.06246 24.4885 10.0735 24.4885H14.2988L14.18 24.1617C13.9602 23.5575 13.8615 22.9711 13.856 22.2369C13.8532 21.864 13.8684 21.4421 13.8897 21.2993L13.9284 21.0395L13.6901 21.3169L12.5888 21.3316C11.0706 21.3519 11.0675 21.3502 11.0675 20.5034C11.0675 19.987 11.07 19.9753 11.209 19.8363L11.3505 19.6947H13.6316L13.7835 19.8305C13.9235 19.9556 13.9383 19.9986 13.971 20.3753C13.9905 20.6002 14.0096 20.7373 14.0134 20.68C14.0259 20.4931 14.3636 19.5838 14.584 19.1436C14.7025 18.907 14.9377 18.4933 15.1069 18.2242L15.4144 17.7348L15.3104 17.589C15.2213 17.464 15.2064 17.3763 15.2064 16.9786C15.2064 16.2273 15.3311 16.1115 16.1397 16.1115H16.6227L17.8919 14.6517L17.5336 14.223H16.5381C15.4318 14.223 15.3775 14.2095 15.2497 13.9034C15.1699 13.7126 15.1616 13.2096 15.2338 12.9494C15.2682 12.8257 15.3356 12.7344 15.4393 12.6711C15.5786 12.5862 15.6883 12.577 16.5657 12.5768L17.5378 12.5766L17.6051 12.4509C17.6421 12.3817 17.7963 12.2104 17.9478 12.0701L18.2232 11.815L17.8625 11.4574C17.4815 11.0795 17.2865 10.7546 17.2252 10.3954L17.1884 10.1797L6.71301 10.1313L6.44459 9.86294L6.43002 8.7284C6.41772 7.77274 6.42741 7.57072 6.49135 7.44705C6.65245 7.1354 6.2861 7.15332 12.5052 7.15351C18.0708 7.15365 18.1617 7.1552 18.3178 7.25035C18.5202 7.37378 18.5707 7.51232 18.5707 7.94333L18.5706 8.29124H18.9458C19.1522 8.29124 19.3973 8.30892 19.4905 8.33046C19.6507 8.36756 19.6649 8.36029 19.7528 8.19629C19.943 7.84106 20.6145 7.34904 20.9112 7.34749C20.9954 7.34705 20.9997 7.29795 20.9838 6.51172L20.9669 5.67643L20.7871 5.29971C20.4846 4.66615 19.9869 4.25403 19.3117 4.07811C18.9014 3.97119 6.04929 3.97535 5.65095 4.08251ZM20.9529 8.13426C20.7135 8.21096 20.4339 8.50968 20.3418 8.78709C20.1844 9.26105 19.9076 9.37571 19.4338 9.16304C19.1841 9.05094 19.0943 9.03414 18.8686 9.05748C18.3468 9.11132 17.9735 9.52742 17.974 10.0546C17.9743 10.4238 18.0665 10.5805 18.6106 11.1361L19.0729 11.6082H23.5386L24.0009 11.1361C24.5467 10.5788 24.6405 10.4211 24.6422 10.0587C24.6446 9.53497 24.2641 9.11127 23.7429 9.05748C23.5173 9.03414 23.4274 9.05094 23.1777 9.16304C22.7039 9.37571 22.4271 9.26105 22.2697 8.78689C22.0868 8.23619 21.5166 7.95359 20.9529 8.13426ZM18.7886 12.4414C18.5466 12.526 18.3444 12.7073 18.2312 12.9411C18.0048 13.409 18.1946 14.0084 18.6433 14.2429C18.8324 14.3417 18.8955 14.344 21.3379 14.344H23.8388L24.0484 14.1967C24.3401 13.9917 24.4747 13.7361 24.4757 13.3858C24.477 12.9237 24.2351 12.5825 23.8037 12.438C23.5849 12.3648 18.9989 12.3678 18.7886 12.4414ZM9.49108 12.6238C9.71211 12.7079 9.80854 12.9388 9.80873 13.3845C9.80893 13.8259 9.76928 13.9722 9.60915 14.1215C9.50488 14.2187 9.45095 14.223 8.34387 14.223H7.18746L7.04596 14.0814C6.90756 13.943 6.90451 13.929 6.90616 13.4398C6.90805 12.9025 6.95389 12.7539 7.15183 12.6442C7.29221 12.5664 9.29416 12.5489 9.49108 12.6238ZM13.7154 12.6714C13.9173 12.7946 13.9897 13.0584 13.9607 13.5652C13.9402 13.9221 13.9281 13.958 13.7851 14.0858L13.6316 14.223H11.3505L11.209 14.0814C11.0704 13.9427 11.0675 13.9296 11.0675 13.4245C11.0675 12.5772 11.0609 12.5811 12.4956 12.5788C13.4682 12.5772 13.5739 12.5852 13.7154 12.6714ZM18.0987 15.5943C16.7915 17.0925 15.7907 18.4715 15.2749 19.4848C14.0873 21.8181 14.516 24.3635 16.3999 26.1637C17.3127 27.0359 18.5668 27.6655 19.8777 27.9096C20.5177 28.0288 22.0902 28.0304 22.7236 27.9127C24.0686 27.6625 25.2493 27.0732 26.1885 26.1833C27.9482 24.5159 28.4547 22.2704 27.5812 20.0094C27.1922 19.0024 26.1152 17.4431 24.6075 15.7042C24.0428 15.053 24.0423 15.0525 23.8846 15.0977C23.6783 15.1569 18.934 15.1571 18.7279 15.098C18.5723 15.0534 18.5668 15.0577 18.0987 15.5943ZM9.49757 16.1823C9.72329 16.2767 9.80893 16.4903 9.80893 16.9588C9.80893 17.4319 9.72378 17.6408 9.49137 17.7379C9.34823 17.7978 9.11796 17.8087 8.25117 17.7967L7.18678 17.782L7.04562 17.6239C6.90897 17.4708 6.90446 17.4498 6.90446 16.9646C6.90446 16.526 6.91739 16.4471 7.00796 16.3319C7.06489 16.2595 7.15749 16.1816 7.21369 16.1589C7.26994 16.1362 7.76864 16.1162 8.32194 16.1145C9.10116 16.1121 9.36619 16.1274 9.49757 16.1823ZM13.6227 16.1635C13.8837 16.2545 13.9478 16.4112 13.9478 16.9588C13.9478 17.5221 13.8796 17.6755 13.5915 17.7609C13.4817 17.7934 13.026 17.8072 12.3826 17.7975L11.3498 17.782L11.2087 17.6239C11.072 17.4708 11.0675 17.4498 11.0675 16.9646C11.0675 16.526 11.0805 16.4471 11.171 16.3319C11.228 16.2595 11.3206 16.1816 11.3768 16.1589C11.5284 16.0977 13.4451 16.1016 13.6227 16.1635ZM21.5891 17.4892C21.6976 17.5897 21.7172 17.6486 21.7172 17.8727V18.1374L21.9714 18.2205C22.3266 18.3368 22.5995 18.5043 22.8535 18.762C23.0765 18.9882 23.3147 19.4011 23.3147 19.5614C23.3147 19.7369 23.1736 19.9279 23.0023 19.9845C22.7849 20.0563 22.6094 19.978 22.4607 19.7431C22.1569 19.2632 21.891 19.0762 21.4477 19.0304C20.9661 18.9807 20.445 19.2036 20.2928 19.5245C20.1718 19.7796 20.1932 20.0953 20.3437 20.2742C20.5313 20.4973 20.7721 20.5997 21.4865 20.7604C22.5243 20.9938 23.0267 21.3121 23.3051 21.9127C23.492 22.3158 23.4897 22.8521 23.2994 23.2404C23.0628 23.7231 22.5622 24.0611 21.8503 24.2188C21.7261 24.2463 21.7171 24.2652 21.7157 24.5016C21.7141 24.7688 21.6636 24.8726 21.4905 24.9649C21.3254 25.0528 21.1539 25.0316 21.0069 24.9052C20.897 24.8106 20.8674 24.7379 20.8469 24.5119L20.8217 24.2346L20.5201 24.1422C19.764 23.9106 19.094 23.1387 19.1423 22.5549C19.1639 22.2933 19.4669 22.1273 19.7452 22.2243C19.8544 22.2624 19.9189 22.3431 20.0222 22.5702C20.1745 22.9054 20.3964 23.1402 20.668 23.2535C20.9625 23.3764 21.4063 23.3981 21.7618 23.307C22.354 23.1552 22.5698 22.9258 22.5282 22.4925C22.4858 22.0513 22.14 21.8125 21.2792 21.6297C20.1977 21.4001 19.7253 21.1137 19.4461 20.5182C19.3432 20.2989 19.3215 20.1828 19.3234 19.8642C19.3281 19.0986 19.7447 18.5456 20.5307 18.2616L20.8217 18.1564L20.8469 17.8795C20.8674 17.6538 20.897 17.581 21.0069 17.4865C21.1862 17.3322 21.421 17.3332 21.5891 17.4892ZM9.64255 19.843C9.77712 19.9835 9.7855 20.0165 9.79905 20.4604C9.8114 20.8645 9.79968 20.9514 9.71429 21.0881C9.65983 21.1753 9.55939 21.2679 9.49108 21.2939C9.42283 21.3198 8.89896 21.3411 8.32692 21.3411C6.92073 21.3411 6.90446 21.3311 6.90446 20.4635C6.90446 19.9913 6.90838 19.9739 7.04596 19.8363L7.18746 19.6947H9.50038L9.64255 19.843Z" fill="#545F72"/>
+					</svg>
+					<span style="cursor: pointer !important; ">Asientos</span></a></li>
+
+				
+
+				    <!--#4DIF _V3_verifica_permisos_web (vLogin;676)-->
+     			
+					 <li style="display: none; margin-left: 20px; cursor: pointer !important;" class="iframe submenu-contable" data-name="conexion_sii_pagos"><a class="unblock-menu tosavelogs" data-logsmodulo="bandeja_banco" data-logsdes="Ha ingresado al módulo de Bandeja Pagos" 
+						href="/v3/views/conexion_sii_pagos/index.html"><i title="Conciliación" class="fa fa-folder-open"></i><span style="cursor: pointer !important; ">Conciliación</span></a></li>
+					
+					<!--#4DENDIF-->
+					
+					<li style="display: none; margin-left: 20px; cursor: pointer !important;" class="iframe submenu-contable" id="submenu-balance" data-name="balance"><a class="unblock-menu tosavelogs" data-logsmodulo="balance" data-logsdes="Ha ingresado al módulo de balance" href="/newV3/Contabilidad/Balance/index.html"><i title="Balance" class="fa fa-bank"></i><span style="cursor: pointer !important; ">Balance</span></a></li>
+					<li style="display: none; margin-left: 20px; cursor: pointer !important;" class="iframe submenu-contable" id="submenu-eerr" data-name="eerr"><a class="unblock-menu tosavelogs" data-logsmodulo="eerr" data-logsdes="Ha ingresado al módulo de estado resultado" href="/newV3/Contabilidad/EERR/index.html"><i title="EERR" class="fas fa-chart-line"></i><span style="cursor: pointer !important; ">EERR</span></a></li>
+					<li style="display: none; margin-left: 20px; cursor: pointer !important;" class="iframe submenu-contable" id="submenu-cuentas_contables" data-name="cuentas_contables"><a class="unblock-menu tosavelogs" data-logsmodulo="cuentas_contables" data-logsdes="Ha ingresado al módulo de cuentas contables" href="/configuracion/cuentas_contables/index.html"><i title="cuentas_contables" class="fas fa-calculator"></i><span style="cursor: pointer !important; ">Plan de cuentas</span></a></li>
+					<li style="display: none; margin-left: 20px; cursor: pointer !important;" class="iframe submenu-contable" id="submenu-periodos_contables" data-name="periodos_contables"><a class="unblock-menu tosavelogs" data-logsmodulo="periodos_contables" data-logsdes="Ha ingresado al módulo de periodos contables" href="/newV3/Contabilidad/Periodos_Contables/index.shtml"><i title="periodos_contables" class="fas fa-calculator"></i><span style="cursor: pointer !important; ">Periodos Contables</span></a></li>
+
+				   <!--#4DENDIF-->
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;626)-->
+					   <!--<li  class="goto-banco" data-name="banco"><a class="unblock-menu tosavelogs" data-logsmodulo="banco" data-logsdes="Ha ingresado al módulo de banco" href="#">Banco</a></li>-->
+   
+					   <li data-name="banco"><a class="unblock-menu tosavelogs" data-logsmodulo="banco" data-logsdes="Ha ingresado al módulo de banco" href="/v3/views/banco/list.shtml"><i title="EERR" class="fas fa-bank"></i><span style="cursor: pointer !important; ">Banco</span></a></li>
+
+				   <!--#4DENDIF-->
+   
+   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;558)-->
+				   <li data-name="presupuestos"><a class="unblock-menu tosavelogs" data-logsmodulo="presupuestos" data-logsdes="Ha ingresado al módulo de presupuestos" href="/v3/views/presupuestos/list.shtml"><svg width="15" height="15" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M13.8 3.24251V6.96C13.8 7.46405 13.8 7.71607 13.8981 7.90859C13.9844 8.07794 14.1221 8.21562 14.2915 8.30191C14.484 8.4 14.736 8.4 15.24 8.4H18.9575M19.2 10.1894V16.68C19.2 18.1921 19.2 18.9482 18.9058 19.5258C18.6469 20.0338 18.2339 20.4469 17.7258 20.7057C17.1483 21 16.3922 21 14.88 21H9.12005C7.60791 21 6.85184 21 6.27427 20.7057C5.76624 20.4469 5.35319 20.0338 5.09433 19.5258C4.80005 18.9482 4.80005 18.1921 4.80005 16.68V7.32C4.80005 5.80786 4.80005 5.05179 5.09433 4.47423C5.35319 3.96619 5.76624 3.55314 6.27427 3.29428C6.85184 3 7.60791 3 9.12005 3H12.0106C12.671 3 13.0012 3 13.312 3.0746C13.5875 3.14074 13.8508 3.24983 14.0924 3.39787C14.3649 3.56484 14.5984 3.79833 15.0653 4.2653L17.9347 7.1347C18.4017 7.60167 18.6352 7.83516 18.8022 8.10763C18.9502 8.34921 19.0593 8.61258 19.1254 8.88807C19.2 9.19881 19.2 9.52901 19.2 10.1894Z" stroke="#545F72" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+					<span style="cursor: pointer !important; ">Presup. de Gastos</span></a></li>
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF  _V3_verifica_permisos_web (vLogin;681)-->
+				   <li class="iframe" data-name="tasks"><a class="unblock-menu tosavelogs" data-logsmodulo="task" data-logsdes="Ha ingresado al módulo de tareas" data-link="task"><i class="fas fa-sync"></i><span style="cursor: pointer !important; ">Tareas</span></a></li>
+
+				   <!--#4DENDIF-->
+
+			   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;468)-->
+				   <li data-name="contactos"><a class="unblock-menu tosavelogs" data-logsmodulo="contactos" data-logsdes="Ha ingresado al módulo de contactos" href="/v3/views/contactos/index.shtml"><svg width="15" height="15" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M11.6757 6.03119C9.61945 6.35888 8.01657 8.0837 7.80552 10.1958C7.71955 11.0562 7.84983 11.8532 8.20292 12.6272C9.13263 14.665 11.3681 15.7549 13.4761 15.198C13.9165 15.0816 14.5749 14.7777 14.9329 14.5255C15.8126 13.9057 16.4886 12.9044 16.7824 11.786C16.9144 11.2834 16.914 10.0424 16.7817 9.53838C16.2394 7.47245 14.5612 6.08701 12.5009 6.0044C12.2121 5.99283 11.8408 6.00486 11.6757 6.03119ZM21.278 8.87853C20.5474 9.03652 19.7672 9.54017 19.3229 10.1405C18.7094 10.9696 18.4806 11.9837 18.6818 12.983C19.0868 14.9947 21.1148 16.2086 23.0284 15.5848C24.9729 14.951 25.9412 12.704 25.0825 10.8181C24.4097 9.34035 22.8408 8.54049 21.278 8.87853ZM11.4257 16.6892C7.53246 17.1388 4.4928 20.2744 4.04625 24.3015C3.93927 25.266 4.00649 25.5933 4.36827 25.8699C4.5062 25.9754 4.51581 25.9755 12.292 25.9878L20.0777 26L20.2777 25.8853C20.4166 25.8057 20.5148 25.6941 20.5991 25.5201C20.7196 25.271 20.72 25.2657 20.6608 24.5727C20.6281 24.1895 20.5664 23.7031 20.5237 23.4918C20.4101 22.9292 20.0813 21.9469 19.8265 21.4088C19.1827 20.0495 17.9882 18.7004 16.7269 17.9079C15.1555 16.9208 13.2379 16.4799 11.4257 16.6892ZM20.9827 16.8143C20.4818 16.9069 19.8075 17.1376 19.3545 17.3712C19.1608 17.471 19.0024 17.563 19.0024 17.5757C19.0024 17.5883 19.2012 17.8039 19.444 18.0548C20.7216 19.3743 21.6722 21.186 22.0546 23.0309C22.1159 23.3267 22.1737 23.5975 22.1831 23.6326C22.1964 23.6828 22.7558 23.6967 24.7666 23.6967C27.3288 23.6967 27.3336 23.6965 27.5561 23.5814C27.9942 23.355 28.0823 22.9741 27.9323 21.9553C27.8021 21.0709 27.4461 20.1415 26.9449 19.3774C26.4338 18.5982 25.362 17.6803 24.4857 17.2714C23.4448 16.7857 22.0922 16.6092 20.9827 16.8143Z" fill="#545F72"/>
+					</svg>
+					<span style="cursor: pointer !important; ">Contactos</span></a></li>
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;483)-->
+				   <!-- <li data-name="catalogo" class="standalone"><a href="/v3/views/catalogo/index.shtml">Catálogo</a></li> -->
+				   <li data-name="catalogo"><a class="unblock-menu tosavelogs" data-logsmodulo="catalogo" data-logsdes="Ha ingresado al módulo de catálogo" href="/v3/views/catalogo/index.shtml"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M8.92234 9.25359C9.08016 8.82142 9.55845 8.599 9.99063 8.75682C11.2889 9.23093 12.7027 9.23093 14.001 8.75682C14.4332 8.599 14.9115 8.82142 15.0693 9.25359C15.2271 9.68577 15.0047 10.1641 14.5725 10.3219C12.9051 10.9308 11.0865 10.9308 9.41912 10.3219C8.98694 10.1641 8.76452 9.68577 8.92234 9.25359Z" fill="#545F72"/>
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M7.95934 21.4872C6.9807 22.026 5.7274 22.245 4.62111 21.5935C3.51354 20.9412 3.09863 19.7377 3.09863 18.6197V6.88179C3.09863 4.19831 5.28299 2 7.98042 2H16.0112C18.7102 2 20.8887 4.19812 20.9013 6.87393L20.9014 6.88179L20.9013 18.6197C20.9013 19.7373 20.4893 20.9457 19.3789 21.5997C18.2678 22.2541 17.0112 22.0275 16.0343 21.4836L16.0336 21.4832L12.0221 19.2556C12.0163 19.2552 12.0099 19.255 12.0031 19.255C11.993 19.255 11.9842 19.2554 11.9769 19.2561L7.95934 21.4872ZM16.8443 20.0276C18.1605 20.7607 19.2352 20.1276 19.2352 18.6197V6.88179C19.2269 5.11568 17.7857 3.66614 16.0112 3.66614H7.98042C6.20598 3.66614 4.76477 5.11568 4.76477 6.88179V18.6197C4.76477 20.1193 5.83943 20.7524 7.15568 20.0276L11.2211 17.77C11.6543 17.5284 12.354 17.5284 12.7789 17.77L16.8443 20.0276Z" fill="#545F72"/>
+					</svg>
+					<span style="cursor: pointer !important; ">Catálogo</span></a></li>
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;15)-->
+					   <!--#4DIF g_uso_tareas_easy-->
+						   <li  class="goto-tareas" data-name="tareas"><a class="unblock-menu tosavelogs" data-logsmodulo="tareas" data-logsdes="Ha ingresado al módulo de tareas" href="#"><i class="fas fa-sync"></i>Tareas</a></li>
+					   <!--#4DELSE-->
+						   <li class="iframe" data-name="ot"><a class="unblock-menu tosavelogs" data-logsmodulo="ot" data-logsdes="Ha ingresado al módulo de orden de trabajo" href="/lista_ot.shtml?r=<!--#4DVAR Random-->"><i class="fas fa-sync"></i><span style="cursor: pointer !important; ">Tareas</span></a></li>
+					   <!--#4DENDIF-->
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF vLogin="gin"-->
+				   <!--<li data-name="ot"><a href="/v3/views/ots/v3/list.shtml">OTS2</a></li>-->
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;477)-->
+				   <!--<li data-name="timesheet" class="iframe"><a href="/planner_ot.shtml?r=<!- -#4DVAR Random- ->">Timesheet</a></li>-->
+				   <li  class="iframe" data-name="timesheet"><a class="unblock-menu tosavelogs" data-logsmodulo="timesheet" data-logsdes="Ha ingresado al módulo de timesheet" href="/v3/views/timesheet/content.shtml?r=<!--#4DTEXT Random-->">Timesheet</a></li>
+				   <!--<li data-name="timesheet"><a href="/v3/views/timesheet/content.shtml">Timesheet</a></li>-->
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;25)-->
+				   <!--<li data-name="calendario" class="iframe"><a href="/v3/views/ots/calendar.shtml">Calendario</a></li>-->
+				   <li data-name="calendario"><a class="unblock-menu tosavelogs" data-logsmodulo="calendario" data-logsdes="Ha ingresado al módulo de calendario" href="/v3/views/calendar/list.shtml"><i class="fas fa-calendar"></i><span style="cursor: pointer !important; ">Calendario</span></a></li>
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF vLogin="bdbvdbvdbvfvbfbvfnvbfbvf"-->
+				   <li  data-name="timesheet2"><a class="unblock-menu tosavelogs" data-logsmodulo="timesheet" data-logsdes="Ha ingresado al módulo de timesheet" href="/v3/views/timesheet/list.shtml">Timesheet2</a></li>
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;6)-->
+				   <!--<li data-name="pagos" class="iframe"><a href="/4DACTION/W_LISTA_PAGOS/<!- -#4DVAR vSesion- ->">Pagos</a></li>-->
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;502)-->
+				   <li  data-name="box"><a class="unblock-menu tosavelogs" data-logsmodulo="box" data-logsdes="Ha ingresado al módulo de box" href="/v3/views/box/index.shtml">Box</a></li>
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;469)-->
+				   <!--<li data-name="accesos"><a href="/v3/views/accesos/list.shtml">Accesos</a></li>-->
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;470)-->
+				   <li  data-name="usuarios"><a class="unblock-menu tosavelogs" data-logsmodulo="usuarios" data-logsdes="Ha ingresado al módulo de usuarios" href="/v3/views/usuarios/listado.shtml"><svg width="15" height="15" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M11.6757 6.03119C9.61945 6.35888 8.01657 8.0837 7.80552 10.1958C7.71955 11.0562 7.84983 11.8532 8.20292 12.6272C9.13263 14.665 11.3681 15.7549 13.4761 15.198C13.9165 15.0816 14.5749 14.7777 14.9329 14.5255C15.8126 13.9057 16.4886 12.9044 16.7824 11.786C16.9144 11.2834 16.914 10.0424 16.7817 9.53838C16.2394 7.47245 14.5612 6.08701 12.5009 6.0044C12.2121 5.99283 11.8408 6.00486 11.6757 6.03119ZM21.278 8.87853C20.5474 9.03652 19.7672 9.54017 19.3229 10.1405C18.7094 10.9696 18.4806 11.9837 18.6818 12.983C19.0868 14.9947 21.1148 16.2086 23.0284 15.5848C24.9729 14.951 25.9412 12.704 25.0825 10.8181C24.4097 9.34035 22.8408 8.54049 21.278 8.87853ZM11.4257 16.6892C7.53246 17.1388 4.4928 20.2744 4.04625 24.3015C3.93927 25.266 4.00649 25.5933 4.36827 25.8699C4.5062 25.9754 4.51581 25.9755 12.292 25.9878L20.0777 26L20.2777 25.8853C20.4166 25.8057 20.5148 25.6941 20.5991 25.5201C20.7196 25.271 20.72 25.2657 20.6608 24.5727C20.6281 24.1895 20.5664 23.7031 20.5237 23.4918C20.4101 22.9292 20.0813 21.9469 19.8265 21.4088C19.1827 20.0495 17.9882 18.7004 16.7269 17.9079C15.1555 16.9208 13.2379 16.4799 11.4257 16.6892ZM20.9827 16.8143C20.4818 16.9069 19.8075 17.1376 19.3545 17.3712C19.1608 17.471 19.0024 17.563 19.0024 17.5757C19.0024 17.5883 19.2012 17.8039 19.444 18.0548C20.7216 19.3743 21.6722 21.186 22.0546 23.0309C22.1159 23.3267 22.1737 23.5975 22.1831 23.6326C22.1964 23.6828 22.7558 23.6967 24.7666 23.6967C27.3288 23.6967 27.3336 23.6965 27.5561 23.5814C27.9942 23.355 28.0823 22.9741 27.9323 21.9553C27.8021 21.0709 27.4461 20.1415 26.9449 19.3774C26.4338 18.5982 25.362 17.6803 24.4857 17.2714C23.4448 16.7857 22.0922 16.6092 20.9827 16.8143Z" fill="#545F72"/>
+					</svg>
+					<span style="cursor: pointer !important; ">Usuarios</span></a></li>
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;472)-->
+				   <li  data-name="reportes" class="standalone"><a class="unblock-menu tosavelogs" data-logsmodulo="reportes" data-logsdes="Ha ingresado al módulo de reportes" href="/v3/views/reportes/index.shtml"><svg width="15" height="15" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M9.35937 4.1055C9.20619 4.18259 9.12123 4.26736 9.04398 4.42022L8.93826 4.62944V15.3952L9.13796 15.3595C9.24782 15.3398 9.69713 15.3249 10.1365 15.3264C10.7755 15.3286 11.0356 15.3501 11.4366 15.4341C12.9129 15.7432 14.0897 16.3701 15.1188 17.3953C16.2144 18.487 16.9198 19.8987 17.1574 21.4752C17.2294 21.9528 17.2204 22.9568 17.1393 23.4956C16.9787 24.5627 16.5189 25.7162 15.9318 26.5249L15.7918 26.7178L21.3246 26.7297C26.7646 26.7414 26.8607 26.74 27.0489 26.6483C27.1542 26.597 27.2932 26.4772 27.3578 26.382L27.4753 26.2089L27.5 12.6276L23.4936 12.6266C19.6881 12.6256 19.4775 12.6212 19.2946 12.5383C19.1887 12.4903 19.0513 12.3799 18.9892 12.2931L18.8764 12.1353L18.8514 4H9.56904L9.35937 4.1055ZM20.4035 11.0803H23.6927C25.5018 11.0803 26.9819 11.0644 26.9819 11.0449C26.9819 11.0255 25.5018 9.53277 23.6927 7.72768L20.4035 4.44568V11.0803ZM9.73707 16.8787C7.77341 17.0148 6.07331 18.1129 5.13909 19.8485C4.14062 21.7034 4.3243 24.036 5.6046 25.7598C5.90218 26.1605 6.57807 26.8072 6.96474 27.0612C8.78945 28.2597 11.0903 28.3145 12.9434 27.2035C13.1569 27.0755 13.3523 26.9503 13.3774 26.9253C13.407 26.8958 12.7165 26.1728 11.4205 24.8763C10.3191 23.7744 9.39259 22.823 9.36158 22.7621C9.2903 22.622 9.29157 22.2305 9.36379 22.0894C9.39405 22.0303 10.3196 21.0803 11.4206 19.9783C13.3141 18.0832 13.4175 17.971 13.3301 17.9065C12.8811 17.5753 12.0465 17.1903 11.4522 17.0403C11.1267 16.9582 10.1319 16.8322 9.9955 16.8559C9.96966 16.8603 9.85336 16.8706 9.73707 16.8787ZM12.8383 20.7629L11.1707 22.4274L12.8383 24.092C13.7555 25.0075 14.5189 25.7565 14.5347 25.7565C14.5797 25.7565 14.881 25.2872 15.0492 24.955C15.9267 23.2225 15.8319 21.1217 14.8027 19.491C14.6664 19.275 14.5438 19.0983 14.5304 19.0983C14.5169 19.0983 13.7555 19.8473 12.8383 20.7629Z" fill="#545F72"/>
+					</svg>
+					<span style="cursor: pointer !important; ">Reportes</span></a></li>
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;625)-->
+				   <li  data-name="generador-reportes"><a class="unblock-menu tosavelogs" data-logsmodulo="generador-reportes" data-logsdes="Ha ingresado al módulo generador de reportes" href="#" onclick="unaBase.loadInto.dialog('/v3/views/generador-reportes/index.shtml', undefined, 'large'); return false;"><i title="Reportes" class="fas fa-balance-scale"></i><span style="cursor: pointer !important; ">Generar Reportes</span></a></li>
+				   <!--#4DENDIF-->
+   
+   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;473)-->
+				   <li  data-name="logs"><a class="unblock-menu tosavelogs" data-logsmodulo="logs" data-logsdes="Ha ingresado al módulo de logs" href="/v3/views/logs/index.shtml"><svg width="15" height="15" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M10.2636 4.86806C10.154 4.83024 10.0115 4.81838 9.29299 4.81838H5.81818C5.29404 4.81838 4.95561 4.81908 4.69803 4.84013C4.45107 4.86031 4.3595 4.89456 4.31456 4.91746C4.1435 5.00462 4.00443 5.14369 3.91727 5.31475C3.89437 5.3597 3.86011 5.45126 3.83994 5.69823C3.82143 5.92473 3.81865 6.21374 3.81825 6.63656H11.4382L11.0818 5.92395C10.7605 5.28127 10.6862 5.15916 10.6033 5.078C10.5071 4.98371 10.391 4.912 10.2636 4.86806ZM13.4709 6.63656L12.7081 5.11084C12.6911 5.07685 12.6743 5.04312 12.6576 5.00968C12.4169 4.52673 12.2053 4.10201 11.8755 3.77905C11.5867 3.49619 11.2387 3.28107 10.8565 3.14925C10.4202 2.99876 9.94565 2.99938 9.40605 3.0001C9.36868 3.00015 9.331 3.0002 9.29299 3.0002L5.78314 3.00019C5.30392 3.00018 4.8905 3.00016 4.54998 3.02799C4.19057 3.05735 3.8331 3.12218 3.48912 3.29745C2.97595 3.55892 2.55873 3.97614 2.29726 4.48931C2.12199 4.83329 2.05716 5.19077 2.02779 5.55017C1.99997 5.89069 1.99998 6.30411 2 6.78334L2 15.9468C1.99999 16.6786 1.99998 17.2826 2.04018 17.7746C2.08193 18.2856 2.17153 18.7553 2.39634 19.1965C2.74497 19.8807 3.30126 20.437 3.98549 20.7857C4.4267 21.0105 4.89643 21.1001 5.40743 21.1418C5.89942 21.182 6.50338 21.182 7.23516 21.182H16.7648C17.4966 21.182 18.1006 21.182 18.5926 21.1418C19.1036 21.1001 19.5733 21.0105 20.0145 20.7857C20.6987 20.437 21.255 19.8807 21.6037 19.1965C21.8285 18.7553 21.9181 18.2856 21.9598 17.7746C22 17.2826 22 16.6786 22 15.9469V11.8717C22 11.1399 22 10.536 21.9598 10.044C21.9181 9.53299 21.8285 9.06326 21.6037 8.62205C21.255 7.93782 20.6987 7.38153 20.0145 7.0329C19.5733 6.80809 19.1036 6.71849 18.5926 6.67674C18.1006 6.63654 17.4966 6.63655 16.7648 6.63656L13.4709 6.63656ZM12.8908 8.45474C12.9034 8.45501 12.9161 8.45501 12.9288 8.45474H16.7273C17.506 8.45474 18.0353 8.45545 18.4445 8.48888C18.8431 8.52144 19.0469 8.58047 19.1891 8.65291C19.5312 8.82723 19.8093 9.10537 19.9836 9.44749C20.0561 9.58967 20.1151 9.79349 20.1477 10.192C20.1811 10.6012 20.1818 11.1306 20.1818 11.9093V15.9093C20.1818 16.688 20.1811 17.2174 20.1477 17.6265C20.1151 18.0251 20.0561 18.2289 19.9836 18.3711C19.8093 18.7132 19.5312 18.9913 19.1891 19.1657C19.0469 19.2381 18.8431 19.2971 18.4445 19.3297C18.0353 19.3631 17.506 19.3638 16.7273 19.3638H7.27273C6.49402 19.3638 5.96466 19.3631 5.55549 19.3297C5.15693 19.2971 4.95311 19.2381 4.81093 19.1657C4.46882 18.9913 4.19067 18.7132 4.01635 18.3711C3.94391 18.2289 3.88488 18.0251 3.85232 17.6265C3.81889 17.2174 3.81818 16.688 3.81818 15.9093V8.45474H12.8908Z" fill="#545F72"/>
+					</svg>
+					<span style="cursor: pointer !important; ">Historial</span></a></li>
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;474)-->
+				   <li  data-name="fxr"><a class="unblock-menu tosavelogs" data-logsmodulo="fxr" data-logsdes="Ha ingresado al módulo de rendiciones v2" href="/v3/views/fxr/list.shtml"><i class="fa fa-line-chart"></i><span style="cursor: pointer !important; ">Rendiciones V2</span></a></li>
+				   <!--#4DENDIF-->
+   
+				   <!--
+				   <!- -#4DIF vLogin="gin"- ->
+				   <li data-name="google" class="standalone"><a href="/v3/views/google/index.shtml">Google</a></li>
+				   <!- -#4DENDIF- -> -->
+   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;37)-->
+				   <li data-name="proyectos-v2" class="iframe "><a class="unblock-menu tosavelogs" data-logsmodulo="proyectos-v2" data-logsdes="Ha ingresado al módulo de proyectos v2" href="/proyectos.shtml?r=<!--#4DVAR Random-->">Proyectos V2</a></li>
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF vLogin="gin"-->
+				   <!--<li data-name="calgoogle"><a class="unblock-menu tosavelogs" data-logsmodulo="calgoogle" data-logsdes="Ha ingresado al módulo de calendario" href="/v3/views/calendar/google/quickstart.html">Calendar</a></li>-->
+				   <!--#4DENDIF-->
+   
+				   
+				   <!--#4DIF _V3_verifica_permisos_web (vLogin;471)-->
+				   <li data-name="ajustes" class="standalone"><a class="unblock-menu tosavelogs" data-logsmodulo="ajustes" data-logsdes="Ha ingresado al módulo de ajustes" href="/v3/views/ajustes/index.shtml"><svg width="15" height="15" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M25.7185 17.896C26.1323 18.124 26.4514 18.484 26.676 18.844C27.1133 19.588 27.0779 20.5 26.6524 21.304L25.8249 22.744C25.3876 23.512 24.572 23.992 23.7327 23.992C23.319 23.992 22.858 23.872 22.4798 23.632C22.1724 23.428 21.8178 23.356 21.4396 23.356C20.2694 23.356 19.2883 24.352 19.2528 25.54C19.2528 26.92 18.1653 28 16.806 28H15.1984C13.8272 28 12.7398 26.92 12.7398 25.54C12.7161 24.352 11.735 23.356 10.5648 23.356C10.1748 23.356 9.82014 23.428 9.52463 23.632C9.14638 23.872 8.67356 23.992 8.27167 23.992C7.4206 23.992 6.605 23.512 6.16764 22.744L5.35204 21.304C4.91468 20.524 4.89104 19.588 5.3284 18.844C5.51752 18.484 5.87213 18.124 6.27403 17.896C6.605 17.728 6.81776 17.452 7.01871 17.128C7.60973 16.096 7.25512 14.74 6.25039 14.128C5.08017 13.444 4.70192 11.92 5.37568 10.732L6.16764 9.316C6.85323 8.128 8.31895 7.708 9.50099 8.404C10.5294 8.98 11.8651 8.596 12.4679 7.576C12.657 7.24 12.7634 6.88 12.7398 6.52C12.7161 6.052 12.8462 5.608 13.0707 5.248C13.5081 4.504 14.3001 4.024 15.1629 4H16.8296C17.7043 4 18.4963 4.504 18.9336 5.248C19.1464 5.608 19.2883 6.052 19.2528 6.52C19.2292 6.88 19.3355 7.24 19.5247 7.576C20.1275 8.596 21.4632 8.98 22.5034 8.404C23.6736 7.708 25.1512 8.128 25.8249 9.316L26.6169 10.732C27.3025 11.92 26.9242 13.444 25.7422 14.128C24.7375 14.74 24.3828 16.096 24.9857 17.128C25.1748 17.452 25.3876 17.728 25.7185 17.896ZM12.6569 16.0119C12.6569 17.8959 14.1581 19.3959 16.0139 19.3959C17.8697 19.3959 19.3354 17.8959 19.3354 16.0119C19.3354 14.1279 17.8697 12.6159 16.0139 12.6159C14.1581 12.6159 12.6569 14.1279 12.6569 16.0119Z" fill="#545F72"/>
+					</svg>
+					<span style="cursor: pointer !important; ">Ajustes</span></a></li>
+   
+				   <li class="iframe" data-name="configuracion"><a class="unblock-menu tosavelogs" data-logsmodulo="configuracion" data-logsdes="Ha ingresado al módulo de light" href="/configuracion/index.shtml"><svg width="15" height="15" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path fill-rule="evenodd" clip-rule="evenodd" d="M25.7185 17.896C26.1323 18.124 26.4514 18.484 26.676 18.844C27.1133 19.588 27.0779 20.5 26.6524 21.304L25.8249 22.744C25.3876 23.512 24.572 23.992 23.7327 23.992C23.319 23.992 22.858 23.872 22.4798 23.632C22.1724 23.428 21.8178 23.356 21.4396 23.356C20.2694 23.356 19.2883 24.352 19.2528 25.54C19.2528 26.92 18.1653 28 16.806 28H15.1984C13.8272 28 12.7398 26.92 12.7398 25.54C12.7161 24.352 11.735 23.356 10.5648 23.356C10.1748 23.356 9.82014 23.428 9.52463 23.632C9.14638 23.872 8.67356 23.992 8.27167 23.992C7.4206 23.992 6.605 23.512 6.16764 22.744L5.35204 21.304C4.91468 20.524 4.89104 19.588 5.3284 18.844C5.51752 18.484 5.87213 18.124 6.27403 17.896C6.605 17.728 6.81776 17.452 7.01871 17.128C7.60973 16.096 7.25512 14.74 6.25039 14.128C5.08017 13.444 4.70192 11.92 5.37568 10.732L6.16764 9.316C6.85323 8.128 8.31895 7.708 9.50099 8.404C10.5294 8.98 11.8651 8.596 12.4679 7.576C12.657 7.24 12.7634 6.88 12.7398 6.52C12.7161 6.052 12.8462 5.608 13.0707 5.248C13.5081 4.504 14.3001 4.024 15.1629 4H16.8296C17.7043 4 18.4963 4.504 18.9336 5.248C19.1464 5.608 19.2883 6.052 19.2528 6.52C19.2292 6.88 19.3355 7.24 19.5247 7.576C20.1275 8.596 21.4632 8.98 22.5034 8.404C23.6736 7.708 25.1512 8.128 25.8249 9.316L26.6169 10.732C27.3025 11.92 26.9242 13.444 25.7422 14.128C24.7375 14.74 24.3828 16.096 24.9857 17.128C25.1748 17.452 25.3876 17.728 25.7185 17.896ZM12.6569 16.0119C12.6569 17.8959 14.1581 19.3959 16.0139 19.3959C17.8697 19.3959 19.3354 17.8959 19.3354 16.0119C19.3354 14.1279 17.8697 12.6159 16.0139 12.6159C14.1581 12.6159 12.6569 14.1279 12.6569 16.0119Z" fill="#545F72"/>
+					</svg>
+					<span style="cursor: pointer !important; ">Configuracion</span></a></li>
+				   <!--#4DENDIF-->
+   
+				   <!--<li data-name="ayuda"><a class="unblock-menu tosavelogs unabase-help" data-logsmodulo="ayuda" data-logsdes="Ha ingresado al módulo de ayuda" href="#"><span style="cursor: pointer !important; ">Ayuda</span></a></li>-->
+   
+   
+   
+				   <!--<li data-name="contratos" class="iframe"> <a href="#">Contratos</a></li>-->
+   
+				   <!--#4DIF aCheckPermiso{5}=true-->
+				   <!--<li data-name="rendiciones" class="iframe"> <a href="/4DACTION/W_LISTA_SOL/<!- - # 4DVAR vSesion- ->/ln/0">Rendiciones</a></li>-->
+				   <!--#4DENDIF-->
+   
+				   <!--#4DIF aCheckPermiso{2}=true-->
+				   <!--
+				   <li class="iframe"><a href="/4DACTION/W_LISTA_NEGOCIOS_DUP/< ! - - # 4 D V A R   v S e s i o n  - - >">Cotizaciones</a></li>
+				   -->
+				   <!--#4DENDIF-->
+
+				   
+   
+				</ul>
+			   </div>
+			</div>
+		</aside>
+		
+		<input type="checkbox" name="toUnblock" style="display: none;">
+
+		<section style="padding-left: 10px;" class="main-section">
+			
+			<h1><span>Inicio</span></h1>
+			<header class="full-height header-btns">
+				<fieldset class="toolbox" id="search">
+					<legend>Búsqueda</legend>
+					<label class="search-input">
+						<input type="checkbox" name="searchCheckbox" title="Busqueda Manual">
+						<input autocomplete="off" type="search" name="q" placeholder="Buscar...">
+					</label>
+					<label>
+						<input type="checkbox" name="searchCheckbox" title="Busqueda Manual">
+						<input autocomplete="off" type="search" name="q2" placeholder="Buscar...">
+					</label>
+					<!--
+					<button><span>Búsqueda avanzada</span></button>
+					<fieldset>
+						<legend>Búsqueda avanzada</legend>
+						<button><span>Buscar</span></button>
+						<button type="reset"><span>Restablecer</span></button>
+					</fieldset>
+					-->
+				</fieldset>
+				<br>
+				<nav class="toolbox" id="menu">
+					<ul></ul>
+				</nav>
+			</header>
+			<section id="viewport"></section>
+			<section id="iframe">
+				<iframe allowtransparency="true" scrolling="auto"></iframe>
+			</section>
+		</section>
+
+		<footer
+			class="footer-page"
+			itemscope
+			itemtype="http://schema.org/Organization" style="box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px; z-index: 50;">
+			<section style="display: inline-block; line-height: 10px;">
+				<!--&copy; 2013 <span itemprop="name">UNA Sistemas Ltda.</span>
+				Todos los derechos reservados.
+				<br>
+				<address
+					itemprop="address"
+					itemscope
+					itemtype="http://data-vocabulary.org/Address">
+					<span itemprop="street-address">Monseñor Eyzaguirre 660</span>,
+					<span itemprop="locality">Ñuñoa</span>,
+					<span itemprop="region">Santiago</span> -
+					<span itemprop="country">Chile</span>
+				</address>
+				<p itemprop="telephone">
+					<a target="_blank" href="tel:+56222398622">(56 - 2) 2239 8622</a>
+				</p>
+				<br>
+				<p style="margin-top:5px"><a class="version" target="_blank" href="/v3/views/versiones/list.shtml"></a></p>-->
+			</section>
+			<nav style="width:100%; height: 30px;">
+
+				
+									<span style="vertical-align:middle;">
+										<a title="Ver novedades de esta versión haciendo click en el enlace" target="_blank" href="https://sites.google.com/una.cl/novedades/novedades-v3-214?authuser=0">
+											<span class="fas fa-code-branch fa-2x" style="color: #03D6F9;">   </span>
+											<span  class="version" style="font-size: 10px;vertical-align: super;"></span>
+										</a>
+											
+										</a>
+									</span>
+									
+								<a title="Háblanos a: soporte.unasistemas" target="_blank" href="callto:soporte.unasistemas"></a>
+							
+									<span style="vertical-align:middle;">
+										<a title="Envíanos un correo a: soporte@unabase.com" target="_blank" href="mailto:soporte@unabase.com">
+											<span class="far fa-envelope-open fa-2x" style="color: #F9BD00;"></span>
+											<span style="font-size: 10px;vertical-align: super;"> soporte@unabase.com</span>
+										</a>
+									</span>
+								
+									<span style="vertical-align:middle;">
+										<a title="Visita nuestro instagram!" target="_blank" href="https://www.instagram.com/unabase_global/">
+											<span class="fab fa-instagram fa-2x" style="color: #a80d60;">   </span>
+											<span class="insta" style="font-size: 9px;vertical-align: super; margin-top: 5px;"> unabase_global</span>
+										</a>
+									</span>
+								
+								<!--#4DIF _V3_defaultCurrencyCode="PEN"-->
+									<td class="tipo-cambio-hoy" data-valueraw="0" style="margin-left:100px;width:200px;font-weight:bold;">
+										<a onclick="updateValorCambio()" title="Información SUNAT" style="width:200px;cursor:pointer;">
+											<span style="font-weight:bold;margin-left:-10px; margin-top: 5px;">Valor dolar: 
+												<label class="numeric currency"></label>
+											</span>
+										</a>
+								
+								<!--#4DENDIF--> 
+								
+								
+									<span style="vertical-align:middle;">
+										<a title="Revisa los tutoriales disponibles!" target="_blank" href="https://intercom.help/unabase">
+											<span class="fab fa-intercom fa-2x" style="color: #34CC02;">   </span>
+											<span style="font-size: 10px;vertical-align: super;">¿ Necesitas ayuda?, revisa los tutoriales aqui!</span>
+										</a>
+									</span>
+							
+									<span style="vertical-align:middle;cursor: pointer;">
+											<i class="fas fa-expand-arrows-alt fa-2x" id="fullscreen-btn" ></i>
+										</span>
+
+				
+			</nav>
+			
+			<!-- <p class="chatItem users">
+				<span title="Usuarios conectados" class="fas fa-users fa-2x"style="color: #34CC02;"></span>
+				<span></span>
+			</p> -->
+			<!-- <button class="chatItem chatBtn" type="button"#4DIF _V3_verifica_permisos_web(vLogin;583) | Not(chatOnline) style="display: none !important;"#4DENDIF>Chat Online</button> -->
+			<!-- <article class="chatItem chat">
+				<header>
+					<h1>Chat</h1>
+				</header>
+				<section></section>
+				<footer>
+					<input type="text" placeholder="Escriba su mensaje..." name="msg" autocomplete="off">
+					<button type="button"><span>Enviar</span></button>
+				</footer>
+			</article> -->
+		</footer>
+		<!--#4DIF _V3_demo-->
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+			ga('create', 'UA-58262854-1', 'auto');
+			ga('send', 'pageview');
+		</script>
+		<!--#4DENDIF-->
+
+		<iframe src="" style="display:none;" name="printFrame"></iframe>
+		<input style="display:none;" name="printBtn" type="button" onclick="frames['printFrame'].print()" value="">
+		<script type="text/javascript" src="/v3/script/dialogConfirm.js?<!--#4DTEXT _V3_version-->" defer></script>
+		<script src="/v3/views/compras/library/modalImportPagos.js?<!--#4DTEXT _V3_version-->"></script>
+
+
+
+	</body>
+
+
+	<style>
+		div.intercom-lightweight-app{
+			filter:alpha(opacity=50) !important; opacity:0.5 !important;
+		}
+		iframe.intercom-launcher-frame{
+			filter:alpha(opacity=50) !important; opacity:0.5 !important;
+		}
+	</style>
+
+
+	<script  src="https://statics-v3.s3.amazonaws.com/js/plugins/statics.js"></script>
+	<!-- https://statics-v3.s3.amazonaws.com/js/plugins/plugins.js -->
+	<script type="text/javascript">
+		$('.unblock-menu').click(function(){
+
+			window.onbeforeunload = function(){
+				return '¿Está seguro que desea salir?';
+			}
+			var cotizacionUnblock = {
+				'id': $('#main-container .sheet').data('id'),
+				'folio': $('#main-container .sheet').data('index'),
+				'user': $('html > body.menu.home > aside > div > div > h1').data('username'),
+				'block': false,
+				'module': $('.sidebar li.active').attr('data-name'),
+				'from': "sale de la cot al clickear menu"
+			 };
+
+
+			if(typeof cotizacionUnblock.id != 'undefined' && typeof block_by_use !== 'undefined'){
+				block_by_use(cotizacionUnblock);
+			}
+		});
+
+		$(document).ready(function(){
+			//elimina elementos de chat online y contador de usuarios online
+			// if(!uVar.enableChatOnline){
+			// 	// let chatItems = document.querySelectorAll('.chatItem.chatBtn');
+			// 	// for(item of chatItems){
+			// 	// 	item.parentNode.removeChild(item);
+			// 	// }
+			// 	setTimeout(()=> {
+			// 		document.querySelector('.chatItem.chatBtn').style.display = 'none';
+
+			// 	},6000);
+
+			// }
+
+			/*$.ajax({
+				url:'/v3/views/versiones/json/version.shtml',
+				async:false,
+				dataType:'json',
+				success:function(data){
+					$('.version').text("Versión ("+ data.info.current_version +")");
+				}
+			});*/
+			let menuValidate = document.querySelector('li[data-name="validate"] a');
+
+			if(menuValidate != null){
+				menuValidate.addEventListener('click', function(){
+					window.open(`http://${nodejs_public_ipaddr}:${nodejs_port}/expenses/tovalidate` , '_blank');
+				})
+			}
+
+			if (version_Actual != "") {
+				$('.version').text("Versión ("+ version_Actual +")");
+			}
+
+			// /*<![CDATA[*/window.zEmbed||function(e,t){var n,o,d,i,s,a=[],r=document.createElement("iframe");window.zEmbed=function(){a.push(arguments)},window.zE=window.zE||window.zEmbed,r.src="javascript:false",r.title="",r.role="presentation",(r.frameElement||r).style.cssText="display: none",d=document.getElementsByTagName("script"),d=d[d.length-1],d.parentNode.insertBefore(r,d),i=r.contentWindow,s=i.document;try{o=s}catch(e){n=document.domain,r.src='javascript:var d=document.open();d.domain="'+n+'";void(0);',o=s}o.open()._l=function(){var e=this.createElement("script");n&&(this.domain=n),e.id="js-iframe-async",e.src="https://assets.zendesk.com/embeddable_framework/main.js",this.t=+new Date,this.zendeskHost="unabase.zendesk.com",this.zEQueue=a,this.body.appendChild(e)},o.write('<body onload="document._l();">'),o.close()}();
+			// /*]]>*/
+
+			// $('.src-component-Launcher-label').text("Chat soporte");
+
+
+			// unaBase.node.check(false).then(res => {
+			// 	unaBase.node.state('on');
+			// }).catch(err => {
+
+			// 	unaBase.node.state('off');
+	  //        	unaBase.node.checkNotify().then(res => {
+			// 		console.log('res from checknotify');
+			// 		console.log(res);
+			// 		if(res.notify){
+			// 			unaBase.node.notify();
+			// 		}
+			// 	}).catch(err => {
+
+			// 	});
+			// });
+			// setInterval(() => {
+			// 	unaBase.node.check(false).then(res => {
+			// 		unaBase.node.state('on');
+			// 	}).catch(err => {
+			// 		unaBase.node.state('off');
+
+			// 		unaBase.node.checkNotify().then(res => {
+			// 			console.log('res from checknotify');
+			// 			console.log(res);
+			// 			if(res.notify){
+			// 				unaBase.node.notify();
+			// 			}
+			// 		}).catch(err => {
+
+			// 		});
+			// 	});
+
+			// }, 300000);
+
+		});
+
+		/*$.getJSON('http://api.wipmania.com/jsonp?callback=?', function (data) {
+		    //document.getElementById("pais").value = data.address.country;
+		    if (data.address.country == "Peru") {
+		    	$('.changes-fono').text('+51 959 619 835');
+		    }
+		});*/
+
+		if (currency.code == "PEN") {
+	    	$('.changes-fono').text('+51 959 619 835');
+	    }
+
+		try{
+		var valorCambioUSD = <!--#4DHTML String(valorCambioDOLAR;"&xml")-->;
+		 document.querySelector(".tipo-cambio-hoy") != null ? document.querySelector(".tipo-cambio-hoy").dataset.valueraw = valorCambioUSD : null
+		 document.querySelector(".tipo-cambio-hoy > a > span > label") != null ? document.querySelector(".tipo-cambio-hoy > a > span > label").textContent = $.number(valorCambioUSD, 3, currency.decimals_sep, currency.thousands_sep) : null
+
+		}catch(err){
+			console.log(err);
+		}
+		function updateValorCambio(){
+			var valorusd = parseFloat(document.querySelector(".tipo-cambio-hoy").dataset.valueraw);
+			var htmlObjectUSD = $(
+            	'<section> \
+				<span>Ingresar valor cambio</span><br><br> \
+				<input required class="numeric currency" type="text" name="USD_cambio" value="'+ valorusd + '" style="border: 1px solid lightgrey;"> \
+				</section>'
+          	);
+          	htmlObjectUSD.find('input[name="USD_cambio"]').number(true, 3, currency.decimals_sep, currency.thousands_sep);
+          	htmlObjectUSD.data("response", htmlObjectUSD.find('input[name="USD_cambio"]').val());
+			htmlObjectUSD.find('input').on("blur", function() {
+				htmlObjectUSD.data("response", $(this).val());
+			});
+
+          	prompt(htmlObjectUSD).done(function(data) {
+            	if (data !== false){
+            		var value = parseFloat(htmlObjectUSD.find('input[name="USD_cambio"]').val());
+            		const datos = new FormData();
+					datos.append('valorusd', value);
+					fetch('/4DACTION/_V3_setSettings2', {
+					  method: 'POST',
+					  body: datos
+					})
+					.then(function(response) {
+						if(response.ok) {
+							toastr.success("Actualizado con éxito.");
+							$(".tipo-cambio-hoy").data('valueraw', value);
+							$(".tipo-cambio-hoy").find("label").text($.number(value, 3, currency.decimals_sep, currency.thousands_sep));
+						} else {
+						   toastr.error("No se pudo actuálizar. Intentar nuevamente.");
+						}
+					})
+					.catch(function(err) {
+						toastr.error("Error:" +  err);
+					});
+            	}
+          	});
+		}
+
+		// if(parametros.night_mode){
+		// 	document.getElementById('night_mode').addEventListener('click', () => {
+		// 		document.getElementById('nav-bar').style = 'background-color: #121212;'
+		// 		document.getElementById('header').style = 'background-color: #202124;'
+		// 		document.getElementById('viewport').style = 'background-color: #202124;'
+		// 		document.body.style = 'background-color: #202124;'
+		// 		//HEADER
+		// 		let a = document.querySelectorAll('header div button a span i')
+		// 		for(i=0;i<=a.length;i++){
+		// 			if(a[i] != undefined)
+		// 				a[i].style = 'color: white'
+		// 		}
+	
+	
+	
+		// 		let b = document.querySelectorAll('.btn_collapse button i')
+		// 		for(i=0;i<=b.length;i++){
+		// 			if(b[i] != undefined)
+		// 				b[i].style = 'color: white'
+		// 		}
+	
+		// 		//ASIDE
+		// 		let li = document.querySelectorAll('aside div div li a')
+	
+		// 		for(i=0;i<=li.length;i++){
+		// 			if(li[i] != undefined)
+		// 				li[i].style = 'color: white'
+		// 		}
+	
+		// 	})
+		// }
+
+
+        
+
+
+
+	</script>
+	<script type='text/Javascript' src='/v3/design/sidebar/js/header.js?<!--#4DTEXT _V3_version-->'></script>
+	<script type='text/Javascript' src='/script/welcome.js?<!--#4DTEXT _V3_version-->'></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js" integrity="sha512-TW5s0IT/IppJtu76UbysrBH9Hy/5X41OTAbQuffZFU6lQ1rdcLHzpU5BzVvr/YFykoiMYZVWlr/PX1mDcfM9Qg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+	
+	<script type='text/Javascript' src='/script/tom-select.js?<!--#4DTEXT _V3_version-->'></script>
+
+	<script type='text/Javascript' src="/v3/script/creative.js?<!--#4DTEXT _V3_version-->"></script>
+
+
+	<script src="/v3/script/notify.js" ></script>
+
+
+
+
+</html>

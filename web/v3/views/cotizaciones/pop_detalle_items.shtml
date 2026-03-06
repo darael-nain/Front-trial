@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!--#4DSCRIPT/_V3_proxy_getDetalleItems-->
+  <meta charset="utf-8">
+  <title>Contactos</title>
+  <link rel="stylesheet" href="/v3/design/temporal.css?<!--#4DTEXT random-->">
+  <script type="text/javascript" src="/v3/script/datepicker_es.js?<!--#4DTEXT _V3_version-->"></script>
+  <script>
+
+    var reasociarAction = false;
+
+
+    function checkStatusMarcaNoImpuesto() {
+      if (document.querySelector('input[name="item-no-considerar-impuesto"]').checked) {
+        document.querySelector('input[name="item-no-considerar-impuesto"]').value = "true";
+        document.querySelector('input[name="item-no-considerar-impuesto-2"]').value = "TRUE";
+      } else {
+        document.querySelector('input[name="item-no-considerar-impuesto"]').value = "false";
+        document.querySelector('input[name="item-no-considerar-impuesto-2"]').value = "FALSE";
+      }
+    }
+
+    function checkStatusMarca(target) {
+      if (document.querySelector("input[name=" + target.name + "]").checked) {
+        document.querySelector("input[name=" + target.name + "]").value = "true";
+        document.querySelector("input[name=" + target.name + "-2]").value = "TRUE";
+      } else {
+        document.querySelector("input[name=" + target.name + "]").value = "false";
+        document.querySelector("input[name=" + target.name + "-2]").value = "FALSE";
+      }
+    }
+
+    // agregado by gin, 19-8-19, para ajustar monto presupeustado en caso de tener precompras
+    var preOrdenGetTotal = function () {
+      let montoTotalPre = 0;
+      $.ajax({
+        'url': '/4DACTION/_V3_getTotalPreOrdenes',
+        data: {
+          prellaveitem: '<!--#4DTEXT id-->'
+        },
+        async: false,
+        dataType: 'json',
+        success: function (data) {
+          montoTotalPre = data.totalPreOrden;
+        }
+      });
+      return montoTotalPre;
+    }
+
+
+    unaBase.toolbox.form.autocomplete({
+      fields: [
+        { local: 'item[][itemReasociar]', remote: 'id', type: 'search', default: true } // el primero es default
+        //{ local: 'cotizacion[empresa][razon_social]', remote: 'razon_social', type: 'search' },
+        // { local: 'item[2][itemReasociar]', remote: 'nombre', type: 'text' },
+
+      ],
+      data: {
+        entity: 'Producto'
+      },
+      //restrict: false,
+      restrict: true, // test
+      response: function (event, ui) {
+        ;
+        var target = $(this).parentTo('ul');
+        $(this).data('id', null);
+        target.find('input[name^="item[][itemReasociar]"]').not(this).val('');
+    
+      },
+      select: function (event, ui) {
+        var cco;
+        var target = $(this).parentTo('ul');
+        
+
+        $('input[type="search"][name="item[][itemReasociar]"]').val((ui.item.text) ? ui.item.text : '');
+        $('input[type="search"][name="item[][itemReasociar]"]').data('id', ui.item.id);
+        $('input[type="text"][name="item[][codigoReasociar]"]').val((ui.item.codigo_cuenta_contable) ? ui.item.codigo_cuenta_contable : '');
+
+        //$('input[type="search"][name="item[][itemReasociar]"]').setAttribute( 'data-id', ui.item.id );
+        var searchR = document.getElementById("searchReasociar");
+        searchR.dataset.id = ui.item.id;
+
+       
+
+        // if (ui.item.codigo_cuenta_contable=='object') {
+        //   cco=ui.item.codigo_cuenta_contable;
+
+        // }else{
+        //   cco="";
+        // }
+       
+
+        return false;
+      },
+      renderItem: function (ul, item) {
+       
+
+        return $('<li><a><strong class="highlight">' + ((item.text) ? item.text : '[Sin nombre]') +"</strong><em>" + ((item.codigo_cuenta_contable) ? item.codigo_cuenta_contable : '[Sin cuenta]') + "</em><span></span></strong></a></li>").appendTo(ul);
+      }
+    });
+
+
+    //   $('input[name="item[][itemReasociar]"]').on("change ",function(){
+    // 	
+    // 	var htmlObject = $(this);
+    //        var finder1 = $('input[name="item[][itemReasociar]"]');
+
+    //        $.ajax({
+    //          url: '/4DACTION/_V3_' + 'getProducto',
+    //          dataType: 'json',
+    //          async: false,
+    //          data:{
+    //          	q: ''
+    //          },
+    //          success: function(data) {
+    // 					var target = $('input[type="search"][name="item[][itemReasociar]"]').parentTo('ul');
+
+
+    // 					$.map(data.rows, function(item) {
+    // 						target.find('input[name="item[][itemReasociar]"]').data('id', item.id);
+    // 						target.find('input[name="item[][itemReasociar]"]').val(item.text);
+    // 						// setTimeout(function() {
+    // 						// 	inputObject.removeData('ajax-call');
+    // 						// }, 1500);
+    // 					});
+    // 			}
+    //        });
+    // });
+
+    var reference_cost = function () {
+      var assigned = $('select[name="item[][responsable_asig]"]').val();
+      var costoUnitario = parseFloat($('input[name="item[][costo_hh_unitario]"]').val());
+      var totalRef = costoUnitario * 45 * 4;
+      if (assigned != "") {
+        var MsgRef = "(Costo mensual $<strong>" + costoUnitario + "</strong> x 45 x 4 = $<strong>" + totalRef + "</strong>)";
+        $('span[data-ref="costo"]').html(MsgRef);
+        $('span[data-ref="costo"] strong').number(true, currency.decimals, ',', '.');
+      };
+    }
+
+    $(document).ready(function () {
+      $("#dialog-profile-detalleItem").tabs();
+      $('.ui-dialog .numeric.currency input').number(true, currency.decimals, ',', '.');
+      //reference_cost();
+
+
+
+
+      unaBase.toolbox.init();
+      unaBase.toolbox.menu.init({
+        entity: 'ItemByCotizacion', // especifica entidad sobre la cual se almacenan los datos
+        // y nombre para referenciar los views
+        // acá se envía la data que debe validar la API al presionar el botón save
+        // y enviar en caso de ser válida
+
+        buttons: ['save'],
+          data: function() {
+            var target;
+
+            $('table.items > tbody > tr').each(function() {
+              if ($(this).data('id') == '<!--#4DTEXT id-->') {
+                target = $(this);
+                return false;
+              }
+            });
+
+            target.trigger('beforeUpdate'); // Logs tiempo real
+
+
+            var tipo_documento_old = target.data('tipo-documento');
+            var tipo_documento_new = target.find('select[name="item[][tipo_documento]"]').val();
+            
+            var selectElement = target.find('select[name="item[][tipo_documento]"]');
+            var tipoDocumentoSeleccionado = selectElement.val();
+            var textoTipoDocumentoSeleccionado = selectElement.find('option:selected').text();
+
+            // Se actualiza el valor de las horas extras simulando 'cambio' en el input
+            if (tipo_documento_old != tipo_documento_new)
+              target.find('input[name="item[][horas_extras]"]').trigger('change');
+
+            // Se extraen los datos relevantes para desglosar el precio
+            var tipo_documento_ratio_old = (typeof target.data('tipo-documento-ratio') != 'undefined')? target.data('tipo-documento-ratio') : 0;
+            var tipo_documento_inverse_old = (typeof target.data('tipo-documento-inverse') != 'undefined')? target.data('tipo-documento-inverse') : false;
+            var tipo_documento_valor_usd_old = (typeof target.data('tipo-documento-valor-usd') != 'undefined')? target.data('tipo-documento-valor-usd') : false; // Impuesto extranjero
+            var tipo_documento_valor_moneda= (typeof target.data('tipo-documento-valor-moneda') != 'undefined')? target.data('tipo-documento-valor-moneda') : 1; // Impuesto extranjero
+
+            // Corrección cálculo tipos de documentos cuando se ocultan decimales
+            //var base_imponible_old = (tipo_documento_ratio_old > 0)? target.data('base-imponible') : target.find('[name="item[][precio_unitario]"]').val();
+            if (target.find('[name="item[][precio_unitario]"]').data('old-value'))
+                var base_imponible_old = (tipo_documento_ratio_old > 0)? target.data('base-imponible') : target.find('[name="item[][precio_unitario]"]').data('old-value');
+            else
+                var base_imponible_old = (tipo_documento_ratio_old > 0)? target.data('base-imponible') : target.find('[name="item[][precio_unitario]"]').val();
+
+            var hora_extra_cantidad_old = target.find('[name="item[][horas_extras]"]').val();
+
+            // Se reconstruye el precio base
+
+            var precio_base = 0;
+
+             if (tipo_documento_inverse_old) {
+              // precio_base = Math.round(base_imponible_old * (1 - tipo_documento_ratio_old));
+              // Impuesto extranjero
+              if (tipo_documento_valor_usd_old)
+                precio_base = parseFloat((base_imponible_old * tipo_documento_valor_moneda * (1 - tipo_documento_ratio_old)).toFixed(2));
+              else
+                precio_base = parseFloat((base_imponible_old * (1 - tipo_documento_ratio_old)).toFixed(2));
+            } else
+              // precio_base = Math.round(base_imponible_old / (1 + tipo_documento_ratio_old));
+              precio_base = parseFloat((base_imponible_old / (1 + tipo_documento_ratio_old)).toFixed(2));
+
+            // Se guardan en la línea del ítem algunos datos modificados desde el popup
+            
+            target.data('observacion', $('textarea[name="item[][observacion]"]').val());
+            target.data('comentario', $('textarea[name="item[][comentario]"]').val());
+            target.data('tipo-documento', target.find('select[name="item[][tipo_documento]"]').val());
+
+            // Se actualizan valores relacionados a las horas hombre de OT
+            // TODO: actualziar automáticamente cuando se cambian los días para el contrato por proyecto
+
+            if (target.find('input[name="item[][costo_interno]"]').prop('checked')) {
+
+              if (typeof target.data('costo-presupuestado-hh-cantidad') == 'undefined')
+                target.data('costo-presupuestado-hh-cantidad', 0);
+
+              if (typeof target.data('costo-presupuestado-hh-valor') == 'undefined')
+                target.data('costo-presupuestado-hh-valor', 0);
+
+              var old_costo_total = parseFloat((target.find('input[name="item[][costo_unitario]"]').data('old-value'))? target.find('input[name="item[][costo_unitario]"]').data('old-value') : target.find('input[name="item[][costo_unitario]"]').val());
+              var old_costo_interno = target.data('costo-presupuestado-hh-cantidad') * target.data('costo-presupuestado-hh-valor');
+              var costo_externo = old_costo_total - old_costo_interno;
+
+              var new_costo_interno = parseFloat($('input[name="item[][cant_hh_asig]"]').val()) * parseFloat($('input[name="item[][costo_hh_unitario]"]').val());
+              var new_costo_total = costo_externo + new_costo_interno;
+              if (old_costo_total != new_costo_total) {
+                target.find('input[name="item[][costo_unitario]"]').val(new_costo_total.toFixed(currency.decimals));
+                target.find('input[name="item[][costo_unitario]"]').data('old-value', new_costo_total.toFixed(currency.decimals + 2));
+                updateRow({
+                  target: target.find('input[name="item[][costo_unitario]"]')
+                });
+              }
+            }
+
+            // Pasar datos HH a la fila actual de la cotización
+            target.data('costo-presupuestado-hh-cantidad', parseFloat($('input[name="item[][cant_hh_asig]"]').val()));
+            target.data('costo-presupuestado-hh-valor', parseFloat($('input[name="item[][costo_hh_unitario]"]').val()));
+            target.data('costo-presupuestado-hh-username', $('select[name="item[][responsable_asig]"]').val());
+
+             // agregado 10-01-20, gin, campos sutom det item
+            target.data('det-custom-data-1', $('[name="item-custom-data-1"]').val());
+            target.data('det-custom-data-2', $('[name="item-custom-data-2"]').val());
+            target.data('det-custom-data-3', $('[name="item-custom-data-3"]').val());
+            target.data('det-custom-data-4', $('[name="item-custom-data-4"]').val());
+            target.data('det-no_considera_impuesto', $('[name="item-no-considerar-impuesto"]').val());
+            target.data('det-afecto-exportativo', $('[name="item-afecto-exportativo"]').val());
+            target.data('det-afecto-no-exportativo', $('[name="item-afecto-no-exportativo"]').val());
+
+            // agregado 3-3-20, gin, guardar sobrecargo predefinido
+            target.data('sobrecargo-predefinido-data', $('[name="sobrecargo-predefinido"]').val());
+
+            if (target.data('costo-presupuestado-hh-cantidad') > 0 && target.find('input[name="item[][costo_interno]"]').prop('checked'))
+              target.find('button.detail.cost').visible();
+            else
+              target.find('button.detail.cost').invisible();
+
+            target.data('hora-extra-dias', parseInt($('input[name="item[][horas_extras_dias]"]').val()));
+
+            if (typeof target.data('producto') == "undefined") {
+                var tooltip = ' \
+                    <p>Nombre ítem:</p> \
+                    <p>' + target.find('[name="item[][nombre]"]').val() + '</p> \
+                    <p>&nbsp;</p> \
+                    <p>Descripción larga:</p> \
+                    <p>' + ((target.data('observacion')!= '')? target.data('observacion').replace(/\n/g, '</p><p>') : 'N/A') + '</p> \
+                ';
+            } else {
+                var tooltip = ' \
+                    <p>Nombre ítem:</p> \
+                    <p>' + target.find('[name="item[][nombre]"]').val() + '</p> \
+                    <p>&nbsp;</p> \
+                    <p>Descripción larga:</p> \
+                    <p>' + ((target.data('observacion')!= '')? target.data('observacion').replace(/\n/g, '</p><p>') : 'N/A') + '</p> \
+                    <p>&nbsp;</p>\
+                    <p>Observación interna:</p> \
+                    <p>' + ((target.data('comentario')!= '')? target.data('comentario').replace(/\n/g, '</p><p>') : 'N/A') + '</p> \
+                ';
+            }
+            target.find('button.profile.item').tooltipster('update', tooltip);
+
+            // Mostrar signo de admiración (ui-icon-notice) si el ítem tiene comentario
+            // caso contrario mostrar ícono normal (ui-icon-gear)
+            //if (target.data('comentario') != '') {
+            if (target.data('observacion') != '') {
+                target.find('button.profile.item').removeClass('ui-icon-gear').addClass('ui-icon-notice');
+            } else {
+                target.find('button.profile.item').removeClass('ui-icon-notice').addClass('ui-icon-gear');
+            }
+
+            // Se consulta el tipo de documento elegido y se cambian los parámetros de cálculo de acuerdo a él
+            if (tipo_documento_old != tipo_documento_new)
+              $.ajax({
+                url: '/4DACTION/_V3_getTipoDocumento',
+                data: {
+                  q: target.data('tipo-documento'),
+                  filter: 'id'
+                },
+                dataType: 'json',
+                async: false,
+                success: function(data) {
+                  
+                  // Se rescatan y cambian los parámetros de cálculo
+                  if (data.rows.length) {
+                    // próximas 2 líneas, ver si se pueden quitar
+                    if (data.rows[0].ratio == 0)
+                      target.find('input[name="item[][precio_unitario]"]').removeClass('edited');
+                    target.data('tipo-documento-text', data.rows[0].text);
+                    target.data('tipo-documento-ratio', data.rows[0].ratio);
+                    target.data('tipo-documento-valor-usd', data.rows[0].valor_usd); // Impuesto extranjero
+                    target.data('tipo-documento-valor-moneda', data.rows[0].valor_moneda); // Impuesto extranjero
+
+                    target.data('tipo-documento-inverse', data.rows[0].inverse);
+                    //target.find('[name="item[][tipo_documento]"]').val(data.rows[0].abbr);
+
+                    if (typeof data.rows[0].hora_extra != 'undefined') {
+                      target.data('hora-extra-enabled', true);
+                      target.data('hora-extra-factor', data.rows[0].hora_extra.factor);
+                      target.data('hora-extra-jornada', data.rows[0].hora_extra.jornada);
+                      target.find('input[name="item[][horas_extras]"]').val(0).parentTo('td').visible();
+                      target.find('input[name="item[][precio_unitario]"]').addClass('edited')
+                      target.data('hora-extra-dias', data.rows[0].hora_extra.dias);
+                      target.find('button.detail.price').visible();
+                    } else {
+                      target.data('hora-extra-enabled', false);
+                      target.find('input[name="item[][horas_extras]"]').val(0).parentTo('td').invisible();
+                      target.find('input[name="item[][precio_unitario]"]').removeClass('edited').removeClass('special');
+                      // Corrección cálculo tipos de documentos cuando se ocultan decimales
+                      //target.data('base-imponible', parseFloat(target.find('input[name="item[][precio_unitario]"]').val()));
+                      if (target.find('input[name="item[][precio_unitario]"]').data('old-value'))
+                        target.data('base-imponible', parseFloat(target.find('input[name="item[][precio_unitario]"]').data('old-value')));
+                      else
+                        target.data('base-imponible', parseFloat(target.find('input[name="item[][precio_unitario]"]').val()));
+                      target.find('button.detail.price').invisible();
+                    }
+                  } else {
+                    target.data('hora-extra-enabled', false);
+                    target.find('input[name="item[][horas_extras]"]').val(0).parentTo('td').invisible();
+                    target.find('input[name="item[][precio_unitario]"]').removeClass('edited').removeClass('special');
+                    target.find('button.detail.price').invisible();
+                    // Corrección cálculo tipos de documentos cuando se ocultan decimales
+                    //target.data('base-imponible', parseFloat(target.find('input[name="item[][precio_unitario]"]').val()));
+                    if (target.find('input[name="item[][precio_unitario]"]').data('old-value'))
+                        target.data('base-imponible', parseFloat(target.find('input[name="item[][precio_unitario]"]').data('old-value')));
+                    else
+                        target.data('base-imponible', parseFloat(target.find('input[name="item[][precio_unitario]"]').val()));
+                  }
+
+                  // Corrección cálculo tipos de documentos cuando se ocultan decimales
+                  //var precio_unitario = target.find('input[name="item[][precio_unitario]"]').val();
+                  if (target.find('input[name="item[][precio_unitario]"]').data('old-value'))
+                    var precio_unitario = target.find('input[name="item[][precio_unitario]"]').data('old-value');
+                  else
+                    var precio_unitario = target.find('input[name="item[][precio_unitario]"]').val();
+
+                  if (precio_unitario != 0) {
+
+                    // Se reemplaza el precio base antiguo por el nuevo
+                    target.find('input[name="item[][precio_unitario]"]').trigger('focus').val(0).trigger('blur').trigger('focus').val(precio_base).data('old-value', precio_base).trigger('blur');
+
+                    // Se reemplaza la cantidad horas extras antigua por la nueva
+                    if (target.data('hora-extra-enabled')) {
+                      target.find('input[name="item[][horas_extras]"]').val(hora_extra_cantidad_old).trigger('change');
+                    }
+
+                  }
+
+                }
+              });
+
+            target.trigger('afterUpdate'); // Logs tiempo real
+
+            var detalle_serialized = $('#form-detalle-items').serializeAnything();
+            return detalle_serialized;
+          },
+          validate: function() {
+
+            // agregado by gin, 19-8-19, para ajustar monto presupeustado en caso de tener precompras
+            /*if (currency.code == "PEN") {
+                let totalpreoc = preOrdenGetTotal();
+                var old_costo_total = parseFloat((target.find('input[name="item[][costo_unitario]"]').data('old-value'))? target.find('input[name="item[][costo_unitario]"]').data('old-value') : target.find('input[name="item[][costo_unitario]"]').val());
+                var new_costo_total = totalpreoc;
+                if (isNaN(old_costo_total)) {
+                  old_costo_total = 0;
+                }
+
+                if (old_costo_total != new_costo_total) {
+                  target.find('input[name="item[][costo_unitario]"]').val(new_costo_total.toFixed(currency.decimals));
+                  target.find('input[name="item[][costo_unitario]"]').data('old-value', new_costo_total.toFixed(currency.decimals + 2));
+                  updateRow({
+                    target: target.find('input[name="item[][costo_unitario]"]')
+                  });
+                }
+            }*/
+
+             return true;
+            
+          }
+        });
+
+        <!--#4DIF (is_negocio & Not(_V3_verifica_permisos_web(_V3_data_username;528)))-->
+        $('.dialog > header').hide();
+        <!--#4DENDIF-->
+
+        // Calcula costo presupuestado desde cantidad
+         $('input[name="item[][cant_hh_asig]"]').keyup(function(){
+            var cant = parseFloat($(this).val());
+            var costoUnitario =  parseFloat($('input[name="item[][costo_hh_unitario]"]').val());
+            var costoPresupuestado = cant * costoUnitario;
+            $('input[name="item[][costo_hh_presupuestado]"]').val(costoPresupuestado);
+         });
+
+          // Calcula gasto p hh desde gasto unitario
+         $('input[name="item[][costo_hh_unitario]"]').blur(function(){
+            var costoUnitario = parseFloat($(this).val());
+            var cant =  parseFloat($('input[name="item[][cant_hh_asig]"]').val());
+            var login = $('select[name="item[][responsable_asig]"]').val();
+            var costoPresupuestado = cant * costoUnitario;
+            $('input[name="item[][costo_hh_presupuestado]"]').val(costoPresupuestado);
+            //reference_cost();
+            if(costoUnitario>0 && login!=""){
+              confirm("Desea modificar el valor en ficha del responsable?").done(function(data) {
+                  if (data) {
+                    $.ajax({
+                      url:'/4DACTION/_V3_changesValueHHOt',
+                      data:{
+                        'responsable':login,
+                        'costo':costoUnitario
+                      },
+                      dataType:'json',
+                      success: function(data){
+                        if (data.success) {
+                         toastr.success(NOTIFY.get('SUCCESS_SAVE'));
+                        }else{
+                          if (data.readonly) {
+                            toastr.error(NOTIFY.get('ERROR_RECORD_READONLY'));
+                          }else{
+                            toastr.error(NOTIFY.get('ERROR_INTERNAL'));
+                          }
+                        }
+                      }
+                    });
+                  }
+              });
+            }
+         });
+
+        // Get valores HH responsable
+        $('select[name="item[][responsable_asig]"]').change(function(){
+          var login = $(this).val();
+          if(login!=""){
+            $.ajax({
+              url:'/4DACTION/_V3_getValuesHHResponsable',
+              data:{
+                'responsable':login
+              },
+              dataType:'json',
+              success: function(data){
+                if (data.success) {
+                  var cant = parseFloat($('input[name="item[][cant_hh_asig]"]').val());
+                  var costoPresupuestado = cant * parseFloat(data.costo_hh_unitario);
+                  $('input[name="item[][costo_hh_unitario]"]').val(data.costo_hh_unitario);
+                  $('input[name="item[][costo_hh_presupuestado]"]').val(costoPresupuestado);
+                  //reference_cost();
+                }else{
+                  toastr.error(NOTIFY.get('ERROR_INTERNAL', 'Error'));
+                }
+              }
+            });
+          }else{
+            toastr.warning('No ha seleccionado un responsable.');
+          }
+        });
+
+        $('.horas-extras-dias').hide();
+
+        $('select[name="item[][tipo_documento]"]').change(function() {
+          if ($(this).val() == 110)
+              $('.horas-extras-dias').show();
+          else {
+              $('input[name="item[][horas_extras_dias]"]').val(7);
+              $('.horas-extras-dias').hide();
+          }
+        }).triggerHandler('change');
+
+
+        $('.ui-dialog a[href="#tabs-2"]').click(function() {
+          $('.ui-dialog #tabs-2').load('/v3/views/cotizaciones/pop_detalle_items_archivos.shtml?id=<!--#4DVAR id-->');
+        });
+
+        $('.ui-dialog a[href="#tabs-6"]').click(function() {
+          $('.ui-dialog #tabs-6').load('/v3/views/negocios/compras_items.shtml?id=<!--#4DVAR id-->&detail=true');
+        });
+
+        $('.ui-dialog a[href="#tabs-7"]').click(function() {
+          $('.ui-dialog #tabs-7').load('/v3/views/negocios/rendiciones_items.shtml?id=<!--#4DVAR id-->&detail=true');
+        });
+
+        // agregado by gin, 10-8-19, para habilitar seccion info proveedor
+        $('.ui-dialog a[href="#tabs-8"]').click(function() {
+          $('.ui-dialog #tabs-8').load('/v3/views/preorden/registro.shtml?id=<!--#4DVAR id-->&detail=true');
+        });
+
+        var target;
+        $('table.items > tbody > tr').each(function() {
+          if ($(this).data('id') == '<!--#4DTEXT id-->') {
+            target = $(this);
+            return false;
+          }
+        });
+
+        
+        let is_title = target[0].classList.contains('title');
+
+        if(!is_title){
+         if (!access._648){
+            //document.querySelectorAll('.autoPercentages').forEach(element => element.setAttribute('disabled', true));
+          }
+          document.querySelectorAll('.autoPercentages.checkbox').forEach(element => element.addEventListener('click',function(){
+            const name = this.name;
+            // console.log(name);
+            // console.log(this.checked);
+            // console.log(`input[name="${name}helper"]`);
+            document.querySelector(`input[name="${name}helper"]`).value = this.checked;
+            if(this.checked){
+              document.querySelector('input[name="item[][porcentaje_monto_total2]"]').value = 0;
+            }
+          //           formula_productor_ejecutivo2helper
+          // formula_asistente_produccion2helper
+          }));
+
+          // document.querySelector('input[name="item[][porcentaje_monto_total2]"]').addEventListener('change', function(){
+     
+          //   if(this.value > 0){
+          //     document.querySelectorAll('.autoPercentages.helper').forEach(element => element.value = false)
+          //     document.querySelectorAll('.autoPercentages.checkbox').forEach(element => element.checked = false)
+          //     document.querySelector('input[name="item[][formula_prod_ejec_ratio2]"]').value = 0;
+          //   }
+          // });
+          // document.querySelector('input[name="item[][formula_productor_ejecutivo2]"]').addEventListener('change', function(){
+            
+          //   if(this.checked){
+          //     document.querySelector('input[name="item[][formula_asistente_produccion2]"]').checked = false;
+          //     document.querySelector('input[name="item[][formula_asistente_produccion2]helper"]').value = 'false';
+          //   }
+          // });
+
+          // document.querySelector('input[name="item[][formula_asistente_produccion2]"]').addEventListener('change', function(){
+            
+          //   if(this.checked){
+          //     document.querySelector('input[name="item[][formula_productor_ejecutivo2]"]').checked = false;
+          //     document.querySelector('input[name="item[][formula_productor_ejecutivo2]helper"]').value = 'false';
+          //   }
+          // });
+        }
+
+      });
+
+
+    $('.ui-dialog fieldset.reasociar button').button({
+      icons: {
+        primary: 'ui-icon-disk'
+      },
+      text: true
+    }).click(function () {
+      unaBase.ui.block();
+
+      var sr;
+      var id_servicio = "";
+      var nameser=$('input[type="search"][name="item[][itemReasociar]"]').val()
+
+      sr = document.getElementById("searchReasociar");
+      id_servicio = sr.dataset.id;
+      
+
+
+      var is_valid = true;
+      $('.ui-dialog fieldset.reasociar input[required]').each(function (key, element) {
+        if ($(element).val() == '') {
+          is_valid = false;
+          return false;
+        }
+      });
+
+      if (is_valid) {
+        $.ajax({
+          url: '/4DACTION/_V3_set_reasociarItem',
+          type: 'POST',
+          data: {
+            'id_servicio': id_servicio,
+            'll_nv': '<!--#4DTEXT [Detalle_NV]Llave_nv-->'
+          },
+          dataType: 'json',
+          success: function (data) {
+            toastr.success('item reasociado');
+           
+
+            var cc= $('.ui-dialog fieldset.reasociar input.cc').val();
+            var updaterow2 = $('table.items tr.item');
+            var row = $("[data-id='" + '<!--#4DTEXT [Detalle_NV]Llave_nv-->' + "']");
+            row.data('producto', id_servicio);
+            row.data.producto= id_servicio;
+           
+
+
+            
+            ll_nv2='<!--#4DTEXT [Detalle_NV]Llave_nv-->';
+            var tt= document.querySelector('[data-id="' + ll_nv2 + '"]');
+
+            tt.dataset.producto=id_servicio;
+            row.find('[name="item[][codigo]"]').val(cc)
+
+            //$('.ui-dialog fieldset.reasociar input[required]').val(undefined);
+            $('.ui-dialog fieldset.datosgenerales input.ser').val(nameser);
+            $('.ui-dialog fieldset.datosgenerales input.cod').val(cc);
+            $('input[name="item[][id_servicio]"]').val(id_servicio);
+            unaBase.ui.unblock();
+
+
+
+          }
+        });
+      } else {
+        unaBase.ui.unblock();
+        toastr.error(NOTIFY.get('ERROR_DATA'));
+      }
+    });
+  
+  </script>
+  <style type="text/css">
+    .sideFieldset {
+      display: inline-table;
+    }
+
+    #form-detalle-items {
+      background-color: rgb(227, 227, 228);
+    }
+
+    .articleTable {
+      display: inline-table;
+    }
+
+    .autoPercentages {
+      background-color: white;
+    }
+
+    .articleTable label {
+      text-align: left !important;
+    }
+
+    .articleTable h1 span {
+      display: inline-block;
+    }
+
+    .inputBack {
+      background-color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="main-container">
+    <div class="detalle-items">
+      <div id="dialog-profile-detalleItem">
+        <ul>
+          <li>
+            <a href="#tabs-1">Datos generales</a>
+          </li>
+          <li>
+            <a href="#tabs-2">Archivos adjuntos</a>
+          </li>
+          <!--#4DIF Not(is_titulo)-->
+          <li>
+            <a href="#tabs-3">Precios</a>
+          </li>
+          <!-- <li><a href="#tabs-4">Gastos</a></li> -->
+          <li>
+            <a href="#tabs-5">OT</a>
+          </li>
+          <li>
+            <a href="#tabs-6">Órdenes de compra</a>
+          </li>
+          <li>
+            <a href="#tabs-7">Rendiciones</a>
+          </li>
+          <li>
+            <a href="#tabs-8">Info proveedor</a>
+          </li>
+          <li>
+            <a href="#tabs-9">Reasigar cuenta contable item</a>
+          </li>
+          <!--#4DENDIF-->
+        </ul>
+        <form id="form-detalle-items" class="form-popup">
+          <input type="hidden" name="id" value="<!--#4DTEXT [Detalle_NV]Llave_NV-->">
+
+          <div id="tabs-1">
+            <!-- <p> -->
+
+            <fieldset class="datosgenerales">
+              <!--<legend><strong>Información básica</strong></legend>-->
+              <article class="articleTable">
+                <div>
+                  <label>Nombre del
+                    <!--#4DIF is_titulo-->título
+                    <!--#4DELSE-->ítem
+                    <!--#4DENDIF-->:</label>
+                  <input readonly type="text"  value="<!--#4DTEXT Uppercase([Detalle_NV]Nombre_Producto;*)-->">
+                </div>
+                <!--#4DIF Not(is_titulo)-->
+                <div>
+                  <label>Código:</label>
+                  <input readonly type="text" class="cod" value="<!--#4DTEXT Uppercase([Detalle_NV]Codigo_Producto;*)-->">
+                </div>
+                <!--#4DIF Not(is_negocio)-->
+                <div>
+                  <label>Origen del servicio:</label>
+                  <input readonly type="text"   class="ser" value="<!--#4DTEXT Uppercase(nombre_servicio;*)-->">
+                </div>
+                <div>
+                  <label>Clasificación:</label>
+                  <input readonly type="text" value="<!--#4DTEXT Uppercase(nombre_categoria;*)-->">
+                </div>
+                <!--#4DENDIF-->
+                <!--#4DENDIF-->
+                <div>
+                  <label class="label-textarea">Descripción larga:</label>
+                  <textarea name="item[][observacion]" <!--#4DIF (is_negocio & Not(_V3_verifica_permisos_web(_V3_data_username;528))))--> readonly<!--#4DENDIF-->><!--#4DTEXT [Detalle_NV]ObservacionesItem--></textarea>
+                </div>
+                <!--#4DIF Not(is_titulo)-->
+                <div>
+                  <label class="label-textarea">Observaciones (internas):</label>
+                  <textarea name="item[][comentario]"><!--#4DTEXT [Detalle_NV]Comentarios_item--></textarea>
+                </div>
+                <div style="display: none;">
+                  <label>Tipo documento</label>
+                  <select name="item[][tipo_documento]">
+                    <option default value="">Seleccionar...</option>
+                    <!--#4DLOOP [Tipo_Doctribu]-->
+                    <option value="<!--#4DVAR [Tipo_Doctribu]ID_TIPODOC-->" <!--#4DIF [Tipo_Doctribu]ID_TIPODOC=[Detalle_NV]ID_Tipo_documento-->
+                      selected
+                      <!--#4DENDIF-->>
+                      <!--#4DVAR [Tipo_Doctribu]DESCRIPCION_TIPO-->
+                    </option>
+                    <!--#4DENDLOOP-->
+                  </select>
+                  <label class="horas-extras-dias">Días</label>
+                  <input class="horas-extras-dias" style="width: 35px !important; background-color: white !important;" type="number" name="item[][horas_extras_dias]"
+                    value="<!--#4DIF [Detalle_NV]horas_extras_dias>0--><!--#4DTEXT [Detalle_NV]horas_extras_dias--><!--#4DELSE-->7<!--#4DENDIF-->">
+                </div>
+              </article>
+              <article class="articleTable">
+                <h1>
+                  <span class="ui-icon ui-icon-notice" title="solo se puede utilizar un porcentaje por ítem"></span>Funciones especiales</h1>
+                <div>
+                  <label>Porcentaje automático</label>
+                  <input class="autoPercentages" type="number" name="item[][auto_percent]" value="<!--#4DTEXT Replace string(String([Detalle_NV]auto_percent);",";".")-->">
+                  <hr>
+                </div>
+              <!--#4DIF false-->  
+                <div>
+                  <label>Productor Ejecutivo</label>
+                  <input class="autoPercentages helper" hidden type="text" name="item[][formula_productor_ejecutivo2]helper" value="<!--#4DIF formula_productor_ejecutivo-->true<!--#4DELSE-->false<!--#4DENDIF-->">
+                  <input class="autoPercentages checkbox" type="checkbox" name="item[][formula_productor_ejecutivo2]" <!--#4DIF formula_productor_ejecutivo-->checked<!--#4DENDIF-->>
+                  <input class="autoPercentages" type="number" name="item[][formula_prod_ejec_ratio2]" value="<!--#4DTEXT Replace string(String([Detalle_NV]formula_prod_ejec_ratio);"
+                    , ";". ")-->">
+                </div>
+                <div>
+                  <label>Asistente</label>
+                  <input class="autoPercentages helper" hidden type="text" name="item[][formula_asistente_produccion2]helper" value="<!--#4DIF formula_asistente_produccion-->true<!--#4DELSE-->false<!--#4DENDIF-->">
+                  <input class="autoPercentages checkbox" type="checkbox" name="item[][formula_asistente_produccion2]" <!--#4DIF formula_asistente_produccion
+                    -->checked
+                  <!--#4DENDIF-->>
+                </div>
+                <hr>
+                <div>
+                  <label>Porcentaje General</label>
+                  <input class="autoPercentages" type="number" name="item[][porcentaje_monto_total2]" value="<!--#4DTEXT Replace string(String([Detalle_NV]porcentaje_monto_total);"
+                    , ";". ") -->">
+                </div>
+              <!--#4DENDIF-->
+                <br><hr>
+
+               
+              </article>
+
+              <!--#4DIF peParamMostrarInfoAgenciaViaje-->
+              <div class="det-item-info-custom" style="position:absolute;top:180px;right:380px;">
+                <div style="margin-bottom:10px;">
+                  <label style="font-weight:bold;">No considerar impuesto: </label>
+                  <!--#4DIF [Detalle_NV]v3_no_considera_impuesto-->
+                  <input name="item-no-considerar-impuesto" value="true" type="checkbox" checked onchange="checkStatusMarcaNoImpuesto();">
+                  <input name="item-no-considerar-impuesto-2" type="hidden" value="TRUE">
+                  <!--#4DELSE-->
+                  <input name="item-no-considerar-impuesto" value="false" type="checkbox" onchange="checkStatusMarcaNoImpuesto();">
+                  <input name="item-no-considerar-impuesto-2" type="hidden" value="FALSE">
+                  <!--#4DENDIF-->
+                </div>
+
+
+                <div style="margin-bottom:10px;">
+                  <label style="font-weight:bold;">Afecto exportativo: </label>
+                  <!--#4DIF [Detalle_NV]v3_pe_afecto_exportativo-->
+                  <input name="item-afecto-exportativo" value="true" type="checkbox" checked onchange="checkStatusMarca(this);">
+                  <input name="item-afecto-exportativo-2" type="hidden" value="TRUE">
+                  <!--#4DELSE-->
+                  <input name="item-afecto-exportativo" value="false" type="checkbox" onchange="checkStatusMarca(this);">
+                  <input name="item-afecto-exportativo-2" type="hidden" value="FALSE">
+                  <!--#4DENDIF-->
+                </div>
+
+                <div style="margin-bottom:10px;">
+                  <label style="font-weight:bold;">Afecto no exportativo: </label>
+                  <!--#4DIF [Detalle_NV]v3_pe_afecto_no_exportativo-->
+                  <input name="item-afecto-no-exportativo" value="true" type="checkbox" checked onchange="checkStatusMarca(this);">
+                  <input name="item-afecto-no-exportativo-2" type="hidden" value="TRUE">
+                  <!--#4DELSE-->
+                  <input name="item-afecto-no-exportativo" value="false" type="checkbox" onchange="checkStatusMarca(this);">
+                  <input name="item-afecto-no-exportativo-2" type="hidden" value="FALSE">
+                  <!--#4DENDIF-->
+                </div>
+
+                <div>
+                  <h5 style="text-decoration:underline;font-weight:bold;">CAMPOS ADICIONALES:</h5>
+                  <div style="margin:5px;">
+                    <label style="font-weight:bold;">Fecha: </label>
+                    <input name="item-custom-data-1" style="padding:2px;background-color:white;" type="text" class="datepicker" value="<!--#4DTEXT [Detalle_NV]pe_custom_data_1-->">
+                  </div>
+
+                  <div style="margin:5px;">
+                    <label style="font-weight:bold;">Tipo: </label>
+                    <select name="item-custom-data-2">
+                      <option <!--#4DIF [Detalle_NV]pe_custom_data_2="" -->selected
+                        <!--#4DENDIF-->value="
+                        <!--#4DTEXT [Detalle_NV]pe_custom_data_2-->">[ Ninguno ]</option>
+                      <option <!--#4DIF [Detalle_NV]pe_custom_data_2="PVT" -->selected
+                        <!--#4DENDIF-->value="PVT">PVT</option>
+                      <option <!--#4DIF [Detalle_NV]pe_custom_data_2="SIC" -->selected
+                        <!--#4DENDIF-->value="SIC">SIC</option>
+                    </select>
+                  </div>
+
+                  <div style="margin:5px;">
+                    <label style="font-weight:bold;">Movilidad:</label>
+                    <select name="item-custom-data-3">
+
+                      <!--#4DIF [Detalle_NV]pe_custom_data_3=""-->
+                      <option selected value="">[ Ninguno ]</option>
+                      <!--#4DELSE-->
+                      <option value="">[ Ninguno ]</option>
+                      <!--#4DENDIF-->
+
+                      <!--#4DIF [Detalle_NV]pe_custom_data_3="AUTO"-->
+                      <option selected value="AUTO">AUTO</option>
+                      <!--#4DELSE-->
+                      <option value="AUTO">AUTO</option>
+                      <!--#4DENDIF-->
+
+                      <!--#4DIF [Detalle_NV]pe_custom_data_3="S. LARGA"-->
+                      <option selected value="S. LARGA">S. LARGA</option>
+                      <!--#4DELSE-->
+                      <option value="S. LARGA">S. LARGA</option>
+                      <!--#4DENDIF-->
+
+                      <!--#4DIF [Detalle_NV]pe_custom_data_3="S. CORTA"-->
+                      <option selected value="S. CORTA">S. CORTA</option>
+                      <!--#4DELSE-->
+                      <option value="S. CORTA">S. CORTA</option>
+                      <!--#4DENDIF-->
+
+                      <!--#4DIF [Detalle_NV]pe_custom_data_3="MINIBUS"-->
+                      <option selected value="MINIBUS">MINIBUS</option>
+                      <!--#4DELSE-->
+                      <option value="MINIBUS">MINIBUS</option>
+                      <!--#4DENDIF-->
+
+                      <!--#4DIF [Detalle_NV]pe_custom_data_3="BUS"-->
+                      <option selected value="BUS">BUS</option>
+                      <!--#4DELSE-->
+                      <option value="BUS">BUS</option>
+                      <!--#4DENDIF-->
+                    </select>
+                  </div>
+
+                  <div style="margin:5px;">
+                    <label style="font-weight:bold;">Idioma:</label>
+                    <select name="item-custom-data-4">
+                      <option <!--#4DIF [Detalle_NV]pe_custom_data_4="" -->selected
+                        <!--#4DENDIF-->value="">[ Ninguno ]</option>
+                      <option <!--#4DIF [Detalle_NV]pe_custom_data_4="ALEMAN" -->selected
+                        <!--#4DENDIF-->value="ALEMAN">ALEMAN</option>
+                      <option <!--#4DIF [Detalle_NV]pe_custom_data_4="ESPAÑOL" -->selected
+                        <!--#4DENDIF-->value="ESPAÑOL">ESPAÑOL</option>
+                      <option <!--#4DIF [Detalle_NV]pe_custom_data_4="ESP/ING" -->selected
+                        <!--#4DENDIF-->value="ESP/ING">ESP/ING</option>
+                      <option <!--#4DIF [Detalle_NV]pe_custom_data_4="FRANCES" -->selected
+                        <!--#4DENDIF-->value="FRANCES">FRANCES</option>
+                      <option <!--#4DIF [Detalle_NV]pe_custom_data_4="INGLES" -->selected
+                        <!--#4DENDIF-->value="INGLES">INGLES</option>
+                      <option <!--#4DIF [Detalle_NV]pe_custom_data_4="PORTUGUES" -->selected
+                        <!--#4DENDIF-->value="PORTUGUES">PORTUGUES</option>
+                      <option <!--#4DIF [Detalle_NV]pe_custom_data_4="RUSO" -->selected
+                        <!--#4DENDIF-->value="RUSO">RUSO</option>
+                    </select>
+                  </div>
+
+                </div>
+
+              </div>
+              <!--#4DENDIF-->
+
+              <!--#4DIF peParamMostrarFeePredefinidos-->
+              <article class="predefinir-sobrecargo" style="display:none;">
+                <div>
+                  <label for="" style="vertical-align:middle;display:inline-block;">Definir sobrecargo:</label>
+                  <select name="sobrecargo-predefinido" style="vertical-align:middle;">
+                    <option <!--#4DIF sobrecargoPredefinidoSelected="" -->selected
+                      <!--#4DENDIF-->value="">Ninguno</option>
+                    <!--#4DIF sobrecargoPredefinidoSelected#""-->
+                    <option value="<!--#4DTEXT sobrecargoPredefinidoSelected-->" selected>
+                      <!--#4DTEXT sobrecargoPredefinidoSelected-->
+                    </option>
+                    <!--#4DENDIF-->
+                    <!--#4DLOOP aSobrecargosHabilitados-->
+                    <!--#4DIF aSobrecargosHabilitados{aSobrecargosHabilitados}#sobrecargoPredefinidoSelected-->
+                    <option value="<!--#4DTEXT aSobrecargosHabilitados{aSobrecargosHabilitados}-->">
+                      <!--#4DTEXT aSobrecargosHabilitados{aSobrecargosHabilitados}-->
+                    </option>
+                    <!--#4DENDIF-->
+                    <!--#4DENDLOOP-->
+
+                  </select>
+                </div>
+              </article>
+              <!--#4DENDIF-->
+
+              <!--#4DENDIF-->
+
+              <article style="display: table-cell">
+              <div>
+                <label>Shortcut</label>
+                <select name="item[][shortcut]">
+                  <option default value="">Seleccionar...</option>
+                
+                  <option value="1" >Shortcut1</option>
+                  <option value="1" >Shortcut2</option>
+                
+                </select>
+                <select name="item[][shortcut]">
+                  <option default value="">Seleccionar...</option>
+                
+                  <option value="1" >cantidad</option>
+                  <option value="2" >dias</option>
+                
+                </select>
+              </div>
+              </article>
+            </fieldset>
+
+            <!-- </p> -->
+          </div>
+
+          <div id="tabs-2"></div>
+
+          <!--#4DIF Not(is_titulo)-->
+
+          <div id="tabs-3">
+
+            <!--#4DIF (is_negocio)-->
+            <fieldset>
+              <article>
+                <div>
+                  <label>Origen del servicio:</label>
+                  <input readonly type="text" value="<!--#4DTEXT Uppercase(nombre_servicio;*)-->">
+                </div>
+                <div>
+                  <label>Clasificación:</label>
+                  <input readonly type="text" value="<!--#4DTEXT Uppercase(nombre_categoria;*)-->">
+                </div>
+              </article>
+            </fieldset>
+            <!--#4DENDIF-->
+            <fieldset>
+              <article>
+                <div>
+                  <label>Costo:</label>
+                  <input type="text" readonly value='<!--#4DTEXT String([Detalle_NV]Subtotal_GastoPresupuestado;"$ ###.###.###.##0")-->'>
+                </div>
+                <div>
+                  <label>% Margen:</label>
+                  <input type="text" readonly value='<!--#4DTEXT String([Detalle_NV]GPST;"% ###")-->'>
+                </div>
+                <div>
+                  <label>Venta:</label>
+                  <input type="text" readonly value='<!--#4DTEXT String([Detalle_NV]Subtotal2;"$ ###.###.###.##0")-->'>
+                </div>
+              </article>
+            </fieldset>
+          </div>
+
+          <!--
+			        <div id="tabs-4">
+			          <fieldset>
+			              <article>
+			                <div>
+			                  <label>Costo:</label>
+			                  <input type="text" readonly value='< ! - - #4DTEXT String([Detalle_NV]Subtotal_GastoPresupuestado;"$ ###.###.###.##0") - - > '>
+			                </div>
+			                <div>
+			                  <label>% Margen:</label>
+			                  <input type="text" readonly value='< ! -  - #4DTEXT String([Detalle_NV]GPST;"% ###") - - > '>
+			                </div>
+			                 <div>
+			                  <label>Venta:</label>
+			                  <input type="text" readonly value='< ! - - #4DTEXT String([Detalle_NV]Subtotal2;"$ ###.###.###.##0") - - > '>
+			                </div>
+			              </article>
+			          </fieldset>
+			        </div>
+			        -->
+
+          <div id="tabs-5">
+            <fieldset>
+              <article>
+                <div>
+                  <label>Cant. HH Asignadas:</label>
+                  <input style="background:white;width:100px!important;margin-left:14px" name="item[][cant_hh_asig]" type="text" value="<!--#4DTEXT [Detalle_NV]Param_CantRealOT-->">
+                </div>
+                <div>
+                  <label>Responsable:</label>
+                  <select style="text-transform:capitalize;margin-left:14px" name="item[][responsable_asig]">
+
+                    <!--#4DIF [Detalle_NV]login_asociado_hh_ot#""-->
+                    <option default value="<!--#4DTEXT [Detalle_NV]login_asociado_hh_ot-->">
+                      <!--#4DTEXT [Detalle_NV]nombre_login_asociado_hh_ot-->
+                    </option>
+                    <!--#4DELSE-->
+                    <option default value="">Seleccionar...
+                      <!--#4DTEXT [Detalle_NV]login_asociado_hh_ot-->
+                    </option>
+                    <!--#4DENDIF-->
+
+                    <!--#4DLOOP aLoginResp-->
+                    <!--#4DIF aLoginResp{aLoginResp}#[Detalle_NV]login_asociado_hh_ot-->
+                    <option value="<!--#4DTEXT aLoginResp{aLoginResp}-->">
+                      <!--#4DTEXT aNamesResp{aLoginResp}-->
+                    </option>
+                    <!--#4DENDIF-->
+                    <!--#4DENDLOOP-->
+
+                  </select>
+                </div>
+                <div>
+                  <label>Gasto P. interno unitario:</label>
+                  <span style="color:gray" class="numeric currency">
+                    <!--#4DVAR _V3_defaultCurrencySymbol-->
+                    <input style="background:white;width:100px!important" name="item[][costo_hh_unitario]" type="text" value="<!--#4DTEXT [Detalle_NV]costo_hh_unitario_ot-->">
+                  </span>
+                  <span data-ref="costo" style="color:gray"></span>
+                </div>
+                <div>
+                  <label>Gasto P. interno total:</label>
+                  <span style="color:gray" class="numeric currency">
+                    <!--#4DVAR _V3_defaultCurrencySymbol-->
+                    <input readonly name="item[][costo_hh_presupuestado]" type="text" value="<!--#4DTEXT [Detalle_NV]costo_hh_presupuestado_ot-->">
+                  </span>
+                </div>
+              </article>
+            </fieldset>
+
+            <table class="ot-items">
+              <thead>
+                <th>Ot</th>
+                <th>Responsable</th>
+                <th>H. Asignadas</th>
+                <th>H. Reales</th>
+                <th>Costo Unit.</th>
+                <th>Total Real</th>
+              </thead>
+              <tbody>
+                <!--#4DLOOP aOtId-->
+                <tr>
+                  <td>
+                    <a title="Ir a ot" style="color:gray" target="_blank" href="/ot.shtml?i=<!--#4DTEXT aOtId{aOtId}-->">
+                      <!--#4DTEXT Num(aOtFolio{aOtId})-->
+                    </a>
+                  </td>
+                  <td style="text-tranform:capitalize!important;text-align:left">
+                    <!--#4DTEXT Lowercase(aOtName{aOtId}+" "+aOtPat{aOtId};*)-->
+                  </td>
+                  <td>
+                    <!--#4DTEXT aOtHAsig{aOtId}-->
+                  </td>
+                  <td>
+                    <!--#4DTEXT aOtHTrab{aOtId}-->
+                  </td>
+                  <td>
+                    <!--#4DTEXT  String(aOtCostUni{aOtId};"$ ###.###.###.##0")-->
+                  </td>
+                  <td>
+                    <!--#4DTEXT  String(aOtCostTot{aOtId};"$ ###.###.###.##0")-->
+                  </td>
+                </tr>
+                <!--#4DENDLOOP-->
+              </tbody>
+            </table>
+          </div>
+
+
+          <div id="tabs-6">
+          </div>
+
+          <div id="tabs-7">
+          </div>
+
+          <div id="tabs-8">
+          </div>
+
+          <div id="tabs-9">
+            <fieldset class="reasociar">
+              <article>
+                <div>
+                  <button type="button" style="border-color: green; font-weight: bold;"><span  style="color: black;   font-weight: bold;">Reasociar</span> </button>
+
+                </div>
+                <div>
+                  <label>Origen del servicio:</label>
+                  <input class="inputBack" data-help="Acá buscas el item que al que necesitas reasociar" type="search" name="item[][itemReasociar]"
+                    data-id="" id="searchReasociar" placeholder="ingresa el nombre del item" value="<!--#4DTEXT Uppercase(nombre_servicio;*)-->" required>
+                  </span>
+
+                </div>
+
+                <div>
+                  <label>codigo:</label>
+                  <input readonly class="cc" type="text" name="item[][codigoReasociar]" type="text" value="<!--#4DTEXT Uppercase([Detalle_NV]Codigo_Producto;*)-->">
+                </div>
+              </article>
+            </fieldset>
+          </div>
+
+          <!--#4DENDIF-->
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

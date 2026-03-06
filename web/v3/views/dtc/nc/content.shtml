@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getNcContent-->
+		<title>Nota crédito / débito</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="/v3/design/temporal.css?<!--#4DTEXT random-->">
+		<script type="text/javascript" src="/v3/script/datepicker_es.js"></script>
+		<script type="text/javascript" src="/v3/views/dtc/nc/content.js"></script>
+	</head>
+	<body>		
+		<section id="sheet-nc" class="sheet" data-id="<!--#4DTEXT [Doc_Tributario_Compra]ID_DOC-->" data-index="<!--#4DTEXT [Doc_Tributario_Compra]FOLIO_DOCUMENTO-->">
+			<input type="hidden" name="dtc[id]" value="<!--#4DTEXT [Doc_Tributario_Compra]ID_DOC-->">
+			<input type="hidden" name="id" value="<!--#4DTEXT [Doc_Tributario_Compra]ID_DOC-->">
+
+			<fieldset>
+				<legend><strong>Información general</strong></legend>
+				<article class="inline">				 	             	                
+	            </article>
+			</fieldset>
+
+			<fieldset>
+				<legend><strong>Proveedor</strong></legend>
+				<article class="inline">				 	             	                
+	            </article>
+			</fieldset>
+
+			<fieldset>
+				<legend><strong>Totales</strong></legend>
+				<article class="inline">				 	             	                
+	            </article>
+			</fieldset>
+
+			<fieldset>
+				<legend><strong>Facturas</strong></legend>
+				<article class="inline">				 	             	                
+	            </article>
+			</fieldset>
+			
+		</section>
+	</body>
+</html>

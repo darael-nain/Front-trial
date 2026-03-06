@@ -1,0 +1,89 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Nota_de_venta]) - 2)-->,
+		"total": <!--#4DHTML $total-->,
+		"total_reg": <!--#4DHTML $total_reg-->
+	},
+	"created_up_to": "<!--#4DHTML String($created_up_to)-->",
+	"created_from_to": "<!--#4DHTML String($created_from_to)-->",
+	"totales": {
+		"neto": "<!--#4DHTML _V3_formatCurrency(neto)-->",
+		"gasto_p": "<!--#4DHTML _V3_formatCurrency(gasto_p)-->",
+		"gasto_r": "<!--#4DHTML _V3_formatCurrency(gasto_r)-->",
+		"por_gastar": "<!--#4DHTML _V3_formatCurrency(por_gastar)-->",
+		"utilidad_value": "<!--#4DHTML _V3_formatCurrency(utilidad_value)-->",
+		"utilidad_percent": "<!--#4DHTML String(utilidad_percent;"###.###.###.###.###.###.##0,## %")-->",
+		"utilidad_final": "<!--#4DHTML _V3_formatCurrency(utilidad_final)-->",
+		"totales_saldo_por_facturar": "<!--#4DHTML _V3_formatCurrency(totales_saldo_por_facturar)-->",
+		"totales_total_facturado": "<!--#4DHTML _V3_formatCurrency(totales_total_facturado)-->",
+		"total_cobrado": "<!--#4DHTML _V3_formatCurrency(total_cobrado)-->",
+		"total_por_cobrar": "<!--#4DHTML _V3_formatCurrency(total_por_cobrar)-->",
+		"total_justificado": "<!--#4DHTML _V3_formatCurrency(total_justificado)-->",
+		"total_por_justificar": "<!--#4DHTML _V3_formatCurrency(total_por_justificar)-->",
+		"total_pagado": "<!--#4DHTML _V3_formatCurrency(total_pagado)-->",
+		"total_por_pagar": "<!--#4DHTML _V3_formatCurrency(total_por_pagar)-->"
+	},
+	"rows": [
+<!--#4DLOOP aProyectoId -->
+		{
+			"id": <!--#4DHTML aProyectoId{aProyectoId}-->,
+			"tareas_completadas": <!--#4DHTML aProyectoTareasCompletadas{aProyectoId}-->,
+			"tareas_totales": <!--#4DHTML aProyectoTareasTotales{aProyectoId}-->,
+			"complete": <!--#4DHTML aProyectoPorcentajeCompletado{aProyectoId}-->,
+			"id": <!--#4DHTML aProyectoId{aProyectoId}-->,
+			"index": <!--#4DHTML aProyectoFolio{aProyectoId}-->,
+			<!--#4DIF NOT(aProyectoFolio{aProyectoId} = 0)-->"folio": <!--#4DHTML aProyectoFolio{aProyectoId}-->,<!--#4DENDIF-->
+			"text": "<!--#4DHTML _V3_escapeString(aProyectoNombre{aProyectoId})-->",
+			"asociated_business": <!--#4DHTML asociated_business{aProyectoId}-->,
+			"tipo": "<!--#4DHTML _V3_escapeString(aProyectoTipo{aProyectoId})-->",
+			"username": "<!--#4DHTML aProyectoUsuario{aProyectoId}-->",
+			"nombre_responsable": "<!--#4DHTML _V3_escapeString(aProyectoNombreResponsable{aProyectoId})-->",
+			"iniciales_responsable": "<!--#4DHTML _V3_escapeString(aProyectoInicialesResponsable{aProyectoId})-->",
+			"observaciones": "<!--#4DHTML _V3_escapeString(aProyectoObservaciones{aProyectoId})-->",
+			"cliente": {
+				"id": <!--#4DHTML aProyectoEmpresaId{aProyectoId}-->,
+				"alias": "<!--#4DHTML _V3_escapeString(aProyectoEmpresaAlias{aProyectoId})-->",
+				"razon_social": "<!--#4DHTML _V3_escapeString(aProyectoEmpresaRazonSocial{aProyectoId})-->",
+				"rut": "<!--#4DHTML _V3_escapeString(aProyectoEmpresaRut{aProyectoId})-->",
+				"direccion": "<!--#4DHTML _V3_escapeString(aProyectoEmpresaDireccion{aProyectoId})-->",
+				"telefono": "<!--#4DHTML _V3_escapeString(aProyectoEmpresaTelefono{aProyectoId})-->",
+				"contacto": "<!--#4DHTML _V3_escapeString(aProyectoEmpresaContacto{aProyectoId})-->"
+			},
+			"status": <!--#4DIF aProyectoEstado{aProyectoId}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"created_at": "<!--#4DHTML Substring(String(aProyectoCreacionFecha{aProyectoId};8);1;10)-->T<!--#4DHTML aProyectoCreacionHora{aProyectoId}-->-04:00"<!--#4DIF (NOT(aProyectoModificacionHora{aProyectoId} = "00:00:00")))-->,
+			"updated_at": "<!--#4DHTML Substring(String(aProyectoModificacionFecha{aProyectoId};8);1;10)-->T<!--#4DHTML aProyectoModificacionHora{aProyectoId}-->-04:00"<!--#4DENDIF-->,
+			"fecha_inicio": "<!--#4DHTML String(aProyectoFechaInicio{aProyectoId})-->",
+			"fecha_termino": "<!--#4DHTML String(aProyectoFechaTermino{aProyectoId})-->",
+			"costo_total_hh": "<!--#4DHTML _V3_formatCurrency(aProyectoCostototalHH{aProyectoId})-->",
+			"totales": {
+				"neto": "<!--#4DHTML _V3_formatCurrency(atotales_neto{aProyectoId})-->",
+				"gasto_p": "<!--#4DHTML _V3_formatCurrency(atotales_gasto_p{aProyectoId})-->",
+				"gasto_r": "<!--#4DHTML _V3_formatCurrency(atotales_gasto_r{aProyectoId})-->",
+				"por_gastar": "<!--#4DHTML _V3_formatCurrency(atotales_por_gastar{aProyectoId})-->",
+				"utilidad_value": "<!--#4DHTML _V3_formatCurrency(atotales_utilidad_value{aProyectoId})-->",
+				"utilidad_percent": "<!--#4DHTML String(atotales_utilidad_percent{aProyectoId};"###.###.###.###.###.###.##0,## %")-->",
+				"utilidad_final": "<!--#4DHTML _V3_formatCurrency(atotales_utilidad_final{aProyectoId})-->",
+				"totales_saldo_por_facturar": "<!--#4DHTML _V3_formatCurrency(atotales_saldo_por_facturar{aProyectoId})-->",
+				"totales_total_facturado": "<!--#4DHTML _V3_formatCurrency(atotales_total_facturado{aProyectoId})-->",
+				"total_cobrado": "<!--#4DHTML _V3_formatCurrency(atotales_total_cobrado{aProyectoId})-->",
+				"total_por_cobrar": "<!--#4DHTML _V3_formatCurrency(atotales_total_porcobrar{aProyectoId})-->",
+				"total_justificado": "<!--#4DHTML _V3_formatCurrency(atotales_total_justificado{aProyectoId})-->",
+				"total_por_justificar": "<!--#4DHTML _V3_formatCurrency(atotales_total_porjustificar{aProyectoId})-->",
+				"total_pagado": "<!--#4DHTML _V3_formatCurrency(atotales_total_pagado{aProyectoId})-->",
+				"total_por_pagar": "<!--#4DHTML _V3_formatCurrency(atotales_total_porpagar{aProyectoId})-->"
+			}
+		}<!--#4DIF NOT(aProyectoId{aProyectoId} = aProyectoId{Size of array(aProyectoId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	],
+	"vLogin": {
+		"login": "<!--#4DTEXT vLogin-->",
+		"name": "<!--#4DTEXT vNomUsr2-->",
+		"iniciales": "<!--#4DTEXT vIniciales-->",
+		"email": "<!--#4DTEXT vEmail-->"
+	}
+}

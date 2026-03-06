@@ -1,0 +1,35 @@
+{
+	"comuna": <!--#4DIF Not(Undefined(comuna))-->"<!--#4DHTML comuna-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"ciudad": <!--#4DIF Not(Undefined(ciudad))-->"<!--#4DHTML ciudad-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"rut": <!--#4DIF Not(Undefined(rut))-->"<!--#4DHTML rut-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"nombre_empresa": <!--#4DIF Not(Undefined(nombre_empresa))-->"<!--#4DHTML nombre_empresa-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"giro": <!--#4DIF Not(Undefined(giro))-->"<!--#4DHTML giro-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"direccion": <!--#4DIF Not(Undefined(direccion))-->"<!--#4DHTML _V3_escapeString(direccion)-->"<!--#4DELSE-->null<!--#4DENDIF-->,   
+	"fecha": <!--#4DIF Not(Undefined(fecha))-->"<!--#4DHTML fecha-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"subtotal": <!--#4DIF Not(Undefined(aSubTotal))-->"<!--#4DHTML aSubTotal-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"decimals": <!--#4DIF Not(Undefined(_V3_defaultCurrencyDecimals))-->"<!--#4DHTML _V3_defaultCurrencyDecimals-->"<!--#4DELSE-->null<!--#4DENDIF-->,	
+	"records": {
+		"total": <!--#4DHTML total-->
+	},
+	"rows": [
+<!--#4DLOOP aId -->
+		{
+			"id": "<!--#4DHTML aId{aId}-->",
+			"name": "<!--#4DHTML aNameAccount{aId}-->",
+			"tipo": "<!--#4DHTML aTipo{aId}-->",
+			"tipo_cuenta": "<!--#4DHTML aTipoCuenta{aId}-->",
+			"number": "<!--#4DHTML aNumber{aId}-->",
+			"debe": "<!--#4DHTML aDebe{aId}-->",
+			"haber": "<!--#4DHTML aHaber{aId}-->",
+			"deudor": "<!--#4DHTML aDeudor{aId}-->",
+			"acreedor": "<!--#4DHTML aAcredor{aId}-->",
+			"perdida": "<!--#4DHTML aPerdida{aId}-->",
+			"ganancia": "<!--#4DHTML aGanancia{aId}-->",
+			"inicial_deudor": "<!--#4DHTML aInicialDeudor{aId}-->",
+			"inicial_acreedor": "<!--#4DHTML aInicialAcreedor{aId}-->",
+			"activo": "<!--#4DHTML aActivo{aId}-->",
+			"pasivo": "<!--#4DHTML aPasivo{aId}-->"
+		}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

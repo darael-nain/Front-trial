@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getSettingsNegocios-->
+		<title>AJUSTES PARA NEGOCIOS</title>
+		<meta charset="utf-8">
+		<style>
+			article, header{
+				display: block!important;
+			}
+		</style>
+		<script type="text/javascript" src="/v3/script/datepicker_es.js?<!--#4DTEXT _V3_version-->"></script>
+		<style>
+			#settings-container-by-module input{
+				background:yellow;
+				border:1px solid lightgray;
+				padding:2px;
+				text-align:center;
+			}
+		</style>
+		<script>
+			var login = "<!--#4DTEXT _V3_data_username-->";
+			$(document).ready(function(){
+				let setSettings = (data) => {
+					$.ajax({
+						url: '/4DACTION/_V3_setSettingsNegocios',
+						data: data,
+						dataType: 'json',
+						success: function(data) {
+							if (data.success) {
+								toastr.success('Cambio realizado con éxito');
+							}else{
+								toastr.error('No fue posible realizar el cambio. Intente nuevamente.');
+							}							
+						}
+					});
+				}
+				$('.saveinfo').change(function() {
+					let option = $(this).data('option');
+					let fieldName = $(this).attr('name');
+					let value;
+					if ($(this).attr('type') == 'checkbox') {
+						value = $(this).prop('checked');
+					}else{
+						value = $(this).val();
+					}
+					eval("\
+						data = {\
+							'option': option,\
+							'" + fieldName + "': value,\
+						};\
+					");
+					setSettings(data);						
+				});
+
+				$('.ui-dialog').find('#dialog-search').closest('header').remove();
+
+				if(!access._482) { // permiso admin para modificar parametros
+					$('.ui-dialog').find('input').prop('disabled', true).css('background', 'none');
+    			}
+
+    			let cierreCompraEstado = <!--#4DIF cierreCompraEstado -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+    			let cierreCompraFechaAsignacion = <!--#4DIF cierreCompraFechaAsignacion -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+    			let cierreCompraFechaRealizacion = <!--#4DIF cierreCompraFechaRealizacion -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+    			let cierreCompraOtrasFechas = <!--#4DIF cierreCompraOtrasFechas -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+    			let cierreNegociosAutomatico = <!--#4DIF cierreNegociosAutomatico -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+    			if (cierreCompraEstado) {
+    				$('#cierre-compra-estado').prop('checked', true);
+    			}else{
+    				$('#cierre-compra-estado').prop('checked', false);
+    			}
+    			if (cierreCompraFechaAsignacion) {
+    				$('#cierre-compra-asignacion').prop('checked', true);
+    			}else{
+    				$('#cierre-compra-asignacion').prop('checked', false);
+    			}
+    			if (cierreCompraFechaRealizacion) {
+    				$('#cierre-compra-realizacion').prop('checked', true);
+    			}else{
+    				$('#cierre-compra-realizacion').prop('checked', false);
+    			}
+    			if (cierreCompraOtrasFechas) {
+    				$('#cierre-compra-otras-fechas').prop('checked', true);
+    				$('.table-months-cierre-compras').show();
+    			}else{
+    				$('#cierre-compra-otras-fechas').prop('checked', false);
+    				$('.table-months-cierre-compras').hide();
+    			}
+    			if (cierreNegociosAutomatico) {
+    				$('#cierre-negocio-automatico').prop('checked', true);
+    			}else{
+    				$('#cierre-negocio-automatico').prop('checked', false);
+    			}
+
+    			/*if (login != "soporte" && login != "gin") {
+    				$('#settings-container-by-module').find('input').prop('disabled', true);
+    			}*/
+
+			});
+		</script>
+		<style>
+			#settings-container-by-module > .settings-section{
+				border:1px solid lightgray;
+				border-radius:3px;
+				margin:10px 5px;
+				padding:5px;
+				overflow-x:auto;
+			}
+				#settings-container-by-module > .settings-section > h2{
+					font-weight:bold;
+				}
+				#settings-container-by-module > .settings-section input{
+					margin:5px;
+				}
+				#settings-container-by-module > .settings-section .table-info{
+					margin:5px;
+				}
+				
+		</style>
+	</head>
+	<body>
+		<div id="settings-container-by-module">
+			<div class="settings-section">
+				<h2>Cierre de compras</h2>
+				<div>
+					<input id="cierre-compra-estado" type="checkbox" name="cierre-compra-estado" class="saveinfo"><label for="cierre-compra-estado">Habilitar cierre automático</label>
+					<input id="cierre-compra-dias" style="width:50px;" type="text" name="cierre-compra-dias" value="<!--#4DTEXT cierreCompraDias-->" class="saveinfo"><label for="cierre-compra-dias">días</label>
+				</div>				
+				<div style="margin-left:10px;">
+					<input id="cierre-compra-asignacion" type="checkbox" name="cierre-compra-asignacion" class="saveinfo"><label for="cierre-compra-asignacion">Desde fecha de asignación</label>
+				</div>
+				<div style="margin-left:10px;">
+					<input id="cierre-compra-realizacion" type="checkbox" name="cierre-compra-realizacion" class="saveinfo"><label for="cierre-compra-realizacion">Desde fecha de realización evento</label>
+				</div>
+				<div style="margin-left:10px;">
+					<input id="cierre-compra-otras-fechas" type="checkbox" name="cierre-compra-otras-fechas" class="saveinfo"><label for="cierre-compra-otras-fechas">Definir otras fechas</label>
+				</div>
+				<div>
+					<!--#4DIF Size of array(acierreCompraId)>0-->
+					<table class="table-info table-months-cierre-compras" style="text-align:center">
+						<thead>
+							<tr>
+								<!--#4DLOOP acierreCompraId-->
+									<th><!--#4DTEXT acierreCompraMesText{acierreCompraId}--></th>
+								<!--#4DENDLOOP-->											
+							</tr>
+						</thead>							
+						<tbody>
+							<tr>
+								<!--#4DLOOP acierreCompraId-->
+									<td><input data-option="cierre-compras" data-cierre-aplicado="<!--#4DTEXT acierreCompraAplicado{acierreCompraId}-->" name="<!--#4DTEXT acierreCompraId{acierreCompraId}-->" type="text" value="<!--#4DTEXT acierreCompraFecha{acierreCompraId}-->" class="datepicker saveinfo"></td>
+								<!--#4DENDLOOP-->
+							</tr>
+						</tbody>
+					</table>
+					<!--#4DELSE-->
+						<h3 style="margin-left:20px;font-style:italic">No existen fechas agendadas para este año.</h3>
+					<!--#4DENDIF-->
+				</div>
+			</div>
+
+			<div class="settings-section">
+				<h2>Cierre de negocios</h2>
+				<div>
+					<input id="cierre-negocio-automatico" type="checkbox" name="cierre-negocio-automatico" class="saveinfo"><label for="cierre-negocio-automatico">Habilitar cierre automático</label>
+				</div>
+				<div>
+					<!--#4DIF Size of array(acierreNegociosId)>0-->
+						<table class="table-info table-months-cierre-negocios" style="text-align:center">
+							<thead>
+								<tr>
+									<!--#4DLOOP acierreNegociosId-->
+										<th><!--#4DTEXT acierreNegociosMesText{acierreNegociosId}--></th>
+									<!--#4DENDLOOP-->											
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<!--#4DLOOP acierreNegociosId-->
+										<td><input data-option="cierre-negocios" data-cierre-aplicado="<!--#4DTEXT acierreNegociosAplicado{acierreNegociosId}-->" name="<!--#4DTEXT acierreNegociosId{acierreNegociosId}-->" type="text" value="<!--#4DTEXT acierreNegociosFecha{acierreNegociosId}-->" class="datepicker saveinfo"></td>
+									<!--#4DENDLOOP-->
+								</tr>
+							</tbody>
+						</table>
+					<!--#4DELSE-->
+						<h3 style="margin-left:20px;font-style:italic">No existen fechas agendadas para este año.</h3>
+					<!--#4DENDIF-->
+				</div>
+			</div>
+
+			<div class="settings-section">
+				<h2>Pronostico de ventas <!--#4DTEXT currentYear--></h2>
+				<div style="display:none;">
+					<input id="cierre-negocio-automatico" type="checkbox" name="cierre-negocio-automatico" class="saveinfo"><label for="cierre-negocio-automatico">Habilitar pronosticos</label>
+				</div>			
+				<div>
+					<!--#4DIF Size of array(aForecastId)>0-->
+						<table class="table-info" style="text-align:center">
+							<thead>
+								<tr>
+									<!--#4DLOOP aForecastId-->
+										<th><!--#4DTEXT aForecastName{aForecastId}--></th>
+									<!--#4DENDLOOP-->											
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<!--#4DLOOP aForecastId-->
+										<td><input data-option="forescast" name="<!--#4DTEXT aForecastId{aForecastId}-->" type="text" value="<!--#4DTEXT aForecastAmount{aForecastId}-->" class="saveinfo"></td>
+									<!--#4DENDLOOP-->										
+								</tr>
+							</tbody>
+						</table>
+					<!--#4DELSE-->
+						<h3 style="margin-left:20px;font-style:italic">No existen pronosticos registrados.</h3>
+					<!--#4DENDIF-->
+				</div>
+			</div>
+
+		</div>
+	</body>
+</html>

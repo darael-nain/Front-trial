@@ -1,0 +1,15 @@
+{
+	"clientes" : [
+	<!--#4DLOOP aInformeFA_id-->
+		{
+			"id": <!--#4DHTML aInformeFA_id{aInformeFA_id}-->,
+			"nombre": "<!--#4DHTML _V3_escapeString(aInformeFA_area{aInformeFA_id})-->",
+			"neto": <!--#4DHTML String(aInformeFA_neta{aInformeFA_id};"&xml")-->,
+			"utilidad_final": <!--#4DHTML String(aInformeFA_utilfinal{aInformeFA_id};"&xml")-->,
+			"margen_utilidad_final": <!--#4DHTML String(aInformeFA_margen_utilfinal{aInformeFA_id};"&xml")-->,
+			"porcentaje": <!--#4DHTML String(aInformeFA_por{aInformeFA_id};"&xml")-->,
+			"desglose_areas": "<!--#4DHTML _V3_escapeString(aInformeFA_desglose_por_area{aInformeFA_id})-->"
+		}<!--#4DIF NOT(aInformeFA_id{aInformeFA_id} = aInformeFA_id{Size of array(aInformeFA_id)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

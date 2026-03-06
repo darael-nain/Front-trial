@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Reportes de servicio</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/views/reportes/script/content.js"></script>
+		<script src="/v3/script/sorttable.js"></script>
+		<script>
+		var container = $('#container-reportes');
+		var tbody = container.find('table.reportes > tbody');
+
+		var getCategorias = function(){
+			unaBase.ui.block();
+			$.ajax({
+				url: '/4DACTION/_V3_getCategoriasReporte',
+				data: $('#search').serializeAnything(),
+				dataType: 'json',
+				success: function(data) {												
+						//var rows = '';
+
+						/*data.categorias.push({"id":"010101", "descripcion":"SIN CATEGORÍA"});
+						$.each(data.categorias, function(key, item){
+
+							var class_ = "name";
+							if (item.id == "010101") {
+								class_ = "name_rojo";
+							};
+
+							rows = rows + '<tr style="display:none" class="title" data-id="'+item.id+'" data-categoria="'+item.id+'">';
+							rows = rows + '<th></th>';
+							rows = rows + '<th><button class="ui-icon toggle categoria ui-icon-folder-open" title="Contraer o expandir título"></button></th>';
+							rows = rows + '<th></th>';
+							rows = rows + '<th></th>';
+							rows = rows + '<th class="'+class_+'">'+ item.descripcion +' <span style="vertical-align:top"></span></th>';
+							rows = rows + '<th class="ventas numeric currency">$ <span style="display: inline-block; width: 60px;">0</span></th>';							
+							rows = rows + '<th class="compras numeric currency">$ <span style="display: inline-block; width: 60px;">0</span></th>';
+							rows = rows + '<th class="utilidad numeric currency">$ <span style="display: inline-block; width: 60px;">0</span></th>';		
+							rows = rows + '</tr>';
+						});
+						tbody.html(rows);*/
+						
+						var categoria = '';
+						var total_ventas = 0;
+						var total_compras= 0;
+						$.each(data.servicios, function(key, item){
+
+							var class_ = "name";
+							if (item.id == "010101") {
+								class_ = "name_rojo";
+							};
+
+							// verifica categoria, sino los agrega
+							if (tbody.find('tr.title[data-id="'+item.id_categoria+'"]').length > 0) {
+								categoria = categoria + '<tr class="title" data-id="'+item.id_categoria+'">';
+								categoria = categoria + '<th></th>';
+								categoria = categoria + '<th><button class="ui-icon toggle categoria ui-icon-folder-open" title="Contraer o expandir título"></button></th>';
+								categoria = categoria + '<th></th>';
+								categoria = categoria + '<th></th>';
+								categoria = categoria + '<th class="'+class_+'">'+ item.nombre_categoria +' <span style="vertical-align:top"></span></th>';
+								categoria = categoria + '<th class="ventas numeric currency">$ <span style="display: inline-block; width: 60px;">0</span></th>';
+								categoria = categoria + '<th class="utilidad numeric currency">$ <span style="display: inline-block; width: 60px;">0</span></th>';		
+								categoria = categoria + '</tr>';
+								tbody.append(categoria);
+							};
+
+							var class_ = "";
+							if (item.id_categoria == 0) {
+								// 
+								item.id_categoria = "010101";
+								item.descripcion = "Servicios no clasificados";
+								// item.id = 0;
+								class_ = "name_rojo";
+							};
+
+							// containerTitle = tbody.find('tr.title[data-categoria="'+ item.id_categoria +'"]');
+							// containerTitle.show();
+
+							var rows = '';
+							var cont;
+							// rows = rows + '<tr class="title2" style="display:none" data-id="'+item.id+'" data-categoria="'+item.id_categoria+'">';
+							rows = rows + '<tr class="title2" data-id="'+item.id+'" data-categoria="'+item.id_categoria+'">';
+							rows = rows + '<td><input name="usuario[check]" class="check" type="checkbox"></td>';
+							rows = rows + '<td></td>';
+							/*rows = rows + '<td>'+ item.nombre_categoria +'</td>';*/
+							rows = rows + '<td style="text-align: left;">'+ item.codigo +'</td>';
+							rows = rows + '<td>'+ item.cuenta +'</td>';
+							rows = rows + '<td class="'+class_+'">'+ item.descripcion +'</td>';
+							rows = rows + '<td class=" ventas numeric currency">$ <span style="display: inline-block; width: 60px;">' + Math.round(item.ventas) + '</span><button id="detalle_compras" class="ui-icon ui-icon-document detail item" title="Detalle" onclick="unaBase.loadInto.dialog(\'/v3/views/servicios/content.shtml?id=' + item.id + '&tipo=ventas\', \'Detalle del servicio\', \'large\');">Detalle</button></td>';
+							
+							rows = rows + '<td class="compras numeric currency">$ <span style="display: inline-block; width: 60px;">' + Math.round(item.compras) + '</span><button id="detalle_compras" class="ui-icon ui-icon-document detail item" title="Detalle" onclick="unaBase.loadInto.dialog(\'/v3/views/servicios/content.shtml?id=' + item.id + '&tipo=compras\', \'Detalle del servicio\', \'large\');">Detalle</button></td>';
+							rows = rows + '<td class="numeric currency">$ <span '+ ((item.utilidad < 0)? 'style="color:red"' : '') +'>'+ Math.round(item.utilidad) +'</span></td>';	
+							rows = rows + '</tr>';
+							// var containerItem = containerTitle.last();
+							// $(rows).insertAfter(containerItem);
+							tbody.append(rows);
+
+							//style="text-align:right"
+
+							// calcula total ventas por titulo
+							var totalTituloVentas = parseFloat(containerTitle.find('th.ventas span').text());
+							var totalTituloVentas =  Math.round(totalTituloVentas + item.ventas);
+							containerTitle.find('th.ventas span').text(totalTituloVentas);
+							
+							// calcula total compras por titulo
+							var totalTituloCompras = parseFloat(containerTitle.find('th.compras span').text());
+							var totalTituloCompras =  Math.round(totalTituloCompras + item.compras);
+							containerTitle.find('th.compras span').text(totalTituloCompras);
+							
+							// calcula total utilidad por titulo
+							var totalTituloUtilidad = parseFloat(containerTitle.find('th.utilidad span').text());
+							var totalTituloUtilidad =  Math.round(totalTituloUtilidad + item.utilidad);
+							containerTitle.find('th.utilidad span').text(totalTituloUtilidad);
+							if(totalTituloUtilidad<0){
+								containerTitle.find('th.utilidad span').css('color','red');
+							}												
+
+							// calculo totales finales
+							total_ventas+= Math.round(item.ventas);
+							total_compras+= Math.round(item.compras);
+							
+
+						});
+
+						
+
+						numero = data.totales.total_servicios;
+
+						$(".numero_servicios").text('(' + numero + ' ítems)');
+						
+						//montos totales
+						totalVentas = total_ventas;
+						totalCompras = total_compras;
+						totalUtilidad = totalVentas-totalCompras;
+
+						$("#total_ventas").html(totalVentas).number(true, currency.decimals, ',', '.');
+						$("#total_compras").html(totalCompras).number(true, currency.decimals, ',', '.');
+						$("#total_utilidad").html(totalUtilidad).number(true, currency.decimals, ',', '.');						
+
+
+						comision_venta = Math.round(data.totales.comision_venta);
+						descuento_venta = data.totales.descuento_venta;
+						descuento_compra = data.totales.descuento_compra;
+						diferencia_venta =  Math.round(data.totales.diferencia_venta);
+
+						$("#comision_ventas").html(comision_venta).number(true, currency.decimals, ',', '.');
+						$("#descuento_ventas").html(descuento_venta).number(true, currency.decimals, ',', '.');
+						$("#descuento_compras").html(descuento_compra).number(true, currency.decimals, ',', '.');
+						$("#diferencia_ventas").html(diferencia_venta).number(true, currency.decimals, ',', '.');
+
+
+
+						comision1 = Math.round(data.totales.comision1);
+						nombre_comision1 = data.totales.nombre_comision1;
+						comision2 = Math.round(data.totales.comision2);
+						nombre_comision2 =  data.totales.nombre_comision2;
+						comision3 = Math.round(data.totales.comision3);
+						nombre_comision3 =  data.totales.nombre_comision3;
+						comision4 = Math.round(data.totales.comision4);
+						nombre_comision4 =  data.totales.nombre_comision4;
+						comision5 = Math.round(data.totales.comision5);
+						nombre_comision5 =  data.totales.nombre_comision5;
+
+
+						//comisiones
+						$("#comision1").text(comision1).number(true, currency.decimals, ',', '.');
+						$("#nombre_comision1").text(nombre_comision1);
+						if(comision1>=0){
+							if(data.totales.check_comision1==true){
+								$(".tr_comision1").show();	
+							}
+							else{
+								$(".tr_comision1").hide();
+							}
+							
+						}
+
+						$("#comision2").text(comision2).number(true, currency.decimals, ',', '.');
+						$("#nombre_comision2").text(nombre_comision2);
+						if(comision2>=0){
+							if(data.totales.check_comision2==true){
+								$(".tr_comision2").show();	
+							}
+							else{
+								$(".tr_comision2").hide();
+							}
+							
+						}
+
+
+						$("#comision3").text(comision3).number(true, currency.decimals, ',', '.');
+						$("#nombre_comision3").text(nombre_comision3);
+						if(comision3>=0){
+							if(data.totales.check_comision3==true){
+								$(".tr_comision3").show();	
+							}
+							else{
+								$(".tr_comision3").hide();
+							}
+							
+						}
+
+
+						$("#comision4").text(comision4).number(true, currency.decimals, ',', '.');
+						$("#nombre_comision4").text(nombre_comision4);
+
+						$("#comision5").text(comision5).number(true, currency.decimals, ',', '.');
+						$("#nombre_comision5").text(nombre_comision5);
+
+						if(comision4>=0){
+							if(data.totales.check_comision4y5==true){
+								$(".tr_comision4").show();	
+							}
+							else{
+								$(".tr_comision4").hide();
+							}
+							
+						}
+
+						if(comision5>=0){
+							if(data.totales.check_comision4y5==true){
+								$(".tr_comision5").show();	
+							}
+							else{
+								$(".tr_comision5").hide();
+							}
+							
+						}
+
+						sumaTotalesVentas = parseFloat(totalVentas - descuento_venta + comision_venta + diferencia_venta);
+						sumaTotalesCompras = parseFloat(totalCompras - descuento_compra);
+						sumaTotalesUtilidad = parseFloat(sumaTotalesVentas - sumaTotalesCompras);
+
+						$("#sumaTotalesVentas").html(sumaTotalesVentas).number(true, currency.decimals, ',', '.');
+						$("#sumaTotalesCompras").html(sumaTotalesCompras).number(true, currency.decimals, ',', '.');
+						$("#sumaTotalesUtilidad").html(sumaTotalesUtilidad).number(true, currency.decimals, ',', '.');
+						
+						
+						$.each(data.categorias, function(key, item) {
+							var title = tbody.find('tr.title[data-categoria="' + item.id + '"]');
+							var total = title.nextUntil('tr.title').length;	
+							var total_items = 0;										
+							title.find('th.name span').text('(' + total + ' ítems)');						
+						});
+
+
+
+						tbody.find('.numeric.currency span').number(true, currency.decimals, ',', '.');
+					unaBase.ui.unblock();					
+				}
+			});			
+		}
+		$(document).ready(function() {
+					
+			// seleccionar check y mostrat u ocultar fusionar
+			tbody.on('click', 'tr > td input[name="usuario[check]"]', function(){
+				if (tbody.find('input:checked').length > 1) {
+					$('#menu ul li[data-name="merge_report"]').show();				
+				}else{
+					$('#menu ul li[data-name="merge_report"]').hide();	
+				}					
+			});
+
+			// Expandir y contraer títulos
+			$('section.sheet table > thead button.toggle.all').click(function() {
+				if ($(this).hasClass('ui-icon-folder-open')) {
+					$(this).removeClass('ui-icon-folder-open');
+					$(this).addClass('ui-icon-folder-collapsed');
+					$(this).attr('title', 'Contraer todo');
+					$('section.sheet table > tbody > tr.title button.toggle.categoria.ui-icon-folder-open').each(function() {
+						$(this).trigger('click');
+					});
+				} else {
+					$(this).removeClass('ui-icon-folder-collapsed');
+					$(this).addClass('ui-icon-folder-open');
+					$(this).attr('title', 'Expandir todo');
+					$('section.sheet table > tbody > tr.title button.toggle.categoria.ui-icon-folder-collapsed').each(function() {
+						$(this).trigger('click');
+					});
+				}
+			});
+
+			$('section.sheet table > tbody').on('click', 'button.toggle.categoria', function(event) {
+				if ($(event.target).hasClass('ui-icon-folder-collapsed')) {
+					$(event.target).closest('tr').nextUntil('tr.title').show();
+					$(event.target).removeClass('ui-icon-folder-collapsed').addClass('ui-icon-folder-open');
+				} else {
+					$(event.target).closest('tr').nextUntil('tr.title').hide();
+					$(event.target).removeClass('ui-icon-folder-open').addClass('ui-icon-folder-collapsed');
+				}
+			});
+
+			unaBase.toolbox.init();
+			unaBase.toolbox.search.init({
+				callback: function() {	
+
+					getCategorias();
+					return false;
+				},
+				inflection: {
+					singular: 'categoria',
+					plural: 'categorias',
+					none: 'ninguna'
+				},
+				// Filtros
+				filters: [
+					{ name: 'fecha', type: 'month', caption: 'Fecha', range: true, currentMonth: true },
+					{ name: 'categoria', type: 'autocomplete', caption: 'Categoria', dataSource: 'getCategorias' }			
+				]
+			});
+
+			unaBase.toolbox.menu.init({
+				entity: 'CategoriasReporte', // especifica entidad sobre la cual se almacenan los datos
+									  // y nombre para referenciar los views
+				/*buttons: [ 'new', 'clone', 'print' ]*/
+				buttons: [ 'exit', 'merge_report']
+
+			});
+
+			$('#menu ul li[data-name="merge_report"]').hide();
+			
+			
+		});		
+		</script>
+		<style type="text/css">
+
+
+		.name{color: black;}
+		.name_rojo{color: red;}
+		.name > span{color: #AF6D44;}
+		.ventas{color: black;}
+		.ventas > span{color: black;}
+		.compras{color: black;}
+		.compras > span{color: black;}
+		.utilidad{color: black;}
+		.utilidad > span{color: black;}
+
+		div.totales {
+            	position: absolute;
+            	right: 15px;
+            	bottom: 30px;
+            	z-index: 1000;
+            	width: 515px;
+            	height: 190px;
+            	padding: 3px;
+
+            	opacity: 0.9;
+            	background-color: darkgrey;
+            	color: black;
+            	font-size: 14px;
+            	cursor: move;
+            	border-radius: 4px;
+            	box-shadow: -4px 4px 8px 1px rgba(48, 48, 48, 0.75);
+            }
+
+            div.totales > span {
+            	display: block;
+            }
+
+            div.totales > span > span {
+            	display: inline-block;
+            }
+
+            div.totales > span > span:first-of-type {
+            	width: 85px;
+            }
+
+            div.totales > span > span:nth-of-type(2) {
+            	width: 135px;
+            }
+
+            div.totales > span > span:nth-of-type(3) {
+            	width: 135px;
+            }
+
+            div.totales > span > span:nth-of-type(4) {
+            	width: 145px;
+            }
+
+
+
+
+            div.totales > span > span.numeric {
+            	text-align: right;
+            }
+
+            span.total_comisiones {
+				/* color: #CF8D64; */
+				background-color: #2DC800;
+				color: black;
+				margin-top: 10px;
+			}
+
+			span.total_ventas {
+				/* color: #64CF8D; */
+				background-color: #FFFF11;
+				color: black;
+				text-align: left!important;
+			}
+
+			span.total_descuentos {
+				background-color: #FF3333;
+				color: black;
+			}
+
+			span.total_Facturado {
+				background-color: #F781BE;
+				color: black;
+			}
+
+			span.total_diferencia {
+				background-color: #22FF22;
+				color: black;
+			}
+
+			span.sumaTotalesVentas {
+				background-color: #8258FA;
+				color: black;
+			}
+
+			span.saldo_por_cobrar {
+				background-color: #FFFF11;
+				color: black;
+			}
+
+			span.real {
+				-webkit-filter: hue-rotate(270deg);
+			}
+
+			section.sheet table.items{
+				width: 100% !important;
+				margin-left: auto; 
+				margin-right: auto;
+			}
+
+			.label{
+				color:black!important;
+				font-weight:bold!important;
+				padding:3px!important;;
+				border-radius:2px!important;
+				display:inline-block!important;
+				min-width:80px!important;
+			}
+
+			.fn_blue{
+				background-color: #2F74D0
+			}
+			.fn_yellow{
+				background-color: #fde601
+				
+			}
+
+			.fn_green{
+				background-color: #3bc372
+			}
+
+			.fn_red{
+				background-color: #ff6961
+			}
+
+			.fn_orange{
+				background-color: #FFB347
+			}
+
+			.uno{
+				display:none; 
+			}
+
+
+			
+		</style>
+		<script>
+			$(document).ready(function() {
+				$('div.totales').draggable({ containment: "parent" });		
+			});			       
+		</script>
+
+		  
+		
+	</head>
+	<body>
+		<section class="sheet items" id="container-reportes">
+			<!--<input type="button" id="btnExport" value=" Export Table data into Excel " />-->
+			<table class="items reportes">
+				<thead>
+					<tr>
+						<th style="background-color: <!--#4DVAR vColorCorporativoCSS--> !important; width: 30px !important;"></th>
+						<th><div><button style="-webkit-filter: invert(100%);" class="ui-icon ui-icon-folder-open toggle all" title="Contraer todo"></button></div></th>
+						<!--<th style="text-align: left;">Categoria</th>-->
+						<th style="text-align: left;">Código</th>
+						<th style="text-align: left;">Cta. contable</th>
+						<th style="text-align: left; width: 300PX !important;">Servicios <span class="numero_servicios" style="vertical-align:top; font-color: red !important;"></span></th>
+						<th style="text-align: left;">$ Ventas</th>
+						<th style="text-align: left;">$ Compras</th>
+						<th style="text-align: left;">$ Utilidad</th>						
+					</tr>
+				</thead>
+				<tfoot>
+					<tr>  
+				        <th colspan="5"></th>
+				        <th style="text-align: left;"><span>Total Ventas</span></th>
+				        <th style="text-align: left;"><span>Total Compras</span></th>
+				        <th style="text-align: left;"><span>Total Utilidad</span></th>
+			        </tr>
+		           	<tr>  
+			            <th colspan="4"></th>
+			           	<th style="text-align: right;"><span></span></th>
+			           	<th style="text-align: left;"><span class="label fn_yellow">$ <span id="total_ventas">0</span></th>
+			           	<th style="text-align: left;"><span class="label fn_yellow">$ <span id="total_compras">0</span></th>
+			           	<th style="text-align: left;"><span class="label fn_yellow">$ <span id="total_utilidad">0</span></th>
+		           	</tr>
+		           	<tr>  
+			            <th colspan="4"></th>
+			           	<th style="text-align: right;">Descuentos:</th>
+			           	<th style="text-align: left;"><span class="label fn_red">$ <span id="descuento_ventas">0</span></th>
+			           	<th style="text-align: left;"><span class="label fn_red">$ <span id="descuento_compras">0</span></th>
+			           	<th></th>
+		           	<tr class="tr_comision1">  
+			            <th colspan="4"></th>
+			           	<th style="text-align: right;"><span><span id="nombre_comision1"></span>:</span></th>
+			           	<th style="text-align: left;"><span class="label fn_blue">$ <span id="comision1">0</span></th>
+			           	<th colspan="2"></th>
+		           	</tr>
+		           	<tr class="tr_comision2">  
+			            <th colspan="4"></th>
+			           	<th style="text-align: right;"><span><span id="nombre_comision2"></span>:</span></th>
+			           	<th style="text-align: left;"><span class="label fn_blue">$ <span id="comision2">0</span></th>
+			           	<th colspan="2"></th>
+			           	<th></th>
+		           	</tr>
+		           	<tr class="tr_comision3">  
+			            <th colspan="4"></th>
+			           	<th style="text-align: right;"><span><span id="nombre_comision3"></span>:</span></th>
+			           	<th style="text-align: left;"><span class="label fn_blue">$ <span id="comision3">0</span></th>
+			           	<th colspan="2"></th>
+		           	</tr>
+		           	<tr class="tr_comision4">  
+			            <th colspan="4"></th>
+			           	<th style="text-align: right;"><span><span id="nombre_comision4"></span>:</span></th>
+			           	<th style="text-align: left;"><span class="label fn_blue">$ <span id="comision4">0</span></th>
+			           	<th colspan="2"></th>
+		           	</tr>
+		           	<tr class="tr_comision5">  
+			            <th colspan="4"></th>
+			           	<th style="text-align: right;"><span><span id="nombre_comision5"></span>:</span></th>
+			           	<th style="text-align: left;"><span class="label fn_blue">$ <span id="comision5">0</span></th>
+			           	<th colspan="2"></th>
+		           	</tr>
+		           	<tr>  
+			            <th colspan="4"></th>
+			           	<th style="text-align: right;"><span>Ajustes:</span></th>
+			           	<th style="text-align: left;"><span class="label fn_orange">$ <span id="diferencia_ventas">0</span></th>
+			           	<th colspan="2"></th>
+		           	</tr>
+		           	<tr>  
+			            <th colspan="4"></th>
+			           	<th style="text-align: right;"><span>Montos Totales:</span></th>
+			           	<th style="text-align: left;"><span class="label fn_green">$ <span id="sumaTotalesVentas">0</span></th>
+			           	<th style="text-align: left;"><span class="label fn_green">$ <span id="sumaTotalesCompras">0</span></th>
+			           	<th style="text-align: left;"><span class="label fn_green">$ <span id="sumaTotalesUtilidad">0</span></th>
+		           	</tr>			          
+				</tfoot>
+				
+				<tbody></tbody>		
+			</table>					
+		</section>			
+	</body>
+</html>
+

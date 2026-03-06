@@ -1,0 +1,282 @@
+
+/* POPUP */
+
+/* Define tamaño de la ventana - detalle items */
+#main-container .detalle-items{}
+
+/* Define tamaño de la ventana - contactos */
+#main-container .perfil-contactos{}
+
+#main-container{
+	padding:0px;
+}
+#main-container h1{
+	font-weight:bold;
+	font-size:15px;
+	margin:10px;
+	text-transform:uppercase;
+	/*text-decoration: underline;*/
+}
+#main-container nav {
+	padding:5px;
+}
+#main-container nav a{
+	font-size:13px;
+	color:#819FF7;
+}
+#main-container fieldset{
+	margin:10px;
+	padding:3px;
+}
+#main-container fieldset legend{
+	font-weight:bold;
+	font-size:13px;
+}
+#main-container fieldset article{
+	/* border-bottom:1px solid #F2F2F2;*/
+}
+#main-container fieldset article div{	
+	margin:5px;
+}
+#main-container fieldset article div label{	
+	display:inline-block;
+	/*color:gray;*/
+	color:black;
+	font-weight:bold;
+	text-align:right;
+	vertical-align:middle;
+	width:100px;
+}
+#main-container fieldset article div .label-textarea{	
+	display:inline-block;
+	color:gray;
+	font-weight:bold;
+	text-align:right;
+	vertical-align:top;
+	width:100px;
+}
+#main-container fieldset article div span{	
+	vertical-align:middle;
+	color:#BDBDBD;
+}
+#main-container fieldset article div input[type="checkbox"]{	
+	vertical-align:middle;
+	color:#BDBDBD;
+	width:20px!important;
+}
+#main-container fieldset article div input{
+	font-size:11px;
+	margin-left:5px;
+	text-transform:normal;
+	padding:2px;
+	vertical-align:middle;
+	width:300px!important;
+}
+#main-container fieldset article div textarea[name="item[][observacion]"]{
+	font-size:11px;
+	margin-left:5px;
+	height:150px;
+	text-transform:normal;
+	padding:2px;
+	vertical-align:middle;
+	width:400px!important;
+}
+#main-container fieldset article div textarea[name="item[][comentario]"]{
+	font-size:11px;
+	margin-left:5px;
+	height:80px;
+	text-transform:normal;
+	padding:2px;
+	vertical-align:middle;
+	width:400px!important;
+}
+#main-container fieldset article div .textarea-big{
+	font-size:11px;
+	margin-left:5px;
+	height:200px;
+	text-transform:normal;
+	padding:2px;
+	vertical-align:middle;
+	width:650px!important;
+}
+#main-container .editable input[type="text"]{
+	border:1px solid transparent;
+	/* Comentado: entra en conflicto con diseño de campos de texto cotización (jguitard) */
+	/* padding:3px!important; */
+	width:120px;	
+}
+
+/* Info header oc */
+#main-container .info-header{
+	min-height:50px;
+	padding:5px;
+	position:relative;
+}
+	#main-container .info-header > article{
+		display:block;
+		margin-top:5px;
+	}
+	#main-container .info-header > article.derecho{
+		position:absolute;		
+		top:0px;	
+		right:10px;
+		text-align:right;
+	}			
+		#main-container .info-header > .derecho > h4{	
+			font-weight:bold;
+			font-size:15px;		
+		}
+		#main-container .info-header  > .derecho > h3{		
+			font-weight:bold;
+			margin-top:3px;
+			font-size:12px;	
+		}
+		#main-container .info-header  > .derecho > h2{		
+			font-weight:bold;
+			margin-top:10px;
+			font-size:15px;
+			/*font-style:italic;*/
+		}
+	#main-container .info-header > article > div{		
+		display:inline-block!important;
+		font-size:12px;
+		margin-right:10px;
+	}
+	#main-container .info-header > article > div.cerrado-compras{		
+		color:red;
+		font-size: 10px;
+		font-weight:bold;
+	}
+	#main-container .info-header > article > div.validar-compras{font-size: 12px;font-weight:bold}
+		#main-container .info-header > article > div.validar-compras .validado{color:green}
+		#main-container .info-header > article > div.validar-compras .novalidado{color:red}
+
+	#main-container .info-header > article > div > label{	
+		color:black;
+		font-weight:bold;
+		text-align:right;		
+	}
+	#main-container .info-header > article > div > label,
+	#main-container .info-header > article > div > span{		
+		vertical-align:middle;	
+	}
+
+/* Deja todos los checkbox del detalle en un atamaño chico*/
+
+
+.TITULO-neg{
+	background-color:rgb(240,240,241)!important;
+}
+
+.TITULO-neg td{
+	font-weight:bold;
+}
+
+.ITEM-neg, .white-fn{	
+	background-color:white!important;
+}
+
+.fn-blanco{background-color:white!important;}
+
+.verde{
+	color:green;
+	font-weight:bold;
+}
+.rojo{
+	color:red;
+	font-weight:bold;
+}
+
+.left{text-align:left}
+.right{text-align:right}
+.center{text-align:center}
+
+.middle{vertical-align:bottom}
+
+.ventas-back{background-color:#2E64FE;color:white}
+.compras-back{background-color:#01DF3A;color:white}
+.uti-pres-back{background-color:#01DF01;color:white}
+.gasto-real-back{background-color:#FF4000;color:white}
+
+.incrementa-dscto{
+	width:50px!important;	
+}
+
+/* items negocio 
+#dialog-profile-negocio > .items > tbody > tr > td > input[type="text"]{
+	text-decoration:none!important;
+	color:red!important;
+}*/
+
+
+/*.editable textarea{
+	width:100px;	
+}*/
+
+
+/* contactos modificado el 30-10-14 */
+#main-container.form-contact input{
+	text-transform: uppercase;
+  	border-bottom: 1px solid lightgray!important;
+}
+#main-container.form-contact fieldset{
+  	background:white!important;
+}
+#main-container.form-contact select{
+  border:1px solid lightgray!important;
+  padding:10px!important;
+  min-width:100px!important;
+}
+#main-container.form-contact .inline{    
+  display:inline-block;
+  vertical-align:top;           
+  /* width:calc(50% - 5px); */
+  width:calc(50% - 5px);
+}
+#main-container.form-contact .inline input{    
+  display:inline-block;
+  vertical-align:top;
+  width:220px!important;
+}
+#main-container.form-contact textarea{
+	text-transform: uppercase;             
+  	height:40px!important;          
+}
+#main-container.form-contact ul.tags{                    
+  position: absolute;
+  top:40px;
+  right:10px;           
+}
+#main-container.form-contact ul.tags li{
+  color:gray;
+  display: inline-block;
+  font-weight:bold;
+  font-size:10px;
+  text-transform:uppercase;
+  margin:5px;           
+}
+#main-container.form-contact ul.tags li:hover{
+  cursor:pointer;
+  text-decoration: line-through;      
+}       
+#main-container.form-contact .venta{
+  color:#59955C; 
+}
+#main-container.form-contact .compra{
+  color:#FF4848; 
+}
+#main-container.form-contact ul.activity{
+  padding:2px;
+}
+#main-container.form-contact ul.activity li{
+  margin-left:10px;
+  list-style-type:square;
+}
+#main-container.form-contact input[type="checkbox"]{
+ 	width: 25px!important;
+	height: 25px!important;
+}  
+
+
+
+

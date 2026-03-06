@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="/out/style.css"/>
+    <title>REPORTES UNABASE</title>
+        <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+-->
+     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/out/report.js"></script>
+    <style>
+       /* p{text-align:left;display:block!important; margin: 30px 0 0 40px;}
+        label{font-weight:bold;font-size:12px}   */
+        .bg-reporte{
+            background-color: grey;
+            color: white;
+        }    
+    </style>
+</head>
+<body>
+<div class="contenedor" align="center">
+ <div class="cuadro2">
+   <div>
+        <h4><!--#4DVAR v_Tit_Informe--></h4>
+        <p><!--#4DVAR String(aReporteDesc)--></p>
+    </div>
+    <p><img src="<!--#4DVAR vUrlImagenLogo-->" width="<!--#4DVAR vAnchoPicture-->" height="<!--#4DVAR vAltoPicture-->" border="0"/></p>
+    <div class="row">
+
+
+    <table class="totaleshead">
+                <tr>
+                    <td width="85%" class="title">TOTAL:</td>
+                    <td width="15%" class="text"><!--#4DVAR String(V_RFTotal;"$ ###.###.###.##0")--></td>  
+                </tr>
+    </table>
+
+    <div class="totalreg">Total Rendiciones: <!--#4DVAR String(v_TotReg;"###.###.###.##0")--></div>
+    <table class="table table-responsive table-bordered">
+    <thead>
+      <tr>
+        <td class="center-c">Numero</td>
+        <td class="center-c">Fecha</td>
+        <td class="center-c">D&iacute;as de Atraso</td>
+        <td class="center-c">Raz&oacute;n Social</td>
+        <td class="center-c">Responsable</td>
+        <td class="center-c">Saldo</td>
+        <td class="center-c">Estado</td>
+       </tr>
+    </thead>
+     	 <!--#4DLOOP aFolioRF_-->          
+    <tbody>
+        <tr class="count">
+            <td class="orden-alfa"><!--#4DVAR aFolioRF_{aFolioRF_}--></td>
+            <td class="center"><!--#4DVAR aFechaRF_{aFolioRF_}--></td>
+            <td class="center"><!--#4DVAR string(aVencidaRF_{aFolioRF_})--></td>
+            <td class="items"><!--#4DVAR aClienteRF_{aFolioRF_}--></td>
+            <td class="items"><!--#4DVAR aNombreResponsable{aFolioRF_}--></td>
+            <td class="nro-items-subtotal"><!--#4DVAR  string(aSaldoRF_{aFolioRF_};"$ ###.###.###.##0")--></td>
+            <td class="items"><!--#4DVAR aEstadoCierreRF_{aFolioRF_}--></td> 
+        </tr>
+    </tbody>        
+        <!--#4DENDLOOP--> 
+    </table>
+
+    <div class="contenedor-footer">
+        <span class="datos-empresa-izq">
+        <!--#4DVAR nom_empresa--> / <!--#4DVAR dir_empresa--> / <a target="_blank" href="<!--#4DVAR sitio_empresa-->"><!--#4DVAR sitio_empresa--></a></span><em></em>
+    <span class="datos-empresa-der">Reporte enviado por <a href="http://www.unabase.cl" target="_blank" >UnaBase.cl</a></span>
+    </div>
+</div>
+</div>
+</body>
+</html>

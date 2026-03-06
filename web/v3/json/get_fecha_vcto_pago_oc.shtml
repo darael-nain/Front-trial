@@ -1,0 +1,4 @@
+{
+	"fecha":"<!--#4DHTML vFechaVctoPago-->",
+	"fecha_old":"<!--#4DHTML Substring(String(vFechaVctoPago;ISO Date);1;10)-->"
+}

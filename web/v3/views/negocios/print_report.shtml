@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--#4DSCRIPT/_V3_proxy_getCotizacionContent-->
+    <meta charset="utf-8"/>
+    <title>NRO <!--#4DTEXT vid_negocio--></title>
+    <style>
+      @media print {
+
+        html {
+          font-family: "Arial", sans-serif;
+        }
+
+        .capitalize {
+          text-transform: capitalize;
+        }
+
+        header h1 {
+          font-size: 14pt;
+        }
+
+        header h2 {
+          font-size: 13pt;
+        }
+
+        section.large {
+          page-break-before: always !important;
+        }
+
+        section h1 {
+          font-size: 12pt;
+        }
+
+
+        h1 {
+          page-break-after: avoid;
+        }
+
+        table {
+          border-collapse: collapse;
+          width: 100%;
+          margin-bottom: 10pt;
+          page-break-before: avoid;
+          page-break-inside: auto !important;
+          font-size: 9pt;
+        }
+
+        table, th, td {
+          border: 1pt solid black;
+        }
+
+        th, td {
+          padding: 3pt;
+        }
+
+        tbody th {
+          text-align: left;
+        }
+
+        tbody tr {
+          page-break-inside: avoid;
+          page-break-before: auto !important;
+          page-break-after: auto !important;
+          vertical-align: top;
+        }
+
+        tr.nullified {
+          text-decoration: line-through;
+        }
+
+        .numeric {
+          text-align: right;
+        }
+
+        .numeric, .status, .date {
+          white-space: no-wrap;
+          word-break: keep-all;
+        }
+
+        .status, .date, .info {
+          text-align: center;
+        }
+
+        .info {
+          font-style: italic;
+        }
+
+        thead > * {
+          background-color: black;
+          color: white;
+        }
+      }
+    </style>
+    <script>
+      var currency = {
+  			code: '<!--#4DVAR _V3_defaultCurrencyCode-->',
+  			name: '<!--#4DVAR _V3_escapeString(_V3_defaultCurrencyName)-->',
+  			symbol: '<!--#4DHTML _V3_escapeString(_V3_defaultCurrencySymbol)-->',
+  			is_right: <!--#4DIF _V3_defaultCurrencyRight-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+  			decimals: <!--#4DHTML String(_V3_defaultCurrencyDecimals;"&xml")-->,
+  			thousands_sep: '<!--#4DTEXT _V3_defaultCurrencyThousandSep-->',
+  			decimals_sep: '<!--#4DTEXT _V3_defaultCurrencyDecimalSep-->'
+  		};
+    </script>
+    <script src="/v3/script/jquery/jquery.js"></script>
+    <script src="/v3/script/jquery/plugins/jquery-number/jquery.number.js"></script>
+    <script>
+      $(document).ready(function() {
+        
+        $.ajax({
+          url: '/4DACTION/_V3_getOcsByNegocio',
+          data: {
+            id: <!--#4DVAR vid_nv-->,
+            sid: '<!--#4DVAR sid-->'
+          },
+          async: false,
+          dataType: 'json',
+          success: function(data) {
+            var htmlData = '';
+            var total_costoempresa = 0, total_justificado = 0, total_pagado = 0;
+            for (var i = 0, len = data.rows.length; i < len; i++) {
+              var row = data.rows[i];
+              htmlData+= '\
+                  <tr' + (row.estado.toLowerCase() === 'anulada'? ' class="nullified"' : '' ) + '> \
+                      <td class="numeric">' + row.folio + '</td>              \
+                      <td class="date">' + row.fecha + '</td>                 \
+                      <td class="capitalize">' + row.referencia.toLowerCase() + '</td>                         \
+                      <td class="capitalize">' + row.proveedor.toLowerCase() + '</td>                          \
+                      <td class="numeric">' + currency.symbol + ' ' + $.number(row.costoempresa, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</td>  \
+                      <td class="status">' + row.doc_abbr + '</td>            \
+                      <td class="numeric">' + currency.symbol + ' ' + $.number(row.justificado, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</td>   \
+                      <td class="numeric">                                    \
+                      ' + (row.dtc? currency.symbol + ' ' + $.number(row.dtc.pagado_raw, currency.decimals, currency.decimals_sep, currency.thousands_sep) : 'N/A') + '               \
+                      </td>                                                   \
+                      <td class="numeric">                                    \
+                      ' + (row.dtc? row.dtc.folio : 'N/A') + '                \
+                      </td>                                                   \
+                      <td class="date">                                       \
+                      ' + (row.dtc? (row.dtc.folio != 'Varios'? row.dtc.fecha : 'Varios') : 'N/A') + '                \
+                      </td>                                                   \
+                      <td class="status capitalize">' + row.estado.toLowerCase() + '</td>              \
+                  </tr>';
+              if (row.estado.toLowerCase() !== 'anulada') {
+                total_costoempresa+= row.costoempresa;
+                total_justificado+= row.justificado;
+                total_pagado+= row.dtc? row.dtc.pagado_raw : 0;
+              }
+            }
+
+            if (len > 0) {
+              $('#oc').find('tfoot').html('\
+                <tr>                                                            \
+                  <th colspan="4"></th>                                         \
+                  <th class="numeric">' + currency.symbol + ' ' + $.number(total_costoempresa, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</th>                 \
+                  <th></th>                                                     \
+                  <th class="numeric">' + currency.symbol + ' ' + $.number(total_justificado, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</th>                  \
+                  <th class="numeric">' + currency.symbol + ' ' + $.number(total_pagado, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</th>                       \
+                  <th colspan="3"></th>                                         \
+                </tr>                                                           \
+              ');
+              $('#oc').find('tbody').html(htmlData);
+            }
+          }
+        });
+
+        $.ajax({
+          url: '/4DACTION/_V3_getFxrByNegocio',
+          data: {
+            id: <!--#4DVAR vid_nv-->,
+            sid: '<!--#4DVAR sid-->'
+          },
+          async: false,
+          dataType: 'json',
+          success: function(data) {
+            var htmlData = '';
+            var total_costoempresa = 0, total_solicitado = 0, total_rendido = 0, total_pagado = 0, total_deposito = 0;
+            for (var i = 0, len = data.rows.length; i < len; i++) {
+              var row = data.rows[i];
+              htmlData+= '\
+                  <tr' + (row.estado.toLowerCase() === 'anulada'? ' class="nullified"' : '' ) + '> \
+                      <td class="numeric">' + row.folio + '</td>              \
+                      <td class="date">' + row.fecha + '</td>                 \
+                      <td class="capitalize">' + row.referencia.toLowerCase() + '</td>                         \
+                      <td class="capitalize">' + row.proveedor.toLowerCase() + '</td>                          \
+                      <td class="numeric">' + row.costoempresa + '</td>       \
+                      <td class="numeric">' + row.solicitado + '</td>          \
+                      <td class="numeric">' + row.rendido + '</td>            \
+                      <td class="numeric">' + row.pagado + '</td>             \
+                      <td class="numeric">' + row.deposito + '</td>           \
+                      <td class="status capitalize">' + row.estado.toLowerCase() + '</td>              \
+                  </tr>';
+              if (row.estado.toLowerCase() !== 'anulada') {
+                total_costoempresa+= row.costoempresa_;
+                total_solicitado+= row.solicitado_;
+                total_rendido+= row.rendido_;
+                total_pagado+= row.pagado_;
+                total_deposito+= row.deposito_;
+              }
+            }
+            if (len > 0) {
+              $('#fxr').find('tfoot').html('\
+                <tr>                                                            \
+                  <th colspan="4"></th>                                         \
+                  <th class="numeric">' + currency.symbol + ' ' + $.number(total_costoempresa, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</th>                 \
+                  <th class="numeric">' + currency.symbol + ' ' + $.number(total_solicitado, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</th>                  \
+                  <th class="numeric">' + currency.symbol + ' ' + $.number(total_rendido, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</th>                       \
+                  <th class="numeric">' + currency.symbol + ' ' + $.number(total_pagado, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</th>                       \
+                  <th class="numeric">' + currency.symbol + ' ' + $.number(total_deposito, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</th>                       \
+                  <th></th>                                         \
+                </tr>                                                           \
+              ');
+              $('#fxr').find('tbody').html(htmlData);
+            }
+          }
+        });
+
+        $.ajax({
+          url: '/4DACTION/_V3_getFacturasByNegocio',
+          data: {
+            id: <!--#4DVAR vid_nv-->
+          },
+          dataType: 'json',
+          success: function(data) {
+            var htmlData = '';
+            var total_neto = 0, total_exento, total_iva = 0, total_factura = 0, total_cobrado = 0;
+            for (var i = 0, len = data.rows.length; i < len; i++) {
+              var row = data.rows[i];
+              htmlData+= '\
+                  <tr' + (row.estado.toLowerCase() === 'anulada'? ' class="nullified"' : '' ) + '> \
+                      <td class="numeric">' + row.folio + '</td>              \
+                      <td class="date">' + row.fechaEmision + '</td>          \
+                      <td class="capitalize">' + row.cliente.toLowerCase() + '</td>                            \
+                      <td class="numeric">' + row.totalNeto + '</td>          \
+                      <td class="numeric">' + row.totalExento + '</td>          \
+                      <td class="numeric">' + row.iva + '</td>                \
+                      <td class="numeric">' + row.totalFactura + '</td>       \
+                      <td class="numeric">' + row.cobrado + '</td>             \
+                      <td class="status capitalize">' + row.estado.toLowerCase() + '</td>              \
+                  </tr>';
+              if (row.estado.toLowerCase() !== 'anulada') {
+                total_neto+= row.totalNeto_raw;
+                total_neto+= row.totalExento_raw;
+                total_iva+= row.iva_raw;
+                total_factura+= row.totalFactura_raw;
+                total_cobrado+= row.cobrado_raw;
+              }
+            }
+            if (len > 0) {
+              $('#dtv').find('tfoot').html('\
+                <tr>                                                            \
+                  <th colspan="3"></th>                                         \
+                  <th class="numeric">' + currency.symbol + ' ' + $.number(total_neto, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</th>                 \
+                  <th class="numeric">' + currency.symbol + ' ' + $.number(total_exento, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</th>                 \
+                  <th class="numeric">' + currency.symbol + ' ' + $.number(total_iva, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</th>                  \
+                  <th class="numeric">' + currency.symbol + ' ' + $.number(total_factura, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</th>                       \
+                  <th class="numeric">' + currency.symbol + ' ' + $.number(total_cobrado, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</th>                       \
+                  <th></th>                                         \
+                </tr>                                                           \
+              ');
+              $('#dtv').find('tbody').html(htmlData);
+            }
+          }
+        });
+
+      });
+    </script>
+</head>
+
+<body>
+  <header>
+      <h1>Resumen general &quot;<!--#4DVAR vreferencia-->&quot;</h1>
+      <h2>ID: <!--#4DVAR vid_negocio--><!--#4DIF param4#""--> / <!--#4DVAR param4--><!--#4DENDIF--></h2>
+      <div style="text-align: right;">Generado el <!--#4DVAR String(Current date(*);3)--> a las <!--#4DVAR String(Current time(*);HH MM)--></div>
+  </header>
+  <section>
+      <h1>Información general</h1>
+      <ul>
+          <!--#4DIF v3_cot_cliente_como_agencia-->
+          <li>Cliente: <span class="capitalize"><!--#4DVAR Lowercase(vempresa2;*)--> / <!--#4DVAR Lowercase(vnombrecontacto2;*)--></span></li>
+          <li>Agencia: <span class="capitalize"><!--#4DVAR Lowercase(vempresa;*)--> / <!--#4DVAR Lowercase(vnombrecontacto;*)--></span></li>
+          <!--#4DELSE-->
+          <li>Cliente: <span class="capitalize"><!--#4DVAR Lowercase(vempresa;*)--> / <!--#4DVAR Lowercase(vnombrecontacto;*)--></span></li>
+          <!--#4DENDIF-->
+          <li>Ejecutivo responsable: <span class="capitalize"><!--#4DVAR Lowercase(vDeEmisor;*)--></span></li>
+          <li>Estado de las compras: <!--#4DIF vCerradaCompras-->Cerrado para compras<!--#4DELSE-->Abierto para compras<!--#4DENDIF--></li>
+          <li>Estado cierre de negocio: <!--#4DIF vCerrada-->Cerrado<!--#4DELSE-->Abierto<!--#4DENDIF--></li>
+          <!--#4DIF param1#""--><li><span class="capitalize"><!--#4DVAR Lowercase(etiqueta_param1;*)-->: <!--#4DVAR Lowercase(param1;*)--></span></li><!--#4DENDIF-->
+          <!--#4DIF param2#""--><li><span class="capitalize"><!--#4DVAR Lowercase(etiqueta_param2;*)-->: <!--#4DVAR Lowercase(param2;*)--></span></li><!--#4DENDIF-->
+          <!--#4DIF param3#""--><li><span class="capitalize"><!--#4DVAR Lowercase(etiqueta_param3;*)-->: <!--#4DVAR Lowercase(param3;*)--></span></li><!--#4DENDIF-->
+          <!--#4DIF param4#""--><li><span class="capitalize"><!--#4DVAR Lowercase(etiqueta_param4;*)-->: <!--#4DVAR Lowercase(param4;*)--></span></li><!--#4DENDIF-->
+          <li>OC Cliente: <!--#4DVAR nro_oc_cliente--></li>
+      </ul>
+  </section>
+  <section>
+      <h1>Cronología del proyecto</h1>
+      <ol>
+          <li>Cotización fue creada el <!--#4DVAR vFechaEmi1--> por <span class="capitalize"><!--#4DVAR Lowercase(vCreadoPor;*)--></span>.</li>
+          <li>Fue convertida en negocio el <!--#4DVAR vConvertidoFecha--> por <span class="capitalize"><!--#4DVAR Lowercase(vConvertidoPor;*)--></span>.</li>
+          <!--#4DIF vCerradaCompras-->
+          <li>Se cerraron las compras el <!--#4DVAR vCerradoComprasFecha--> por <span class="capitalize"><!--#4DVAR Lowercase(vCerradoComprasPor;*)--></span>.</li>
+          <!--#4DENDIF-->
+          <!--#4DIF nro_oc_cliente#"Sin OC"-->
+          <li>Se ingresó OC de cliente el <!--#4DVAR vOcclienteFecha--> por <span class="capitalize"><!--#4DVAR Lowercase(vOcclientePor;*)--></span>.</li>
+          <!--#4DENDIF-->
+          <!--#4DIF vCerrada-->
+          <li>Se cerró completamente el negocio el <!--#4DVAR vCerradoFecha--> por <span class="capitalize"><!--#4DVAR Lowercase(vCerradoPor;*)--></span>.</li>
+          <!--#4DENDIF-->
+          <li>Se proyectó gastar <!--#4DVAR gasto_p_valor--> y se terminó gastando <!--#4DVAR gasto_r_valor-->, lo que indicó una eficiencia <!--#4DIF gasto_p_valor_raw < gasto_r_valor_Raw-->en contra<!--#4DELSE-->a favor<!--#4DENDIF--> de un <!--#4DIF vGastoP#0--><!--#4DVAR eficiencia_porcentaje--><!--#4DELSE-->0,00 %<!--#4DENDIF--> <!--#4DIF gasto_p_valor_raw < gasto_r_valor_raw-->pero<!--#4DELSE-->y<!--#4DENDIF--> con una rentabilidad de un <!--#4DIF vNeto#0--><!--#4DVAR utilidad_r_porcentaje--><!--#4DELSE-->0,00%<!--#4DENDIF-->.</li>
+      </ol>
+  </section>
+  <section>
+      <h1>Resumen</h1>
+      <table>
+          <thead>
+              <tr>
+                  <th colspan="2">Presupuesto</th>
+                  <th colspan="2">Real</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                  <th>Venta (100,00%)</th>
+                  <td class="numeric"><!--#4DVAR _V3_formatCurrency(venta_valor)--></td>
+                  <th>Venta (100,00%)</th>
+                  <td class="numeric"><!--#4DVAR _V3_formatCurrency(venta_valor)--></td>
+              </tr>
+              <tr>
+                <!--#4DIF v3_sobrecargos_cinemagica-->
+                  <th>Gasto prespuestado (<!--#4DVAR gp_report_cine_porc_-->)</th>
+                  <td class="numeric"><!--#4DVAR gasto_p_valor--></td>
+                <!--#4DELSE-->
+                  <th>Gasto prespuestado (<!--#4DVAR gp_report_porc_-->)</th>
+                  <td class="numeric"><!--#4DVAR gasto_p_valor--></td>
+                <!--#4DENDIF-->
+                  <th>Gasto actual (<!--#4DVAR gasto_r_porcentaje-->)</th>
+                  <td class="numeric"><!--#4DVAR gasto_r_valor--></td>
+              </tr>
+              <tr>
+                  <!--#4DIF v3_sobrecargos_cinemagica-->
+ 					          <th>Utilidad presupuestada (<!--#4DVAR utilidad_p_porcentaje-->)</th>
+                  	<td class="numeric"><!--#4DVAR ut_nt_cinemagica--></td>
+              	 <!--#4DELSE-->
+              	  	<th>Utilidad presupuestada (<!--#4DVAR utilidad_p_porcentaje-->)</th>
+                  	<td class="numeric"><!--#4DVAR utilidad_p_valor--></td>
+              	 <!--#4DENDIF-->
+                 <th>Por gastar (<!--#4DVAR por_gastar_porcentaje-->)</th>
+                 <td class="numeric"><!--#4DVAR por_gastar_valor--></td>
+              </tr>
+              <tr>
+                  <th></th>
+                  <td></td>
+                  <th>Utilidad final (<!--#4DVAR utilidad_r_porcentaje-->)</th>
+                  <td class="numeric"><!--#4DVAR utilidad_r_valor--></td>
+              </tr>
+              <tr>
+                  <th></th>
+                  <td></td>
+                  <th>Eficiencia (<!--#4DVAR eficiencia_porcentaje-->)</th>
+                  <td class="numeric"><!--#4DVAR eficiencia_valor--></td>
+              </tr>
+          </tbody>
+      </table>
+  </section>
+  <section>
+      <h1>Facturación</h1>
+      <table>
+          <tbody>
+              <tr>
+                  <th>Facturado (<!--#4DVAR facturado_porcentaje-->)</th>
+                  <td class="numeric"><!--#4DVAR facturado_valor--></th>
+                  <th>Cobrado (<!--#4DVAR cobrado_porcentaje-->)</th>
+                  <td class="numeric"><!--#4DVAR cobrado_valor--></th>
+              </tr>
+              <tr>
+                  <th>Por facturar (<!--#4DVAR por_facturar_porcentaje-->)</th>
+                  <td class="numeric"><!--#4DVAR por_facturar_valor--></th>
+                  <th>Por cobrar (<!--#4DVAR por_cobrar_porcentaje-->)</th>
+                  <td class="numeric"><!--#4DVAR por_cobrar_valor--></th>
+              </tr>
+          </tbody>
+      </table>
+  </section>
+  <section>
+      <h1>Gastos</h1>
+      <table>
+          <tbody>
+              <tr>
+                  <th>Gasto real</th>
+                  <td class="numeric"><!--#4DVAR gasto_r_valor--></th>
+                  <th></th>
+                  <td></th>
+              </tr>
+              <tr>
+                  <th>Justificado (<!--#4DVAR justificado_porcentaje-->)</th>
+                  <td class="numeric"><!--#4DVAR justificado_valor--></th>
+                  <th>Pagado (<!--#4DVAR pagado_porcentaje-->)</th>
+                  <td class="numeric"><!--#4DVAR pagado_valor--></th>
+              </tr>
+              <tr>
+                  <th>Por justificar (<!--#4DVAR por_justificar_porcentaje-->)</th>
+                  <td class="numeric"><!--#4DVAR por_justificar_valor--></th>
+                  <th>Por pagar (<!--#4DVAR por_pagar_porcentaje-->)</th>
+                  <td class="numeric"><!--#4DVAR por_pagar_valor--></th>
+              </tr>
+          </tbody>
+      </table>
+      <table>
+          <tbody>
+              <tr>
+                  <th>Cantidad OC</th>
+                  <td class="numeric"><!--#4DVAR cantidad_oc--></th>
+                  <th>Cantidad FXR</th>
+                  <td class="numeric"><!--#4DVAR cantidad_fxr--></th>
+              </tr>
+              <tr>
+                  <th>OC cerradas</th>
+                  <td class="numeric"><!--#4DVAR cantidad_oc_cerrado--></th>
+                  <th>FXR cerrados</th>
+                  <td class="numeric"><!--#4DVAR cantidad_fxr_cerrado--></th>
+              </tr>
+              <tr>
+                  <th>OC pendientes</th>
+                  <td class="numeric"><!--#4DVAR cantidad_oc_pendiente--></th>
+                  <th>FXR pendientes</th>
+                  <td class="numeric"><!--#4DVAR cantidad_fxr_pendiente--></th>
+              </tr>
+          </tbody>
+      </table>
+  </section>
+  <section>
+      <h1>DTC</h1>
+      <table>
+          <thead>
+              <tr>
+                  <th>TIPO</th>
+                  <th>CANT.</th>
+                  <th>TOTAL NETO</th>
+                  <th>IMPUESTO</th>
+              </tr>
+          </thead>
+          <tbody>
+              <!--#4DLOOP dtcs_tipo-->
+              <!--#4DIF dtcs_cantidad{dtcs_tipo}>0-->
+              <tr>
+                  <td class="capitalize"><!--#4DVAR Lowercase(dtcs_tipo{dtcs_tipo};*)--></td>
+                  <td class="numeric"><!--#4DVAR dtcs_cantidad{dtcs_tipo}--></td>
+                  <td class="numeric"><!--#4DVAR _V3_formatCurrency(dtcs_total_neto{dtcs_tipo})--></td>
+                  <td class="numeric"><span class="capitalize"><!--#4DVAR Lowercase(dtcs_tipo_impuesto{dtcs_tipo};*)--></span> <!--#4DVAR _V3_formatCurrency(dtcs_total_impuesto{dtcs_Tipo})--></td>
+              </tr>
+              <!--#4DENDIF-->
+              <!--#4DENDLOOP-->
+          </tbody>
+      </table>
+  </section>
+  <section class="large">
+      <h1>Detalle Gastos / Órdenes de Compra</h1>
+      <table id="oc">
+          <thead>
+              <tr>
+                  <th>Nº OC</th>
+                  <th width="10%">FECHA</th>
+                  <th>REF.</th>
+                  <th>PROVEEDOR</th>
+                  <th width="10%">TOTAL</th>
+                  <th>DOC.</th>
+                  <th width="10%">JUST.</th>
+                  <th width="10%">PAGADO</th>
+                  <th>Nº DOC.</th>
+                  <th width="10%">FECHA DOC.</th>
+                  <th>ESTADO OC.</th>
+              </tr>
+          </thead>
+          <tfoot></tfoot>
+          <tbody>
+              <tr>
+                  <td class="info" colspan="11">No se encontraron órdenes de compra.</td>
+              </tr>
+          </tbody>
+      </table>
+  </section>
+  <section class="large">
+      <h1>Detalle Gastos / Rendiciones</h1>
+      <table id="fxr">
+          <thead>
+              <tr>
+                  <th>Nº FXR</th>
+                  <th width="10%">FECHA</th>
+                  <th>REF.</th>
+                  <th>PROVEEDOR</th>
+                  <th width="10%">TOTAL</th>
+                  <th width="10%">SOLICITADO</th>
+                  <th width="10%">RENDIDO</th>
+                  <th width="10%">PAGOS</th>
+                  <th width="10%">DEPÓSITO</th>
+                  <th>ESTADO</th>
+              </tr>
+          </thead>
+          <tfoot></tfoot>
+          <tbody>
+              <tr>
+                  <td class="info" colspan="10">No se encontraron rendiciones.</td>
+              </tr>
+          </tbody>
+      </table>
+  </section>
+  <section class="large">
+      <h1>Facturas de venta</h1>
+      <table id="dtv">
+          <thead>
+              <tr>
+                  <th>Nº</th>
+                  <th width="10%">FECHA</th>
+                  <th>Cliente</th>
+                  <th width="10%">NETO</th>
+                  <th width="10%">EXENTO</th>
+                  <th width="10%"><!--#4DTEXT _V3_IVAName--></th>
+                  <th width="10%">TOTAL</th>
+                  <th width="10%">PAGADO</th>
+                  <th>ESTADO</th>
+              </tr>
+          </thead>
+          <tfoot></tfoot>
+          <tbody>
+              <tr>
+                  <td class="info" colspan="9">No se encontraron facturas de venta.</td>
+              </tr>
+          </tbody>
+      </table>
+  </section>
+</body>
+</html>

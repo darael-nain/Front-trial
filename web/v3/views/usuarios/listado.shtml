@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Compras</title>
+		<meta charset="utf-8">
+		<script>
+
+			$(document).ready(function() {
+				document.title = nombreEmpresa + ' / Usuarios';
+				unaBase.toolbox.init();
+
+				// Inicializamos un buscador
+				var params = {
+					searchOff: true,
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/_V3_getUsuario2' },
+					entity: 'Usuarios',
+					callback : function(){
+						if(!access._613){
+							$('li[data-name=restart_all_pass]').hide();							
+						}
+						if(!access._613){
+							$('li[data-name=request_pass_change]').hide();							
+						}
+					},
+					row: {
+						html: function(i, rows) {
+							var chk = "";
+							if(rows[i].estado == true){
+								chk='<input name="usuario[check]" class="check" type="checkbox" disabled checked>';
+							}else{
+								chk='<input name="usuario[check]" class="check" type="checkbox" disabled>';
+							}
+							// return '<tr data-id="' + rows[i].login + '">' +
+							// 	'<td>' + rows[i].login + '</td>' +
+							// 	'<td class="left">' + rows[i].nombres +' '+ rows[i].ape_paterno +'</td>' +
+							// 	// '<td>' + rows[i].ape_paterno + '</td>' +
+							// 	'<td>' + rows[i].cargo + '</td>' +
+							// 	'<td>' + rows[i].telefono + '</td>' +
+							// 	'<td>' + rows[i].email + '</td>' +
+							// 	'<td>' + rows[i].tipo_ultima_conex + '</td>' +
+							// 	'<td>' + chk + '</td>' +
+
+							// '</tr>'
+							return `<tr data-id="${rows[i].login}"><td> ${rows[i].login} </td><td class="left">${rows[i].nombres} ${rows[i].ape_paterno}</td>
+							<td>${rows[i].cargo}</td>
+							<td>${rows[i].telefono}</td>
+							<td>${rows[i].email}</td>
+							<td>${rows[i].tipo_ultima_conex}</td>
+							<td><input name="usuario[blockEmail]" class="check" type="checkbox" disabled ${rows[i].blockEmail ? 'checked' : ''}></td>
+							<td>${chk}</td>
+							`
+						}
+					},
+					detail: {
+						url: function(id) { return '/v3/views/usuarios/content.shtml?id=' + id},
+						iframe: false
+					},
+					// Inflexiones
+					inflection: {
+						singular: 'gasto',
+						plural: 'gastos',
+						none: 'ningún'
+					},
+					filters: [
+						{ name: 'estado', type: 'checkbox', caption: 'Estado del usuario', options: [
+							{ caption: 'Activo', name: 'estado_activo', value: true },
+							{ caption: 'Inactivo', name: 'estado_inactivo', value: false }
+						] }
+					]
+				};
+
+				unaBase.toolbox.search.init(params);
+				unaBase.toolbox.menu.init({
+					entity: 'Usuarios',
+					buttons: ['searchOff','new', 'export_list','restart_all_pass','request_pass_change', 'usersCount','export_matriz_permiso', 'reset_all_active_users_password'],
+					buttonAccess: {
+						'usersCount': '_650'
+					}
+				});
+
+				// disabled buttons
+				//$('#menu ul li[data-name="create_usuarios"]').hide();
+
+
+				/*setTimeout(function(){
+					$('.especial').fixedHeaderTable({ footer: false, cloneHeadToFoot: false, fixedColumn: false });
+				}, 100);*/
+
+			});
+
+				var resetAllUsersPassword = async function () {
+					try {
+						const resp = await $.ajax({
+							url: "/4DACTION/_RESET_allActiveUsersPasswords",
+							method: "GET",
+							dataType: "json",
+						});
+						
+						if (!resp?.success) {
+							console.error("Reset falló:", resp);
+							return;
+						}
+
+						const list = Array.isArray(resp.data) ? resp.data : [];
+
+						list.forEach((u) => {
+							// Validación mínima
+							
+							if (!u?.email || !u?.password) return;
+							enviarCorreoResetPassword({
+								correo: u.email, 
+								passwordTemp: u.password,
+								nombres: u.nombres,
+								apellido: u.apellido,
+								nombreEmpresa: u.nombreEmpresa});
+						});
+
+					} catch (err) {
+						console.error("Error en resetAllUsersPassword:", err);
+					}
+				}
+
+				function enviarCorreoResetPassword({ correo, nombres, apellido, nombreEmpresa, passwordTemp, }) {
+
+					const html = `
+                <html>
+                  <head>
+                    <meta charset="utf-8" />
+                    <style>
+                      body { font-family: Arial, Helvetica, sans-serif; color:#111; padding:20px; }
+                      .card { max-width:600px; margin:auto; border-radius:10px; border:1px solid #e5e7eb; padding:20px; }
+                      h2 { margin-top:0; color:#1f2937; }
+                      p { line-height: 1.45; }
+                      .info { margin: 14px 0; }
+                      .label { color:#6b7280; font-size:12px; }
+                      .value { font-size:12px; font-weight:600; }
+                      .hr { border-top:1px solid #e5e7eb; margin:16px 0; }
+                      .footer { font-size:12px; color:#6b7280; margin-top:20px; }
+                      .pwd { font-size:14px; font-weight:700; letter-spacing: .3px; }
+                    </style>
+                  </head>
+
+                  <body>
+                    <div class="card">
+                      <h2>Reinicio de contraseña</h2>
+
+                      <p>
+                        Estimado(a) ${nombres} ${apellido}.
+                      </p>
+
+                      <p>
+                        Su contraseña ha sido reiniciada temporalmente a:
+                        <span class="pwd">${passwordTemp}</span>
+                      </p>
+
+                      <p>
+                        Al ingresar al sistema debe cambiar esta contraseña de inmediato.
+                      </p>
+
+                      <div class="hr"></div>
+
+                      <div class="info">
+                        <div class="label">Correo:</div>
+                        <div class="value">${correo || "Sin correo"}</div>
+                      </div>
+
+                      <p class="footer">
+                        Este mensaje fue generado automáticamente por:<br/>
+                        UNABASE - SISTEMA DE GESTIÓN ${String(nombreEmpresa || "").toUpperCase()}<br/>
+                        Por ser de carácter informativo, le solicitamos no responder el presente mail.<br/>
+                        Host: ${window.location.origin}
+                      </p>
+                    </div>
+                  </body>
+                </html>
+              `;
+
+
+
+					const toReal = (correo || "").trim();
+					if (!toReal) {
+						console.warn("[EMAIL] No se envió: correo destinatario vacío.");
+						return $.Deferred().resolve({ success: false, message: "Destinatario vacío" }).promise();
+					}
+
+					// si no te pasan hostname, usa el actual
+					const host = (window.location.origin || "").trim();
+					if (!host) {
+						console.warn("[EMAIL] No se envió: hostname vacío.");
+						return $.Deferred().resolve({ success: false, message: "Hostname vacío" }).promise();
+					}
+
+					const payload = {
+						template: "bill_facturation",
+						to: toReal,
+						subject: `REINICIO DE CONTRASEÑA`,
+						msg: html,
+						hostname: host,
+						username: "programador_masivo"
+					};
+
+					return $.ajax({
+						url: `https://${window.location.host}/node/generic-email-interno`,
+						method: "POST",
+						contentType: "application/json; charset=utf-8",
+						dataType: "json",
+						data: JSON.stringify(payload)
+					})
+						.done(function (resp) {
+							console.log("[EMAIL] Enviado OK:", resp);
+							console.log(`[EMAIL] Notificación enviada a ${toReal}`);
+						})
+						.fail(function (jqXHR) {
+							const msg =
+								(jqXHR && jqXHR.responseJSON && (jqXHR.responseJSON.message || jqXHR.responseJSON.error)) ||
+								(jqXHR && jqXHR.responseText) ||
+								"Error enviando correo";
+							console.error("[EMAIL] FAIL:", msg);
+						});
+				}
+
+		</script>
+
+
+	</head>
+	<body style="min-width: 900px !important;">
+		<!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->
+		<table style="min-width: 900px !important; width: 100% !important;" data-tipogasto="OC" class="results especial" data-sortable>
+			<thead>
+				<tr>
+					<th>Usuario</th>
+					<th class="left">Nombres</th>
+					<!--<th>Apellidos</th>-->
+					<th>Cargo</th>
+					<th>Teléfono</th>
+					<th>Email</th>
+					<th>Ultima Conexión</th>
+					<th>bloqueo de email</th>
+					<th>Estado</th>
+
+				</tr>
+			</thead>
+
+			<tbody></tbody>
+		</table>
+	</body>
+</html>

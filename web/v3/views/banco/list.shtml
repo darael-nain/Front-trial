@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_serverInfo-->
+<html>
+	<head>
+		<title>Movimientos bancarios</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="/v3/views/compras/lista.css?<!--#4DTEXT _V3_version-->">
+		<script>
+			let saldoInicial = 0;
+			let idctacte = 0;
+
+			unaBase.ui.block();
+			$(document).ready(function() {
+
+				unaBase.toolbox.init();
+				var params = {
+					url: function() { return '/4DACTION/_V3_getMovimientosBanco' },
+					entity: 'MovimientosBanco',
+					callback : function(data){
+
+						// Fijar header y footer
+						$('#viewport .fht-table-init').fixedHeaderTable('destroy');
+						//$('#viewport table.fixed').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false });
+						// --ini-- corrección para ordenar
+						$('#viewport table.fixed').fixedHeaderTable({
+							footer: true,
+							cloneHeadToFoot: false,
+							fixedColumn: false,
+							create: function() {
+								$('[data-sort-by]').removeClass('sort-order-desc').removeClass('sort-order-asc').removeData('sort-order');
+								$('[data-sort-by="' + data.sort.by + '"]').addClass('sort-order-' + data.sort.order).data('sort-order', data.sort.order);
+							}
+						});
+						// --fin-- corrección para ordenar
+
+
+						// carga info resumen
+
+						saldoInicial = data.cuentas.saldo_inicial;
+						idctacte = data.cuentas.id;
+						if (data.cuentas.id > 0) {
+							$('.ub-edit-saldos').show();
+						}else{
+							$('.ub-edit-saldos').hide();
+						}
+
+						$('.saldo-inicial > span').text(currency.symbol + " " + $.number(data.cuentas.saldo_inicial, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+						$('.total-abonos > span').text(currency.symbol + " " + $.number(data.cuentas.total_abonos, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+						$('.total-cargos > span').text(currency.symbol + " " + $.number(data.cuentas.total_cargos, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+						$('.saldo-final > span').text(currency.symbol + " " + $.number(data.cuentas.saldo_final, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+						if (data.cuentas.saldo_final < 0) {
+							$('.saldo-final').attr('style', 'color:red;');
+						}else{
+							$('.saldo-final').attr('style', 'color:green;');
+						}
+
+						$('.ub-status-ctas').text(data.cuentas.nro);
+						$('.ub-last-update').text(data.cuentas.ultima_actualizacion);
+
+						unaBase.ui.unblock();
+
+					},
+					row: {
+						html: function(i, rows) {							
+							var htmlObject;
+
+							var totalCargo = rows[i].cargo;
+							var totalAbono = rows[i].abono;
+							var totalItf = rows[i].itf;
+							var totalSaldo = rows[i].saldo;
+							var symbol = currency.symbol;
+							if (rows[i].tipo_moneda == "USD" && currency.code == "PEN") {
+								totalCargo = (rows[i].cargo/rows[i].valor_cambio);
+								totalAbono = (rows[i].abono/rows[i].valor_cambio);
+								totalItf = (rows[i].itf/rows[i].valor_cambio);
+								totalSaldo = (rows[i].saldo/rows[i].valor_cambio);
+								symbol = "USD";
+							}
+
+							let tipoDoc = "";
+							if (totalCargo > 0) {
+								tipoDoc = "DTC";
+							}else{
+								tipoDoc = "DTV";
+							}
+
+							htmlObject = $('<tr style="background-color:white;border-bottom:1px solid lightgray;" data-id="'+ rows[i].id +'" data-tipo="' +  tipoDoc + '">' +
+								//'<td width="10%" title="' + rows[i].descripcion +'">' + rows[i].tipo + '</td>' +
+								//'<td style="text-align:center;"><input type="checkbox" class="banco-accion-list"></td>' +
+								'<td>' + rows[i].fecha_movimiento + '</td>' +
+
+								'<td><div>' + rows[i].nombre_banco + '</div><div>' + rows[i].cta_cte + '</div></td>' +
+
+								'<td>' + rows[i].nro_mvto + '</td>' +
+								'<td style="text-align:left;">' + rows[i].glosa_banco + '</td>' +
+
+								'<td style="text-align:right;font-weight:bold;' + ((totalCargo > 0)? 'color:red':'') + '">' + symbol + " " + $.number(totalCargo, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</td>' +
+
+								'<td style="text-align:right;;font-weight:bold;' + ((totalAbono > 0)? 'color:green':'') + '">' + symbol + " " + $.number(totalAbono, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</td>' +
+
+								'<td style="text-align:right">' + symbol + " " + $.number(totalItf, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</td>' +
+
+								'<td style="text-align:right">' + symbol + " " + $.number(totalSaldo, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</td>' +
+
+								'<td style="text-align:center;">' + (rows[i].is_conciliado? '<a style="color:gray;text-decoration:underline;" data-tipoorigen="'+ rows[i].tipo_origen + '" data-idorigen="'+ rows[i].id_origen + '" class="goto-link">' + rows[i].origen + '</a>' : '----------') + '</td>' +
+
+								'<td>' + (rows[i].is_conciliado? '<span style="color:green;">CONCILIADO</span>' : '<div style="font-size:10px;margin:5px;display:none;">Por conciliar</div><button style="font-weight:bold;" class="conciliar">CONCILIAR</button><div class="seem-'+ rows[i].cant_parecidos +'" style="margin:3px;color:#ef6c00;"><a href="#" class="conciliar-same">'+ rows[i].cant_parecidos + ' concidencias</a></div>')  + '</td>' +
+
+								'<td style="vertical-align:bottom;">' + (rows[i].is_conciliado? '' : '<button class="actions">Eliminar</button>') + '</td>' +
+
+							'</tr>');
+
+							htmlObject.find('.seem-0').hide();
+
+							htmlObject.find('a.goto-link').click(function(){
+								let id = $(this).data('idorigen');
+								let tipo = $(this).data('tipoorigen');
+								switch(tipo) {
+									case 'DTV':
+										window.open("http://" + window.location.host + "/4DACTION/wbienvenidos#dtv/content.shtml?id="+ rows[i].id_origen , '_blank');
+										break;
+									case 'DTC':
+										window.open("http://" + window.location.host + "/4DACTION/wbienvenidos#dtc/content.shtml?id="+ rows[i].id_origen , '_blank');
+										break;
+									case 'OC':
+										window.open("http://" + window.location.host + "/4DACTION/wbienvenidos#compras/content.shtml?id="+ rows[i].id_origen , '_blank');
+										break;
+									case 'FXR':
+										window.open("http://" + window.location.host + "/4DACTION/wbienvenidos#compras/content.shtml?id="+ rows[i].id_origen , '_blank');
+										break;
+								}
+							});
+
+							htmlObject.find('button.conciliar').button({icons: { primary: 'ui-icon-search'}, text: true }).click(function(){
+								let id = $(this).closest('tr').data("id");
+								let tipo = $(this).closest('tr').data("tipo");
+								let title  = "DOCUMENTOS PARA ASOCIAR";
+								if (tipo == "DTC") {
+									title = "DOCUMENTOS DE COMPRA PARA ASOCIAR";
+								}else{
+									title = "DOCUMENTOS DE VENTA PARA ASOCIAR";
+								}
+								if (tipo != "") {
+									unaBase.loadInto.dialog("/v3/views/banco/docs_disponibles.shtml?tipodoc=" + tipo + "&id=" + id , title,"large");
+								}else{
+									toastr.error("No fue posible detectar el tipo de movimiento.");
+								}
+							});
+
+							htmlObject.find('a.conciliar-same').click(function(){
+								let id = $(this).closest('tr').data("id");
+								let tipo = $(this).closest('tr').data("tipo");
+								let title  = "DOCUMENTOS PARA ASOCIAR";
+								if (tipo == "DTC") {
+									title = "DOCUMENTOS DE COMPRA PARA ASOCIAR";
+								}else{
+									title = "DOCUMENTOS DE VENTA PARA ASOCIAR";
+								}
+								if (tipo != "") {
+									unaBase.loadInto.dialog("/v3/views/banco/docs_disponibles.shtml?tipodoc=" + tipo + "&id=" + id , title,"large");
+								}else{
+									toastr.error("No fue posible detectar el tipo de movimiento.");
+								}
+							});
+
+							htmlObject.find('button.actions').button({icons: { primary: 'ui-icon-trash'}, text: false }).click(function(){
+								var id = $(this).closest('tr').data("id");
+								var tipo = $(this).closest('tr').data("tipo");
+								var currentRows = $(this).closest('tr');
+								confirm("¿Estás seguro de eliminar el registro?").done(function(data) {
+      								if (data) {
+      									$.ajax({
+											'url': '/4DACTION/_V3_setMovimientoBanco',
+											data: {
+												'id': id,
+												'delete': true
+											},
+											dataType: 'json',
+											success: function(data) {
+												if (data.success) {
+													toastr.success("Eliminado con éxito.");
+													$('#search [name="q"]').data("manual", true).trigger('keydown');
+													$('#search [name="q"]').data("manual", true).trigger('keyup');
+												}else{
+													toastr.error("No fue posible eliminar el registro. Intente nuevamente.");
+												}							},
+											error: function(xhr, text, error) {
+												toastr.error(NOTIFY.get('ERROR_INTERNAL', 'Error'));
+											}
+										});
+      								}
+   	 							});
+							});
+							return htmlObject;
+						}
+					},
+					inflection: {
+						singular: 'Documento',
+						plural: 'Documentos',
+						none: 'ningún'
+					},
+					// Filtros
+					filters: [
+						{ name: 'created_at', type: 'month', caption: 'Fecha de emisión', range: true, currentMonth: true },
+						{ name: 'cuenta_cte', type: 'autocomplete', caption: 'Cuentas bancarías', dataSource: 'getCuentaCorriente' },
+						{ name: 'abono_cargo', type: 'autocomplete', caption: 'Por importe', dataObject: [
+							{ id: "abono", text: 'Abono'},
+							{ id: "cargo", text: 'Cargo'}
+						]},
+						
+						/*{ name: 'tipo_movimiento', type: 'autocomplete', caption: 'Tipo', dataSource: 'getTipoMovimientoByBanco' },
+						{ name: 'emisor', type: 'autocomplete', caption: 'Emisor', dataSource: 'getUsuario' },*/
+
+						{ name: 'estado', type: 'checkbox', caption: 'Estado del movimiento', options: [
+							{ caption: 'Conciliado', name: 'conciliado', value: false },
+							{ caption: 'Por conciliar', name: 'desconciliado', value: true }
+						]}
+					]
+				};
+
+				unaBase.toolbox.search.init(params);
+				unaBase.toolbox.menu.init({
+					entity: 'Banco',
+					buttons: ['new', 'export_list', 'MovimientosBanco']
+				});
+
+				$('.ub-edit-saldos').click(function(){
+					let html = $(
+					'<section>\
+						<h5 style="font-weight:bold">Saldo inicial</h5>\
+						<input class="numeric currency" style="background-color:yellow;padding:3px;" name="monto_saldo_inicial" data-rawvalue="' + saldoInicial + '" value="'+ saldoInicial +'">\
+					</section>'
+					);
+					html.find('.numeric.currency').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+					prompt(html, "Guardar", "Cancelar").done(function(data) {
+						if (data !== false) {
+							var saldo = $('[name="monto_saldo_inicial"]').val();
+							var fecha = $('[name="created_at"]').val();
+							$.ajax({
+								'url': '/4DACTION/_V3_setCuentaCte',
+								data: {
+									'id': idctacte,
+									'saldo_inicial': saldo,
+									'created_at': fecha
+								},
+								dataType: 'json',
+								success: function(data) {
+									if (data.success) {
+										toastr.success("Guardado con éxito.");
+										$('#search [name="q"]').data("manual", true).trigger('keydown');
+										$('#search [name="q"]').data("manual", true).trigger('keyup');
+									}else{
+										toastr.error("No fue posible modificar el dato. Intente nuevamente.");
+									}							},
+								error: function(xhr, text, error) {
+									toastr.error(NOTIFY.get('ERROR_INTERNAL', 'Error'));
+								}
+							});
+                        }
+	              	});
+
+					$('[name="monto_saldo_inicial"]').on("focus", function(event){
+						var decimals = currency.decimals + 2;
+				      	$(event.target).unbind(".format");
+				      	$(event.target).number(true, decimals, currency.decimals_sep, currency.thousands_sep);
+				      	$(event.target).val(parseFloat($(event.target).data('rawvalue')));
+					});
+
+					$('[name="monto_saldo_inicial"]').on("blur", function(event){
+						$(event.target).data('rawvalue', parseFloat($(event.target).val()));
+				      	$(event.target).unbind(".format");
+				      	$(event.target).number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+					});
+
+				});
+
+				// $('#menu').find('button.importar-cartola').remove();
+				// $('#menu').append('<button class="importar-cartola">Importar cartola desde excel</button>');
+				// $('.importar-cartola').button({icons: { primary: 'ui-icon-circle-plus'}, text: true }).click(function(){
+				// 	unaBase.loadInto.dialog('/v3/views/banco/import.shtml', 'Importar banco', 'small');
+				// });
+
+			});
+		</script>
+
+		<style>
+			.container-resumen{
+				top:16%;
+			    left: 10px;
+			    position: absolute;
+			    padding: 5px;
+			    width: 100%;
+				margin-left: 100px;
+				margin-top: 60px;
+			}
+			.container-resumen > h3{
+				text-transform: uppercase;
+				text-decoration: underline;
+				color: black;
+				font-weight:bold;
+			}
+
+			.box-summary-totales{ 
+				display:inline-block;border-right:1px solid lightgray;padding:5px;
+			}
+				.box-summary-totales > div{
+					margin:5px;
+					text-align:center;
+
+				}
+				.box-summary-totales > .name{
+					color:gray;
+				}
+				.box-summary-totales > .amount{
+					font-size:12px;
+				}
+
+			header.full-height{
+			 height:170px;
+			}
+	
+			.totales-value{
+				font-weight:bold;
+			}
+
+		</style>
+
+	</head>
+	<body>
+		<div class="padre bancos" style="width: 100%; height: calc(100% - 10px); overflow-x: scroll; overflow-y: scroll">
+			<div class="container-resumen">
+				<h3>Resumen saldos y movimientos - <span class="ub-status-ctas" style="color:gray;">Todas las cuentas</span></h3>
+				<div style="margin:5px 0px 2px 0px!important">
+					<div class="box-summary-totales">
+						<div class="name" style="color:black">SALDO INICIAL</div>
+						<div class="amount saldo-inicial totales-value"><span>0</span><i title="modificar" style="margin-left:5px;color:gray;cursor:pointer;" class="fas fa-pencil-alt ub-edit-saldos"></i></div>
+					</div>
+					<div class="box-summary-totales">
+						<div class="name" style="color:green">ABONOS</div>
+						<div class="amount total-abonos totales-value"><span>0</span></div>
+					</div>
+					<div class="box-summary-totales">
+						<div class="name" style="color:red">CARGOS</div>
+						<div class="amount total-cargos totales-value"><span>0</span></div>
+					</div>
+					<div class="box-summary-totales">
+						<!--<div class="name" style="color:black">SALDO DISPONIBLE (actualizado: <span class="ub-last-update"></span>)</div>-->
+						<div class="name" style="color:black">SALDO DISPONIBLE</div>
+						<div class="amount saldo-final totales-value" style="text-align:left!important"><span>0</span></div>
+					</div>
+				</div>
+			</div>
+			<table width="100%" class="results especial listpayout">
+				<thead>
+					<tr>
+						<!--<th class="center" style="width:5px;"></th>-->
+						<th class="center" width="10%" data-sort-by="date" data-sort-default="desc">F. Operac.</th>
+						<th class="center" width="10%" data-sort-by="date" data-sort-default="desc">Cta. cte.</th>
+						<th class="center" width="10%" data-sort-by="numero" data-sort-default="desc">Nro. mvto.</th>
+						<th class="center" width="20%" data-sort-by="descripcion" data-sort-default="asc">Referencia</th>
+						<th class="center" width="10%" data-sort-by="cargos" data-sort-default="asc">Cargo</th>
+						<th class="center" width="10%" data-sort-by="abonos" data-sort-default="asc">Abono</th>
+						<th class="center" width="10%" data-sort-by="itf" data-sort-default="asc">Itf</th>
+						<th class="center" width="10%" data-sort-by="tipo-movimiento" data-sort-default="asc">Saldo</th>
+						<th class="center" width="10%" data-sort-by="origen" data-sort-default="asc">Origen</th>
+						<th class="center" width="10%" data-sort-by="conciliado" data-sort-default="desc">Conciliado</th>
+						<th class="center" width="10%"></th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+	</body>
+</html>

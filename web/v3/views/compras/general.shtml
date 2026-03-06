@@ -1,0 +1,42 @@
+<fieldset>
+	<legend><strong>Información del negocio</strong></legend>
+      <article>
+      	<div><label>Número:</label><input readonly type="text" value="<!--#4DTEXT [Nota_de_venta]Id_Negocio-->"></div>
+      	<div><label>Referencia:</label><input readonly type="text" value="<!--#4DTEXT [Orden_de_compra]Referencia_NV-->"></div>
+      </article>
+</fieldset>
+<fieldset>
+	<legend><strong>Información de la compra</strong></legend>
+     <article>
+        <div><label>Folio:</label><input readonly name="oc[folio]" type="text" value="<!--#4DIF [Orden_de_compra]Folio_OC=""-->S/N<!--#4DELSE--><!--#4DTEXT [Orden_de_compra]Folio_OC--><!--#4DENDIF-->"></div>
+      	<div><label>Referencia:</label><input name="oc[referencia]" type="text" value="<!--#4DTEXT [Orden_de_compra]Referencia-->"></div>
+      	<div>
+  	    	<label>Documento de compra:</label>
+  	    	<input readonly name="oc[dtc]" placeholder="Seleccionar documento" type="search" value="<!--#4DTEXT [Orden_de_compra]FacturaTipo-->">
+  	    	<button type="button" class="show dtc">ver tipos de documentos</button>    	
+  	    	<input name="oc[id_dtc]" type="hidden" value="<!--#4DTEXT [Orden_de_compra]ID_TipoDocumento-->">
+	    </div>      	
+      </article>
+</fieldset>
+<fieldset>
+	<legend><strong>Información del proveedor</strong></legend>
+     <article>
+      	<div><label>Razon social:</label><input name="proveedor[nombre]" type="search" value="<!--#4DTEXT v_razon-->"></div>
+      	<div class="hide"><label>Giro:</label><input readonly type="text" value="<!--#4DTEXT v_giro-->"></div>
+      	<div class="hide"><label>Rut:</label><input readonly type="text" value="<!--#4DTEXT vRut-->"></div>      	
+      	<button type="button" class="edit proveedor"><span>Editar empresa</span></button>
+        <input name="proveedor[id]" type="hidden" value="<!--#4DTEXT [Orden_de_compra]Id_Empresa-->">
+     </article>
+</fieldset>
+<fieldset>
+	<legend><strong>Información del contacto asociado</strong></legend>
+     <article>      	
+      	<div>
+          <label>Nombre:</label>
+          <input readonly name="asociado[nombre]" type="search" value="<!--#4DTEXT vNombreContacto-->">
+          <button type="button" class="show asociado">Ver todos los contactos</button>      
+          <input name="asociado[id]" type="hidden" value="<!--#4DTEXT vIdContactoAsociado-->">
+        </div>
+      	<button type="button" class="edit asociado"><span>Editar contacto</span></button>
+     </article>
+</fieldset>

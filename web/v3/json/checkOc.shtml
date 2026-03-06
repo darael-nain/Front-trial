@@ -1,0 +1,13 @@
+{
+	"success": <!--#4DIF Not(Undefined(success))-->"<!--#4DHTML success-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"errorMsg": <!--#4DIF Not(Undefined(errorMsg))-->"<!--#4DHTML errorMsg-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"text": <!--#4DIF Not(Undefined(text))-->"<!--#4DHTML _V3_escapeString(text)-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"rows": [
+		<!--#4DLOOP aContador-->
+		{
+			"id_neg": <!--#4DHTML aIdNegocio{aContador}-->,
+			"numero_oc": "<!--#4DHTML aNumeroOc{aContador}-->"
+		}<!--#4DIF NOT(aContador{aContador} = aContador{Size of array(aContador)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	]
+}

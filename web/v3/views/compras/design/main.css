@@ -1,0 +1,111 @@
+section.sheet {
+  position: relative; }
+  section.sheet table .collapsed {
+    display: none; }
+  section.sheet table .moving-src, section.sheet table .moving-dst {
+    outline: 1px dashed black;
+    opacity: .3; }
+  section.sheet table th:last-of-type {
+    /*width: 80px;*/
+    width: 110px; }
+  /*section.sheet table > tbody {
+    counter-reset: item; }
+    section.sheet table > tbody > tr:not(.title) > td:nth-of-type(2):before {
+      counter-increment: item;
+      content: counter(item);
+      font-weight: bold; }*/
+  /*section.sheet table .add.items {
+    width: 30px; } */
+  section.sheet footer article {
+    position: relative; }
+    section.sheet footer article ul {
+      margin: 10px; }
+      section.sheet footer article ul li textarea {
+        width: 1000px;
+        height: 100px; }
+      section.sheet footer article ul li > span > input {
+        border-color: lightgray !important;
+        /*background-color:transparent;*/ }
+    section.sheet footer article section h2 > span {
+      border: 1px solid lightgray;
+      border-radius: 3px;
+      padding: 3px;
+      font-weight: bold;
+      font-size: 12px;
+      margin: 3px; }
+    section.sheet footer article button.mas {
+      position: absolute;
+      right: 30px;
+      top: 30px; }
+    section.sheet footer article p {
+      margin-top: 5px; }
+  section.sheet .center {
+    text-align: center !important; }
+  section.sheet .left {
+    text-align: left !important; }
+  section.sheet .right {
+    text-align: text !important; }
+  section.sheet .azul {
+    color: blue; }
+  section.sheet .resumen-block {
+    width: 100%;
+    margin-top: -10px;
+    height: 60px;
+    margin: 0px !important;
+    padding: 5px;
+    box-sizing: border-box; }
+    section.sheet .resumen-block :first-of-type {
+      border-left: none; }
+    section.sheet .resumen-block :last-of-type {
+      border-right: none; }
+    section.sheet .resumen-block > h2 {
+      display: block;
+      background-color: #6c6c6c;
+      color: white;
+      margin-left: -14px;
+      margin-top: -14px;
+      width: calc(100% + 4px);
+      padding: 5px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      font-size: 11px; }
+    section.sheet .resumen-block span {
+      margin: 10px;
+      margin-left: 0;
+      margin-right: 0;
+      cursor: pointer;
+      font-size: 15px;      
+      text-transform: uppercase !important;
+      border-bottom: 1px solid lightgray; }
+    section.sheet .resumen-block span.referencia-resumen {
+      text-transform: capitalize; }
+    section.sheet .resumen-block span.green {
+      cursor: default;
+      border: none;
+      color: #43af7c; }
+    section.sheet .resumen-block span.dtc-razon, section.sheet .resumen-block span.dtc-contacto {
+      text-transform: capitalize; }
+    section.sheet .resumen-block > div {
+      text-align: left;
+      font-size: 16px;
+      font-weight: bold; }
+    section.sheet .resumen-block p {
+      text-align: left;
+      padding-top: 10px;
+      text-transform: capitalize; }
+  section.sheet .lineal {
+    display: inline-block;
+    width: calc(40% - 2px) !important;
+    vertical-align: top;
+    margin-top: 0px; }
+  section.sheet .container-menu-origen {
+    position: relative; }
+    section.sheet .container-menu-origen .menu-origen {
+      position: absolute;
+      top: 25px;
+      left: 40px;
+      z-index: 1000; }
+      section.sheet .container-menu-origen .menu-origen li a {
+        font-weight: bold;
+        text-align: left;
+        width: 150px; }

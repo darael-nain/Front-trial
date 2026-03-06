@@ -1,0 +1,88 @@
+.breadcrumb {
+    margin-bottom: 0;
+    background-color: white;
+}
+
+.dataTables_scrollBody {
+    overflow: none
+}
+
+.btnback {
+    color: whitesmoke !important;
+    background: #000000 !important;
+}
+
+.btn-label {
+    position: relative;
+    left: -12px;
+    display: inline-block;
+    padding: 6px 12px;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 3px 0 0 3px;
+}
+
+.btn-labeled {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.btn {
+    margin-bottom: 10px;
+}
+
+.pagination>li>a {
+    background-color: white;
+    color: #000000;
+}
+
+.pagination>li>a:focus,
+.pagination>li>a:hover,
+.pagination>li>span:focus,
+.pagination>li>span:hover {
+    color: #5a5a5a;
+    background-color: #eee;
+    border-color: #ddd;
+}
+
+.pagination>.active>a {
+    color: white;
+    background-color: #000000 !Important;
+    border: solid 1px #000000 !Important;
+}
+
+.pagination>.active>a:hover {
+    background-color: #000000 !Important;
+    border: solid 1px #000000;
+}
+
+.dataTables_Filter {
+    float: left;
+}
+
+.search {
+    margin-bottom: 100px;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #03D6F9;
+}
+
+table.dataTable>thead .sorting,
+table.dataTable>thead .sorting_asc,
+table.dataTable>thead .sorting_desc,
+table.dataTable>thead .sorting_asc_disabled,
+table.dataTable>thead .sorting_desc_disabled {
+    cursor: pointer;
+    position: relative;
+    border-radius: 5px;
+}
+
+
+table#cuentas_corrientes.dataTable tbody tr:hover>* {
+    background-color: #d5f2f7;
+}
+
+table#cuentas_corrientes>table#table_detalle.dataTable tbody tr:hover>* {
+    background-color: #054c58;
+}

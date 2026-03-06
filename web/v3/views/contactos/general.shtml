@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_proxy_getPerfilContacto2-->
+<html>
+	<head>
+		<title>Perfil</title>
+		<meta charset="utf-8">
+
+		<script type="text/javascript" src="/v3/script/datepicker_es.js?<!--#4DTEXT _V3_version-->"></script>
+
+		<script type="text/javascript">
+			// Helper para analizar si es vacío o undefined
+			const isBlank = v => v == null || String(v).trim() === "";
+			
+			var fileUploadOptions = function() {
+				return {
+					dataType: 'json',
+					formData: {
+						index: (function() { return 'Contacto|' + $('.dialog input[name="id"]').val(); })(),
+						filename: (function() { return (($('input[name="file"]')[0].files.length > 0)? $('input[name="file"]')[0].files[0].name : '') })()
+					},
+					add: function (e, data) {
+						data.submit();
+					},
+					done: function (e, data) {
+						console.log(data);
+						toastr.success('Imagen cambiada!');
+						if ($('img.picture').css('display') == 'none') {
+							$('div.no-picture').hide();
+							$('img.picture').show();
+						}
+						var href = '/4DACTION/_V3_getUpload?index=Contacto|' + $('.dialog input[name="id"]').val() + '&_r=' + (Math.random() * 10000);
+						$('img.picture').attr('src', href);
+						console.log($('img.picture').attr('src'));
+						$('#viewport').find('table > tbody > tr[data-id="<!--#4DTEXT [Contacto]Id_Cont-->"]').find('img').attr('src', href);
+					}
+				}
+			};
+			var container = $('.form-contact');
+			var idContacto = containerContacto.find('input[name="id"]').val();
+
+			// setea valores por defecto
+			if (idContacto == 0) {
+				var infoalias = $('input[name="contacto[info][alias]"]');
+				if (infoalias.length > 0) {
+					var busqueda = infoalias.val();
+					var srt = busqueda.split(" ");
+					$('input[name="contact[nombre]"]').val(srt[0]);
+					$('input[name="contact[paterno]"]').val(srt[1]);
+					$('input[name="contact[materno]"]').val(srt[2]);
+					$('input[name="contact[alias]"]').val(busqueda);
+					$('input[name="contact[razon]"]').val(busqueda);
+				}
+			}
+
+			var full_fields = function(){
+				container.find('input:not([type="radio"])').each(function() {
+					if ($(this).val() != "") {
+						$(this).css("background-color","#FECA40");
+					}
+				});
+				if (container.find('textarea').val() != "") {
+					container.find('textarea').css("background-color","#FECA40");
+				}
+			}
+
+			var getTagByContact = function(){
+				var contacto = $('.form-contact').find('input[name="id"]').val();
+				var ul = $('.tags');
+				$.ajax({
+		          url: '/4DACTION/_v3_getTagByContacto',
+		          dataType: 'json',
+		          data:{
+		          	"contacto[id]": contacto
+		          },
+		          success: function(data) {
+		            $.each(data.rows, function(key, item){
+		                ul.append('<li data-id="'+ item.id +'" data-contacto="'+ contacto +'" data-tag="'+ item.tag_id +'">#'+ item.tag_name +'</li>');
+		            });
+		          }
+		        });
+			}
+
+			var complete_razon = function(){
+				if ($('input[name="contact[razon]"]').val()=="") {
+		    		var nombre = $('input[name="contact[nombre]"]').val();
+		    		var pat = $('input[name="contact[paterno]"]').val();
+		    		var mat = $('input[name="contact[materno]"]').val();
+		    		var cadena = "";
+		    		if (nombre!="") {
+		    			cadena = cadena + nombre+" ";
+		    		}
+		    		if (pat!="") {
+	    				cadena = cadena + pat+" ";
+	    			}
+		    		if (mat!="") {
+    					cadena = cadena + mat+" ";
+    				}
+		    		$('input[name="contact[razon]"]').val(cadena.trim());
+		    	}
+			}
+
+			$(document).ready(function() {
+			    $("#radio").buttonset();
+			    $('.hide').hide();
+			    full_fields();
+
+			    $('.form-contact input[name="contact[rut]"]').change(function(){
+			      verifica_duplicacion();
+			    });
+
+			    <!--#4DIF [Contacto]Id_Cont > 0-->
+			    $('input[name="file"]').fileupload(fileUploadOptions());
+			    <!--#4DENDIF-->
+
+			    $('.inline figure button').button({
+					icons: {
+						primary: 'ui-icon-image'
+					}
+				});
+
+				
+				// Funcion que en el perfil de contacto, cambia estado del contacto dependiendo si RUT, NOMBRE o RAZON están vacíos o no.
+				function syncActivoByRequiredFields() {
+					const $c = $('.form-contact').length ? $('.form-contact') : $(document);
+
+					const rut    = $c.find('input[name="contact[rut]"]').val();
+					const nombre = $c.find('input[name="contact[nombre]"]').val();
+					const razon  = $c.find('input[name="contact[razon]"]').val();
+
+					const falta = isBlank(rut) || isBlank(nombre) || isBlank(razon);
+					const activo = !falta;
+
+					$c.find('input[name="check[estado]"]').prop('checked', activo);
+					$c.find('input[name="contact[estado]"]').val(activo ? 'true' : 'false');
+				}
+
+				syncActivoByRequiredFields();
+
+				$(document).on(
+				'input change blur',
+				'input[name="contact[rut]"], input[name="contact[nombre]"], input[name="contact[razon]"]',
+				syncActivoByRequiredFields
+				);
+
+			    //remove tag
+			    $(".tags").on('click','li', function(){
+			    	var li = $(this);
+					var tagContactoId = $(this).data('id');
+
+			    	confirm(MSG.get('CONFIRM_TAG_REMOVE')).done(function(data) {
+						if (data) {
+					    	$.ajax({
+				              url: '/4DACTION/_V3_setTagContacto',
+				              dataType: 'json',
+				              data: {
+				              	'tag_contact[delete]': "yes",
+				              	'tag_contact[id]': tagContactoId
+				              },
+				              success: function(data) {
+								if (data.success) {
+									li.fadeOut(function(){
+										$(this).remove;
+									});
+									toastr.success('Etiqueta quitado exitosamente!');
+								}else {
+								  if (data.opened) {
+								    if (data.readonly)
+								      toastr.error(NOTIFY.get('ERROR_RECORD_READONLY', 'Error'));
+								  }
+								}
+				              },
+				              error: function(xhr, text, error) {
+				                toastr.error(NOTIFY.get('ERROR_INTERNAL', 'Error'));
+				              }
+				            });
+						}
+					});
+			    });
+
+			    getTagByContact();
+
+			    // set razon
+			    $('input[name="contact[razon]"]').focus(function(){
+			    	complete_razon();
+			    });
+
+			    // set estado
+			    $('input[name="check[estado]"]').click(function(){
+			    	if ($(this).prop('checked')) {
+			    		$('input[name="contact[estado]"]').val('true');
+			    	}else{
+			    		$('input[name="contact[estado]"]').val('false');
+			    	}
+			    });
+
+			
+			    // set estado validar
+			    $('input[name="check[validar_rut]"]').click(function(){
+			    	if ($(this).prop('checked')) {
+			    		$('input[name="contact[validar_rut]"]').val('true');
+			    	}else{
+			    		$('input[name="contact[validar_rut]"]').val('false');
+			    	}
+			    });
+
+			    // show paises
+				$('input[name="contact[dir_pais]"]').click(function() {
+					$('input[name="contact[dir_pais]"]').autocomplete('search', $(this).val()).focus();
+				});
+			    $('input[name="contact[dir_pais]"]').autocomplete({
+				    source: function(request, response) {
+				      $.ajax({
+				        url: '/4DACTION/_V3_get_pais',
+				        dataType: 'json',
+				        data: {
+				          q: request.term
+				        },
+				        success: function(data) {
+				          response($.map(data.rows, function(item) {
+				            return item;
+				          }));
+				        }
+				      });
+				    },
+				    minLength: 0,
+				    autoFocus: false,
+				    open: function() {
+				      $(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+				    },
+				    close: function() {
+				      $(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+				    },
+				    focus: function(event, ui) {
+				    	$(this).data('id', ui.item.id);
+				    	$(this).val(ui.item.text);
+				      	return false;
+				    },
+				    response: function(event, ui) {
+				    },
+				    select: function(event, ui) {
+						
+				    	$(this).data('id', ui.item.id);
+				    	$(this).val(ui.item.text);
+
+				    	$('input[name="contact[dir_region]"]').val('');
+				    	$('input[name="contact[dir_region]"]').data('id','');
+				    	$('input[name="contact[ciudad]"]').val('');
+				    	$('input[name="contact[ciudad]"]').data('id','');
+				    	$('input[name="contact[comuna]"]').val('');
+				    	$('input[name="contact[comuna]"]').data('id','');
+				    	$('input[name="contact[id_comuna]"]').val('');
+
+						$('.country-label-rut').text(ui.item.des_document_id != '' ? ui.item.des_document_id + ":" : 'Rut' + ":");
+
+						$('input[name="contact[dir_region]"]').val('');
+
+						return false;
+				    }
+				  }).data('ui-autocomplete')._renderItem = function(ul, item) {
+				    return $('<li><a><strong>' +  item.text + '</strong></a></li>').appendTo(ul);
+				  };
+
+				// show regiones
+				$('input[name="contact[dir_region]"]').click(function() {
+					$('input[name="contact[dir_region]"]').autocomplete('search', $(this).val()).focus();
+				});
+			    $('input[name="contact[dir_region]"]').autocomplete({
+				    source: function(request, response) {
+				      $.ajax({
+				        url: '/4DACTION/_V3_get_regiones',
+				        dataType: 'json',
+				        data: {
+				          q: request.term,
+				          idpais: $('input[name="contact[dir_pais]"]').data('id'),
+				          pais: $('input[name="contact[dir_pais]"]').val()
+				        },
+				        success: function(data) {
+				          response($.map(data.rows, function(item) {
+				            return item;
+				          }));
+				        }
+				      });
+				    },
+				    minLength: 0,
+				    autoFocus: false,
+				    open: function() {
+				      $(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+				    },
+				    close: function() {
+				      $(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+				    },
+				    focus: function(event, ui) {
+				    	$(this).data('id', ui.item.id);
+				    	$(this).val(ui.item.text);
+				      	return false;
+				    },
+				    response: function(event, ui) {
+				    },
+				    select: function(event, ui) {
+				    	$(this).data('id', ui.item.id);
+				    	$(this).val(ui.item.text);
+
+				    	$('input[name="contact[ciudad]"]').val('');
+				    	$('input[name="contact[ciudad]"]').data('id','');
+				    	$('input[name="contact[comuna]"]').val('');
+				    	$('input[name="contact[comuna]"]').data('id','');
+				    	$('input[name="contact[id_comuna]"]').val('');
+
+						return false;
+				    }
+				  }).data('ui-autocomplete')._renderItem = function(ul, item) {
+				    return $('<li><a><strong>' +  item.text + '</strong></a></li>').appendTo(ul);
+				  };
+
+				// show ciudades
+				$('input[name="contact[ciudad]"]').click(function() {
+					$('input[name="contact[ciudad]"]').autocomplete('search', $(this).val()).focus();
+				});
+			    $('input[name="contact[ciudad]"]').autocomplete({
+				    source: function(request, response) {
+				      $.ajax({
+				        url: '/4DACTION/_V3_get_ciudad',
+				        dataType: 'json',
+				        data: {
+				          q: request.term,
+				          idregion: $('input[name="contact[dir_region]"]').data('id'),
+				          region: $('input[name="contact[dir_region]"]').val()
+				        },
+				        success: function(data) {
+				          response($.map(data.rows, function(item) {
+				            return item;
+				          }));
+				        }
+				      });
+				    },
+				    minLength: 0,
+				    autoFocus: false,
+				    open: function() {
+				      $(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+				    },
+				    close: function() {
+				      $(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+				    },
+				    focus: function(event, ui) {
+				    	$(this).data('id', ui.item.id);
+				    	$(this).val(ui.item.text);
+				      	return false;
+				    },
+				    response: function(event, ui) {
+				    },
+				    select: function(event, ui) {
+				    	$(this).data('id', ui.item.id);
+				    	$(this).val(ui.item.text);
+
+				    	$('input[name="contact[comuna]"]').val('');
+				    	$('input[name="contact[comuna]"]').data('id','');
+				    	$('input[name="contact[id_comuna]"]').val('');
+
+						return false;
+				    }
+				  }).data('ui-autocomplete')._renderItem = function(ul, item) {
+				    return $('<li><a><strong>' +  item.text + '</strong></a></li>').appendTo(ul);
+				  };
+
+				 // show comunas
+				$('input[name="contact[comuna]"]').click(function() {
+					$('input[name="contact[comuna]"]').autocomplete('search', $(this).val()).focus();
+				});
+			    $('input[name="contact[comuna]"]').autocomplete({
+				    source: function(request, response) {
+				      $.ajax({
+				        url: '/4DACTION/_V3_getComunas',
+				        dataType: 'json',
+				        data: {
+				          q: request.term,
+				          ciudad: $('input[name="contact[ciudad]"]').val()
+				        },
+				        success: function(data) {
+				          response($.map(data.rows, function(item) {
+				            return item;
+				          }));
+				        }
+				      });
+				    },
+				    minLength: 0,
+				    autoFocus: false,
+				    open: function() {
+				      $(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+				    },
+				    close: function() {
+				      $(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+				    },
+				    focus: function(event, ui) {
+				    	$(this).data('id', ui.item.id);
+				    	$(this).val(ui.item.text);
+				    	$('input[name="contact[ciudad]"]').val(ui.item.ciudad);
+				      	return false;
+				    },
+				    response: function(event, ui) {
+				    },
+				    select: function(event, ui) {
+				    	$(this).data('id', ui.item.id);
+				    	$(this).val(ui.item.text);
+				    	$('input[name="contact[ciudad]"]').val(ui.item.ciudad)
+						return false;
+				    }
+				  }).data('ui-autocomplete')._renderItem = function(ul, item) {
+				    return $('<li><a><strong>' +  item.text + '</strong></a></li>').appendTo(ul);
+				  };
+
+				  $('button.show').button({icons: {primary: 'ui-icon-carat-1-s'},text: false});
+
+				  // show tipo
+				$('button.show.tipo').click(function() {
+					$('input[name="contact[tipo]"]').autocomplete('search', $(this).val()).focus();
+				});
+			    $('input[name="contact[tipo]"]').autocomplete({
+				    source:["ClIENTE","PROVEEDOR", "EXTRANJERO", 'EMPLEADO', 'HONORARIO'],
+				    minLength: 0,
+				    autoFocus: false,
+				    open: function() {
+				      $(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+				    },
+				    close: function() {
+				      $(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+				    },
+				    focus: function(event, ui) {
+				      	return false;
+				    },
+				    response: function(event, ui) {
+				    }/*,
+				    select: function(event, ui) {
+				    	$(this).val(ui.item);
+						return false;
+				    }*/
+				  });
+			    	/*.data('ui-autocomplete')._renderItem = function(ul, item) {
+				    return $('<li><a><strong>' +  item + '</strong></a></li>').appendTo(ul);
+				  };*/
+
+				  	const inputElement = document.querySelector('input[name="contact\\[dir_pais\\]"]');
+					const documentId = inputElement ? inputElement.dataset.docId : '';
+
+					if (documentId) {
+						$('.country-label-rut').text(documentId + ":");
+					} else {
+						$('.country-label-rut').text(country.label_rut + ":");
+					}
+
+
+
+				   if (currency.code != "CLP") {
+				   		$('.mostrar-opcion-validar').hide();
+				   }
+
+
+				   $('#btn-delete-photo').click(function(e) {
+						confirm("¿Estás seguro de que deseas eliminar la imagen?").done(function(data) {
+							if (data) {
+								let id = e.currentTarget.dataset.file
+								
+								$.ajax({
+									url: '/4DACTION/_V3_removeUpload',
+									dataType: 'json',
+									data: {
+										index: id
+									},
+									success: function(data) {
+										
+										document.getElementById('img-photo').src = '';
+										toastr.success('Imagen eliminada exitosamente!');
+
+									}
+								});
+							}
+						});
+						
+
+				   });
+
+					// Eventos para mostrar/ocultar el botón "Eliminar" al hacer hover en la imagen
+					$('.img-container').hover(function() {
+						$(this).find('button').show();
+					}, function() {
+						$(this).find('button').hide();
+					});
+
+
+					const datos_extras = unaBase.parametros.datos_extras_banco_contacto;
+					if (!datos_extras) {
+						let liElements = document.querySelectorAll('.data-extra-mx');
+						liElements.forEach(li => {
+							li.style.display = 'none';
+						});
+					}
+			});
+
+			
+			// En caso que alguno de los campos estén incompletos y se cierre la ventana, se envía contacto inactivo
+			function deactivateContactUncompleted() {
+					const $c = $('.form-contact').length ? $('.form-contact') : $(document);
+
+					const nombre = $c.find('input[name="contact[nombre]"]').val();
+					const rut = $c.find('input[name="contact[rut]"]').val();
+					const razon = $c.find('input[name="contact[razon]"]').val();
+
+					if (![nombre, rut, razon].some(isBlank)) return;
+
+					const id =
+						$('.dialog input[name="id"]').val() ||
+						$c.find('input[name="id"]').val() ||
+						$('section.contacto_section').data('id');
+
+					if (!id) return;
+
+					const data = $c
+						.find('input[name^="contact["], select[name^="contact["], textarea[name^="contact["]')
+						.serializeArray()
+						.filter(p => p.name !== 'contact[id]' && p.name !== 'contact[estado]');
+
+					data.push({ name: 'contact[id]', value: id });
+					data.push({ name: 'contact[estado]', value: 'false' });
+
+					$.ajax({
+						url: '/4DACTION/_V3_setContacto',
+						dataType: 'json',
+						data: {
+							'contact[id]': id,
+							'contact[estado]': 'false'
+						}
+					});
+				}
+
+			const $dlgContent = $('section.contacto_section').closest('.ui-dialog-content');
+			if ($dlgContent.length) {
+				$dlgContent.on('dialogbeforeclose', function (e, ui) {
+					deactivateContactUncompleted();
+				});
+
+			} 
+
+		</script>
+		<style type="text/css">
+			.radius{
+				border-radius:none!important;
+			}
+		</style>
+	</head>
+	<body>
+		<section class="sheet">
+		<section class="sheet contacto_section" data-id="<!--#4DVAR [Contacto]Id_Cont-->" data-index="<!--#4DVAR [Contacto]Id_Cont-->"<!--#4DIF false--> data-new="true"<!--#4DENDIF--><!--#4DIF [Contacto]Estado_Cont=False--> data-readonly="true"<!--#4DENDIF-->>
+
+			<nav style="height:30px;">
+
+				<!--<ul class="tags">
+					<li>#tag1</li>
+					<li>#tag2</li>
+					<li>#tag3</li>
+				</ul>-->
+
+				<ul class="tags"></ul>
+
+				<div style="margin:10px">
+					<!--#4DIF [Contacto]Id_Cont>0-->
+						<!--#4DIF [Contacto]Estado_Cont-->
+							<span style="display:inline-block;vertical-align:middle"><input name="check[estado]" type="checkbox" checked="checked"></span>
+							<input name="contact[estado]" type="hidden" value="true">
+						<!--#4DELSE-->
+							<span style="display:inline-block;vertical-align:middle"><input name="check[estado]" type="checkbox"></span>
+							<input name="contact[estado]" type="hidden" value="false">
+						<!--#4DENDIF-->
+					<!--#4DELSE-->
+						<span style="display:inline-block;vertical-align:middle"><input name="contact[estado]" type="checkbox" checked="checked"></span>
+						<input name="contact[estado]" type="hidden" value="true">
+					<!--#4DENDIF-->
+					<span style="display:inline-block;vertical-align:middle;font-weight:bold">Activo</span>
+				</div>
+
+			</nav>
+
+			<fieldset>
+			<legend><strong>Información básica</strong></legend>
+				<article class="inline inline3">
+					<figure style="text-align: center; position: relative; margin-bottom: 10px;">
+						<div class="img-container" style="position: relative; display: inline-block;">
+							<img class="picture" id="img-photo" style="width: 100%; height: auto; display: block; max-height: 235px; margin-bottom: 10px;" src="/4DACTION/_V3_getUpload?index=Contacto|<!--#4DTEXT [Contacto]Id_Cont-->" onerror="$(this).hide(); $('div.no-picture').show();">
+					
+							<button id="btn-delete-photo" data-file="Contacto|<!--#4DTEXT [Contacto]Id_Cont-->" style="position: absolute; top: 5px; right: 5px; display: none; background-color: rgba(255,0,0,0.8); color: white;">Eliminar</button>
+						</div>
+					
+						<div class="no-picture" style="display: none; font-size: 18px; line-height: 112px; margin-bottom: 10px;">Sin foto</div>
+						<input style="display: none;" type="file" name="file" data-url="/4DACTION/_V3_setUpload">
+					
+						<div style="justify-content: space-between; margin-bottom: 10px;">
+							<button onclick="if ($('.dialog input[name=\'id\']').val() > 0) $('input[name=&quot;file&quot;]').trigger('click'); else toastr.warning('Es necesario guardar el nuevo contacto antes de agregar una foto.');" style="flex: 1; margin-right: 5px;">Cambiar foto</button>
+						</div>
+					</figure>
+					
+					<div><label>Tipo:</label><input readonly name="contact[tipo]" value="<!--#4DTEXT Uppercase([Contacto]Cli_Prov;*)-->" type="search"><button type="button" class="show tipo">ver tipo</button></div>
+					<div><label>Alias:</label><input name="contact[alias]" value="<!--#4DTEXT Uppercase([Contacto]Alias_Cont;*)-->" type="text"></div>
+					<div><label>Tratamiento:</label><input name="contact[tratamiento]" value="<!--#4DTEXT Uppercase([Contacto]Tratamiento;*)-->" type="text" placeholder="Ej.: Sr. / Srta. / Sra."></div>
+	                <div><label>Nombre(s):</label><input required name="contact[nombre]" value="<!--#4DTEXT Uppercase([Contacto]Nombre_Cont;*)-->" type="text"><span class="obligatorio">*</span></div>
+	                <div><label>A. Paterno:</label><input name="contact[paterno]" value="<!--#4DTEXT Uppercase([Contacto]Paterno_Cont;*)-->" type="text"></div>
+	                <div><label>A. Materno:</label><input name="contact[materno]" value="<!--#4DTEXT Uppercase([Contacto]Materno_cont;*)-->" type="text"></div>
+					<div><label>Estado civil:</label><input name="contact[estado_civil]" value="<!--#4DTEXT Uppercase([Contacto]Estado_Civil;*)-->" type="text"></div>
+	            </article>
+	            <article class="inline inline3">
+	            	<div>
+	                	<label class="country-label-rut">Rut:</label><input required name="contact[rut]" value="<!--#4DTEXT _rut-->" type="text"><span class="obligatorio">*</span>
+	                	<label></label><span style="display:inline-block">
+	                	<!--#4DIF _rut#""-->
+		                	<!--#4DIF [Contacto]valida_rut-->
+		                		<input class="mostrar-opcion-validar" style="vertical-align:middle" name="check[validar_rut]" type="checkbox" checked="checked">
+		                		<input name="contact[validar_rut]" type="hidden" value="true">
+		                	<!--#4DELSE-->
+		                		<input class="mostrar-opcion-validar" style="vertical-align:middle" name="check[validar_rut]" type="checkbox">
+		                		<input name="contact[validar_rut]" type="hidden" value="false">
+		                	<!--#4DENDIF-->
+		                <!--#4DELSE-->
+		                	<input class="mostrar-opcion-validar" style="vertical-align:middle" name="check[validar_rut]" type="checkbox">
+		                	<input name="contact[validar_rut]" type="hidden" value="false">
+	                	<!--#4DENDIF-->
+	                	<strong style="color:gray" class="mostrar-opcion-validar">Validación rut Chileno</strong></span>
+	                </div>
+
+	                <div><label>Razón social:</label><input required name="contact[razon]" value="<!--#4DTEXT Uppercase([Contacto]Razon_Cont;*)-->" type="text"><span class="obligatorio">*</span></div>
+	                <div><label>Giro:</label><input name="contact[giro]" value="<!--#4DTEXT Uppercase([Contacto]Giro_Cont;*)-->" type="text"></div>
+                	<div><label>Email:</label><input placeholder="" name="contact[email]" value="<!--#4DTEXT Uppercase([Contacto]Email_Cont;*)-->" type="email"></div>
+                	<div><label>Teléfono:</label><input placeholder="<!--#4DTEXT _V3_placeHolderPhoneFijo-->" name="contact[fono_1]" value="<!--#4DTEXT [Contacto]Telefono1_Cont-->" type="tel"></div>
+                	<div><label></label><input placeholder="Agregar otro teléfono" name="contact[fono_2]" style="text-transform:lowercase" value="<!--#4DTEXT [Contacto]Telefono2_Cont-->" type="tel"></div>
+                	<div><label>Celular:</label><input placeholder="<!--#4DTEXT _V3_placeHolderPhoneMovil-->" name="contact[celular]" value="<!--#4DTEXT [Contacto]Celular_Cont-->" type="tel"></div>
+                	<div><label>País:</label><input name="contact[dir_pais]" data-id="" data-doc-id="<!--#4DTEXT _document_id-->" value="<!--#4DTEXT _pais-->" type="search"></div>
+                	<div><label>Región/Estado:</label><input name="contact[dir_region]" data-id="" value="<!--#4DTEXT _region-->" type="search"></div>
+                	<div><label>Ciudad:</label><input data-id="" name="contact[ciudad]" value="<!--#4DTEXT _ciudad-->" type="search"></div>
+                	
+					<!--#4DIF modoMx-->
+                		<div><label>Alcaldía/Municipio:</label><input data-id="" name="contact[comuna]" value="<!--#4DTEXT _comuna-->" type="search"><input name="contact[id_comuna]" value="<!--#4DTEXT _idcomuna-->" type="hidden"></div>
+					<!--#4DELSE-->
+                		<div><label>Comuna / localidad:</label><input data-id="" name="contact[comuna]" value="<!--#4DTEXT _comuna-->" type="search"><input name="contact[id_comuna]" value="<!--#4DTEXT _idcomuna-->" type="hidden"></div>
+                	<!--#4DENDIF-->
+
+		            <div><label>Dirección:</label><input name="contact[dir_calle]" value="<!--#4DTEXT Uppercase([Contacto]Dir_Calle_Cont;*)-->" type="text"></div>
+                	<div><label>Sitio web:</label><input placeholder="http://www.mipagina.com" name="contact[sitio_web]" value="<!--#4DTEXT Uppercase([Contacto]Sitio_Cont;*)-->" type="url"></div>
+                	<div><label>F. Nacimiento:</label><input class="datepicker" name="contact[f_nacimiento]" value="<!--#4DTEXT [Contacto]f_nacimiento-->" type="text"></div>
+
+					<div class="data-extra-mx"><label>No ABBA (Banco intermediario):</label><input data-id="" name="contacto[info][no_aba_bic]" value="<!--#4DTEXT v_no_aba_bic-->" type="text"></div>
+					<div class="data-extra-mx"><label>No. Swift (Banco intermediario):</label><input data-id="" name="contacto[info][no_swift_bic]" value="<!--#4DTEXT v_no_swift_bic-->" type="text"></div>
+					<div class="data-extra-mx"><label>Direccion (Banco intermediario):</label><input data-id="" name="contacto[info][direccion_bic]" value="<!--#4DTEXT v_direccion_bic-->" type="text"></div>
+					<div class="data-extra-mx"><label>Iban (Banco intermediario):</label><input data-id="" name="contacto[info][iban_banco_intermediario]" value="<!--#4DTEXT v_iban_banco_int-->" type="text"></div>
+					<div class="data-extra-mx"><label>Codigo postal (Banco intermediario):</label><input data-id="" name="contacto[info][code_postal_banco_intermediario]" value="<!--#4DTEXT v_code_postal_banco_int-->" type="text"></div>
+
+					<div class="data-extra-mx"><label>Nombre del beneficiario:</label><input data-id="" name="contacto[info][beneficiario_bn]" value="<!--#4DTEXT v_beneficiario_bn-->" type="text"></div>
+					<div class="data-extra-mx"><label>Codigo Swift (BIC):</label><input data-id="" name="contacto[info][codigo_swift_bn]" value="<!--#4DTEXT v_codigo_swift_bn-->" type="text"></div>
+					<div class="data-extra-mx"><label>Dirección de Beneficiario:</label><input data-id="" name="contacto[info][direccion_bn]" value="<!--#4DTEXT v_direccion_bn-->" type="text"></div>
+					<div class="data-extra-mx"><label>Iban:</label><input data-id="" name="contacto[info][iban_banco_nacional]" value="<!--#4DTEXT v_iban_banco_nacional-->" type="text"></div>
+					<div class="data-extra-mx"><label>Codigo postal:</label><input data-id="" name="contacto[info][code_postal_banco_nacional]" value="<!--#4DVAR v_code_postal_banco_nacional-->" type="text"></div>
+
+              	</article>
+			</fieldset>
+			<fieldset>
+				<legend><strong>Notas</strong></legend>
+				<div><textarea name="contact[notas]"><!--#4DTEXT Uppercase([Contacto]nota;*)--></textarea></div>
+			</fieldset>
+			<!--<fieldset>
+		        <legend><strong>Actividad</strong></legend>
+		        <ul class="activity">
+		        	<li class="venta">Cotización Nº 123 en proceso $120.0</li>
+		        	<li class="compra">Compra Nº 123 emitida $120.0</li>
+		        </ul>
+	      	</fieldset>-->
+		</section>
+	</body>
+</html>

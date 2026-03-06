@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="/out/style.css"/>
+        <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+-->
+     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <title>REPORTES-UNABASE</title>
+    <script type="text/javascript" src="/out/report.js"></script>
+    <style>
+      /*  p{text-align:left;display:block!important; margin: 30px 0 20px 40px;}
+        label{font-weight:bold;font-size:12px}      */ 
+    </style>
+</head>
+<body>
+<div class="contenedor" align="center">
+ <div class="cuadro2c">
+   <div>
+        <h4><!--#4DVAR v_Tit_Informe--></h4>
+        <p><!--#4DVAR String(aReporteDesc)--></p>
+    </div>
+    <p><img src="<!--#4DVAR vUrlImagenLogo-->" width="<!--#4DVAR vAnchoPicture-->" height="<!--#4DVAR vAltoPicture-->" border="0"/></p>
+
+
+<!--#4DLOOP aCobranza_Fecha-->
+<div class="background-block" >
+   <h3><!--#4DVAR aCobranza_RazonCliente{aCobranza_Fecha}--></h3>
+<table class="table" style="margin:10px" border="0">
+  <!--<tr bgcolor="#000000">
+    <td class="center-h">Fecha</td>
+    <td class="center-h">Fecha vencimiento</td>
+    <td class="center-h">Acción</td>
+    <td class="center-h">Contacto</td>
+    <td class="center-h">Razon Social</td> 
+  </tr>-->  
+    <tr>
+        <!--<td class="orden-alfa">#4DVAR aCobranza_Fecha{aCobranza_Fecha}</td>-->
+        <td class="items">
+            <h4>Fecha de Vencimiento:</h4>
+            <div><!--#4DVAR aCobranza_vence1{aCobranza_Fecha}--></div>            
+        </td>
+        <td class="items">
+            <h4>Acción:</h4>
+            <div><!--#4DVAR aCobranza_Tipo{aCobranza_Fecha}--></div>            
+        </td>
+        <td class="items">
+            <h4>Contacto:</h4>
+            <div><!--#4DVAR aCobranza_NomContacto{aCobranza_Fecha}--></div>
+        </td>
+        <!--<td class="items">#4DVAR aCobranza_RazonCliente{aCobranza_Fecha}</td>-->             
+    </tr>
+    <tr>
+        <td colspan="6">
+            <h4>Observacion:</h4>
+            <div><!--#4DVAR aCobranza_Observaciones{aCobranza_Fecha}--></div>
+        </td>
+    </tr>  
+    <!--4DACTION/listafacturas-->
+    <tr>
+        <td colspan="6">
+            <h4>Factura(s):</h4>
+            <div style="text-align:rigth;padding:5px">     
+            <!--#4DIF aTieneFacturas{aCobranza_Fecha}-->
+                <!--#4DINCLUDE facturascobranza.shtml-->        
+            <!--#4DENDIF--></div>
+        </td>
+    </tr>   
+</table>
+</div>
+ <!--#4DENDLOOP-->
+
+<div class="contenedor-footer">
+    <span class="datos-empresa-izq">
+    <!--#4DVAR nom_empresa--> / <!--#4DVAR dir_empresa--> / <a target="_blank" href="<!--#4DVAR sitio_empresa-->"><!--#4DVAR sitio_empresa--></a></span><em></em>
+    <span class="datos-empresa-der">Reporte enviado por <a href="http://www.unabase.cl" target="_blank" >UnaBase.cl</a></span>
+</div>
+</div>
+</div>
+</body>
+</html>

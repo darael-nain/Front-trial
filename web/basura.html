@@ -1,0 +1,24 @@
+<tr>
+    <td class="right"><div>Tipo de tarea</div></td>
+    <td class="left">
+        <div>
+            <select id="tipo-tarea" name="tipotarea">
+                <option selected="selected" value="<!--#4dvar vIdTipoTarea-->"><!--#4dvar vDesTipoTarea--></option>
+                <!--#4dloop aTareaId-->
+                    <!--#4dif aTareaId{aTareaId}#vIdTipoTarea-->         
+                    <option value="<!--#4dvar aTareaId{aTareaId}-->"><!--#4dvar aTareaDes{aTareaId}--></option>
+                    <!--#4dendif-->
+                <!--#4dendloop-->
+            </select> 
+        </div>
+    </td>
+</tr>
+
+
+ <!--#4dif (aCheckPermiso{18}=true) | (vLogin=vLoginResp_creado)-->
+    <a id="ver-planner-from-ot" rel="<!--#4dvar Current date(*)-->" href="#">
+        <img class="img-title-calendar" src="/imagenes_green/planner.png">
+    </a> 
+<!--#4delse-->
+   <img class="img-title-calendar" src="/imagenes_green/planner.png">
+<!--#4dendif-->      

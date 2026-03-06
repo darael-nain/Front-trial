@@ -1,0 +1,88 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Nota_de_venta]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP aProyectoId -->
+		{
+			"id": <!--#4DHTML aProyectoId{aProyectoId}-->,
+			"fecha_realizacion": "<!--#4DHTML String(aFechaRealizacion{aProyectoId})-->",
+			"fecha_asignacion": "<!--#4DHTML String(aFechaAsignacion{aProyectoId})-->",
+			"index": <!--#4DHTML aProyectoFolio{aProyectoId}-->,
+			<!--#4DIF NOT(aProyectoFolio{aProyectoId} = 0)-->"folio": <!--#4DHTML aProyectoFolio{aProyectoId}-->,<!--#4DENDIF-->
+			"text": "<!--#4DHTML _V3_escapeString(aProyectoNombre{aProyectoId})-->",
+			"tipo": "<!--#4DHTML _V3_escapeString(aProyectoTipo{aProyectoId})-->",
+			"username": "<!--#4DHTML aProyectoUsuario{aProyectoId}-->",
+			"ejecutivo": "<!--#4DHTML aProyectoEjecutivo{aProyectoId}-->",
+			"ejecutivo_nombre": "<!--#4DHTML _V3_escapeString(aProyectoEjecutivoNombre{aProyectoId})-->",
+			"ejecutivo_email": "<!--#4DHTML _V3_escapeString(aProyectoEjecutivoEmail{aProyectoId})-->",
+			"forma_pago": "<!--#4DHTML _V3_escapeString(aProyectoFormaPago{aProyectoId})-->",
+			"observaciones": "<!--#4DHTML _V3_escapeString(aProyectoObservaciones{aProyectoId})-->",
+			"empresa": {
+				"id": <!--#4DHTML aProyectoEmpresaId{aProyectoId}-->,
+				"alias": "<!--#4DHTML _V3_escapeString(aProyectoEmpresaAlias{aProyectoId})-->",
+				"razon_social": "<!--#4DHTML _V3_escapeString(aProyectoEmpresaRazonSocial{aProyectoId})-->",
+				"rut": "<!--#4DHTML _V3_escapeString(aProyectoEmpresaRut{aProyectoId})-->",
+				"direccion": "<!--#4DHTML _V3_escapeString(aProyectoEmpresaDireccion{aProyectoId})-->",
+				"telefono": "<!--#4DHTML _V3_escapeString(aProyectoEmpresaTelefono{aProyectoId})-->",
+				"cliente": "<!--#4DHTML _V3_escapeString(aProyectoEmpresaCliente{aProyectoId})-->"
+			},
+			"total_neto": <!--#4DHTML  String(Round(aProyectoTotalNeto{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->,
+            "gasto_p": <!--#4DHTML  String(Round(aProyectoGastoP{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->,
+            "gasto_r": <!--#4DHTML  String(Round(aProyectoGastoR{aProyectoId};_V3_defaultCurrencyDecimals);"&xml")-->,
+			<!--#4DIF (aProyectoMonedaTrabajo{aProyectoId}#"")-->
+			"exchange": {
+				"type": "<!--#4DHTML aProyectoMonedaTrabajo{aProyectoId}-->",
+				"rate": <!--#4DHTML String(aProyectoTipoCambio{aProyectoId};"&xml")-->
+			},
+			<!--#4DENDIF-->
+			"closed_compras": <!--#4DIF aProyectoCerradoCompras{aProyectoId}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"status": <!--#4DIF aProyectoEstado{aProyectoId}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"validated": <!--#4DIF aProyectoValidacion{aProyectoId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"created_at": "<!--#4DHTML Substring(String(aProyectoCreacionFecha{aProyectoId};8);1;10)-->T<!--#4DHTML aProyectoCreacionHora{aProyectoId}-->-04:00"<!--#4DIF (NOT(aProyectoModificacionHora{aProyectoId} = "00:00:00")))-->,
+			"updated_at": "<!--#4DHTML Substring(String(aProyectoModificacionFecha{aProyectoId};8);1;10)-->T<!--#4DHTML aProyectoModificacionHora{aProyectoId}-->-04:00"<!--#4DENDIF-->,
+			"nro_oc_cliente": "<!--#4DHTML _V3_escapeString(aNroOCCliente{aProyectoId})-->",
+			"neto_oc_cliente": <!--#4DHTML  String(aTotalNetoOCCliente{aProyectoId};"&xml")-->,
+			"emision_oc_cliente": "<!--#4DHTML aEmisionOCCliente{aProyectoId}-->",
+			"descuento_porcentaje": <!--#4DHTML String(aProyectoDescPorc{aProyectoId};"&xml")-->,
+			"descuento_valor": <!--#4DHTML String(aProyectoDescVal{aProyectoId};"&xml")-->,
+			"iva": <!--#4DHTML String(aProyectoIva{aProyectoId};"&xml")-->
+		}<!--#4DIF NOT(aProyectoId{aProyectoId} = aProyectoId{Size of array(aProyectoId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	],
+
+	"parametros" : {
+			"nombre_param1": "<!--#4DHTML _V3_escapeString(aNombreParametro)-->"
+	},
+	"totales": {
+		"neto": "<!--#4DVAR _V3_formatCurrency($total_neto)-->",
+		"neto_raw": <!--#4DHTML String(Round($total_neto;_V3_defaultCurrencyDecimals);"&xml")-->,
+		"gasto_r": "<!--#4DVAR _V3_formatCurrency($total_gasto_r)-->",
+		"gasto_r_raw": <!--#4DHTML String(Round($total_gasto_r;_V3_defaultCurrencyDecimals);"&xml")-->,
+		"gasto_p": "<!--#4DVAR _V3_formatCurrency($total_gasto_p)-->",
+		"gasto_p_raw": <!--#4DHTML String(Round($total_gasto_p;_V3_defaultCurrencyDecimals);"&xml")-->,
+		"gasto_dif": "<!--#4DVAR _V3_formatCurrency($total_gasto_diferencia)-->",
+		"gasto_dif_raw": <!--#4DHTML String(Round($total_gasto_diferencia;_V3_defaultCurrencyDecimals);"&xml")-->
+		},
+	"settings": {
+		"usar_segunda_cantidad": <!--#4DIF vUsarSegunda_cantidad-->true<!--#4DELSE-->false<!--#4DENDIF-->
+	},
+	"currency" : {
+        "code" : "<!--#4DTEXT _V3_defaultCurrencyCode-->",
+        "name" : "<!--#4DTEXT _V3_defaultCurrencyName-->",
+        "symbol" : "<!--#4DTEXT _V3_defaultCurrencySymbol-->",
+        "right" : <!--#4DIF _V3_defaultCurrencyRight-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+        "decimal": <!--#4DTEXT _V3_defaultCurrencyDecimals-->,
+        "decimal_sep": "<!--#4DTEXT _V3_defaultCurrencyDecimalSep-->",
+        "thousand_sep" : "<!--#4DTEXT _V3_defaultCurrencyThousandSep-->",
+        "decimal_text_excel" : "<!--#4DTEXT _V3_defaultCurrencyDecimalsText-->",
+        "format_code_excel" : "<!--#4DTEXT _V3_defaultCurrencyFormatCode-->",
+        "label_rut" : "<!--#4DTEXT country_label_rut-->"
+    }
+}

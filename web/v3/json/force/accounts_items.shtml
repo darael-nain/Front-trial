@@ -1,0 +1,40 @@
+{
+	"rut":<!--#4DIF Not(Undefined(rut_empresa))-->"<!--#4DHTML rut_empresa-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+	"dv":<!--#4DIF Not(Undefined(dv_empresa))-->"<!--#4DHTML dv_empresa-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+	"records": {
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP aId -->
+		{
+			"id": "<!--#4DHTML aId{aId}-->",
+			"name": "<!--#4DHTML _V3_escapeString(aNameAccount{aId})-->",
+			"number": "<!--#4DHTML _V3_escapeString(aNumber{aId})-->",
+			"label": "<!--#4DHTML aNameAccount{aId}-->",
+			"nivel": "<!--#4DHTML aNivel{aId}-->",
+			"type": "<!--#4DHTML aType{aId}-->",
+			"auxiliar": <!--#4DIF aAuxiliar{aId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"documento": <!--#4DIF aDocumento{aId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"i_operacional": <!--#4DIF aIOperacional{aId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"i_nooperacional": <!--#4DIF aINoOperacional{aId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"g_admin": <!--#4DIF aGAdmin{aId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"c_operacional": <!--#4DIF aCOperacional{aId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"comision": "<!--#4DHTML aComision{aId}-->",
+			"parent": "<!--#4DHTML aParent{aId}-->",
+			"aPor_defecto_cc_fxr_neg": <!--#4DIF Not(Undefined(aPor_defecto_cc_fxr_neg))-->"<!--#4DHTML aPor_defecto_cc_fxr_neg{aId}-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+			"cc_fxr_neg": <!--#4DIF Not(Undefined(cc_fxr_neg))-->"<!--#4DHTML cc_fxr_neg{aId}-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+			"subtotal": "<!--#4DHTML aSubTotalItems{aId}-->"
+		}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	],
+	"items":[
+	<!--#4DLOOP aIdItem -->
+	{
+		"id_item":"<!--#4DHTML aIdItem{aIdItem}-->",
+		"cuenta_item":"<!--#4DHTML aAccountItem{aIdItem}-->",
+		"subtotal_item":"<!--#4DHTML aSubTotalItems{aIdItem}-->",
+		"id_cuenta":"<!--#4DHTML aIdCuenta{aIdItem}-->"
+	}<!--#4DIF NOT(aIdItem{aIdItem} = aIdItem{Size of array(aIdItem)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

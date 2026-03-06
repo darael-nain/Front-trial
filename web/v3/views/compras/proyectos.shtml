@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!--#4DSCRIPT/_V3_proxy_getProyectosCompras-->
+	<title>Buscar proyectos</title>
+	<meta charset="utf-8">
+	<script type="text/javascript">
+		var menus = function(){
+			unaBase.toolbox.init();
+			unaBase.toolbox.menu.init({
+				entity: 'Proyectos_compras',
+				buttons: ['itemsoc_volver_proyectos','itemsoc_agregar_items', 'itemsoc_otros_gastos'],
+				data: function(){     
+				  return $('#buscar-proyectos-compras').serializeAnything();            
+				},
+				validate:function(){     
+				  return true;
+				}    
+			});
+		};
+		$(document).ready(function() {
+			$('button.select').button({icons: {primary: 'ui-icon-arrowreturnthick-1-w'},text: false});			
+			get_proyectos_compras("load");			
+		});
+		function get_proyectos_compras(type){
+			var container = $('#buscar-proyectos-compras > .dynamic-container');
+			var param = "";
+			$.ajax({
+		        'url': '/4DACTION/_V3_get_proyectos_compras',
+		        data: {
+		        	type:type,
+		        	param:param
+		        },
+		        dataType: 'json',
+		        success: function(data) {
+
+		        	// Agrega tabla
+		        	var htmlObject;
+		          	htmlObject = $('<table class="items select proyecto">'+
+									'<thead>'+
+										'<tr>'+						
+											'<th>Nro.</th>'+
+											'<th>Emisión</th>'+
+											'<th>Cliente</th>'+
+											'<th>Referencia</th>'+
+											'<th>Neto[' + currency.symbol + ']</th>'+											
+										'</tr>'+
+									'</thead>'+
+									'<tbody class="ui-selectable"></tbody>'+
+								'</table>');	
+					container.append(htmlObject);
+
+					// Lista proyectos
+					var htmlObject;
+					var container2 = $('#buscar-proyectos-compras > .dynamic-container > table > tbody');
+					var cant = 0;
+		        	$.each(data.rows, function(key, item) {
+		        		cant++;
+		        		htmlObject = $('<tr data-id="'+item.id_nv+'" data-nro="'+item.nro+'" data-ref="'+item.referencia+'">'+
+			            	'<td>'+item.nro+'</td>'+
+			            	'<td>'+item.emision+'</td>'+
+			            	'<td>'+item.cliente+'</td>'+             
+			               	'<td>'+item.referencia+'</td>'+
+			               	'<td class="currency">'+item.neto+'</td>'+
+			               	//'<td><button class="select proyecto" type="button">Seleccionar</button></td>'+
+		            	'</tr>');							
+						container2.append(htmlObject);
+					});
+					var titulo = cant+" NEGOCIO(S) DISPONIBLE(S) PARA COMPRAS.";
+					$('.ui-dialog-titlebar .ui-dialog-title').text(titulo);
+		        	formatCurrency();
+
+					// Asocia oc a proyecto seleccionado
+					$('.items.select.proyecto > tbody > tr').click(function(){
+						unaBase.ui.block();					
+						var id_proyecto = $(this).data('id');
+						var id_oc = $('section.sheet').data('id');						
+						var negocio = '#'+$(this).data('nro')+' '+$(this).data('ref')+' - ÍTEM(S) DEL NEGOCIO DISPONIBLE(S) PARA COMPRAS.';						
+						$.ajax({
+							url: '/4DACTION/_V3_setCompras',
+							data: {
+								"oc[id]":id_oc,
+								"oc[negocio][id]": id_proyecto,
+								"oc[from]": "agregar_item"										
+							},
+							dataType: 'json',
+							type: 'POST'
+						}).done(function(data) {
+							container.find("*").remove();
+							$.ajax({
+								url: '/v3/views/negocios/items.shtml',
+								data: {
+									"oc[negocio][id]": id_proyecto							
+								},
+								dataType: 'html',
+								type: 'GET'
+							}).done(function(data) {			
+								$('.ui-dialog-titlebar .ui-dialog-title').text(negocio);
+								container.html(data);
+								$('input[name="oc[negocio][id]"]').val(id_proyecto);
+								// formatea numeros
+								$('.ui-dialog-titlebar .numeric.currency input').number(true, currency.decimals, ',', '.');
+    							$('.ui-dialog-titlebar .numeric.percent input').number(true, 1, ',', '.');
+								menus();
+
+								if ($('#buscar-proyectos-compras').data('permiso')) {
+									$('.ui-dialog header nav ul li[data-name="itemsoc_otros_gastos"]').hide();
+								}
+
+								unaBase.ui.unblock();
+
+							});
+						});
+					});					
+		        }
+		    });
+		}
+	</script>
+	<style>
+		.costo > span > span[name] {
+			color: #AF6D44;
+		}
+	</style>
+	<link rel="stylesheet" href="/v3/design/temporal.css?<!--#4DTEXT random-->">
+</head>
+<body>
+<section id="buscar-proyectos-compras" class="sheet" data-permiso="<!--#4DTEXT vPermisoOtrosGastos-->" data-id="<!--#4DTEXT [Orden_de_compra]Id_OCompra-->">
+	<input type="hidden" name="id" value="<!--#4DTEXT [Orden_de_compra]Id_OCompra-->">
+	<input type="hidden" name="oc[id]" value="<!--#4DTEXT [Orden_de_compra]Id_OCompra-->">
+	<input type="hidden" name="oc[negocio][id]" value="">
+	<div class="dynamic-container"></div>	
+</section>	
+</body>
+</html>

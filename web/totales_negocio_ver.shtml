@@ -1,0 +1,11 @@
+<div class="sumatotalesitems" id="sumatotalesitems">
+<table border="0">
+<tr>
+<td>
+<td>Gasto P. <input readonly id="" name="" type="text" value="<!--#4DVAR vsumagastop2-->" /></td>
+<td>Gasto R. <input  readonly id="" name="" type="text" value="<!--#4DVAR vsumagastor2-->" /></td>
+<td>Diferencia<input  readonly id="" name="" type="text" value="<!--#4DVAR vdiferencia2-->" /></td>
+</tr>
+</table>
+</div>
+

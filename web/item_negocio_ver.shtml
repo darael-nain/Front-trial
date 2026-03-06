@@ -1,0 +1,51 @@
+<table class="item-negocio"  width="100%" border="1" cellpadding="0" cellspacing="0" hspace="0" vspace="0">
+<tbody id="tabla">
+<tr bgcolor="#CCCCCC" >
+<td class="center" width="45%">DESCRIPCION</td>
+<td class="center" width="5%">CANT</td>
+<td class="center" width="10%">GASTO P.[ $ ]</td>
+<td class="center" width="10%">GASTO R.[ $ ]</td>
+<td class="center" width="10%">DIFERENCIA .[ $ ]</td>
+<!--#4DIF vPerfil="01"-->
+<td class="center" width="10%">MARGEN P.[ % ]</td>
+<!--#4DENDIF-->
+<td class="center" width="5%">*</td>
+</tr>      
+<!--#4DLOOP a_llave-->        
+<!--#4DIF a_tipo_det{a_llave}="TITULO"-->
+<tr>
+<td><input disabled id="" name="" class="des-titulo"  type="text" value="<!--#4DVAR a_des{a_llave}-->" /></td>
+<td><input disabled id="" name="" class="cant-titulo" type="text" value="<!--#4DVAR a_cantidad{a_llave}-->"/></td>        
+<td><input disabled id="" name="" class="total-titulo" type="text" value="<!--#4DVAR a_gasto_p{a_llave}-->"/></td>
+<td><input disabled id="" name="" class="total-titulo" type="text" value="<!--#4DVAR a_gasto_r{a_llave}-->"/></td>
+<td><input disabled id="" name="" class="total-titulo" type="text" value="<!--#4DVAR a_diferencia{a_llave}-->"/></td>
+<!--#4DIF vPerfil="01"-->
+<td><input disabled id="" name="" class="total-titulo" type="text" value="<!--#4DVAR a_margen{a_llave}-->" /></td>
+<!--#4DENDIF-->
+<td>
+<input checked="checked" class="chk-t" id="<!--#4DVAR a_llave{a_llave}-->_C8" name="<!--#4DVAR a_llave{a_llave}-->" type="checkbox" value="noafecto" />
+</td>
+</tr>
+<!--#4DELSE-->
+<tr>
+<td><input disabled id="" name="" class="disabled des-item" type="text" value="<!--#4DVAR a_des{a_llave}-->"   /></td>
+<td><input disabled id="" name="" class="disabled cant-item" type="text" value="<!--#4DVAR a_cantidad{a_llave}-->"   /></td>    
+<td><input disabled id="" name="" class="total-item" type="text" value="<!--#4DVAR a_gasto_p{a_llave}-->"   /></td>
+<td><input disabled id="" name="" class="total-item" type="text" value="<!--#4DVAR a_gasto_r{a_llave}-->"  /></td>
+<td><input disabled id="" name="" class="total-item" type="text" value="<!--#4DVAR a_diferencia{a_llave}-->"  /></td>
+<!--#4DIF vPerfil="01"-->
+<td><input disabled id="" name="" class="total-item" type="text" value="<!--#4DVAR a_margen{a_llave}-->"  /></td>
+<!--#4DENDIF-->
+<td>
+<!--#4DIF a_chk_comision{a_llave}=true-->
+	<input disabled class="disabled chk-i" id="" name="" type="checkbox" value=""  checked="checked" />
+<!--#4DELSE-->
+	<input disabled class="disabled chk-i" id="" name="" type="checkbox" value=""  />
+<!--#4DENDIF-->
+</td>
+
+</tr>
+<!--#4DENDIF-->    
+<!--#4DENDLOOP-->
+</tbody>
+</table>

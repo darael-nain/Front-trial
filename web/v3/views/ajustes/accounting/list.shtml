@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Cuentas Contables</title>
+		<meta charset="utf-8">
+		<script>
+
+			$(document).ready(function() {
+				unaBase.toolbox.init();
+
+				// Inicializamos un buscador
+				var params = {
+					searchOff: true,
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/_V3_getParamContable' },
+					entity: 'accounting',
+					callback : function(){
+						//$('li[data-name="new"]').remove()
+						//$('li[data-name="save"]').remove()
+						//$('table').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false });
+					},
+					// Función que genera cada fila de la tabla, dado el valor de i (índice de posición)
+					// y el valor de rows (array con todos los resultados)
+					// El contenido de rows corresponde al objeto de mismo nombre generado mediante la llamada
+					// a la api JSON. Ver /v3/json/get_cotizacion.shtml para conocer el formato.
+					row: {
+						html: function(i, rows) {
+							var act;
+							var envia="";
+							
+							
+							// if(rows[i].enviara.length>1){
+							// 	envia = " Para: "+ rows[i].enviara + "<br>";
+							// }
+							// if(rows[i].copiara.length>1){
+							// 	envia += " Cc: "+ rows[i].copiara;
+							// }
+
+							// if(rows[i].totalUsuarios>0 && envia.length>1){
+							// 	envia += " y " + rows[i].totalUsuarios + "+";
+							// }else if(rows[i].totalUsuarios>0){
+							// 	envia = rows[i].totalUsuarios;
+							// }
+
+
+							envia = rows[i].totalUsuarios;
+
+
+							var htmlData = '';
+								htmlData = '<tr data-id="' + rows[i].id + '">' +
+									'<td colspan="3" style="text-align: left; padding-left: 5px">' + rows[i].name + '</td>' +
+									'<td>' + rows[i].number + '</td>' +
+									'<td>' + rows[i].type + '</td>' +			
+									'<td>' + rows[i].nivel + '</td>' +			
+								'</tr>';
+							return htmlData;
+						}
+					},
+					hideSearchBox: true,
+
+
+					detail: {
+						url: function(id) { return '/v3/views/ajustes/accounting/content.shtml?id=' + id},
+						iframe: false
+					},
+					// Inflexiones
+					inflection: {
+						singular: 'regla',
+						plural: 'reglas',
+						none: 'ninguna'
+					},
+					// Filtros
+					filters: [
+						
+					/*	{ name: 'created_at', type: 'month', caption: 'Fecha de creación', range: true },*/
+						//{ name: 'updated_at', type: 'month', caption: 'Fecha últ. modificación', range: true },
+						// Pendiente: agregar datasource remoto y convertir a checkbox
+						// con jquery ui autocomplete
+						/*{ name: 'area_negocio', type: 'autocomplete', caption: 'Área de negocio', dataSource: 'getAreaNegocio' },
+						{ name: 'ejecutivo_responsable', type: 'autocomplete', caption: 'Ejecutivo responsable', dataSource: 'getUsuario' },*/
+						// { name: 'nivel', type: 'checkbox', caption: 'Nivel', options: [
+						// 	{ caption: 'cuenta', name: 'cuenta', value: "cuenta" },
+						// 	{ caption: 'titulo', name: 'titulo', value: "titulo" }
+						// ] }
+						{ name: 'nivel', type: 'autocomplete', caption: 'Nivel', dataObject: [
+							{ text: 'Cuenta', id: "cuenta" },
+							{ text: 'Título', id: "titulo" }
+						] }
+
+					
+
+					]
+				};
+
+				unaBase.toolbox.search.init(params);
+				unaBase.toolbox.menu.init({
+					entity: 'accounting',
+					buttons: [ 'searchOff','exit','export_accounting_plan']
+				});
+
+			
+
+
+			});
+		</script>
+	</head>
+	<body>
+
+			<div class='maintitle'>
+				<h1></h1>
+			</div>
+		<!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->
+		<table class="results">
+			<thead>
+				<tr>
+					<th colspan="3" >Nombre</th>
+					<th>Número</th>
+					<th>Tipo</th>	
+					<th>Nivel</th>	
+				</tr>
+			</thead>
+			<tfoot></tfoot>
+			<tbody></tbody>
+		</table>
+	</body>
+</html>

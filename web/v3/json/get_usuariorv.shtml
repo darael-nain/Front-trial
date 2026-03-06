@@ -1,0 +1,15 @@
+{
+	"rows": [
+<!--#4DLOOP aUsuarioRVId -->
+		{
+			"id": <!--#4DHTML aUsuarioRVId{aUsuarioRVId}-->,
+			"index": <!--#4DHTML aUsuarioRVIndex{aUsuarioRVId}-->,
+			"jerarquia": <!--#4DHTML aUsuarioRVJerarquia{aUsuarioRVId}-->,
+			"username": "<!--#4DHTML aUsuarioRVUsername{aUsuarioRVId}-->",
+			"required": <!--#4DIF aUsuarioRVRequired{aUsuarioRVId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"block_email": <!--#4DIF aUsuarioRVBlockEmail{aUsuarioRVId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"ejecutivo": <!--#4DIF aUsuarioRVEjecutivo{aUsuarioRVId}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aUsuarioRVId{aUsuarioRVId} = aUsuarioRVId{Size of array(aUsuarioRVId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

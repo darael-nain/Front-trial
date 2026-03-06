@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no" ?>
+<DTE>
+
+  <Documento>
+    <Encabezado>
+      <IdDoc>
+        <TipoDTE>52</TipoDTE>
+        <Folio>000582</Folio>
+        <FchEmis>05-08-14</FchEmis>
+        <FchVenc>0000-00-00</FchVenc>
+        <TipoDespacho>1</TipoDespacho>
+        <IndTraslado>6</IndTraslado>
+      </IdDoc>
+      <Emisor>
+        <RUTEmisor>76132391-1</RUTEmisor>
+        <RznSoc>BER INVERSIONES E.I.R.L</RznSoc>
+        <GiroEmis>OUTSOURCING</GiroEmis>
+        <Acteco/>
+        <DirOrigen>AV. CRISTOBAL COLON 3940 OF. 163</DirOrigen>
+        <CmnaOrigen>LAS CONDES</CmnaOrigen>
+        <CiudadOrigen>SANTIAGO</CiudadOrigen>
+      </Emisor>
+      <Receptor>
+        <RUTRecep>96775350-5</RUTRecep>
+        <RznSocRecep>COALFA S.A</RznSocRecep>
+        <GiroRecep>CONCESIONARIO</GiroRecep>
+        <Contacto>GONZALO FERNANDEZ </Contacto>
+        <DirRecep>CAMINO AEROPUERTO # 1381  </DirRecep>
+        <CmnaRecep>SANTIAGO</CmnaRecep>
+        <CiudadRecep>STGO</CiudadRecep>
+      </Receptor>
+      <Totales>
+        <MntNeto>27000</MntNeto>
+        <MntExe>0</MntExe>
+        <TasaIVA>19</TasaIVA>
+        <IVA>5130</IVA>
+        <MntTotal>32130</MntTotal>
+      </Totales>
+    </Encabezado>
+    <Detalle>
+      <NroLinDet>1</NroLinDet>
+      <CdgItem>
+        <TpoCodigo>INT1</TpoCodigo>
+        <VlrCodigo>0</VlrCodigo>
+      </CdgItem>
+      <NmbItem>MANILLA PLASTICA PARA MANTENEDOR NARANJO SB2-B90T</NmbItem>
+      <QtyItem>3</QtyItem>
+      <PrcItem>9000</PrcItem>
+      <MontoItem>27000</MontoItem>
+    </Detalle>
+  </Documento>
+
+</DTE>

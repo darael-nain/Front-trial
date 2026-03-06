@@ -1,0 +1,67 @@
+{
+	"success": <!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"status":<!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"dateFrom": "<!--#4DHTML dateStart-->",
+	"errorMsg": "<!--#4DTEXT errorMsg-->",
+  "total_contactos": "<!--#4DTEXT $totalContactos-->",
+  "total_catalogo": "<!--#4DTEXT $totalServicios-->",
+  "total_usuario_activos": "<!--#4DTEXT $totalUsuariosActivos-->",
+  "total_usuario_inactivos": "<!--#4DTEXT $totalUsuariosInactivos-->",
+  "total_tareas": "<!--#4DTEXT $totalTask-->",
+	"rows": {
+		"total_mes": [
+			{
+				"months": [
+              { 
+                "value": <!--#4DIF Not(Undefined(aTotalValueJan{1}))--><!--#4DIF Size of array(aTotalValueJan)>0-->"<!--#4DTEXT String(aTotalValueJan{1};"&xml")-->"<!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->,
+                "cantidad": <!--#4DIF Not(Undefined(aTotalQuantityJan{1}))--><!--#4DIF Size of array(aTotalQuantityJan)>0-->"<!--#4DTEXT String(aTotalQuantityJan{1};"&xml")-->"<!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->
+              },
+              { 
+                "value": <!--#4DIF Not(Undefined(aTotalValueFeb{1}))--><!--#4DIF Size of array(aTotalValueFeb)>0-->"<!--#4DTEXT String(aTotalValueFeb{1};"&xml")-->"<!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->,
+                "cantidad": <!--#4DIF Not(Undefined(aTotalQuantityFeb{1}))--><!--#4DIF Size of array(aTotalQuantityFeb)>0-->"<!--#4DTEXT String(aTotalQuantityFeb{1};"&xml")-->"<!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->
+              },
+              { 
+                "value": <!--#4DIF Not(Undefined(aTotalValueMar{1}))--><!--#4DIF Size of array(aTotalValueMar)>0-->"<!--#4DTEXT String(aTotalValueMar{1};"&xml")-->"<!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->,
+                "cantidad": <!--#4DIF Not(Undefined(aTotalQuantityMar{1}))--><!--#4DIF Size of array(aTotalQuantityMar)>0-->"<!--#4DTEXT String(aTotalQuantityMar{1};"&xml")-->"<!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->
+              },
+              { 
+                "value": <!--#4DIF Not(Undefined(aTotalValueApr{1}))--><!--#4DIF Size of array(aTotalValueApr)>0-->"<!--#4DTEXT String(aTotalValueApr{1};"&xml")-->"<!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->,
+                "cantidad": <!--#4DIF Not(Undefined(aTotalQuantityApr{1}))--><!--#4DIF Size of array(aTotalQuantityApr)>0-->"<!--#4DTEXT String(aTotalQuantityApr{1};"&xml")-->"<!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->
+              },
+              { 
+                "value": <!--#4DIF Not(Undefined(aTotalValueMay{1}))--><!--#4DIF Size of array(aTotalValueMay)>0-->"<!--#4DTEXT String(aTotalValueMay{1};"&xml")-->"<!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->,
+                "cantidad": <!--#4DIF Not(Undefined(aTotalQuantityMay{1}))--><!--#4DIF Size of array(aTotalQuantityMay)>0-->"<!--#4DTEXT String(aTotalQuantityMay{1};"&xml")-->"<!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->
+              },
+              { 
+                "value": <!--#4DIF Not(Undefined(aTotalValueJun{1}))--><!--#4DIF Size of array(aTotalValueJun)>0-->"<!--#4DTEXT String(aTotalValueJun{1};"&xml")-->"<!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->,
+                "cantidad": <!--#4DIF Not(Undefined(aTotalQuantityJun{1}))--><!--#4DIF Size of array(aTotalQuantityJun)>0-->"<!--#4DTEXT String(aTotalQuantityJun{1};"&xml")-->"<!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->
+              },
+              { 
+                "value": <!--#4DIF Not(Undefined(aTotalValueJul{1}))--><!--#4DIF Size of array(aTotalValueJul)>0-->"<!--#4DTEXT String(aTotalValueJul{1};"&xml")-->"<!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->,
+                "cantidad": <!--#4DIF Not(Undefined(aTotalQuantityJul{1}))--><!--#4DIF Size of array(aTotalQuantityJul)>0-->"<!--#4DTEXT String(aTotalQuantityJul{1};"&xml")-->"<!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->
+              },
+              { 
+                "value": <!--#4DIF Not(Undefined(aTotalValueAug{1}))--><!--#4DIF Size of array(aTotalValueAug)>0-->"<!--#4DTEXT String(aTotalValueAug{1};"&xml")-->"<!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->,
+                "cantidad": <!--#4DIF Not(Undefined(aTotalQuantityAug{1}))--><!--#4DIF Size of array(aTotalQuantityAug)>0-->"<!--#4DTEXT String(aTotalQuantityAug{1};"&xml")-->"<!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->
+              },
+              { 
+                "value": <!--#4DIF Not(Undefined(aTotalValueSep{1}))--><!--#4DIF Size of array(aTotalValueSep)>0-->"<!--#4DTEXT String(aTotalValueSep{1};"&xml")-->"<!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->,
+                "cantidad": <!--#4DIF Not(Undefined(aTotalQuantitySep{1}))--><!--#4DIF Size of array(aTotalQuantitySep)>0-->"<!--#4DTEXT String(aTotalQuantitySep{1};"&xml")-->"<!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->
+              },
+              { 
+                "value": <!--#4DIF Not(Undefined(aTotalValueOct{1}))--><!--#4DIF Size of array(aTotalValueOct)>0-->"<!--#4DTEXT String(aTotalValueOct{1};"&xml")-->"<!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->,
+                "cantidad": <!--#4DIF Not(Undefined(aTotalQuantityOct{1}))--><!--#4DIF Size of array(aTotalQuantityOct)>0-->"<!--#4DTEXT String(aTotalQuantityOct{1};"&xml")-->"<!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->
+              },
+              { 
+                "value": <!--#4DIF Not(Undefined(aTotalValueNov{1}))--><!--#4DIF Size of array(aTotalValueNov)>0-->"<!--#4DTEXT String(aTotalValueNov{1};"&xml")-->"<!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->,
+                "cantidad": <!--#4DIF Not(Undefined(aTotalQuantityNov{1}))--><!--#4DIF Size of array(aTotalQuantityNov)>0-->"<!--#4DTEXT String(aTotalQuantityNov{1};"&xml")-->"<!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->
+              },
+              { 
+                "value": <!--#4DIF Not(Undefined(aTotalValueDec{1}))--><!--#4DIF Size of array(aTotalValueDec)>0-->"<!--#4DTEXT String(aTotalValueDec{1};"&xml")-->"<!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->,
+                "cantidad": <!--#4DIF Not(Undefined(aTotalQuantityDec{1}))--><!--#4DIF Size of array(aTotalQuantityDec)>0-->"<!--#4DTEXT String(aTotalQuantityDec{1};"&xml")-->"<!--#4DELSE-->0<!--#4DENDIF--><!--#4DELSE-->0<!--#4DENDIF-->
+              }
+          ]
+			}
+	  ]
+	}
+}

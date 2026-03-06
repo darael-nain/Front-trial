@@ -1,0 +1,51 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Orden_de_compra]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"totales": {
+		"neto": "<!--#4DHTML _V3_formatCurrency(vNeto)-->",
+		"total": "<!--#4DHTML _V3_formatCurrency(vTotal)-->",
+		"justificado": "<!--#4DHTML _V3_formatCurrency(vJustificado)-->",
+		"pagado": "<!--#4DHTML _V3_formatCurrency(vPagado)-->",
+		"porpagar": "<!--#4DHTML _V3_formatCurrency(vPorPagar)-->",
+		"porjustificar": "<!--#4DHTML _V3_formatCurrency(vPorJustificar)-->",
+		"depositado": "<!--#4DHTML _V3_formatCurrency(vDepositado)-->",
+		"saldo": "<!--#4DHTML _V3_formatCurrency(vSaldo)-->",
+		"classColor": "<!--#4DHTML vColorBackSaldo-->"
+	},
+	"rows": [
+<!--#4DLOOP aIdOC -->
+		{
+			"id": <!--#4DHTML aIdOC{aIdOC}-->,
+			"version": "<!--#4DHTML aVersionOC{aIdOC}-->",
+			"folio": "<!--#4DHTML aNroOC{aIdOC}-->",
+			"tipo": "<!--#4DHTML aTipoOC{aIdOC}-->",
+			"doc": "<!--#4DHTML aDocOC{aIdOC}-->",
+			"fecha": "<!--#4DHTML String(aFechaOC{aIdOC};7)-->",
+			"referencia": "<!--#4DHTML _V3_escapeString(aReferenciaOC{aIdOC})-->",
+			"proveedor": "<!--#4DHTML _V3_escapeString(aProveedorOC{aIdOC})-->",
+			"estado": "<!--#4DHTML aEstadoOC{aIdOC}-->",
+			"neto": "<!--#4DHTML _V3_formatCurrency(aNetoOC{aIdOC})-->",
+			"total": "<!--#4DHTML S_V3_formatCurrency(aTotalOC{aIdOC})-->",
+			"saldo_a_pagar": "<!--#4DHTML _V3_formatCurrency(aSaldoAPagar{aIdOC})-->",
+			"saldo_a_justificar": "<!--#4DHTML _V3_formatCurrency(aSaldoAJustificar{aIdOC})-->",
+			"pago": "<!--#4DHTML _V3_formatCurrency(aPago{aIdOC})-->",
+			"justificado": "<!--#4DHTML _V3_formatCurrency(aJustificado{aIdOC})-->",
+			"deposito": "<!--#4DHTML _V3_formatCurrency(aDeposito{aIdOC})-->",
+			"saldo_real": "<!--#4DHTML _V3_formatCurrency(aSaldoReal{aIdOC})-->",
+			"gasto_real_pagado": "<!--#4DHTML _V3_formatCurrency(aGastoRealPagado{aIdOC})-->",
+			"color": "<!--#4DHTML aColor{aIdOC}-->",
+			"validado": "<!--#4DHTML aValidadoOC{aIdOC}-->"
+		}<!--#4DIF NOT(aIdOC{aIdOC} = aIdOC{Size of array(aIdOC)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}
+
+
+

@@ -1,0 +1,15 @@
+{
+	"success": <!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF-->,		
+	"rows":[
+	<!--#4DLOOP aId -->
+		{
+			"id":  <!--#4DIF Not(Undefined(aId))-->"<!--#4DHTML aId{aId}-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+			"name":   <!--#4DIF Not(Undefined(aName))-->"<!--#4DHTML _V3_escapeString(aName{aId})-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+			"email":   <!--#4DIF Not(Undefined(aEmail))-->"<!--#4DHTML _V3_escapeString(aEmail{aId})-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+			"cargo":   <!--#4DIF Not(Undefined(aCargo))-->"<!--#4DHTML _V3_escapeString(aCargo{aId})-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+			"razon":   <!--#4DIF Not(Undefined(aRazon))-->"<!--#4DHTML _V3_escapeString(aRazon{aId})-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+			"rut": <!--#4DIF Not(Undefined(aRut))-->"<!--#4DHTML _V3_escapeString(aRut{aId})-->"<!--#4DELSE-->""<!--#4DENDIF-->
+		}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

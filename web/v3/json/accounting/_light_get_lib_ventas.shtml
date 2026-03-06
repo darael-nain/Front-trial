@@ -1,0 +1,29 @@
+{
+	"success": <!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"errorMsg": "<!--#4DTEXT errorMsg-->",
+	"total": "<!--#4DTEXT total-->"
+	<!--#4DIF Not(Undefined(aCont))-->
+	,
+	"rows":[
+		<!--#4DLOOP aCont -->
+			{
+				"cont":  <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML aCont{aCont}-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"codigo_sii":   <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aCodigoDocSii{aCont})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"tipo_doc":   <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aTipoDoc{aCont})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"abreviatura":   <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aTipoDocAbr{aCont})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"folio":   <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aFolio{aCont})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"fecha":   <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aFecha{aCont})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"rut":   <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML aRut{aCont}-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"razon":   <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML  _V3_escapeString(aRazon{aCont})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"item":   <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML _V3_escapeString(String(aItem{aCont}))-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"iva": <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aIva{aCont})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"iva2": <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aIva2{aCont})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"exento": <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aExento{aCont})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"total": <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aTotal{aCont})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"neto": <!--#4DIF Not(Undefined(aCont))-->"<!--#4DHTML String(aNeto{aCont})-->"<!--#4DELSE-->null<!--#4DENDIF-->
+			}<!--#4DIF NOT(aCont{aCont} = aCont{Size of array(aCont)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+	<!--#4DENDIF-->
+
+	]
+}

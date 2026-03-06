@@ -1,0 +1,13 @@
+{
+	"rows": [
+<!--#4DLOOP aItemsProyectoId-->
+		{
+			"seccion": <!--#4DIF Undefined(aItemsProyectoSec{aItemsProyectoId})-->0<!--#4DELSE--><!--#4DVAR aItemsProyectoSec{aItemsProyectoId}--><!--#4DENDIF-->,
+			"codigo": "<!--#4DVAR aItemsProyectoCodigoProducto{aItemsProyectoId}-->",
+			"descripcion": "<!--#4DVAR aItemsProyectoDetalle{aItemsProyectoId}-->",
+			"cantidad": <!--#4DVAR aItemsProyectoCantidad{aItemsProyectoId}-->,
+			"precio_unitario": <!--#4DVAR aItemsProyectoPrecioUnitario{aItemsProyectoId}-->
+		}<!--#4DIF (NOT(aItemsProyectoId{aItemsProyectoId}=aItemsProyectoId{Size of array(aItemsProyectoId)})))-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getSettingsContent-->
+		<title>Seguridad</title>
+		<meta charset="utf-8">
+		<script>
+			$(document).ready(function() {
+				$('button.save.currency').click(function(event) {
+					$.ajax({
+						url: '/4DACTION/_V3_setSettings',
+						data: {
+							currency: $('[name="moneda"]').val(),
+							iva: $('[name="iva"]').val(),
+							iva_rate: $('[name="iva_rate"]').val(),
+							replace_iva: $('[name="replace_iva"]').is(':checked'),
+							replace_iva_text: $('[name="replace_iva_text"]').val(),
+							condiciones_cotizacion: $('[name="condiciones_cotizacion"]').val(),
+							condiciones_oc: $('[name="condiciones_oc"]').val(),
+							paisorigen: $('[name="paisorigen"]').val()
+						},
+						dataType: 'json',
+						success: function(data) {
+							toastr.success('Parámetros cambiados con éxito');
+						}
+					});
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<section class="sheet">
+			<footer>
+				<article>
+					<h1>Contraseñas</h1>
+					<ul>
+						<li>
+							<span>Caducidad de las contraseñas</span>
+							<input type="text" name="caducidad_contraseña" value="<!--#4DVAR [Parametros]caducidad_contraseña-->">
+						</li>
+						<li>
+							<span>Tiempo de espera a partir de la caducidad</span>
+							<input type="text" name="caducidad_contraseña" value="<!--#4DVAR [Parametros]caducidad_contraseña-->">
+						</li>
+					</ul>
+				</article>
+			</footer>
+		</section>
+	</body>
+
+</html>

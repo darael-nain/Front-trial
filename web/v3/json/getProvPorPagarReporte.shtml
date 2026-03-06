@@ -1,0 +1,32 @@
+{
+	"total_por_pagar" : <!--#4DTEXT String(totalPorPagar;"&xml")-->,
+	"prov_por_pagar" : <!--#4DTEXT String(prov_por_pagar;"&xml")-->,
+	"por_pagar": [
+		<!--#4DLOOP aPorPagarProvId-->
+		{
+			"id": <!--#4DTEXT String(aPorPagarProvId{aPorPagarProvId};"&xml")-->,
+			"proveedor": "<!--#4DHTML _V3_escapeString(aPorPagarProvName{aPorPagarProvId})-->",
+			"cantidad": <!--#4DTEXT String(aPorPagarCantidad{aPorPagarProvId};"&xml")-->,
+			"monto": <!--#4DTEXT String(aPorPagarMonto{aPorPagarProvId};"&xml")-->,
+			"nombre_cont_rel": "<!--#4DTEXT  _V3_escapeString(aNombreContactoRel{aPorPagarProvId};"&xml")-->",
+			"email_cont_rel": "<!--#4DTEXT  _V3_escapeString(aEmailContactoRel{aPorPagarProvId};"&xml")-->",
+			"telefono_cont_rel": "<!--#4DTEXT _V3_escapeString(aTelefonContactoRel{aPorPagarProvId};"&xml")-->",
+			"cargo_cont_rel": "<!--#4DTEXT  _V3_escapeString(aCargoContactoRel{aPorPagarProvId};"&xml")-->",
+			"email": "<!--#4DTEXT  _V3_escapeString(aEmailEmpresa{aPorPagarProvId};"&xml")-->",
+			"telefono": "<!--#4DTEXT _V3_escapeString(aTelefonoEmpresa{aPorPagarProvId};"&xml")-->",
+			"vencimiento": "<!--#4DTEXT aPorPagarVencimiento{aPorPagarProvId}-->"
+		}<!--#4DIF NOT(aPorPagarProvId{aPorPagarProvId} = aPorPagarProvId{Size of array(aPorPagarProvId)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	],
+	"currency" : {
+		"code" : "<!--#4DTEXT _V3_defaultCurrencyCode-->",
+		"name" : "<!--#4DTEXT _V3_defaultCurrencyName-->",
+		"symbol" : "<!--#4DTEXT _V3_defaultCurrencySymbol-->",
+		"right" : <!--#4DIF _V3_defaultCurrencyRight-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+		"decimal": <!--#4DTEXT _V3_defaultCurrencyDecimals-->,
+		"decimal_sep": "<!--#4DTEXT _V3_defaultCurrencyDecimalSep-->",
+		"thousand_sep" : "<!--#4DTEXT _V3_defaultCurrencyThousandSep-->",
+		"decimal_text_excel" : "<!--#4DTEXT _V3_defaultCurrencyDecimalsText-->",
+		"format_code_excel" : "<!--#4DTEXT _V3_defaultCurrencyFormatCode-->"
+	}
+}

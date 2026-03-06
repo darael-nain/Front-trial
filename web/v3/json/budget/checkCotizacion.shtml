@@ -1,0 +1,5 @@
+{
+	"valid": <!--#4DIF $valid-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"hidden_items": <!--#4DIF $items_ocultos_con_monto-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"id": <!--#4DIF Not(Undefined($id))--><!--#4DIF Type($id)=Is Text-->"<!--#4DVAR $id-->"<!--#4DELSE--><!--#4DVAR $id--><!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->
+}

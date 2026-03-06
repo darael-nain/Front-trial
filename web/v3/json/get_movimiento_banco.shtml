@@ -1,0 +1,69 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML ($selectedRecordNumber - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"sort": {
+		"by": "<!--#4DTEXT sort_by-->",
+		"order": "<!--#4DTEXT sort_order-->"
+	},
+	"cuentas":{
+		"id" : <!--#4DTEXT idctacte-->,
+		"nro" : "<!--#4DHTML _V3_escapeString(nrocta)-->", 
+		"saldo_inicial": <!--#4DHTML String(saldoInicial;"&xml")-->,
+		"total_abonos": <!--#4DHTML String(totalAbono;"&xml")-->,
+		"total_cargos": <!--#4DHTML String(totalCargos;"&xml")-->,
+		"saldo_final": <!--#4DHTML String(saldoFinal;"&xml")-->,
+		"ultima_actualizacion": "<!--#4DHTML String(ultimaActualizacion;7)-->"
+	},
+	"rows": [
+<!--#4DLOOP aIdDetMovBanco -->
+		{
+			"id": <!--#4DHTML aIdDetMovBanco{aIdDetMovBanco}-->,
+			"fecha_movimiento": "<!--#4DHTML String(aFechaDetMovBanco{aIdDetMovBanco};7)-->",
+			"descripcion": "<!--#4DHTML _V3_escapeString(aDesTipoDetMovBanco{aIdDetMovBanco})-->",
+			"cta_cte": "<!--#4DHTML _V3_escapeString(aCtaCte{aIdDetMovBanco})-->",
+			"rut_ruc": "<!--#4DHTML aRUTRUC{aIdDetMovBanco}-->", 
+			"proveedor_cliente": "<!--#4DHTML _V3_escapeString(aProveedorCliente{aIdDetMovBanco})-->",
+			"documento": "<!--#4DHTML _V3_escapeString(aDocumento{aIdDetMovBanco})-->",
+			"documento_nro": "<!--#4DHTML _V3_escapeString(aDocumentoNro{aIdDetMovBanco})-->",
+			"tipo": "<!--#4DHTML aTipoDetMovBanco{aIdDetMovBanco}-->",
+			"id_origen": <!--#4DHTML aidOrigen{aIdDetMovBanco}-->,
+			"tipo_origen": "<!--#4DHTML _V3_escapeString(aTipoOrigen{aIdDetMovBanco})-->",
+			"origen": "<!--#4DHTML _V3_escapeString(aOrigenTipoDetMovBanco{aIdDetMovBanco})-->",
+			"nro_mvto": "<!--#4DHTML _V3_escapeString(aNroMvtoTipoDetMovBanco{aIdDetMovBanco})-->",
+			"glosa_banco": "<!--#4DHTML _V3_escapeString(aGlosaBanco{aIdDetMovBanco})-->",
+			"numero": "<!--#4DHTML _V3_escapeString(aNroDocDetMovBanco{aIdDetMovBanco})-->",
+			"cargo": <!--#4DHTML String(aCargoDetMovBanco{aIdDetMovBanco};"&xml")-->,
+			"abono": <!--#4DHTML String(aAbonoMovBanco{aIdDetMovBanco};"&xml")-->,
+			"saldo": <!--#4DHTML String(aSaldoDDetMovBanco{aIdDetMovBanco};"&xml")-->,
+			"importe": <!--#4DHTML String(aImporteDetMovBanco{aIdDetMovBanco};"&xml")-->,
+			"is_conciliado": <!--#4DIF aConciDetMovBanco{aIdDetMovBanco}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"fecha_ingreso": "<!--#4DHTML String(aFIngDetMovBanco{aIdDetMovBanco};7)-->",
+			"ingresado_por": "<!--#4DHTML aIngPorDetMovBanco{aIdDetMovBanco}-->",
+			"tipo_moneda": "<!--#4DHTML aTipoMoneda{aIdDetMovBanco}-->",
+			"valor_cambio": <!--#4DHTML String(aValorCambio{aIdDetMovBanco};"&xml")-->,
+			"nombre_banco": "<!--#4DHTML _V3_escapeString(aNombreBanco{aIdDetMovBanco})-->",
+			"cant_parecidos": <!--#4DHTML aCantParecidos{aIdDetMovBanco}-->,
+			"itf": <!--#4DHTML String(aTotalItfMovBanco{aIdDetMovBanco};"&xml")-->
+		}<!--#4DIF NOT(aIdDetMovBanco{aIdDetMovBanco} = aIdDetMovBanco{Size of array(aIdDetMovBanco)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	],
+	"currency" : {
+	    "code" : "<!--#4DTEXT _V3_defaultCurrencyCode-->",
+	    "name" : "<!--#4DTEXT _V3_defaultCurrencyName-->",
+	    "symbol" : "<!--#4DTEXT _V3_defaultCurrencySymbol-->",
+	    "right" : <!--#4DIF _V3_defaultCurrencyRight-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	    "decimal": <!--#4DTEXT _V3_defaultCurrencyDecimals-->,
+	    "decimal_sep": "<!--#4DTEXT _V3_defaultCurrencyDecimalSep-->",
+	    "thousand_sep" : "<!--#4DTEXT _V3_defaultCurrencyThousandSep-->",
+	    "decimal_text_excel" : "<!--#4DTEXT _V3_defaultCurrencyDecimalsText-->",
+	    "format_code_excel" : "<!--#4DTEXT _V3_defaultCurrencyFormatCode-->",
+	    "label_rut" : "<!--#4DTEXT country_label_rut-->"
+	}
+}

@@ -1,0 +1,19 @@
+{
+	"rows": [
+<!--#4DLOOP aIndexPagosPre -->
+		{
+			"id": <!--#4DTEXT aIndexPagosPre{aIndexPagosPre}-->,
+			"iprov": <!--#4DHTML aIdProPagosPre{aIndexPagosPre}-->,
+			"nprov": "<!--#4DHTML _V3_escapeString(aNombrePagosPre{aIndexPagosPre})-->",
+			"total": <!--#4DHTML String(aMontoTotalPagosPre{aIndexPagosPre};"&xml")-->,
+			"monto": "<!--#4DTEXT String(aMontoDtcPagoPre{aIndexPagosPre};"&xml")-->",
+			"montoRaw": <!--#4DTEXT String(aMontoDtcPagoPre{aIndexPagosPre};"&xml")-->,
+			"dtc": <!--#4DHTML aIdDtcPagosPre{aIndexPagosPre}-->,
+			"group": "<!--#4DHTML String(aAgrupadoPagosPre{aIndexPagosPre})-->",
+			"show": "<!--#4DHTML String(aShowPagosPre{aIndexPagosPre})-->",
+			"tipo_moneda": "<!--#4DHTML aTipoMoneda{aIndexPagosPre}-->",
+			"valor_cambio": <!--#4DHTML String(aValorCambio{aIndexPagosPre};"&xml")-->
+		}<!--#4DIF NOT(aIndexPagosPre{aIndexPagosPre} = aIndexPagosPre{Size of array(aIndexPagosPre)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

@@ -1,0 +1,15 @@
+{
+	"ok": true,
+	"rows": [
+  <!--#4DLOOP aId-->
+	  {
+		"id": <!--#4DVAR aId{aId}-->,
+		"descripcion": "<!--#4DVAR _V3_escapeString(aDesc{aId})-->",
+		"estado": <!--#4DIF (aEstado{aId})-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+		"tipo": "<!--#4DVAR _V3_escapeString(aTipo{aId})-->",
+		"valor": <!--#4DVAR aValor{aId}-->
+	  }<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+  <!--#4DENDLOOP-->
+	]
+  }
+  

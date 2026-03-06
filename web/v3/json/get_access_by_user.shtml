@@ -1,0 +1,15 @@
+{
+	"general_percent": "<!--#4DHTML vGeneralPercent-->%",
+	"modulo_percent": "<!--#4DHTML vModuloPercent-->%",
+	"rows": [
+	<!--#4DLOOP aIdAccess -->
+		{
+			"id": <!--#4DHTML aIdAccess{aIdAccess}-->,
+			"nombre": "<!--#4DHTML aNombreAccess{aIdAccess}-->",
+			"estado": <!--#4DHTML aEstadoAccess{aIdAccess}-->,
+			"modulo": "<!--#4DHTML aModuloAccess{aIdAccess}-->",
+			"has_parent": <!--#4DIF (aIdAccess{aIdAccess}#aParentAccess{aIdAccess}) & (aParentAccess{aIdAccess}#0)-->true<!--#4DELSE-->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aIdAccess{aIdAccess} = aIdAccess{Size of array(aIdAccess)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

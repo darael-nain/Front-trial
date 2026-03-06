@@ -1,0 +1,29 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML $total - 1-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP [Orden_de_compra]-->
+		{
+			"id": <!--#4DTEXT [Orden_de_compra]Id_OCompra-->,
+			"id_proveedor": <!--#4DTEXT [Orden_de_compra]Id_Empresa-->,
+			"version": "<!--#4DTEXT [Orden_de_compra]version-->",
+			"folio": "<!--#4DTEXT [Orden_de_compra]Folio_OC-->",
+			"emision": "<!--#4DTEXT String([Orden_de_compra]Fecha;7)-->",
+			"id_tipo_doc": "<!--#4DTEXT [Orden_de_compra]ID_TipoDocumento-->",
+			"tipo": "<!--#4DHTML _V3_escapeString([Orden_de_compra]FacturaTipo)-->",
+			"proveedor": "<!--#4DHTML _V3_escapeString([Orden_de_compra]Razon_Proveedor)-->",
+			"referencia": "<!--#4DHTML _V3_escapeString([Orden_de_compra]Referencia)-->",			
+			"total": "<!--#4DTEXT _V3_formatCurrency([Orden_de_compra]Total_OC)-->",
+			"estado": "<!--#4DTEXT [Orden_de_compra]Estado_OC-->",
+			"saldo_por_justificar": "<!--#4DTEXT _V3_formatCurrency([Orden_de_compra]Saldo_Consolidar)-->"
+		}<!--#4DIF Selected record number([Orden_de_compra])<Records in selection([Orden_de_compra])-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

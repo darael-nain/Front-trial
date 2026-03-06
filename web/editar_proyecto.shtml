@@ -1,0 +1,259 @@
+<!--#4DINCLUDE head2.shtml-->
+<!--4DACTION/editp-->
+<div id="dialog-nuevo-cliente" class="dialog-form" title="Nuevo cliente"></div>
+<div id="dialog-nuevo-solicitante" class="dialog-form" title="Nuevo solicitante"></div>
+<div id="dialog-participantes" class="dialog-confirm" title="Agregar participantes"></div>
+<div id="dialog-componente" class="dialog-form" title="Agregar componente"></div>
+<div id="dialog-ver-mas" class="dialog-form" title="Descripción etapa"></div>
+
+<div id="dialog-cerrar-proyecto" class="dialog-confirm" title="Confirmación de cierre del Proyecto">    
+    <p class="dialogo-cierre-ot">
+        <span class="ui-icon ui-icon-alert" style="float:left;margin:0 7px 20px 0;text-align:left"></span>
+        <span>Ingresar una nota de cierre (Opcional)</span>
+        <textarea></textarea>
+    </p>   
+</div>
+
+<body>
+<!--#4DINCLUDE menu_superior_green.shtml-->
+<link rel="stylesheet" href="/css/proyecto.css"/>
+<div id="dialog">				
+	<div class="loader">
+		<div class="render"></div>
+		<!--<a href="#" onclick="return closeDialog();">[Cerrar]</a>-->
+	</div>
+</div>
+<div class="loading">Se ha guardado la modificación!</div>
+<input type="hidden" id="proyecto_disabled" value="<!--#4dvar vDisabledEnabled-->">
+<section>
+	<article>
+		<fieldset style="margin-bottom:20px">
+
+		<!--#4dif vNroProy#"S/N"-->
+			<legend>Editar Proyecto</legend>
+		<!--#4delse-->
+			<legend>Nuevo Proyecto</legend>
+		<!--#4dendif-->		
+
+			<!--#4dif vEstadoProyecto#"ANULADA"-->
+				<!--#4dif vNroProy#"S/N"-->
+					<div class="por-defecto">				
+					<!--#4dif vPlantilla="si"-->
+						<button class="establecido plantillas" name="si">Establecido como plantilla</button>
+					<!--#4delse-->
+						<button class="por-establecer plantillas" name="no">Establecer como plantilla</button>
+					<!--#4dendif-->				
+					</div>
+				<!--#4dendif-->
+			<!--#4dendif-->
+
+			<div class="right">
+				<div class="info-de-creacion">
+					<label>Estado : </label>
+					<!--#4dif vEstadoProyecto="EN PROCESO"-->
+						<span class="color-green"> <!--#4DVAR vEstadoProyecto--></span>
+					<!--#4delse-->
+						<!--#4dif vEstadoProyecto="CERRADA"-->
+							<span class="color-blue"> <!--#4DVAR vEstadoProyecto--></span>
+						<!--#4delse-->
+							<span class="color-gray"> <!--#4DVAR vEstadoProyecto--></span>
+						<!--#4dendif-->						
+					<!--#4dendif-->				
+				</div>
+				<div class="info-de-creacion"><label>Nro : </label><span> <!--#4DVAR vNroProy--></span></div>
+				<div class="info-de-creacion"><label>Fecha : </label><span> <!--#4DVAR vFechaCreacionP--></span></div>
+				<div class="info-de-creacion"><label>Emisor : </label><span> <!--#4DVAR vNomEmisor--></span></div>		
+			</div>
+
+			<!--#4dif vEstadoProyecto="CERRADA"-->
+			<div class="bloque-cerrado-proy">
+				<span>Cerrada por <label class="capitalize"><!--#4DVAR nombRespCierre--></label> el <!--#4DVAR fechaCierre--> a las <!--#4DVAR horaCierre--> Hrs.</span>
+				<span>Observación: <!--#4DVAR notaCierre--></span>				
+			</div>
+			<!--#4dendif-->
+
+			<form id="frm-proyect" action="/4DACTION/saveproject" method="post" onsubmit="return valida_pro();">
+				<input id="idproyecto" name="idproyecto" value="<!--#4DVAR vIdProyecto-->" type="hidden">
+				<fieldset id="block-datos">   
+					<legend><h4>Datos del Proyecto</h4></legend>				
+					<div>
+						<div>
+							<label>Nombre del Proyecto : </label>						
+							<input <!--#4DVAR vDisabledEnabled--> class="ref" name="nombre" placeholder="ingresar nombre o referencia del proyecto" value="<!--#4DVAR vNombreProy-->" type="text">
+
+							<label>Tipo de Proyecto : </label>
+							<select <!--#4DVAR vDisabledEnabled--> name="areas-de-negocio" style="width:170px">
+								<!--#4dif vIdAreaNegocio>0-->
+										<option selected value="<!--#4DVAR vIdAreaNegocio-->"><!--#4DVAR vDesAreaNegocio-->
+										</option>
+									<!--#4delse-->
+										<option selected value="0">[ Seleccionar ]</option>
+									<!--#4dendif-->
+								<!--#4dloop a_id_areas_neg_pro-->
+								<!--#4dif vIdAreaNegocio#a_id_areas_neg_pro{a_id_areas_neg_pro}-->
+									<option value="<!--#4DVAR a_id_areas_neg_pro{a_id_areas_neg_pro}-->">
+										<!--#4DVAR a_nom_areas_neg_pro{a_id_areas_neg_pro}-->
+									</option>
+								<!--#4dendif-->			
+								<!--#4dendloop-->
+							</select>						
+						</div>
+
+						<div>
+							<label>Asociar a Negocio : </label>
+							<input value="<!--#4DVAR vIdNvProy-->" type="hidden" id="idproyecto-select" name="idproyecto-select">
+							<input placeholder="buscar negocio a asociar (opcional)" name="des-proyecto-select" value="<!--#4DVAR vRefNvProy-->" style="width:500px" <!--#4DVAR vDisabledEnabled--> autocomplete="off" id="buscar-neg" type="text">
+							<label>( Opcional )</label>
+						</div>
+
+					</div>
+
+					<fieldset class="bloque-cliente">
+						<legend><h4>Datos del Cliente</h4></legend>
+						<div>
+
+							<!--#4dif vEstadoProyecto="EN PROCESO"-->					
+								<nav ><button type="button" class="mas" id="add-cliente">Crear cliente</button></nav>
+							<!--#4dendif-->
+
+							<label>Cliente : </label>
+							<div class="box-autocompletar">								
+								<input id="id-cliente" name="id-cliente" type="hidden" value="<!--#4DVAR vIdCliente-->">
+								<input placeholder="buscar cliente" <!--#4DVAR vDisabledEnabled--> autocomplete="off" id="buscar-clientes" name="nom-cliente" value="<!--#4DVAR vNomCliente-->" type="text">								
+							</div>
+							<div>
+								<label>Giro : </label>
+								<input class="datos-extra giro" disabled value="<!--#4DVAR vGiroCli-->" type="text">
+							</div>
+							<div>
+								<label>Dirección : </label>
+								<input class="datos-extra direccion" disabled value="<!--#4DVAR vDirCli-->" type="text">
+							</div>
+							<div>
+								<label>Rut : </label>
+								<input class="datos-extra-rut rut" disabled value="<!--#4DVAR vRutCli-->" type="text">
+							</div>
+							<div>
+								<label>Fono : </label>
+								<input class="datos-extra-rut fono" disabled value="<!--#4DVAR vFonoCli-->" type="text">
+							</div>
+						</div>
+					</fieldset>
+
+					<fieldset class="bloque-solicitante">
+						<legend><h4>Datos del Solicitante</h4></legend>
+
+						<!--#4dif vEstadoProyecto="EN PROCESO"-->
+							<nav style="margin:5px">
+								<button type="button"  class="mas" id="add-solicitante">Crear solicitante</button>
+							</nav>
+						<!--#4dendif-->											
+						
+						<label>Solicitante : </label>
+						<div>						
+							<select <!--#4DVAR vDisabledEnabled--> name="id-solicitante" id="lista-contactos">
+								<!--#4dif vIdSolicitante>0-->
+									<option selected value="<!--#4DVAR vIdSolicitante-->"><!--#4DVAR vNomSolicitante-->
+									</option>
+								<!--#4delse-->
+									<option selected value="0">[ Seleccionar ]</option>
+								<!--#4dendif-->
+
+								<!--#4dloop w_a_id_relacionado-->
+								<!--#4dif vIdSolicitante#w_a_id_relacionado{w_a_id_relacionado}-->
+									<option value="<!--#4DVAR w_a_id_relacionado{w_a_id_relacionado}-->">
+										<!--#4DVAR w_a_nom_relacionado{w_a_id_relacionado}-->
+									</option>
+								<!--#4dendif-->		
+								<!--#4dendloop-->
+							</select>
+						</div>
+						<div>
+							<label>Cargo : </label>
+							<input id="cargo_" class="datos-extra cargo_s" disabled value="<!--#4DVAR vCargoS-->" type="text">
+						</div>
+						<div>
+							<label>Fono : </label>
+							<input id="fono_" class="datos-extra fono_s" disabled value="<!--#4DVAR vFonoS-->" type="text">
+						</div>
+						<div>
+							<label>Email : </label>
+							<input id="email_" class="datos-extra email_s" disabled value="<!--#4DVAR vEmailS-->" type="text">
+						</div>
+					</fieldset>								
+				</fieldset>
+
+				<fieldset id="block-antecedentes">
+					<legend><h4>Antecedentes</h4></legend>
+					<div class="accion">
+						<!--#4dif vEstadoProyecto="EN PROCESO"-->
+							<button type="button" class="mas" id="add-antecedentes">Antecedentes</button>		
+						<!--#4dendif-->						
+					</div>						
+					<div class="content-ant">
+						<!--#4dloop aIdAntProy-->
+						<span class="box-ant" id="<!--#4DVAR aIdAntProy{aIdAntProy}-->">
+							<!--#4dif aDesAntProy{aIdAntProy}#""-->
+								<label class="label-ant<!--#4DVAR vDisabledEnabled-->"><!--#4DVAR aDesAntProy{aIdAntProy}--></label>
+							<!--#4delse-->
+								<label class="label-ant<!--#4DVAR vDisabledEnabled-->">Etiqueta ...</label>
+							<!--#4dendif-->								
+							<input <!--#4DVAR vDisabledEnabled--> class="antecedentes" value="<!--#4DVAR aValorAntProy{aIdAntProy}-->" type="text">
+							<!--#4dif vEstadoProyecto="EN PROCESO"-->
+							<input type="hidden" class="datepicker-ant antecedentes"/>
+								<a class="delete-antecedente">x</a>
+							<!--#4dendif-->												
+						</span>
+						<!--#4dendloop-->
+					</div>										
+				</fieldset>
+								
+				<fieldset id="block-etapas">
+					<legend><h4>Etapas</h4></legend>
+						<div style="margin:5px" class="actions">
+							<!--#4dif vEstadoProyecto="EN PROCESO"-->
+								<button type="button" class="mas" id="add_etapa">Etapas</button>			
+							<!--#4dendif-->							
+						</div>
+						<div id="accordion-etapas" class="etapas">
+						<!--#4dloop aIdEtapaProy-->
+							<div class="grupo">
+								<input type="hidden" name="idetapa" value="<!--#4DVAR aIdEtapaProy{aIdEtapaProy}-->">
+								<h3>
+									<span class="titulo-acordion"><!--#4DVAR aDesEtapaProy{aIdEtapaProy}--></span>
+									<button type="button" title="Ver mas" class="mas-ot ver-mas-etapa">Ver mas</button>
+									<!--#4dif vEstadoProyecto="EN PROCESO"-->				
+										<button title="Agregar nueva OT" class="mas-ot add-tarea">OT</button>
+										<button title="Eliminar etapa" class="delete_etapa"></button>
+									<!--#4dendif-->
+								</h3>
+								<div>
+									<p>
+										<div>
+											<label>Nombre de la etapa : </label>
+											<input <!--#4DVAR vDisabledEnabled--> autocomplete="off" class="save_etapa" name="nombre-etapa" placeholder="Ingrese el nombre de la etapa..." type="text" value="<!--#4DVAR aDesEtapaProy{aIdEtapaProy}-->">
+										</div>
+										<div class="accordion-ots">
+											<!--#4DINCLUDE proy_tareas.shtml-->				 
+										</div>							
+									</p>
+								</div>
+							</div>								
+						<!--#4dendloop-->						 			  
+						</div>
+				</fieldset>
+			<div class="set-botones-proyectos">
+				<!--#4dif vEstadoProyecto="EN PROCESO"-->
+					<button type="submit">Guardar</button>
+					<button onClick="anular_proyecto()" type="button">Anular</button>
+					<button id="cerrar-proyecto" type="button">Cerrar</button>
+				<!--#4delse-->
+					<button id="abrir-proyecto" type="button">Abrir</button>
+				<!--#4dendif-->
+			</div>
+			<form>			
+		</fieldset>
+	</article>  
+</section>
+</body>
+</html>

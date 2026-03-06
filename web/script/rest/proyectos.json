@@ -1,0 +1,40 @@
+<!--4DVAR TEXT TO BLOB("Content-Type: application/json; charset=utf-8"; $header; UTF8 text without length)-->
+<!--4DVAR SEND HTTP RAW DATA($header)-->
+
+{
+	"page": 1,
+	"total": <!--4DVAR CEILING(Size of array($aProyectoId)/8)-->,
+	"records": <!--4DVAR Size of array($aProyectoId)-->,
+	"rows": [
+<!--4DLOOP $aProyectoId-->
+		{
+			"id": <!--4DVAR $aProyectoId{$aProyectoId}-->,
+			"folio": "<!--4DVAR $aProyectoFolio{$aProyectoId}-->",
+			"text": "<!--4DVAR $aProyectoNombre{$aProyectoId}-->",
+			"empresa": {
+				"alias": "una",
+				"rut": "12345678-9",
+				"razon_social": "Comercial UNA Sistemas Limitada",
+				"giro": "Giro de prueba",
+				"direccion": "Dirección de prueba",
+				"direccion_nro": "1234-A",
+				"direccion_depto": "1514-B",
+				"direccion_piso": 15,
+				"id_comuna": 1,
+				"id_ciudad": 1,
+				"id_pais": 1,
+				"telefono": "(02) 2345 6789",
+				"fax": "(02) 2345 6780"
+			},
+			"contacto": {
+				"email": "juanperez@asdf.cl",
+				"nombres": "Juan Pablo",
+				"ap_pat": "Pérez",
+				"ap_mat": "González",
+				"cargo": "Desarrollador",
+				"telefono": "(02) 2345 6789 anx. 123"
+			}
+		}
+<!--4DENDLOOP-->
+	]
+}

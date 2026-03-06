@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_proxy_getProductoContent-->
+<html>
+	<head>		
+		<title>Perfil</title>
+		<meta charset="utf-8">
+		<script>
+			$(document).ready(function() {
+
+				htmlObject = $('\
+					<ul class="options dropdown-menu" style="position: absolute; top: 100px; right: 30px; z-index: 1000; min-width: 150px; text-align: left;">	\
+						<li><a href="#" class="select-all items"><span class="ui-icon ui-icon-radio-on"></span>Seleccionar todo</a></li>			\
+						<li><a href="#" class="deselect-all items"><span class="ui-icon ui-icon-radio-off"></span>Deseleccionar todo</a></li>		\
+						<li><a href="#" class="unmerge items"><span class="ui-icon ui-icon-newwin"></span>Deshacer fusión</a></li>					\
+					</ul>																															\
+				');
+
+				htmlObject.appendTo('table.fusionado > thead > tr > th').menu().hide();
+
+
+				$('table.fusionado > thead > tr > th > button').button({
+					icons: {
+						primary: 'ui-icon-triangle-1-s',
+						secondary: 'ui-icon-gear'
+					},
+					text: false,
+					caption: 'Opciones'
+				}).click(function() {
+					$('table.fusionado > thead > tr > th > .options').toggle();
+				});
+
+				$('table.fusionado .items.select-all').click(function(event) {
+					$('table.fusionado > tbody > tr > td > input').each(function() {
+						$(this).prop('checked', true);
+					});
+					event.preventDefault();
+				});
+
+				$('table.fusionado .items.deselect-all').click(function(event) {
+					$('table.fusionado > tbody > tr > td > input').each(function() {
+						$(this).prop('checked', false);
+					});
+					event.preventDefault();
+				});
+
+				var unmerge = function() {
+					$('table.fusionado > tbody > tr > td > input:checked').each(function() {
+						var that = this;
+						$.ajax({
+							url: '/4DACTION/_V3_setProducto',
+							data: {
+								id: $(this).val(),
+								unmerge: true
+							},
+							async: false,
+							dataType: 'json',
+							success: function(data) {
+								$(that).parentTo('tr').remove();
+							}
+						});
+					});
+				};
+
+				$('table.fusionado .items.unmerge').click(function(event) {
+					var total_items = $('table.fusionado > tbody > tr > td > input').length;
+					var checked_items = $('table.fusionado > tbody > tr > td > input:checked').length;
+
+					if (total_items - checked_items < 2 && checked_items > 0)
+						confirm('Si no permanecen al menos 2 ítems en el grupo, éste se desactivará.\n¿Está seguro?').done(function(data) {
+							if (data) {
+								unmerge();
+								checked_items = $('table.fusionado > tbody > tr > td > input:checked').length;
+								if (checked_items == 0) {
+									$.ajax({
+										url: '/4DACTION/_V3_setProducto',
+										data: {
+											id: $('section.sheet').data('id'),
+											active: false
+										},
+										dataType: 'json',
+										success: function(data) {
+											if (data.success)
+												toastr.success('Realizado!');
+											else
+												toastr.warning('Se removieron los ítems del grupo, pero el grupo sigue activo.');
+										}
+									});
+								} else
+									toastr.warning('No se ha podido realizar la acción en todos los ítems.');
+							}
+						});
+					if (checked_items == 0)
+						toastr.warning('Debe seleccionar al menos un ítem para realizar esta acción.');
+
+					if (total_items - checked_items >= 2 && checked_items > 0)
+						unmerge();
+
+					event.preventDefault();
+				});
+
+			});
+		</script>
+		<style>
+			table.fusionado > thead > tr > th > button {
+				height: 25px;
+			}
+		</style>
+	</head>
+	<body>		
+		<section class="sheet" data-id="<!--#4DVAR [Servicio]Id_Servicio-->" data-index="<!--#4DVAR [Servicio]Codigo_Servicio-->"<!--#4DIF false--> data-new="true"<!--#4DENDIF--><!--#4DIF [Servicio]Estado=False--> data-readonly="true"<!--#4DENDIF-->>
+
+			<fieldset>
+				<legend><strong>Este ítem de catálogo se fusionó a partir de</strong></legend>
+				<table class="fusionado">
+					<thead>
+						<tr>
+							<th>Código</th>
+							<th>Categoría</th>
+							<th>Nombre</th>
+							<th><button class="dropdown-button"></button></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!--#4DLOOP aProductoId-->
+						<tr>
+							<td><!--#4DTEXT aProductoIndex{aProductoId}--></td>
+							<td><!--#4DTEXT aProductoCategoria{aProductoId}--></td>
+							<td><!--#4DTEXT aProductoText{aProductoId}--></td>
+							<td><input type="checkbox" name="select" value="<!--#4DTEXT aProductoId{aProductoId}-->"></td>
+						</tr>
+						<!--#4DENDLOOP-->
+					</tbody>
+				</table>
+			</fieldset>
+		</section>
+	</body>
+
+</html>

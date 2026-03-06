@@ -1,0 +1,16 @@
+{
+	"rows": [
+<!--#4DLOOP aId-->
+		{
+			"id": <!--#4DTEXT aId{aId}-->,
+			"id_rel": <!--#4DTEXT aIdRel{aId}-->,
+			"nombre_rel": "<!--#4DTEXT _V3_escapeString(aNomRel{aId})-->",
+			"cargo_rel": "<!--#4DTEXT _V3_escapeString(aCargoRel{aId})-->",
+			"email_rel": "<!--#4DTEXT aEmailRel{aId}-->",
+			"fono_rel": "<!--#4DTEXT aFonoRel{aId}-->",
+			"observacion_rel": "<!--#4DTEXT  _V3_escapeString(aObervacionRel{aId})-->",
+			"defecto_rel": <!--#4DTEXT aSelRel{aId}-->				
+		}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

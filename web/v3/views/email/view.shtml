@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Email View</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+        .container { max-width: 800px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px #0001; }
+        h1 { color: #34cc02; }
+        .subtitle { color: #03D6F9; }
+        .footer { margin-top: 40px; color: #888; font-size: 0.9em; text-align: center; }
+    </style>
+    <script>
+        function getParam(name) {
+            const params = new URLSearchParams(window.location.search);
+            return params.get(name) ? decodeURIComponent(params.get(name)) : '';
+        }
+
+        function base64ToJson(base64) {
+            try {
+                const jsonStr = atob(base64);
+                return JSON.parse(jsonStr);
+            } catch (e) {
+                console.error('Error decodificando datos:', e);
+                return null;
+            }
+        }
+
+        window.onload = function() {
+            try {
+                const data = base64ToJson(getParam('data'));
+                if (!data) {
+                    document.getElementById('email-content').innerHTML = '<p>Error: No se pudieron cargar los datos del email.</p>';
+                    return;
+                }
+
+                const html = `
+                    <div class="container">
+                        <h1>${data.title || ''}</h1>
+                        <div class="subtitle">Documento: ${data.document || ''} ${data.index ? `- ${data.index}` : ''}</div>
+                        <p><strong>De:</strong> ${data.from_name || ''}</p>
+                        <p><strong>Fecha:</strong> ${data.date || ''} ${data.time || ''}</p>
+                        <p><strong>Extra:</strong> ${data.extra || ''}</p>
+                        <p><strong>Observación:</strong> ${data.obs || ''}</p>
+                        ${data.detail_uri ? `
+                        <p>
+                            <a href="${data.hostname}/4DACTION/wbienvenidos#${data.detail_uri}?id=${data.id_item}" 
+                               target="_blank" style="color:#03D6F9;">
+                                Ir al documento
+                            </a>
+                        </p>` : ''}
+                    </div>
+                    <div class="footer">Unabase - Notificación automática</div>
+                `;
+                
+                document.getElementById('email-content').innerHTML = html;
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('email-content').innerHTML = '<p>Error cargando el contenido.</p>';
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="email-content"></div>
+</body>
+</html>

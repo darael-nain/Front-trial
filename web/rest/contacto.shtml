@@ -1,0 +1,24 @@
+{
+	"page": 1,
+	"total": <!--#4DVAR -INT((Size of array(aContactoId)/8)* -1)-->,
+	"records": <!--#4DVAR Size of array(aContactoId)-->,
+	"rows": [
+<!--#4DIF newContacto-->
+		{
+			"text": "<!--#4DVAR q-->"
+		}<!--#4DIF Size of array(aContactoId) > 0-->,<!--#4DENDIF-->
+<!--#4DENDIF-->
+<!--#4DLOOP aContactoId -->
+		{
+			"id": <!--#4DVAR aContactoId{aContactoId}-->,
+			"email": "<!--#4DVAR aContactoEmail{aContactoId}-->",
+			"nombres": "<!--#4DVAR aContactoNombres{aContactoId}-->",
+			"ap_pat": "<!--#4DVAR aContactoApPat{aContactoId}-->",
+			"ap_mat": "<!--#4DVAR aContactoApMat{aContactoId}-->",
+			"cargo": "<!--#4DVAR aContactoCargo{aContactoId}-->",
+			"telefono": "<!--#4DVAR aContactoTelefono{aContactoId}-->"
+
+		}<!--#4DIF NOT(aContactoId{aContactoId} = aContactoId{Size of array(aContactoId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

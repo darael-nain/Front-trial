@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Preview cobros</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/script/datepicker_es.js?<!--#4DTEXT _V3_version-->"></script>
+		<script type="text/javascript" src="/v3/views/dtv/script/wizard_income.js?<!--#4DTEXT _V3_version-->"></script>
+		<style type="text/css">
+			.fill1{
+				background:#f2fe8a;
+				text-align: right;
+				padding:5px;
+			}
+			.fill2{
+				background:#f2fe8a;
+				text-align: center;
+				padding:5px;
+			}
+			.fill3{
+				background:#f2fe8a;
+				text-align:left;
+				padding:5px;
+				width:90%;
+				text-transform: uppercase;
+			}
+			.dialog header{
+				text-align:right!important;
+			}
+			.reset{
+				zoom:80%;
+				width:15px;
+				height:15px;
+				padding:0px;
+				margin:0px;
+			}
+			.steps-labels{
+				font-weight:bold;
+				padding:5px;
+				float: right;
+			}
+			.steps-text{
+				font-size:12px;
+				font-weight:bold;
+				padding:5px;
+				float: left;
+			}
+			.bold{
+				font-weight:bold!important;
+				border-radius:5px;
+				zoom:100%;
+			}
+			.tipo-cambio-ingreso {
+				width: 150px; /* Ajustar tamaño adecuado */
+				padding: 2px; /* Espaciado interno */
+				font-size: 14px; /* Tamaño de texto legible */
+				border: 2px solid #ccc; /* Borde suave */
+				border-radius: 5px; /* Bordes redondeados */
+				background-color: #f9f9f9; /* Fondo claro */
+				transition: all 0.3s ease-in-out; /* Animación en hover/focus */
+			}
+
+			.tipo-cambio-ingreso:focus {
+				border-color: #007bff; /* Azul para enfoque */
+				background-color: #ffffff; /* Fondo blanco en enfoque */
+				box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Sombra para enfoque */
+				outline: none; /* Eliminar borde azul predeterminado */
+			}
+
+			.tipo-cambio-ingreso:hover {
+				background-color: #eef5ff; /* Fondo ligero al pasar el cursor */
+			}
+
+			p.ingreso{
+				color: black;
+				padding: 5px;
+			}
+
+			.comision-input{
+				padding-left: 5px;
+				border-radius: 5px;
+				background-color: #EEF8F6;
+			}
+
+		</style>
+	</head>
+	<body>
+		<section id="dtvporcobrar" class="sheet">
+			<div class="diff-cambio"><span>Tipo de cambio: </span><input type="text" class="tipo-cambio-ingreso numeric currency"></div>
+			<div style="position:absolute;right:0px;margin-right:100px;top:55px;font-weight:bold;font-size:12px;" class="income-suma modoperu"><label>Suma total: </label><span></span></div>
+			<h2><div class="steps-text">CONFIRMACIÓN DE MONTO</div><div class="steps-labels">Paso 1 de 2</div></h2>
+			<table class="step-1">
+				<thead>
+					<tr>
+						<th width="10%" class="center">Número</th>
+						<th width="20%" class="center">Cliente</th>
+						<th width="30%" class="center">Fecha factura</th>
+						<th width="10%" class="center">Por cobrar</th>
+						<th width="10%" class="center modoperu"><input type="text" style="width:30px;background-color:yellow;padding:2px;text-align:center;" name="percentallcobro" value="100">%</th>
+						<th width="10%" class="center">Monto ingreso</th>
+						<th width="10%" class="center">Saldo [$]</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+				<tfoot></tfoot>
+			</table>
+			<table class="step-2">
+				<thead>
+					<tr>
+						<th width="15%" class="center">Número</th>
+						<th width="30%" class="left">cliente</th>
+						<th width="30%" class="left">cobrar a</th>
+						<th width="5%" class="center">Fecha de ingreso</th>
+						<th width="20%" class="right">Monto ingreso</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+				<tfoot></tfoot>
+			</table>
+			<table class="step-3">
+				<thead>
+					<tr>
+						<th width="10%" class="center">Número</th>
+						<th width="30%" class="left">Cliente</th>
+						<th width="40%" class="left">Referencia</th>
+						<th width="15%" class="right">Total pagado</th>
+						<!--<th width="5%" class="right">Acción</th>-->
+					</tr>
+				</thead>
+				<tbody></tbody>
+				<tfoot></tfoot>
+			</table>
+		</section>
+	</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+	<title>Lineas adicionales al total</title>
+	<meta charset="utf-8">
+
+
+
+	<style>
+		section#sheet-total-adicionales input {
+
+
+			display: inline-block;
+
+			width: calc(100% - 16px);
+			height: 18px;
+			padding-right: 11px;
+			text-align: inherit;
+			text-decoration: inherit;
+			text-transform: uppercase;
+			font-weight: inherit;
+
+		}
+
+		section#sheet-total-adicionales input.edit {
+
+			border-bottom: 1px ridge rgb(180, 180, 180);
+
+		}
+		#dialog-viewport{
+			background: linear-gradient(45deg, black, transparent);
+		}
+		td.moneda,input.moneda{
+			text-align: center;
+		}
+
+	</style>
+</head>
+
+<body class="home" style="background:azure;">
+
+	<section id="sheet-monedas" class="sheet-monedas" >
+		<fieldset class="button-fieldset">
+			<legend>Monedas de trabajo</legend>
+			<!-- <button class="add-line" id="add-line-button"  style="display: inline-block;">Agregar</button> -->
+		</fieldset>
+
+		<table class="items" style="background:azure;">
+			<thead>
+				<tr style="margin-right: 10px;">
+					<th class="thleft">Nombre</th>
+					<th class="thleft">En este pres.</th>
+					<th class="thleft">Default</th>
+					<th class="thleft">Impresión</th>
+					<th class="thleft" colspan="2"></th>
+				</tr>
+			</thead>
+			<tbody id="money_by_nv">
+
+
+			</tbody>
+			<tfoot>
+				<tr style="margin-right: 10px;">
+					<th class="thleft" colspan="6">
+						<button type="button" class="btn btn-success" id="set-currency"style="float: right;font-weight: bolder;margin-right: 16px;">CONFIRMAR</button>
+					</th>
+				</tr>
+			</tfoot>
+		</table>
+	</section>
+
+
+	<script>
+		$(document).ready(function () {
+			unaBase.toolbox.init();
+			utilities.general_params.getGeneralParams();
+
+
+			document.getElementById('set-currency').addEventListener('click' , utilities.general_params.setChanges)
+
+			document.getElementById('set-currency').addEventListener('click' , utilities.general_params.checkedChange)
+
+			
+
+		});
+	</script>
+</body>
+
+</html>

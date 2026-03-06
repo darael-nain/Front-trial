@@ -1,0 +1,11 @@
+{
+	"rows": [
+<!--#4DLOOP aId -->
+		{
+			"id": "<!--#4DHTML aId{aId}-->",
+			"name": "<!--#4DHTML _V3_escapeString(aName{aId})-->"<!--#4DIF Not(Undefined(aList))-->,
+      "list": "<!--#4DHTML _V3_escapeString(aList{aId})-->"<!--#4DENDIF-->
+		}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

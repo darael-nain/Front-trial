@@ -1,0 +1,13 @@
+{
+    "rows": [
+    <!--#4DLOOP aIdReporte -->
+        {
+            "id": "<!--#4DHTML aIdReporte{aIdReporte}-->",
+            "tipo": "<!--#4DHTML aTipoReporte{aIdReporte}-->",
+            "data": "<!--#4DHTML _V3_escapeString(aDataReporte{aIdReporte})-->",
+            "dominio": "<!--#4DHTML aUrl{aIdReporte}-->",
+            "empresa": "<!--#4DHTML aEmpresa{aIdReporte}-->"
+        }<!--#4DIF NOT(aIdReporte{aIdReporte} = aIdReporte{Size of array(aIdReporte)})-->,<!--#4DENDIF-->
+    <!--#4DENDLOOP-->
+    ]
+}

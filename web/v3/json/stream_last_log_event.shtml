@@ -1,0 +1,11 @@
+{
+    "event": {
+        "date": "<!--#4DHTML vFecha-->",
+        "time": "<!--#4DHTML vHora-->",
+        "username": "<!--#4DHTML vUsername-->",
+        "type": "<!--#4DHTML vTipo-->",
+        "detail": "<!--#4DHTML vDescripcion-->",
+        "id_nv": "<!--#4DHTML vIdNv-->",
+        "id_oc": "<!--#4DHTML vIdOc-->"
+    }
+}

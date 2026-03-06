@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Home</title>
+    <meta charset="utf-8">
+
+</head>
+
+<style>
+    #iframe-container {
+        height: 100vh;
+        overflow-y: auto;
+    }
+</style>
+
+<body style="min-width: 900px !important;">
+    <!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->
+
+    <iframe id="mi-marco" name="mi-marco" src="about:blank" style="width: 100%;"></iframe>
+
+
+    <script type="text/javascript">
+        var miMarco = document.getElementById('mi-marco');
+
+        const sid = () => {
+            // var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                // if (c.indexOf(name) == 0) {
+                if (c.match(/UNABASE/g)) {
+                    return c.substring(c.indexOf("UNABASE"));
+                }
+            }
+            return "";
+        }
+
+        const toHomeRedirect = (e) => {
+            var frame = document.getElementById("mi-marco");
+            let url = window.origin
+            let newUrl = url.substring(8, url.length)
+            let username = 'soporte'
+            //frame.src = `https://dev-panel.herokuapp.com/dashboard?from=v3&user=${username}&url=${window.origin.substring(8, window.origin.length)}&sid=${sid()}`;
+            frame.src = `https://dev-panel.herokuapp.com/tables?from=v3&user=${username}&hostname=${window.origin.substring(8, window.origin.length)}&sid=${sid()}`;
+            frame.style.height = "calc(100vh - 48px - 41px)";
+        }
+
+        (function init() {
+
+
+            toHomeRedirect()
+            unaBase.ui.unblock()
+
+
+
+        })();
+
+
+
+
+    </script>
+</body>
+<script>
+</script>
+
+</html>

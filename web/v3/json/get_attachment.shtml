@@ -1,0 +1,13 @@
+{
+	"rows": [
+<!--#4DLOOP aAttachmentId -->
+		{
+			"id": "<!--#4DVAR aAttachmentId{aAttachmentId}-->",
+			"username": "<!--#4DVAR aAttachmentUsername{aAttachmentId}-->",
+			"updated_at": "<!--#4DVAR Substring(String(aAttachmentFecha{aAttachmentId};8);1;10)--> <!--#4DVAR aAttachmentHora{aAttachmentId}-->",
+			"text": "<!--#4DVAR _V3_escapeString(aAttachmentText{aAttachmentId})-->",
+			"notas": "<!--#4DVAR _V3_escapeString(aAttachmentNotas{aAttachmentId})-->"
+		}<!--#4DIF NOT(aAttachmentId{aAttachmentId} = aAttachmentId{Size of array(aAttachmentId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

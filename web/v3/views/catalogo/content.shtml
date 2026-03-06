@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_proxy_getProductoContent-->
+<html>
+  <head>
+    <title>Perfil</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="/v3/views/catalogo/content2.js"></script>
+    <link rel="stylesheet" href="/v3/design/temporal.css?<!--#4DTEXT random-->">
+    <script>
+      $(document).ready(function() {
+        var id = $('.form-contact').find('input[name="id"]').val();       
+        $("#tabs-1-dialog").load('/v3/views/catalogo/general.shtml', 'id='+ id);
+        $("#tabs-2-dialog").load('/v3/views/catalogo/adicional.shtml', 'id='+ id);
+        $("#tabs-3-dialog").load('/v3/views/catalogo/contactos.shtml', 'id='+ id);
+        <!--#4DIF Not(Undefined(is_merged))-->
+        <!--#4DIF is_merged-->
+        $("#tabs-4-dialog").load('/v3/views/catalogo/fusionado.shtml', 'id='+ id);
+        <!--#4DENDIF-->
+        <!--#4DENDIF-->
+        <!--#4DIF Not(Undefined(is_linked))-->
+        <!--#4DIF is_linked-->
+        $('#dialog-menu').text('Este ítem está dentro de una fusión, por lo que no puede ser modificado');
+        <!--#4DENDIF-->
+        <!--#4DENDIF-->
+
+        $("#tabs-5-dialog").load('/v3/views/historial/index.shtml', 'id=<!--#4DTEXT id-->&mod=catalogo');
+
+      });
+    </script>
+    <style type="text/css">
+      .ui-tabs .ui-tabs-panel {
+        padding: 0 !important;
+        overflow: hidden;
+      }
+
+      .inline3 {
+        width: calc(33% - 10px) !important;
+      }
+
+      .inline3 > div > label {
+        text-align: left !important;
+      }
+
+      .inline3 > div > input {
+        margin-left: 0 !important;
+      }
+
+      .inline3 figure {
+        width: 100% !important;
+        text-align: center;
+      }
+
+      .inline3 figure img, .inline3 figure button {
+        display: block;
+        margin: 0 auto;
+      }
+
+      .inline3 figure button {
+        margin-top: 15px;
+      }
+
+      <!--#4DIF is_linked-->
+      #dialog-menu [data-name="save"], .ui-dialog .ui-buttonset {
+        display: none;
+      }
+      <!--#4DENDIF-->
+
+    </style>
+
+  </head>
+  <body>
+    <div id="main-container" class="form-contact">
+      <input type="hidden" name="id" id="id_servicio" value="<!--#4DTEXT [Servicio]Id_Servicio-->">
+      <section class="tabs">
+        <ul class="infinite-tabs">
+          <li><a href="#tabs-1-dialog">General</a></li>
+          <li><a href="#tabs-2-dialog">Adicional</a></li>
+          <li><a href="#tabs-3-dialog">Uso en contactos</a></li>
+          <!--#4DIF Not(Undefined(is_merged))-->
+          <!--#4DIF is_merged-->
+          <li><a href="#tabs-4-dialog">Fusión</a></li>
+          <!--#4DENDIF-->
+          <!--#4DENDIF-->
+          <li><a href="#tabs-5-dialog">Historial</a></li>
+        </ul>
+        <article id="tabs-1-dialog"></article>
+        <article id="tabs-2-dialog"></article>
+        <article id="tabs-3-dialog"></article>
+        <!--#4DIF Not(Undefined(is_merged))-->
+        <!--#4DIF is_merged-->
+        <article id="tabs-4-dialog"></article>
+        <!--#4DENDIF-->
+        <!--#4DENDIF-->
+        <article id="tabs-5-dialog"></article>
+        <article id="tabs-6-dialog"></article>
+      </section>
+    </div>
+  </body>
+</html>

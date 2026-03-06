@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+    <!--#4DSCRIPT/_V3_proxy_getNcVentasContent-->
+    <head>
+        <meta charset="utf-8">
+        <title>Nota de crédito</title>
+        <style>
+            body {
+                font-family: Verdana, sans-serif;
+            }
+            .css-table-items-fe{
+                border-collapse: collapse;
+            }
+           .css-table-items-fe > thead > tr{
+              border: 2px solid black;
+            }
+            .css-table-items-fe > thead > tr > th{
+              border: 0px;
+            }
+            .css-table-items-fe > tbody > tr{
+                border:0px;
+            }
+            .css-table-items-fe > tbody > tr > td{
+                border:0px;
+            }
+
+            .css-table-items-fe-2{
+                border-collapse: collapse;
+            }
+            .css-table-items-fe-2 > tbody tr{
+                border:0px;
+                margin:0px;
+                padding:0px;
+            }
+            .css-table-items-fe-2 > tbody td{
+                border:0px;
+                margin:0px;
+                padding:0px;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+           <table border="0" width="100%" style="padding:3px;">
+                <tr style="vertical-align:top;padding:2px;">
+                    <td width="25%" align="center">
+                        <img style="width: 100px; height:100px; display: inline-block; vertical-align: top;" src="<!--#4DTEXT vUrlImagenLogo-->">
+                    </td>
+                    <td  width="45%" align="center" style="font-weight:bold;">
+                        <div style="font-size:18px;"><!--#4DTEXT razonPropietaria--></div>
+                        <div style="font-size:14px;"><!--#4DTEXT direccionPropietaria--></div>
+                    </td>
+                    <td  width="50%" align="center" colspan="2">
+                        <div style="border:2px solid black">
+                            <div style="margin:5px;font-weight:bold;font-size:18px;">RUC: <!--#4DTEXT rutFormatPropietariaPEN--></div>
+                            <div style="margin:5px;font-weight:bold;font-size:18px;">NOTA DE CRÉDITO ELECTRÓNICA</div>
+                            <div style="margin:5px;font-weight:bold;font-size:18px;">Nro. <!--#4DTEXT [Nota_Credito_Debito]Folio_Nota--></div>
+                        </div>
+                    </td>
+                 </tr>
+            </table>
+            <br>
+            <table border="0" width="100%">
+                <tr>
+                    <td style="font-size:14px;font-weight:bold;" width="15%">SEÑOR(ES)</td><td width="55%" style="font-size:13px;">: <!--#4DTEXT [Nota_Credito_Debito]EmpresaRazon--></td>
+                    <td style="font-size:14px;font-weight:bold;" width="10%">F.EMISIÓN</td><td width="20%" style="font-size:13px;">: <!--#4DTEXT [Nota_Credito_Debito]Fecha_Impresion--></td>
+                </tr>
+                <tr>
+                    <td style="font-size:14px;font-weight:bold;" width="15%">RUC</td><td width="55%" style="font-size:13px;">: <!--#4DTEXT [Nota_Credito_Debito]EmpresaRut--><!--#4DTEXT [Nota_Credito_Debito]EmpresaDV--></td>
+                    <td style="font-size:14px;font-weight:bold;" width="10%">MONEDA</td><td width="20%" style="font-size:13px;">: <!--#4DTEXT monedaNCText--></td>
+                </tr>
+                <tr>
+                    <td style="font-size:14px;font-weight:bold;" width="15%">DIRECCIÓN</td><td width="55%" style="font-size:13px;">: <!--#4DTEXT vdireccion--></td>
+                    <td style="font-size:14px;font-weight:bold;" width="10%">F.VCTO</td><td width="20%" style="font-size:13px;">: <!--#4DTEXT [Nota_Credito_Debito]Fecha_Impresion--></td>
+                </tr>
+                <!--<tr>
+                    <td style="font-size:14px;font-weight:bold;" width="15%">O. COMPRA</td><td width="55%" style="font-size:13px;">: <!- -#4DTEXT V3_FOLIOOCC- -></td>
+                    <td style="font-size:14px;font-weight:bold;" width="10%">F. ORDEN COMPRA</td><td width="20%" style="font-size:13px;">: <!- -#4DTEXT V3_FECHAOCC- -></td>
+                </tr>-->
+            </table>
+        </header>
+        <section>
+           <div style="margin:5px;border:2px solid gray;height:600px;border-radius:2px;position:relative;">
+                <hr size="600" style="position:absolute;left:6%;top:-9px;background-color:black;">
+                <hr size="600" style="position:absolute;left:55%;top:-9px;background-color:black;">
+                <hr size="600" style="position:absolute;left:80%;top:-9px;background-color:black;">
+                <table border="0" width="100%" class="css-table-items-fe">
+                    <thead>
+                        <tr>
+                            <th style="font-size:14px;font-weight:bold;padding:5px;width:5%">Cant.</th>
+                            <th style="font-size:14px;font-weight:bold;padding:5px;width:50%">Descripción</th>
+                            <th style="font-size:14px;font-weight:bold;padding:5px;width:25%">Valor venta unit</th>
+                            <th style="font-size:14px;font-weight:bold;padding:5px;width:20%">Importe</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!--#4DLOOP [Detalle_Nota_Credito_Debito]-->
+                        <tr style="padding:5px;">
+                            <td style="text-align:center;font-size:13px;padding:5px;"><!--#4DTEXT [Detalle_Nota_Credito_Debito]Cantidad--></td>
+                            <td style="text-align:left;font-size:13px;padding:5px;"><!--#4DTEXT [Detalle_Nota_Credito_Debito]Nombre_Producto--></td>
+                            <td style="text-align:right;font-size:13px;padding:5px;"><!--#4DTEXT _V3_formatCurrencyNoSymbol([Detalle_Nota_Credito_Debito]Precio_Unitario/monedaNCValorCambio)--></td>
+                            <td style="text-align:right;font-size:13px;padding:5px;"><!--#4DTEXT _V3_formatCurrencyNoSymbol([Detalle_Nota_Credito_Debito]Subtotal/monedaNCValorCambio)--></td>
+                        </tr>
+                        <!--#4DENDLOOP-->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+        <br>
+        <footer>
+            <div style="width:99%;">
+                <div style="display:inline-block;border:0px solid gray;vertical-align:top;width:450px;border-radius:3px;">
+
+                    <div style="margin:0px 0 10px 0;font-size:14px;">
+                        <label style="font-weight:bold;">SON: </label><span><!--#4DTEXT vCadena--></span>
+                    </div>
+
+                    <table border="0" width="100%" style="vertical-align: top;" class="css-table-items-fe-2">
+                        <tbody>
+                            <tr>
+                                <td colspan="3" style="text-align:center">
+                                    <div style="font-weight:bold;font-size:13px;border:1px solid black;padding:5px;box-sizing: border-box;margin:0px;border-bottom: 0px;">DOCUMENTO QUE MODIFICA</div>
+                                </td>
+                            </tr>
+                            <tr style="text-align:left;">                                    
+                                <td>
+                                    <div style="border:1px solid black;padding:5px;box-sizing: border-box;margin:0px;font-size:13px;border-right: 0px;border-bottom: 0px;"><span style="font-weight: bold;">Denominación:</span> FACTURA</div>
+                                </td>
+                                <td>
+                                    <div style="border:1px solid black;padding:5px;box-sizing: border-box;margin:0px;font-size:13px;border-right: 0px;border-bottom: 0px;"><span style="font-weight: bold;">N°:</span> <!--#4DTEXT refenciaFolio--></div>
+                                </td>
+                                <td>
+                                    <div style="border:1px solid black;padding:5px;box-sizing: border-box;margin:0px;font-size:13px;border-bottom: 0px;"><span style="font-weight: bold;">Fecha:</span> <!--#4DTEXT referenciaFechaEmisionText2--></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="text-align:left;">
+                                    <div style="border:1px solid black;padding:5px;box-sizing: border-box;margin:0px;font-size:13px;"><span style="font-weight: bold;">Motivos de Modificación:</span> <!--#4DTEXT sustento--></div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <div style="display:inline-block;vertical-align:top;width:360px;margin-left:40px;border:1px solid black;">
+                    <table border="0" width="100%" class="css-table-items-fe-2">
+                        <tbody>
+                            <tr>
+                                <td width="50%">
+                                    <div style="font-weight:bold;border-left:1px solid black;border:1px solid black;padding:7px;box-sizing: border-box;margin:0px;">Total Gravado</div>
+                                </td>
+                                <td  width="50%">
+                                    <div style="text-align:right;border:1px solid black;padding:7px;box-sizing: border-box;margin:0px;">
+                                        <!--#4DIF monedaNC="USD"-->
+                                            <span style="float:left;margin:-left:5px;">$</span> <!--#4DTEXT TotalNetoPrint-->
+                                        <!--#4DELSE-->
+                                            <!--#4DTEXT TotalNetoPrint-->
+                                        <!--#4DENDIF-->
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="50%">
+                                    <div style="font-weight:bold;border-left:1px solid black;border:1px solid black;padding:7px;box-sizing: border-box;margin:0px;">Total No Gravado</div>
+                                </td>
+                                <td  width="50%">
+                                    <div style="text-align:right;border:1px solid black;padding:7px;box-sizing: border-box;margin:0px;">
+                                        <!--#4DIF monedaNC="USD"-->
+                                            <span style="float:left;margin:-left:5px;">$</span> <!--#4DTEXT TotalExentoPrint-->
+                                        <!--#4DELSE-->
+                                            <!--#4DTEXT TotalExentoPrint-->
+                                        <!--#4DENDIF-->
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  width="50%">
+                                    <div style="font-weight:bold;border:1px solid black;border-left:1px solid black;padding:7px;box-sizing: border-box;margin:0px;">Total IGV</div>
+                                </td>
+                                <td  width="50%">
+                                    <div style="text-align:right;border:1px solid black;padding:7px;box-sizing: border-box;margin:0px;">
+                                        <!--#4DIF monedaNC="USD"-->
+                                            <span style="float:left;margin:-left:5px;">$</span> <!--#4DTEXT TotalIvaPrint-->
+                                        <!--#4DELSE-->
+                                            <!--#4DTEXT TotalIvaPrint-->
+                                        <!--#4DENDIF-->
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  width="50%">
+                                    <div style="font-weight:bold;border:1px solid black;border-left:1px solid black;padding:6px;box-sizing: border-box;margin:0px;">Importe Total</div>
+                                </td>
+                                <td  width="50%">
+                                    <div style="text-align:right;border:1px solid black;padding:6px;box-sizing: border-box;">
+                                        <!--#4DIF monedaNC="USD"-->
+                                            <span style="float:left;margin:-left:5px;">$</span> <!--#4DTEXT TotalFacturaPrint-->
+                                        <!--#4DELSE-->
+                                            <!--#4DTEXT TotalFacturaPrint-->
+                                        <!--#4DENDIF-->
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div style="margin-top:100px;width: 100%; display: inline-block; vertical-align: top; text-transform: uppercase; color: red; font-size:12px;text-align:left;">
+                <p>* Copia no válida para efectos tributarios.</p>
+            </div>
+        </footer>
+    </body>
+</html>

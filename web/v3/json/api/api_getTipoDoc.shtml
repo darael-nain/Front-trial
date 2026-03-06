@@ -1,0 +1,15 @@
+
+{
+	
+	"records": {
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP aIdTipodoc -->
+		{
+			"id": <!--#4DIF Not(Undefined(aIdTipodoc{aIdTipodoc}))--><!--#4DIF Type(aIdTipodoc{aIdTipodoc})=Is Text-->"<!--#4DVAR aIdTipodoc{aIdTipodoc}-->"<!--#4DELSE--><!--#4DVAR aIdTipodoc{aIdTipodoc}--><!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+			"Description": "<!--#4DHTML aDescription{aIdTipodoc}-->",
+		}<!--#4DIF NOT(aIdTipodoc{aIdTipodoc} = aIdTipodoc{Size of array(aIdTipodoc)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

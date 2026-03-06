@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Confirmar emision electrónico</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/script/datepicker_es.js?<!--#4DTEXT _V3_version-->"></script>
+		<script>
+			  $(document).ready(function(){
+
+			  });
+		</script>
+		<style type="text/css">
+			
+		</style>
+	</head>
+	<body>
+		<section id="dtvporcobrar" class="sheet">
+			<h2><div class="steps-text">CONFIRMACIÓN INFORMACIÓN</div><div class="steps-labels">Paso 1 de 2</div></h2>
+			<button>Emitir</button>
+		</section>
+	</body>
+</html>

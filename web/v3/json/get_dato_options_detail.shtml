@@ -1,0 +1,13 @@
+{
+	"rows": [
+	<!--#4DLOOP aIndex-->
+		{
+			"index": <!--#4DTEXT aIndex{aIndex}-->,
+			"id": "<!--#4DTEXT aDatoOptionsIdx{aIndex}-->",
+			"text": "<!--#4DHTML _V3_escapeString(aDatoOptionsTextx{aIndex})-->",
+			"correlativo": "<!--#4DTEXT aDatoOptionsCorrelativoActualx{aIndex}-->",
+			"poto": "<!--#4DHTML _V3_escapeString(aDatoPoto{aIndex})-->"
+		}<!--#4DIF NOT(aIndex{aIndex} = aIndex{Size of array(aIndex)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

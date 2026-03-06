@@ -1,0 +1,20 @@
+<table class="item-negocio"  width="100%" border="1" cellpadding="0" cellspacing="0" hspace="0" vspace="0">
+<tbody id="tabla">
+<tr bgcolor="#CCCCCC" >
+<td width="5%" class="center">ITEM</td>
+<td width="30%" class="center">DESCRIPCION</td>
+<td width="5%" class="center">CANT</td>
+<td width="10%" class="center">P.U.[$]</td>
+<td width="10%" class="center">SUBTOTAL[$]</td>
+</tr>
+<!--#4DLOOP atxtNro-->        
+<tr>
+<td><input id="items-det-oc-new" readonly name="items-det-oc-new" type="text" value="<!--#4DVAR aNroItems{atxtNro}-->" class="cant-item"/></td>
+<td><input id="des-det-oc-new" readonly name="des-det-oc-new" type="text" value="<!--#4DVAR aDescripcion{atxtNro}-->" class="des-item"/></td>        
+<td><input readonly onkeyup="calculaSubTotalesOC();" onchange="calculaSubTotalesOC();" id="cant-det-oc-new" name="cant-det-oc-new" type="text" value="<!--#4DVAR aCantidad{atxtNro}-->" class="cant-item"/></td>
+<td><input readonly onkeyup="calculaSubTotalesOC();" onchange="calculaSubTotalesOC();" id="precio-det-oc-new" 
+name="precio-det-oc-new" type="text" value="<!--#4DVAR aPrecio{atxtNro}-->" class="precio-item"/></td>
+<td><input id="total-det-oc-new" name="total-det-oc-new" readonly type="text" value="<!--#4DVAR aSubtotal{atxtNro}-->" class="total-item"/></td>
+</tr>
+<!--#4DENDLOOP-->
+</table>

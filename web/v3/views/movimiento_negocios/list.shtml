@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title><!--#4DTEXT _V3_nombre_empresa--> / MOVIMIENTO NEGOCIOS - Lista</title>
+	<link rel="stylesheet" href="/v3/views/compras/lista.css?7474848334748474847">
+	<script src="/v3/script/idle.js"></script>
+	<script defer src="/v3/script/block_by_use.js?<!--#4DTEXT _V3_version-->"></script>
+	<script defer src="/v3/script/unblock.js?<!--#4DTEXT _V3_version-->"></script>
+	<script defer src="/v3/script/requestUnblock.js?<!--#4DTEXT _V3_version-->"></script>
+	<style>
+		/* Estilos personalizados para el módulo */
+		.table-container {
+			margin: 20px;
+			background: white;
+			border-radius: 8px;
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+			overflow: hidden;
+		}
+
+		.table-header {
+			background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+			color: white;
+			padding: 20px;
+			text-align: center;
+		}
+
+		.table-header h2 {
+			font-size: 18px;
+			font-weight: 600;
+			color: white;
+			margin: 0;
+		}
+
+		/* Estilos para la tabla */
+		.table {
+			margin-bottom: 0;
+		}
+
+		.table th {
+			background-color: #f8f9fa;
+			border-bottom: 2px solid #dee2e6;
+			font-weight: 600;
+			color: #495057;
+		}
+
+		.table tbody tr {
+			cursor: pointer;
+			transition: background-color 0.2s;
+		}
+
+		.table tbody tr:hover {
+			background-color: #f8f9fa;
+		}
+
+		/* Estilos para el modal */
+		.modal {
+			display: none;
+			position: fixed;
+			z-index: 1000;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.5);
+		}
+
+		.modal-content {
+			background-color: white;
+			margin: 5% auto;
+			padding: 0;
+			border-radius: 8px;
+			width: 80%;
+			max-width: 800px;
+			max-height: 80vh;
+			overflow: hidden;
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+		}
+
+		.modal-header {
+			background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+			color: white;
+			padding: 15px 20px;
+			border-bottom: none;
+		}
+
+		.modal-title {
+			font-size: 16px;
+			font-weight: 600;
+		}
+
+		.close {
+			color: white;
+			font-size: 24px;
+			font-weight: bold;
+			opacity: 0.8;
+		}
+
+		/* Estilos para el modal de descripción */
+		.modal-descripcion {
+			display: none;
+			position: fixed;
+			z-index: 2000;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0, 0, 0, 0.6);
+			justify-content: center;
+			align-items: center;
+		}
+
+		.modal-descripcion-content {
+			background-color: white;
+			border-radius: 12px;
+			width: 90%;
+			max-width: 800px;
+			max-height: 90vh;
+			overflow: hidden;
+			box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+			animation: modalSlideIn 0.3s ease-out;
+		}
+
+		@keyframes modalSlideIn {
+			from {
+				opacity: 0;
+				transform: translateY(-50px) scale(0.9);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0) scale(1);
+			}
+		}
+
+		.modal-descripcion-header {
+			background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+			color: white;
+			padding: 20px;
+			border-radius: 12px 12px 0 0;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.modal-descripcion-title {
+			margin: 0;
+			font-size: 20px;
+			font-weight: 600;
+			color: white;
+		}
+
+		.close {
+			color: white;
+			font-size: 28px;
+			font-weight: bold;
+			cursor: pointer;
+			opacity: 0.8;
+			transition: opacity 0.2s;
+		}
+
+		.close:hover {
+			opacity: 1;
+		}
+
+		.modal-descripcion-body {
+			padding: 25px;
+			max-height: 60vh;
+			overflow-y: auto;
+		}
+
+		.item-info {
+			background-color: #f8f9fa;
+			border-radius: 8px;
+			padding: 20px;
+			margin-bottom: 25px;
+			border-left: 4px solid #28a745;
+		}
+
+		.item-info p {
+			margin: 8px 0;
+			font-size: 16px;
+			color: #333;
+		}
+
+		.item-info strong {
+			color: #28a745;
+			font-weight: 600;
+			min-width: 80px;
+			display: inline-block;
+		}
+
+		.descripcion-texto {
+			font-size: 15px;
+			line-height: 1.6;
+			color: #333;
+		}
+
+		/* Estilos para el contenido formateado de la descripción */
+		.categoria-header {
+			background-color: #e8f5e8;
+			color: #155724;
+			padding: 12px 16px;
+			margin: 12px 0;
+			border-radius: 8px;
+			font-weight: 600;
+			border-left: 4px solid #28a745;
+			font-size: 16px;
+		}
+
+		.clave-valor {
+			display: flex;
+			margin: 8px 0;
+			padding: 8px 0;
+			border-bottom: 1px solid #f0f0f0;
+			font-size: 15px;
+		}
+
+		.clave-valor:last-child {
+			border-bottom: none;
+		}
+
+		.clave {
+			font-weight: 600;
+			color: #28a745;
+			min-width: 140px;
+			flex-shrink: 0;
+		}
+
+		.valor {
+			color: #333;
+			margin-left: 15px;
+			flex: 1;
+		}
+
+		.linea-texto {
+			margin: 6px 0;
+			padding: 4px 0;
+			color: #555;
+			font-size: 15px;
+		}
+
+		.linea-lista {
+			margin: 8px 0;
+			padding: 8px 12px;
+			background-color: #f8f9fa;
+			border-radius: 6px;
+			border-left: 3px solid #28a745;
+			color: #333;
+			font-size: 15px;
+		}
+
+		.linea-url {
+			margin: 8px 0;
+			padding: 8px 12px;
+			background-color: #e3f2fd;
+			border-radius: 6px;
+			border-left: 3px solid #2196f3;
+		}
+
+		.linea-url a {
+			color: #1976d2;
+			text-decoration: none;
+			font-weight: 500;
+		}
+
+		.linea-url a:hover {
+			text-decoration: underline;
+		}
+
+		/* Estilos para elementos destacados */
+		.clave-valor.moneda .clave,
+		.clave-valor.moneda .valor {
+			color: #155724;
+			font-weight: 600;
+		}
+
+		.clave-valor.numero .clave,
+		.clave-valor.numero .valor {
+			color: #6f42c1;
+			font-weight: 600;
+		}
+
+		.clave-valor.destacado {
+			background-color: #fff3cd;
+			border-left: 3px solid #ffc107;
+			padding: 10px 15px;
+			margin: 10px 0;
+			border-radius: 6px;
+		}
+
+		.clave-valor.destacado .clave {
+			color: #856404;
+		}
+
+		.clave-valor.destacado .valor {
+			color: #856404;
+		}
+
+		.modal-descripcion-footer {
+			padding: 20px;
+			text-align: center;
+			border-top: 1px solid #e9ecef;
+			background-color: #f8f9fa;
+		}
+
+		.modal-descripcion-footer .btn {
+			padding: 10px 20px;
+			font-size: 16px;
+			border-radius: 6px;
+			transition: all 0.2s;
+		}
+
+		.modal-descripcion-footer .btn:hover {
+			transform: translateY(-1px);
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+		}
+
+		/* Responsive design para el modal */
+		@media (max-width: 768px) {
+			.modal-descripcion-content {
+				width: 95%;
+				margin: 10px;
+			}
+
+			.modal-descripcion-body {
+				padding: 15px;
+			}
+
+			.clave-valor {
+				flex-direction: column;
+			}
+
+			.clave {
+				min-width: auto;
+				margin-bottom: 5px;
+			}
+
+			.valor {
+				margin-left: 0;
+			}
+
+			.item-info p {
+				font-size: 14px;
+			}
+
+			.descripcion-texto {
+				font-size: 14px;
+			}
+		}
+
+		/* Estilos para badges */
+		.badge {
+			font-size: 11px;
+			padding: 4px 8px;
+			border-radius: 12px;
+		}
+
+		.badge-primary {
+			background-color: #007bff;
+			color: white;
+		}
+
+		.badge-success {
+			background-color: #28a745;
+			color: white;
+		}
+
+		/* Loading spinner */
+		.loading {
+			text-align: center;
+			padding: 40px;
+			color: #666;
+		}
+
+		.spinner {
+			border: 3px solid #f3f3f3;
+			border-top: 3px solid #007bff;
+			border-radius: 50%;
+			width: 30px;
+			height: 30px;
+			animation: spin 1s linear infinite;
+			margin: 0 auto 10px;
+		}
+
+		@keyframes spin {
+			0% {
+				transform: rotate(0deg);
+			}
+
+			100% {
+				transform: rotate(360deg);
+			}
+		}
+
+		/* Estilos para el buscador */
+		.search-container {
+			background: #f8f9fa;
+			padding: 20px;
+			margin-bottom: 20px;
+			border-radius: 8px;
+			border: 1px solid #e9ecef;
+		}
+
+		.search-filters {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 20px;
+			align-items: end;
+		}
+
+		.filter-group {
+			display: flex;
+			flex-direction: column;
+			min-width: 200px;
+		}
+
+		.filter-group label {
+			font-weight: 600;
+			color: #495057;
+			margin-bottom: 5px;
+			font-size: 14px;
+		}
+
+		.search-input {
+			padding: 8px 12px;
+			border: 1px solid #ced4da;
+			border-radius: 4px;
+			font-size: 14px;
+			transition: border-color 0.15s ease-in-out;
+		}
+
+		.search-input:focus {
+			outline: none;
+			border-color: #28a745;
+			box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+		}
+
+		.btn-limpiar {
+			background: #dc3545;
+			color: white;
+			border: none;
+			padding: 8px 16px;
+			border-radius: 4px;
+			cursor: pointer;
+			font-size: 14px;
+			transition: background-color 0.15s ease-in-out;
+		}
+
+		.btn-limpiar:hover {
+			background: #c82333;
+		}
+
+		/* Ocultar header global vacío */
+		body>div:first-child {
+			display: none !important;
+		}
+
+		/* Ocultar cualquier header global */
+		header,
+		.header,
+		.global-header,
+		.top-bar {
+			display: none !important;
+		}
+
+		/* Ocultar elementos específicos del header */
+		body>div:first-child,
+		body>div:first-child>div,
+		body>div:first-child>header,
+		body>div:first-child>.header {
+			display: none !important;
+		}
+
+		/* Ajustar espaciado del contenido principal */
+		#viewport {
+			margin-top: 0 !important;
+			padding-top: 0 !important;
+		}
+
+		/* Forzar el contenido al tope */
+		body {
+			margin-top: 0 !important;
+			padding-top: 0 !important;
+		}
+
+		/* Ocultar cualquier elemento que pueda estar causando el espacio */
+		body>*:first-child:not(#viewport) {
+			display: none !important;
+		}
+
+		/* Botón de regreso */
+		.btn-back {
+			background-color: #6c757d;
+			color: white;
+			border: none;
+			padding: 8px 16px;
+			border-radius: 4px;
+			cursor: pointer;
+			margin-bottom: 15px;
+		}
+
+		.btn-back:hover {
+			background-color: #5a6268;
+		}
+	</style>
+</head>
+
+<body>
+
+	<!-- Header -->
+	<header class="headerUnabase newheader" id="newheader">
+		<div style="display: none;">
+			<div class="container">
+			<!-- Icono de Notificaciones -->
+			<button id="notification-btn" class="notification-button">
+				<i class="fas fa-bell"></i>
+				<span id="notification-count" class="badge bg-danger">0</span>
+			</button>
+
+			<!-- Panel de Notificaciones -->
+			<div id="notification-panel" class="card notification-panel">
+				<div class="card-header">
+					<h5 class="mb-0">Notificaciones</h5>
+				</div>
+				<ul id="notification-list" class="list-group list-group-flush">
+					<!-- Las notificaciones se agregarán aquí -->
+				</ul>
+				<div class="card-footer text-end">
+					<button id="clear-all" class="btn btn-sm btn-danger">Borrar Todas</button>
+				</div>
+			</div>
+		</div>
+		</div>
+		<div class="headerUnabase__company">
+			<img src='<!--#4DTEXT vUrlImagenLogo-->'
+				alt="" class="headerUnabase__company-logo" onclick="iniciarJuego()">
+			<p class="headerUnabase__company-name">
+				<!--#4DTEXT _V3_nombre_empresa-->
+			</p>
+		</div>
+		<button class="headerUnabase__settings">
+			<img src="https://getonbrd-prod.s3.amazonaws.com/uploads/users/logo/8952/LOGO.jpg" alt=""
+				class="headerUnabase__settings-logo" />
+			<span class="headerUnabase__settings-text"><!--#4DVAR vLogin--></span>
+			<span id="icon-down" class="mdi mdi-menu-down headerUnabase__settings-icon"></span>
+		</button>
+		<div class="headerUnabase__modal">
+			<ul>
+				<li>
+					<button class="headerUnabase__modal-btn" id="icon-profile">
+						<span class="mdi mdi-account"></span>
+						<span>Perfil</span>
+					</button>
+				</li>
+				<li id="night_mode" style="display: none;">
+					<button class="headerUnabase__modal-btn">
+						<span class="mdi mdi-account"></span>
+						<span>Perfil</span>
+					</button>
+				</li>
+				<li>
+					<button class="headerUnabase__modal-btn" id="icon-notifications">
+						<span class="mdi mdi-bell"></span>
+						<span>Notificaciones</span>
+					</button>
+				</li>
+				<li>
+					<button class="headerUnabase__modal-btn" id="icon-nodeServer">
+						<span class="mdi mdi-wifi"></span>
+						<span>Conexion</span>
+					</button>
+				</li>
+				<li>
+					<button class="headerUnabase__modal-btn" id="icon-intercom">
+						<span class="mdi mdi-chat"></span>
+						<span>Chat de Soporte</span>
+					</button>
+				</li>
+				<li>
+					<button class="headerUnabase__modal-btn" id="icon-permisos">
+						<span class="mdi mdi-book"></span>
+						<span>Permisos</span>
+					</button>
+				</li>
+				<!-- <li>
+					<button class="headerUnabase__modal-btn">
+						<span class="mdi mdi-compare"></span>
+						<span>Tema</span>
+					</button>
+				</li> -->
+				<li>
+					<a  class="headerUnabase__modal-a" href="/4DACTION/W_CERRAR_SESION/<!--#4DVAR vSesion-->">
+						<span class="mdi mdi-power"></span>
+						<span>Cerrar Sesión</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</header>
+
+	<div id="viewport">
+		<div class="results">
+			<div class="table-container">
+				<div class="table-header">
+					<h2>Movimiento de Negocios</h2>
+				</div>
+
+				<!-- Buscador -->
+				<div class="search-container">
+					<div class="search-filters">
+						<div class="filter-group">
+							<label for="search-negocio">Buscar negocio:</label>
+							<input type="text" id="search-negocio" placeholder="Escriba para buscar..."
+								class="search-input">
+						</div>
+						<div class="filter-group">
+							<label for="search-fecha">Filtrar por fecha:</label>
+							<input type="date" id="search-fecha" class="search-input">
+						</div>
+						<div class="filter-group">
+							<button type="button" id="btn-limpiar-filtros" class="btn-limpiar">Limpiar filtros</button>
+						</div>
+					</div>
+				</div>
+
+				<!-- Tabla de resultados -->
+				<div class="table-responsive">
+					<table class="table table-hover padre results fixed">
+						<thead>
+							<tr>
+								<th>N</th>
+								<th>Negocio</th>
+								<th>Fecha</th>
+								<th>Hora</th>
+								<th>Descripción del Cambio</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td colspan="5" style="text-align: center; color: #666; padding: 40px;">
+									<div class="spinner"></div>
+									Cargando negocios...
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal para mostrar categorías -->
+	<div id="modalMovimientos" class="modal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modalTitle">Categorías del Negocio</h5>
+				<span class="close">&times;</span>
+			</div>
+			<div class="modal-body">
+				<div id="modalLoading" class="loading">
+					<div class="spinner"></div>
+					Cargando categorías...
+				</div>
+				<div id="modalContent" style="display: none;">
+					<!-- Contenido del modal se cargará dinámicamente -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		// Configuración de timeouts y reintentos
+		const CONFIG = {
+			timeout: 30000,           // Timeout en milisegundos (30 segundos)
+			maxRetries: 3,            // Máximo número de reintentos
+			retryDelay: 2000,         // Delay entre reintentos en milisegundos
+			backendTimeout: 25000     // Timeout del backend (menor que el frontend)
+		};
+
+		// Función para mostrar mensajes de error
+		function mostrarError(mensaje) {
+			var modalContent = document.getElementById('modalContent');
+			var modalLoading = document.getElementById('modalLoading');
+
+			if (modalLoading) modalLoading.style.display = 'none';
+			if (modalContent) modalContent.style.display = 'block';
+
+			modalContent.innerHTML = '<div class="alert alert-danger" style="margin: 20px;">' +
+				'<h4><i class="fa fa-exclamation-triangle"></i> Error</h4>' +
+				'<p>' + mensaje + '</p>' +
+				'<button class="btn btn-primary" onclick="volverACategorias()">Volver a Categorías</button>' +
+				'</div>';
+		}
+
+		// Función para mostrar mensajes de éxito
+		function mostrarExito(mensaje) {
+			var modalContent = document.getElementById('modalContent');
+			var modalLoading = document.getElementById('modalLoading');
+
+			if (modalLoading) modalLoading.style.display = 'none';
+			if (modalContent) modalContent.style.display = 'block';
+
+			modalContent.innerHTML = '<div class="alert alert-success" style="margin: 20px;">' +
+				'<h4><i class="fa fa-check-circle"></i> Éxito</h4>' +
+				'<p>' + mensaje + '</p>' +
+				'<button class="btn btn-primary" onclick="volverACategorias()">Volver a Categorías</button>' +
+				'</div>';
+		}
+
+		// Función para mostrar loading
+		function mostrarLoading(mensaje = 'Cargando...') {
+			var modalContent = document.getElementById('modalContent');
+			var modalLoading = document.getElementById('modalLoading');
+
+			if (modalLoading) modalLoading.style.display = 'block';
+			if (modalContent) modalContent.style.display = 'none';
+		}
+
+		// Función para ocultar loading
+		function ocultarLoading() {
+			var modalLoading = document.getElementById('modalLoading');
+			if (modalLoading) modalLoading.style.display = 'none';
+		}
+
+		// Función para hacer peticiones AJAX con retry automático
+		function ajaxWithRetry(config, maxRetries = CONFIG.maxRetries, retryDelay = CONFIG.retryDelay) {
+			return new Promise((resolve, reject) => {
+				let intento = 1;
+
+				function hacerPeticion() {
+					$.ajax({
+						...config,
+						timeout: CONFIG.timeout,
+						success: function(data) {
+							resolve(data);
+						},
+						error: function(xhr, status, error) {
+							// Si es timeout y no hemos agotado los intentos, reintentar
+							if ((status === 'timeout' || xhr.status === 408) && intento < maxRetries) {
+								console.log(`Timeout en petición AJAX, reintentando... Intento ${intento + 1} de ${maxRetries}`);
+								intento++;
+								setTimeout(hacerPeticion, retryDelay);
+							} else {
+								reject({ xhr, status, error, intentos: intento });
+							}
+						}
+					});
+				}
+
+				hacerPeticion();
+			});
+		}
+
+		// Función para escapar caracteres HTML especiales
+		function escapeHtml(text) {
+			if (!text) return '';
+			var map = {
+				'&': '&amp;',
+				'<': '&lt;',
+				'>': '&gt;',
+				'"': '&quot;',
+				"'": '&#039;'
+			};
+			return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+		}
+
+		// Función para mostrar la descripción completa en un modal
+		function mostrarDescripcionCompleta(descripcion, nombre, fecha, hora) {
+			// Crear el modal si no existe
+			var modalDescripcion = document.getElementById('modalDescripcion');
+			if (!modalDescripcion) {
+				modalDescripcion = document.createElement('div');
+				modalDescripcion.id = 'modalDescripcion';
+				modalDescripcion.className = 'modal-descripcion';
+				document.body.appendChild(modalDescripcion);
+			}
+
+			// Formatear la descripción para el modal
+			var descripcionFormateada = formatearDescripcion(descripcion);
+
+			// Contenido del modal
+			modalDescripcion.innerHTML = `
+				<div class="modal-descripcion-content">
+					<div class="modal-descripcion-header">
+						<span class="close" onclick="cerrarModalDescripcion()">&times;</span>
+						<h4 class="modal-descripcion-title">Descripción Completa del Cambio</h4>
+					</div>
+					<div class="modal-descripcion-body">
+						<div class="item-info">
+							<p><strong>Item:</strong> ${escapeHtml(nombre)}</p>
+							<p><strong>Fecha:</strong> ${escapeHtml(fecha)}</p>
+							<p><strong>Hora:</strong> ${escapeHtml(hora)}</p>
+						</div>
+						<div class="descripcion-texto">
+							${descripcionFormateada}
+						</div>
+					</div>
+					<div class="modal-descripcion-footer">
+						<button class="btn btn-primary" onclick="cerrarModalDescripcion()">Cerrar</button>
+						<button class="btn btn-secondary" onclick="copiarDescripcion()" style="margin-left: 10px;">
+							<i class="fa fa-copy"></i> Copiar Descripción
+						</button>
+					</div>
+				</div>
+			`;
+			
+			modalDescripcion.style.display = 'flex'; // Mostrar el modal
+
+			// Cerrar modal al hacer clic fuera
+			modalDescripcion.onclick = function(event) {
+				if (event.target === modalDescripcion) {
+					cerrarModalDescripcion();
+				}
+			};
+
+			// Cerrar modal con tecla ESC
+			document.onkeydown = function(event) {
+				if (event.key === 'Escape') {
+					cerrarModalDescripcion();
+				}
+			};
+		}
+
+		// Función para configurar los event listeners del modal
+		function setupModalEventListeners(modal) {
+			// Cerrar con clic fuera del modal
+			modal.addEventListener('click', function(e) {
+				if (e.target === modal) {
+					cerrarModalDescripcion();
+				}
+			});
+
+			// Cerrar con tecla ESC
+			document.addEventListener('keydown', function(e) {
+				if (e.key === 'Escape' && modal.style.display === 'flex') {
+					cerrarModalDescripcion();
+				}
+			});
+		}
+
+		// Función para cerrar el modal de descripción
+		function cerrarModalDescripcion() {
+			var modalDescripcion = document.getElementById('modalDescripcion');
+			if (modalDescripcion) {
+				modalDescripcion.style.display = 'none';
+			}
+		}
+
+		// Función para copiar la descripción al portapapeles
+		function copiarDescripcion() {
+			var modalDescripcion = document.getElementById('modalDescripcion');
+			if (!modalDescripcion) return;
+
+			// Obtener el texto de la descripción (sin formato HTML)
+			var descripcionTexto = modalDescripcion.querySelector('.descripcion-texto').textContent || 
+								  modalDescripcion.querySelector('.descripcion-texto').innerText;
+
+			// Crear un elemento temporal para copiar
+			var textArea = document.createElement('textarea');
+			textArea.value = descripcionTexto;
+			document.body.appendChild(textArea);
+			textArea.select();
+
+			try {
+				// Intentar copiar al portapapeles
+				var successful = document.execCommand('copy');
+				if (successful) {
+					// Mostrar mensaje de éxito
+					mostrarMensajeCopiado();
+				} else {
+					// Fallback: usar la API moderna del portapapeles
+					navigator.clipboard.writeText(descripcionTexto).then(function() {
+						mostrarMensajeCopiado();
+					}).catch(function() {
+						alert('No se pudo copiar la descripción. Por favor, selecciona y copia manualmente.');
+					});
+				}
+			} catch (err) {
+				// Fallback: usar la API moderna del portapapeles
+				navigator.clipboard.writeText(descripcionTexto).then(function() {
+					mostrarMensajeCopiado();
+				}).catch(function() {
+					alert('No se pudo copiar la descripción. Por favor, selecciona y copia manualmente.');
+				});
+			}
+
+			// Limpiar
+			document.body.removeChild(textArea);
+		}
+
+		// Función para mostrar mensaje de copiado exitoso
+		function mostrarMensajeCopiado() {
+			var modalDescripcion = document.getElementById('modalDescripcion');
+			if (!modalDescripcion) return;
+
+			var botonCopiar = modalDescripcion.querySelector('.btn-secondary');
+			if (botonCopiar) {
+				var textoOriginal = botonCopiar.innerHTML;
+				botonCopiar.innerHTML = '<i class="fa fa-check"></i> ¡Copiado!';
+				botonCopiar.classList.remove('btn-secondary');
+				botonCopiar.classList.add('btn-success');
+				botonCopiar.disabled = true;
+
+				// Restaurar después de 2 segundos
+				setTimeout(function() {
+					botonCopiar.innerHTML = textoOriginal;
+					botonCopiar.classList.remove('btn-success');
+					botonCopiar.classList.add('btn-secondary');
+					botonCopiar.disabled = false;
+				}, 2000);
+			}
+		}
+
+		// Función para formatear la descripción del cambio
+		function formatearDescripcion(descripcion) {
+			if (!descripcion) return 'No hay descripción disponible';
+
+			// Dividir por líneas y formatear cada una
+			var lineas = descripcion.split('\n').filter(linea => linea.trim());
+			
+			if (lineas.length === 0) return 'No hay descripción disponible';
+
+			var htmlFormateado = '';
+
+			lineas.forEach(function(linea, index) {
+				linea = linea.trim();
+				
+				// Detectar si es un encabezado de categoría (contiene "/" y está en mayúsculas)
+				if (linea.includes('/') && linea === linea.toUpperCase()) {
+					htmlFormateado += `<div class="categoria-header">${escapeHtml(linea)}</div>`;
+				}
+				// Detectar si es un encabezado de categoría (contiene "/")
+				else if (linea.includes('/') && !linea.includes('=') && !linea.includes(':')) {
+					htmlFormateado += `<div class="categoria-header">${escapeHtml(linea)}</div>`;
+				}
+				// Detectar si es una línea con clave-valor separada por ":"
+				else if (linea.includes(':') && !linea.includes('=')) {
+					var partes = linea.split(':');
+					if (partes.length >= 2) {
+						var clave = partes[0].trim();
+						var valor = partes.slice(1).join(':').trim();
+						
+						// Detectar si es un precio o cantidad
+						if (clave.toLowerCase().includes('precio') || clave.toLowerCase().includes('cantidad') || 
+							clave.toLowerCase().includes('costo') || clave.toLowerCase().includes('total')) {
+							htmlFormateado += `<div class="clave-valor destacado">
+								<span class="clave">${escapeHtml(clave)}:</span>
+								<span class="valor">${escapeHtml(valor)}</span>
+							</div>`;
+						} else {
+							htmlFormateado += `<div class="clave-valor">
+								<span class="clave">${escapeHtml(clave)}:</span>
+								<span class="valor">${escapeHtml(valor)}</span>
+							</div>`;
+						}
+					} else {
+						htmlFormateado += `<div class="linea-texto">${escapeHtml(linea)}</div>`;
+					}
+				}
+				// Detectar si es una línea con asignación separada por "="
+				else if (linea.includes('=') && !linea.includes(':')) {
+					var partes = linea.split('=');
+					if (partes.length >= 2) {
+						var clave = partes[0].trim();
+						var valor = partes.slice(1).join('=').trim();
+						
+						// Detectar si es un precio o cantidad
+						if (clave.toLowerCase().includes('precio') || clave.toLowerCase().includes('cantidad') || 
+							clave.toLowerCase().includes('costo') || clave.toLowerCase().includes('total')) {
+							htmlFormateado += `<div class="clave-valor destacado">
+								<span class="clave">${escapeHtml(clave)}:</span>
+								<span class="valor">${escapeHtml(valor)}</span>
+							</div>`;
+						} else {
+							htmlFormateado += `<div class="clave-valor">
+								<span class="clave">${escapeHtml(clave)}:</span>
+								<span class="valor">${escapeHtml(valor)}</span>
+							</div>`;
+						}
+					} else {
+						htmlFormateado += `<div class="linea-texto">${escapeHtml(linea)}</div>`;
+					}
+				}
+				// Detectar si es una línea que contiene números y moneda
+				else if (/\d+\.?\d*\s*\$/.test(linea) || /\$\s*\d+\.?\d*/.test(linea)) {
+					htmlFormateado += `<div class="linea-texto moneda">${escapeHtml(linea)}</div>`;
+				}
+				// Detectar si es una línea que contiene solo números
+				else if (/^\d+\.?\d*$/.test(linea)) {
+					htmlFormateado += `<div class="linea-texto numero">${escapeHtml(linea)}</div>`;
+				}
+				// Es texto normal
+				else {
+					htmlFormateado += `<div class="linea-texto">${escapeHtml(linea)}</div>`;
+				}
+			});
+
+			return htmlFormateado;
+		}
+
+		// Variables globales
+		var folioActual = '';
+		var peticionActual = null; // Para cancelar peticiones anteriores
+		var todosLosNegocios = []; // Para almacenar todos los negocios y filtrar
+		var filtroNegocio = '';
+		var filtroFecha = '';
+
+
+		// Función para remover spinners de carga
+		function removerSpinners() {
+			// Remover cualquier spinner que pueda estar interfiriendo
+			var spinners = document.querySelectorAll('.spinner, .loading');
+			spinners.forEach(function (spinner) {
+				spinner.style.display = 'none';
+			});
+
+			// Remover contenido de carga del tbody
+			var tbody = document.querySelector('table.padre.results.fixed tbody');
+			if (tbody) {
+				var loadingRows = tbody.querySelectorAll('tr td[colspan]');
+				loadingRows.forEach(function (row) {
+					if (row.textContent.includes('Cargando')) {
+						row.parentElement.remove();
+					}
+				});
+			}
+		}
+
+		// Función para mostrar mensaje cuando no hay datos
+		function mostrarMensajeNoDatos() {
+			removerSpinners();
+			var tbody = document.querySelector('table.padre.results.fixed tbody');
+			if (tbody) {
+				tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #666; padding: 40px;">No se encontraron negocios</td></tr>';
+			}
+		}
+
+		// Función para renderizar la tabla manualmente
+		function renderizarTabla(negocios) {
+			console.log('Renderizando tabla con', negocios.length, 'negocios');
+
+			// Remover spinners de carga primero
+			removerSpinners();
+
+			var tbody = document.querySelector('table.padre.results.fixed tbody');
+			if (!tbody) {
+				console.error('No se encontró el tbody de la tabla');
+				return;
+			}
+
+			if (!negocios || negocios.length === 0) {
+				mostrarMensajeNoDatos();
+				return;
+			}
+
+			var html = '';
+			negocios.forEach(function (negocio, index) {
+				var nombre = negocio.referencia || negocio.nombre || 'Sin nombre';
+				var id = negocio.id || negocio.folio || '';
+
+				html += '<tr data-id="' + id + '" data-folio="' + id + '" style="cursor: pointer;">';
+				html += '<td>' + (index + 1) + '</td>';
+				html += '<td>' + nombre + '</td>';
+				html += '<td></td>'; // Fecha - vacío por ahora
+				html += '<td></td>'; // Hora - vacío por ahora
+				html += '<td></td>'; // Descripción del cambio - vacío por ahora
+				html += '</tr>';
+			});
+
+			// Limpiar el tbody y agregar el nuevo contenido
+			tbody.innerHTML = '';
+			tbody.insertAdjacentHTML('beforeend', html);
+
+
+
+			// Forzar actualización visual
+			setTimeout(function () {
+				// Agregar event listeners a las filas
+				var filas = tbody.querySelectorAll('tr');
+				filas.forEach(function (fila) {
+					fila.addEventListener('click', function () {
+						var id = this.getAttribute('data-id') || this.getAttribute('data-folio');
+						var nombre = this.cells[1].textContent;
+						if (id) {
+							abrirModalCategorias(id, nombre);
+						}
+					});
+				});
+
+				// Forzar reflow para asegurar que se vea la actualización
+				tbody.style.display = 'none';
+				tbody.offsetHeight; // Trigger reflow
+				tbody.style.display = '';
+
+				// Desbloquear UI si unaBase está disponible
+				try {
+					if (typeof unaBase !== 'undefined' && unaBase.ui && unaBase.ui.unblock) {
+						unaBase.ui.unblock();
+					}
+				} catch (e) {
+					// Silenciar errores
+				}
+			}, 100);
+		}
+
+		// Función para abrir el modal y cargar categorías
+		function abrirModalCategorias(negocioId, nombreNegocio) {
+			// Cancelar petición anterior si existe
+			if (peticionActual) {
+				peticionActual.abort();
+			}
+
+			// Limpiar estado anterior
+			folioActual = negocioId;
+			window.nombreNegocioActual = nombreNegocio;
+
+			// Limpiar contenido del modal antes de cargar
+			var modalContent = document.getElementById('modalContent');
+			if (modalContent) {
+				modalContent.innerHTML = '';
+			}
+
+			try {
+				var modal = document.getElementById('modalMovimientos');
+				if (!modal) return;
+
+				modal.style.display = 'block';
+
+				var modalTitle = document.getElementById('modalTitle');
+				if (modalTitle) {
+					modalTitle.textContent = 'Categorías del Negocio: ' + nombreNegocio;
+				}
+
+				var modalLoading = document.getElementById('modalLoading');
+				if (modalLoading) {
+					modalLoading.style.display = 'block';
+					modalLoading.innerHTML = '<div class="spinner"></div>Cargando categorías...';
+				}
+				if (modalContent) modalContent.style.display = 'none';
+
+			} catch (error) {
+				return;
+			}
+
+			// Obtener SID dinámicamente
+			var sid = '';
+			if (typeof unaBase !== 'undefined' && unaBase.sid) {
+				sid = unaBase.sid.encoded();
+			}
+
+			if (!sid) {
+				mostrarError('No se pudo obtener el SID de las cookies');
+				return;
+			}
+
+			// Construir URL para obtener categorías
+			var baseUrl = 'https://frank.unabase.com/node/get-business-items';
+			var params = {
+				id: negocioId,
+				categorias: 'True',
+				hostname: window.location.origin,
+				sid: sid
+			};
+
+			var fullUrl = baseUrl + '?' + $.param(params);
+
+			peticionActual = $.ajax({
+				url: fullUrl,
+				type: 'GET',
+				dataType: 'json',
+				crossDomain: true,
+				timeout: CONFIG.timeout,
+				success: function (data) {
+					if (data && data.rows) {
+						// Filtrar solo categorías
+						var categorias = data.rows.filter(function (item) {
+							return item.tipo_item === 'categoria' && item.nombre;
+						});
+
+						// Ordenar alfabéticamente
+						categorias.sort(function (a, b) {
+							return (a.nombre || a.categoria || '').localeCompare(b.nombre || b.categoria || '');
+						});
+
+						mostrarCategoriasEnModal(categorias);
+					} else {
+						mostrarError('No se encontraron categorías para este negocio');
+					}
+				},
+				error: function (xhr, status, error) {
+					mostrarError('Error al cargar las categorías del negocio: ' + error);
+				}
+			});
+		}
+
+		// Función para mostrar categorías en el modal
+		function mostrarCategoriasEnModal(categorias) {
+
+			// Resetear variable de volver a categorías
+			if (typeof volviendoACategorias !== 'undefined') {
+				volviendoACategorias = false;
+			}
+
+			var modalContent = document.getElementById('modalContent');
+			var modalLoading = document.getElementById('modalLoading');
+
+			if (!modalContent) return;
+
+			if (modalLoading) modalLoading.style.display = 'none';
+			modalContent.style.display = 'block';
+
+			if (!categorias || categorias.length === 0) {
+				modalContent.innerHTML = '<div style="text-align: center; color: #666; padding: 20px;">No se encontraron categorías</div>';
+				return;
+			}
+
+			// Mostrar categorías inmediatamente
+			var html = '<div class="table-responsive"><table class="table table-hover">';
+			html += '<thead><tr><th>Categoría</th><th>Descripción</th><th>Items</th></tr></thead><tbody>';
+
+			categorias.forEach(function (categoria) {
+				var nombre = categoria.nombre || categoria.categoria || 'Sin nombre';
+				var descripcion = categoria.descripcion || '';
+				var cantidadItems = categoria.cantidad_items || 0;
+
+				html += '<tr data-categoria="' + nombre + '" style="cursor: pointer;">';
+				html += '<td><strong>' + nombre + '</strong></td>';
+				html += '<td>' + descripcion + '</td>';
+				html += '<td><span class="badge badge-primary">' + cantidadItems + ' items</span></td>';
+				html += '</tr>';
+			});
+
+			html += '</tbody></table></div>';
+			modalContent.innerHTML = html;
+
+			// Agregar event listeners a las categorías
+			setTimeout(function () {
+				var filasCategoria = modalContent.querySelectorAll('tr[data-categoria]');
+				filasCategoria.forEach(function (fila) {
+					fila.addEventListener('click', function () {
+						var categoria = this.getAttribute('data-categoria');
+						cargarItemsDeCategoria(categoria);
+					});
+				});
+			}, 100);
+
+			// Contar items en segundo plano (opcional)
+			setTimeout(function () {
+				obtenerCantidadItemsPorCategoria(categorias, function (categoriasConItems) {
+					// Actualizar solo las cantidades sin recargar todo
+					actualizarCantidadesItems(categoriasConItems);
+				});
+			}, 500);
+		}
+
+		// Función para actualizar solo las cantidades de items
+		function actualizarCantidadesItems(categoriasConItems) {
+			var modalContent = document.getElementById('modalContent');
+			if (!modalContent) return;
+
+			// Buscar y actualizar cada badge de cantidad
+			categoriasConItems.forEach(function (categoria) {
+				var nombre = categoria.nombre || categoria.categoria || '';
+				var cantidad = categoria.cantidad_real || 0;
+
+				// Buscar la fila correspondiente
+				var fila = modalContent.querySelector('tr[data-categoria="' + nombre + '"]');
+				if (fila) {
+					var badge = fila.querySelector('.badge');
+					if (badge) {
+						badge.textContent = cantidad + ' items';
+					}
+				}
+			});
+		}
+
+
+		// Función para obtener la cantidad real de items por categoría
+		function obtenerCantidadItemsPorCategoria(categorias, callback, intento = 1) {
+
+			// Obtener SID dinámicamente
+			var sid = '';
+			if (typeof unaBase !== 'undefined' && unaBase.sid) {
+				sid = unaBase.sid.encoded();
+			}
+
+			if (!sid) {
+				callback(categorias);
+				return;
+			}
+
+			// Construir URL para obtener todos los items
+			var baseUrl = 'https://frank.unabase.com/node/get-business-items';
+			var params = {
+				id: folioActual,
+				hostname: window.location.origin,
+				sid: sid
+			};
+
+			var fullUrl = baseUrl + '?' + $.param(params);
+
+			$.ajax({
+				url: fullUrl,
+				type: 'GET',
+				dataType: 'json',
+				crossDomain: true,
+				timeout: CONFIG.timeout,
+				success: function (data) {
+					if (data && data.rows) {
+						// Contar items por categoría
+						categorias.forEach(function (categoria) {
+							var nombreCategoria = categoria.nombre || categoria.categoria || '';
+							var itemsEnCategoria = data.rows.filter(function (item) {
+								return item.tipo_item === 'item' &&
+									(item.categoria === nombreCategoria || item.nombre_categoria === nombreCategoria);
+							});
+							categoria.cantidad_real = itemsEnCategoria.length;
+						});
+					}
+					callback(categorias);
+				},
+				error: function (xhr, status, error) {
+					// Si es timeout y no hemos agotado los intentos, reintentar
+					if ((status === 'timeout' || xhr.status === 408) && intento < 3) {
+						console.log('Timeout en obtenerCantidadItemsPorCategoria, reintentando... Intento ' + (intento + 1));
+						setTimeout(function() {
+							obtenerCantidadItemsPorCategoria(categorias, callback, intento + 1);
+						}, 2000);
+					} else {
+						console.log('Error en obtenerCantidadItemsPorCategoria después de ' + intento + ' intentos:', error);
+						callback(categorias);
+					}
+				}
+			});
+		}
+
+		// Función para cargar items de una categoría
+		function cargarItemsDeCategoria(categoria, intento = 1) {
+
+			var modalContent = document.getElementById('modalContent');
+			var modalLoading = document.getElementById('modalLoading');
+
+			if (modalLoading) modalLoading.style.display = 'block';
+			if (modalContent) modalContent.style.display = 'none';
+
+			// Obtener SID dinámicamente
+			var sid = '';
+			if (typeof unaBase !== 'undefined' && unaBase.sid) {
+				sid = unaBase.sid.encoded();
+			}
+
+			if (!sid) {
+				mostrarError('No se pudo obtener el SID de las cookies');
+				return;
+			}
+
+			// Construir URL para obtener items
+			var baseUrl = 'https://frank.unabase.com/node/get-business-items-modulo';
+			var params = {
+				id: folioActual,
+				categoria: categoria, // Agregar la categoría específica
+				hostname: window.location.origin,
+				sid: sid
+			};
+
+			var fullUrl = baseUrl + '?' + $.param(params);
+
+			$.ajax({
+				url: fullUrl,
+				type: 'GET',
+				dataType: 'json',
+				crossDomain: true,
+				timeout: CONFIG.timeout,
+				success: function (data) {
+					if (data && data.rows) {
+						// Tomar registros relacionados con la categoría, sin restringir por tipo_item
+						var items = data.rows.filter(function (item) {
+							return (item.categoria === categoria || item.nombre_categoria === categoria || item.nombre === categoria);
+						});
+
+						// Ordenar por Fecha/Hora descendente cuando existan; de lo contrario por nombre
+						function parseTimestamp(it) {
+							var f = it.Fecha || it.fecha || '';
+							var h = it.Hora || it.hora || '00:00:00';
+							var p = String(f).split('-'); // DD-MM-YYYY
+							if (p.length === 3) {
+								var iso = p[2] + '-' + p[1] + '-' + p[0] + 'T' + h;
+								var t = Date.parse(iso);
+								return isNaN(t) ? 0 : t;
+							}
+							return 0;
+						}
+
+						items.sort(function (a, b) {
+							var tb = parseTimestamp(b) - parseTimestamp(a);
+							return tb !== 0 ? tb : (a.nombre || '').localeCompare(b.nombre || '');
+						});
+
+
+						mostrarItemsEnModal(items, categoria);
+					} else {
+						mostrarError('No se encontraron items para esta categoría');
+					}
+				},
+				error: function (xhr, status, error) {
+					var errorMessage = 'Error al cargar los items de la categoría';
+					var shouldRetry = false;
+					
+					// Manejar diferentes tipos de errores
+					if (status === 'timeout') {
+						errorMessage = 'Timeout: El servidor tardó demasiado en responder';
+						shouldRetry = true;
+					} else if (xhr.status === 408) {
+						errorMessage = 'Timeout del servidor: El servidor 4D tardó demasiado en responder';
+						shouldRetry = true;
+					} else if (xhr.status === 500) {
+						// Intentar parsear el error del backend
+						try {
+							var errorData = JSON.parse(xhr.responseText);
+							if (errorData.message) {
+								errorMessage = errorData.message;
+							}
+							if (errorData.error === 'Request Timeout') {
+								shouldRetry = true;
+							}
+						} catch (e) {
+							errorMessage = 'Error del servidor: ' + error;
+						}
+					}
+					
+					// Mostrar mensaje de error con opción de retry
+					if (shouldRetry && intento < 3) {
+						var retryMessage = errorMessage + '<br><br>Reintentando... (Intento ' + (intento + 1) + ' de 3)';
+						mostrarError(retryMessage);
+						
+						// Retry automático después de 2 segundos
+						setTimeout(function() {
+							cargarItemsDeCategoria(categoria, intento + 1);
+						}, 2000);
+					} else if (intento >= 3) {
+						mostrarError(errorMessage + '<br><br>Se han agotado los intentos. Por favor, inténtalo de nuevo más tarde.');
+					} else {
+						mostrarError(errorMessage);
+					}
+				}
+			});
+		}
+
+		// Función para mostrar items en el modal
+		function mostrarItemsEnModal(items, categoria) {
+			var modalContent = document.getElementById('modalContent');
+			var modalLoading = document.getElementById('modalLoading');
+
+			if (!modalContent) {
+				console.error('Error: modalContent no encontrado');
+				return;
+			}
+
+			if (modalLoading) modalLoading.style.display = 'none';
+			modalContent.style.display = 'block';
+
+			var html = '<button class="btn-back" onclick="volverACategorias()">← Volver a Categorías</button>';
+
+			if (!items || items.length === 0) {
+				html += '<div style="text-align: center; color: #666; padding: 20px;">No se encontraron items en esta categoría</div>';
+				modalContent.innerHTML = html;
+				return;
+			}
+
+			html += '<div class="table-responsive"><table class="table table-hover">';
+			html += '<thead><tr><th>Item</th><th>Fecha</th><th>Hora</th><th>Descripción del Cambio</th><th>Acciones</th></tr></thead><tbody>';
+
+			items.forEach(function (item, index) {
+				var nombre = item.nombre || item.item || '';
+				var fecha = item.Fecha || item.fecha || '';
+				var hora = item.Hora || item.hora || '';
+				var descripcionCambio = item.Cambio || '';
+				
+				// Truncar la descripción para la tabla (primeros 100 caracteres + "...")
+				var descripcionCorta = descripcionCambio.length > 100 ? 
+					descripcionCambio.substring(0, 100) + '...' : descripcionCambio;
+
+				html += '<tr>';
+				html += '  <td><strong>' + (nombre || '') + '</strong></td>';
+				html += '  <td>' + (fecha || '') + '</td>';
+				html += '  <td>' + (hora || '') + '</td>';
+				html += '  <td style="max-width: 300px; word-wrap: break-word;">' + (descripcionCorta || '') + '</td>';
+				html += '  <td>';
+				
+				if (descripcionCambio && descripcionCambio.trim()) {
+					// Crear botón "Ver Completa" con ID único para evitar conflictos
+					var botonId = 'btn-ver-completa-' + index;
+					var botonHtml = '<button id="' + botonId + '" class="btn btn-sm btn-info">';
+					botonHtml += '<i class="fa fa-eye"></i> Ver Completa</button>';
+					html += botonHtml;
+					
+					// Agregar event listener después de que el botón esté en el DOM
+					setTimeout(function() {
+						var boton = document.getElementById(botonId);
+						if (boton) {
+							boton.addEventListener('click', function() {
+								mostrarDescripcionCompleta(descripcionCambio, nombre, fecha, hora);
+							});
+						}
+					}, 100);
+				}
+				html += '  </td>';
+				html += '</tr>';
+			});
+
+			html += '</tbody></table></div>';
+			modalContent.innerHTML = html;
+		}
+
+		// Variable para evitar doble ejecución
+		var volviendoACategorias = false;
+
+		// Función para volver a categorías
+		function volverACategorias(intento = 1) {
+			if (volviendoACategorias) {
+				return;
+			}
+
+			volviendoACategorias = true;
+
+			// Mostrar loading en el modal
+			var modalContent = document.getElementById('modalContent');
+			var modalLoading = document.getElementById('modalLoading');
+
+			if (modalLoading) modalLoading.style.display = 'block';
+			if (modalContent) modalContent.style.display = 'none';
+
+			// Obtener SID dinámicamente
+			var sid = '';
+			if (typeof unaBase !== 'undefined' && unaBase.sid) {
+				sid = unaBase.sid.encoded();
+			}
+
+			if (!sid) {
+				mostrarError('No se pudo obtener el SID de las cookies');
+				volviendoACategorias = false;
+				return;
+			}
+
+			// Construir URL para obtener categorías
+			var baseUrl = 'https://frank.unabase.com/node/get-business-items';
+			var params = {
+				id: folioActual,
+				categorias: 'True',
+				hostname: window.location.origin,
+				sid: sid
+			};
+
+			var fullUrl = baseUrl + '?' + $.param(params);
+
+			$.ajax({
+				url: fullUrl,
+				type: 'GET',
+				dataType: 'json',
+				crossDomain: true,
+				timeout: CONFIG.timeout,
+				success: function (data) {
+					if (data && data.rows) {
+						
+						// Filtrar solo las categorías
+						var categorias = data.rows.filter(function (item) {
+							return item.tipo_item === 'categoria';
+						});
+
+						// Ordenar por nombre
+						categorias.sort(function (a, b) {
+							var nombreA = a.nombre || a.categoria || '';
+							var nombreB = b.nombre || b.categoria || '';
+							return nombreA.localeCompare(nombreB);
+						});
+
+						// Mostrar categorías en el modal
+						mostrarCategoriasEnModal(categorias);
+					} else {
+						mostrarError('No se encontraron categorías para este negocio');
+					}
+					volviendoACategorias = false;
+				},
+				error: function (xhr, status, error) {
+					// Si es timeout y no hemos agotado los intentos, reintentar
+					if ((status === 'timeout' || xhr.status === 408) && intento < 3) {
+						console.log('Timeout en volverACategorias, reintentando... Intento ' + (intento + 1));
+						setTimeout(function() {
+							volverACategorias(intento + 1);
+						}, 2000);
+					} else {
+						console.log('Error en volverACategorias después de ' + intento + ' intentos:', error);
+						mostrarError('Error al cargar las categorías: ' + error);
+						volviendoACategorias = false;
+					}
+				}
+			});
+		}
+
+		// Función para cargar datos iniciales
+		function cargarDatosIniciales() {
+			// Obtener SID dinámicamente
+			var sid = '';
+			if (typeof unaBase !== 'undefined' && unaBase.sid) {
+				sid = unaBase.sid.encoded();
+			}
+
+			if (!sid) {
+				mostrarMensajeNoDatos();
+				return;
+			}
+
+			// Construir URL con SID dinámico
+			var baseUrl = 'https://frank.unabase.com/node/get-business-list';
+			var params = {
+				hostname: window.location.origin,
+				sid: sid
+			};
+
+			var fullUrl = baseUrl + '?' + $.param(params);
+
+			$.ajax({
+				url: fullUrl,
+				type: 'GET',
+				dataType: 'json',
+				crossDomain: true,
+				timeout: CONFIG.timeout,
+				success: function (data) {
+					try {
+						if (data && data.data && data.data.rows) {
+							// Ordenar negocios alfabéticamente por nombre
+							var negociosOrdenados = data.data.rows.sort(function (a, b) {
+								var nombreA = a.referencia || a.nombre || '';
+								var nombreB = b.referencia || b.nombre || '';
+								return nombreA.localeCompare(nombreB);
+							});
+
+							// Guardar todos los negocios para filtrado
+							todosLosNegocios = negociosOrdenados;
+
+							// Renderizar tabla manualmente
+							renderizarTabla(negociosOrdenados);
+
+						} else {
+							mostrarMensajeNoDatos();
+						}
+					} catch (error) {
+						mostrarMensajeNoDatos();
+					}
+				},
+				error: function (xhr, status, error) {
+					mostrarMensajeNoDatos();
+				}
+			});
+		}
+
+		// Función para filtrar negocios
+		function filtrarNegocios() {
+			if (!todosLosNegocios || todosLosNegocios.length === 0) {
+				return;
+			}
+
+			var negociosFiltrados = todosLosNegocios.filter(function (negocio) {
+				var cumpleFiltroNegocio = true;
+				var cumpleFiltroFecha = true;
+
+				// Filtro por nombre del negocio
+				if (filtroNegocio && filtroNegocio.trim() !== '') {
+					var nombreNegocio = (negocio.referencia || negocio.nombre || '').toLowerCase();
+					var busqueda = filtroNegocio.toLowerCase();
+					cumpleFiltroNegocio = nombreNegocio.includes(busqueda);
+				}
+
+				// Filtro por fecha
+				if (filtroFecha && filtroFecha.trim() !== '') {
+					var fechaNegocio = negocio.fecha_realizacion || negocio.fecha_asignacion || '';
+					if (fechaNegocio && fechaNegocio !== '00-00-00') {
+						// Convertir fecha del formato DD-MM-YYYY a YYYY-MM-DD para comparar
+						var partes = fechaNegocio.split('-');
+						if (partes.length === 3) {
+							var fechaFormateada = partes[2] + '-' + partes[1] + '-' + partes[0];
+							cumpleFiltroFecha = fechaFormateada === filtroFecha;
+						} else {
+							cumpleFiltroFecha = false;
+						}
+					} else {
+						cumpleFiltroFecha = false;
+					}
+				}
+
+				return cumpleFiltroNegocio && cumpleFiltroFecha;
+			});
+
+			// Ordenar resultados filtrados alfabéticamente
+			negociosFiltrados.sort(function (a, b) {
+				var nombreA = a.referencia || a.nombre || '';
+				var nombreB = b.referencia || b.nombre || '';
+				return nombreA.localeCompare(nombreB);
+			});
+
+			renderizarTabla(negociosFiltrados);
+		}
+
+		// Función para limpiar filtros
+		function limpiarFiltros() {
+			filtroNegocio = '';
+			filtroFecha = '';
+
+			// Limpiar campos de entrada
+			document.getElementById('search-negocio').value = '';
+			document.getElementById('search-fecha').value = '';
+
+			// Mostrar todos los negocios
+			if (todosLosNegocios && todosLosNegocios.length > 0) {
+				renderizarTabla(todosLosNegocios);
+			}
+		}
+
+		// Inicializar event listeners para el buscador
+		function inicializarBuscador() {
+			// Event listener para búsqueda por texto
+			var searchInput = document.getElementById('search-negocio');
+			if (searchInput) {
+				searchInput.addEventListener('input', function () {
+					filtroNegocio = this.value;
+					filtrarNegocios();
+				});
+			}
+
+			// Event listener para filtro por fecha
+			var fechaInput = document.getElementById('search-fecha');
+			if (fechaInput) {
+				fechaInput.addEventListener('change', function () {
+					filtroFecha = this.value;
+					filtrarNegocios();
+				});
+			}
+
+			// Event listener para botón limpiar
+			var btnLimpiar = document.getElementById('btn-limpiar-filtros');
+			if (btnLimpiar) {
+				btnLimpiar.addEventListener('click', function () {
+					limpiarFiltros();
+				});
+			}
+		}
+
+		// Función para ocultar header global
+		function ocultarHeaderGlobal() {
+			// Ocultar cualquier elemento que esté antes del viewport
+			var viewport = document.getElementById('viewport');
+			if (viewport) {
+				var elementosAntes = [];
+				var elemento = viewport.previousElementSibling;
+				while (elemento) {
+					elementosAntes.push(elemento);
+					elemento = elemento.previousElementSibling;
+				}
+
+				// Ocultar todos los elementos antes del viewport
+				elementosAntes.forEach(function (el) {
+					el.style.display = 'none';
+				});
+
+				// También ocultar el primer elemento del body si no es el viewport
+				var primerElemento = document.body.firstElementChild;
+				if (primerElemento && primerElemento.id !== 'viewport') {
+					primerElemento.style.display = 'none';
+				}
+			}
+
+			// Forzar el viewport al tope
+			document.body.style.marginTop = '0';
+			document.body.style.paddingTop = '0';
+		}
+
+		// Inicializar el módulo
+		function inicializarModulo() {
+			$(document).ready(function () {
+				// Ocultar header global
+				ocultarHeaderGlobal();
+
+				// Inicializar unaBase
+				try {
+					if (typeof unaBase !== 'undefined') {
+						unaBase.toolbox.init();
+					}
+				} catch (e) {
+					// Silenciar errores
+				}
+
+				// Inicializar buscador
+				inicializarBuscador();
+
+				// Cerrar modal al hacer click en X
+				$('.close').click(function () {
+					$('#modalMovimientos').hide();
+				});
+
+				// Cerrar modal al hacer click fuera
+				$(window).click(function (event) {
+					var modal = document.getElementById('modalMovimientos');
+					if (event.target == modal) {
+						modal.style.display = 'none';
+					}
+				});
+
+				// Cargar datos iniciales
+				cargarDatosIniciales();
+
+				// Asegurar que el header global se oculte después de un breve delay
+				setTimeout(function () {
+					ocultarHeaderGlobal();
+				}, 100);
+			});
+		}
+
+		// Verificar si jQuery está disponible
+		if (typeof $ === 'undefined') {
+			var script = document.createElement('script');
+			script.src = 'https://code.jquery.com/jquery-3.6.0.min.js';
+			script.onload = function () {
+				inicializarModulo();
+			};
+			document.head.appendChild(script);
+		} else {
+			inicializarModulo();
+		}
+	</script>
+</body>
+
+</html>

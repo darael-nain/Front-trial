@@ -1,0 +1,26 @@
+{
+	"rows": [
+<!--#4DLOOP aIdCompraDetItem -->
+		{
+			"id": <!--#4DHTML aIdCompraDetItem{aIdCompraDetItem}-->,
+			"folio": "<!--#4DHTML aFolioCompraDetItem{aIdCompraDetItem}-->",
+			"documento": "<!--#4DHTML  _V3_escapeString(aDocumentoCompraDetItem{aIdCompraDetItem})-->",
+			"sigla_documento": "<!--#4DHTML  _V3_escapeString(aSiglaTipoDoc{aIdCompraDetItem})-->",
+			"fecha": "<!--#4DHTML aFechaCompraDetItem{aIdCompraDetItem}-->",
+			"vencimiento": "<!--#4DHTML aFechaVctoCompraDetItem{aIdCompraDetItem}-->",
+			"estado": "<!--#4DHTML aEstadoCompraDetItem{aIdCompraDetItem}-->",
+			"proveedor": "<!--#4DHTML  _V3_escapeString(aProvCompraDetItem{aIdCompraDetItem})-->",
+			"referencia": "<!--#4DHTML _V3_escapeString(aRefCompraDetItem{aIdCompraDetItem})-->",			
+			"costoempresa": "<!--#4DHTML _V3_formatCurrency(aCostoEmpresaCompraDetItem{aIdCompraDetItem})-->",
+			"costoempresa_": <!--#4DHTML String(aCostoEmpresaCompraDetItem{aIdCompraDetItem};"&xml")-->,	
+			"total_item_gasto": "<!--#4DHTML _V3_formatCurrency(aTotalItemGasto{aIdCompraDetItem})-->",
+			"total_item_imp": "<!--#4DHTML _V3_formatCurrency(aTotalImp{aIdCompraDetItem})-->",
+			"version": "<!--#4DHTML aVersionCompraDetItem{aIdCompraDetItem}-->",
+			"excluir_gasto": <!--#4DHTML aFreeCompraDetItem{aIdCompraDetItem}-->,
+			"tipo":  "<!--#4DHTML aTipoGasto{aIdCompraDetItem}-->",
+			"justificado":  "<!--#4DHTML aJustificado{aIdCompraDetItem}-->",
+			"validado": <!--#4DIF aValidadaCompraDetItem{aIdCompraDetItem}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aIdCompraDetItem{aIdCompraDetItem} = aIdCompraDetItem{Size of array(aIdCompraDetItem)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

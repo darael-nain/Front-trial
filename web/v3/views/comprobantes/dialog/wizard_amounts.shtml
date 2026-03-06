@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_proxy_getWizardPayout-->
+<html>
+	<head>
+		<title>Preview seleccion de negocios</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/script/datepicker_es.js?<!--#4DTEXT _V3_version-->"></script>
+		<script>
+
+			var selectTipoPagos = '';
+			// $.ajax({
+			// 	url: '/4DACTION/_V3_getTiposEgresos',
+			// 	data: {},
+			// 	dataType: 'json',
+			// 	success: function(data) {
+			// 		selectTipoPagos = '<select name="tipo_by_doc" style="border:1px solid gray;background:#f2fe8a;padding:5px;">';
+			// 		selectTipoPagos += '<option value="" style="text-align:center!important;" selected>--SELECCIONAR--</option>';
+			// 		$.each(data.rows, function(key, item){
+			// 			selectTipoPagos += '<option value="'+ item.text +'">'+ item.text +'</option>';
+			// 		});
+			// 		selectTipoPagos += '<option value="">--NINGUNO--</option>';
+			// 		selectTipoPagos += '</select>';
+			// 	}
+			// });
+			$.ajax({
+            	// url: '/4DACTION/api_tipospago?page=1&results=10&q=&q2=&searchCheckbox=true&activo=true&ingreso=true',
+            	url: '/4DACTION/_V3_getTipoPagos?egreso=true',
+				data: {},
+				dataType: 'json',
+				success: function(data) {
+					selectTipoPagos = '<select name="tipo_by_doc" style="border:1px solid gray;background:#f2fe8a;padding:5px;">';
+					selectTipoPagos += '<option value="" style="text-align:center!important;" selected>--SELECCIONAR--</option>';
+					let generalContainer = $('select[name="general_tipo_pago"]');
+					generalContainer[0].dataset.checkNumber = data.cheque.numero || 0;
+					generalContainer.append('<option value="" style="text-align:center!important;" selected>--SELECCIONAR--</option>');
+					$.each(data.rows, function(key, item){
+						selectTipoPagos += '<option value="'+ item.text +'">'+ item.text +'</option>';
+						generalContainer.append('<option value="'+ item.text +'">'+ item.text +'</option>');
+
+					});
+
+					generalContainer.append('<option value="">--NINGUNO--</option>');
+					selectTipoPagos += '<option value="">--NINGUNO--</option>';
+					selectTipoPagos += '</select>';
+
+
+				}
+			});
+
+			let validarIngresoNroDocs = function(){
+				let status = true;
+				let rows = payout.container.find('table.step-2 tbody tr[data-show="True"]');
+				$.each(rows, function(key, item){
+
+					
+					let doc = $(this).find('select[name="tipo_by_doc"]').val();
+					let value = $(this).find('input[name="tipo_doc_numero"]').val();
+					
+					if ((doc != "CHEQUE" &&  doc != "") && value == "") {
+						status = false;
+						$(this).find('input[name="tipo_doc_numero"]').css('border', '2px solid red').focus();
+					}
+				});
+				return status;
+			}
+
+			var calculo_totales = function(paso){
+				var table = payout.container.find('table.step-1');
+				var porpagar = 0;
+				var apagar = 0;
+				var saldo = 0;
+				table.find('tbody > tr').each(function() {
+					porpagar = porpagar + parseFloat($(this).data('porpagar'));
+					apagar = apagar + parseFloat($(this).data('apagar'));
+					saldo = saldo + parseFloat($(this).data('saldo'));
+				});
+				table.find('tfoot > tr > th > div.porpagar').html(currency.symbol + ' <span>'+ porpagar.toString().replace('.', ',') +'</span>');
+				table.find('tfoot > tr > th > div.apagar').html(currency.symbol + ' <span>'+ apagar.toString().replace('.', ',') +'</span>');
+				table.find('tfoot > tr > th > div.saldo').html(currency.symbol + ' <span>'+ saldo.toString().replace('.', ',') +'</span>');
+				$('#dialog-menu ul').find('li[data-name="print_navegador"]').hide();
+				// $('.numeric.currency span').number(true, 0, ',', '.');
+				$('.numeric.currency span').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+				
+			}
+			var calculo_totales_final = function(paso){
+				
+				
+				// $('.numeric.currency span').number(true, 0, ',', '.');
+				$('.numeric.currency span').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+				
+			}
+
+			var payout = {
+				"container" : $('#dtcporpagar'),
+				"moneda" : "",
+				menu: function(){
+					unaBase.toolbox.menu.init({
+						entity: 'dtc_pagos',
+						buttons: ["pay_next_step", "pay_previous_step", "pay_balance", "generate_payments","print_navegador"]
+					});
+				},
+				dtc: {
+					get: function(){
+						var selected = $('table.listpayout > tbody > tr > td > input:checked');
+						var objFinal = {};
+						selected.each(function(key, item){
+							var id = $(this).closest("tr").data('id');
+							eval("obj = { 'id_dtc_"+ id +"': '" + id + "' }");
+							$.extend(objFinal, objFinal, obj);
+						});
+
+						$.ajax({
+					    	'url':'/4DACTION/_V3_get_dtc_to_pay',
+						    data: objFinal,
+					   		dataType:'json',
+						    success:function(data){
+								var containerTableStep1 = payout.container.find('table.step-1 tbody');
+								var htmlObject;
+								containerTableStep1.find("*").remove();
+								var cantLiq = 0;
+								var cont = 0;
+								if (data.rows.length > 0) {
+									$.each(data.rows, function(key, item){
+										if(!item.ocsHasPayment || item.ocsQuantity === 1){
+
+											var saldo = item.saldo;
+											var symbol = currency.symbol;
+											var moneda = "";
+											var valorCambio = 0;
+											if (item.tipo_moneda == "USD" && currency.code == "PEN") {
+												saldo = (item.saldo/item.valor_cambio);
+												symbol = item.tipo_moneda;
+												payout.moneda = item.tipo_moneda;
+												moneda = item.tipo_moneda;
+												valorCambio = item.valor_cambio;
+											}
+
+											//var saldoprev = item.saldo;
+											var saldoprev = saldo;
+											var resta = 0;
+
+											/*if(item.id_tipo_doc == "111"){
+												saldoprev = item.saldo_prev;
+												resta = item.saldo - saldoprev;
+											}*/
+											
+											let isRead = (item.ocsQuantity === 1) && item.ocsHasPayment ? 'readonly title="se debe justificar en su totalidad ya que posee pagos desde la orden de compra"' : 'class="fill1"'
+											cont++;
+
+										    /*htmlObject = $('<tr data-id="'+ item.id +'" data-idpro="'+ item.idproveedor +'" data-porpagar="' + item.saldo + '" data-apagar="' + saldoprev + '" data-saldo="' + resta + '">' +
+												'<td width="10%" class="center" title="' + item.des_tipo_doc + '">' + item.abrev_tipo_doc + '</td>' +
+												'<td width="10%" class="center">' + item.numero + '</td>' +
+												'<td width="20%" class="left">' + item.proveedor + '</td>' +
+												'<td width="30%" class="left">' + item.referencia + '</td>' +
+												'<td width="10%" class="numeric currency right">' + currency.symbol + ' <input readonly style="width:80px!important;text-align:right" autocomplete="off"  name="porpagar" type="text" value="' + item.saldo + '"></td>' +
+												'<td width="10%" class="numeric currency right">' + currency.symbol + ' <input style="width:80px!important" autocomplete="off"  ' + isRead + ' name="monto" data-saldoactual="' + item.saldo + '" type="text" value="' + saldoprev + '"></td>' +
+												'<td width="10%" class="numeric currency right">' + currency.symbol + ' <input readonly style="width:80px!important;text-align:right" autocomplete="off" name="saldo" type="text" value="' + resta + '"></td>' +
+											    '</tr>');*/
+
+										    htmlObject = $('<tr data-id="'+ item.id +'" data-idpro="'+ item.idproveedor +'" data-porpagar="' + saldo + '" data-apagar="' + saldoprev + '" data-saldo="' + resta + '">' +
+												'<td width="10%" class="center" title="' + item.des_tipo_doc + '">' + item.abrev_tipo_doc + '</td>' +
+												'<td width="10%" class="center">' + item.numero + '</td>' +
+												'<td width="20%" class="left">' + item.proveedor + '</td>' +
+												'<td width="30%" class="left">' + item.referencia + '</td>' +
+												'<td width="10%" class="numeric currency right">' + symbol + ' <input readonly style="width:80px!important;text-align:right" autocomplete="off"  name="porpagar" type="text" value="' + saldo + '"></td>' +
+												'<td width="10%" class="numeric currency right">' + symbol + ' <input style="width:80px!important" autocomplete="off"  ' + isRead + ' name="monto" data-saldoactual="' + saldo + '" type="text" value="' + saldoprev + '"></td>' +
+												'<td width="10%" class="numeric currency right">' + symbol + ' <input readonly style="width:80px!important;text-align:right" autocomplete="off" name="saldo" type="text" value="' + resta + '"></td>' +
+											    '</tr>');
+
+										    containerTableStep1.append(htmlObject);
+
+										    htmlObject.find('input[name="monto"]').blur(function(){
+										    	var montoIngresado = parseFloat($(this).val());
+										    	var saldoActual = parseFloat($(this).data("saldoactual"));
+										    	var saldoFinal = saldoActual - montoIngresado;
+
+										    	//$(this).closest('tr').find('input[name="saldo"]').val(saldoFinal.toString().replace('.', ','));
+										    	$(this).closest('tr').find('input[name="saldo"]').val(saldoFinal);
+
+										    	// para totales
+										    	$(this).closest('tr').data("apagar", montoIngresado);
+										    	$(this).closest('tr').data("saldo", saldoFinal);
+
+										    	if (saldoFinal < 0) {
+										    		//alert("Ha excedido monto por pagar. Por favor reingrese monto.");
+										    		$(this).closest('tr').find("data-saldofinal", 0);
+										    		//$(this).val(saldoActual.toString().replace('.', ',')).focus();
+										    		$(this).val(saldoActual).focus();
+										    		$(this).closest('tr').find('input[name="saldo"]').val(0);
+										    	}else{
+
+										    		//$('.numeric.currency span').number(true, 0, ',', '.');
+										    		// $('.numeric.currency span').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+										    	}
+
+										    	$('.numeric.currency span').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+										    	calculo_totales();
+										    });
+
+										}else{
+
+											htmlObject = $(`<tr><td colspan="8">Este DTC (${item.numero}) debe ser pagado desde la Orden de compra.</td></tr>`);
+										    containerTableStep1.append(htmlObject);
+										}
+
+
+									});
+								}else{
+									htmlObject = $('<tr><td colspan="8">Hubo un problema al cargar la lista.</td></tr>');
+									containerTableStep1.append(htmlObject);
+								}
+
+								//$('.numeric.currency input').number(true, 0, ',', '.');
+								//$('.numeric.currency span').number(true, 0, ',', '.');
+
+								$('.numeric.currency input').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+								$('.numeric.currency span').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+								
+						    },
+						    complete: function(){
+						    	$('#dtcporpagar .fht-table-init').fixedHeaderTable('destroy');
+								$('#dtcporpagar table.fixed').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false});
+								calculo_totales();
+						    }
+					  	});
+					}
+				},
+				payments: {
+					preview: function(tipo){
+						var selected = $('#dtcporpagar table.step-1 tbody > tr');
+						var objFinal = {
+							"agrupado" : false,
+							"balance" : false
+						};
+						var repetidos = 0;
+						var aIdProveedor = [];
+						selected.each(function(key, item){
+							var id = $(this).data('id');
+							var idpro = $(this).data('idpro');
+							var monto = $(this).find('input[name="monto"]').val();
+							var info = id+"/"+idpro+"/"+monto;
+							eval("obj = { 'dtc_"+ id +"': '" + info + "' }");
+							$.extend(objFinal, objFinal, obj);
+							var index = jQuery.inArray(idpro, aIdProveedor);
+							if (index != -1) {
+								repetidos++;
+							}
+							aIdProveedor.push(idpro);
+						});
+						if (tipo == "balance") {
+							confirm("Esta opción agrupará todos los documentos en un solo pago. Deberá seleccionar el nuevo proveedor. <br/><br/> ¿Desea agruparlos?").done(function(data) {
+								if (data) {
+									objFinal.agrupado = true;
+									objFinal.balance = true;
+									payout.payments.showpagos(objFinal);
+									payout.next.show();
+								}
+							});
+						}else{
+							if (repetidos > 0) {
+								confirm("Existen documentos del mismo proveedor. <br/><br/> ¿Cómo desea pagarlos?", "Agrupada", "Separada").done(function(data) {
+									if (data) {
+										objFinal.agrupado = true;
+										objFinal.balance = false;
+										payout.payments.showpagos(objFinal);
+										payout.next.show();
+									}else{
+										payout.payments.showpagos(objFinal);
+										payout.next.show();
+									}
+								});
+							}else{
+								payout.payments.showpagos(objFinal);
+								payout.next.show();
+							}
+						}
+					},
+					showpagos: function(dtcs){
+						if (dtcs) {
+							$.ajax({
+						    	'url':'/4DACTION/_V3_get_preview_pagos',
+							    data: dtcs,
+						   		dataType:'json',
+							    success:function(data){
+									var containerTableStep2 = payout.container.find('table.step-2 tbody');
+									var htmlObject2;
+									containerTableStep2.find("*").remove();
+									if (data.rows.length > 0) {
+										$.each(data.rows, function(key, item){
+
+											var totalPrev = item.total;
+											var montoPrev = item.montoRaw;
+											var symbol = currency.symbol;
+											var moneda = "";
+											var valorCambio = 0;
+											if (item.tipo_moneda == "USD" && currency.code == "PEN") {
+												totalPrev = (item.total/item.valor_cambio);
+												montoPrev = (item.montoRaw/item.valor_cambio);
+												symbol = item.tipo_moneda;
+												payout.moneda = item.tipo_moneda;
+												moneda = item.tipo_moneda;
+												valorCambio = item.valor_cambio;
+											}
+
+										    htmlObject2 = $('<tr data-show="' + item.show + '" data-id="' + item.id + '" data-dtc="' + item.dtc + '" data-group="' + item.group + '" data-monto="' + montoPrev + '" data-total="' + totalPrev + '" data-prov="'+ item.iprov +'">' +
+										      '<td>S/N</td>' +
+										      '<td class="left"><input style="width:200px" '+ ((item.iprov == 0) ? 'class="fill3"' : 'readonly') +' data-id="' + item.iprov + '" placeholder="Buscar aquí proveedor..." type="text" name="proveedor" value="' + item.nprov + '"></td>' +
+										      '<td class="left"><input class="fill3" type="text" name="pagara" value="' + item.nprov + '"></td>' +
+										      '<td><input class="datepicker fill2" placeholder="dd-mm-aaaa" type="text" name="fecha" value="'+ payout.currentdate() +'"></td>' +
+										      '<td class="left"><div style="margin-left:5px;">'+ selectTipoPagos +'</div><div><input placeholder="Ingresar nro. documento." name="tipo_doc_numero" type="text" value="" style="background:#f2fe8a;border:1px solid gray;margin:5px;width:113px;border-radius:3px;padding:3px;"/></div></td>' +
+										      '<td class="numeric currency right">' + symbol + ' <span style="font-weight:bold;padding:5px">' + totalPrev + '</span></td>' +
+										    '</tr>');
+
+											/*
+										     htmlObject2 = $('<tr data-show="' + item.show + '" data-id="' + item.id + '" data-dtc="' + item.dtc + '" data-group="' + item.group + '" data-monto="' + item.monto + '" data-total="' + item.total + '" data-prov="'+ item.iprov +'">' +
+										      '<td>S/N</td>' +
+										      '<td class="left"><input style="width:200px" '+ ((item.iprov == 0) ? 'class="fill3"' : 'readonly') +' data-id="' + item.iprov + '" placeholder="Buscar aquí proveedor..." type="text" name="proveedor" value="' + item.nprov + '"></td>' +
+										      '<td class="left"><input class="fill3" type="text" name="pagara" value="' + item.nprov + '"></td>' +
+										      '<td><input class="datepicker fill2" placeholder="dd-mm-aaaa" type="text" name="fecha" value="'+ payout.currentdate() +'"></td>' +
+										      '<td class="left"><div style="margin-left:5px;">'+ selectTipoPagos +'</div><div><input placeholder="Ingresar nro. documento." name="tipo_doc_numero" type="text" value="" style="background:#f2fe8a;border:1px solid gray;margin:5px;width:113px;border-radius:3px;padding:3px;"/></div></td>' +
+										      '<td class="numeric currency right">' + currency.symbol + ' <span style="font-weight:bold;padding:5px">' + item.total + '</span></td>' +
+										    '</tr>'); */
+
+										    containerTableStep2.append(htmlObject2);
+
+										    htmlObject2.find('input[name="tipo_doc_numero"]').hide();
+
+										    htmlObject2.find('input[name="proveedor"]').autocomplete({
+												source: function(request, response) {
+											        $.ajax({
+											          url: '/4DACTION/_V3_getEmpresa',
+											          dataType: 'json',
+											          data: {
+											            q: request.term,
+											            filter : "alias"
+											          },
+											          success: function(data) {
+											            response($.map(data.rows, function(item) {
+											              return item;
+											            }));
+											          }
+											        });
+											    },
+											    minLength: 0,
+											    autoFocus: true,
+											    open: function() {
+											    	$(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+											    },
+											    close: function() {
+											    	$(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+											    },
+											    focus: function(event, ui) {
+											    	return false;
+											    },
+											    response: function(event, ui) {
+
+											    },
+												select: function(event, ui) {
+													containerTableStep2.find('input[name="proveedor"]').val(ui.item.text);
+													containerTableStep2.find('input[name="proveedor"]').data("id", ui.item.id);
+													containerTableStep2.find('tr').data("prov", ui.item.id);
+													containerTableStep2.find('input[name="pagara"]').val(ui.item.text);
+													return false;
+												}
+											}).data('ui-autocomplete')._renderItem = function(ul, item) {
+										      return $('<li><a><strong class="highlight">' + ((item.text)? item.text : '[Sin Alias]') + '</strong><em>' + ((item.rut_validar)? unaBase.data.rut.format(item.rut) : item.rut) + '</em><span>' + item.razon_social + '</span></a></li>').appendTo(ul);
+										    };
+
+										    htmlObject2.find('select[name="tipo_by_doc"]').change(function(){
+										    	let value = $(this).val();
+										    	if(value != "" && value != "CHEQUE"){
+										    		$(this).closest('tr').find('[name="tipo_doc_numero"]').show();
+										    	}else{
+										    		$(this).closest('tr').find('[name="tipo_doc_numero"]').hide();
+										    	}							
+											});
+
+										});										
+
+										var cant = $('table.step-2 tbody tr[data-show="True"]').length;
+										if (cant == 1) {
+											$('#dtcporpagar').find('.steps-text').text("SE GENERARÁ "+ cant +" ORDEN DE PAGO");
+										}else{
+											if (cant > 1) {
+												$('#dtcporpagar').find('.steps-text').text("SE GENERARÁN "+ cant +" ÓRDENES DE PAGO");
+											}
+										}
+
+										containerTableStep2.find('tr[data-show="False"]').hide();
+
+										$('.opciones-general-tipo-pago').show();
+
+									}else{
+										htmlObject2 = $('<tr><td colspan="7">Hubo un problema al cargar la lista.</td></tr>');
+										containerTableStep2.append(htmlObject2);
+									}
+
+									//$('.numeric.currency span').number(true, 0, ',', '.');
+									$('.numeric.currency span').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+									$(".datepicker" ).datepicker();
+							    },
+							    complete: function(){
+							    	// $('#dtcporpagar .fht-table-init').fixedHeaderTable('destroy');
+									$('#dtcporpagar table.fixed2').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false});
+									// calculo_totales();
+							    }
+						  	});
+						}else{
+							alert("Ocurrió un error al cargar la información. Por favor intente nuevamente.");
+						}
+					},
+					setPagos: function(){
+						if(validarIngresoNroDocs()){
+							confirm("Se pagarán todos los dtc asociados. <br/><br/> ¿Confirma el pago?").done(function(data) {
+								
+								if (data) {									
+									var selected = $('#dtcporpagar table.step-2 tbody > tr');
+									var pagos = {};
+									var cont = 0;
+									selected.each(function(key, item){
+										cont++;
+										var prov = $(this).data('prov');
+										var dtc = $(this).data('dtc');
+										var group = $(this).data('group');
+										var monto = $(this).data('monto');
+										var fecha = $(this).find('input[name="fecha"]').val();
+										var tipo = $(this).find('select[name="tipo_by_doc"]').val();
+										var pagara = $(this).find('input[name="pagara"]').val();
+										var original = $(this).data('show');
+										var nro = $(this).find('input[name="tipo_doc_numero"]').val();
+										var ctacte = $('select[name="general_cta_cte"]').val();
+										if (nro == "") {
+											nro = 0;
+										}
+										var info = prov+"+"+dtc+"+"+group+"+"+monto+"+"+fecha+"+"+pagara+"+"+original+"+"+tipo+"+"+nro+"+"+ctacte;
+										// eval("obj = { 'pago_"+ cont +"': '" + info + "' }");
+								
+										eval(`obj = { "pago_${cont}": "${info}" }`);
+										$.extend(pagos, pagos, obj);
+									});
+									if (pagos) {							
+										unaBase.ui.block();
+										$.ajax({
+											url: '/4DACTION/_V3_setOpsAgrupados',
+											dataType: 'json',
+											type: 'POST',
+											data: pagos,
+											success: function(data) {
+												if (data.success) {
+													toastr.success('Pagos generados con éxito.');
+
+
+													if (data.ops.length == 1){
+														unaBase.ui.unblock();
+														$('.ui-dialog button[title="close"]').trigger('click');
+														unaBase.loadInto.viewport('/v3/views/pagos/content2.shtml?id=' + data.ops[0].id);
+													}else{
+														
+														payout.payments.showPagosCreados(data.ops,data.total);
+														unaBase.ui.unblock();
+													}
+												}
+											},
+											error: function(e) {
+												unaBase.ui.unblock();
+												toastr.error('Ha ocurrido un error interno. Por favor comunicarse con soporte.');
+												console.log(e);
+											}
+										});							
+									}else{
+										alert("Ocurrió un error al cargar la información. Por favor intente nuevamente.");
+									}
+								}
+							});
+						}else{
+							alert("Falta ingresar datos del documento de pago.");
+						}						
+					},
+					showPagosCreados: function(pagos,total){
+
+						payout.container.find('table.step-1').closest('.fht-table-wrapper').hide();
+						payout.container.find('table.step-1').hide();
+
+						payout.container.find('table.step-2').closest('.fht-table-wrapper').hide();
+						payout.container.find('table.step-2').hide();
+
+						/* payout.container.find('table.step-1').hide();
+						payout.container.find('table.step-2').hide(); */
+						
+						if (accountingMode) {
+							
+						payout.container.find('table.step-4').closest('.fht-table-wrapper').show();
+						payout.container.find('table.step-4').show();
+
+						}else{
+						payout.container.find('table.step-3').closest('.fht-table-wrapper').show();
+						payout.container.find('table.step-3').show();
+
+
+						}
+						
+
+						$('#dtcporpagar').find('.steps-labels').text("");
+						$('#dialog-menu ul').find('li[data-name="pay_previous_step"]').hide();
+						$('#dialog-menu ul').find('li[data-name="generate_payments"]').hide();
+						$('#dialog-menu ul').find('li[data-name="print_navegador"]').show();
+
+						if (pagos) {
+							if (accountingMode) {
+								var containerTableStep3 = payout.container.find('table.step-4 tbody');
+								var htmlObject3;
+								containerTableStep3.find("*").remove();
+								if (pagos.length > 0) {
+									
+									$.each(pagos, function(key, item){
+									    htmlObject3 = $('<tr data-id="' + item.id + '">' +
+									      '<td>' + item.folio + '</td>' +
+									      '<td class="left">' + item.prov + '</td>' +
+									       '<td class="left">' + item.referencia + '</td>' +
+									       '<td class="left">' + item.aNumeroDoc + '</td>' +
+									       '<td class="left">' + item.numeroComp + '</td>' +
+									      '<td class="numeric currency right">' + currency.symbol + ' <span style="font-weight:bold;padding:5px">' + item.monto + '</span></td>' +
+									      // '<td><button>+ Doc.</button></td>' +
+									    '</tr>');
+									    containerTableStep3.append(htmlObject3);
+									    var table = payout.container.find('table.step-4');
+					
+						
+										table.find('tfoot > tr > th > div.total').html( '<th width="15%" class="right">' +currency.symbol +' <span class="label2"style="padding:12px;">'+total +'</span></th>');
+					
+									});
+									var cant = $('table.step-4 tbody > tr').length;
+									$('#dtcporpagar').find('.steps-text').text(cant +" ÓRDENES DE PAGOS CREADAS");
+								}else{
+									htmlObject3 = $('<tr><td colspan="4">Hubo un problema al cargar la lista.</td></tr>');
+									containerTableStep3.append(htmlObject3);
+								}
+
+								 $('.numeric.currency span').number(true, 0, ',', '.');
+								
+
+								$('.total.right th span').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+								$(".datepicker" ).datepicker();
+							
+							}else{
+								var containerTableStep3 = payout.container.find('table.step-3 tbody');
+								var htmlObject3;
+								containerTableStep3.find("*").remove();
+								if (pagos.length > 0) {
+									$.each(pagos, function(key, item){
+									    htmlObject3 = $('<tr data-id="' + item.id + '">' +
+									      '<td>' + item.folio + '</td>' +
+									      '<td class="left">' + item.prov + '</td>' +
+									       '<td class="left">' + item.referencia + '</td>' +
+									       '<td class="left">' + item.aNumeroDoc + '</td>' +
+									      '<td class="numeric currency right">' + currency.symbol + ' <span style="font-weight:bold;padding:5px">' + item.monto + '</span></td>' +
+									      // '<td><button>+ Doc.</button></td>' +
+									    '</tr>');
+									    containerTableStep3.append(htmlObject3);
+									    var table = payout.container.find('table.step-3');
+					
+						
+										table.find('tfoot > tr > th > div.total').html( '<th width="15%" class="right">' +currency.symbol +' <span class="label2"style="padding:12px;">'+total +'</span></th>');
+					
+									});
+									var cant = $('table.step-3 tbody > tr').length;
+									$('#dtcporpagar').find('.steps-text').text(cant +" ÓRDENES DE PAGOS CREADAS");
+								}else{
+									htmlObject3 = $('<tr><td colspan="4">Hubo un problema al cargar la lista.</td></tr>');
+									containerTableStep3.append(htmlObject3);
+								}
+
+								 $('.numeric.currency span').number(true, 0, ',', '.');
+								
+
+								$('.total.right th span').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+								$(".datepicker" ).datepicker();
+							}
+								
+
+						}else{
+							alert("Ocurrió un error al cargar la información. Por favor intente nuevamente.");
+						}
+					},
+				},
+				next:{
+					ini: function(tipo){
+						payout.payments.preview(tipo);
+					},
+					show:function(){
+
+						payout.container.find('table.step-1').closest('.fht-table-wrapper').hide();
+						payout.container.find('table.step-1').hide();
+
+						payout.container.find('table.step-2').closest('.fht-table-wrapper').show();
+						payout.container.find('table.step-2').show();
+
+						$('#dialog-menu ul').find('li[data-name="print_navegador"]').hide();
+						$('#dialog-menu ul').find('li[data-name="pay_next_step"]').hide();
+						$('#dialog-menu ul').find('li[data-name="pay_balance"]').hide();
+						$('#dialog-menu ul').find('li[data-name="pay_previous_step"]').show();
+						$('#dialog-menu ul').find('li[data-name="generate_payments"]').show().find('button').addClass('ui-state-hover').find('.ui-button-text').addClass('bold');
+						$('#dtcporpagar').find('.steps-labels').text("Paso 2 de 2");
+					}
+				},
+				previous: function(){
+
+					payout.container.find('table.step-1').closest('.fht-table-wrapper').show();
+					payout.container.find('table.step-1').show();
+
+					payout.container.find('table.step-2').closest('.fht-table-wrapper').hide();
+					payout.container.find('table.step-2').hide();
+
+
+					payout.container.find('table.step-4').closest('.fht-table-wrapper').hide();
+					payout.container.find('table.step-4').hide();
+
+					//$('#dialog-menu ul').find('li[data-name="print_navegador"]').hide();
+					$('#dialog-menu ul').find('li[data-name="pay_next_step"]').show();
+					$('#dialog-menu ul').find('li[data-name="pay_balance"]').show();
+					$('#dialog-menu ul').find('li[data-name="pay_previous_step"]').hide();
+					$('#dialog-menu ul').find('li[data-name="generate_payments"]').hide();
+					payout.container.find('.steps-labels').text("Paso 1 de 2");
+					$('#dtcporpagar').find('.steps-text').text("CONFIRMACIÓN DE MONTO");
+
+					$('.opciones-general-tipo-pago').hide();
+				},
+				display: {
+					init: function(){
+						// $('#dialog-menu ul').find('li[data-name="pay_balance"]').hide();
+						$('#dialog-menu ul').find('li[data-name="pay_previous_step"]').hide();
+						$('#dialog-menu ul').find('li[data-name="generate_payments"]').hide();
+						payout.container.find('table.step-2').hide();
+						payout.container.find('table.step-3').hide();
+						payout.container.find('table.step-4').hide();
+					}
+				},
+				currentdate: function(){
+					var today = new Date();
+					var dd = today.getDate();
+					var mm = today.getMonth()+1; //January is 0!
+					var yyyy = today.getFullYear();
+					if(dd < 10){
+				        dd ='0'+ dd;
+				    }
+				    if(mm < 10){
+				        mm ='0'+ mm;
+				    }
+					return dd +'/'+ mm +'/'+ yyyy;
+				}
+			}
+
+			$(document).ready(function() {
+				payout.menu();
+				payout.dtc.get();
+				payout.display.init();
+				$('#dialog-menu ul').find('li[data-name="print_navegador"]').hide();
+				//$('.numeric.currency span').number(true, 0, ',', '.');
+				$('.numeric.currency span').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+				$('select[name="general_tipo_pago"]').change(function(){
+					
+					let generalValue = $(this).val();
+					let selectPayment = document.querySelector('select[name="general_tipo_pago"]');
+					let checkNumber = Number(selectPayment.dataset.checkNumber);
+					let rows = payout.container.find('table.step-2 tbody tr');
+					$.each(rows, function(key, item){
+						let target = $(this);
+						target.find('select[name="tipo_by_doc"]').val(generalValue);
+						if(generalValue != ""){
+						// if(generalValue != "" && generalValue != "CHEQUE"){
+				    		target.find('[name="tipo_doc_numero"]').show();
+				    		target.find('[name="tipo_doc_numero"]').val(generalValue === "CHEQUE" ? checkNumber : '');
+				    		checkNumber += 1;
+				    	}else{
+				    		target.find('[name="tipo_doc_numero"]').hide();
+				    	}						
+					});
+				});
+				
+                              	
+
+					
+
+			});
+		</script>
+		<style type="text/css">
+			.fill1{
+				background:#f2fe8a;
+				text-align: right;
+				padding:5px;
+			}
+			.fill2{
+				background:#f2fe8a;
+				text-align: center;
+				padding:5px;
+			}
+			.fill3{
+				background:#f2fe8a;
+				text-align:left;
+				padding:5px;
+				width:90%;
+				text-transform: uppercase;
+			}
+			.dialog header{
+				text-align:right!important;
+			}
+			.reset{
+				zoom:80%;
+				width:15px;
+				height:15px;
+				padding:0px;
+				margin:0px;
+			}
+			.steps-labels{
+				font-weight:bold;
+				padding:5px;
+				float: right;
+			}
+			.steps-text{
+				font-size:12px;
+				font-weight:bold;
+				padding:5px;
+				float: left;
+			}
+			.bold{
+				font-weight:bold!important;
+				border-radius:5px;
+				zoom:100%;
+			}
+			#dtcporpagar > table{
+				width: 100%;
+			}
+			#dtcporpagar .fht-tbody{
+				overflow: auto!important;
+			}
+				#dtcporpagar tfoot{
+					position: relative;
+				}
+				#dtcporpagar tfoot tr th > div{
+					display: inline-block;
+					position: absolute;
+				}
+				#dtcporpagar tfoot tr th > div.label2{
+					font-size:10px!important;
+				}
+				#dtcporpagar tfoot tr th > div.porpagar{
+					right:235px;
+				}
+				#dtcporpagar tfoot tr th > div.apagar{
+					right: 110px;
+				}
+				#dtcporpagar tfoot tr th > div.saldo{
+					right: 0px;
+				}
+				
+				.opciones-general-tipo-pago{
+					background:rgb(227,227,228);
+					display:none;
+					margin:20px 0 5px 0;
+					padding:5px;
+					text-align:right;
+				}
+					.opciones-general-tipo-pago > div{
+						display:inline-block;
+					}
+					.opciones-general-tipo-pago > div > select{
+						border:1px solid gray;padding:5px;
+					}
+
+				.fht-tbody{
+					height:350px;
+				}
+		</style>
+	</head>
+	<body>
+		<section id="dtcporpagar" class="sheet">
+
+			<h2 style="border:1px solid transparent">
+				<div class="steps-text">CONFIRMACIÓN DE MONTO</div>
+				<div class="steps-labels">Paso 1 de 2</div>
+			</h2>
+
+			<div class="opciones-general-tipo-pago">
+				<div>
+					<label>Cta. Cte.</label>
+					<select name="general_cta_cte">
+						<!--#4DLOOP aCuentaId-->
+							<!--#4DIF aCuentaDefault{aCuentaId}-->
+								<option selected value="<!--#4DTEXT aCuentaId{aCuentaId}-->"><!--#4DTEXT aDesCtacte{aCuentaId}--> / <!--#4DTEXT aNroCtacte{aCuentaId}--></option>
+							<!--#4DELSE-->
+								<option value="<!--#4DTEXT aCuentaId{aCuentaId}-->"><!--#4DTEXT aDesCtacte{aCuentaId}--> / <!--#4DTEXT aNroCtacte{aCuentaId}--></option>
+							<!--#4DENDIF-->
+						<!--#4DENDLOOP--> 
+					</select>
+				</div>
+				<div>
+					<label>Tipo pago</label>
+					<select name="general_tipo_pago">
+				
+					</select>
+				</div>
+			</div>
+
+			<table class="step-1 fixed">
+				<thead>
+					<tr>
+						<th width="10%" class="center"></th>
+						<th width="10%" class="center">Número</th>
+						<th width="20%" class="center">Proveedor</th>
+						<th width="30%" class="center">Referencia</th>
+						<th width="10%" class="center">Por pagar [$]</th>
+						<th width="10%" class="center">Total a pagar [$]</th>
+						<th width="10%" class="center">Saldo [$]</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+				<tfoot>
+					<tr>
+						<th width="100%" colspan="7" class="right numeric currency">
+							<div class="porpagar label2"></div>
+							<div class="apagar label2"></div>
+							<div class="saldo label2"></div>
+						</th>
+					</tr>
+				</tfoot>
+			</table>
+			<table class="step-2 fixed2">
+				<thead>
+					<tr>
+						<th width="20%" class="center">Número</th>
+						<th width="20%" class="center">Proveedor</th>
+						<th width="20%" class="center">Pagar a</th>
+						<th width="20%" class="center">Fecha pago</th>
+						<th width="20%" class="center">Tipo pago</th>
+						<th width="20%" class="center">Total a pagar [$]</th>
+					</tr>
+				</thead>
+				<tfoot></tfoot>
+				<tbody></tbody>
+			</table>
+			<table class="step-3 fixed3">
+				<thead>
+					<tr>
+						<th width="10%" class="center">Número</th>
+						<th width="20%" class="left">Proveedor</th>
+						<th width="45%" class="left">Referencia</th>
+						<th width="10%" class="left">DTC</th>
+						<th width="15%" class="right">Total pagado [$]</th>
+					</tr>
+				</thead>
+				
+				<tbody></tbody>
+				<tfoot>
+					<tr>
+						<th width="100%" colspan="4" class="right numeric currency">
+							
+							<div class="total right " style="align-content: right; margin-right:5px;"></div>
+							<th width="85%" class="right"></th>
+						</th>
+					</tr>
+				</tfoot>
+			</table>
+			<table class="step-4 fixed4">
+				<thead>
+					<tr>
+						<th width="10%" class="center">Número</th>
+						<th width="20%" class="left">Proveedor</th>
+						<th width="45%" class="left">Referencia</th>
+						<th width="10%" class="left">DTC</th>
+						<th width="5%" class="left">N° Comp</th>
+						<th width="10%" class="right">Total pagado [$]</th>
+					</tr>
+				</thead>
+				
+				<tbody></tbody>
+				<tfoot>
+					<tr>
+						<th width="100%" colspan="4" class="right numeric currency">
+							
+							<div class="total right " style="align-content: right; margin-right:5px;"></div>
+							<th width="85%" class="right"></th>
+						</th>
+					</tr>
+				</tfoot>
+			</table>
+		</section>
+	</body>
+</html>

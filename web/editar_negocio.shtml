@@ -1,0 +1,136 @@
+<!--#4DINCLUDE head.shtml-->
+<body>
+<!--#4DINCLUDE mensajes.shtml-->
+<!--#4DINCLUDE menuSuperior.shtml-->
+<section>
+
+<form  name="convertiraneg" id="convertiraneg" action="/4DACTION/W_CONVERTIR_A_NEG" method="post">
+    <input name="id_nv" type="hidden" value="<!--#4DVAR id_nv-->" />   
+</form>
+
+<div id="dialog-modal3" title="Mensaje de notificaci&#243;n">
+    <form class="send-notificacion" name="sendNotificacion" id="send-notificacion" action="/4DACTION/W_NOTIFICACION_NEG" method="post">
+        <input name="id_nv" type="hidden" value="<!--#4DVAR id_nv-->" />
+        <div class="enviandoxx">
+            Espere por favor, Enviando...
+            <div><img src="/imagenes/cargando.gif" width="50" height="50" /></div>
+        </div>
+        <div class="bloque-envios-not">
+           <h3>Correo del destinatario : </h3>
+           <input id="paranotneg" placeholder="ejemplo@gmail.com" name="paranotneg" type="text" value="" />
+           <textarea id="lost-focus" placeholder="Escribe un comentario..." name="mensaje"></textarea>
+           <p>
+                <button title="Enviar notificacion" class="button-bkn" type="button" onclick="fn_send_notificacion_neg();">Enviar</button>
+           </p>
+        </div>     
+    </form>
+</div>
+
+<input id="type-comision1" type="hidden" value="<!--#4DVAR typeComision1-->" />
+<input id="type-comision2" type="hidden" value="<!--#4DVAR typeComision2-->" />
+<input id="type-comision3" type="hidden" value="<!--#4DVAR typeComision3-->" />
+<h1>Editar proyecto</h1>
+    <article>
+        <form  name="frmeditarnegocio" id="frmeditarnegocio" action="/4DACTION/W_ACTUALIZA_NEG" method="post">
+            <input name="id_nv" type="hidden" value="<!--#4DVAR id_nv-->" />
+            <input id="accion" name="accion" type="hidden" value="ACTUALIZAR" />
+            <fieldset>
+                <legend>DATOS DEL CLIENTE</legend>
+                <div><span>Razon Social :</span><span><!--#4DVAR v_razon--></span></div>
+                <div><span>Rut :</span><span><!--#4DVAR v_rut--></span></div>
+                <div><span>Alias :</span><span><!--#4DVAR v_alias--></span></div>
+                <div><span>Giro :</span><span><!--#4DVAR v_giro--></span></div>
+                                        
+                <div>            
+                    <label>Contactos : </label>
+                    <!--#4DIF vcant_contactos>0-->
+                    <select id="cboContacto" name="cboContacto">
+                        <option selected="selected" value="<!--#4DVAR v_id_contacto_sel-->"><!--#4DVAR v_nombre_contacto_sel--></option>
+                        <!--#4DLOOP w_a_id_relacionado-->
+                        <!--#4DIF v_id_contacto_sel#w_a_id_relacionado{w_a_id_relacionado}-->
+                        <option value="<!--#4DVAR w_a_id_relacionado{w_a_id_relacionado}-->">
+                        <!--#4DVAR w_a_nom_relacionado{w_a_id_relacionado}-->
+                        </option>
+                        <!--#4DENDIF-->
+                        <!--#4DENDLOOP-->         			               
+                    </select>
+                    <!--#4DELSE-->
+                    <span>No se encontraron contactos asociados!</span>
+                    <!--#4DENDIF-->
+                </div>
+                     
+            </fieldset>
+                        
+            <fieldset>                              
+                <legend>DATOS DEL NEGOCIO</legend>
+                <div><span>Proyecto :</span><span><input class="referencias" id="referencianeg" name="referencianeg" type="text" value="<!--#4DVAR v_proyecto-->"></span></div>                               
+                <div><span>Id Negocio :</span><span><!--#4DVAR v_id_negocio--></span></div>
+                <div><span>Estado :</span><span><!--#4DVAR v_estado--></span></div> 
+                <div><span>Emisor :</span><span><!--#4DVAR v_emisor--></span></div>
+                <div><span>Fecha Emision :</span><span><!--#4DVAR v_fecha_emision--></span></div>                                    
+            </fieldset>
+                        
+            <fieldset>                              
+                <legend>ITEMS DEL NEGOCIO</legend>
+                <div style= "overflow:auto; height:400px;"><!--#4DINCLUDE item_negocio.shtml--></div>                                           
+            </fieldset>           
+            <!--#4DINCLUDE totales_negocio.shtml-->                                      
+            <fieldset>
+                <legend>CONDICIONES GENERALES</legend>
+                <div id="condiciones-necogio">
+                    <label for="condicionespago">Condiciones de pago : </label>           
+                    <select id="formapago" name="formapago">
+                      <option selected="selected" value="<!--#4DVAR v_id_fpago-->"><!--#4DVAR v_nombre_fpago--></option>
+                            <!--#4DLOOP aIdFormas_1-->
+                            <!--#4DIF v_id_fpago#aIdFormas_1{aIdFormas_1}-->
+                            <option value="<!--#4DVAR aIdFormas_1{aIdFormas_1}-->">
+                            <!--#4DVAR aFormas_pago1{aIdFormas_1}-->
+                            </option>
+                            <!--#4DENDIF-->
+                            <!--#4DENDLOOP-->         			               
+                  </select>         
+                <label for="notas">Notas : </label>
+                <textarea name="notas"  id="notas" cols="10" rows="10"><!--#4DVAR v_nota--></textarea>
+                </div>
+                       
+            </fieldset>
+
+            <p class="set-botones">
+           
+            	<button title="GUARDAR" class="button-inf" onClick="enviarEditarNeg()" type="button">
+                	<img src="/imagenes/disk.png" border="0" />
+                	<span>Guardar</span>
+                </button> 
+                <button title="LIMPIAR" class="button-inf" type="reset">
+                	<img src="/imagenes/arrow_undo.png" border="0" />
+                	<span>Deshacer</span>
+                </button>
+            
+                <button title="IMPRIMIR" class="button-inf" type="button" onClick="window.open('/4DACTION/outEmailNeg/<!--#4DVAR id_nv-->/<!--#4DVAR vLogin-->');">
+                	<img src="/imagenes/printer.png" border="0" />
+                	<span>Imprimir</span>
+                </button>
+
+                <!--#4DIF (v_estado="COTIZACION") & (vPermisoConvertir) -->
+                <button title="CONVERTIR" class="button-inf" type="button" onClick="fn_convertir_a_neg()">
+                    <img src="/imagenes/application_get.png" border="0" />
+                    <span>Convertir En Neg.</span>
+                </button>
+                <!--#4DENDIF-->
+
+                <button title="Enviar notificacion" class="button-inf" onClick="fn_dialog_notificar_neg()" type="button">
+                    <img src="/imagenes/email.png" border="0" />                   
+                    <span>Notificar</span>
+                </button>              
+                                                 
+            </p>
+
+            <!--#4DIF (v_estado="COTIZACION") & (vPermisoConvertir=FALSE) -->
+            <div style="font-weight:bold">* Si no se muestra la opción de "convertir a Negocio", es porque Ud. no cuenta con el permiso.</div>
+            <!--#4DENDIF-->            
+
+        </form>                          
+    </article>         
+</section>
+</body>
+</html>

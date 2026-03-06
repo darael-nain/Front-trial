@@ -1,0 +1,10 @@
+{
+	"key": "<!--#4DVAR apiKey-->",
+	"ip": "<!--#4DVAR ip-->",
+	"port": "<!--#4DHTML port-->",
+	"name": "<!--#4DHTML name-->",
+	"numRandom": "<!--#4DHTML numRandom-->"
+}
+
+
+

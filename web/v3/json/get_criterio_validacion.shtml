@@ -1,0 +1,24 @@
+{
+	"page": {
+		"current": <!--#4DVAR page-->,
+		"last": <!--#4DVAR -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DVAR $offset-1-->,
+		"to": <!--#4DVAR (Selected record number([criterio_validacion]) - 2)-->,
+		"total": <!--#4DVAR $total-->
+	},
+	"rows": [
+<!--#4DLOOP aCriterioValidacionId -->
+		{
+			"id": <!--#4DVAR aCriterioValidacionId{aCriterioValidacionId}-->,
+			"text": "<!--#4DVAR _V3_escapeString(aCriterioValidacionText{aCriterioValidacionId})-->",
+			"entity": "<!--#4DVAR _V3_escapeString(aCriterioValidacionEntity{aCriterioValidacionId})-->",
+			"has_value": <!--#4DIF aCriterioValidacionHasValue{aCriterioValidacionId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"has_value2": <!--#4DIF aCriterioValidacionHasValue2{aCriterioValidacionId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"is_numeric": <!--#4DIF aCriterioValidacionIsNumeric{aCriterioValidacionId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"is_text": <!--#4DIF aCriterioValidacionIsText{aCriterioValidacionId}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aCriterioValidacionId{aCriterioValidacionId} = aCriterioValidacionId{Size of array(aCriterioValidacionId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

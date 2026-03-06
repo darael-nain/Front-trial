@@ -1,0 +1,10 @@
+body {
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-image: linear-gradient(#f2f2f2, white);
+}
+.bgGreen {
+  background-color: #34cc02;
+  color: white;
+  font-weight: bolder;
+}

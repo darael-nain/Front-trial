@@ -1,0 +1,31 @@
+<footer>
+	<article>
+		<h1>Información general</h1>
+		<input value="<!--#4DTEXT [Nota_de_venta]Fecha_emision-->" id="input_fecha_emision" type="text" style="display: none">
+		<h2 class="custom-h2"><span id="index"><!--#4DIF vid_negocio=0-->Borrador<!--#4DELSE--><!--#4DIF vid_negocio=-1-->Plantilla<!--#4DELSE-->Nº <!--#4DVAR vid_negocio--><!--#4DENDIF--><!--#4DENDIF--></span> <strong><!--#4DTEXT EstadoActual--></strong> <span class="titulofinal"><!--#4DVAR vreferencia--></span></h2>
+		<p><!--#4DVAR vestado--> - Creada por <!--#4DVAR vDeEmisor--> el <span class="fecha_emision_"></span> a las <!--#4DVAR vHoraEmi1--><!--#4DIF vCerradaCompras--><span class="closed-compras-tag"><br>
+		<span class="ui-icon ui-icon-locked" style="display: inline-block; vertical-align: bottom; margin-bottom: -2px;"></span>Cerrado para compras<!--#4DENDIF--></span></p>
+	</article>
+</footer>
+<script>
+	let fecha_emision = document.getElementById('input_fecha_emision') ? document.getElementById('input_fecha_emision').value : ''
+	const transformDate = (inputDate) => {
+		const months = [
+			"enero", "febrero", "marzo",
+			"abril", "mayo", "junio",
+			"julio", "agosto", "septiembre",
+			"octubre", "noviembre", "diciembre"
+		];
+
+		const [day, month, year] = inputDate.split("-").map(Number);
+		const monthName = months[month - 1];
+
+		return `${day} de ${monthName} del ${year}`;
+	};
+	const elements = document.querySelectorAll('.fecha_emision_');
+
+	elements.forEach(element => {
+		element.textContent = transformDate(fecha_emision);
+	});
+
+</script>

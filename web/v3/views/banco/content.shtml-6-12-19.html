@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getMovimientoContent-->
+		<title>Añadir movimiento bancario</title></title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/script/datepicker_es.js"></script>
+		<!--<link rel="stylesheet" href="/v3/design/gray_and_white.css">-->
+		<script>
+			var ocb = {
+				"dialog" : $('#dialog-menu'),
+				"container" : $('section#sheetocb'),
+				"estado" : $('section#sheetocb').data('estado'),
+				display: function(){
+					switch(ocb.estado) {
+					    case 'POR EMITIR':
+					   		ocb.dialog.find('li[data-name="discard"]').hide();
+					    	break;
+					    case 'EMITIDA':
+					    	if(!access._499){ // anular pago
+								ocb.dialog.find('li[data-name="discard"]').hide();
+							} else {
+								ocb.dialog.find('li[data-name="discard"]').show();
+							}
+					        break;
+					    case 'PAGADA':
+					    	ocb.dialog.find('li[data-name="discard"]').hide();
+					    	break;
+					    case 'ANULADA':
+					    	ocb.dialog.find('li[data-name="discard"]').hide();
+					    	break;
+					}
+				}
+
+			};
+
+			$(document).ready(function() {
+
+				$('.ui-dialog fieldset').find('.numeric.currency input').number(true, currency.decimals, ',', '.');
+
+				unaBase.toolbox.init();
+				unaBase.toolbox.menu.init({
+					entity: 'MovimientoBanco',
+					buttons: ['save', 'discard'],
+					data: function() {
+						var from = $('html > body > aside > div > div > ul > li.active').data('name');
+						return {
+							'movimiento[tipo]': $('.ui-dialog [name="movimiento[tipo]"]').data('id'),
+              				'movimiento[numero]': $('.ui-dialog [name="movimiento[numero]"]').val(),
+              				'movimiento[cargo]': $('.ui-dialog [name="movimiento[cargo]"]').val(),
+							'movimiento[abono]': $('.ui-dialog [name="movimiento[abono]"]').val(),
+							'movimiento[fecha]': $('.ui-dialog [name="movimiento[fecha]"]').val(),
+							'movimiento[descripcion]': $('.ui-dialog [name="movimiento[descripcion]"]').val(),
+							'movimiento[cuenta]': $('.ui-dialog [name="movimiento[cuenta]"]').data('id'),
+							'id': $('.ui-dialog fieldset.ingreso').data('id')
+						};
+					},
+					validate: function() {
+						var status = true;
+						$('.ui-dialog fieldset.ingreso input:required').removeClass('invalid');
+						$('.ui-dialog fieldset.ingreso input:required').each(function() {
+							if ($(this).val() == '') {
+								status = false;
+								$(this).addClass('invalid');
+							}
+						});
+						if (status) {
+							setTimeout(function() {
+								$('.ui-dialog').find('.ui-dialog-titlebar-close').trigger('click');
+								unaBase.toolbox.search._advancedSearch();
+							}, 2000);
+						}
+						return status;
+					}
+				});
+
+				$('.ui-dialog input[name="movimiento[cuenta]"]').autocomplete({
+					source: function(request, response) {
+						$.ajax({
+							url: '/4DACTION/_V3_' + 'getCuentaBancaria',
+							dataType: 'json',
+							data: {
+								q: request.term
+							},
+							success: function(data) {
+								response($.map(data.rows, function(item) {
+									return item;
+								}));
+							}
+						});
+					},
+					minLength: 0,
+					autoFocus: true,
+					delay: 5,
+					position: { my: "left top", at: "left bottom", collision: "flip" },
+					open: function() {
+						$(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+					},
+					close: function() {
+						$(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+					},
+					focus: function(event, ui) {
+						return false;
+					},
+					response: function(event, ui) {
+					},
+					select: function(event, ui) {
+						$('.ui-dialog input[name="movimiento[cuenta]"]').data('id', ui.item.id);
+						$('.ui-dialog input[name="movimiento[cuenta]"]').val(ui.item.text);
+						return false;
+					}
+
+				}).data('ui-autocomplete')._renderItem = function(ul, item) {
+					return $('<li><a><span>' + item.text + '</span></a></li>').appendTo(ul);
+				};
+
+				$('.ui-dialog button.show.cuenta-movimiento').button({
+					icons: {
+						primary: 'ui-icon-carat-1-s'
+					},
+					text: false
+				}).click(function() {
+					$('.ui-dialog input[name="movimiento[cuenta]"]').autocomplete('search', '@').focus();
+				});
+
+				$('.ui-dialog input[name="movimiento[tipo]"]').autocomplete({
+					source: function(request, response) {
+						$.ajax({
+							url: '/4DACTION/_V3_' + 'getTipoMovimientoByBanco',
+							dataType: 'json',
+							data: {
+								q: request.term
+							},
+							success: function(data) {
+								response($.map(data.rows, function(item) {
+									return item;
+								}));
+							}
+						});
+					},
+					minLength: 0,
+					autoFocus: true,
+					delay: 5,
+					position: { my: "left top", at: "left bottom", collision: "flip" },
+					open: function() {
+						$(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+					},
+					close: function() {
+						$(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+					},
+					focus: function(event, ui) {
+						return false;
+					},
+					response: function(event, ui) {
+					},
+					select: function(event, ui) {
+						$('.ui-dialog input[name="movimiento[tipo]"]').data('id', ui.item.id);
+						$('.ui-dialog input[name="movimiento[tipo]"]').val(ui.item.text);
+						return false;
+					}
+
+				}).data('ui-autocomplete')._renderItem = function(ul, item) {
+					return $('<li><a><span>' + item.text + '</span></a></li>').appendTo(ul);
+				};
+
+				$('.ui-dialog button.show.tipo-movimiento').button({
+					icons: {
+						primary: 'ui-icon-carat-1-s'
+					},
+					text: false
+				}).click(function() {
+					$('.ui-dialog input[name="movimiento[tipo]"]').autocomplete('search', '@').focus();
+				});
+
+
+				ocb.display();
+
+			});
+		</script>
+		<style>
+			.ui-dialog fieldset > label > span > input {
+				display: inline-block;
+				width: calc(100% - 30px) !important;
+			}
+			.estado {
+				font-weight:bold;
+				display: block;
+				text-align: left;
+				text-decoration: underline;
+			}
+
+			.check{
+				position: absolute !important;
+				left:-40px !important;
+
+			}
+
+			.container-cartola{
+				width:100%;
+				border-collapse: collapse;
+			}
+				.container-cartola > tbody > tr{
+					background-color:white!important;
+				}
+					.container-cartola > tbody > tr > td{
+						border-spacing: 0;
+						border:1px solid gray;
+					}
+						.container-cartola > tbody > tr > td > input{
+							background-color:white;
+							border:1px solid gray;
+							margin:0px;
+							width:100%;
+							padding:5px;
+							box-sizing:border-box;
+						}
+			
+		</style>
+	</head>
+	<body>
+	<section id="sheetocb" class="sheet-ocb" data-folio="<!--#4DTEXT [Orden_de_Cobro]Folio_OCobro-->" data-currentdate="<!--#4DTEXT Current date(*)-->" data-estado="<!--#4DTEXT vEstado-->">
+		<fieldset class="ingreso"<!--#4DIF Not(Undefined(id))--> data-id="<!--#4DTEXT id-->"<!--#4DENDIF--><!--#4DIF ([Orden_de_Cobro]Estado="PAGADA")--> data-paid="true"<!--#4DENDIF--> <!--#4DIF ([Orden_de_Cobro]Estado="ANULADA")--> data-nullified="true"<!--#4DENDIF-->>
+			<strong name="ingreso[estado]" class="estado"><!--#4DTEXT vEstado--></strong>
+			<legend>Datos del movimiento <span><label class="nro-orden"><!--#4DIF Not(Undefined(id))-->Nº <!--#4DTEXT [Orden_de_Cobro]Folio_OCobro--><!--#4DENDIF--></label></span></legend>
+			<label>
+				<span>Cuenta bancaria</span>
+				<input required readonly type="search" name="movimiento[cuenta]" value="<!--#4DTEXT vCuentaMovimiento-->" data-id="<!--#4DTEXT [Cartola_Bancaria]cta_corriente-->"><button class="show cuenta-movimiento"></button>
+			</label>
+			<label>
+				<span>Fecha movimiento</span>
+				<!--<input required type="date" name="pago[fecha]" value="<!- -#4DTEXT Substring(String([Cartola_Bancaria]Fecha_Movimiento;ISO Date);1;10)- ->"> -->
+				<input required type="text" class="datepicker" name="movimiento[fecha]" value="<!--#4DTEXT [Cartola_Bancaria]Fecha_Movimiento-->">
+			</label>
+			<label>
+				<span>Tipo movimiento</span>
+				<input required readonly type="search" name="movimiento[tipo]" value="<!--#4DTEXT vTipoMovimiento-->" data-id="<!--#4DTEXT [Cartola_Bancaria]Tipo_Movimiento-->"><button class="show tipo-movimiento"></button>
+			</label>
+      <label>
+				<span>Nº movimiento</span>
+				<input required type="text" name="movimiento[numero]" value="<!--#4DTEXT [Cartola_Bancaria]Nro_Movimiento-->">
+			</label>
+			<label class="numeric currency">
+				<span>Cargo</span>
+				<span class="numeric currency editable"><!--#4DVAR _V3_defaultCurrencySymbol--> <input required type="text" name="movimiento[cargo]" value="<!--#4DTEXT String([Cartola_Bancaria]Cargo_Movimiento;"&xml")-->"></span>
+			</label>
+      <label class="numeric currency">
+				<span>Abono</span>
+				<span class="numeric currency editable"><!--#4DVAR _V3_defaultCurrencySymbol--> <input required type="text" name="movimiento[abono]" value="<!--#4DTEXT String([Cartola_Bancaria]Abono_Movimiento;"&xml")-->"></span>
+			</label>
+			<label class="full-width">
+				<span>Descripción</span>
+				<textarea name="movimiento[descripcion]"><!--#4DTEXT String([Cartola_Bancaria]des_tipo_mov)--></textarea>
+			</label>
+		</fieldset>
+	</section>
+	</body>
+</html>

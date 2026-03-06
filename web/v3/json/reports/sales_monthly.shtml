@@ -1,0 +1,12 @@
+{
+	"rows": [
+<!--#4DLOOP a_c1_id-->
+		{
+			"id": "<!--#4DTEXT a_c1_id{a_c1_id}-->",
+			"login": "<!--#4DTEXT a_c1_login{a_c1_id}-->",
+			"mes": "<!--#4DTEXT a_c1_month{a_c1_id}-->",
+			"total": <!--#4DHTML String(a_c1_total{a_c1_id};"&xml")-->
+		}<!--#4DIF NOT(a_c1_id{a_c1_id} = a_c1_id{Size of array(a_c1_id)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

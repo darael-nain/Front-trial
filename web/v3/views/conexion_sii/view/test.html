@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache"/>
+
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
+    <title>Document</title>
+</head>
+
+<body class="container mx-auto m-5 body-index" onload="initLogin()">
+    <main class="container">
+      <div class="fixed-bottom container mx-auto" id="alertas"></div>
+
+
+      <div class="card mx-auto" style="width: 300px; border-radius: 20px;">
+        <img class="card-img-top" src="../css/img/sii.png" alt="Card image cap" style="margin: 20px; width: 250px;">
+        <div class="card-body">
+          <div class="mb-3 input-group">
+            <label for="rut" class="input-group-text" style="width: 20%;">Rut</label>
+            <input type="text" class="form-control" id="rut-login" readonly disabled >
+          </div>
+          <div class="mb-3 input-group">
+            <label for="password-sii" class="input-group-text" style="width: 20%;">#</label>
+            <input type="password" class="form-control" id="password-sii"  placeholder="Contraseña...">
+          </div>
+          <div class="input-group mb-3 ">
+            <button type="button"  class="btn  w-100 bgGreen" id="acceder">Acceder</button>
+         </div>
+         <div id="loading"></div>
+        </div>
+       
+
+      </div>
+     
+     
+           
+
+    
+        
+       
+
+    </main>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+        crossorigin="anonymous"></script>
+   
+   
+</body>
+
+</html>

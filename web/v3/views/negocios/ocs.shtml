@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getCotizacionContent-->
+		<!--#4DSCRIPT/_V3_proxy_getListGastos-->
+		<meta charset="utf-8">
+		<title>Compras</title>
+		<style>
+		.selected {
+			width: 20px!important;
+			height: 20px!important;
+			vertical-align: middle!important;
+		}
+		.table-adjuntos tbody tr:hover{
+			background-color: #F0F5FF;
+
+		}
+
+
+		.table-adjuntos thead tr{
+			background-color: #E9F6FF;
+
+		}
+		</style>
+		<script>
+		$(document).ready(function() {
+
+			$('#list_options_oc').button({
+				icons: {
+					primary: "ui-icon-gear",
+					secondary: "ui-icon-triangle-1-s"
+				},
+				text: false
+			}).click(function() {
+				$('table.gastos > thead > tr:last-of-type > th:last-of-type > .dropdown-menu').toggle();
+			});
+
+			(function() {
+
+			  var htmlObject = $('\
+			  <ul class="dropdown-menu" style=" position: absolute; right: 10px;top:auto;left: auto; min-width: 150px; text-align: left;">	\
+			        <li><a href="#" class="select-all items"><span class="ui-icon ui-icon-radio-on"></span>Seleccionar todo</a></li>			\
+			        <li><a href="#" class="deselect-all items"><span class="ui-icon ui-icon-radio-off"></span>Deseleccionar todo</a></li>		\
+			        <li><a href="#" class="print items"><span class="ui-icon ui-icon-locked"></span>Generar PDF con selección</a></li>				\
+			      </ul>																															\
+			    ');
+			  htmlObject.appendTo('table.gastos > thead > tr:last-of-type > th:last-of-type').menu().hide();
+
+			  /*if (!access._490)
+			    htmlObject.find('.close-compras').parentTo('li').remove();
+			  */
+			})();
+
+		
+
+			const viewAdjunto = (id, download = false) => {
+				let flag = true;
+				unaBase.ui.block()
+				$.ajax({
+					'url': '/4DACTION/_V3_getUpload',
+					data: {
+						"index": "Doc_Tributario_Compra|" + id,
+					},
+					dataType: 'json',
+					async: false,
+					success: function (data) {
+						
+						if (data == null) {
+							unaBase.ui.unblock()
+							toastr.warning("No hay archivo adjunto asociado");
+							flag = false;
+							return;
+						}
+					}
+				});
+
+				let url = ''
+				if (flag & !download) {
+					url = `/4DACTION/_V3_getUpload?index=Doc_Tributario_Compra|${id}`
+					unaBase.ui.unblock()
+					unaBase.loadInto.dialog(url, 'Archivo adjunto', 'large', true); return false;
+				}
+
+				if(flag & download){
+					
+					url = `/4DACTION/_V3_getUpload?index=Doc_Tributario_Compra|${id}&download=true`
+					unaBase.ui.unblock()
+					var download = window.open(url);
+					download.blur();
+					window.focus();
+				}
+			}
+
+			var loadTooltips = function (target, id) {
+				var tooltipHtml;
+				$.ajax({
+					'url': '/4DACTION/_force_getAdjuntoByDtc',
+					data: {
+						"id": id,
+						"api": true,
+						'module': 'oc',
+						'type_doc': 'Doc_Tributario_Compra'
+					},
+					dataType: 'json',
+					async: false,
+					success: function (data) {
+						if (data.rows && data.rows.length > 0) {
+							// Comienza con el contenedor básico y la cabecera de la tabla
+							var htmlContent = `<div class='container' id='tooltipdtc'>
+												<table class='table table-adjuntos'>
+													<thead>
+														<tr>
+															<th>Nombre del documento</th>
+															<th>Fecha de creación</th>
+															<th>Descargar</th>
+															<th>Visualizar</th>
+														</tr>
+													</thead>
+													<tbody>`;
+
+							// Recorrer data.rows para agregar cada fila de documento adjunto
+							data.rows.forEach(function(row) {
+								htmlContent += `<tr>
+													<td><span class="text">${row.filename}</span></td>
+													<td><span class="text">${row.created_at}</span></td>
+													<td class="center">
+														<a class="pe-auto pointer downloadDTC" style="cursor:pointer;" title="Clic para descargar documento" data-id="${row.id_doc}">
+															<i class="fas fa-download"></i>
+														</a>
+													</td>
+													<td class="center">
+														<a class="pe-auto viewAdjunto" title="Clic para visualizar archivo adjunto" data-id="${row.id_doc}" style="cursor:pointer;">
+															<i class="fas fa-eye"></i>
+														</a>
+													</td>
+												</tr>`;
+							});
+
+							// Cierra el cuerpo y la tabla
+							htmlContent += `</tbody></table></div>`;
+
+							// Convierte el HTML en un objeto jQuery
+							tooltipHtml = $(htmlContent);
+						} else {
+							// Manejo cuando no hay datos
+							tooltipHtml = $('<div class="container" id="tooltipdtc">No hay documentos adjuntos</div>');
+						}
+
+						// Eventos de clic para los botones, si existen
+						tooltipHtml.find('.downloadDTC').click(function (event) {
+							let id = $(this).data('id');
+							viewAdjunto(id, true);
+						});
+
+						tooltipHtml.find('.viewAdjunto').click(function (event) {
+							let id = $(this).data('id');
+							viewAdjunto(id);
+						});
+
+						target.tooltipster('update', tooltipHtml);
+					}
+				});
+			}
+
+
+
+
+			
+
+			$('table.gastos > thead > tr:last-of-type > th:last-of-type a.items').click(function(event) {
+			  var target = $(event.target);
+
+			  $('table.gastos > thead > tr:last-of-type > th:last-of-type > .dropdown-menu').toggle();			 
+
+			  if (target.hasClass('select-all') || target.hasClass('deselect-all')) {
+			    if (target.hasClass('select-all'))
+			      $('table.gastos tbody').find('tr input[type="checkbox"][name="selected_one"]').prop('checked', true);
+			    if (target.hasClass('deselect-all'))
+			      $('table.gastos tbody').find('tr input[type="checkbox"][name="selected_one"]').prop('checked', false);
+			  } else {
+
+				var selected = $('table.gastos tbody').find('tr:not(.title)').has('input[type="checkbox"][name="selected_one"]:checked');
+				var selectable = $('table.gastos tbody').find('tr:not(.title)').has('input[type="checkbox"][name="selected_one"]');
+
+				if (selected.length == 0) {
+					toastr.warning('Para realizar esta acción, debe seleccionar uno o más documentos de la lista.');
+				} else {
+
+					var printGastos = function() {
+						
+
+						var sid = '';
+						$.each($.cookie(),function(clave, valor) { if (clave == hash && valor.match(/UNABASE/g)) sid = valor; });
+
+						var ids = [];
+						var aliasfilesGastos = file_name_oficial_oc;
+
+						selected.each(function() {
+							var element = this;
+							var id = $(element).data('id');
+							ids.push(id);
+						});
+
+						var url = nodeUrl + '/download-batch/?download=true&entity=compras&entitytwo=OC&ids=' + ids.join('|') + '&sid=' + encodeURIComponent(sid) + '&preview=false&aliasfiles=' + aliasfilesGastos + '&hostname=' + window.location.origin;
+						var url = nodeUrl+ '/download-batch/?download=true&entity=compras&entitytwo=OC&ids=' + ids.join('|') + '&sid=' + encodeURIComponent(sid) + '&preview=false&aliasfiles=' + aliasfilesGastos + '&hostname=' + window.location.origin;
+
+											
+						if(pdf.microservice){
+							console.warn('from microservice');
+
+
+							axios(url).then(res => {
+								// console.log(res);
+								axios.post(pdf.url, {
+									url: res.data.url,
+									fileName: res.data.fileName
+								},{
+									headers: {
+										Authorization: pdf.apiKey
+									}
+								}).then(resp => {
+									downloadUrl(resp.data.pdf)
+								}).catch(err => {
+									console.error(err)
+								})
+							})
+
+						}else{
+							console.warn('from plugins');
+							downloadUrl(url);												
+						}
+						// downloadUrl(url);
+					};
+
+					if (target.hasClass('print')) {
+						confirm('Se generará un archivo PDF agrupando los documentos seleccionados. Este proceso puede tardar un tiempo.<br>¿Desea continuar?').done(function(data) {
+							if (data) {
+								printGastos();
+							}
+						});
+					}
+				}
+			  }
+			  event.preventDefault();
+			});
+
+			var considerarSoloGastosValidados = <!--#4DTEXT considerarSoloGastosValidados-->;
+
+
+			var container = $('section.sheet-list-compras');
+			var id = container.data('id');
+			var detail = container.data('detail');
+			var tbody = container.find('table > tbody');
+			var tfoot = container.find('table > tfoot');
+
+			var totales = {
+				'costoempresa' : 0,
+				'justificado' : 0,
+				'porjustificar' : 0
+			}
+
+			var iniTotalesSumTotal = function(){
+				totales.costoempresa = 0;
+			}
+
+			var loadTotalesFoot = function(totales){
+				var htmlObject;
+				htmlObject = $('<tr>'+
+					'<th></th>' +	
+					'<th></th>' +
+						'<th></th>' +
+						'<th></th>' +
+						'<th></th>' +
+						'<th></th>' +
+						'<th></th>' +
+						'<th class="currency right">'+ totales.costoempresa +'</th>' +
+						'<th class="currency right">'+ totales.justificado +'</th>' +
+						'<th class="currency right">'+ totales.porjustificar +'</th>' +
+						'<th></th>' +
+						'<th></th>' +
+						'<th></th>' +
+						'<th></th>' +
+						'</tr>');
+				return htmlObject;
+			}
+
+			var loadComprasNegocio = function(data) {
+				tbody.find("*").remove();
+
+				iniTotalesSumTotal();
+				var htmlObject;
+
+				$.each(data.rows, function(key, item) {
+
+					if (considerarSoloGastosValidados) {
+						if(item.estado != "ANULADA" && !item.excluir_gasto && item.validado){
+							totales.costoempresa += item.costoempresa;
+							totales.justificado += item.justificado;
+							totales.porjustificar += item.porjustificar;
+						}
+					}else{
+						if(item.estado != "ANULADA" && !item.excluir_gasto){
+							totales.costoempresa += item.costoempresa;
+							totales.justificado += item.justificado;
+							totales.porjustificar += item.porjustificar;
+						}
+					}
+
+
+					var v2 = "";
+					var title = "";
+					if (item.version == "") {
+						v2 = '<strong title="Orden de compra creada en versión antigua" style="font-size:11px!important;font-weight:bold">*</strong>';
+						title = "Orden de compra creada en versión antigua";
+					}
+
+					htmlObject = $('<tr title="'+ title +'" data-id="'+ item.id +'" data-tipo="'+ item.tipo +'" data-version="'+ item.version +'" data-costoempresa="'+ item.costoempresa +'" data-estado="'+item.estado +'"'+ ( (item.excluir_gasto == 1)? '" data-skip="true"' : '' ) + '>'+
+						`<td data-goto="true" width="2%" class="tooltipsnv greenLink"><i class="fas fa-link"></i></td>` +		
+						'<td>'+ v2 +' '+item.folio+'</td>' +
+								'<td>'+item.emisor+'</td>' +
+								'<td>'+item.fecha+'</td>' +
+								'<td>'+item.doc+'</td>' +
+								'<td class="left">'+item.proveedor+'</td>' +
+								'<td class="left">'+item.referencia+'</td>' +
+								'<td class="currency right">'+ item.costoempresa_text +'</td>' +
+								'<td class="currency right">'+ item.justificado +'</td>' +
+								'<td class="currency right">'+ item.porjustificar +'</td>' +
+								'<td>'+item.estado+'</td>' +
+								'<td>'+ ((item.validado) ? 'SI' : 'NO')+'</td>' +
+								'<td>'+ ((item.excluir_gasto) ? 'SI' : '')+'</td>' +
+								'<td data-disabled><input class="selected" type="checkbox" name="selected_one"></td>' +
+								'</tr>');
+					tbody.append(htmlObject);
+				});
+
+				tfoot.html(loadTotalesFoot(totales));
+				formatCurrency();
+
+				$('table.gastos tbody').find('tr[data-estado="ANULADA"]').hide();
+				var content = ""
+				$('table.gastos tbody td.tooltipsnv').tooltipster({
+					content: content,
+					contentAsHTML: true,
+					contentCloning: false,
+					interactive: true,
+					maxWidth: 800,
+					multiple: false
+				});
+
+				$('td.tooltipsnv').on('hover', function () {
+					var tr = $(this).closest('tr');
+					loadTooltips($(this), tr.data('id'));
+				});
+
+			};
+
+			$.ajax({
+				url: '/4DACTION/_V3_getOcsByNegocio',
+				dataType: 'json',
+				async: false, // para que no avance hasta que la llamada se complete
+				cache: false,
+				data: {
+					id: id,
+					detail: detail
+				},
+				success: function(data){
+					loadComprasNegocio(data);
+					unaBase.ui.unblock();
+				}
+			}).fail(function(a, b, c) {
+				unaBase.ui.unblock();
+			});
+
+			formatCurrency();
+
+			//Ingresar a una oc, dando doble click
+		    tbody.find('tr').unbind('click').bind('click', function(event) {
+				if (typeof $(event.srcElement).data('disabled') == 'undefined' && event.srcElement.localName != 'input' && event.srcElement.className != 'ui-button-text') {
+		    	// unaBase.loadInto.viewport('/v3/views/compras/content.shtml?id=' + $(this).data('id'), 'Modificar orden de compra');
+					window.open('/4DACTION/wbienvenidos#compras/content.shtml?id=' + $(this).data('id'));
+				}
+
+			});
+
+		    // al buscar por tipo
+			$('select.tipo-gasto').change(function(event) {
+				var tipo = $(this).val();
+				$('table.gastos tbody').find('tr').show();
+				$('table.gastos tbody').find('tr[data-estado="ANULADA"]').hide();
+				switch(tipo) {
+				    case 'DIRECTOS':
+				      	$('table.gastos tbody').find('tr[data-tipo!="DIRECTOS"]').hide();
+				    	break;
+				    case 'OTROS':
+				    	$('table.gastos tbody').find('tr[data-tipo!="OTROS"]').hide();
+				        break;
+				    case 'VARIOS':
+				    	// por defecto muestra todo
+				    	break;
+				}
+				iniTotalesSumTotal();
+				tbody.find('tr:not(:hidden)').each(function() {
+					var item = $(this);
+					if (item.find('td.status') != 'ANULADA' && typeof item.data('skip') == 'undefined'){
+						totales.costoempresa += item.data('costoempresa');
+					}
+				});
+				tfoot.html(loadTotalesFoot(totales));
+				formatCurrency();
+
+			});
+
+			// al buscar por estado
+			$('select.by-status').change(function(event) {
+				var status = $(this).val();
+
+				// disabled checked
+				$('input.show-hide-null').prop('checked', false);
+
+				$('table.gastos tbody').find('tr').show();
+
+				switch(status) {
+					case 'EMITIDA':
+						$('table.gastos tbody').find('tr[data-estado!="EMITIDA"]').hide();
+						break;
+					case 'CERRADA':
+						$('table.gastos tbody').find('tr[data-estado!="CERRADA"]').hide();
+						break;
+					case 'PAGADA':
+						$('table.gastos tbody').find('tr[data-estado!="PAGADA"]').hide();
+						break;
+					case 'ANULADA':
+						$('table.gastos tbody').find('tr[data-estado!="ANULADA"]').hide();
+						break;
+					case '':
+						$('table.gastos tbody').find('tr[data-estado="ANULADA"]').hide();
+						break;
+				}
+
+				iniTotalesSumTotal();
+				if (status=="") {
+					tbody.find('tr:not(:hidden)').each(function() {
+						var item = $(this);
+						if (item.is(':visible') && item.find('td.status') != 'ANULADA' && !item.hasData('skip')){
+							totales.costoempresa += item.data('costoempresa');
+						}
+					});
+				}else{
+					tbody.find('tr:not(:hidden)').each(function() {
+						var item = $(this);
+						if (!item.hasData('skip'))
+							totales.costoempresa += item.data('costoempresa');
+					});
+				}
+
+				tfoot.html(loadTotalesFoot(totales));
+				formatCurrency();
+
+			});
+
+			// show / hide null
+			$('input.show-hide-null').change(function(event) {
+				var checked = $(this);
+
+				iniTotalesSumTotal();
+				if (checked.prop('checked')){
+					$('table.gastos tbody').find('tr[data-estado="ANULADA"]').show();
+					tbody.find('tr:not(:hidden)').each(function() {
+						var item = $(this);
+						if (!item.hasData('skip'))
+							totales.costoempresa += item.data('costoempresa');
+					});
+				}else{
+					$('table.gastos tbody').find('tr[data-estado="ANULADA"]').hide();
+					tbody.find('tr:not(:hidden)').each(function() {
+						var item = $(this);
+						if (item.is(':visible') && item.find('td.status') != 'ANULADA' && !item.hasData('skip')){
+							totales.costoempresa += item.data('costoempresa');
+						}
+					});
+				}
+
+				tfoot.html(loadTotalesFoot(totales));
+				formatCurrency();
+
+			});
+
+			// viene de la lista de neogcio y cotizacion
+			$(".titulofinal").text($("#main-container").data("titulofinal"));
+
+		});
+		</script>
+	</head>
+	<body>
+		<section class="sheet-list-compras sheet" data-id="<!--#4DTEXT id-->" data-detail="<!--#4DTEXT detail-->">
+			<!--4DINCLUDE infogeneral.shtml-->
+			<section style="height: 25px; padding:3px">
+				<label style="float:left;">
+					Tipo de gasto
+					<select class="tipo-gasto" style="border:1px solid gray; margin:2px">
+						<option value="">Todos</option>
+						<option value="DIRECTOS">Gastos directos</option>
+						<option value="OTROS">Otros gastos</option>
+						<!--<option value="VARIOS">Otros gastos y Directos</option>-->
+					</select>
+				</label>
+				<label style="float:left;">
+					Estado
+					<select class="by-status" style="border:1px solid gray;margin:2px">
+						<option value="">Todos</option>
+						<option value="EMITIDA">Emitida</option>
+						<option value="PAGADA">Pagada</option>
+						<option value="CERRADA">Cerrada</option>
+						<option value="ANULADA">Anulada</option>
+					</select>
+					<span><input class="show-hide-null" type="checkbox" value="ANULADA"> Anuladas</span>
+				</label>
+			</section>
+			<table class="gastos">
+				<thead>
+					<tr>
+						<th class="center"></th>
+						<th width="5%" class="center">Número</th>
+						<th width="7%" class="center">Emisor</th>
+						<th width="5%" class="center">Emisión</th>
+						<th width="5%" class="center">Doc.</th>
+						<th width="15%" class="center">Proveedor</th>
+						<th width="15%" class="center">Referencia</th>
+						<th width="10%" class="right">Gasto real [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th width="10%" class="right">Justificado</th>
+						<th width="10%" class="right">Por Justificar</th>
+						<th width="5%" class="center">Estado</th>
+						<th width="5%" class="center" title="¿Se encuentra validada?">V</th>
+						<th width="5%" class="center" title="¿Excluye gasto?">E</th>
+						<th width="3%" class="center"><button id="list_options_oc" class="dropdown-button actions items" style="display: inline-block; margin-left: 0 !important; width: 3.7em !important; height: 20px !important;">Opciones...</button></th>
+					</tr>
+				</thead>
+				<tbody class="ui-selectable"></tbody>
+			  	<tfoot></tfoot>
+			</table>
+		</section>
+	</body>
+</html>

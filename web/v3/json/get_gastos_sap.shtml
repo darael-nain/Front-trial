@@ -1,0 +1,11 @@
+{
+	"rows": [
+<!--#4DLOOP aIdOC-->
+		{
+			"id": <!--#4DHTML aIdOC{aIdOC}-->,
+			"id_sap": <!--#4DHTML aIdSap{aidOc}-->,
+			"folio": "<!--#4DHTML aNroOC{aIdOC}-->"
+		}<!--#4DIF NOT(aIdOC{aIdOC} = aIdOC{Size of array(aIdOC)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

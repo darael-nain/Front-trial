@@ -1,0 +1,54 @@
+{
+	"rows": [
+<!--#4DLOOP aIdOC-->
+		{
+			"id": <!--#4DHTML aIdOC{aIdOC}-->,
+			"llave_nv": "<!--#4DHTML _V3_escapeString(aLlaveNv{aIdOC})-->",
+			"emisor": "<!--#4DHTML _V3_escapeString(aEmisorOC{aIdOC})-->",
+			"version": "<!--#4DHTML aVersionOC{aIdOC}-->",
+			"folio": "<!--#4DHTML aNroOC{aIdOC}-->",
+			"tipo": "<!--#4DHTML aTipoOC{aIdOC}-->",
+			"doc": "<!--#4DHTML aDocOC{aIdOC}-->",
+			"doc_abbr": "<!--#4DHTML aDocAbbrOC{aIdOC}-->",
+			"fecha": "<!--#4DHTML String(aFechaOC{aIdOC};7)-->",
+			"fecha_pago": "<!--#4DHTML String(aFechaPago{aIdOC};7)-->",
+			"vencimiento": "<!--#4DHTML String(aVencimientoOC{aIdOC};7)-->",
+			"referencia": "<!--#4DHTML _V3_escapeString(aReferenciaOC{aIdOC})-->",
+			"proveedor": "<!--#4DHTML _V3_escapeString(aProveedorOC{aIdOC})-->",
+			"rut": "<!--#4DHTML _V3_escapeString(aProveedorRutOC{aIdOC})-->",
+			"estado": "<!--#4DHTML aEstadoOC{aIdOC}-->",
+			"costoempresa_text": "<!--#4DHTML String(aCostoEmpresaOC{aIdOC};"$ ###.###.###.##0")-->",
+			"costoempresa": <!--#4DHTML String(aCostoEmpresaOC{aIdOC};"&xml")-->,
+			"costoreal": <!--#4DHTML String(aCostoRealNegocio{aIdOC};"&xml")-->,
+			"justificado_text": "<!--#4DHTML String(aJustificadoOC{aIdOC};"$ ###.###.###.##0")-->",
+			"justificado": <!--#4DHTML String(aJustificadoOC{aIdOC};"&xml")-->,
+			"total_ventas": <!--#4DHTML String(aTotalDocVentas{aIdOC};"&xml")-->,
+			"total_compras": <!--#4DHTML String(aTotalDocCompras{aIdOC};"&xml")-->,
+			"total_pagos": <!--#4DHTML String(aTotalPagos{aIdOC};"&xml")-->,
+			"total_ingresos": <!--#4DHTML String(aTotalIngresos{aIdOC};"&xml")-->,
+			"total_saldo": <!--#4DHTML String(aTotalSaldo{aIdOC};"&xml")-->,
+			"porjustificar": <!--#4DHTML String(aPorJustificarOC{aIdOC};"&xml")-->,
+			"validado": <!--#4DHTML aValidacion{aIdOC}-->,
+			"excluir_gasto": <!--#4DHTML aFree{aIdOC}--><!--4DIF (aLlaveNv{aIdOC}#"")-->,
+			"item": {
+				"index": <!--#4DHTML aSecuenciaItem{aIdOC}-->,
+				"codigo": "<!--#4DHTML _V3_escapeString(aCodigoItem{aIdOC})-->",
+				"codigo_origen": "<!--#4DHTML _V3_escapeString(aCodigoOrigen{aIdOC})-->",
+				"nombre": "<!--#4DHTML _V3_escapeString(aNombreItem{aIdOC})-->",
+				"costo_empresa": <!--#4DHTML String(aCostoEmpresaOC{aIdOC};"&xml")-->,
+				"index_negocio": "<!--#4DHTML aNegocioIndex{aIdOC}-->",
+				"text_negocio": "<!--#4DHTML _V3_escapeString(aNegocioText{aIdOC})-->",
+				"tipo_documento": "<!--#4DHTML _V3_escapeString(aTipoDocumentoItem{aIdOC})-->",
+				"impuesto": <!--#4DHTML String(aImpuestoItem{aIdOC}*aCostoEmpresaOC{aIdOC};"&xml")-->,
+				"tipo_gasto": "<!--#4DTEXT aTipoGastoItem{aIdOC}-->"
+			}<!--#4DENDIF--><!--#4DIF (aFolioDtc{aIdOC}#"")-->,
+			"dtc": {
+				"folio": "<!--#4DHTML aFolioDtc{aIdOC}-->",
+				"fecha": "<!--#4DHTML String(aFechaDtc{aIdOC};7)-->",
+				"pagado": "<!--#4DHTML String(aPagadoDtc{aIdOC};"$ ###.###.###.##0")-->",
+				"pagado_raw": <!--#4DHTML String(aPagadoDtc{aIdOC};"&xml")-->
+			}<!--#4DENDIF-->
+		}<!--#4DIF NOT(aIdOC{aIdOC} = aIdOC{Size of array(aIdOC)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

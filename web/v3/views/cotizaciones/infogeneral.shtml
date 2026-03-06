@@ -1,0 +1,8 @@
+<footer>
+	<article>
+		<h1>Información general</h1>
+		<h2><span class="index2"><!--#4DIF vid_negocio=0-->Borrador<!--#4DELSE--><!--#4DIF vid_negocio=-1-->Plantilla<!--#4DELSE-->Nº <!--#4DVAR vid_negocio--><!--#4DENDIF--><!--#4DENDIF--></span> <strong><!--#4DTEXT _V3_escapeString(etiqueta_cotizacion)--></strong> <span class="titulofinal"><!--#4DVAR vreferencia--></span></h2>
+		<p><!--#4DVAR vestado--> - Creado por <!--#4DVAR vDeEmisor--> el <!--#4DVAR vFechaEmi1--> a las <!--#4DVAR vHoraEmi1--><!--#4DIF vCerradaCompras--><br>
+						<span class="ui-icon ui-icon-locked" style="display: inline-block; vertical-align: bottom; margin-bottom: -2px;"></span>Cerrado para compras<!--#4DENDIF--></p>
+	</article>
+</footer>

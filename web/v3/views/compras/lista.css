@@ -1,0 +1,105 @@
+
+.especial thead tr th{
+	vertical-align: middle!important;
+}
+.red{color:#FF4848;font-weight:bold!important}
+.blue{color:#3923D6;font-weight:bold!important}
+.orange{color:orange;font-weight:bold!important}
+
+.label{
+	color:white!important;
+	font-weight:bold!important;
+	padding:1px!important;
+	border-radius:2px!important;
+	display:inline-block!important;
+	min-width:80px!important;
+}
+
+.neto_b{background-color:#2F74D0}
+
+.neto_c{color:#2F74D0;font-weight:bold!important}
+
+.total_b{background-color:#2F74D0}
+.total_c{color:#2F74D0;font-weight:bold!important}
+
+.justificado_b{background-color:#FF7575}
+.justificado_c{color:#FF7575;font-weight:bold!important}
+
+.porjustificar_b{background-color:#FF7575}
+.porjustificar_c{color:#FF7575;font-weight:bold!important}
+
+.pagado_b{background-color:#6094DB}
+.pagado_c{color:#6094DB;font-weight:bold!important}
+
+.porpagar_b{background-color:#6094DB}
+.porpagar_c{color:#6094DB;font-weight:bold!important}
+
+.depositado_b{background-color:#FF9797}
+.depositado_c{color:#FF9797;font-weight:bold!important}
+
+/*.saldo_b{background-color:#59955C;border:2px solid #59955C}
+.saldo_b_menos{background-color:white;color:#FF4848!important;border:2px solid #FF4848}
+.saldo_c{color:#59955C;font-weight:bold!important}*/
+
+
+.fn_blue{
+	background-color:#2F74D0
+}
+.color_blue{
+	color:#2F74D0;
+	font-weight:bold!important;
+}
+.fn_red{
+	background-color:#FF7575
+}
+.color_red{
+	color:#FF7575;
+	font-weight:bold!important;
+}
+
+.label2{
+    background-color:#818a91 !important;
+    color: #fff!important;
+    /*background-color:#03a66a !important;*/
+	/*background-color:#03a66a !important;*/
+    color: white !important;
+    display: inline-block;
+    padding:2px;
+    font-weight: bold;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25rem;
+    font-size:10px!important;
+    /*text-decoration: overline;*/
+}
+
+.label3{
+	background-color:#818a91 !important;
+    color: #fff!important;
+    display: inline-block;
+    padding:2px;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border: 1px solid red;
+    border-radius: .25rem;
+    font-size:9px!important;
+}
+
+.totales{
+	border-top:1px solid lightgray;
+}
+/*.totales tr th{
+	border:1px solid gray;
+}*/
+
+
+.selected{
+	width:20px!important;
+	height:20px!important;
+	vertical-align:middle!important;
+}

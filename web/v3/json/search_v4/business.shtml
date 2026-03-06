@@ -1,0 +1,14 @@
+{
+	"business": [
+	<!--#4DLOOP id-->
+		{	
+			"id": <!--#4DTEXT id{id}-->,
+			"number": <!--#4DTEXT number{id}-->,
+			"name": "<!--#4DTEXT name{id}-->",
+			"client_name": "<!--#4DTEXT client_name{id}-->",
+			"id_proyecto": <!--#4DTEXT id_proyecto{id}-->,
+			"text_proyecto": "<!--#4DTEXT text_proyecto{id}-->"
+		}<!--#4DIF NOT(id{id} = id{Size of array(id)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

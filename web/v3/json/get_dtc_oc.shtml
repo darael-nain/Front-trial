@@ -1,0 +1,20 @@
+{	
+	"rows": [
+<!--#4DLOOP $aid_oc-->
+		{
+			"id": <!--#4DHTML $aid_oc{$aid_oc}-->,
+			"referencia": "<!--#4DHTML _V3_escapeString($aref_oc{$aid_oc})-->",
+			"proveedor": "<!--#4DHTML _V3_escapeString($arazon_oc{$aid_oc})-->",	
+			"documento": "<!--#4DHTML _V3_escapeString($atipodoc_oc{$aid_oc})-->",
+			"numero": "<!--#4DHTML $afolio_oc{$aid_oc}-->",
+			"emision": "<!--#4DHTML $afecha_oc{$aid_oc}-->",
+			"estado": "<!--#4DHTML $aestado_oc{$aid_oc}-->",
+			"neto_": <!--#4DHTML String($aneto_oc{$aid_oc};"&xml")-->,
+			"total_": <!--#4DHTML String($atotal_oc{$aid_oc};"&xml")-->,
+			"currency_value" : <!--#4DHTML String(aCurrencyValue{$aid_oc};"&xml")-->,
+			"currency": "<!--#4DHTML _V3_escapeString(aCurrencyCode{$aid_oc})-->",
+			"total_justificado" : <!--#4DHTML String($ajustificado_oc{$aid_oc};"&xml")-->
+		}<!--#4DIF NOT($aid_oc{$aid_oc} = $aid_oc{Size of array($aid_oc)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

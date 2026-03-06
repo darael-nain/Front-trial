@@ -1,0 +1,19 @@
+{
+	"total_facturas" : <!--#4DHTML String(vSumaTotalFacturas;"&xml")-->,
+	"total_neto_facturas" : <!--#4DHTML String(vSumaTotalnetoFacturas;"&xml")-->,
+	"rows": [
+<!--#4DLOOP [Doc_Tributario_Compra]-->
+		{
+			"id": <!--#4DHTML [Doc_Tributario_Compra]ID_DOC-->,
+			"folio": "<!--#4DHTML [Doc_Tributario_Compra]FOLIO_DOCUMENTO-->",
+			"documento": "<!--#4DHTML [Doc_Tributario_Compra]des_tipo_doc-->",
+			"tipo_doc": "<!--#4DHTML [Doc_Tributario_Compra]TIPO_DOCUMENTO-->",
+			"proveedor": "<!--#4DHTML [Doc_Tributario_Compra]RAZON_SOCIAL-->",
+			"referencia": "<!--#4DHTML [Doc_Tributario_Compra]REFERENCIA_DOCUMENTO-->",
+			"emision": "<!--#4DHTML [Doc_Tributario_Compra]FECHA_EMISION-->",
+			"estado": "<!--#4DHTML [Doc_Tributario_Compra]ESTADO_DOCUMENTO-->",
+			"monto": <!--#4DHTML String([Doc_Tributario_Compra]TOTAL_NETO;"&xml")-->
+		}<!--#4DIF Selected record number([Doc_Tributario_Compra])<Records in selection([Doc_Tributario_Compra])-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

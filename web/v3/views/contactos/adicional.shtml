@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_proxy_getCampoContent-->
+<html>
+	<head>
+		<title>Perfil</title>
+		<meta charset="utf-8">
+	</head>
+	<body>
+		<section class="sheet">
+			<fieldset>
+				<legend><strong>Datos adicionales</strong></legend>
+				<article>
+				<!--#4DLOOP aDatoId-->
+					<div>
+						<label><!--#4DTEXT aDatoText{aDatoId}-->:</label>
+						<!--#4DIF aDatoSelectable{aDatoId}-->
+						<select name="campo_adicional[<!--#4DTEXT aDatoId{aDatoId}-->]">
+							<option value="">[Seleccionar]</option>
+							<!--#4DSCRIPT/_V3_proxy_getOpcionContent-->
+							<!--#4DLOOP aOpcionId-->
+							<option value="<!--#4DTEXT aOpcionValue{aOpcionId}-->"<!--#4DIF aOpcionValue{aOpcionId}=aDatoValue{aDatoId}--> selected<!--#4DENDIF-->><!--#4DTEXT aOpcionValue{aOpcionId}--></option>
+							<!--#4DENDLOOP-->
+						</select>
+						<!--#4DELSE-->
+						<input type="text" name="campo_adicional[<!--#4DTEXT aDatoId{aDatoId}-->]" value="<!--#4DTEXT aDatoValue{aDatoId}-->">
+						<!--#4DENDIF-->
+					</div>
+				<!--#4DENDLOOP-->
+				</article>
+			</fieldset>
+		</section>
+	</body>
+</html>

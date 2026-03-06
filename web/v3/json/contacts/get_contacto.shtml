@@ -1,0 +1,19 @@
+{
+	"isCompanyActive": <!--#4DTEXT $isCompanyActive-->,
+	"companyEmail": "<!--#4DTEXT $companyEmail-->",
+	"contacts": [
+	<!--#4DLOOP $contact_id-->
+		{	
+			"id": "<!--#4DTEXT $contact_id{$contact_id}-->",
+			"name": "<!--#4DTEXT $name{$contact_id}-->",
+			
+			"position": "<!--#4DTEXT _V3_escapeString($position{$contact_id})-->",
+			"default": <!--#4DIF $default{$contact_id}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"email": "<!--#4DTEXT _V3_escapeString($email{$contact_id})-->"
+		}<!--#4DIF NOT($contact_id{$contact_id} = $contact_id{Size of array($contact_id)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}
+
+
+

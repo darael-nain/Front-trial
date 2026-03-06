@@ -1,0 +1,11 @@
+<!--#4dloop aIdEtapaProy-->
+<fieldset id="<!--#4DVAR aIdEtapaProy{aIdEtapaProy}-->">					
+	<legend><input name="nombre-etapa" id="nombre-etapa" OnChange="save_etapa(this)" placeholder="Ingrese el nombre de la etapa..." value="<!--#4DVAR aDesEtapaProy{aIdEtapaProy}-->" type="text"><span>100%</span></legend>
+	<div class="actions">
+		<a href='javascript:add_tarea(<!--#4DVAR aIdEtapaProy{aIdEtapaProy}-->)'>+ Tarea</a>
+		<a href='javascript:disable_etapa(<!--#4DVAR aIdEtapaProy{aIdEtapaProy}-->)'>Desactivar</a>
+		<a href='javascript:delete_etapa(<!--#4DVAR aIdEtapaProy{aIdEtapaProy}-->)'>Eliminar</a>
+	</div>
+	<div id="tareas"><!--#4DINCLUDE proy_tareas.shtml--></div>
+</fieldset>
+<!--#4dendloop-->

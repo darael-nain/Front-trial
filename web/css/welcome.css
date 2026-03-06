@@ -1,0 +1,36 @@
+
+*::-webkit-scrollbar {
+    width: 12px;
+    background: #ebeae8;
+    border-radius: 20px;
+  } 
+*::-webkit-scrollbar-thumb {
+   background: rgb(144,144,145);
+background: radial-gradient(circle, rgba(144,144,145,1) 2%, rgba(95,95,98,1) 18%, rgba(79,79,79,1) 26%, rgba(11,11,11,1) 38%);
+    border-radius: 20px;
+    border: 1px solid #d6d5d4;
+  }
+
+  /* Borde redondeado para la tabla */
+.table-bordered {
+  border-radius: 15px;
+  overflow: hidden; /* Es importante para esconder cualquier borde o fondo de los hijos que salga de los bordes redondeados */
+}
+
+/* Borde redondeado para las esquinas superiores del primer <th> y el último <th> */
+.thead-dark tr:first-child th:first-child {
+  border-top-left-radius: 10px;
+}
+
+.thead-dark tr:first-child th:last-child {
+  border-top-right-radius: 10px;
+}
+
+/* Borde redondeado para las esquinas inferiores del primer <td> y el último <td> */
+.table > tbody > tr:last-child > td:first-child {
+  border-bottom-left-radius: 10px;
+}
+
+.table > tbody > tr:last-child > td:last-child {
+  border-bottom-right-radius: 10px;
+}

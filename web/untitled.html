@@ -1,0 +1,129 @@
+<table id="myTable" width="100%" border="0" cellspacing="0" cellspadding="0" >
+    <thead>
+    <tr class="table-header">
+        <th class="center">            
+            <a rel="none" title="folio"  id="a-title-folio" class="link-order-title" href="#">
+                <span>Folio</span>
+            </a>
+        </th>
+        <th class="center">
+            <a rel="none" title="femision" id="a-title-femision" class="link-order-title" href="#">
+                <span>F.Emision</span>
+            </a>
+        </th>       
+        <th class="center">
+            <a rel="none" title="fvcto" id="a-title-fvcto" class="link-order-title" href="#">
+                <span>F.Vcto</span>
+            </a>
+        </th>
+        <th class="center">
+            <a rel="none" title="hvcto" id="a-title-hvcto" class="link-order-title" href="#">
+                <span>H.Vcto</span>
+            </a>
+        </th>
+        <th class="center">
+            <a rel="none" title="cantidad" id="a-title-cantidad" class="link-order-title" href="#">
+                <span>Cant.Hrs</span>
+            </a>
+        </th>
+        <th class="center">
+            <a rel="none" title="cliente" id="a-title-cliente" class="link-order-title" href="#">
+                <span>Cliente/Proveedor</span>
+            </a>
+        </th>
+        <th class="center">
+            <a rel="none" title="referencia" id="a-title-referencia" class="link-order-title" href="#">
+                <span>Referencia</span>
+            </a>
+        </th>
+        <th class="center">
+            <a rel="none" title="responsable" id="a-title-responsable" class="link-order-title" href="#">
+                <span>Responsable</span>
+            </a>
+        </td>
+        <th class="center">
+            <a rel="none" title="generada" id="a-title-generada" class="link-order-title" href="#">
+                <span>Generada por</span>
+            </a>
+        </td>
+        <th class="center">
+            <a rel="none" title="estado" id="a-title-estado" class="link-order-title" href="#">
+                <span>Estado</span>
+            </a>
+        </th>
+    </tr>
+    <tr>
+      <td colspan="10">
+        <hr class="line2"/>
+      </td>                  
+    </tr>
+    </thead>
+
+    <tbody>
+    <!--#4dif Size of array(aIdOT)>0-->
+        <!--#4DLOOP aIdOT-->        
+        <tr class="table-items" id="<!--#4DVAR aIdOT{aIdOT}-->">
+            <td class="center color-green"><!--#4DVAR aFolioOT{aIdOT}--></td>
+            <td class="center"><!--#4DVAR aFechaEmiOT{aIdOT}--></div></td>     
+            <td class="center"><!--#4DVAR aFechaVctoOT{aIdOT}--></td>    
+            <td class="center"><!--#4DVAR aHoraVctoOT{aIdOT}--></td>
+            <td class="center"><!--#4DVAR aHrsAsignadasOT{aIdOT}--></td>
+            <td class="left"><!--#4DVAR aClienteProvOT{aIdOT}--></td>
+            <td class="left"><!--#4DVAR aReferenciaOT{aIdOT}--></td>
+            <td class="center"><!--#4DVAR aResponsableOT{aIdOT}--></td>
+            <td class="center"><!--#4DVAR aEmitidoPorOT{aIdOT}--></td>   
+            <td class="center"><!--#4DVAR aEstadoOT{aIdOT}--></td>               
+        </tr>        
+        <tr><td colspan="10"><hr class="line" /></td></tr>
+        <!--#4DENDLOOP-->
+    <!--#4DELSE-->
+         <tr><td colspan="10">No se encontraron resultados!</td>
+    <!--#4DENDIF-->
+    </tbody> 
+</table>
+
+
+
+<table id="myTable" width="100%" border="0" cellspacing="0" cellspadding="0" >
+    <thead>
+        <tr class="table-header">
+            <th class="center">Folio</th>
+            <th class="center">F.Emision</th>       
+            <th class="center">F.Vcto</th>
+            <th class="center">H.Vcto</th>
+            <th class="center">Cant.Hrs</th>
+            <th class="center">Cliente/Proveedor</th>
+            <th class="center">Referencia</th>
+            <th class="center">Responsable</th>
+            <th class="center">Generada por</th>
+            <th class="center">Estado</th>
+        </tr>
+        <tr><th colspan="10"><hr class="line2"/></th></tr>
+    </thead>
+
+    <tbody>
+    <!--#4dif Size of array(aIdOT)>0-->
+        <!--#4DLOOP aIdOT-->        
+        <tr class="table-items" id="<!--#4DVAR aIdOT{aIdOT}-->">
+            <td class="center color-green"><!--#4DVAR aFolioOT{aIdOT}--></td>
+            <td class="center"><!--#4DVAR aFechaEmiOT{aIdOT}--></div></td>     
+            <td class="center"><!--#4DVAR aFechaVctoOT{aIdOT}--></td>    
+            <td class="center"><!--#4DVAR aHoraVctoOT{aIdOT}--></td>
+            <td class="center"><!--#4DVAR aHrsAsignadasOT{aIdOT}--></td>
+            <td class="left"><!--#4DVAR aClienteProvOT{aIdOT}--></td>
+            <td class="left"><!--#4DVAR aReferenciaOT{aIdOT}--></td>
+            <td class="center"><!--#4DVAR aResponsableOT{aIdOT}--></td>
+            <td class="center"><!--#4DVAR aEmitidoPorOT{aIdOT}--></td>   
+            <td class="center"><!--#4DVAR aEstadoOT{aIdOT}--></td>               
+        </tr>        
+        <tr><td colspan="10"><hr class="line" /></td></tr>
+        <!--#4DENDLOOP-->
+    <!--#4DELSE-->
+         <tr><td colspan="10">No se encontraron resultados!</td>
+    <!--#4DENDIF-->
+    </tbody> 
+</table>
+
+
+
+

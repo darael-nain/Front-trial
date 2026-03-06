@@ -1,0 +1,13 @@
+{
+	"rows": [
+<!--#4DLOOP aLoginAsig -->
+		{
+			"login": "<!--#4DHTML aLoginAsig{aLoginAsig}-->",
+			"tipo": "<!--#4DHTML aTipoAsig{aLoginAsig}-->",
+			"visto": "<!--#4DHTML aVistoPorAsig{aLoginAsig}-->",
+			"nombre": "<!--#4DHTML aNombreAsig{aLoginAsig}-->",
+			"pordefecto": "<!--#4DHTML aDefectoAsig{aLoginAsig}-->"
+		}<!--#4DIF NOT(aLoginAsig{aLoginAsig} = aLoginAsig{Size of array(aLoginAsig)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

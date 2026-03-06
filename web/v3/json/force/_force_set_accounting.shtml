@@ -1,0 +1,8 @@
+{
+	
+	"success": <!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+	"id_account": <!--#4DIF Not(Undefined($id_account))-->"<!--#4DTEXT $id_account-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+	"nivel": <!--#4DIF Not(Undefined($nivel_str))-->"<!--#4DTEXT $nivel_str-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+	"errorMsg": "<!--#4DTEXT errorMsg-->"
+	
+}

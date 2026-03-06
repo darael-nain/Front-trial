@@ -1,0 +1,9 @@
+<!--#4DLOOP aIdmagenes-->
+  <!--#4dscript/met_int-->
+  	<div style="margin:3px auto 3px auto;display:inline-block;width:200px;border:1px solid gray;text-align:center">
+  		<a style="display:block;margin:auto" href="<!--#4DVAR vFotoLogueadox-->" target="_blank">
+			<img src="<!--#4DVAR vFotoLogueadox-->" height="100" width="150">
+		</a>
+		<span style="display:block;margin:auto"><!--#4DVAR aNomImagenes{aIdmagenes}--></span>
+  	</div>	
+<!--#4DENDLOOP-->

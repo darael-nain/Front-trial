@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Parametros Pagos e Ingresos</title>
+		<script type="text/javascript" src="/v3/views/ajustes/parametros/egreso/egreso.js"></script>
+
+    	<link href="/css/form1.css" rel="stylesheet">
+    	<link href="/v3/views/ajustes/parametros/css/params.css" rel="stylesheet">
+</head>
+<script type="text/javascript">
+	$(document).ready(function(){
+
+	  	unaBase.ui.block();    
+	  	egresoParam.menu();
+	  	egresoParam.init();
+	  	unaBase.ui.unblock();
+	  	unaBase.ui.expandable.init();
+	});
+
+</script>
+<body>
+	<section class="sheet" id="egresoParam">
+		<footer>
+			<article>
+				<h1>Nominas</h1>
+				<ul class="editable">
+					<li>
+						<label for="bciGrand">BCI grandes empresas</label>
+						<input class="item" type="checkbox" name="bciGrand" id="bciGrand">
+					</li>
+					<br/>
+					<li>
+
+						<label for="bciGen">BCI generico</label>
+						<input class="item" type="checkbox" name="bciGen" id="bciGen">
+					</li>
+				
+					<li>						
+						<label for="email_not_pago_v3">Email de notificacion de pago</label>
+						<input class="item"  type="text" id="email_not_pago_v3" name="email_not_pago_v3" placeholder="email de notificación de pago">	
+					</li>
+				
+					
+				</ul>
+			</article>
+			
+		</footer>
+		
+	</section>
+</body>
+</html>

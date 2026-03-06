@@ -1,0 +1,17 @@
+{
+	"rows": [
+<!--#4DLOOP aIdDtv -->
+		{
+			"id": <!--#4DTEXT aIdDtv{aIdDtv}-->,
+			"numero": "<!--#4DTEXT aNumeroDtv{aIdDtv}-->",
+			"fecha_factura": "<!--#4DHTML aFechaDtv{aIdDtv}-->",
+			"idcliente": <!--#4DHTML aIdClienteDtv{aIdDtv}-->,
+			"cliente": "<!--#4DHTML _V3_escapeString(aClienteDtv{aIdDtv})-->",
+			"saldo": <!--#4DHTML String(aSaldoDtv{aIdDtv};"&xml")-->,
+			"vencimiento": "<!--#4DHTML aVencimientoDtv{aIdDtv}-->",
+			"tipo_moneda": "<!--#4DHTML aTipoMoneda{aIdDtv}-->",
+			"valor_cambio": <!--#4DHTML String(aValorCambio{aIdDtv};"&xml")-->
+		}<!--#4DIF NOT(aIdDtv{aIdDtv} = aIdDtv{Size of array(aIdDtv)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>etiquetar</title>
+    <meta charset="utf-8"> 
+    <script type="text/javascript">
+        var ul = $('#container-tags > ul');
+
+        var getSelectedTags = function(){          
+          return ul.find('li > input:checked');          
+        }       
+
+        var getSelectedContacts = function(){         
+          return $('.credencial > tbody > tr > td > div.chk > input:checked');
+        }
+
+        var clearSelected = function(){
+          $('.credencial > tbody > tr > td > div.chk > input:not(:checked)').closest('tr').remove();
+          setTimeout(function(){
+            $('.credencial > tbody > tr > td > div.chk > input:checked').prop( "checked", false );
+          }, 1000);       
+        }
+
+        var applyTag = function(obj){          
+          var contacts = getSelectedContacts();
+          var tags = {};
+          var tag_add = "";
+
+          if (obj) {
+            eval("tag = {'tag[id]0': '" + obj.id + "'}");
+            $.extend(tags, tags, tag );
+            tag_add = "<span>#"+ obj.name +"</span>";
+          }else{
+            getSelectedTags().each(function(key, item) {
+              eval("tag = {'tag[id]"+key+"': '" + $(this).val() + "'}");
+              $.extend(tags, tags, tag );
+              tag_add = tag_add + "<span>#"+ $(this).data('name') +"</span>";
+            });
+          }
+
+          contacts.each(function(key, item) {
+            var tr = $(this).closest('tr');  
+            eval("obj = {'contacto[id]': '" + $(this).val() + "'}");
+            var objFinal = $.extend({} , tags, obj); 
+            $.ajax({
+              url: '/4DACTION/_V3_setTagContacto',
+              dataType: 'json',
+              data: objFinal,
+              success: function(data) {
+                if (data.success) {                 
+                  tr.find('.container-tags').append(tag_add);
+                  clearSelected();
+                  toastr.success(NOTIFY.get('SUCCESS_SAVE'));                  
+                }else {
+                  if (data.opened) {
+                    if (data.readonly)
+                      toastr.error(NOTIFY.get('ERROR_RECORD_READONLY', 'Error'));
+                  }                     
+                }
+              },
+              error: function(xhr, text, error) {
+                toastr.error(NOTIFY.get('ERROR_INTERNAL', 'Error'));                
+              }
+            });
+          });          
+        }
+
+        // select tag
+        ul.on('click', 'li > input[type="checkbox"]', function(){          
+          if (getSelectedTags().length>0) {
+            ul.find('li[data-applytag]').show();
+          }else{
+            ul.find('li[data-applytag]').hide();
+          }
+        });
+
+        // apply only tag
+        ul.on('dblclick', 'li', function(){
+          var id = $(this).data('id');
+          var name = $(this).data('name');
+          applyTag({'id': id, 'name':name});
+        });
+
+        // apply tag
+        ul.on('click', 'li[data-applytag]', function(){
+          applyTag();
+        });
+
+        var get_tag = function(){        
+          $.ajax({
+            url: '/4DACTION/_V3_getTags',
+            dataType: 'json',
+            data: $("#container-tags").serialize(),
+            success: function(data) {           
+              var htmlObject;              
+              ul.find("*").remove();
+              var cant = 0;   
+              $.each(data.rows, function(key, item){
+                cant++;              
+                htmlObject = $('<li data-id="'+ item.id +' data-name="'+ item.tag_name +'"><input data-name="'+ item.tag_name +'" type="checkbox" name="tags[tag_id]" value="'+ item.id +'"><span>'+ item.tag_name +'</span></li>');
+                ul.append(htmlObject);                                        
+              });
+              if (cant>0) {
+                ul.append('<li><hr/></li>');
+              }              
+              ul.append('<li data-newtag>Nueva etiqueta</li>');
+              ul.append('<li data-applytag>Aplicar</li>');
+              ul.find('li[data-applytag]').hide();
+            }
+          });
+        }
+       
+        //  open new tag
+        $('#container-tags > ul').on('click', 'li[data-newtag]', function(){
+            var htmlObject = $('<section> \
+              <span>Ingresar un nuevo nombre de etiqueta:</span> \
+              <input style="border-bottom:1px solid lightgray;width:300px;" type="text" name="tag[new_name]"> \
+              </section>');
+
+            htmlObject.find('input[name="tag[new_name]"]').on('change', function(){
+              htmlObject.data('response', $(this).val());
+            });            
+
+            htmlObject.find('button.show.motivo-anulacion').button({
+              icons: {
+                primary: 'ui-icon-carat-1-s'
+              },
+              text: false
+            });
+
+            prompt(htmlObject).done(function(data) {
+              if (htmlObject.find('input[name="tag[new_name]"]').val()!="") {
+                $.ajax({
+                  url: '/4DACTION/_V3_setTag',
+                  dataType: 'json',
+                  data: {
+                    'tag[name]': data
+                  },
+                  success: function(data) {
+                    if (data.success) {
+                      applyTag({'id': data.id, 'name': data.name});
+                      toastr.success('Etiqueta se guardó exitosamente!');
+                    }else {
+                      if (data.opened) {
+                        if (data.readonly)
+                          toastr.error(NOTIFY.get('ERROR_RECORD_READONLY', 'Error'));
+                      }
+                    }
+                  },
+                  error: function(xhr, text, error) {
+                    toastr.error(NOTIFY.get('ERROR_INTERNAL', 'Error'));                
+                  }
+                }); 
+              };                       
+            });
+
+        });       
+
+      $(document).ready(function() {
+        get_tag();        
+        $('#container-tags input[name="tag[search]"]').on("change keyup",function(){    
+          get_tag();
+        });
+      });
+    </script>
+    <style type="text/css">
+      #container-tags{
+        font-size:11px!important;
+        min-height:50px;       
+      }
+      #container-tags ul{
+        margin:3px;
+        line-height: 16px;
+        overflow:auto;
+      }
+      #container-tags ul > li{       
+        padding:2px;
+      }
+      #container-tags ul > li:hover{
+        background:lightgray!important;
+        cursor: pointer;
+      }
+      #container-tags ul > li > input{
+
+      }
+      #container-tags ul > li > span{
+        display: inline-block!important;
+        margin-left:3px;
+        text-transform:none!important;
+        vertical-align:middle;
+        text-transform: uppercase!important;
+      }
+      #container-tags .search > label{
+        display: block;
+      }
+      #container-tags input[type="checkbox"]{
+        display: inline-block!important;
+        vertical-align:middle;
+        height:25px;
+        width:25px;
+      }
+    </style>
+  </head>
+  <body>
+  <section id="container-tags">
+    <div class="search">
+      <label>Etiquetar como:</label>
+      <input type="search" name="tag[search]">
+    </div>   
+    <ul></ul>
+  </section>
+  </body>
+</html>

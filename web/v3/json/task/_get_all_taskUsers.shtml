@@ -1,0 +1,12 @@
+{
+	"rows":[
+	<!--#4DLOOP aLogin -->
+		{
+			"login":  <!--#4DIF Not(Undefined(aLogin))-->"<!--#4DHTML aLogin{aLogin}-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+			"name":   <!--#4DIF Not(Undefined(aName))-->"<!--#4DHTML String(aName{aLogin})-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+			"block":   <!--#4DIF aBlock{aLogin}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"email":   <!--#4DIF Not(Undefined(aEmail))-->"<!--#4DHTML String(aEmail{aLogin})-->"<!--#4DELSE-->""<!--#4DENDIF-->
+		}<!--#4DIF NOT(aLogin{aLogin} = aLogin{Size of array(aLogin)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

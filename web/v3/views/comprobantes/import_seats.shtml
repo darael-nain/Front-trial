@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <title>Importar comprobantes</title>
+    
+    <!-- Librería para leer Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <!-- Estilos CSS -->
+    <link rel="stylesheet" href="/v3/views/comprobantes/importador.css">
+    
+    <!-- IMPORTANTE: Configurar nodeUrl ANTES de cargar el JS -->
+    <script>
+        // Configurar URL del servidor Node.js
+        window.nodeUrl = nodeUrl || '';
+        console.log('✅ nodeUrl configurado:', window.nodeUrl);
+    </script>
+</head>
+<body>
+    <!-- Paso 1: Descargar Plantilla -->
+    <div class="step-section">
+        <div class="step-header">
+            Paso 1 - Descargar plantilla
+        </div>
+        <div class="step-content">
+            <div class="instructions">
+                Una vez descargada la plantilla Excel, puede reemplazar los datos de prueba con los definitivos. Para cargar y crear gastos, vuelva aquí y cargue el archivo Excel utilizando el siguiente formulario (paso 2).
+            </div>
+            <div class="step-actions">
+                <div class="template-type-selector">
+                    <span class="selector-label">Tipo:</span>
+                    <label>
+                        <input type="radio" name="template_type" value="normal" checked>
+                        <span>Normal</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="template_type" value="apertura">
+                        <span>Apertura</span>
+                    </label>
+                </div>
+                <button class="btn btn-secondary btn-download">
+                    <i class="fas fa-download"></i>
+                    Descargar plantilla
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Paso 2: Subir Plantilla -->
+    <div class="step-section">
+        <div class="step-header">
+            Paso 2 - Subir plantilla
+        </div>
+        <div class="step-content">
+            <div class="file-upload-container">
+                <div class="file-input-wrapper">
+                    <input type="file" 
+                           name="upload[attachment]" 
+                           accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" 
+                           class="file-input"
+                           id="fileInputTest">
+                    <div class="file-status">Sin archivos seleccionados</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sección de Vista Previa -->
+    <div class="preview-section" id="previewSection">
+        <div class="preview-header">
+            <div>
+                <div class="preview-title">Vista Previa de Datos</div>
+                <div class="preview-info">0 registros, 0 totales</div>
+            </div>
+            <div class="preview-buttons">
+                <button class="btn btn-secondary btn-cancel-preview">
+                    <i class="fas fa-times"></i>
+                    Cancelar
+                </button>
+                <button class="btn btn-primary btn-import-confirm">
+                    <i class="fas fa-upload"></i>
+                    Importar Datos
+                </button>
+            </div>
+        </div>
+        
+        <div class="preview-table-container">
+            <div class="loading-preview">
+                <div class="loading-spinner"></div>
+                Selecciona un archivo Excel para ver la vista previa
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de fecha para apertura -->
+    <div class="date-modal" id="dateModal">
+        <div class="date-modal-content">
+            <div class="modal-header info">
+                <h5>
+                    <i class="fa fa-calendar"></i> 
+                    Seleccionar Fecha de Apertura
+                </h5>
+                <button class="modal-close" id="closeDateModalBtn" style="color: white;">
+                    &times;
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <strong>Importante:</strong> Selecciona la fecha que se utilizará para todos los asientos de apertura.
+                </div>
+                <div class="date-input-group">
+                    <label for="aperturaDate">Fecha de Apertura *</label>
+                    <input type="date" id="aperturaDate" name="aperturaDate" required>
+                    <div class="date-help-text">
+                        Esta fecha se aplicará a todos los comprobantes de apertura
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelDateModalBtn">
+                    Cancelar
+                </button>
+                <button class="btn btn-primary" id="confirmDateBtn">
+                    <i class="fa fa-check"></i> Confirmar e Importar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script type="text/javascript" src="/v3/views/comprobantes/importador.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+{
+	"id": <!--#4DIF Not(Undefined(id))--><!--#4DIF Type(id)=Is Text-->"<!--#4DVAR id-->"<!--#4DELSE--><!--#4DVAR id--><!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"index": <!--#4DIF Not(Undefined(index))-->"<!--#4DHTML index-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"folio": <!--#4DIF Not(Undefined(folio))-->"<!--#4DHTML folio-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"success": <!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,<!--#4DIF Not(Undefined(computer))-->
+	"computer": "<!--#4DTEXT _V3_escapeString(computer)-->",
+	"process": "<!--#4DTEXT _V3_escapeString(process)-->",<!--#4DENDIF-->
+	"new": <!--#4DIF Not(Undefined(new))--><!--#4DIF new-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"opened": <!--#4DIF Not(Undefined(opened))--><!--#4DIF opened-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"valid": <!--#4DIF Not(Undefined(valid))--><!--#4DIF valid-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->true<!--#4DENDIF-->,
+	"readonly": <!--#4DIF Not(Undefined(readonly))--><!--#4DIF readonly-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"pass":<!--#4DIF Not(Undefined(changesPass))--><!--#4DIF changesPass-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"unique": <!--#4DIF Not(Undefined(unique))--><!--#4DIF unique-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF--><!--#4DIF Not(Undefined(detail_result))-->,
+	"detail": {
+		"result": <!--#4DIF detail_result-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+		"data": "<!--#4DHTML _V3_escapeString(detail_data)-->"
+
+	}<!--#4DENDIF-->,
+	"id_tipo_gasto": <!--#4DIF Not(Undefined(idTipoGasto))-->"<!--#4DTEXT idTipoGasto-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"valida_user_emisor": <!--#4DIF Not(Undefined(validaUserEmisor))-->"<!--#4DTEXT validaUserEmisor-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"valida_record_name": <!--#4DIF Not(Undefined(validaRecordName))-->"<!--#4DTEXT validaRecordName-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"valida_index": <!--#4DIF Not(Undefined(validaIndex))-->"<!--#4DTEXT validaIndex-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"valida_text": <!--#4DIF Not(Undefined(validaText))-->"<!--#4DTEXT validaText-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"valida_id": <!--#4DIF Not(Undefined(validaId))--><!--#4DTEXT validaId--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"valida_user_validador": <!--#4DIF Not(Undefined(validaUserValidador))-->"<!--#4DTEXT validaUserValidador-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"valida_name_validador": <!--#4DIF Not(Undefined(validaNameValidador))-->"<!--#4DTEXT validaNameValidador-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"valida_email_validador": <!--#4DIF Not(Undefined(validaEmailValidador))-->"<!--#4DTEXT validaEmailValidador-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"accion_realizada": <!--#4DIF Not(Undefined(accionRelizada))-->"<!--#4DTEXT accionRelizada-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"accion_final": <!--#4DIF Not(Undefined(accionFinal))-->"<!--#4DTEXT accionFinal-->"<!--#4DELSE-->null<!--#4DENDIF-->
+}

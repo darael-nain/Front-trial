@@ -1,0 +1,25 @@
+{
+	"cobros_agendados": [
+		<!--#4DLOOP aId-->
+		{
+			"id": <!--#4DTEXT aId{aId}-->,
+			"numero": "<!--#4DTEXT aNumero{aId}-->",
+			"cliente": "<!--#4DHTML _V3_escapeString(aCliente{aId})-->",
+			"referencia": "<!--#4DHTML _V3_escapeString(aReferencia{aId})-->",
+			"fecha": "<!--#4DTEXT aFechaCobro{aId}-->",
+			"monto": <!--#4DTEXT String(aMontoCobro{aId};"&xml")-->
+		}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	],
+	"currency" : {
+		"code" : "<!--#4DTEXT _V3_defaultCurrencyCode-->",
+		"name" : "<!--#4DTEXT _V3_defaultCurrencyName-->",
+		"symbol" : "<!--#4DTEXT _V3_defaultCurrencySymbol-->",
+		"right" : <!--#4DIF _V3_defaultCurrencyRight-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+		"decimal": <!--#4DTEXT _V3_defaultCurrencyDecimals-->,
+		"decimal_sep": "<!--#4DTEXT _V3_defaultCurrencyDecimalSep-->",
+		"thousand_sep" : "<!--#4DTEXT _V3_defaultCurrencyThousandSep-->",
+		"decimal_text_excel" : "<!--#4DTEXT _V3_defaultCurrencyDecimalsText-->",
+		"format_code_excel" : "<!--#4DTEXT _V3_defaultCurrencyFormatCode-->"
+	}
+}

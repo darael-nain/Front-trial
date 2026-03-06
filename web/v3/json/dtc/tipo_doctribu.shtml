@@ -1,0 +1,10 @@
+{
+	"id": <!--#4DTEXT tId-->,
+	"abreviatura": "<!--#4DHTML _V3_escapeString(abreviatura)-->",
+	"description": "<!--#4DHTML description-->",
+	"export": "<!--#4DHTML export-->",
+	"docSii": <!--#4DIF docSii-->true<!--#4DELSE-->false<!--#4DENDIF-->
+}
+
+
+

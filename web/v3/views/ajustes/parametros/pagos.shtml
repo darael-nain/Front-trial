@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Conectividad</title>
+	<meta charset="utf-8">
+	<script type="text/javascript">
+		let urlWeb = '';
+		let ipServer = '';
+		let webPort = '';
+		let ipAlt1 = '';
+		let ipAlt2 = '';
+		let nodePort = '';
+		unaBase.ready(()=>{
+
+			// REAPER --- DEPRECATED METODO 4D NO EXISTE
+
+			// fetch(`${base_url}/4DACTION/_aParamGetConect`)
+			// .then((response)=>{
+			// 	return response.json();
+			// })
+			// .then((response)=>{
+			// 	for(const key in response){
+			// 		document.querySelector(`input[name="${key}"]`).value = response[key];
+			// 	}
+			// })
+		});
+
+		document.getElementById('save').addEventListener('click', function(){
+			const data = {
+				urlWeb: document.querySelector('input[name="urlWeb"]').value,
+				ipServer: document.querySelector('input[name="ipServer"]').value,
+				webPort: document.querySelector('input[name="webPort"]').value,
+				ipAlt1: document.querySelector('input[name="ipAlt1"]').value,
+				ipAlt2: document.querySelector('input[name="ipAlt2"]').value,
+				nodePort: document.querySelector('input[name="nodePort"]').value
+			}
+			$.ajax({
+				url: `${base_url}/4DACTION/_aParamSetConect`,
+				data,
+				dataType: 'json',
+				type: 'post',
+				success: (data) =>{
+					console.log(data)
+				},
+				error: (error, text, response) => {
+					console.log(text);
+				}
+			})
+		});
+	</script>
+</head>
+<body>
+	<section class="sheet">
+		<footer>
+			<article>
+				<h1>Conectividad</h1>
+				<ul class="editable">
+					<li>
+						<label>Email de notificacion de pago</label>
+						<input type="text" name="emailPago" placeholder="email de notificación de pago">						
+					</li>
+					
+				</ul>
+
+				<button id="save" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" id="cacheClear4d">
+					<span class="ui-button-text">
+						Guardar	
+					</span>
+				</button>
+			</article>
+			
+		</footer>
+	</section>
+</body>
+</html>

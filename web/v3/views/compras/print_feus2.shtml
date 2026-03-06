@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!--#4DSCRIPT/_V3_serverInfo-->
+    <!--#4DSCRIPT/_v3_print_oc-->
+    <!--#4DSCRIPT/_V3_proxy_getCampoContent-->
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <title>PDF</title>
+    <style>
+      body {
+        margin: 0;
+        width: 271mm;
+        font-family: "Poppins";
+        color: #1e1b32;
+      }
+
+      /* Header */
+      .header__1 {
+        height: 50mm;
+        position: relative;
+        table-layout: fixed;
+      }
+      .header__1 img {
+        max-height: 45mm;
+        max-width: 65mm;
+        height: auto;
+        width: auto;
+        position: absolute;
+        top: 10%;
+        transform: translateY(-50%);
+      }
+      .header__sup-col {
+        padding-top: 4mm;
+      }
+      .header__sup-col:nth-child(2) {
+        text-align: center;
+      }
+      .header__sup-col:nth-child(2) h1 {
+        margin: 0 0 2mm 0;
+        font-size: 6mm;
+        line-height: 6mm;
+        text-transform: uppercase;
+        font-weight: 400;
+      }
+      .header__sup-col:nth-child(2) span {
+        font-size: 7mm;
+        line-height: 7mm;
+        font-weight: 600;
+      }
+      .header__sup-col:nth-child(3) {
+        padding-top: 0mm;
+        position: absolute;
+        top: 8mm;
+        right: 0;
+      }
+      .header__sup-col:nth-child(3) span {
+        font-size: 4.5mm;
+        line-height: 4.5mm;
+        font-weight: 600;
+      }
+
+      .header__2 {
+        padding: 2mm 0 5mm 0;
+        overflow: hidden;
+      }
+      .header__2__inf_col {
+        width: 50%;
+        float: left;
+        box-sizing: border-box;
+      }
+      .header__2__inf_col-iten {
+        margin-bottom: -2mm;
+      }
+      .header__2__inf_col-item div {
+        display: inline-block;
+        width: 22mm;
+      }
+      .header__2__inf_col-item span {
+        text-transform: uppercase;
+        font-weight: 500;
+        font-size: 3mm;
+        line-height: 3mm;
+      }
+      .header__2__inf_col-item div span {
+        font-weight: 700;
+        font-size: 3mm;
+        line-height: 3mm;
+      }
+
+      .header__3 {
+        text-align: end;
+        padding: 5mm 0 2mm;
+      }
+      .header__3 span {
+        font-size: 5.5mm;
+        line-height: 5.5mm;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #48af7c;
+      }
+
+      table {
+        width: 271mm;
+      }
+
+      /* Main table */
+      .mainTable {
+        width: 271mm;
+      }
+      .mainTable thead td:nth-child(1) {
+        background-color: red;
+      }
+      .mainTable thead td:not(:nth-child(1)) {
+        background-color: #000;
+      }
+      .mainTable thead td:nth-child(4) {
+        padding: 0;
+        text-align: center;
+      }
+      .mainTable thead span {
+        color: #fff;
+        font-size: 3mm;
+        line-height: 3mm;
+      }
+      .mainTable thead td {
+        padding-left: 2mm;
+      }
+
+      .mainTable tbody tr.trMain td {
+        background-color: #dddddd;
+      }
+      .mainTable tbody tr.trMain td span {
+        font-size: 4mm;
+        line-height: 4mm;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+
+      .mainTable tbody tr.trItem td {
+        background-color: #dddddd2c;
+      }
+      .mainTable tbody tr.trItem td:nth-child(2) {
+        text-align: center;
+      }
+      .mainTable tbody tr.trItem td span {
+        font-size: 3.5mm;
+        line-height: 3.5mm;
+        text-transform: uppercase;
+        font-weight: 500;
+      }
+
+      .mainTable tfoot tr {
+        height: 30mm;
+        padding-top: 2mm;
+      }
+      .mainTable tfoot tr td {
+        padding-bottom: 10mm;
+      }
+      .mainTable tfoot tr td:nth-child(2) div {
+        background-color: #aaaaaa;
+        height: 18mm;
+        border-radius: 20px;
+        padding: 5.5mm 5mm 0 5mm;
+        box-sizing: border-box;
+        text-align: end;
+      }
+      .mainTable tfoot tr td:nth-child(2) div span {
+        color: #fff;
+        font-size: 3.5mm;
+        line-height: 3.5mm;
+        font-weight: 500;
+      }
+
+      .secondTable thead tr {
+        height: 10mm;
+      }
+      .secondTable thead tr td div {
+        width: 50%;
+        height: 10mm;
+        background-color: #dddddd;
+        border-radius: 5mm;
+        padding: 1.8mm 0 0 5mm;
+        box-sizing: border-box;
+      }
+      .secondTable thead tr td div span {
+        color: #023a52;
+        font-size: 3.8mm;
+        line-height: 3.8mm;
+        font-weight: 600;
+      }
+      .secondTable tbody tr.trMain {
+        height: 10mm;
+      }
+      .secondTable tbody tr.trMain td span {
+        font-size: 3.5mm;
+        line-height: 3.5mm;
+        font-weight: 600;
+      }
+      .secondTable tbody tr.trItem td {
+        padding: 2mm 4mm;
+      }
+      .secondTable tbody tr.trItem td p {
+        font-size: 4.2mm;
+        font-weight: 500;
+        padding: 0;
+        margin: 0;
+      }
+      .secondTable tbody tr.trItem__fake td {
+        height: 2mm;
+      }
+      .secondTable tbody tr.trItem__list td div:nth-child(1) {
+        display: inline-block;
+        width: 25mm;
+      }
+      .secondTable tbody tr.trItem__list td div:nth-child(2) {
+        width: 244.5mm;
+        display: inline-block;
+      }
+      .secondTable tbody tr.trItem__list td div:nth-child(1) span {
+        font-size: 3.5mm;
+        line-height: 3.5mm;
+        font-weight: 700;
+      }
+      .secondTable tbody tr.trItem__list td div:nth-child(2) span {
+        font-size: 3.5mm;
+        line-height: 3.5mm;
+        font-weight: 400;
+      }
+      .secondTable tfoot tr {
+        height: 5mm;
+      }
+
+      .footer {
+        position: relative;
+        height: 8mm;
+      }
+      .footer img {
+        height: 8mm;
+      }
+      .footer p {
+        font-size: 3.5mm;
+        line-height: 3.5mm;
+        font-weight: 400;
+        color: #aaaaaa;
+        margin: 0;
+        position: absolute;
+        left: 10mm;
+        top: 3mm;
+      }
+      .footer a {
+        color: #09a96c;
+        text-transform: uppercase;
+        font-weight: 500;
+        text-decoration: none;
+      }
+
+      @media page {
+        .header__2__inf,
+        .header__2__inf_col,
+        .header__2__inf_col-item,
+        .mainTable,
+        .secondTable thead,
+        .secondTable thead tr,
+        .secondTable thead tr td,
+        .secondTable thead tr td div,
+        .mainTable tbody,
+        .mainTable tbody tr.trItem,
+        .mainTable tbody tr.trItem td,
+        .mainTable tfoot,
+        .mainTable tfoot tr,
+        .mainTable tfoot tr td,
+        .secondTable,
+        .secondTable tbody,
+        .secondTable tbody tr.trMain,
+        .secondTable tbody tr.trMain td,
+        .secondTable tbody tr.trItem,
+        .secondTable tbody tr.trItem td,
+        .footer {
+          page-break-inside: avoid !important;
+          page-break-before: auto !important;
+          page-break-after: avoid !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header__1">
+      <div class="header__sup-col">
+        <img
+        src="<!--#4DTEXT vUrlImagenLogo-->"
+          alt="Logo"
+        />
+      </div>
+      <div class="header__sup-col">
+        <h1>Purchase Order</h1>
+        <span>#<!--#4DTEXT [Orden_de_compra]Folio_OC--></span>
+      </div>
+      <div class="header__sup-col">
+        <span>01/20/2024</span>
+      </div>
+    </div>
+    <div class="header__2">
+      <div class="header__2__inf_col">
+        <div class="header__2__inf_col-item">
+          <div><span>From:</span></div>
+          <span><!--#4DIF nombreEmisor#""--><!--#4DVAR nombreEmisor--><!--#4DELSE-->N/A<!--#4DENDIF--></span>
+        </div>
+        <div class="header__2__inf_col-item">
+          <div><span>Email:</span></div>
+          <span><!--#4DIF emailEmisor#""--><!--#4DVAR emailEmisor--><!--#4DELSE-->N/A<!--#4DENDIF--></span>
+        </div>
+        <div class="header__2__inf_col-item">
+          <div><span>Job Number:</span></div>
+          <span><!--#4DTEXT job_numbers--></span>
+        </div>
+        <div class="header__2__inf_col-item">
+            <div><span>Job Name:</span></div>
+            <span><!--#4DVAR job_names--></span>
+        </div>
+      </div>
+      <div class="header__2__inf_col">
+        <!--#4DIF nombreContacto#""-->
+        <div class="header__2__inf_col-item">
+          <div><span>To:</span></div>
+          <span><!--#4DIF nombreContacto#""--><!--#4DVAR nombreContacto--><!--#4DELSE-->N/A<!--#4DENDIF--></span>
+        </div>
+        <!--#4DENDIF-->
+        <!--#4DIF razonEmp#""-->
+        <div class="header__2__inf_col-item">
+          <div><span>Vendor:</span></div>
+          <span><!--#4DIF razonEmp#""--><!--#4DVAR razonEmp--><!--#4DELSE-->N/A<!--#4DENDIF--></span>
+        </div>
+        <!--#4DENDIF-->
+        <!--#4DIF direccionEmp#""-->
+        <div class="header__2__inf_col-item">
+          <div><span>Address:</span></div>
+          <span><!--#4DIF direccionEmp#""--><!--#4DVAR direccionEmp--><!--#4DELSE-->N/A<!--#4DENDIF--></span>
+        </div>
+        <!--#4DENDIF-->
+        <!--#4DIF rutEmp#""-->
+        <div class="header__2__inf_col-item">
+          <div><span>Tax ID:</span></div>
+          <span><!--#4DIF rutEmp#""--><!--#4DVAR rutEmp--><!--#4DELSE-->N/A<!--#4DENDIF--></span>
+        </div>
+        <!--#4DENDIF-->
+        <div class="header__2__inf_col-item">
+          <div><span>SSN:</span></div>
+          <span><!--#4DVAR ssn--></span>
+        </div>
+        <!--#4DIF emailEmp#""-->
+        <div class="header__2__inf_col-item">
+          <div><span>Email:</span></div>
+          <span><!--#4DIF emailEmp#""--><!--#4DVAR emailEmp--><!--#4DELSE-->N/A<!--#4DENDIF--></span>
+        </div>
+        <!--#4DENDIF-->
+        <!--#4DIF fono1Emp#""-->
+        <div class="header__2__inf_col-item">
+          <div><span>Phone:</span></div>
+          <span><!--#4DIF fono1Emp#""--><!--#4DVAR fono1Emp--><!--#4DELSE-->N/A<!--#4DENDIF--></span>
+        </div>
+        <!--#4DENDIF-->
+      </div>
+    </div>
+   
+    <table class="mainTable" border="0" cellpadding="0" cellspacing="0">
+      <colgroup>
+        <col style="width: 2%" />
+        <col style="width: 5%" />
+        <col style="width: 16%" />
+        <col style="width: 27%" />
+        <col style="width: 10.5%" />
+        <col style="width: 10.5%" />
+        <col style="width: 10.5%" />
+        <col style="width: 10.5%" />
+      </colgroup>
+      <thead>
+        <tr>
+          <td></td>
+          <td><span>Item</span></td>
+          <td><span>Line number</span></td>
+          <td><span>Description</span></td>
+          <td><span>Qty</span></td>
+          <td><span>Days</span></td>
+          <td><span>Price</span></td>
+          <td><span>Amount</span></td>
+        </tr>
+      </thead>
+      <tbody>
+        <!--#4DLOOP a_llave_detalle_oc-->
+          <!--#4DIF a_titulo{a_llave_detalle_oc}="TITULO"-->
+            <tr class="trMain">
+              <td></td>
+              <td></td>
+              <td></td>
+              <td><span><!--#4DTEXT a_des{a_llave_detalle_oc}--></span></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          <!--#4DELSE-->
+            <tr class="trItem">
+              <td></td>
+              <td><span><!--#4DIF habilitarCorrelativoNegEnGASTOS--><!--#4DVAR a_correlativo{a_llave_detalle_oc}--><!--#4DELSE--><!--#4DVAR a_llave_detalle_oc{a_llave_detalle_oc}--><!--#4DENDIF--></span></td>
+              <td></td>
+              <td><span><!--#4DVAR a_des{a_llave_detalle_oc}--></span></td>
+              <td><span><!--#4DTEXT a_cantidad{a_llave_detalle_oc}--></span></td>
+              <td><span><!--#4DTEXT a_dias{a_llave_detalle_oc}--></span></td>
+              <td><span><!--#4DTEXT a_pu1{a_llave_detalle_oc}--></span></td>
+              <td><span><!--#4DTEXT a_subtotal{a_llave_detalle_oc}--></span></td>
+            </tr>
+          <!--#4DENDIF-->
+        <!--#4DENDLOOP-->
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="6"></td>
+          <td colspan="2">
+            <div>
+              <span>Total</span>
+              <span><!--#4DTEXT totalPrint--></span>
+            </div>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+    <table class="secondTable" border="0" cellpadding="0" cellspacing="0">
+      <colgroup>
+        <col style="width: 100%" />
+      </colgroup>
+      <thead>
+        <tr>
+          <td>
+            <div><span>Important: </span></div>
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="trMain">
+            <td>
+                <span>Due date:</span>
+            </td>
+        </tr>
+        <tr class="trItem">
+        <td>
+            <!--#4DTEXT due_date-->
+        </td>
+        </tr>
+        <tr class="trMain">
+          <td><span>Observations</span></td>
+        </tr>
+        <tr class="trItem">
+          <td>
+            <p style="white-space:pre-wrap;page-break-inside: avoid"><!--#4DHTML Replace string(Replace string(Replace string(Replace string([Orden_de_compra]Comentarios;Char(13)+Char(10);Char(10));Char(13);Char(10));"\"";"\\\"");Char(8232);Char(10))--></p>
+            <p style="font-weight: bold!important;font-size: 20px!important; text-transform: uppercase!important;"><!--#4DHTML Replace string(Replace string(Replace string(Replace string(textoDestacado;Char(13)+Char(10);Char(10));Char(13);Char(10));"\"";"\\\"");Char(8232);Char(10))--></p>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan=""></td>
+        </tr>
+      </tfoot>
+    </table>
+    <table class="secondTable" border="0" cellpadding="0" cellspacing="0">
+      <colgroup>
+        <col style="width: 100%" />
+      </colgroup>
+      <thead>
+        <tr>
+          <td>
+            <div><span>Invoice to: </span></div>
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="trItem__fake">
+          <td></td>
+        </tr>
+        <tr class="trItem__list">
+          <td>
+            <div>
+              <span>Company:</span>
+            </div>
+            <div>
+              <span><!--#4DTEXT razonPropietaria--></span>
+            </div>
+          </td>
+        </tr>
+        <tr class="trItem__list">
+          <td>
+            <div>
+              <span>Tax ID:</span>
+            </div>
+            <div>
+              <span><!--#4DTEXT rutPropietaria--></span>
+            </div>
+          </td>
+        </tr>
+        <tr class="trItem__list">
+          <td>
+            <div>
+              <span>Address:</span>
+            </div>
+            <div>
+              <span><!--#4DIF _V3_address_empresa#""--><!--#4DVAR _V3_address_empresa--><!--#4DELSE--><!--#4DENDIF--></span>
+            </div>
+          </td>
+        </tr>
+        <tr class="trItem__list">
+          <td>
+            <div>
+              <span>Email:</span>
+            </div>
+            <div>
+              <span><!--#4DIF _V3_email_empresa#""--><!--#4DVAR _V3_email_empresa--><!--#4DELSE--><!--#4DENDIF--></span>
+            </div>
+          </td>
+        </tr>
+        <tr class="trItem__list">
+            <td>
+              <div>
+                <span>Phone:</span>
+              </div>
+              <div>
+                <span><!--#4DIF _V3_phone_empresa#""--><!--#4DVAR _V3_phone_empresa--><!--#4DELSE--><!--#4DENDIF--></span>
+              </div>
+            </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan=""></td>
+        </tr>
+      </tfoot>
+    </table>
+    <table class="secondTable" border="0" cellpadding="0" cellspacing="0">
+      <colgroup>
+        <col style="width: 100%" />
+      </colgroup>
+      <thead>
+        <tr>
+          <td>
+            <div><span>Payments linked to this PO:</span></div>
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="trItem">
+          <td>
+           
+            <section>
+                <!--#4DIF vCantPagos > 0-->
+                    <h2><!--#4DHTML vCantPagos--> Payment(s)</h2>
+                    <article>
+                        <table class="pagos borders" width="99%">
+                        <thead>
+                        <tr>
+                            <th class="left">Number</th>
+                            <th class="left">Date</th>
+                            <th class="left">Payment Date</th>               
+                            <th class="left">Ch/Tr</th>       
+                            <th class="left">Amount</th>             
+                        </tr>
+                        </thead>
+                        <tbody class="ui-selectable">
+                        <!--#4DLOOP aOCOP_id-->
+                            <tr>
+                            <td class="right"><!--#4DHTML aOCOP_folio{aOCOP_id}--></td>
+                            <td class="right"><!--#4DHTML aOCOP_fechaemision{aOCOP_id}--></td>
+                            <td class="right"><!--#4DHTML aOCOP_fechavencimiento{aOCOP_id}--></td>
+                            <td class="right"><!--#4DHTML aOCOP_documento{aOCOP_id}--></td>
+                            <td class="right"><!--#4DHTML _V3_formatCurrency(aOCOP_abono{aOCOP_id})--></td>
+                            </tr>         
+                        <!--#4DENDLOOP-->
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <th colspan="7" style="border:0px"></th>              
+                            <th class="right" style="border:0px"><!--#4DHTML _V3_formatCurrency(vPagosOPOC)--></th> 
+                        </tr>             
+                        </tfoot>      
+                    </table>
+                    </article>   
+                <!--#4DELSE-->
+                    <h2></h2>
+                <!--#4DENDIF-->  
+            </section>
+  
+  
+  
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan=""></td>
+        </tr>
+      </tfoot>
+    </table>
+    <div class="footer">
+      <img
+        src="https://statics-v3.s3.amazonaws.com/img/logo_icono.png"
+        alt=""
+      />
+      <p>Powered by <a href="http://unabase.com/" target="_blank">unabase.com</a></p>
+    </div>
+  </body>
+</html>

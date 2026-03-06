@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Reporte costo</title>
+  <script>
+
+
+
+    const dateInput = document.getElementById('date_from');
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const formattedDate = `${year}-${month}-${day}`;
+    dateInput.value = formattedDate;
+
+
+    var callback = async function () {
+
+
+      var continueAction = async function (params) {
+        let url;
+        var ajaxData = await params.data();
+        var success = false;
+
+        $.extend(ajaxData, ajaxData, { preview: true });
+
+        if (
+          params.entity == "Cotizacion" ||
+          params.entity == "Negocios"
+        ) {
+
+
+          var is_negocio = true;
+          if (
+            !$(
+              'html > body.menu > aside > div > div > ul > li[data-name="negocios"]'
+            ).hasClass("active")
+          ) {
+            is_negocio = false;
+          }
+
+          let valid, hidden_items, checkDifference;
+
+
+          checkDifference = await business.checkDifference(unaBase.doc.id);
+
+          const downloadReport = () => {
+            const dateFrom = document.getElementById('date_from').value
+            const dateTo = ''
+            if (dateFrom == '') {
+              toastr.warning("Debes indicar una fecha");
+              return;
+            }
+            var url = nodeUrl + '/export-cost-report/?download=true&entity=cotizaciones&id=' + $('section.sheet').data('id') + '&folio=' + (($('#main-container').data('index') > 0) ? $('#main-container').data('index') : 'S/N') + '&sid=' + unaBase.sid.encoded() + '&preview=false&nullified=' + $('section.sheet').data('readonly') + '&from=' + dateFrom + "&to=" + dateTo;
+            url = url + '&hostname=' + window.location.origin;
+            var download = window.open(url).blur();
+            window.focus();
+            unaBase.ui.unblock()
+
+
+
+          }
+
+
+
+          $.ajax({
+            url: "/4DACTION/_V3_checkCotizacionPdf",
+            data: {
+              id: $("section.sheet").data("id")
+            },
+            dataType: "json",
+            async: false,
+            success: function (data) {
+              valid = data.valid;
+              hidden_items = data.hidden_items;
+            }
+          });
+
+
+
+          // valid = !checkDifference.hasDifference;
+          if (valid && !checkDifference.hasDifference) {
+            switch (params.entity) {
+              case "Cotizacion":
+                var modulo = etiqueta_cotizacion;
+                break;
+              case "Negocios":
+                var modulo = etiqueta_negocio;
+                break;
+            }
+            if (hidden_items) {
+              confirm(
+                "Existen ítems ocultos con precio unitario mayor a 0. ¿Desea generar el reporte de costo de todos modos?"
+              ).done(function (data) {
+                if (data) {
+                  downloadReport()
+                }
+              });
+            } else {
+
+              downloadReport()
+
+            }
+            return false;
+          } else {
+
+            // continueAction();
+            toastr.warning("Lo sentimos ! no pudimos obtener el documento, Error 1501, comunícate con soporte de inmediato para resolver.");
+          }
+        }
+
+      }
+      await saveAction(continueAction, params, true)
+
+
+    };
+
+    document.querySelector('.export-cost-report').addEventListener('click', (e) => callback())
+  </script>
+
+
+  <style>
+    /* Estilo general del modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 200px;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    /* Contenido del modal */
+    .modal-content {
+      background-color: #fff;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 5px;
+      width: 80%;
+      border: none;
+    }
+
+    /* Cabecera del modal */
+    .modal-header {
+      border-bottom: 1px solid #e5e5e5;
+      padding-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+    }
+
+    /* Botón de cerrar */
+    .close {
+      font-size: 1.5em;
+      cursor: pointer;
+    }
+
+    /* Cuerpo del modal */
+    .modal-body {
+      padding-top: 20px;
+    }
+
+    .date-range {
+      display: flex;
+      justify-content: center;
+    }
+
+    .date-picker {
+      display: flex;
+      flex-direction: column;
+    }
+
+    input[type="date"] {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 10px;
+      margin-top: 5px;
+    }
+
+    /* Opciones de exportación */
+    .export-options {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .export-btn {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      background-color: #F1F9F8;
+      border: 1px solid transparent;
+      transition: 0.5s;
+    }
+
+    .export-btn:not([disabled]) {
+      color: #6F7272;
+    }
+
+    .export-btn:not([disabled]):hover {
+      color: #6F7272;
+      transition: 0.5s;
+      background-color: white;
+      border: 1px solid #2DAC90;
+    }
+
+    .export-btn i {
+      color: #6F7272;
+      margin-right: 3px;
+    }
+
+    /* Pie de página del modal */
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+    .footer-btn {
+      padding: 10px 15px;
+      margin-left: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .cancel {
+      background-color: #f0f0f0;
+    }
+
+    .continue {
+      background-color: #4CAF50;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="modal-content">
+    <div class="modal-body">
+      <form>
+        <div class="date-range">
+          <div class="date-picker">
+            <label for="desde">Fecha:</label>
+            <input type="date" id="date_from" name="desde">
+          </div>
+        </div>
+
+        <div class="export-options">
+          <button type="button" class="export-btn" disabled>Descargar PDF</button>
+          <button type="button" class="export-btn export-cost-report"><i class="fas fa-download"></i>Descargar
+            Excel</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getOcPorJustificar-->
+		<title>Buscar proyectos</title>
+		<meta charset="utf-8">
+		<script>
+			$(document).ready(function() {
+				var containerdtc = $('#sheet-dtc');
+
+				unaBase.toolbox.init();
+				// Inicializamos un buscador
+				var params = {
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/_V3_get_compras_por_justificar' },
+					entity: 'dtc_compras',
+					searchOff: true,
+					data: {
+						'idproveedor' : "<!--#4DTEXT idproveedor-->",
+						'tipodtc' : "<!--#4DTEXT tipodtc-->",
+						'totaljust': "<!--#4DTEXT totaljust-->"
+					},
+					// Función que genera cada fila de la tabla, dado el valor de i (índice de posición)
+					// y el valor de rows (array con todos los resultados)
+					// El contenido de rows corresponde al objeto de mismo nombre generado mediante la llamada
+					// a la api JSON. Ver /v3/json/xxxxx.shtml para conocer el formato.
+					row: {
+						html: function(i, rows) {							
+							return '<tr data-id="' + rows[i].id + '">' +
+								'<td>' + rows[i].folio + '</td>' +
+								'<td>' + rows[i].tipo + '</td>' +
+								'<td class="left">' + rows[i].proveedor + '</td>' +
+								'<td class="left">' + rows[i].referencia + '</td>' +
+								'<td>' + rows[i].total + '</td>' +
+								'<td>' + rows[i].saldo_por_justificar + '</td>' +
+								'<td><input class="select" name="ocselect[id]'+rows[i].id+'" value="'+rows[i].id+'" type="checkbox"></td>' +						
+							'</tr>'
+						}
+					},
+					/*detail: {
+						url: function(id) {
+							var container = $('#sheet-lista-negocios-gastos');					
+							var idoc = container.data('id');
+							var from = container.data('from');
+							return '/v3/views/negocios/items2.shtml?oc[negocio][id]=' + id +'&oc[id]='+idoc+'&from='+from
+						},
+						iframe: false,
+						dialog: true
+					},*/
+					// Inflexiones
+					inflection: {
+						singular: 'negocio',
+						plural: 'negocios',
+						none: 'ningún'
+					},									
+					filters: [
+						{ /*name: 'created_at', type: 'month', caption: 'Fecha de creación', range: true*/ }
+					]
+				};
+
+				unaBase.toolbox.search.init(params);
+
+				unaBase.toolbox.menu.init({
+					entity: 'dtc_compras',
+					buttons: []					  
+				});
+
+
+				// add selección
+		    	$('button.addseleccionoc').button({icons: {primary: 'ui-icon ui-icon-plus'},text: true}).click(function(){		    		
+
+		    		var element = $(this); 		
+					var selectedoc = $('#compras-por-justificar > table > tbody').find('input.select:checked');
+					var currentdtc = { "dtc[id]": '<!--#4DTEXT iddtc-->'};
+
+					var ocselect = {};
+					selectedoc.each(function(key, item) {			
+						eval("obj = {'ocselect[id]"+ $(this).val() +"': '" + $(this).val() + "'}");
+						$.extend(ocselect, ocselect, obj );
+					});
+					var finalobj = $.extend({}, currentdtc, ocselect);
+					if (selectedoc.length > 0) {
+						$.ajax({
+							'url':'/4DACTION/_V3_getInfoComprasDtc',
+							data: finalobj,
+							dataType:'json',
+							success: function(data) {
+								
+								containerdtc.find('input[name="dtc[referencia]"]').val(data.referencia);
+
+								// tipo doc
+								containerdtc.find('select[name="tipo_doc[id]"] > option[selected]').val(data.documento.id);
+								containerdtc.find('select[name="tipo_doc[id]"] > option[selected]').text(data.documento.text);
+								containerdtc.find('select[name="tipo_doc[id]"] > option[selected]').data('impuesto', data.documento.impuesto_valor);
+								containerdtc.find('select[name="tipo_doc[id]"] > option[selected]').data('tipo', data.documento.impuesto_tipo);
+								if (data.documento.especial) {							
+									containerdtc.find('input[name="dtc[nro_folio]"]').val(data.documento.correlativo);
+								}
+								containerdtc.find('input[name="dtc[nro_folio]"]').focus();										
+
+								// proveedor del doc
+								containerdtc.find('input[name="contacto[info][id]"]').val(data.proveedor.id);
+								containerdtc.find('input[name="contacto[info][alias]"]').val(data.proveedor.alias);
+								containerdtc.find('input[name="contacto[info][razon_social]"]').val(data.proveedor.razon);
+								containerdtc.find('input[name="contacto[info][rut]"]').val(unaBase.data.rut.format(data.proveedor.rut));
+								containerdtc.find('input[name="contacto[info][giro]"]').val(data.proveedor.giro);
+								element.parentTo('.ui-dialog-content').dialog('close');
+
+								// forma pago del doc
+								containerdtc.find('select[name="forma_pago[id]"] > option[selected]').val(data.forma.id);
+								containerdtc.find('select[name="forma_pago[id]"] > option[selected]').text(data.forma.text);
+
+								// carga ocs asociadas							
+								var containeroc = containerdtc.find('table.ocs > tbody');     
+		      					var htmlObject;
+		  						containeroc.find("*").remove();
+								$.each(data.compras, function(key, item){
+									htmlObject = build_rows_compras(item);
+									htmlObject.click(function(event){		 			
+										if (event.srcElement.localName != 'input' && event.srcElement.className != 'ui-button-text')        
+											unaBase.loadInto.viewport('/v3/views/compras/content.shtml?id=' + item.id);										
+										//event.preventDefault();
+										//event.stopPropagation();
+									});
+									containeroc.append(htmlObject);
+								});
+								$('button.remove.ocs').button({icons: {primary: 'ui-icon ui-icon-circle-minus'},text: true});			
+
+								// carga items del doc
+								var current = containerdtc.find('table.items > tbody');
+								var currentTitulo;
+								current.find("*").remove();
+								
+								if (data.detalle.length > 0) {
+									containerdtc.find('table.items').show();
+								}
+
+								$.each(data.detalle, function(key, item){
+									if (item.tipo=="TITULO"){
+									  currentTitulo = get_detail.titulo('prependTo', current, item);
+									}else{
+									  var currentItem = containerdtc.find('table.items > tbody > tr[data-llave="'+item.llave_titulo+'"]');
+									  if(item.llave_titulo == "") {
+									    get_detail.item('prependTo', current, item);            
+									  }else{
+									    get_detail.item('insertAfter', currentItem, item);
+									  }
+									}
+								});
+								calcula_por_filas();
+								update_subtotal_items();
+
+								// otros ajustes
+								containerdtc.find('#scrollocs h1 span').text(data.compras.length);
+								containerdtc.find('.montos-justificados').hide();														
+
+							},
+							error: function(data) {
+								toastr.error(NOTIFY.get('ERROR_INTERNAL'));
+							}
+						});
+					}else{
+						alert("Debe seleccionar al menos una Orden de compra.");
+					}
+				});
+
+
+			});
+		</script>
+		<!--<style type="text/css">
+			#dialog-search input[name="q"]{
+				width:500px!important;
+			}
+		</style>-->
+	</head>
+	<body>		
+		<section id="compras-por-justificar" class="sheet">
+			<div style="text-align:right;margin:5px"><button class="addseleccionoc">Agregar selección</button></div>
+			<table>
+				<thead>
+					<tr>
+						<th width="7%">Número</th>
+						<th width="10%">Doc.</th>
+						<th width="30%">Proveedor</th>
+						<th width="30%">Referencia</th>						
+						<th width="10%">Total [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th width="10%">Saldo por justificar [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						<th width="3%"></th>						
+					</tr>
+				</thead>
+				<tbody></tbody>
+				<tfoot></tfoot>
+			</table>
+		</section>
+	</body>
+</html>

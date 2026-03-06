@@ -1,0 +1,20 @@
+{	
+	"login": "<!--#4DIF Not(Undefined([Prm_Usuario]Login))--><!--#4DHTML [Prm_Usuario]Login--><!--#4DELSE-->null<!--#4DENDIF-->",
+	"nombres": "<!--#4DIF Not(Undefined([Prm_Usuario]Nombres))--><!--#4DHTML [Prm_Usuario]Nombres--><!--#4DELSE-->null<!--#4DENDIF-->",
+	"apepaterno": "<!--#4DIF Not(Undefined([Prm_Usuario]ApePaterno))--><!--#4DHTML [Prm_Usuario]ApePaterno--><!--#4DELSE-->null<!--#4DENDIF-->",
+	"apematerno": "<!--#4DIF Not(Undefined([Prm_Usuario]ApeMaterno))--><!--#4DHTML [Prm_Usuario]ApeMaterno--><!--#4DELSE-->null<!--#4DENDIF-->",
+	"tratamiento": "<!--#4DIF Not(Undefined([Prm_Usuario]Tratamiento))--><!--#4DHTML [Prm_Usuario]Tratamiento--><!--#4DELSE-->null<!--#4DENDIF-->",
+	"rut": "<!--#4DIF Not(Undefined([Prm_Usuario]Rut))--><!--#4DHTML [Prm_Usuario]Rut--><!--#4DELSE-->null<!--#4DENDIF-->",
+	"alias": "<!--#4DIF Not(Undefined([Prm_Usuario]alias))--><!--#4DHTML [Prm_Usuario]alias--><!--#4DELSE-->null<!--#4DENDIF-->",
+	"telefono": "<!--#4DIF Not(Undefined([Prm_Usuario]Telefono))--><!--#4DHTML [Prm_Usuario]Telefono--><!--#4DELSE-->null<!--#4DENDIF-->",
+	"email": "<!--#4DIF Not(Undefined([Prm_Usuario]Email))--><!--#4DHTML [Prm_Usuario]Email--><!--#4DELSE-->null<!--#4DENDIF-->",
+	"direc_calle": "<!--#4DIF Not(Undefined([Prm_Usuario]Direc_Calle))--><!--#4DHTML [Prm_Usuario]Direc_Calle--><!--#4DELSE-->null<!--#4DENDIF-->",
+	"direc_depto": "<!--#4DIF Not(Undefined([Prm_Usuario]Direc_Depto))--><!--#4DHTML [Prm_Usuario]Direc_Depto--><!--#4DELSE-->null<!--#4DENDIF-->",
+	"direc_numero": "<!--#4DIF Not(Undefined([Prm_Usuario]Direc_Numero))--><!--#4DHTML [Prm_Usuario]Direc_Numero--><!--#4DELSE-->null<!--#4DENDIF-->",
+	"direc_piso": "<!--#4DIF Not(Undefined([Prm_Usuario]Direc_Piso))--><!--#4DHTML [Prm_Usuario]Direc_Piso--><!--#4DELSE-->null<!--#4DENDIF-->",
+	"web": "<!--#4DIF Not(Undefined([Prm_Usuario]web))--><!--#4DHTML [Prm_Usuario]web--><!--#4DELSE-->null<!--#4DENDIF-->",
+	"bloqueo_emails": "<!--#4DIF Not(Undefined([Prm_Usuario]bloqueo_emails))--><!--#4DHTML [Prm_Usuario]bloqueo_emails--><!--#4DELSE-->null<!--#4DENDIF-->",
+	"estado": "<!--#4DIF Not(Undefined([Prm_Usuario]Estado))--><!--#4DHTML [Prm_Usuario]Estado--><!--#4DELSE-->null<!--#4DENDIF-->",
+	"perfil_ejecutivo": "<!--#4DIF Not(Undefined([Prm_Usuario]perfil_ejecutivo))--><!--#4DHTML [Prm_Usuario]perfil_ejecutivo--><!--#4DELSE-->null<!--#4DENDIF-->",
+	"jefe_proyecto": "<!--#4DIF Not(Undefined([Prm_Usuario]jefe_proyecto))--><!--#4DHTML [Prm_Usuario]jefe_proyecto--><!--#4DELSE-->null<!--#4DENDIF-->"
+}

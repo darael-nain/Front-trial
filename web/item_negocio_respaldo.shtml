@@ -1,0 +1,84 @@
+<table class="item-negocio"  width="100%" border="1" cellpadding="0" cellspacing="0" hspace="0" vspace="0">
+<tbody id="tabla">
+<tr bgcolor="#CCCCCC" >
+<td class="center" width="45%">DESCRIPCION</td>
+<td class="center" width="5%">CANT</td>
+<!--#4DIF vUsarsegunda_cantidad-->
+<td class="center" width="5%">DIAS</td>
+<!--#4DENDIF-->
+<td class="center" width="10%">P.U.[ $ ]</td>
+<td class="center" width="10%">SUBTOTAL[ $ ]</td>
+<td class="center" width="10%">GASTO P.[ $ ]</td>
+<td class="center" width="10%">UTILIDAD P.[ $ ]</td>
+<td class="center" width="10%">MARGEN P.[ % ]</td>
+<td class="center" width="10%">*</td>
+</tr>      
+<!--#4DLOOP a_llave-->        
+<!--#4DIF a_tipo_det{a_llave}="TITULO"-->
+<tr>
+<td>
+	<input id="<!--#4DVAR a_llave{a_llave}-->_C1" name="<!--#4DVAR a_llave{a_llave}-->" class="des-titulo" type="text" value="<!--#4DVAR a_des{a_llave}-->" />
+</td>
+<td>
+	<input readonly id="<!--#4DVAR a_llave{a_llave}-->_C2" name="<!--#4DVAR a_llave{a_llave}-->" class="cant-titulo" type="text" value="<!--#4DVAR a_cantidad{a_llave}-->"/>
+</td>
+
+<!--#4DIF vUsarsegunda_cantidad-->
+<td>
+	<input readonly id="<!--#4DVAR a_llave{a_llave}-->_C2" name="<!--#4DVAR a_llave{a_llave}-->" class="cant-titulo" type="text" value="<!--#4DVAR a_cantidad2{a_llave}-->"/>
+</td>  
+<!--#4DENDIF-->
+
+<td>
+	<input readonly id="<!--#4DVAR a_llave{a_llave}-->_C3" name="<!--#4DVAR a_llave{a_llave}-->" class="total-titulo" type="text" value="<!--#4DVAR a_pu1{a_llave}-->"/>
+</td>
+<td>
+	<input readonly id="<!--#4DVAR a_llave{a_llave}-->_C4" name="totalestitulo[]" class="total-titulo" type="text" value="<!--#4DVAR a_subtotal{a_llave}-->"/>
+</td>
+<td>
+	<input readonly id="<!--#4DVAR a_llave{a_llave}-->_C5" name="<!--#4DVAR a_llave{a_llave}-->" class="total-titulo" type="text" 	value="<!--#4DVAR a_gasto_real{a_llave}-->"/>
+</td>
+<td><input readonly id="<!--#4DVAR a_llave{a_llave}-->_C6" name="<!--#4DVAR a_llave{a_llave}-->" class="total-titulo" type="text" value="<!--#4DVAR a_utilidad{a_llave}-->"/></td>
+<td><input readonly id="<!--#4DVAR a_llave{a_llave}-->_C7" name="<!--#4DVAR a_llave{a_llave}-->" class="total-titulo" type="text" value="<!--#4DVAR a_margen{a_llave}-->" /></td>
+<td>
+<input checked="checked" class="chk-t" id="<!--#4DVAR a_llave{a_llave}-->_C8" name="<!--#4DVAR a_llave{a_llave}-->" type="checkbox" value="noafecto" />
+</td>
+</tr>
+<!--#4DELSE-->
+<tr>
+<td>
+	<input id="<!--#4DVAR a_llave{a_llave}-->_C1" name="<!--#4DVAR a_llave{a_llave}-->" class="des-item" type="text" value="<!--#4DVAR a_des{a_llave}-->"   />
+</td>
+<td>
+	<input  onkeyup="actualiza_montos(this.id,this.value,'<!--#4DVAR a_llave_titulo{a_llave}-->');" id="<!--#4DVAR a_llave{a_llave}-->_C2" name="<!--#4DVAR a_llave{a_llave}-->"  class="cant-item" type="text" value="<!--#4DVAR a_cantidad{a_llave}-->"   />
+</td>
+
+<!--#4DIF vUsarsegunda_cantidad-->
+<td>
+	<input  onkeyup="actualiza_montos(this.id,this.value,'<!--#4DVAR a_llave_titulo{a_llave}-->');" id="<!--#4DVAR a_llave{a_llave}-->_C2" name="<!--#4DVAR a_llave{a_llave}-->"  class="cant-item" type="text" value="<!--#4DVAR a_cantidad2{a_llave}-->"   />
+</td>  
+<!--#4DENDIF-->
+ 
+<td>
+	<input		
+        onkeyup="actualiza_montos(this.id,this.value,'<!--#4DVAR a_llave_titulo{a_llave}-->');" id="<!--#4DVAR a_llave{a_llave}-->_C3" name="<!--#4DVAR a_llave{a_llave}-->" class="precio-item" type="text" value="<!--#4DVAR a_pu1{a_llave}-->"  />
+    </td>
+<td><input readonly id="<!--#4DVAR a_llave{a_llave}-->_C4" name="<!--#4DVAR a_llave_titulo{a_llave}-->[]" class="total-item" type="text" value="<!--#4DVAR a_subtotal{a_llave}-->" /></td>
+<td><input readonly id="<!--#4DVAR a_llave{a_llave}-->_C5" name="<!--#4DVAR a_llave{a_llave}-->" class="total-item" type="text" value="<!--#4DVAR a_gasto_real{a_llave}-->"   /></td>
+<td><input readonly id="<!--#4DVAR a_llave{a_llave}-->_C6" name="<!--#4DVAR a_llave{a_llave}-->" class="total-item" type="text" value="<!--#4DVAR a_utilidad{a_llave}-->"  /></td>
+<td><input readonly id="<!--#4DVAR a_llave{a_llave}-->_C7" name="<!--#4DVAR a_llave{a_llave}-->" class="total-item" type="text" value="<!--#4DVAR a_margen{a_llave}-->"  /></td>
+<td>
+<!--#4DIF a_chk_comision{a_llave}=true-->
+	<input class="chk-i" onclick="actualizaSubComision(this.id,'<!--#4DVAR a_llave_titulo{a_llave}-->')" id="<!--#4DVAR a_llave{a_llave}-->_C8" 
+    name="<!--#4DVAR a_llave{a_llave}-->_chk" type="checkbox" value="afecto"  checked="checked" />
+<!--#4DELSE-->
+	<input class="chk-i" onclick="actualizaSubComision(this.id,'<!--#4DVAR a_llave_titulo{a_llave}-->')" id="<!--#4DVAR a_llave{a_llave}-->_C8" 
+    name="<!--#4DVAR a_llave{a_llave}-->_chk" type="checkbox" value="noafecto"  />
+<!--#4DENDIF-->
+</td>
+
+</tr>
+<!--#4DENDIF-->    
+<!--#4DENDLOOP-->
+</tbody>
+</table>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--#4DSCRIPT/_V3_proxy_getDetalleItems-->
+  <meta charset="utf-8">
+  <title>Info proveedor</title>
+  <script>
+
+  let preorden = {
+    init: function() {
+      preorden.target = $("table.items > tbody > tr[data-id='<!--#4DTEXT id-->']");
+      preorden.idItem = '<!--#4DTEXT id-->';
+      preorden.nameItem = '<!--#4DTEXT nombreItemNeg-->';
+      preorden.containerPre = $('#pre-list-proveedor > tbody');
+      preorden.total = 0;
+      $('.pre-status').hide();
+    },
+    get: function(){
+      $.ajax({
+        'url':'/4DACTION/_V3_getPreOrdenes',
+        data:{
+          prellaveitem : preorden.idItem
+        },
+        dataType:'json',
+        success:function(data){
+          preorden.containerPre.find("*").remove();
+          preorden.load(data.rows);
+          preorden.getTotal();
+        }
+      });
+    },
+    create : function(){
+      $.ajax({
+        url: '/4DACTION/_V3_setPreOrdenes',
+        type: 'POST',
+        dataType: 'json',
+        data : {
+          prellaveitem : preorden.idItem,
+          prenombreitem : preorden.nameItem
+        },
+        async: false
+      }).done(function(data) {
+          preorden.get();
+      });
+    },
+    load:function(data){
+        let htmlObject;
+        $.each(data, function(key, item){
+          htmlObject = $('<tr data-id="'+ item.id +'">' +
+            '<td>' + ((!item.idgasto > 0)? '<button class="minus pre proveedor">Quitar</button>':'') + '</td>' +
+            '<td><input class="pre-edit" name="pre_proveedor[info][alias]" placeholder="Buscar proveedor" type="search" value="'+ item.nomProveedor +'" data-id="'+ item.idProveedor +'" old-value="'+ item.nomProveedor +'"></td>' +
+            '<td><input class="pre-edit" style="width:150px;" name="pre_proveedor[info][doc]" placeholder="Seleccionar documento" type="search" value="'+ item.nomDoc +'" data-id="'+ item.idDoc +'" old-value="'+ item.nomDoc +'"><button type="button" class="pre show dtc">Tipos documentos</button></td>' +
+            '<td><input data-id="'+ item.llaveItem +'" name="pre_proveedor[info][servicio]" type="text" value="'+ item.nombreItem +'" disabled></td>' +
+            '<td class="numeric currency">' + currency.symbol + ' <input class="pre-edit" name="pre_proveedor[info][monto]" type="text" value="'+ item.monto +'" old-value="'+ item.monto +'"></td>' +
+            '<td><textarea name="pre_proveedor[info][obs]" class="pre-edit" old-value="'+ item.observacion +'">'+ item.observacion +'</textarea><input name="pre_proveedor[info][moneda]" type="hidden" value="'+ item.moneda +'"></td>' +
+            '</tr>');
+          preorden.containerPre.append(htmlObject);
+          htmlObject.find('.numeric.currency input').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+          // BUSCAR PROVEEDOR
+            htmlObject.find('input[name="pre_proveedor[info][alias]"]').autocomplete({
+              source: function(request, response) {
+                $.ajax({
+                  url: '/4DACTION/_V3_getEmpresa',
+                  dataType: 'json',
+                  data: {
+                    q: request.term,
+                    from: 'oc'
+                  },
+                  success: function(data) {
+                    response($.map(data.rows, function(item) {
+                      return item;
+                    }));
+                  }
+                });
+              },
+              minLength: 0,
+              autoFocus: true,
+              open: function() {
+                $(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+              },
+              close: function() {
+                $(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+              },
+              focus: function(event, ui) {
+                return false;
+              },
+              response: function(event, ui) {
+              },
+              select: function(event, ui) {
+                $(this).val(ui.item.text);
+                $(this).data('id', ui.item.id);
+                
+                $(this).closest('tr').find('input[name="pre_proveedor[info][doc]"]').data('id', ui.item.id_dtc_default);
+                $(this).closest('tr').find('input[name="pre_proveedor[info][doc]"]').val(ui.item.des_dtc_default);
+
+                preorden.save($(this).closest('tr'), event);
+
+                return false;
+              }
+            }).data('ui-autocomplete')._renderItem = function(ul, item) {
+                return $('<li><a><strong class="highlight">' + ((item.text)? item.text : '[Sin Alias]') + '</strong><em>' + ((item.rut != "")? 'Ruc: ' + item.rut : '') + '</em><span>' + item.razon_social + '</span></a></li>').appendTo(ul);
+            };
+
+            // BUSCAR DOC
+            htmlObject.find('button.pre.show.dtc').button({icons: { primary: 'ui-icon-carat-1-s'}, text: false }).click(function() {
+              $(this).closest('tr').find('input[name="pre_proveedor[info][doc]"]').autocomplete('search', '@').focus();
+            });
+            htmlObject.find('input[name="pre_proveedor[info][doc]"]').autocomplete({
+              source: function(request, response) {
+                $.ajax({
+                  url: '/4DACTION/_V3_' + 'getTiposDocDeCompras',
+                  dataType: 'json',
+                  data: {
+                    q: request.term
+                  },
+                  success: function(data) {
+                    response($.map(data.rows, function(item) {
+                      return item;
+                    }));
+                  }
+                });
+              },
+              minLength: 0,
+              autoFocus: true,
+              open: function() {
+                $(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+              },
+              close: function() {
+                $(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+              },
+              focus: function(event, ui) {
+                return false;
+              },
+              response: function(event, ui) {
+              },
+              select: function(event, ui) {
+                $(this).val(ui.item.text);
+                $(this).data('id', ui.item.id);
+
+                preorden.save($(this).closest('tr'), event);
+                return false;
+              }
+            }).data('ui-autocomplete')._renderItem = function(ul, item) {
+                return $('<li><a><span class="highlight">' +  item.des + '</span></a></li>').appendTo(ul);
+            };
+
+            // quitar
+            htmlObject.find('button.minus.pre.proveedor').button({icons: { primary: 'ui-icon-circle-minus'}, text: false }).click(function() {
+              preorden.delete($(this).closest('tr'));
+            });
+
+            // save
+            htmlObject.find('.pre-edit').blur(function(event) {
+              preorden.save($(this).closest('tr'), event);
+            });
+
+        });
+    },
+    save: function(currentRow, event){
+      $.ajax({
+        url: '/4DACTION/_V3_setPreOrdenes',
+        type: 'POST',
+        dataType: 'json',
+        data : {
+          'preid' : currentRow.data('id'),
+          'preidprov' : currentRow.find('input[name="pre_proveedor[info][alias]"]').data('id'),
+          'prenomprov' : currentRow.find('input[name="pre_proveedor[info][alias]"]').val(),
+          'preiddoc' : currentRow.find('input[name="pre_proveedor[info][doc]"]').data('id'),
+          'prenomdoc' : currentRow.find('input[name="pre_proveedor[info][doc]"]').val(),
+          'prellaveitem' : preorden.idItem,
+          'prenombreitem' : preorden.nameItem,
+          'premonto' : currentRow.find('input[name="pre_proveedor[info][monto]"]').val(),
+          'premoneda' : currentRow.find('input[name="pre_proveedor[info][moneda]"]').val(),
+          'preobs' : currentRow.find('[name="pre_proveedor[info][obs]"]').val()
+        },
+        beforeSend: function(){
+          $('.pre-status').show();
+        },
+        async: false
+      }).done(function(data) {
+
+        if (event.target.name == "pre_proveedor[info][monto]") {
+          preorden.getTotal();
+        }
+
+        setTimeout(function(){
+          $('.pre-status').hide()
+        }, 500);
+
+        if (!data.success) {
+          toastr.error("Hubo un error al intentar guardar. Intente nuevamente.");
+        }
+
+      });
+    },
+    delete: function(currentRow){
+       $.ajax({
+        url: '/4DACTION/_V3_setPreOrdenes',
+        type: 'POST',
+        dataType: 'json',
+        data : {
+          delete: true,
+          preid : currentRow.data('id'),
+        },
+        async: false
+      }).done(function(data) {
+        if (data.success) {
+          currentRow.remove();
+          preorden.getTotal();
+        }else{
+          toastr.error("Hubo un error al intentar eliminar. Intente nuevamente.");
+        }
+      });
+    },
+    getTotal: function(){
+      $.ajax({
+        'url':'/4DACTION/_V3_getTotalPreOrdenes',
+        data:{
+          prellaveitem : preorden.idItem
+        },
+        dataType:'json',
+        success:function(data){
+          preorden.total = data.totalPreOrden;
+          $('.pre-totalpre').text(currency.symbol + ' ' + $.number(preorden.total, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+        }
+      });
+    }
+  };
+
+  $(document).ready(function() {
+    preorden.init();
+    preorden.get();
+    $('button.add.pre.proveedor').button({icons: { primary: 'ui-icon-circle-plus'}, text: true }).click(function() {
+        preorden.create();
+    });
+  });
+  </script>
+  <style>
+    .pre-buttons{
+      background-color:gray;
+      border-radius:2px;
+    }
+    .pre-tables{
+      border-spacing: 0;
+      border-collapse: collapse;
+    }
+    .pre-tables > tbody > tr{
+      background-color:rgb(227,227,228)!important;
+    }
+    .pre-tables > tbody > tr > td{
+      vertical-align: middle;
+    }
+    .pre-tables input{
+      padding:5px;
+      border-radius:3px;
+      background-color:white;
+    }
+  </style>  
+</head>
+<body>
+  <div style="margin:10px;">
+    <button style="border:2px solid gray" onClick="return false;" class="add pre proveedor"><span style="font-weight:bold;">Agregar proveedor</span></button>
+    <h6 style="float:right;font-weight:bold;font-size:12px;">Presupuestado: <span class="pre-totalpre">0</span></h6>
+    <span class="pre-status">Guardando...</span>
+  </div>
+  <table width="100%" id="pre-list-proveedor" class="pre-tables">
+     <thead>
+        <tr>
+          <th width="5%"></th>
+          <th width="20%">Proveedor</th>
+          <th width="20%">Documento</th>
+          <th width="20%">Servicio</th>
+          <th width="10%">Monto neto</th>
+          <!--<th width="5%">Moneda</th>-->
+          <th width="20%">Observación</th>
+      </tr>
+     </thead>
+    <tbody></tbody>
+  </table>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+	<!--#4DSCRIPT/_V3_proxy-->
+	<head>
+		<title>Reporte cuentas por cobrar y pagar</title>
+		<meta charset="utf-8">
+		<script src="/v3/script/sorttable.js"></script>
+		<script>
+		var container = $('#container-reportes');
+		var tbodyCobros = container.find('table.reportes-cobros > tbody');
+		var tbodyPagos = container.find('table.reportes-pagos > tbody');
+
+
+		var getCategorias = function(){
+			//unaBase.ui.block();
+			var fields = '';
+			var searchFields = $.param(unaBase.toolbox.search.advancedFilter);
+			var serialFields = $('#search').serializeAnything();
+			fields = searchFields + '&' + serialFields;
+			$.ajax({
+				url: '/4DACTION/_V3_getResumenFlujoCaja',
+				data: fields,
+				dataType: 'json',
+				success: function(data) {
+
+					tbodyCobros.find('*').remove();
+					tbodyPagos.find('*').remove();
+
+					$('#search').find('*').prop('disabled', true);
+
+					// resumen montos
+					$('.amount.banco').text(currency.symbol + " " + $.number(data.saldo_banco, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+					$('.amount.porcobrar').text(currency.symbol + " " + $.number(data.total_por_cobrar, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+					$('.amount.porpagar').text(currency.symbol + " " + $.number(data.total_por_pagar, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+					// -- POR COBRAR ---
+					var cant = 0;
+					var htmlObject;
+					$.each(data.por_cobrar, function(key, item) {
+						if (cant < 5) {
+							htmlObject = $('<tr>' +
+							'<td style="text-align:left;width:250px"><div>'+ item.cliente + '</div></td>' +
+							'<td style="width:100px;text-align:center"><div class="ver-facturas">'+ item.cantidad +'</div></td>' +
+							'<td style="width:100px;text-align:right"><div style="font-weight:bold;">'+ currency.symbol + " " + $.number(item.monto, currency.decimals, currency.decimals_sep, currency.thousands_sep) +'</div></td>' +
+							'</tr>');
+							htmlObject.click(function(){
+								unaBase.loadInto.dialog('/v3/views/reportes/dialog/porcobrar.shtml?id=' + item.id, 'FACTURAS POR COBRAR', 'x-large');
+							});
+							tbodyCobros.append(htmlObject);
+						}
+						cant++;
+					});
+
+					// -- POR PAGAR ---
+					var cant = 0;
+					var htmlObject;
+					$.each(data.por_pagar, function(key, item) {
+						if (cant < 5) {
+							htmlObject = $('<tr>' +
+							'<td style="text-align:left;"><div style="width:200px">'+ item.proveedor + '</div></td>' +
+							'<td style="width:100px;text-align:center"><div class="ver-facturas">'+ item.cantidad +'</div></td>' +
+							'<td style="width:100px;text-align:right"><div style="font-weight:bold;">'+ currency.symbol + " " + $.number(item.monto, currency.decimals, currency.decimals_sep, currency.thousands_sep) +'</div></td>' +
+							'</tr>');
+							htmlObject.click(function(){
+								unaBase.loadInto.dialog('/v3/views/reportes/dialog/porpagar.shtml?id=' + item.id, 'FACTURAS POR PAGAR', 'x-large');
+							});
+							tbodyPagos.append(htmlObject);
+						}
+						cant++;
+					});
+
+					$('#search').find('*').prop('disabled', false);
+
+				},
+				error: function(xhr, text, error) {
+					console.log("error:" + error);
+				}
+			});
+		}
+
+		$(document).ready(function() {
+			unaBase.toolbox.init();
+			unaBase.toolbox.search.init({
+				callback: function() {
+					var status = $('#search').find('*').prop('disabled');
+					if (!status) {
+						getCategorias();
+					}
+					return false;
+				},
+				inflection: {
+					singular: 'categoria',
+					plural: 'categorias',
+					none: 'ninguna'
+				},
+				filters: [
+					//{ name: 'date_from', type: 'year', caption: 'Año', currentYear: false }
+				],
+				hideSearchBox: true
+			});
+
+			unaBase.toolbox.menu.init({
+				entity: 'estado_resultados',
+				//buttons: ['exit', 'export_list']
+				buttons: ['exit']
+			});
+
+		});
+		</script>
+		<style type="text/css">
+
+			/* -- ini -- modificado para mostrar boton volver arriba y los filtros abajo, gin, 28-02-18 */
+			li[data-name="exit"]{
+				top: 10px;
+			    left: 0;
+			    position: absolute;
+			}
+
+			/* -- ini -- modificado para mostrar boton volver arriba y los filtros abajo, gin, 28-02-18 */
+			li[data-name="export"]{
+				top: 10px;
+			    left: 70px;
+			    position: absolute;
+			}
+
+			#search{
+			    display: inline-block;
+			    margin: 30px 0 0 -5px;
+			}
+			#search input[name="estado_compras"]{
+			   width: 110px!important;
+			}
+			/* -- fin -- modificado para mostrar boton volver arriba y los filtros abajo, gin, 28-02-18 */
+
+
+			.box-summary-totales{ 
+				display:inline-block;border-right:1px solid lightgray;padding:5px;
+			}
+				.box-summary-totales > div{
+					margin:5px;
+					text-align:center;
+
+				}
+				.box-summary-totales > .name{
+					font-size:10px;
+					color:gray;
+				}
+				.box-summary-totales > .amount{
+					font-size:12px;
+				}
+
+				header.full-height{
+					/*background-color:white!important;*/
+					height:60px;
+				}
+		
+				.panel-resumen > div{
+					border:1px solid lightgray;
+					display:inline-block;
+					width:450px;
+					padding:5px;
+					position:relative;
+					margin:5px;
+					vertical-align:top;
+					border-radius:3px;
+				}
+					.panel-resumen > div > table{
+						border:1px solid transparent;
+						margin-top:30px;
+						width:450px;
+					}
+						.panel-resumen > div > table > thead > tr > th{
+							background-color:black!important;
+						}
+						.panel-resumen > div > table > tbody > tr{
+							border-bottom:1px solid lightgray;
+							text-align:center;
+						}
+						.panel-resumen > div > table > tbody > tr > td{
+							text-align:center;
+						}
+						.panel-resumen > div > table > tbody > tr > td > div{
+							vertical-align: middle;
+						}
+					.panel-resumen > div > h3{
+						float:left;
+					}
+					.panel-resumen > div > button{
+						border:1px solid lightgray;
+						border-radius:3px;
+						float:right;
+					}
+
+				tr:not(.title) > td:nth-of-type(2)::before {
+					content: '' !important;
+				}
+
+				.htitle{
+					padding:5px 0 5px 0;
+					font-weight: bold;
+					text-transform: uppercase;
+				}
+
+				.nota{
+					font-size:10px;
+					color:black;
+					font-style: italic;
+					margin-top:20px;
+				}
+
+				.ver-facturas{
+					background-color:gray;
+					color:white;
+					padding:5px;
+					border-radius:10px;
+					width:20px;
+					text-align: auto;
+					display:inline-block;
+					cursor:pointer;
+				}
+
+		</style>
+		<script>
+			$(document).ready(function() {
+				$('div.totales').draggable({ containment: "parent" });
+				$('.btn-ver-mas-clientes').click(function(){
+					unaBase.loadInto.dialog('/v3/views/reportes/dialog/porcobrar.shtml?id=0', 'FACTURAS POR COBRAR', 'x-large');
+					//window.open("http://" + window.location.host + "/v3/views/reportes/dialog/cpc.shtml", '_blank');
+				});
+				$('.btn-ver-mas-proveedores').click(function(){
+					unaBase.loadInto.dialog('/v3/views/reportes/dialog/porpagar.shtml?id=0', 'FACTURAS POR PAGAR', 'x-large');
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<section class="sheet items" id="container-reportes" style="height:200px;overflow:auto;">
+			<h3 class="htitle">CUENTAS POR COBRAR Y PAGAR</h3>
+			<div style="margin:5px 0px 5px 0px!important">
+				<div class="box-summary-totales">
+					<div class="name" style="color:black">SALDO EN BANCO</div>
+					<div class="amount banco">0</div>
+				</div>
+				<div class="box-summary-totales">
+					<div class="name" style="color:green">POR COBRAR</div>
+					<div class="amount porcobrar">0</div>
+				</div>
+				<div class="box-summary-totales" style="margin-right:transparent!important">
+					<div class="name" style="color:red">POR PAGAR</div>
+					<div class="amount porpagar">0</div>
+				</div>
+			</div>
+
+			<div class="panel-resumen" style="text-align:left">
+				<div>
+					<h3 style="float:left;">TOP #5 CLIENTES POR COBRAR</h3>
+					<table class="items reportes-cobros">
+						<thead>
+							<tr>
+								<th style="width:250px;text-align:center;">Cliente</th>
+								<th style="width:100px;text-align:center;">Facturas pendientes</th>
+								<th style="width:100px;text-align:center;">Por cobrar</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td colspan="3"><div style="text-align:left;">Cargando...</div></td>
+							</tr>
+						</tbody>
+					</table>
+					<button class="btn-ver-mas-clientes">Ver más clientes por cobrar</button>
+				</div>
+				<div>
+					<h3>TOP #5 PROVEEDORES POR PAGAR</h3>
+					<table class="items reportes-pagos">
+						<thead>
+							<tr>
+								<th style="width:250px;text-align:center;">Proveedor</th>
+								<th style="width:100px;text-align:center;">Facturas pendientes</th>
+								<th style="width:100px;text-align:center;">Por pagar</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td colspan="3"><div style="text-align:left;">Cargando...</div></td>
+							</tr>			
+						</tbody>
+					</table>
+					<button class="btn-ver-mas-proveedores">Ver más proveedores por pagar</button>
+				</div>
+			</div>
+			<div style="margin-left:8px;">Ordenado por vencimiento y mayor monto.</div>
+		</section>
+	</body>
+</html>

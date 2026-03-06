@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getCotizacionContent-->
+		<title>Cotizaciones</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/views/compras/content_2.js"></script>
+		<style>
+
+			table.items > tbody {
+				counter-reset: item;
+			}
+
+			table.items > tbody > tr:not(.title) > td:nth-of-type(2):before {
+				counter-increment: item;
+				content: counter(item);
+				font-weight: bold;
+			}
+
+			/* Segunda cantidad */
+			<!--#4DIF NOT(vUsarsegunda_cantidad)-->
+			.segunda-cantidad {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/* Costo según permiso */
+
+			<!--#4DIF NOT(_V3_permission_showCosto)-->
+			table .costo {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/* Utilidad según permiso */
+			<!--#4DIF NOT(_V3_permission_showUtilidad)-->
+			table .utilidad {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			/* Márgenes según parámetro */
+
+			<!--#4DIF _V3_param_showMargenDesdeCompra-->
+			table .margen-desde-venta {
+				display: none;
+			}
+			<!--#4DELSE-->
+			table .margen-desde-compra {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			section.sheet table .collapsed {
+				display: none;
+			}
+
+			table .moving-src, table .moving-dst {
+				outline: 1px dashed black;
+				opacity: .3;
+			}
+
+			section.sheet table th:last-of-type {
+				width: 28px;
+			}
+
+		</style>
+	</head>
+	<body>
+		<!-- Formularios de contenido -->
+		<section class="sheet" data-id="<!--#4DVAR vid_nv-->" data-index="<!--#4DVAR vid_negocio-->"<!--#4DIF vNuevo--> data-new="true"<!--#4DENDIF--><!--#4DIF vAnulada--> data-readonly="true"<!--#4DENDIF-->>
+			<header>
+				<!-- <h1><img src="/4DACTION/logo_empresa_web" alt="UNA Sistemas"></h1> -->
+				<span id="index"><!--#4DIF vid_negocio=0-->Borrador<!--#4DELSE--><!--#4DIF vid_negocio=-1-->Plantilla<!--#4DELSE-->Nº <!--#4DVAR vid_negocio--><!--#4DENDIF--><!--#4DENDIF--></span>
+				<time>19 de agosto de 2013</time>
+				<ul>
+					<li><strong>Emitida por</strong> <span id="emisor"><!--#4DVAR vDeEmisor--></span></li>
+					<!--#4DIF vid_negocio#-1--><li><strong>Versión</strong> <span id="version"><!--#4DIF vVersionActual=""-->Original<!--#4DELSE--><!--#4DVAR vVersionActual--><!--#4DENDIF--></span></li><!--#4DENDIF-->
+				</ul>
+			</header>
+			<ul class="editable">
+				<li class="margin-after"><span>Área de negocio</span> <span><input required readonly type="search" name="cotizacion[area_negocio]" data-id="<!--#4DVAR vid_areanegocio-->" value="<!--#4DVAR vareanegocio-->" placeholder="Buscar..."></span><button class="show area-negocio">Ver mis áreas de negocio</button></li>
+				<li><span>Cliente (Alias)</span> <span><input data-help="Acá buscas o creas al cliente, por ejemplo: &laquo;UNA SISTEMAS&raquo;" required id="empresa" type="search" name="cotizacion[empresa][id]" data-id="<!--#4DVAR vid_empresa-->" value="<!--#4DVAR valias-->" placeholder="Buscar por Alias"></span><button class="unlock empresa" style="display: none;">Modificar datos de cliente</button><button class="profile empresa">Perfil</button></li>
+				<!--
+				<li><span>Razón social</span> <span><input required type="search" name="cotizacion[empresa][razon_social]" value="<!- -#4DVAR vempresa- ->" placeholder="Buscar por razón social"></span></li>
+				-->
+				<li><span>Razón social</span> <span><input required type="search" name="cotizacion[empresa][razon_social]" value="<!--#4DVAR vempresa-->" placeholder="Buscar..."></span><button class="edit save empresa">Guardar cambios a datos de cliente</button><button class="edit discard empresa">Descartar cambios a datos de cliente</button></li>
+				<!--
+				<li><span>RUT</span> <span><input type="search" name="cotizacion[empresa][rut]" value="<!- -#4DIF (Not(vrut="SIN RUT"))- -><!- -#4DVAR vrut- -><!- -#4DENDIF- ->" placeholder="Buscar por RUT"></span><span class="hidden"><label><input type="checkbox" name="cotizacion[empresa][rut][validate]" checked value="true"> ¿Validar?</label></span><button class="edit save empresa">Guardar cambios a datos de cliente</button><button class="edit discard empresa">Descartar cambios a datos de cliente</button></li>
+				-->
+			</ul>
+			<ul class="editable">
+				<li class="margin-after"><span>Ejec. Responsable</span> <span><input id="ejecutivo" readonly required type="search" name="cotizacion[ejecutivo][id]" data-id="<!--#4DVAR vDeLogin-->" value="<!--#4DVAR vDeEmisor-->" placeholder="Buscar por Alias, Nombre o Apellidos..."></span><button class="show ejecutivo">Ver todos los ejecutivos</button></li>
+				<li><span>Para</span> <span><input required data-help="Acá ingresas a quien enviarás la cotización, por ejemplo: &laquo;JUAN PÉREZ&raquo;" id="contacto" type="search" name="cotizacion[empresa][contacto][id]" data-id="<!--#4DVAR vid_contacto-->" value="<!--#4DVAR vnombrecontacto-->" placeholder="Buscar por Alias, Nombre o Apellidos..."></span><button class="show contacto">Ver todos los contactos</button><button class="unlock contacto">Modificar datos de contacto</button><button class="profile contacto">Perfil</button></li>
+				<li><span>Cargo</span> <span><input readonly type="text" name="cotizacion[empresa][contacto][cargo]" value="<!--#4DVAR vcargocontacto-->"></span></li>
+				<li><span>E-mail</span> <span><input readonly type="email" name="cotizacion[empresa][contacto][email]" value="<!--#4DVAR vemailcontacto-->"></span><button class="edit save contacto">Guardar cambios a datos de contacto</button><button class="edit discard contacto">Descartar cambios a datos de contacto</button></li>
+			</ul>
+			<table class="items">
+				<caption><input placeholder="Ingresa el nombre del proyecto..." type="text" name="cotizacion[titulo][text]" value="<!--#4DVAR vreferencia-->"></caption>
+				<thead>
+					<tr>
+						<th rowspan="2" style="background-color: <!--#4DVAR vColorCorporativoCSS--> !important;"><button class="ui-icon ui-icon-tag add categoria" title="Agregar categoría" data-help="Haz clic en este botón para agregar una categoría"></button></th>
+						<th rowspan="2">Código</th>
+						<th rowspan="2">Nombre</th>
+						<th rowspan="2">Cant.</th>
+						<th class="segunda-cantidad" rowspan="2">Días</th>
+						<th colspan="2">Venta</th>
+						<th colspan="2" class="costo">Gasto presup.</th>
+						<th rowspan="2" class="utilidad">Util. presup.</th>
+						<th rowspan="2" class="utilidad">Margen</th>
+						<th rowspan="2" class="aplica-sobrecargo">SC <sup>(*)</sup></th>
+					</tr>
+					<tr>
+						<th>Unit.</th>
+						<th>Subtotal</th>
+						<th class="costo">Unit.</th>
+						<th class="costo">Subtotal</th>
+						<!--
+						<th class="margen-desde-venta">Venta</th>
+						<th class="margen-desde-compra">Compra</th>
+						-->
+					</tr>
+				</thead>
+				<tbody></tbody>
+				<tfoot>
+					<tr>
+						<th colspan="4"></th>
+						<th class="segunda-cantidad"></th>
+						<th></th>
+						<th class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span><input readonly name="cotizacion[precios][subtotal]" type="text" value="0"></span></th>
+						<th></th>
+						<th class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span><input readonly name="cotizacion[costos][subtotal]" type="text" value="0"></span></th>
+						<th class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span><input readonly name="cotizacion[utilidades][subtotal]" type="text" value="0"></span></th>
+						<th class="numeric percent margen-desde-venta"><span><input readonly name="cotizacion[margenes][margen_venta]" type="text" value="0"> %</span></th>
+						<th class="numeric percent margen-desde-compra"><span><input readonly name="cotizacion[margenes][margen_compra]" type="text" value="0"> %</span></th>
+						<th colspan="1"></th>
+					</tr>
+				</tfoot>
+			</table>
+			<footer>
+				<article>
+					<section class="sobrecargos">
+						<h1>Sobrecargos</h1>
+						<ul></ul>
+						<p><sup>(*)</sup>: se aplica sobre ítems seleccionados.</p>
+						<p><sup>(**)</sup>: se aplica sobre total.</p>
+					</section>
+					<section>
+						<h1>Totales</h1>
+						<ul>
+							<!-- BEGIN TODO: quitar estos campos sin afectar el guardado del subtotal neto -->
+							<li style="display: none;"><span>Subtotal ítems</span> <span>$ <input readonly type="text" name="cotizacion[precios][subtotal]"></span></li>
+							<li style="display: none;"><span>Subtotal sobrecargos</span> <span>$ <input readonly type="text" name="cotizacion[sobrecargos][subtotal]"></span></li>
+							<!-- END TODO -->
+							<li class="margin-after"><span>Descuento</span> <span class="numeric percent"><input type="text" name="cotizacion[descuento][porcentaje]" value="<!--#4DVAR Replace string(String(valor_por_desc;"&xml");".";",")-->"> %</span> <span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input type="text" name="cotizacion[descuento][valor]" value="<!--#4DVAR String(T_descuento_raw)-->"></span></li>
+							<li><span>Total neto</span> <span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input readonly type="text" name="cotizacion[montos][subtotal_neto]"></span></li>
+							<li><span><!--#4DVAR <>_V3_IVAName--> (<!--#4DVAR <>_V3_IVARate-->%)</span> <span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input readonly type="text" name="cotizacion[montos][impuesto]" data-porcentaje="19" value="<!--#4DVAR Num(vtotaliva)-->"></span> <span><label><input type="checkbox" name="cotizacion[montos][impuesto][exento]" value="true"<!--#4DIF vExento--> checked<!--#4DENDIF-->> Exento</label></span></li>
+							<li><span>Total + <!--#4DVAR <>_V3_IVAName--></span> <span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input readonly type="text" name="cotizacion[montos][total]"></span></li>
+						</ul>
+					<!--
+					</section>
+					<section>
+					-->
+						<h1>Rentabilidad esperada</h1>
+						<ul>
+							<li><span>Utilidad total presup.</span> <span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input class="utilidad" readonly type="text" name="cotizacion[montos][utilidad]" value="0"></span></li>
+							<li><span>Gasto total presup.</span> <span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input class="costo" readonly type="text" name="cotizacion[montos][costo]" value="0"></span></li>
+						</ul>
+					</section>
+				</article>
+				<article>
+					<section>
+						<h1>Condiciones</h1>
+						<ul>
+							<li><span>Condiciones de pago</span> <span class="full-width"><input required readonly type="search" name="cotizacion[condiciones][forma_pago]" data-id="<!--#4DVAR vIdFormaPago-->" value="<!--#4DVAR vFormaPago-->" placeholder="Seleccionar..."></span><button class="show forma-pago">Ver formas de pago</button></li>
+							<li><span>Validez de cotización</span> <span class="full-width"><input readonly type="search" name="cotizacion[condiciones][validez]" value="<!--#4DVAR vValidez-->" placeholder="Seleccionar..."></span><button class="show validez">Ver periodos de validez</button></li>
+							<li><span>Fecha realización</span> <span class="full-width"><input type="date" name="cotizacion[condiciones][fecha_entrega]" value="<!--#4DVAR Substring(String(vFechaVencimiento;ISO Date);1;10)-->"></span></li>
+							<li><span>Observaciones</span> <span class="full-width"><textarea name="cotizacion[condiciones][notas]"><!--#4DVAR vNotas--></textarea></span></li>
+						</ul>
+					</section>
+				</article>
+			</footer>
+		</section>
+	</body>
+
+</html>

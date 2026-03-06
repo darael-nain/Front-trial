@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+  <!--#4DSCRIPT/_V3_proxy_getCotizacionContent-->
+  <title>NRO<!--#4DTEXT vid_negocio--></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+</head>
+
+<style>
+  .paddingGlobal {
+    padding: 80px;
+  }
+
+  .contenedorMain1 {
+    margin-top: 50px;
+  }
+
+  html>body {
+    font-family: verdana;
+  }
+</style>
+
+<body>
+  <footer>
+    <div class="col-12 contenedorMain1">
+      <figure class="text-center">
+        <blockquote class="blockquote">
+          <p><!--#4DTEXT direccionPropietaria--> - <!--#4DTEXT ciudadPropietaria--></p>
+        </blockquote>
+        <figcaption>
+          www.funkyfilms.cl
+        </figcaption>
+      </figure>
+    </div>
+  </footer>
+</body>
+
+</html>

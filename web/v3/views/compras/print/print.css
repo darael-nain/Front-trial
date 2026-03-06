@@ -1,0 +1,250 @@
+@media print {
+
+	body {margin:2pt 2pt 2pt 2pt;font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;}
+	table{color:#033}
+
+	tr.tr-titulo { page-break-inside: avoid; page-break-before: auto; }
+	tr.tr-item { page-break-inside: avoid; page-break-before: avoid; }
+
+	tr * { page-break-inside: avoid; }
+
+	.atributos { text-align: right;}
+
+	.tabla-headerx{ width:100%}
+	.tabla-headery{ width:100%}
+	.bloque1{width:500px; height:100px; background:#CCC; }
+	.bloque2{width:300px;height:100px;background:#CCC;}
+	.contenedor{/*border:1px solid red;*/}
+	.cuadro
+	{
+	    /*width:1000px;
+		margin-top:10px;
+		margin-bottom:10px;
+		border: 5px solid #888;	
+		border-radius: 0.7em;
+		-webkit-border-radius: 0.7em;
+		-moz-border-radius: 0.7em;
+		-o-border-radius: 0.7em;
+		-ms-border-radius: 0.7em;	
+		behavior: url(ie-css3.htc);*/
+	}
+	.cuadro2
+	{
+	    width:80%;
+		margin-top:10px;
+		margin-bottom:10px;
+		border: 5px solid #888;	
+		border-radius: 0.7em;
+		-webkit-border-radius: 0.7em;
+		-moz-border-radius: 0.7em;
+		-o-border-radius: 0.7em;
+		-ms-border-radius: 0.7em;	
+		behavior: url(ie-css3.htc);
+	}
+	.cuadro2 table{width:95%;color:#033}
+	.cuadro2 .tabla-detalley{ border-color:#CCC}
+	 
+	.center{ text-align:center;vertical-align:top}
+	.center-h{ text-align:center;color:#FFF; vertical-align:top; font-size:12pt; font-weight:bold; padding-left: 15pt; padding-right: 15pt;}
+	.cuadradito{display:inline-block; width:20px; height:20px;vertical-align:top; margin-right:5px; margin-bottom: 1pt;}
+	.condiciones{font-size:12pt; font-weight:bold; text-align:left; padding-left:5px}
+	.condiciones-datos-tit{font-size:14pt;text-align:left; padding-left:5px}
+	.condiciones-datos-item{font-size:13pt;text-align:left; padding-left:8px; color:#666;white-space: pre-wrap;}
+	.condiciones-datos-item2{font-size:13pt;text-align:left; padding-left:8px; color:#666}
+	.datos-empresa{text-align:left;font-size:12pt; width:900px; color:#000;}
+	.datos-empresa a{text-decoration:none;color:#000}
+	.datos-empresa a:hover{text-decoration:underline;color:#009; font-weight:bold}
+
+	.contenedor-footer{ margin-top:30px; height:30px;}
+	.datos-empresa-izq{text-align:left;font-size:12pt;color:#000; margin-bottom:50px; float:left; margin-left:35px;}
+	.datos-empresa-izq a{text-decoration:none;color:#000}
+	.datos-empresa-izq a:hover{text-decoration:underline;color:#009; font-weight:bold}
+
+	.datos-empresa-der{text-align:left;font-size:12pt;color:#000; margin-bottom:50px; float:right; margin-right:35px;}
+	.datos-empresa-der a{text-decoration:none;color:#000}
+	.datos-empresa-der a:hover{text-decoration:underline;color:#009; font-weight:bold}
+
+	.etiquetas{text-align:left;font-size:12pt; vertical-align:top}
+	.etiquetas-valores{ text-align:right; font-size:11pt; padding-right:10px; font-weight:bold}
+	.fecha{text-align:right;font-size:12pt}
+	.header-datos{ width:900px;}
+	.items{ text-align:left; font-size:12pt;}
+	.items-9{ text-align:left; font-size:9pt;}
+	.left{ text-align:left;vertical-align:top}
+	.left-h{ text-align:left;color:#FFF;vertical-align:top;font-size:12pt; font-weight:bold;width: 75pt;}
+	.para-cliente{ text-align:left;vertical-align:top;font-size:11pt; font-weight:bold}
+	.nro{text-align:right; font-weight:bold;font-size:15pt;}
+	.nro-items-cant{text-align:center;font-size:12pt;vertical-align: top;}
+	.nro-items-subtotal{text-align:right;font-size:12pt;vertical-align:top;}
+	.nro-items-subtotal-9{text-align:right;font-size:9pt}
+	.otros-header{text-align:left;font-size:11pt; vertical-align:top}
+	.observacion-items{ font-size:12pt; /*width:300px;*/ color:#666; margin-left: 15px; margin-top: 10px; margin-bottom: 15px; white-space: pre-wrap; page-break-inside: avoid;}
+	.orden-alfa{text-align:center;vertical-align:top; font-size:12pt}
+	.orden-alfa-9{text-align:center;vertical-align:top; font-size:9pt}
+	.right{ text-align:right;vertical-align:top}
+	.referencia{text-align:left; font-weight:bold; text-transform:uppercase; font-size:15pt;}
+	.tabla-header{ margin-top:30px;}
+	.tabla-datos{ margin-top:30px; width:670px;}
+	.tabla-detalle{ margin-top:30px;}
+	.tabla-totales1{display:inline-block; width:270px}
+	.tabla-totales2{display:inline-block;width:270px;}
+	.tabla-condiciones{ margin-top:30px; margin-bottom:50px; page-break-before: always;}
+	.titulos{ text-align:left; text-decoration:underline; font-weight:bold; padding-left:90px; font-size:12pt}
+	.tipo{text-align:right; font-weight:bold;font-size:15pt;}
+	.tipooc{ text-align:left; font-size:12pt; padding-bottom:5px;}
+	.totales{width:900px; margin-top:20px;vertical-align:top}
+	.etiquetas-valores-total{ font-size:11pt; text-align:right; font-weight:bold;padding-right:10px;}
+	.totales-valor{ font-size:11pt; width:150px; text-align:right; background:#CCC}
+	.valor-comision{ font-size:12pt; text-align:right}
+	.valores-totales{font-size:12pt; text-align:right; padding-right:5px; }
+	.totaleshead{text-align:right;margin-right:30px;}
+
+	.box-validar{
+		margin:20px 0 0 0;
+	}
+	.box-validar a{
+		border:1px solid black;
+		background-color:green;
+		color:white;
+		display: inline-block;
+		font-size:15pt;
+		margin:20px;
+		padding:5px;
+		text-decoration:none;
+		width:200px;
+		font-weight:bold;
+	}
+	.box-validar a:hover{
+		text-decoration:underline;
+	}
+
+	.msgvalidada{
+		background-color:green;
+		color:white;
+		font-size:20pt;
+		padding:5px;
+		margin:0;
+	}
+	.datos-msgvalidada{
+		background-color:green;
+		color:white;
+		font-size:15pt;
+		margin:0;
+		padding:5px;
+	}
+	.datos-msgvalidada span{
+		color:yellow;
+	}
+
+
+	.msgAnulada{
+		background-color:#FE642E;
+		color:white;
+		font-size:20pt;
+		padding:5px;
+		margin:0;
+	}
+	.datos-msgAnulada{
+		background-color:#FE642E;
+		color:white;
+		font-size:15pt;
+		margin:0;
+	}
+	.datos-msgAnulada span{
+		color:yellow;
+	}
+
+	.box-motivo{
+		text-align:left;
+		border:1px solid black;
+		background-color:#F5DA81;
+		padding:10px;
+		width:400px;
+	}
+	.box-motivo textarea{
+		display:block;
+		height:80px;
+		width:400px;
+		text-align:auto;
+		font-size:15pt;
+		font-weight:bold;
+	}
+	.box-observaciones{
+		position: relative;
+		margin:0px;
+		text-align:left;
+		border:1px solid black;
+		background-color:#F5DA81;
+		padding:10px;
+		width:400px;
+	}
+	.set-link{
+		text-align:left;
+		margin-left:29px;
+	}
+		.set-link a{
+			margin:0;
+			text-align:center;		
+		}
+
+	.msg-support{
+		color:#6E6E6E;
+		font-size:12pt;
+	}
+
+	.label-r{
+		font-size:14pt;
+	}
+
+	.tope{text-align:left; font-weight:bold; text-transform:uppercase; font-size:15pt;color: #FF0000}
+
+
+	/*cobranza*/
+	.background-block{
+		background-color:#F5F6CE;
+		border:2px solid gray;
+		border-radius:3px;
+		padding:2px;
+		margin:5px 5px 10px 5px;
+	}
+		.background-block h3{
+			background-color:#F5F6CE;		
+			font-size:15pt;
+			text-decoration:underline;
+			padding:0;
+			margin:0;
+			text-align:left;
+		}
+		.background-block h4{
+			background-color:#F5F6CE;		
+			font-size:12pt;
+			text-decoration:underline;
+			padding:0;
+			margin:0;
+			text-align:left;
+		}
+
+	.left{
+		text-align:left;
+	}
+	.left{
+		text-align:right;
+	}
+	.center{
+		text-align:center;
+	}
+
+	/* ----------------*/
+	.tabla-header{display:none}
+	.new-header{padding:10px;text-align:left;position:relative}
+		.new-header > img, p {display:inline-block;vertical-align:top;margin:10px;}
+
+		.new-header > p:nth-of-type(1) > label{display:block;font-size:11pt}
+			.new-header > p:nth-of-type(1) > label:nth-of-type(1){text-transform:uppercase;font-weight:bold;font-size:12pt;}
+			.new-header > p:nth-of-type(1) > label:nth-of-type(4){margin-top:10px}
+
+		.new-header > p:nth-of-type(2){position:absolute;top:5px;right:10px}
+			.new-header > p:nth-of-type(2) > span:nth-of-type(1){display:block;font-size:15pt;font-weight:bold;}
+			.new-header > p:nth-of-type(2) > span:nth-of-type(2){display:block;font-size:12pt;}
+
+}

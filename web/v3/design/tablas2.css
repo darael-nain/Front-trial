@@ -1,0 +1,30 @@
+
+/* nuevo estilo para las tablas fijas y responsive */
+table.fixed{
+	width: 100%!important;
+	border: 1px solid red;
+}
+table.fixed tr th{
+	border: 1px solid red;
+	width: 5%;
+}
+table.fixed tr td{
+	border: 1px solid red;
+	width: 5%;
+}
+table.fixed thead tr{
+	display: none;
+	width: 100%!important;
+	background-color: gray;
+}
+table.fixed tfoot tr{
+	display: none;
+	width: 100%!important;
+	background-color: gray;
+	top:85%;
+}
+table.fixed tbody tr:first-of-type{
+	position: fixed;
+	background-color: black!important;
+	border:1px solid blue;
+}

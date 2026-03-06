@@ -1,0 +1,267 @@
+<div class="task">
+
+<div class="acciones-tarea">
+	<a class="disable" rel="<!--#4DVAR aIdTarea{aIdTarea}-->"></a>
+	<a class="delete" rel="<!--#4DVAR aIdTarea{aIdTarea}-->">Eliminar</a>
+</div>
+
+<form id="<!--#4DVAR aIdTarea{aIdTarea}-->">
+<h5 id="titulo-tarea-<!--#4DVAR aIdTarea{aIdTarea}-->" class="titulo-tarea"><!--#4DVAR aNomTarea{aIdTarea}--></h5>
+<img class="load" id="load-<!--#4DVAR aIdTarea{aIdTarea}-->" src='/imagenes_green/ajaxloader.gif'>
+<table>
+		<tr>
+			<td><label for="">Tarea : </label></td>
+			<td><input name="nombre-tarea" onChange="save_tarea(this,<!--#4DVAR aIdTarea{aIdTarea}-->)" placeholder="Ingresar nombre de la tarea..." value="<!--#4DVAR aNomTarea{aIdTarea}-->" >			
+			</td>
+		</tr>
+		<tr>
+			<td><label for="">Area de Trabajo : </label></td>
+			<td>				
+				<select name="area-trabajo" onChange="save_tarea(this,<!--#4DVAR aIdTarea{aIdTarea}-->)" >
+					<!--#4dif aIdAreaTarea{aIdTarea}>0-->
+						<option selected="selected" value="<!--#4DVAR aIdAreaTarea{aIdTarea}-->">
+		    				<!--#4DVAR aNomAreaTarea{aIdTarea}-->
+		    			</option>
+					<!--#4delse-->
+						<option selected="selected" value="0">[ Seleccionar ]</option>
+					<!--#4dendif-->
+		    		
+			    	<!--#4dloop aAreaId-->                    
+				       	<!--#4dif aIdAreaTarea{aIdTarea}#aAreaId{aAreaId}-->
+							<option value="<!--#4dvar aAreaId{aAreaId}-->">
+								<!--#4dvar aAreaNombre{aAreaId}-->
+							</option>
+			    		<!--#4dendif-->	
+			    	<!--#4dendloop-->
+		    	</select>
+			</td>
+		</tr>
+		
+		<tr>
+			<td><label for="">Responsable : </label></td>
+			<td>				
+				<select class="res-<!--#4DVAR aIdTarea{aIdTarea}-->" name="responsables" onChange="save_tarea(this,<!--#4DVAR aIdTarea{aIdTarea}-->)" >
+					<!--#4dif aIdAreaTarea{aIdTarea}>0-->
+						<!--#4dif aRespTarea{aIdTarea}#""-->
+							<option selected="selected" value="<!--#4DVAR aRespTarea{aIdTarea}-->">
+								<!--#4DVAR aNomRespTarea{aIdTarea}-->
+		    				</option>
+						<!--#4delse-->
+							<option selected="selected" value="">[ Seleccionar ]</option>
+						<!--#4dendif-->						
+					<!--#4delse-->
+						<option selected="selected" value="">[ Seleccionar ]</option>
+					<!--#4dendif-->
+
+		    		<!--#4dscript/carga_responsables_area-->		    		
+		    		<!--#4dloop aLoginAreaResp-->
+			    		<!--#4dif aRespTarea{aIdTarea}#aLoginAreaResp{aLoginAreaResp}-->
+							<option value="<!--#4dvar aLoginAreaResp{aLoginAreaResp}-->">
+					        	<!--#4dvar aNombresAreaResp{aLoginAreaResp}-->
+					        </option>
+			    		<!--#4dendif-->			        
+			    	<!--#4dendloop-->
+
+		    	</select>
+			</td>
+		</tr>
+		<tr>
+			<td><label for="">F.Vcto : </label></td>
+			<td><input value="<!--#4DVAR aFechaVctoTarea{aIdTarea}-->" name="fecha-vcto" onChange="save_tarea(this,<!--#4DVAR aIdTarea{aIdTarea}-->)" class="datepicker" type="text" ></td>
+		</tr>
+		<tr>
+			<td><label for="">Importancia : </label></td>
+			<td>
+				<select name="prioridad" onChange="save_tarea(this,<!--#4DVAR aIdTarea{aIdTarea}-->)">
+				<!--#4dif aPrioridadTarea{aIdTarea}#""-->
+					<option selected="selected" value="<!--#4DVAR aPrioridadTarea{aIdTarea}-->">
+	    				<!--#4DVAR aPrioridadTarea{aIdTarea}-->
+	    			</option>
+				<!--#4delse-->
+					<option selected="selected" value="">[ Seleccionar ]</option>
+				<!--#4dendif-->
+
+				<!--#4dif aPrioridadTarea{aIdTarea}#"ALTA"--> <option value="ALTA">ALTA</option><!--#4dendif-->
+				<!--#4dif aPrioridadTarea{aIdTarea}#"MEDIA"--> <option value="MEDIA">MEDIA</option><!--#4dendif-->
+				<!--#4dif aPrioridadTarea{aIdTarea}#"BAJA"--> <option value="BAJA">BAJA</option><!--#4dendif-->
+	            </select>
+			</td>
+		</tr>
+		<tr>
+			<td><label for="">Descripción : </label></td>
+			<td><textarea name="descripcion" onChange="save_tarea(this,<!--#4DVAR aIdTarea{aIdTarea}-->)"><!--#4DVAR aDesTarea{aIdTarea}--></textarea></td>
+		</tr>
+	</table>
+</form>
+
+<div class="acciones-componentes">
+	<a class="add-componente" rel="<!--#4DVAR aIdTarea{aIdTarea}-->">+ Componente</a>	
+</div>
+
+<form id="frm-componente-<!--#4DVAR aIdTarea{aIdTarea}-->" class="frm-add-componentes" action="">
+	<h4>Nuevo componente : </h4>	
+	<label>Tipo : </label>
+	<select name="tipo">
+		<option selected value="-1">[ Seleccionar ]</option>
+		<option value="adjunto">Archivo Adjunto</option>
+		<option value="campo">Campo Rellenable</option>
+		<!--<option value="lista">Lista Selección</option>-->
+		<option value="pregunta">Pregunta</option>				
+	</select>	
+	<label>Nombre : </label>
+	<input name="nombre" type="text">		
+	<label>Obligatorio : </label>
+	<select name="obligatorio">
+		<option selected value="SI">SI</option>
+		<option value="NO">NO</option>			
+	</select>
+	<label>% : </label>
+	<input name="porcentaje" type="text">
+
+	<button name="<!--#4DVAR aIdTarea{aIdTarea}-->" class="save-componente" type="button">
+		+ Agregar
+	</button>
+
+</form>
+
+<fieldset class="block-componentes">
+<legend><h4>Componentes</h4></legend>
+<!--#4dscript/carga_componentes_tarea-->
+<ul class="lista-componentes">			    		
+<!--#4dloop aIdComp-->
+	<!--#4dif aTipoComp{aIdComp}="adjunto"-->
+	<li>
+		<label><!--#4DVAR aNomComp{aIdComp}--> : </label>
+		<input name="" type="file"><!--#4DVAR aPorComp{aIdComp}-->%
+	</li>
+	<!--#4dendif-->
+
+	<!--#4dif aTipoComp{aIdComp}="campo"-->
+	<li>
+		<label><!--#4DVAR aNomComp{aIdComp}--> : </label>
+		<input name="" type="text"><!--#4DVAR aPorComp{aIdComp}-->%
+	</li>
+	<!--#4dendif-->
+
+	<!--#4dif aTipoComp{aIdComp}="pregunta"-->
+	<li>
+		<label><!--#4DVAR aNomComp{aIdComp}--> ? </label>
+		Si<input class="radio" name="" type="radio">
+		No<input class="radio" name="" type="radio"><!--#4DVAR aPorComp{aIdComp}-->%
+	</li>
+	<!--#4dendif-->        
+<!--#4dendloop-->
+</ul>	
+</fieldset>
+
+
+
+
+
+
+
+<table>
+	<tr>
+		<td><label for="">Tarea : </label></td>
+		<td><input name="nombre-tarea" class="save_tarea" placeholder="Ingresar nombre de la tarea..." value="<!--#4DVAR aNomTarea{aIdTarea}-->" >			
+		</td>
+	</tr>
+	<tr>
+		<td><label for="">Area de Trabajo : </label></td>
+		<td>				
+			<select name="area-trabajo" class="save_tarea">
+				<!--#4dif aIdAreaTarea{aIdTarea}>0-->
+					<option selected="selected" value="<!--#4DVAR aIdAreaTarea{aIdTarea}-->">
+	    				<!--#4DVAR aNomAreaTarea{aIdTarea}-->
+	    			</option>
+				<!--#4delse-->
+					<option selected="selected" value="0">[ Seleccionar ]</option>
+				<!--#4dendif-->
+	    		
+		    	<!--#4dloop aAreaId-->                    
+			       	<!--#4dif aIdAreaTarea{aIdTarea}#aAreaId{aAreaId}-->
+						<option value="<!--#4dvar aAreaId{aAreaId}-->">
+							<!--#4dvar aAreaNombre{aAreaId}-->
+						</option>
+		    		<!--#4dendif-->	
+		    	<!--#4dendloop-->
+	    	</select>
+		</td>
+	</tr>
+	
+	<tr>
+		<td><label for="">Responsable : </label></td>
+		<td>				
+			<select class="save_tarea" name="responsables">
+				<!--#4dif aIdAreaTarea{aIdTarea}>0-->
+					<!--#4dif aRespTarea{aIdTarea}#""-->
+						<option selected="selected" value="<!--#4DVAR aRespTarea{aIdTarea}-->">
+							<!--#4DVAR aNomRespTarea{aIdTarea}-->
+	    				</option>
+					<!--#4delse-->
+						<option selected="selected" value="">[ Seleccionar ]</option>
+					<!--#4dendif-->						
+				<!--#4delse-->
+					<option selected="selected" value="">[ Seleccionar ]</option>
+				<!--#4dendif-->
+
+	    		<!--#4dscript/carga_responsables_area-->		    		
+	    		<!--#4dloop aLoginAreaResp-->
+		    		<!--#4dif aRespTarea{aIdTarea}#aLoginAreaResp{aLoginAreaResp}-->
+						<option value="<!--#4dvar aLoginAreaResp{aLoginAreaResp}-->">
+				        	<!--#4dvar aNombresAreaResp{aLoginAreaResp}-->
+				        </option>
+		    		<!--#4dendif-->			        
+		    	<!--#4dendloop-->
+	    	</select>
+		</td>
+	</tr>
+	<tr>
+		<td><label for="">F.Vcto : </label></td>
+		<td>
+			<input value="<!--#4DVAR aFechaVctoTarea{aIdTarea}-->" name="fecha-vcto" class="datepicker save_tarea" type="text" >
+		</td>
+	</tr>
+	<tr>
+		<td><label for="">Importancia : </label></td>
+		<td>
+			<select name="prioridad" class="save_tarea">
+			<!--#4dif aPrioridadTarea{aIdTarea}#""-->
+				<option selected="selected" value="<!--#4DVAR aPrioridadTarea{aIdTarea}-->">
+    				<!--#4DVAR aPrioridadTarea{aIdTarea}-->
+    			</option>
+			<!--#4delse-->
+				<option selected="selected" value="">[ Seleccionar ]</option>
+			<!--#4dendif-->
+
+			<!--#4dif aPrioridadTarea{aIdTarea}#"ALTA"--> <option value="ALTA">ALTA</option><!--#4dendif-->
+			<!--#4dif aPrioridadTarea{aIdTarea}#"MEDIA"--> <option value="MEDIA">MEDIA</option><!--#4dendif-->
+			<!--#4dif aPrioridadTarea{aIdTarea}#"BAJA"--> <option value="BAJA">BAJA</option><!--#4dendif-->
+            </select>
+		</td>
+	</tr>
+	<tr>
+		<td><label for="">Descripción : </label></td>
+		<td><textarea name="descripcion" class="save_tarea"><!--#4DVAR aDesTarea{aIdTarea}--></textarea></td>
+	</tr>
+</table>
+
+
+
+/*
+function save_tarea(target,idTarea){
+	var nombre = $(target).attr('name');
+	var valor = $(target).val();
+	$('#load-'+idTarea).fadeIn('slow');
+	$.post("/save_tarea",{nombre:nombre,valor:valor,idTarea:idTarea},function(data){
+		if(nombre=="area-trabajo"){			
+			$('.res-'+idTarea).html(data);
+		};
+		if(nombre=="nombre-tarea"){			
+			$('#titulo-tarea-'+idTarea).text(valor);
+		};
+		$('#load-'+idTarea).fadeOut(function(){});
+		
+	});
+}
+*/

@@ -1,0 +1,16 @@
+{
+	"rows": [
+<!--#4DLOOP aOP_id -->
+		{
+			"id": <!--#4DHTML aOP_id{aOP_id}-->,
+			"folio": "<!--#4DHTML aOP_folio{aOP_id}-->",
+			"emision": "<!--#4DHTML aOP_fechaemision{aOP_id}-->",
+			"vencimiento": "<!--#4DHTML aOP_fechavencimiento{aOP_id}-->",
+			"documento": "<!--#4DHTML aOP_documento{aOP_id}-->",
+			"tipo": "<!--#4DHTML aOP_tipo{aOP_id}-->",
+			"abono": "<!--#4DHTML aOP_monto{aOP_id}-->",
+			"estado": "<!--#4DHTML aOP_estado{aOP_id}-->"		
+		}<!--#4DIF NOT(aOP_id{aOP_id} = aOP_id{Size of array(aOP_id)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

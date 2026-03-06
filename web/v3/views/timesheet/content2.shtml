@@ -1,0 +1,124 @@
+<!--#4DSCRIPT/_V3_proxy_getInfoPlanner-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <title>INTRANET ::: UNA BASE</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="/v3/design/reset.css">
+    <script src="/v3/script/jquery/jquery.js"></script>
+    <script src="/v3/script/jquery/plugins/serializeanything/jquery.serializeanything.js"></script>
+    <script src="/v3/script/jquery/plugins/jquery-migrate/jquery-migrate.js"></script>
+    <script src="/v3/script/jquery/plugins/jquery-ui/js/jquery-ui.js"></script> 
+    <link rel="stylesheet" href="/v3/script/jquery/jquery-plugins.css">   
+
+    <!-- Archivos que de la ot que sirven en el planificador-->
+    <link rel="stylesheet" href="/v3/views/ots/ots.css"/>
+
+    <!-- Archivos propios del modulo de planificador-->
+    <!--<script src="/script/jsPlanner.js?<!- -#4DVAR String(Milliseconds+Random)- ->"></script>-->
+    <script src="/v3/views/timesheet/script/content.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+
+    <link rel="stylesheet" href="/css/stylePlanner.css?<!--#4DVAR String(Milliseconds+Random)-->"/>
+
+    <link rel="stylesheet" href="/v3/script/jquery/jquery-plugins.css">
+    <script src="/v3/script/jquery/plugins/jquery-ui-monthpicker/jquery.ui.monthpicker.js"></script>
+
+    <style type="text/css">
+        select[name="search[assigned]"], select[name="search[area]"]{
+            text-transform:capitalize;
+        }       
+    </style>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('button[name="search[monthpicker]"]').button({icons:{primary:"ui-icon-calendar"}},{text:false});   
+            $('input[name="search[date]"]').monthpicker({              
+                changeMonth: true,
+                changeYear: true,
+                yearRange: 'c-10:c'
+            });           
+            //$('input[name="search[date]"]').monthpicker(options);
+            /*$('button[name="search[monthpicker]"]').click(function() {
+                $('input[name="search[date]"]').monthpicker('show');               
+            });*/
+        });
+    </script>
+
+</head>
+
+<body>
+<section id="main-container">   
+    <header>
+        <nav style="text-align:left;height:20px">
+            <!--#4DIF _V3_verifica_permisos_web (vLogin;478)-->
+            <a class="boton settings">Ajustes</a>        
+            <!--#4DENDIF-->            
+        </nav>
+        <form id="search-form-planner">
+            <div class="search2">
+                <label>Buscar por</label>
+                <input data-search="true" name="search[text]" type="text" placeholder="Folio, Referencia, Negocio, Cliente" >
+            </div>
+            <div>
+                <label>Estado</label>
+                <select data-search="true" name="search[state]">
+                    <option selected="selected" value="pa">Pendiente / Atrasada</option>
+                    <!--<option value="pa">Pendiente / Atrasada</option>-->
+                    <option value="pendiente">Pendiente</option>
+                    <option value="atrasada">Atrasada</option>
+                    <option value="cerrada">Cerrada</option>
+                    <option value="anulada">Anulada</option>      
+                    <option value="todas">Todas</option>
+                </select>
+            </div>
+            <div>
+                <label>Fecha</label>                
+                <input placeholder="[Seleccionar]" readonly data-search="true" name="search[date]" style="width:100px;padding:4px">
+                <!--<button type="button" name="search[monthpicker]">Filtar por fecha</button>-->
+            </div>          
+            <div>
+                <label>Prioridad</label>
+                <select data-search="true" name="search[priority]">
+                    <option selected="selected" value="todos">[ Prioridad ]</option>
+                    <option value="alta">Alta</option>
+                    <option value="media">Media</option>
+                    <option value="baja">Baja</option>
+                    <option value="todos">Todas</option>
+                </select>
+            </div>
+            <div>
+                <label>Área de trabajo</label>
+                <!--#4DIF size of array(aIdAreas)=1-->
+                    <select data-search="true" name="search[area]">
+                        <option selected="selected" value="<!--#4DTEXT aIdAreas{1}-->"><!--#4DTEXT Lowercase(aNamesAreas{1};*)--></option>        
+                    </select>
+                <!--#4delse-->
+                    <select data-search="true" name="search[area]">
+                        <option selected="selected" value="todos">[ Área de trabajo ]</option>
+                        <!--#4DLOOP aIdAreas--> 
+                            <option value="<!--#4DTEXT aIdAreas{aIdAreas}-->"><!--#4DTEXT Lowercase(aNamesAreas{aIdAreas};*)--></option>              
+                        <!--#4DENDLOOP-->
+                        <option value="todos">Todas</option>
+                    </select>
+                <!--#4dendif-->
+            </div>
+            <div>
+                <label>Responsables</label>
+                <select  data-search="true" name="search[assigned]">
+                    <option selected="selected" value="<!--#4DTEXT vLogin-->"><!--#4DTEXT Lowercase(vNomUsr2;*)--></option>
+                    <!--#4DLOOP aLoginResp-->
+                        <!--#4DIF aLoginResp{aLoginResp}#vLogin-->
+                        <option value="<!--#4DTEXT aLoginResp{aLoginResp}-->"><!--#4DTEXT aNamesResp{aLoginResp}--></option>
+                        <!--#4DENDIF-->                              
+                    <!--#4DENDLOOP-->
+                    <!--#4DIF Size of array(aLoginResp{aLoginResp})>1-->
+                    <option value="todos">Todos</option>
+                    <!--#4DENDIF-->                    
+                </select>          
+            </div>
+        </form>  
+    </header>
+    <article class="container-timesheet"></article>
+</section>
+</body>
+</html>

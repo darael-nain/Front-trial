@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_assignAccess-->
+		<title>Asignación</title>
+	</head>
+	<body style="font-family: sans-serif;">
+		<header style="position: relative; height: 140px; border-bottom: 3px solid lightgrey;">
+			<h1 style="position: absolute; left: 0; top: 0; width: 141px; height: 86px;"><img style="margin:10px" alt="UNA Base" src="/v3/design/html/body.menu/nav/h1.png"></h1>			
+		</header>
+		<section>			
+			<!--#4DIF success-->
+				<h2 style="color:green">Permiso asignado correctamente.</h2>
+			<!--#4DELSE-->
+				<h2 style="color:red">Ocurrió un error al asignar el permiso, por favor intente nuevamente.</h2>
+			<!--#4DENDIF-->
+		</section>		
+	</body>
+</html>

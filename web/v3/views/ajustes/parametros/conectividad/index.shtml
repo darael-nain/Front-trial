@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>conectividad</title>
+		<script type="text/javascript" src="/v3/views/ajustes/parametros/conectividad/index.js"></script>
+
+    	<link href="/css/form1.css" rel="stylesheet">
+    	<link href="/v3/views/ajustes/parametros/css/params.css" rel="stylesheet">
+</head>
+<script type="text/javascript">
+	$(document).ready(function(){
+
+	  	unaBase.ui.block();    
+	  	ParamConnect.menu();
+	  	ParamConnect.init();
+	  	unaBase.ui.unblock();
+	  	unaBase.ui.expandable.init();
+	  	unaBase.save.callback = () => {
+
+              unaBase.node
+                .quickRestart(true)
+                .then(res => {})
+                .catch(err => {});
+	  	}
+
+
+	});
+
+</script>
+
+<body>
+	<section class="sheet" id="ParamConnect">
+		<footer>
+			<article>
+				<h1>Connectividad</h1>
+				<ul class="editable">
+					<li>
+						<label for="urlWeb">Url</label>
+						<input class="item" type="text" name="urlWeb" id="urlWeb">
+
+					</li>
+					<li>
+						<label for="websiteUrl">Web url</label>
+						<input class="item" type="text" name="websiteUrl" id="websiteUrl">
+
+					</li>
+				
+					<li>
+						<label for="ipServer">Ip</label>
+						<input class="item" type="text" name="ipServer" id="ipServer">
+					</li>
+					<li>
+						<label for="webPort">Puerto Web</label>
+						<input class="item" type="text" name="webPort" id="webPort">
+					</li>
+					<li>
+						<label for="nodePort">Puerto Node</label>
+						<input class="item" type="text" name="nodePort" id="nodePort">
+					</li>
+					<li>
+						<label for="ipAlt1">Ip alternativa</label>
+						<input class="item" type="text" name="ipAlt1" id="ipAlt1">
+					</li>
+					<li>
+						<label for="ipAlt2">Ip alternativa 2</label>
+						<input class="item" type="text" name="ipAlt2" id="ipAlt2">
+					</li>
+					<li>
+						<label for="nodeTimeAfterStart">Tiempo entre inicios del node(segundos)</label>
+						<input class="item" type="number" name="nodeTimeAfterStart" id="nodeTimeAfterStart">
+					</li>
+					<li>
+						<label for="timeToCheckLogin">Tiempo para veficar sesión(segundos)</label>
+						<input class="item" type="number" name="timeToCheckLogin" id="timeToCheckLogin">
+					</li>
+					
+					<li>
+						<label for="checkIsLogin">verificar sesión</label>
+						<input class="item" type="checkbox" name="checkIsLogin" id="checkIsLogin">
+					</li>
+					<li>
+						<label for="serviceNode">Servicio Node</label>
+						<input class="item" type="checkbox" name="serviceNode" id="serviceNode">
+					</li>
+					<li>
+						<label for="serviceNodeUrl">Servicio Node Url</label>
+						<input class="item" type="text" name="serviceNodeUrl" id="serviceNodeUrl">
+					</li>
+					<li>
+						<br>
+					</li>
+					
+					</li>
+				</ul>
+			</article>
+			
+		</footer>
+		
+	</section>
+</body>
+</html>

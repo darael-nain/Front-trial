@@ -1,0 +1,112 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset - 1-->,
+		"to": <!--#4DHTML $offset + $to - 2 -->,
+		"total": <!--#4DHTML $total-->
+	},
+	"sort": {
+		"by": "<!--#4DTEXT sort_by-->",
+		"order": "<!--#4DTEXT sort_order-->"
+	},
+	"totalesFacturas": {
+		"neto": "<!--#4DHTML _V3_formatCurrency(sumaNetoFact)-->",
+		"exento": "<!--#4DHTML _V3_formatCurrency(sumaExentoFact)-->",
+		"impuesto": "<!--#4DHTML _V3_formatCurrency(sumaImpuestoFact)-->",
+		"adicional": "<!--#4DHTML _V3_formatCurrency(sumaAdicionalFact)-->",
+		"total": "<!--#4DHTML _V3_formatCurrency(sumaTotalFact)-->",
+		"abono": "<!--#4DHTML _V3_formatCurrency(sumaAbonoFact)-->",
+		"saldo": "<!--#4DHTML _V3_formatCurrency(sumaSaldoFact)-->"
+	},
+	"totalesNotas": {
+		"neto": "<!--#4DHTML _V3_formatCurrency(sumaNetoNc)-->",
+		"exento": "<!--#4DHTML _V3_formatCurrency(sumaExentoNc)-->",
+		"impuesto": "<!--#4DHTML _V3_formatCurrency(sumaImpuestoNc)-->",
+		"total": "<!--#4DHTML _V3_formatCurrency(sumaTotalNc)-->"
+	},
+	"totales": {
+		"neto": "<!--#4DHTML _V3_formatCurrency(sumaNeto)-->",
+		"exento": "<!--#4DHTML _V3_formatCurrency(sumaExento)-->",
+		"impuesto": "<!--#4DHTML _V3_formatCurrency(sumaImpuesto)-->",
+		"adicional": "<!--#4DHTML _V3_formatCurrency(sumaAdicionales)-->",
+		"total": "<!--#4DHTML _V3_formatCurrency(sumaTotal)-->"
+	},
+	"cantidades": {
+		"facturas": <!--#4DHTML totalFacturas-->,
+		"notas": <!--#4DHTML totalNotas-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"country": {
+		"label_rut": "<!--#4DTEXT country_label_rut-->"
+	},
+	"vctoDesdeFechaRecepcion": <!--#4DIF vctoDesdeFechaRecepcion-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"rows": [
+	<!--#4DLOOP aUnico -->
+		{
+			"id": <!--#4DHTML aIdFactura{aUnico}-->,
+			"folio": "<!--#4DHTML _V3_escapeString(folio{aUnico})-->",
+			"fechaEmision": "<!--#4DHTML fechaEmision{aUnico}-->",
+			"fechaPago": "<!--#4DHTML fechaPago{aUnico}-->",
+			"formaPago": "<!--#4DHTML _V3_escapeString(aformaPago{aUnico})-->",
+			"fechaRecepcion": "<!--#4DHTML afechaRecepcion{aUnico}-->",
+			"fechaVencimiento": "<!--#4DHTML fechaVencimiento{aUnico}-->",
+			"contable": "<!--#4DHTML String(fechaContable{aUnico};7)-->",
+			"estado": "<!--#4DHTML estado{aUnico}-->",
+			"tipoDocumentoVenta": "<!--#4DHTML tipoDocumentoVenta{aUnico}-->",
+			"tipoDocumentoVentaAbrev": "<!--#4DHTML tipoDocumentoVentaAbrev{aUnico}-->",
+			"libro": "<!--#4DHTML _V3_escapeString(libro{aUnico})-->",
+			"emisor": "<!--#4DHTML emisor{aUnico}-->",
+			"areaNegocio": "<!--#4DHTML _V3_escapeString(areaNegocio{aUnico})-->",
+			"cliente": "<!--#4DHTML _V3_escapeString(cliente{aUnico})-->",
+			"rutCliente": "<!--#4DHTML  _V3_escapeString(rutCliente{aUnico})-->",
+			"neto": "<!--#4DHTML _V3_formatCurrency(neto{aUnico})-->",
+			"neto_raw": <!--#4DHTML String(neto{aUnico};"&xml")-->,
+			"exento": <!--#4DHTML String(exento{aUnico};"&xml")-->,
+			"impuesto": "<!--#4DHTML _V3_formatCurrency(impuesto{aUnico})-->",
+			"impuesto_raw": <!--#4DHTML String(impuesto{aUnico};"&xml")-->,
+			"adicional": "<!--#4DHTML _V3_formatCurrency(adicional{aUnico})-->",
+			"adicional_raw": <!--#4DHTML String(adicional{aUnico};"&xml")-->,
+			"total": "<!--#4DHTML _V3_formatCurrency(total{aUnico})-->",
+			"total_raw": <!--#4DHTML String(total{aUnico};"&xml")-->,
+			"total_por_cobrar": "<!--#4DHTML _V3_formatCurrency(totalporcobrar{aUnico})-->",
+			"total_por_cobrar_raw": <!--#4DHTML String(totalporcobrar{aUnico};"&xml")-->,
+			"abono": "<!--#4DHTML _V3_formatCurrency(abono{aUnico})-->",
+			"abono_raw": <!--#4DHTML String(abono{aUnico};"&xml")-->,
+			"saldo": "<!--#4DHTML _V3_formatCurrency(saldo{aUnico})-->",
+			"saldo_raw": <!--#4DHTML String(saldo{aUnico};"&xml")-->,
+			"contabilizado": <!--#4DIF contabilizadoDtv{aUnico}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"idnegocio": <!--#4DHTML aIdNegocio{aUnico}-->,
+			"refnegocio": "<!--#4DHTML _V3_escapeString(aRefNegocio{aUnico})-->",
+			"idfactoring": "<!--#4DHTML _V3_escapeString(aIdFactoring{aUnico})-->",
+			"reffactoring": "<!--#4DHTML _V3_escapeString(aRefFactoring{aUnico})-->",
+			"idfact": <!--#4DHTML aIdFact{aUnico}-->,
+			"fechaRealizacionNegocio": "<!--#4DHTML aFechaRealizacionNegocio{aUnico}-->",
+			"fechaAsignacionNegocio": "<!--#4DHTML aFechaAsignacionNegocio{aUnico}-->",
+			"idnv": "<!--#4DHTML _V3_escapeString(aIdNV{aUnico})-->",
+			"ejecutivo_negocio": "<!--#4DHTML _V3_escapeString(aEjecutivoNegocio{aUnico})-->",
+			"exchangeType": "<!--#4DHTML _V3_escapeString(aExchangeType{aUnico})-->",
+			"exchangeRate": <!--#4DHTML String(eExchangeRate{aUnico};"&xml")-->,
+			"occ_numero": "<!--#4DHTML _V3_escapeString(aOCC_numero{aUnico})-->",
+			"occ_fecha": "<!--#4DHTML aOCC_fecha{aUnico}-->",
+			"occ_total": <!--#4DHTML String(aOCC_total{aUnico};"&xml")-->,
+			"fecha_ingreso":"<!--#4DHTML aFechaIngreso{aUnico}-->"
+		}<!--#4DIF NOT(aUnico{aUnico} = aUnico{Size of array(aUnico)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	],
+	"currency_decimals": <!--#4DVAR _V3_defaultCurrencyDecimals-->,
+	"currency" : {
+	    "code" : "<!--#4DTEXT _V3_defaultCurrencyCode-->",
+	    "name" : "<!--#4DTEXT _V3_defaultCurrencyName-->",
+	    "symbol" : "<!--#4DTEXT _V3_defaultCurrencySymbol-->",
+	    "right" : <!--#4DIF _V3_defaultCurrencyRight-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	    "decimal": <!--#4DTEXT _V3_defaultCurrencyDecimals-->,
+	    "decimal_sep": "<!--#4DTEXT _V3_defaultCurrencyDecimalSep-->",
+	    "thousand_sep" : "<!--#4DTEXT _V3_defaultCurrencyThousandSep-->",
+	    "decimal_text_excel" : "<!--#4DTEXT _V3_defaultCurrencyDecimalsText-->",
+	    "format_code_excel" : "<!--#4DTEXT _V3_defaultCurrencyFormatCode-->",
+	    "label_rut" : "<!--#4DTEXT country_label_rut-->"
+	}
+}

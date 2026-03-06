@@ -1,0 +1,21 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Tipo_Cartola_Bancaria]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP aTipoPagoId -->
+		{
+			"id": <!--#4DHTML Num(aTipoPagoId{aTipoPagoId})-->,
+			"text": "<!--#4DHTML aTipoPagoNombre{aTipoPagoId}-->",
+			"nullable": <!--#4DIF aTipoPagoAnulable{aTipoPagoId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"deleteable": <!--#4DIF aTipoPagoEliminable{aTipoPagoId}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aTipoPagoId{aTipoPagoId} = aTipoPagoId{Size of array(aTipoPagoId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

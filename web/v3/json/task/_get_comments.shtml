@@ -1,0 +1,14 @@
+{
+	"rows":[
+		<!--#4DLOOP aIdComment -->
+		{
+			"id":<!--#4DHTML aIdComment{aIdComment}-->,
+			"id_task":<!--#4DHTML aIdTaskComment{aIdComment}-->,
+			"text":"<!--#4DHTML _V3_escapeString(aTextComment{aIdComment})-->",
+			"login":"<!--#4DHTML aLoginComment{aIdComment}-->",
+			"date":"<!--#4DHTML aDate{aIdComment}-->",
+			"sent" : <!--#4DIF aSent{aIdComment}-->true<!--#4DELSE -->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aIdComment{aIdComment} = aIdComment{Size of array(aIdComment)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	]
+}

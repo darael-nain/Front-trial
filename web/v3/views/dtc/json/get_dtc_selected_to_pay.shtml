@@ -1,0 +1,23 @@
+{
+	"rows": [
+<!--#4DLOOP aIdDtc -->
+		{
+			"id": <!--#4DTEXT aIdDtc{aIdDtc}-->,
+			"ocsQuantity": <!--#4DTEXT aOcsQuantity{aIdDtc}-->,
+			"numero": "<!--#4DTEXT aNumeroDtc{aIdDtc}-->",
+			"referencia": "<!--#4DHTML _V3_escapeString(aReferenciaDtc{aIdDtc})-->",
+			"idproveedor": <!--#4DHTML aIdProveedorDtc{aIdDtc}-->,
+			"proveedor": "<!--#4DHTML _V3_escapeString(aProveedorDtc{aIdDtc})-->",
+			"saldo": <!--#4DHTML String(aSaldoDtc{aIdDtc};"&xml")-->,
+			"saldo_prev": <!--#4DHTML String(aSaldoDtcPrevired{aIdDtc};"&xml")-->,			
+			"vencimiento": "<!--#4DHTML aVencimientoDtc{aIdDtc}-->",
+			"id_tipo_doc": "<!--#4DHTML aIdTipoDocDtc{aIdDtc}-->",
+			"des_tipo_doc": "<!--#4DHTML aDesTipoDocDtc{aIdDtc}-->",
+			"ocsHasPayment" : <!--#4DIF aOcsHasPayment{aIdDtc}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"abrev_tipo_doc": "<!--#4DHTML aAbrevDocDtc{aIdDtc}-->",
+			"tipo_moneda": "<!--#4DHTML aTipoMoneda{aIdDtc}-->",
+			"valor_cambio": <!--#4DHTML String(aValorCambio{aIdDtc};"&xml")-->
+		}<!--#4DIF NOT(aIdDtc{aIdDtc} = aIdDtc{Size of array(aIdDtc)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

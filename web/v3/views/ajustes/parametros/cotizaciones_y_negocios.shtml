@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Cotizaciones y negocios</title>
+	<meta charset="utf-8">
+	<script type="text/javascript">
+	
+
+
+
+		unaBase.ready(()=>{
+			// fetch(`/4DACTION/_aParamGetMisc`)
+			// .then((response)=>{
+			// 	return response.json();
+			// })
+			// .then((response)=>{
+			// 	console.warn(response)
+		
+			// 	for(const key in response){
+			// 		let type;
+			// 		typeof response[key] === 'boolean' ? type = 'checked': type = 'value';
+			// 		document.querySelector(`input[name="${key}"]`)[`${type}`] = response[key];
+			// 	}
+			// })
+			unaBase.ui.unblock();
+
+		});
+
+
+		
+		
+	</script>
+</head>
+<body>
+	<section class="sheet">
+	</section>
+</body>
+</html>

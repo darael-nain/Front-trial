@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Carga XML</title>
+    <style>
+        .import-dialog {
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .import-dialog fieldset {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            background: #fff;
+        }
+        .import-dialog legend {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            padding: 0 10px;
+            margin-bottom: 20px;
+        }
+        .import-dialog .form-group {
+            margin-bottom: 15px;
+        }
+        .import-dialog label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .import-dialog input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .import-dialog .file-input {
+            margin: 20px 0;
+            padding: 15px;
+            border: 2px dashed #ddd;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .import-dialog .file-input span {
+            display: block;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        .import-dialog button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+        }
+        .import-dialog button:hover {
+            background: #45a049;
+        }
+        .import-dialog .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var importLoad = function(append, element) {
+                unaBase.ui.block();
+
+                var data = new FormData();
+                var attachment = $('.ui-dialog fieldset [name="upload[attachment]"]').get(0).files[0];
+
+                // Verificar si el archivo existe
+                if (!attachment) {
+                    toastr.error('Por favor seleccione un archivo XML');
+                    unaBase.ui.unblock();
+                    return;
+                }
+
+                // Obtener los valores de los checkboxes de manera segura
+                const categoriasCheckbox = document.getElementById('Categorias0');
+                const itemsCheckbox = document.getElementById('itemscodigo');
+                const subcategoriasCheckbox = document.getElementById('subcategorías');
+                const itemsZeroCheckbox = document.getElementById('items-zero');
+
+                // Crear un objeto con los valores, usando false como valor por defecto
+                const checkboxValues = {
+                    categorias_zero: categoriasCheckbox ? categoriasCheckbox.checked : false,
+                    items_code: itemsCheckbox ? itemsCheckbox.checked : false,
+                    item_by_subcategorias: subcategoriasCheckbox ? subcategoriasCheckbox.checked : false,
+                    items_zero: itemsZeroCheckbox ? itemsZeroCheckbox.checked : false
+                };
+
+                // Agregar el archivo al FormData
+                data.append('upload[attachment]', attachment);
+
+                // Agregar los valores de los checkboxes al FormData
+                Object.entries(checkboxValues).forEach(([key, value]) => {
+                    data.append(key, value.toString());
+                });
+
+                $.ajax({
+                    url: nodeUrl + '/import-nv-xml?hostname=' + window.location.origin + '&sid=' + unaBase.sid.encoded(),
+                    type: 'POST',
+                    contentType: false,
+                    data: data,
+                    processData: false,
+                    cache: false,
+                    success: function(data) {
+                        console.log("data..");
+                        console.log(data);
+                        unaBase.ui.unblock();
+                        if (data.success) {
+                            toastr.success('Archivo cargado con éxito!');
+                            $(element).parentTo('.ui-dialog-content').dialog('close');
+                            unaBase.loadInto.viewport("/v3/views/negocios/list.shtml");
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        unaBase.ui.unblock();
+                        toastr.error('No fue posible realizar la carga de los datos debido a un problema con el servidor. Por favor intente nuevamente. <p><small>Si el inconveniente persiste, por favor comuníquese con Unabase.</small></p>');
+                        console.error('Error:', error);
+                    }
+                });
+            };
+
+            $('.ui-dialog fieldset.import button').button({
+                icons: {
+                    primary: 'ui-icon-circle-arrow-n'
+                },
+                text: true
+            }).click(function() {
+                let element = this;
+                importLoad(false, element);
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="import-dialog">
+        <fieldset class="import">
+            <legend>Importar desde XML</legend>
+            
+            <div class="form-group">
+                <label for="Categorias0">
+                    <input type="checkbox" name="Categorias" id="Categorias0" checked="checked">
+                    Cargar Categorías en 0
+                </label>
+                <label for="itemscodigo">
+                    <input type="checkbox" name="items" id="itemscodigo">
+                    Cargar código de items
+                </label>
+                <label for="subcategorías">
+                    <input type="checkbox" name="subcategorías" id="subcategorías">
+                    Cargar un item por subcategoría
+                </label>
+                <label for="items-zero">
+                    <input type="checkbox" name="items-zero" id="items-zero">
+                    Cargar items en 0
+                </label>
+            </div>
+
+            <div class="file-input">
+                <span>Seleccione el archivo XML</span>
+                <input type="file" name="upload[attachment]" accept="application/xml">
+            </div>
+                
+            <div class="button-container">
+                <button>CARGAR</button>
+            </div>
+        </fieldset>
+    </div>
+</body>
+</html>

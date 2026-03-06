@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+	<title>Lineas adicionales al total</title>
+	<meta charset="utf-8">
+
+
+
+	<style>
+		section#sheet-total-adicionales input {
+
+
+			display: inline-block;
+
+			width: calc(100% - 10px);
+			height: 18px;
+			padding-right: 11px;
+			text-align: inherit;
+			text-decoration: inherit;
+			text-transform: uppercase;
+			font-weight: inherit;
+
+		}
+
+		section#sheet-total-adicionales input.edit {
+
+			border-bottom: 1px ridge rgb(180, 180, 180);
+
+		}
+
+		/* Para los elementos del dropdown de TomSelect */
+		.ts-dropdown .ts-option {
+			font-size: 10px;
+			/* o cualquier tamaño que desees */
+		}
+
+		/* Para los elementos seleccionados que se muestran en el input */
+		.tomselected .ts-label {
+			font-size: 10px;
+			/* o cualquier tamaño que desees */
+		}
+
+		.ts-control>* {
+			font-size: 10px;
+		}
+
+		.ts-dropdown [data-selectable].option {
+			font-size: 10px;
+		}
+	</style>
+</head>
+
+<body class="home">
+
+	<section id="sheet-total-adicionales" class="sheet-adicionales">
+		<fieldset class="button-fieldset">
+			<legend>Agregar items</legend>
+			<button class="add-line" id="add-line-button" style="display: inline-block;">Agregar linea</button>
+		</fieldset>
+
+		<table class="items" id="Adds">
+			<thead>
+				<tr style="margin-right: 10px;">
+					<th class="thleft">N°</th>
+					<th class="thleft">Nombre</th>
+					<th class="thleft">Valor</th>
+					<th class="thleft" colspan="2"></th>
+				</tr>
+			</thead>
+			<tbody>
+
+
+			</tbody>
+			<tfoot>
+				<tr style="margin-right: 10px;">
+					<th class="thleft" colspan="2" style="text-align: right">
+						Total :
+					</th>
+					<th class="thleft" style="text-align: center">
+						<span id="totalAdicionales"></span>
+					</th>
+				</tr>
+			</tfoot>
+		</table>
+	</section>
+
+
+	<script>
+		$(document).ready(function () {
+			unaBase.toolbox.init();
+
+			totales.adicionales.getTotalAdicionales();
+			if (unaBase.parametros.items_categoria) {
+				totales.adicionales.getCatalogo();
+			}
+
+			$('.ui-dialog fieldset.button-fieldset button').button({
+				icons: {
+					primary: 'ui-icon ui-icon-circle-plus'
+				},
+				text: true
+			}).click(async function () {
+
+				var sid = '';
+				$.each($.cookie(), function (clave, valor) { sid += (valor + ' '); });
+
+
+				
+				var target = document.getElementById('Adds').getElementsByTagName('tbody')[0];
+				let cont = target.getElementsByTagName('tr').length + 1;
+
+
+				if (unaBase.parametros.items_categoria) {
+					
+					let select = document.createElement('select');
+					select.className = 'catalogo_select_' + cont;
+					
+					totales.catalogo.forEach(v => {
+						if (v.text != '') {
+							let option = document.createElement('option');
+							option.text = v.text;
+							option.value = v.id_servicio;
+							option.dataset.code = v.index;
+							select.appendChild(option);
+
+						}
+					});
+
+					let row = `
+						<tr style="margin-right: 10px;" id="0">
+							<th class="thleft" style="width: 50px;">
+								<input type="text" value="${cont}"  readonly />
+							</th>
+							<th class="thleft" style="width: 250px">
+								<!-- Aquí insertamos el select directamente en la cadena -->
+								${select.outerHTML}
+							</th>
+							<th class="thleft" >
+								<input type="text" class="edit" data-idad="0" value="0" onchange="totales.adicionales.save(this)" onkeyup="totales.adicionales.formater(this)"/>
+							</th>
+							<th class="thleft" >
+								<button style="display: inline-block;" class="ui-icon ui-icon-minus" data-idad="0" onclick="totales.adicionales.delete(this)" title="Eliminar"></button>
+							</th>
+						</tr>`;
+
+					target = document.querySelector('#Adds > tbody');
+					target.insertAdjacentHTML('beforeend', row);
+
+					totales.adicionales.setTomSelect(select, cont)
+
+				} else {
+					let row = `
+						<tr style="margin-right: 10px;" id="0">
+							<th class="thleft" style="width: 50px;">
+								<input type="text" value="${cont}"  readonly />
+							</th>
+							<th class="thleft">
+								<input type="text" value="" class="edit" data-idad="0" placeholder="Ingrese un nombre" onchange="totales.adicionales.save(this)"></input>
+
+							</th>
+							<th class="thleft" >
+								<input type="text" class="edit" data-idad="0" value="0" onchange="totales.adicionales.save(this)" onkeyup="totales.adicionales.formater(this)"/>
+							</th>
+							<th class="thleft" >
+								<button style="display: inline-block;" class="ui-icon ui-icon-minus" data-idad="0" onclick="totales.adicionales.delete(this)" title="Eliminar"></button>
+							</th>
+						</tr>`;
+
+
+
+
+					target = $('#Adds > tbody');
+					target.append(row);
+				}
+				this.disabled = true;
+
+			});
+
+		});
+	</script>
+</body>
+
+</html>

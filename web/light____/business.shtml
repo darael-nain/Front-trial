@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--#4DSCRIPT/_V3_serverInfo-->
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+
+  <link rel="stylesheet" type="text/css" href="bootstrap-4.5.3-dist/css/bootstrap.min.css">
+  <script src="/v3/script/jquery/jquery.js"></script>
+  <script src="/v3/script/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="/script/popper.min.js"></script>
+  <script type="text/javascript" src="bootstrap-4.5.3-dist/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="/css/fontawesome5.11.2/css/all.min.css">
+  <script  type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+  
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
+
+  <script type="text/javascript" src="scripts/business.js"></script>
+  <!-- JQUERY UI -->
+  <!-- <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E="	  crossorigin="anonymous"></script> -->
+  <!-- FORMAT NUMBERS -->
+  <script src="/v3/script/jquery/plugins/jquery-number/jquery.number.js"></script>
+  <!-- FORMAT CURRENCY -->
+  <script src="/v3/script/jquery/plugins/format-currency/jquery.formatCurrency.js"></script>
+  <title>Negocio</title>
+  <!-- <link rel="stylesheet" href="css/index.css">
+  <script type="text/javascript" src="js/loader.js"></script>
+  <script type="text/javascript" src="js/modal.js"></script> -->
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN"
+    crossorigin="anonymous">
+
+
+  <script type="text/javascript">
+   
+
+   
+
+    $(document).ready(function () {
+      //business.search.items("");
+      business.starter.init();
+      business.item.categorias.charge();
+
+      
+
+    
+
+       $("input#titleSearch").on("keyup", function () {
+        
+          var value = $(this).val().toLowerCase();
+          let oldval=0;
+        if (value.length==0) {
+             let target= $('datalist#itemlist');
+
+              target.empty();
+        }
+
+         if (value.length >=3 || value.length ==0) {
+          
+
+            business.search.items(value);
+            $("#detalle-nv div.categoria").filter(function () {
+              $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+            // oldval=value.length;
+         }
+
+         
+      });
+
+       
+
+
+
+
+       $(document).on('change', 'input#titleSearch', function(){
+          
+            var options = $('datalist')[0].options;
+            if (options=="") {
+
+            }else{
+
+            }
+            for (var i=0;i<options.length;i++){
+
+
+               if (options[i].value == $(this).val()) {
+                let target=options[i];
+                 // {alert($(this).val());break;}
+                  business.search.selected.item(target);
+                }
+            }
+        });
+    
+    });
+  </script>
+  <style type="text/css">
+    
+    html {
+      font-size: 0.5rem;
+    }
+
+
+
+    body {
+      
+      padding-top: 10rem;
+    }
+
+    
+    @media (min-width: 1200px) { 
+       html {
+        font-size: 0.9rem;
+      }
+      body {
+       
+        padding-top: 5rem;
+      }
+      div#info-content span{
+
+      font-weight: bold;
+      font-size: 1.4rem;
+
+    }
+    }
+    @media (min-width: 700px) { 
+       html {
+        font-size: 0.7rem;
+      }
+      body {
+       
+        padding-top: 5rem;
+      }
+      div#info-content span{
+
+      font-weight: bold;
+      font-size: 1rem;
+
+    }
+    }
+   
+   
+    div#item-content span{
+
+      font-weight: bold;
+
+
+    }
+     div#item-content-detail small{
+
+      font-weight: bold;
+
+
+    }
+     div#info-content span{
+
+      font-weight: bold;
+    
+
+    }
+
+     div#porcentaje.green{
+      
+      color: green;
+      font-weight: bold;
+
+
+    }
+    div#porcentaje.red{
+      
+      color: red;
+      font-weight: bold;
+
+
+    }
+
+
+
+
+    .categoria{
+      background-color: #DCDCDC;
+
+
+    }
+
+
+    .subCat{
+       background-color: #e6e6e6;
+       text-transform: lowercase;
+    }
+   
+
+    div.vb{ 
+  
+   
+    border-left:    1px solid hsla(200, 10%, 50%,100);
+    border-color: white;
+    width:          10px;       
+    }
+
+    .subCatItem{
+
+       text-transform: lowercase;
+    }
+
+    input.form-control{
+       text-transform: lowercase;
+    }
+
+
+     .searchbar{
+    /*margin-bottom: auto;
+    margin-top: auto;*/
+    height: 3rem;
+    background-color: white;
+    border-radius: 30px;
+    padding: 10px;
+    
+    
+   
+    }
+
+    .search_input{
+    color: black;
+   
+    outline: 0;
+    
+    width: 20rem;
+    caret-color:green;
+   
+   
+
+    }
+
+   /* .searchbar:hover > .search_input{*/
+   /* border:3px;*/
+    /*padding: 0 2rem;*/
+    /*width: 12rem;*/
+   /* caret-color:green;
+    transition: width 1s linear;
+     border-bottom: 5px;
+    border-color: green;*/
+    
+    /*}*/
+
+    .searchbar:hover > .search_icon{
+    background: #CCCCCC;
+    color: green;
+    }
+
+    .search_icon{
+      height: 2rem;
+      width: 2rem;
+      float: left;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 100%;
+      color:orange;
+      text-decoration:none;
+      border-color: green;
+      background-color:  white; 
+    }
+    
+    
+    #WindowLoad
+    {
+        position:fixed;
+        top:0px;
+        left:0px;
+        z-index:3200;
+        filter:alpha(opacity=65);
+        -moz-opacity:65;
+        opacity:0.65;
+        background:#999;
+    }
+  </style>
+
+</head>
+
+<body>
+     
+ 
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top   shadow-lg p-3 mb-5 bg-white rounded" id="bloque">
+        <div class=" row  mx-auto container ">
+
+          <div class="">
+              <a class="  "  href="business_list.shtml">
+                  <button class=" btn  btn-block text-left fas fa-chevron-left fa-2x"></button>
+              </a>
+          </div>
+
+          <div class=" row mx-auto container" id="info-content">
+            <div class="col-12 "> 
+                <h5  id="titulo" ></h5> 
+                
+            </div>
+            <div class=" row mx-auto container" id="info-content-totales">
+                 <h5 id="" ></h5> 
+
+            
+            </div>  
+
+          </div>  
+
+          <div class="container ">
+                  
+            <div class="searchbar">
+              <input list="itemlist" id="titleSearch"  class="search_input" type="text" name="" placeholder="Buscar ..." autocomplete="off">
+              
+              <a href="#" class="search_icon"><i class="fas fa-search  "></i></a>
+              <div id="search_list">
+                <datalist id="itemlist" >
+
+                </datalist>
+              </div>
+            </div> 
+
+
+            <div  class=" text-center">
+              <a>
+                <button class=" btn  btn-block fas  fa-file-excel fa-2x" style="color:green"  onclick="business.application.export.resumen()"></button>
+
+              </a>
+               <small>Exportar resumen</small>
+
+            </div>   
+
+          </div>   
+        
+         
+        </div>   
+      </nav>        
+      <div class="toast-content">
+      </div> 
+      <div id="modalCage" >
+          <button id="modalTrigger" type="button" class="btn btn-primary  " data-toggle="modal" data-target="#generalModal" style="display: none;">
+            
+          </button>
+          <div class="modal fade" id="generalModal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="modalTitle"></h5>
+                  <button type="button" class=" close" data-dismiss="modal" aria-label="Close">
+                      <i class="far fa-times-circle fa-2x"></i>
+                  </button>
+                </div>
+                <div class="modal-body " id="modalBody">
+                
+                </div>
+                <div class="modal-footer ">
+                  <div class="modal-toast-content">
+                  </div> 
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>     
+          
+       
+      <main class="pt-5">
+        <div id="business-content" class="container-md " style="padding: 1rem; ">
+          <div id="business-detail" class="list-group">
+    
+            <div class="accordion" id="detalle-nv"  >
+            </div>
+
+
+          </div>
+        </div>
+
+      </main>
+   
+
+</body>
+  <script  type="text/javascript" src="scripts/general_script.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      //setInterval('business.session.verify()',5000);
+    });
+  </script>
+
+</html>

@@ -1,0 +1,49 @@
+{
+	"success": "<!--#4DHTML success-->",
+	"rows": [
+	<!--#4DLOOP aDdtc_index -->
+		{
+			"id_det_dtc": <!--#4DHTML aDdtc_id_det{aDdtc_index}-->,
+			"llave_det_oc": "<!--#4DHTML aDdtc_llave_oc{aDdtc_index}-->",
+			"llave_det_dtc": "<!--#4DHTML aDdtc_llave_dtc{aDdtc_index}-->",
+			"llave_nv": "<!--#4DHTML aDdtc_llave_det_nv{aDdtc_index}-->",
+			"id_dtc": <!--#4DHTML aDdtc_id_dtc{aDdtc_index}-->,
+			"id_oc": <!--#4DHTML aDdtc_idoc{aDdtc_index}-->,
+			"id_nv": <!--#4DHTML aDdtc_id_nv{aDdtc_index}-->,
+			"nro_nv": "<!--#4DHTML aDdtc_nro_nv{aDdtc_index}-->",
+			"ref_nv": "<!--#4DHTML _V3_escapeString(aDdtc_ref_nv{aDdtc_index})-->",
+			"items": "<!--#4DHTML aDdtc_correlativo{aDdtc_index}-->",
+			"nombre": "<!--#4DHTML _V3_escapeString(aDdtc_nombre_pro{aDdtc_index})-->",
+			"cod_prod": "<!--#4DHTML aDdtc_cod_pro{aDdtc_index}-->",
+			"cuentactble_prod": "<!--#4DHTML aDdtc_cuentactble_prod{aDdtc_index}-->",
+			"param4": <!--#4DIF Not(Undefined(aNvParam4{aDdtc_index}))-->"<!--#4DHTML aNvParam4{aDdtc_index}-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+			"cuentanomctble_prod": <!--#4DIF Not(Undefined(aDdtc_nomcuentactble_prod{aDdtc_index}))-->"<!--#4DHTML aDdtc_nomcuentactble_prod{aDdtc_index}-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+			"id_prod": <!--#4DHTML aDdtc_id_pro{aDdtc_index}-->,		
+			"tipo": "<!--#4DHTML aDdtc_tipo_item{aDdtc_index}-->",
+			"id_clas": <!--#4DHTML aDdtc_id_cla{aDdtc_index}-->,
+			"des_clas": "<!--#4DHTML _V3_escapeString(aDdtc_des_cla{aDdtc_index})-->",
+			"id_dtcNc":	<!--#4DHTML aDdtc_id_dtcNc{aDdtc_index}-->,
+			"origen": "<!--#4DHTML aDdtc_origen{aDdtc_index}-->",
+			"lugar_origen": "<!--#4DHTML aDdtc_lugar_origen{aDdtc_index}-->",
+			"des_lugar_origen": "<!--#4DHTML aDdtc_des_lugar_origen{aDdtc_index}-->",
+			"llave_titulo": "<!--#4DHTML aDdtc_llave_titulo{aDdtc_index}-->",
+			"id_imp": <!--#4DHTML aDdtc_id_imp{aDdtc_index}-->,
+			"des_imp": "<!--#4DHTML _V3_escapeString(aDdtc_des_imp{aDdtc_index})-->",
+			"tipo_imp": "<!--#4DHTML aDdtc_tipo_imp{aDdtc_index}-->",
+			"valor_imp": "<!--#4DHTML aDdtc_valor_imp{aDdtc_index}-->",
+			"cantidad": <!--#4DHTML String(aDdtc_cantidad{aDdtc_index};"&xml")-->,
+			"precio": <!--#4DHTML String(aDdtc_precio{aDdtc_index};"&xml")-->,
+			"subtotal": <!--#4DHTML String(aDdtc_subtotal{aDdtc_index};"&xml")-->,
+			"descuento": <!--#4DHTML String(aDdtc_descuento{aDdtc_index};"&xml")-->,
+			"codigo_area_negocio_sap": <!--#4DIF Not(Undefined(aCodigoAreaNegocioSap{aDdtc_index}))-->"<!--#4DHTML String(aCodigoAreaNegocioSap{aDdtc_index};"&xml")-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+			"total": <!--#4DHTML String(aDdtc_total{aDdtc_index};"&xml")-->,
+			"origen_oc": "<!--#4DHTML aDdtc_origen_oc{aDdtc_index}-->",
+			"no_considerar_como_gr": <!--#4DHTML aDdtc_no_considerar_como_gr{aDdtc_index}-->,
+			"id_origen_gasto": "<!--#4DHTML aDdtc_origen_gasto{aDdtc_index}-->",
+			"correlativo_item_negocio": <!--#4DTEXT aDdtc_correlativoItemNeg{aDdtc_index}-->,
+			"conta_codigo_contable": "<!--#4DHTML _V3_escapeString(aContaCodigoContable{aDdtc_index})-->",
+			"conta_centro_costo": "<!--#4DHTML _V3_escapeString(aContaCentroCosto{aDdtc_index})-->"
+		}<!--#4DIF NOT(aDdtc_index{aDdtc_index} = aDdtc_index{Size of array(aDdtc_index)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

@@ -1,0 +1,10 @@
+{
+	"negocio": "<!--#4DHTML V3_escapeString(negocio)-->",
+	"codigo": "<!--#4DHTML V3_escapeString(codigo)-->",
+	"nombre": "<!--#4DHTML V3_escapeString(nombre)-->",
+	"venta": "<!--#4DHTML V3_escapeString(venta)-->",
+	"areaNegocio": "<!--#4DHTML V3_escapeString(areaNegocio)-->",
+	"presupuesto": <!--#4DHTML String(presupuesto;"&xml")-->,
+	"ocValidada": <!--#4DIF ocValidada-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+	"gastoActual": <!--#4DHTML String(gastoActual;"&xml")-->
+}

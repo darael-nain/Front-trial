@@ -1,0 +1,366 @@
+:root {
+  --bg-primary: #20a789;
+  --bg-secondary: #6c6c6c;
+  --bg-tertiary: #e3e3e4;
+  --white: #ffffff;
+  --black: #000000;
+  --green: #1bc62f;
+  --darkskye: #456478;
+  --red: #ef0e0e;
+}
+
+#loader {
+  margin-left: auto;
+}
+
+.ui-dialog textarea {
+width: 100%;
+margin-top: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#dialog-viewport {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0px;
+  padding: 10px;
+  font-family: "Poppins", sans-serif;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+/* Actions Section */
+
+.actionsModal {
+  background-color: var(--bg-tertiary);
+  height: 85px;
+  border-radius: 5px;
+  padding: 5px 10px;
+  gap: 5px;
+}
+
+.actionModalBtn {
+  padding: 4px 15px;
+  border-radius: 5px;
+  gap: 5px;
+  font-size: 10px;
+  line-height: 10px;
+  background-color: var(--white);
+}
+
+.actionModalBtn svg {
+  width: 10px;
+  margin-top: -2px;
+}
+
+/* Sections */
+
+.section {
+  background-color: var(--bg-tertiary);
+  border-radius: 5px;
+}
+
+section .customHeader {
+  background-color: var(--bg-secondary);
+  padding: 5px 10px;
+  border-radius: 5px 5px 0 0;
+  color: var(--white);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+section .formContainer {
+  padding: 10px 20px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 40px;
+  row-gap: 10px;
+  font-size: 10px;
+  color: var(--black);
+}
+
+section .formContainer .formTitle {
+  grid-column: span 2;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+section .formContainer .formCol {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  align-items: center;
+  transform-origin: left;
+  transform: scale(1);
+}
+
+section .formContainer .formCol .formInputContainer {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+section .formContainer .formCol .formInputContainer span {
+  font-size: 12px;
+  line-height: 10px;
+  color: var(--bg-primary);
+  font-weight: 600;
+}
+
+/* From for Table */
+.containerTable {
+  padding: 10px;
+}
+
+.documentos .headerTable,
+.documentos .bodyTableItem {
+  grid-template-columns: 100px 90px 90px 80px 1fr 90px 90px 190px;
+}
+
+.ventas .headerTable,
+.ventas .bodyTableItem {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.comprobantes .headerTable,
+.comprobantes .bodyTableItem {
+  grid-template-columns: 100px repeat(3, 1fr);
+}
+
+.headerTable,
+.bodyTableItem {
+  display: grid;
+  background-color: var(--bg-primary);
+  border-radius: 5px;
+  padding: 5px 0px;
+  align-items: center;
+}
+
+.bodyTable {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 2px;
+}
+
+.headerTableCol {
+  text-align: center;
+  font-size: 10px;
+  line-height: 12px;
+  color: var(--white);
+  text-transform: uppercase;
+}
+
+.bodyTableItem {
+  background-color: var(--white);
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  transition: 0.1s;
+  color: var(--black);
+}
+
+.bodyTableItem:hover {
+  background-color: #119b7d88;
+  color: var(--white);
+  transition: 0.1s;
+}
+
+.bodyTableCol {
+  font-size: 8px;
+  text-align: center;
+  gap: 5px;
+}
+
+.bodyTableCol .btn {
+  gap: 2px;
+  border-radius: 5px;
+  font-size: 8px;
+padding: 2px 4px;
+}
+
+.bodyTableCol .btn svg {
+  width: 12px;
+}
+
+.bodyTableCol .validar svg,
+.bodyTableCol .validar {
+  fill: var(--green);
+  color: var(--green);
+}
+
+.bodyTableCol .anular svg,
+.bodyTableCol .anular {
+  fill: var(--darkskye);
+  color: var(--darkskye);
+}
+
+.bodyTableCol .eliminar svg,
+.bodyTableCol .eliminar {
+  fill: var(--red);
+  color: var(--red);
+}
+
+.bodyTableCol .validar span,
+.bodyTableCol .anular span,
+.bodyTableCol .eliminar span {
+  margin-top: 2px;
+}
+
+.bodyTableCol button {
+  background-color: var(--white);
+}
+
+.msgTable {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  font-size: 10px;
+  text-transform: uppercase;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  background-color: var(--white);
+}
+
+/* Globals */
+.btn {
+  outline: none;
+  cursor: pointer;
+  border: none;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  filter: brightness(80%);
+  transition: 0.3s;
+}
+
+.centerTotal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.centerLeft {
+  display: flex;
+  align-items: center;
+}
+
+.centerRight {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.colDouble {
+  grid-column: span 2;
+}
+
+section input,
+section textarea {
+  background-color: var(--white);
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  outline: none;
+  font-size: 10px;
+  color: var(--bg-secondary);
+  width: 100%;
+  transition: 0.3s;
+  font-size: 10px;
+  line-height: 10px;
+}
+
+section input:focus,
+section textarea:focus {
+  background-color: #20a78a59;
+  color: var(--white);
+  transition: 0.3s;
+}
+
+section select {
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-block;
+  margin: 0 auto;
+  padding: 2px 10px;
+  width: 100%;
+  color: var(--bg-secondary);
+  outline: none;
+  font-size: 10px;
+  line-height: 10px;
+}
+
+section textarea {
+  resize: none;
+}
+
+.add {
+  font-size: 12px;
+  line-height: 18px;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  background-color: var(--bg-primary);
+  color: var(--white);
+  outline: none;
+  cursor: pointer;
+  transition: 0.3s;
+  border: none;
+}
+
+.add:hover {
+  background-color: #22d4ae;
+  color: var(--white);
+}
+
+.add svg {
+  width: 14px;
+  fill: var(--white);
+}
+
+.checkbox {
+  position: relative;
+  cursor: pointer;
+  width: auto;
+  margin-left: -0.5px;
+}
+
+.checkbox:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  z-index: 1;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid transparent;
+  transition: all 0.3s ease-in-out;
+}
+
+.checkbox:checked:before {
+  transform: rotate(-45deg);
+  height: 0.5rem;
+  border-color: #009688;
+  border-top-style: none;
+  border-right-style: none;
+}
+
+.checkbox:after {
+  content: "";
+  position: absolute;
+  top: -0.1rem;
+  left: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+  background: #fff;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.disabled {
+  opacity: 0.5;
+}

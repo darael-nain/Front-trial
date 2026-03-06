@@ -1,0 +1,17 @@
+{
+	"neto": "<!--#4DHTML _V3_formatCurrency(atotales_neto)-->",
+	"gasto_p": "<!--#4DHTML _V3_formatCurrency(atotales_gasto_p)-->",
+	"gasto_r": "<!--#4DHTML _V3_formatCurrency(atotales_gasto_r)-->",
+	"por_gastar": "<!--#4DHTML _V3_formatCurrency(atotales_por_gastar)-->",
+	"utilidad_value": "<!--#4DHTML _V3_formatCurrency(atotales_utilidad_value)-->",
+	"utilidad_percent": "<!--#4DHTML String(atotales_utilidad_percent;"###.###.###.###.###.###.##0,## %")-->",
+	"utilidad_final": "<!--#4DHTML _V3_formatCurrency(atotales_utilidad_final)-->",
+	"totales_saldo_por_facturar": "<!--#4DHTML _V3_formatCurrency(atotales_saldo_por_facturar)-->",
+	"totales_total_facturado": "<!--#4DHTML _V3_formatCurrency(atotales_total_facturado)-->",
+	"total_cobrado": "<!--#4DHTML _V3_formatCurrency(atotales_total_cobrado)-->",
+	"total_por_cobrar": "<!--#4DHTML _V3_formatCurrency(atotales_total_porcobrar)-->",
+	"total_justificado": "<!--#4DHTML _V3_formatCurrency(atotales_total_justificado)-->",
+	"total_por_justificar": "<!--#4DHTML _V3_formatCurrency(atotales_total_porjustificar)-->",
+	"total_pagado": "<!--#4DHTML _V3_formatCurrency(atotales_total_pagado)-->",
+	"total_por_pagar": "<!--#4DHTML _V3_formatCurrency(atotales_total_porpagar)-->"
+}

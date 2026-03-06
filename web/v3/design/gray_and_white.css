@@ -1,0 +1,193 @@
+/* header especial */
+
+.header-especial{
+	margin:5px 0 10px 5px;	
+}
+.header-especial > div{
+	font-weight: bold;
+	font-size:13px;
+}
+.header-especial > div > a{
+	color:#2966B8;
+}
+
+.sheet tfoot{
+	background-color:white;
+}
+
+
+/* generales */
+.sheet label{
+	font-size:11px;
+}
+.sheet input{
+	font-size:11px;	
+}
+.sheet article section input[placeholder]{
+	/*text-transform: none!important;*/
+}
+.sheet label{
+	color:gray;	
+}
+.sheet input{
+	padding:1px;
+}
+
+.sheet .full {
+	background-color: rgb(242, 254, 138);
+}
+
+.sheet .nofull {
+	background-color: white;
+}
+
+.sheet .warning-color {
+	font-weight:bold!important;
+	background-color:#F9994D!important;;
+	border-color:#F9994D!important;;
+	padding:5px!important;;
+}
+
+/* imput seccion items */
+.sheet table.items input.tiny{
+	width:80px!important;
+}
+.sheet table.items input.small{
+	width:100px!important;
+}
+.sheet table.items input.medium{
+	width:200px!important;
+}
+.sheet table.items input.large{
+	width:250px!important;
+}
+
+.sheet select{
+	border:1px solid lightgray;
+	border-radius:none!important;
+	padding:10px!important;
+	width:200px!important;
+	height:20px!important;	
+	font-size:11px;
+	text-transform:uppercase!important;
+}
+
+/* articles */
+.sheet article {
+	background-color:white!important;
+	padding:1px;	
+}
+
+/* sections */
+.sheet article section {
+	display:block;	
+	width:99%!important;
+}
+
+/* ul button */
+
+/* --- begin edit --- gin (21.10.15) */
+
+/*.sheet header{
+	margin:5px;	
+}
+.sheet header > ul.botton {
+	padding:0;	
+}
+.sheet header > ul.botton > li{
+	display: inline-block;
+	border: 1px solid rgb(163, 234, 201);
+	background-color: rgb(163, 234, 201);
+	padding:1px;
+	border-radius:3px;	
+	font-size:10px!important;	
+	text-transform:uppercase;
+	margin-right:2px;
+}
+.sheet header > ul.botton > li.bold{
+	font-weight:bold;
+}*/
+
+/* --- end edit --- */ 
+
+
+
+
+
+/* ul */
+.sheet article > section > ul{
+	margin:5px!important;
+}
+
+/* ul normal */
+.sheet article > section > ul > li > input{
+	text-transform:uppercase!important;
+  	width:220px!important;
+}
+
+/* ul en linea */
+.sheet article > section > ul.inline > li{
+	display:inline-block;	
+	margin-right:5px!important;
+}
+
+.sheet article > section > ul.inline > li > label{	
+	font-weight:bold;
+	text-align:right;
+	vertical-align:middle!important;
+	width:100px;
+}
+.sheet article > section > ul.inline > li > input{
+	text-transform:uppercase!important;
+	vertical-align:middle!important;
+}
+.sheet article > section > ul.inline > li > input.small{
+	width:100px!important;	
+}
+.sheet article > section > ul.inline > li > select{
+	border:1px solid lightgray;
+	vertical-align:middle!important;
+}
+
+
+.sheet article > section > ul.inline > li > input{
+	text-transform:uppercase!important;
+  	width:220px!important;
+}
+.sheet article > section > ul > li > label.large{
+	display:block;	
+	font-weight:bold;
+	text-align:left;
+	vertical-align:middle;	
+}
+.sheet article > section > ul > li > label.fixed{	
+	display:inline-block;
+	font-weight:bold;	
+	text-align:right;
+	vertical-align:middle;
+	width:100px;
+}
+.sheet article > section > ul > li > input.medium{
+	display: block;
+	width:300px!important;
+}
+.sheet article > section > ul > li > input.large{
+	display: block;
+	width:620px!important;
+}
+.sheet article > section > ul > li > span > input.money{	
+	width:100px!important;
+}
+.sheet article > section > ul > li > label{	
+	font-weight:bold;
+	text-align:right;
+	vertical-align:middle;
+	width:100px;
+}
+.sheet article > section > ul > li > textarea{	
+	width:95%;
+	height:80px;
+}
+
+
+

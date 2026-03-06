@@ -1,0 +1,11 @@
+{	
+	"rows": [
+<!--#4DLOOP aIdComuna -->
+		{
+			"id": "<!--#4DHTML aIdComuna{aIdComuna}-->",
+			"text": "<!--#4DTEXT _V3_escapeString(aDesComuna{aIdComuna})-->",
+			"ciudad": "<!--#4DTEXT _V3_escapeString(aDesCiudad{aIdComuna})-->"			
+		}<!--#4DIF NOT(aIdComuna{aIdComuna} = aIdComuna{Size of array(aIdComuna)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

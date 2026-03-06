@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_proxy_getPerfilContacto2-->
+<html>
+  <head>
+    <title>Perfil</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="/v3/views/contactos/content.js?asdf"></script>
+    <link rel="stylesheet" href="/v3/design/temporal.css?<!--#4DTEXT random-->">
+
+    <script>
+      $(document).ready(function() {
+        var id = $('.form-contact').find('input[name="id"]').val();
+        
+        $("#tabs-1-contacto").load('/v3/views/contactos/general.shtml', 'id='+ id, function() {
+
+            <!--#4DIF ((from="gastos") | (from="dtc"))-->
+
+            // $('[name="check[validar_rut]"]').prop('checked', true);
+            // $('[name="check[validar_rut]"]').prop('disabled', true);
+
+            <!--#4DENDIF-->
+
+        });
+        
+        $("#tabs-2-contacto").load('/v3/views/contactos/banco.shtml', 'id='+ id);
+        $("#tabs-3-contacto").load('/v3/views/contactos/adicional.shtml', 'id='+ id);
+        $("#tabs-4-contacto").load('/v3/views/contactos/relacionados.shtml', 'id='+ id);
+        $("#tabs-5-contacto").load('/v3/views/contactos/catalogo.shtml', 'id='+ id);
+        $("#tabs-6-contacto").load('/v3/views/contactos/servicios_asignados.shtml', 'id='+ id);
+        $("#tabs-7-contacto").load('/v3/views/contactos/archivos.shtml', 'id='+ id);
+
+        $('a[href="#tabs-8-contacto"]').click(function() {
+          // unaBase.interval.clearAll();
+          $("#tabs-8-contacto").load('/v3/views/contactos/descuentos.shtml', 'id='+ id);
+        });
+
+        
+
+      });
+    </script>
+    <style type="text/css">
+      .ui-tabs .ui-tabs-panel {
+        padding: 0 !important;
+        overflow: hidden;
+      }
+      .obligatorio{
+        color:red!important;
+        font-weight:bold;
+        margin:2px;
+      }
+
+      .box-nombre-contacto{
+        font-weight: bold;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size:12px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div id="main-container" class="form-contact">
+      <div class="box-nombre-contacto"><!--#4DTEXT Uppercase([Contacto]nombre_completo;*)--></div>
+      <input type="hidden" name="id" value="<!--#4DTEXT [Contacto]Id_Cont-->">
+      <section class="tabs">
+        <ul class="infinite-tabs">
+          <li><a href="#tabs-1-contacto">General</a></li>
+          <li class="load-banco" data-id="<!--#4DTEXT [Contacto]Id_Cont-->"><a href="#tabs-2-contacto">Comercial</a></li>
+
+          <li class="load-adicional" data-id="<!--#4DTEXT [Contacto]Id_Cont-->"><a href="#tabs-3-contacto">Datos adicionales</a></li>
+          <li class="load-relacionados" data-id="<!--#4DTEXT [Contacto]Id_Cont-->"><a href="#tabs-4-contacto">Contactos relacionados</a></li>
+
+          <li class="load-catalogo" data-id="<!--#4DTEXT [Contacto]Id_Cont-->"><a href="#tabs-5-contacto">Historial compra y venta</a></li>
+          <li class="load-ser-asignados" data-id="<!--#4DTEXT [Contacto]Id_Cont-->"><a href="#tabs-6-contacto">Servicios asignados</a></li>
+          <li class="load-archivos" data-id="<!--#4DTEXT [Contacto]Id_Cont-->"><a href="#tabs-7-contacto">Archivos adjuntos</a></li>
+          <li class="load-descuentos" data-id="<!--#4DTEXT [Contacto]Id_Cont-->"><a href="#tabs-8-contacto">Descuentos legales</a></li>
+        </ul>
+        <article id="tabs-1-contacto"></article>
+        <article id="tabs-2-contacto"></article>
+        <article id="tabs-3-contacto"></article>
+        <article id="tabs-4-contacto"></article>
+        <article id="tabs-5-contacto"></article>
+        <article id="tabs-6-contacto"></article>
+        <article id="tabs-7-contacto"></article>
+        <article id="tabs-8-contacto"></article>
+      </section>
+    </div>
+    <div style="margin:5px">(<strong class="obligatorio">*</strong>)<label> Información necesaria.</label></div>
+  </body>
+</html>

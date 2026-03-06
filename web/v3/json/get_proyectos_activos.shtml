@@ -1,0 +1,10 @@
+{	
+	"rows": [
+<!--#4DLOOP aId-->
+		{
+			"id": "<!--#4DTEXT aId{aId}-->",
+			"text": "<!--#4DHTML String(aFolio{aId})--> - <!--#4DHTML _V3_escapeString(aReferencia{aId})-->"
+		}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

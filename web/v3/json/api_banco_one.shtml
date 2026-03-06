@@ -1,0 +1,10 @@
+{
+	"create": <!--#4DIF create-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"creado": <!--#4DIF creado-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"id": "<!--#4DHTML V3_escapeString(id)-->",
+	"banco": "<!--#4DHTML V3_escapeString(banco)-->",
+	"telefono": "<!--#4DHTML V3_escapeString(telefono)-->",
+	"nomina_bci": <!--#4DIF nomina_bci-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"codigo_banco": "<!--#4DHTML V3_escapeString(codigo_banco)-->",
+	"estado": <!--#4DIF estado-->true<!--#4DELSE-->false<!--#4DENDIF-->
+}

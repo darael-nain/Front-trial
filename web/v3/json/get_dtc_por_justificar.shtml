@@ -1,0 +1,31 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML $total - 1-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP [Doc_Tributario_Compra]-->
+		{
+			"id": <!--#4DTEXT [Doc_Tributario_Compra]ID_DOC-->,
+			"idoc": <!--#4DTEXT id-->,
+			"id_proveedor": <!--#4DTEXT [Doc_Tributario_Compra]ID_EMPRESA-->,
+			"emision": "<!--#4DTEXT [Doc_Tributario_Compra]FECHA_EMISION-->",
+			"folio": "<!--#4DTEXT [Doc_Tributario_Compra]FOLIO_DOCUMENTO-->",
+			"id_tipo_doc": "<!--#4DTEXT [Doc_Tributario_Compra]TIPO_DOCUMENTO-->",
+			"tipo": "<!--#4DHTML _V3_escapeString([Doc_Tributario_Compra]des_tipo_doc)-->",
+			"proveedor": "<!--#4DHTML _V3_escapeString([Doc_Tributario_Compra]RAZON_SOCIAL)-->",
+			"referencia": "<!--#4DHTML _V3_escapeString([Doc_Tributario_Compra]REFERENCIA_DOCUMENTO)-->",
+			"total": "<!--#4DTEXT _V3_formatCurrency([Doc_Tributario_Compra]TOTAL_DOCUMENTO)-->",
+			"saldo_por_justificar": "<!--#4DTEXT _V3_formatCurrency([Doc_Tributario_Compra]SALDO_JUSTIFICAR)-->",
+			"saldo_por_pagar": "<!--#4DTEXT _V3_formatCurrency([Doc_Tributario_Compra]SALDO)-->",
+			"estado": "<!--#4DTEXT [Doc_Tributario_Compra]ESTADO_DOCUMENTO-->",
+			"version": "<!--#4DTEXT [Doc_Tributario_Compra]version-->"			
+		}<!--#4DIF Selected record number([Doc_Tributario_Compra])<Records in selection([Doc_Tributario_Compra])-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

@@ -1,0 +1,87 @@
+<div class="block-files">
+<!--#4dloop aIdArchivo-->
+
+    <div class="files" id="list<!--#4dvar aIdArchivo{aIdArchivo}-->">
+
+        <div class="date">
+            <span><!--#4dvar String(aFechaArchivo{aIdArchivo};5)--></span>
+            <span><!--#4dvar aHoraArchivo{aIdArchivo}--> hrs.</span>
+        </div>
+
+        <!--#4dif aDesFormatoArchivo{aIdArchivo}="IMAGEN"-->           
+        <div class="imagenes">
+            <img alt="<!--#4dvar aAncho{aIdArchivo}-->-<!--#4dvar aAlto{aIdArchivo}-->"
+            id="<!--#4dvar aIdArchivo{aIdArchivo}-->" class="img-popup" src="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->">
+        </div>
+        <div class="descripcion">
+            <span><!--#4dvar aNombreArchivo{aIdArchivo}--></span>
+            <span class="subidopor">Subido por <!--#4dvar aNombreUserArchivo{aIdArchivo}--></span>
+            <span class="link"><a href="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->">Descargar</a></span>
+            <!--<span class="link"><a href="#">Ir a Revisi&#243;n</a></span>-->                  
+        </div>
+        <!--#4dendif-->
+
+        <!--#4dif aDesFormatoArchivo{aIdArchivo}="VIDEO"-->
+        <div class="archivo"><img src="/extensiones/PNG/<!--#4dvar aFormatoArchivo{aIdArchivo}-->.png"></div>        
+        <div class="descripcion">
+            <span><!--#4dvar aNombreArchivo{aIdArchivo}--></span>
+            <span class="subidopor">Subido por <!--#4dvar aNombreUserArchivo{aIdArchivo}--></span>
+            <span class="link"><a href="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->">Descargar</a></span>                
+        </div>
+        <!--#4dendif-->
+
+        <!--#4dif aDesFormatoArchivo{aIdArchivo}="AUDIO"-->
+        <div class="archivo"><img src="/extensiones/PNG/<!--#4dvar aFormatoArchivo{aIdArchivo}-->.png"></div>
+        <div class="descripcion">
+            <span><!--#4dvar aNombreArchivo{aIdArchivo}--></span>
+            <span class="subidopor">Subido por <!--#4dvar aNombreUserArchivo{aIdArchivo}--></span>
+            <span class="link"><a target="_black" href="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->">Descargar</a></span>
+            <!--<span class="link"><a href="#">Ir a Revisi&#243;n</a></span>-->
+            
+            <a target="_black" href="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->">
+                <span class="audio">
+                    <audio controls="controls">                 
+                        <source src="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->" type="audio/mpeg" />
+                        Your browser does not support the audio element.
+                    </audio>
+                </span>
+            </a>
+        </div>
+        <!--#4dendif-->
+
+        <!--#4dif aDesFormatoArchivo{aIdArchivo}="DOCUMENTO"-->     
+        <div class="archivo"><img src="/extensiones/PNG/<!--#4dvar aFormatoArchivo{aIdArchivo}-->.png"></div>
+        <div class="descripcion">
+            <span><!--#4dvar aNombreArchivo{aIdArchivo}--></span>
+            <span class="subidopor">Subido por <!--#4dvar aNombreUserArchivo{aIdArchivo}--></span>
+            <span class="link"><a href="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->">Descargar</a></span>
+            <!--<span class="link"><a  href="#">Ir a Revisi&#243;n</a></span>    -->              
+        </div>
+        <!--#4dendif-->
+
+        <!--#4dif aDesFormatoArchivo{aIdArchivo}="COMPRIMIDO"-->
+        <div class="archivo"><img src="/extensiones/PNG/<!--#4dvar aFormatoArchivo{aIdArchivo}-->.png"></div>
+        <div class="descripcion">
+            <span><!--#4dvar aNombreArchivo{aIdArchivo}--></span>
+            <span class="subidopor">Subido por <!--#4dvar aNombreUserArchivo{aIdArchivo}--></span>
+            <span class="link"><a href="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->">Descargar</a></span>
+            <!--<span class="link"><a href="#">Ir a Revisi&#243;n</a></span>   -->               
+        </div>
+        <!--#4dendif-->
+        
+        <!--#4dif aDesFormatoArchivo{aIdArchivo}="ARCHIVO"-->
+        <div class="archivo"><img src="/extensiones/PNG/<!--#4dvar aFormatoArchivo{aIdArchivo}-->.png"></div>
+        <div class="descripcion">
+            <span><!--#4dvar aNombreArchivo{aIdArchivo}--></span>
+            <span class="subidopor">Subido por <!--#4dvar aNombreUserArchivo{aIdArchivo}--></span>
+            <span class="link"><a href="/uploads/<!--#4dvar aNombreArchivo{aIdArchivo}-->">Descargar</a></span>
+            <!--<span class="link"><a href="#">Ir a Revisi&#243;n</a></span>       -->           
+        </div>
+        <!--#4dendif-->
+
+       <a class="delete-file" title="file-list" id="<!--#4dvar aIdArchivo{aIdArchivo}-->" href="#">x</a>
+
+    </div>
+
+<!--#4dendloop-->
+</div>

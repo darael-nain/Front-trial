@@ -1,0 +1,84 @@
+<div id="crear-contacto" class="lightbox">       	
+<!--<h1>Nuevo cliente</h1>-->
+<article>
+    <form id="form-new-client">                                 
+        <fieldset>
+    		<legend>Datos generales :</legend>
+    		<div>
+                <label for="tipo">Tipo : </label>                                         
+                <select name="tipo" id="tipo">                                    	
+            		<option selected value="PROVEEDOR">PROVEEDOR</option> 
+            		<option value="CLIENTE">CLIENTE</option>                                  
+                </select>
+            </div>
+            <div>
+                <label>Alias : </label>                                         
+                <input name="alias" type="text"/><span>*</span>
+                 <label>Rut : </label> 
+                <input placeholder="12345678" name="rut" id="rut-global" type="text" />-
+                <input placeholder="9" name="dv" onchange="g_existe_rut();" maxlength="1" id="dv-global" type="text"/><span>*</span>
+                <input type="checkbox" id="validarut" name="chkvalidar" checked  />validar
+            </div> 
+            <div>
+                <label>Razon : </label> 
+                <input name="razon" type="text"/><span>*</span>
+                <label>Giro : </label> 
+                <input name="giro" type="text"/><span>*</span>
+            </div>
+        </fieldset>
+        		
+        <fieldset>                              
+        		<legend>Direcci&#243;n :</legend>
+                <div>
+                    <label>Direcci&#243;n : </label> 
+                    <input name="direccion" type="text"/>
+                    <label>Nro</label>
+                    <input name="nro" type="text"/>
+                </div>
+                <div>                    
+                    <label>Depto : </label> 
+                    <input name="depto" type="text"/>
+                     <label>Piso : </label> 
+                    <input name="piso" type="text"/>
+                </div>
+                <div>             
+                    <label>Ciudad : </label> 
+                    <input name="ciudad" type="text"/>
+                    <label>Comuna : </label>
+                    <select name="comuna" id="comunas-cliente">
+                    <option selected value="1">SANTIAGO</option>
+                    <!--#4DLOOP w_a_id_comuna-->
+                            <option value="<!--#4DVAR w_a_id_comuna{w_a_id_comuna}-->">
+                            <!--#4DVAR w_a_des_comuna{w_a_id_comuna}-->
+                            </option> 
+                    <!--#4DENDLOOP-->                               
+                   </select>                            
+                </div>                
+        </fieldset>
+        		
+        <fieldset>                              
+    		<legend>Contacto :</legend>
+             <div>
+                <label>Telefono 1 : </label> 
+                <input name="fono1" type="text"/>
+                <label>Fax : </label> 
+                <input name="fax" type="text"/>
+            </div>
+            <div>
+            	<label>Telefono 2 : </label> 
+                <input name="fono2" type="text"/>                                  
+                <label>Celular : </label> 
+                <input name="celular" type="text"/>
+            </div>
+            <div>
+            	<label>Email : </label> 
+                <input name="email" type="text"/>                                  
+                <label>Sitio : </label> 
+                <input name="sitio" type="text"/>
+            </div>
+        </fieldset>
+         <input name="validarut_2" id="validarut_2" type="hidden" value="SI" />
+        <div class="obligatorio-down"><span>*</span> Datos obligatorios.</div>       
+    </form>                          
+</article>         
+</div>

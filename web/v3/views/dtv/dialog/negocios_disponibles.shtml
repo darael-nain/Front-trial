@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Negocios disponibles</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		.dialog {
+          overflow-y: hidden !important;
+		}
+		.dialog #dialog-viewport {
+			height: calc(100% - 100px) !important;
+		}
+		/*.ui-dialog-content button{
+				border:1px solid gray!important;
+			}*/
+	</style>
+	<script>
+		$(document).ready(function () {
+
+			const checkOc = (val) => {
+
+				let id_neg = val.target.parentNode.children[0].parentElement.parentNode.children[0].childNodes[0].data
+				if (val.target.parentNode.children[0].checked) {
+					$.ajax({
+						'url': '/4DACTION/_V3_checkOcCliente',
+						data: {
+							id_neg,
+							sid: unaBase.sid.encoded()
+						},
+						dataType: 'json',
+						success: function (data) {
+
+
+							if (data.rows.length > 0) {
+								let idNeg, idNegSelect, numeroOc;
+								let flag = false;
+								data.rows.forEach(val => {
+									flag = true;
+									idNeg = val.id_neg;
+									idNegSelect = id_neg
+									numeroOc = val.numero_oc
+									//toastr.warning(`La oc de cliente Nro: ${val.numero_oc} del negocio Nro: ${id_neg} ya esta ingresada en el negocio Nro: ${val.id_neg}`)
+								})
+
+								if (flag) {
+									confirm(
+										`La oc de cliente Nro: ${numeroOc} del negocio Nro: ${idNegSelect} ya esta ingresada en el negocio Nro: ${idNeg}
+										<br>¿Desea continuar?`
+									).done(function (data) {
+										if (!data) {
+											val.target.parentNode.children[0].checked = false
+										}
+									});
+								}
+
+
+
+							}
+
+
+						},
+						error: function (error) {
+							
+							console.log(error)
+						},
+					});
+
+				}
+			}
+
+			var containerdtc = $('#sheet-dtc');
+
+
+			unaBase.toolbox.init();
+			// Inicializamos un buscador
+			var params = {
+				// Función que genera una URL de listado JSON
+				url: function () { return '/4DACTION/_V3_get_negocios_por_facturar' },
+				entity: 'dtv_negocios',
+				callback: function (data) {
+					$('td > input.select').on('change', function (val) {
+
+						checkOc(val);
+
+					});
+
+				},
+				/*data: {
+					'idproveedor' : "<!--#4DTEXT idproveedor-->",
+					'tipodtc' : "<!--#4DTEXT tipodtc-->",
+					'totaljust': "<!--#4DTEXT totaljust-->"
+				},*/
+				row: {
+					html: function (i, rows) {
+						return '<tr data-id="' + rows[i].id + '" data-proveedor="' + rows[i].id_cliente + '" data-doc="' + rows[i].id_tipo_doc + '" data-rut="' + unaBase.data.rut.format(rows[i].rut_cliente) + '" data-exchangetype="' + rows[i].exchange_type + '">' +
+							'<td>' + rows[i].folio + '</td>' +
+							'<td class="left">' + rows[i].cliente + '</td>' +
+							'<td class="left">' + rows[i].referencia + '</td>' +
+							'<td>' + rows[i].folio_oc_cliente + '</td>' +
+							'<td>' + rows[i].total_text + '</td>' +
+							'<td>' + rows[i].saldo_por_facturar_text + '</td>' +
+							'<td><input style="width:20px!important;height:20px!important" class="select" name="ocselect[id]' + rows[i].id + '" value="' + rows[i].id + '" type="checkbox"></td>' +
+							'</tr>'
+					}
+				},
+				inflection: {
+					singular: 'negocio',
+					plural: 'negocios',
+					none: 'ningún'
+				},
+				filters: [
+					{ name: 'created_at', type: 'month', caption: 'Fecha de emisión', range: true, currentMonth: true },
+					{ name: 'type_money', type: 'select', caption: 'Tipo de Moneda' },
+				]
+			};
+
+			unaBase.toolbox.search.init(params);
+
+			unaBase.toolbox.menu.init({
+				entity: 'dtv_negocios',
+				// buttons: ["create_dtv_parcial", "crear_dtc_asociado_oc"] // cambiar
+				buttons: ["create_dtv_parcial"] //create_dtv_cero
+			});
+
+			$('[data-name="create_dtv_parcial"]').closest('ul').css('width', '960px').css('text-align', 'right');
+
+
+			// add selección
+			$('button.addseleccionoc').button({ icons: { primary: 'ui-icon-document' }, text: true }).click(function () {
+
+				var element = $(this);
+				var selectedoc = $('#negocios-por-facturar > table > tbody').find('input.select:checked');
+				var currentdtc = { "dtc[id]": '<!--#4DTEXT iddtc-->' };
+
+				var ocselect = {};
+				selectedoc.each(function (key, item) {
+					eval("obj = {'ocselect[id]" + $(this).val() + "': '" + $(this).val() + "'}");
+					$.extend(ocselect, ocselect, obj);
+				});
+				var finalobj = $.extend({}, currentdtc, ocselect);
+				if (selectedoc.length > 0) {
+					$.ajax({
+						'url': '/4DACTION/_V3_getInfoComprasDtc',
+						data: finalobj,
+						dataType: 'json',
+						success: function (data) {
+
+							containerdtc.find('input[name="dtc[referencia]"]').val(data.referencia);
+
+							// tipo doc
+							containerdtc.find('select[name="tipo_doc[id]"] > option[selected]').val(data.documento.id);
+							containerdtc.find('select[name="tipo_doc[id]"] > option[selected]').text(data.documento.text);
+							containerdtc.find('select[name="tipo_doc[id]"] > option[selected]').data('rut', data.proveedor.rut);
+							containerdtc.find('select[name="tipo_doc[id]"] > option[selected]').data('impuesto', data.documento.impuesto_valor);
+							containerdtc.find('select[name="tipo_doc[id]"] > option[selected]').data('tipo', data.documento.impuesto_tipo);
+							if (data.documento.especial) {
+								containerdtc.find('input[name="dtc[nro_folio]"]').val(data.documento.correlativo);
+							}
+							containerdtc.find('input[name="dtc[nro_folio]"]').focus();
+
+							// proveedor del doc
+							containerdtc.find('input[name="contacto[info][id]"]').val(data.proveedor.id);
+							containerdtc.find('input[name="contacto[info][alias]"]').val(data.proveedor.alias);
+							containerdtc.find('input[name="contacto[info][razon_social]"]').val(data.proveedor.razon);
+							containerdtc.find('input[name="contacto[info][giro]"]').val(data.proveedor.giro);
+							element.parentTo('.ui-dialog-content').dialog('close');
+
+							// forma pago del doc
+							containerdtc.find('select[name="forma_pago[id]"] > option[selected]').val(data.forma.id);
+							containerdtc.find('select[name="forma_pago[id]"] > option[selected]').text(data.forma.text);
+
+							// carga ocs asociadas
+							var containeroc = containerdtc.find('table.ocs > tbody');
+							var htmlObject;
+							containeroc.find("*").remove();
+							$.each(data.compras, function (key, item) {
+								htmlObject = build_rows_compras(item);
+								htmlObject.click(function (event) {
+									if (event.srcElement.localName != 'input' && event.srcElement.className != 'ui-button-text')
+										unaBase.loadInto.viewport('/v3/views/compras/content.shtml?id=' + item.id);
+									//event.preventDefault();
+									//event.stopPropagation();
+								});
+								containeroc.append(htmlObject);
+							});
+							$('button.remove.ocs').button({ icons: { primary: 'ui-icon ui-icon-circle-minus' }, text: true });
+
+							// carga items del doc
+							var current = containerdtc.find('table.items > tbody');
+							var currentTitulo;
+							current.find("*").remove();
+
+							if (data.detalle.length > 0) {
+								containerdtc.find('table.items').show();
+							}
+
+							$.each(data.detalle, function (key, item) {
+								if (item.tipo == "TITULO") {
+									currentTitulo = get_detail.titulo('prependTo', current, item);
+								} else {
+									var currentItem = containerdtc.find('table.items > tbody > tr[data-llave="' + item.llave_titulo + '"]');
+									if (item.llave_titulo == "") {
+										get_detail.item('prependTo', current, item);
+									} else {
+										get_detail.item('insertAfter', currentItem, item);
+									}
+								}
+							});
+							calcula_por_filas();
+							update_subtotal_items();
+
+							// otros ajustes
+							containerdtc.find('#scrollocs h1 span').text(data.compras.length);
+							containerdtc.find('.montos-justificados').hide();
+
+						},
+						error: function (data) {
+							toastr.error(NOTIFY.get('ERROR_INTERNAL'));
+						}
+					});
+				} else {
+					alert("Debe seleccionar al menos una Orden de compra.");
+				}
+			});
+
+			$("section#negocios-por-facturar table.results thead th:last-of-type input[type='checkbox']").on("change", function() {
+				var isChecked = $(this).prop("checked");
+				$("section#negocios-por-facturar table.results tbody td:last-of-type input[type='checkbox']").prop("checked", isChecked);
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<section id="negocios-por-facturar" class="sheet">
+		<table class="results">
+			<thead>
+				<tr>
+					<th width="8%">Número</th>
+					<th width="24%">Clientes</th>
+					<th width="28%">Referencia</th>
+					<th width="5%">OC cliente</th>
+					<th width="12%">Total [$]</th>
+					<th width="14%">Saldo por facturar [$]</th>
+					<th width="9%" style="padding-bottom: 5px;"><span style="margin-right: 4px;"></span><input class="select" style="width:20px!important;height:20px!important; margin-right: 5px;" type="checkbox"></th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+			<tfoot></tfoot>
+		</table>
+	</section>
+</body>
+
+</html>

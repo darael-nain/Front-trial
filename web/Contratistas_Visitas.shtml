@@ -1,0 +1,71 @@
+ <!--#4DINCLUDE head.shtml-->
+<body>
+<!--#4DIF vSesion>0-->
+<!--#4DINCLUDE menu_contratistas.shtml-->
+<!--#4DINCLUDE mensajes2.shtml-->
+<section>
+   <!--#4DINCLUDE info_usuario.shtml-->
+   <!-- <div class="welcome-contratistas">Bienvenido a la Intranet de <!#4DVAR vNombreEmpresa2> </div>
+   <p><img src="<!#4DVAR vUrlImagenLogo>" width="<!#4DVAR vAnchoPictureBienv>" height="<!#4DVAR vAltoPictureBienv>" border="0"/></p> -->
+
+</section>
+<section class="lista-ot-contratista top">
+   <div>
+   		<table>
+   			<thead>
+   				<th colspan="16">Visitas T&eacutecnicas</th>
+   			</thead>
+   			<thead>
+   				<!-- <th colspan="" rowspan="" headers="" class="th2">TECNICO</th> -->
+   				<th colspan="" rowspan="" headers="" class="th2">VT</th>
+				<th colspan="" rowspan="" headers="" class="th2">D-VT</th>
+				<th colspan="" rowspan="" headers="" class="th2">COT</th>
+				<th colspan="" rowspan="" headers="" class="th2">D-COT</th>
+				<th colspan="" rowspan="" headers="" class="th2">OC</th>
+				<th colspan="" rowspan="" headers="" class="th2">D-OC</th>
+				<th colspan="" rowspan="" headers="" class="th2">FACT</th>
+				<th colspan="" rowspan="" headers="" class="th2">D-F</th>
+				<th colspan="" rowspan="" headers="" class="th2">PAGO</th>
+				<th colspan="" rowspan="" headers="" class="th2">D-P</th>
+				<th colspan="" rowspan="" headers="" class="th2">ALIAS</th>
+				<th colspan="" rowspan="" headers="" class="th2">CONTACTO</th>
+				<th colspan="" rowspan="" headers="" class="th2">FONO</th>
+				<th colspan="" rowspan="" headers="" class="th2">REFERENCIA</th>
+				<th colspan="" rowspan="" headers="" class="th2">EMISOR</th>
+				<!-- <th colspan="" rowspan="" headers="" class="th2">EDITAR</th> -->
+   			</thead>
+   			<tbody>
+				<!--#4DLOOP a_OT_FOLIO-->
+				<tr class="reg" id="<!--#4DVAR aIdOT{a_OT_FOLIO}-->">
+				<!-- 	<td class="align-center <!#4DVAR a_style_color{a_OT_FOLIO}>"><!#4DVAR aAliasTecnico{a_OT_FOLIO}></td> -->
+					<td class="align-center <!--#4DVAR a_style_color{a_OT_FOLIO}-->"><!--#4DVAR num(a_OT_FOLIO{a_OT_FOLIO})--></td>
+					<td class="align-center"><!--#4DVAR aDiasVisita{a_OT_FOLIO}--></td>
+					<td class="align-center <!--#4DVAR a_color_cot{a_OT_FOLIO}-->"><!--#4DVAR aIDNegocio{a_OT_FOLIO}--></td>
+					<td class="align-center"><!--#4DVAR aDiasCotizacion{a_OT_FOLIO}--></td>
+					<td class="align-center <!--#4DVAR a_color_oc{a_OT_FOLIO}-->"><!--#4DVAR aFolioOC{a_OT_FOLIO}--></td>
+					<td class="align-center"><!--#4DVAR aDiasOC{a_OT_FOLIO}--></td>
+					<td class="align-center <!--#4DVAR a_color_fact{a_OT_FOLIO}-->"><!--#4DVAR aFolioFact{a_OT_FOLIO}--></td>
+					<td class="align-center"><!--#4DVAR aDiasFact{a_OT_FOLIO}--></td>
+					<td class="align-center <!--#4DVAR a_color_Cobro{a_OT_FOLIO}-->"><!--#4DVAR aFolioCobro{a_OT_FOLIO}--></td>
+					<td class="align-center"><!--#4DVAR aDiasCobro{a_OT_FOLIO}--></td>
+					<td class="align-left"><!--#4DVAR aAliasCliente{a_OT_FOLIO}--></td>
+					<td class="align-left"><!--#4DVAR aContacto{a_OT_FOLIO}--></td>	
+					<td class="align-center"><!--#4DVAR aFonoContacto{a_OT_FOLIO}--></td>	
+					<td class="align-left"><!--#4DVAR a_OT_REF{a_OT_FOLIO}--></td>
+					<td class="align-center"><!--#4DVAR aAliasEmisor{a_OT_FOLIO}--></td>
+					<!-- 	<td class="align-center">Editar</td> -->
+				</tr>
+				<!--#4DENDLOOP-->	
+   			</tbody>			
+   		</table>	
+   </div>
+</section>
+<!--#4DELSE-->
+    <p>
+    LA SESI&Oacute;N HA EXPIRADO...!!!
+    <a class="enlaces" href="index.shtml?t=<!--#4DVAR String(Milliseconds+Random(2))-->">VOLVER A INICIAR</a>
+    </p>
+<!--#4DENDIF-->      
+
+</body>
+</html>

@@ -1,0 +1,5 @@
+{
+	"hasDifference": <!--#4DIF Not(Undefined(hasDifference))--><!--#4DIF hasDifference-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"sum": <!--#4DIF Not(Undefined($suma))-->"<!--#4DHTML $suma-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"total": <!--#4DIF Not(Undefined($totalNetoNVCheck))-->"<!--#4DHTML $totalNetoNVCheck-->"<!--#4DELSE-->null<!--#4DENDIF-->
+}

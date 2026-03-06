@@ -1,0 +1,19 @@
+{
+	"rows": [
+<!--#4DLOOP $aId-->
+		{
+			"id": <!--#4DTEXT $aId{$aId}-->,
+			"contacto_id": <!--#4DTEXT $aIdCont{$aId}-->,
+			"contacto_nombre": "<!--#4DTEXT _V3_escapeString($aNomCont{$aId})-->",
+			"servicio_id": "<!--#4DTEXT $aIdServ{$aId}-->",
+			"servicio_nombre": "<!--#4DTEXT _V3_escapeString($aNomServ{$aId})-->",
+			"compra_prom": "<!--#4DTEXT String($aPromComp{$aId};"&xml")-->",
+			"compra_tarifa": "<!--#4DTEXT  String($aTarComp{$aId};"&xml")-->",
+			"compra_sugerida": <!--#4DTEXT $aSugComp{$aId}-->,
+			"venta_prom": "<!--#4DTEXT  String($aPromVenta{$aId};"&xml")-->",
+			"venta_tarifa": "<!--#4DTEXT  String($aTarVenta{$aId};"&xml")-->",
+			"observacion": "<!--#4DTEXT _V3_escapeString($aObervacion{$aId})-->"			
+		}<!--#4DIF NOT($aId{$aId} = $aId{Size of array($aId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

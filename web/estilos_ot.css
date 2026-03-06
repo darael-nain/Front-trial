@@ -1,0 +1,303 @@
+label{
+	font-weight:bold;
+	font-size:12px;
+}
+
+.border-rojo{
+	border:2px solid #FE2E2E;
+}
+
+.border-verde{
+	border:2px solid #088A29;
+}
+
+#box-asignados{	
+	width:500px;
+	font-weight:bold;
+}
+	#box-asignados a{	
+		color:#FFFFFF;
+		font-size:15px;
+		text-transform:lowercase;
+	}
+
+	.cant-asing{
+		color:#0404B4; /* azul */
+	}
+
+.contenido-ot{
+	display:block;
+	height:200px;
+	margin:auto;	
+	width:1000px;
+	font-weight:bold;
+	font: 15px "Lucida Grande";
+}
+
+.div-container{
+	margin:10px;
+}
+
+.etiqueta-resp{
+	color:#088A08; /* verde */
+	font-size:12px;	
+}
+
+.etiqueta-int{
+	color:#FF8000; /* najanjo */
+	font-size:12px;
+}
+
+.etiqueta-inv{
+	color:#0080FF; /* celeste */
+	font-size:12px;
+}
+
+#list-invitados select{
+	display:block;
+	margin:-2px 0px 5px 65px;
+	position: absolute;
+	height:100px;
+	width:302px;	
+}
+
+.buscador-de-proyectos, .buscador-de-empresas{
+	position:relative;
+}
+
+.lista-proyectos-ot{
+	background-color:#FFFFFF;
+	border:1px solid #6E6E6E;		
+	font-size:11px;
+	font-weight:bold;
+	position:absolute;
+	top:30px;
+	text-transform:capitalize;
+	width:405px;
+	z-index:1;		
+}
+
+.lista-proyectos-ot ol{
+	color:black;
+	padding:0;
+	margin:0;
+	list-style:none;
+}
+.lista-proyectos-ot ol li{
+	vertical-align:middle;
+	border-bottom:1px solid #E6E6E6;
+	padding:1px 5px 1px 5px;
+}
+.lista-proyectos-ot ol li:hover{
+	background-color:#DDD;
+	cursor: pointer;
+}
+
+.lista-proyectos-ot a{
+	display: block;
+	color:blue;
+	text-transform:capitalize;
+}
+.lista-proyectos-ot a:hover{
+	color:green;
+	font-weight:bold;
+}
+.lista-proyectos-ot ol li a div{
+	margin:0;
+	padding:0;
+}
+.lista-proyectos-ot ol li a div span:nth-child(1){
+	 color:black;
+}
+.lista-proyectos-ot ol li a div span:nth-child(2){
+	 color:green;
+}
+.lista-proyectos-ot ol li a div span:nth-child(3){
+
+}
+.lista-proyectos-ot ol li a div span:nth-child(4){
+	display:block;
+}
+.lista-proyectos-ot ol li a div span:nth-child(4) span:nth-child(1){
+	color:gray;
+}
+.lista-proyectos-ot ol li a div span:nth-child(4) span:nth-child(2){
+	color:black;
+	margin-left:5px;
+}
+.lista-proyectos-ot ol li a div span:nth-child(4) span:nth-child(3){
+	color:black;
+	margin-left:5px;
+	text-transform:lowercase;
+}
+
+.error-falta-datos{
+	color:red;
+	font-size:13px;
+	font-weight:bold;
+	text-align:left;
+	margin:0;
+	padding:0;
+}
+
+/*.delete-part-ot{
+	font-size:10px;
+	cursor:pointer;
+	margin:2px;
+}*/
+
+/* popup participantes */
+#container-popup{
+}
+	#container-popup header h2{
+		text-decoration:underline;
+	}
+
+	#container-popup nav{
+		/*border:1px solid red;*/
+		margin:0;
+		text-align:left;
+	}
+		#container-popup nav .select-all{
+			color:black;
+			font-size:15px;
+			margin-right:0px;
+			cursor:pointer;
+		}
+		#container-popup nav .invitado{
+			color:#2E2EFE;
+			font-size:15px;
+			margin-right:3px;
+			cursor:pointer;
+			display:none;
+		}
+
+	#container-popup article{	
+		margin:0;
+		height:175px;		
+		overflow:auto;
+		text-align:left;
+	}
+	#container-popup article fieldset{
+		border:1px solid gray;		
+		padding:5px;
+		margin-top:5px;
+	}
+
+	#container-popup article .subir{
+		margin:20px 0;
+		padding:10px;
+		text-align:center;
+	}
+
+	#container-popup article .subir form input{
+		margin-top:5px;
+	}
+
+	#container-popup article .subir #status{
+		height:20px;
+	}
+	#container-popup article #status label{
+		color:black;
+		font-weight:bold;
+		font-size:15px;
+		text-decoration:none;
+	}
+
+	#container-popup article fieldset legend{
+		font-weight:normal;
+		font-size:12px;
+		text-transform:capitalize;
+	}
+	#container-popup article span{
+		background:orange;
+		border-radius:3px;
+		display:inline-block;
+		padding:0 3px 0 3px;
+		margin:1px;
+	}
+	#container-popup article span input{
+		vertical-align:middle;
+		margin:0;
+		border-radius:5px;
+	}
+	#container-popup article span label{
+		color:white;
+		font-size:12px;
+		font-family:Arial, Helvetica, sans-serif;
+		font-weight:normal;
+		vertical-align:middle;
+	}
+
+	/*subir archivos*/
+	#container-popup article .seleccionar-archivo-nuevo{
+		padding:10px;
+		text-align:center;
+	}
+		#container-popup article .seleccionar-archivo-nuevo form{
+			margin:auto;
+		}
+
+	#container-popup footer{
+		margin-top:5px;
+		text-align:left;
+	}
+
+	.link-ots-copiados{
+		text-align:left;
+		padding:5px;		
+	}
+	.link-ots-copiados a{
+		color:gray;
+		font-size:15px;
+		font-weight: bold;
+		text-decoration:underline;		
+	}
+	.link-ots-copiados a:hover{
+		color:black;
+	}
+
+	.sub-title2{
+		position:absolute;
+		top:50px;
+	}
+
+	.cerrar-sesion{		
+		text-align:right;
+		margin-right:50px;
+		vertical-align:middle;
+	}
+	.cerrar-sesion label{
+		color:gray;
+	}
+	.cerrar-sesion span{
+		color:black;
+		text-transform:capitalize;
+		margin-right:5px;
+		font-size:12px;
+	}
+
+	.mostrando{
+		text-align:right;
+		font-size:13px;
+		font-weight:bold;
+	}
+
+/*--- dialogos jquery ---*/
+
+.dialog-confirm{
+	text-align:left;
+}
+
+.dialogo-cierre-ot{
+	text-align:left;
+	padding:0;
+}
+.dialogo-cierre-ot span{
+	font-weight:normal;
+}
+.dialogo-cierre-ot textarea{
+	width:400px;
+	height:100px;
+	font-weight:normal;
+}

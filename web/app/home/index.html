@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Unabase - Home</title>
+  <style>
+    :root {
+      --bg: #f3f5f7;
+      --surface: #ffffff;
+      --text: #18212b;
+      --muted: #5c6975;
+      --border: #dce3ea;
+      --accent: #0a7c56;
+      --accent-hover: #076a49;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      background: #111827;
+      color: #e5e7eb;
+      padding: 22px 18px;
+    }
+
+    .brand {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 22px;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu a {
+      color: #e5e7eb;
+      text-decoration: none;
+      padding: 10px 12px;
+      border-radius: 8px;
+    }
+
+    .menu a:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .main {
+      padding: 28px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 22px;
+      max-width: 860px;
+    }
+
+    .title {
+      margin: 0 0 10px;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin: 0 0 22px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(220px, 1fr));
+      gap: 10px;
+    }
+
+    .item {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fafbfd;
+    }
+
+    .cta {
+      display: inline-block;
+      margin-top: 18px;
+      background: var(--accent);
+      color: #ffffff;
+      text-decoration: none;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    .cta:hover {
+      background: var(--accent-hover);
+    }
+
+    @media (max-width: 900px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        padding: 16px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">Unabase</div>
+      <nav class="menu">
+        <a href="/app/home">Inicio</a>
+        <a href="/node/tasks/list/pending">Tareas</a>
+        <a href="/node/auth/dashboard-ticket">Ticket dashboard</a>
+        <a href="/node/users/me">Mi perfil (API)</a>
+        <a href="/node/auth/logout">Cerrar sesion</a>
+      </nav>
+    </aside>
+
+    <main class="main">
+      <section class="card">
+        <h1 class="title" id="welcomeTitle">Cargando...</h1>
+        <p class="subtitle">Sesion autenticada con JWT.</p>
+        <div class="grid">
+          <div class="item">
+            <b>Usuario:</b>
+            <div id="username">-</div>
+          </div>
+          <div class="item">
+            <b>Email:</b>
+            <div id="email">-</div>
+          </div>
+        </div>
+        <a class="cta" href="/node/auth/logout">Cerrar sesion</a>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    function buildDisplayName(user) {
+      const first = (((user || {}).data || {}).name || {}).first || "";
+      const last = (((user || {}).data || {}).name || {}).last || "";
+      const full = `${String(first).trim()} ${String(last).trim()}`.trim();
+      return full || user.username || "Usuario";
+    }
+
+    (async function bootstrapHome() {
+      try {
+        const meResponse = await fetch("/node/users/me", {
+          credentials: "include",
+          cache: "no-store",
+          headers: { "Accept": "application/json" }
+        });
+
+        if (!meResponse.ok) {
+          window.location.assign("/login/login.shtml");
+          return;
+        }
+
+        const me = await meResponse.json();
+        const username = me.username || "-";
+        const email = me.email || (Array.isArray(me.emails) && me.emails[0] ? me.emails[0] : "-");
+        const displayName = buildDisplayName(me);
+
+        document.getElementById("welcomeTitle").textContent = `Bienvenido, ${displayName}`;
+        document.getElementById("username").textContent = username;
+        document.getElementById("email").textContent = email;
+      } catch (err) {
+        window.location.assign("/login/login.shtml");
+      }
+    })();
+  </script>
+</body>
+</html>

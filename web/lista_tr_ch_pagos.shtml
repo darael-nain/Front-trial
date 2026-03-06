@@ -1,0 +1,51 @@
+<table id="grilla" class="list-grilla" border="0" cellpadding="0" cellspacing="0" hspace="0" vspace="0">
+	<thead>
+		<tr bgcolor="#CCCCCC">
+			<th>F.Registro</th>
+			<th>F.Emision</th>
+			<th>Tipo Pago</th>
+			<th>Nro Doc.</th>
+			<th>Total Pago</th>
+			<th>Estado</th>			
+			<th>Acci&#243;n</th>
+		</tr>
+	</thead>
+	<tbody>
+		<!--#4DLOOP aIdPago_x-->
+		<tr bgcolor="#F5ECCE">
+			<td class="center"><!--#4DVAR aFRegPago_x{aIdPago_x}--></td>
+			<td class="center"><!--#4DVAR aFProPago_x{aIdPago_x}--></td>
+			<td class="center"><!--#4DVAR aTipoPago_x{aIdPago_x}--></td>
+			<td class="center"><!--#4DVAR aNroPago_x{aIdPago_x}--></td>
+			<td class="right"><!--#4DVAR string(aTotalPago_x{aIdPago_x};"$###.###.###.###")--></td>
+			<td class="center"><!--#4DVAR aEstadoPago_x{aIdPago_x}--></td>			
+			<td class="center">
+
+			<!--#4DIF aEstadoPago_x{aIdPago_x}#"ANULADO"-->
+			<button title="Anular pago" class="button-inf" onClick="fn_acciones_pago('anular',<!--#4DVAR aIdPago_x{aIdPago_x}-->)" type="button">
+            	<img src="/imagenes/cancel.png" border="0" />
+            	<span>Anular</span>
+            </button>
+            <!--#4DENDIF-->
+
+            <!--#4DIF aEstadoPago_x{aIdPago_x}="EMITIDO"-->
+            <button title="Validar pago" class="button-inf" onClick="fn_acciones_pago('validar',<!--#4DVAR aIdPago_x{aIdPago_x}-->)" type="button">
+            	<img src="/imagenes/accept.gif" border="0" />
+            	<span>Validar</span>
+            </button>
+            <!--#4DENDIF-->
+
+            <!--#4DIF vPermisoEliminarPago>0-->
+        	 <button title="Eliminar pago" class="button-inf" onClick="fn_acciones_pago('eliminar',<!--#4DVAR aIdPago_x{aIdPago_x}-->)" type="button">
+            	<img src="/imagenes/delete.png" border="0" />
+            	<span>Eliminar</span>
+            </button>	
+            <!--#4DENDIF-->        
+
+
+           
+			</td>
+		</tr>
+		<!--#4DENDLOOP-->
+	</tbody>
+</table>

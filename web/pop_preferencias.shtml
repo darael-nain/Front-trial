@@ -1,0 +1,78 @@
+<h2>Preferencias</h2>
+<p class="align-left">
+    <label class="label-block">Dias desde : </label>
+    <select id="pref-dias-desde" class="combos-normal">
+        <option selected value="<!--#4DVAR vDiasDesdeCodP-->"><!--#4DVAR vDiasDesdeNameP--></option>
+        <option value="1">Lunes</option>
+        <option value="2">Martes</option>
+        <option value="3">Miercoles</option>
+        <option value="4">Jueves</option>
+        <option value="5">Viernes</option>
+        <option value="6">S&aacute;bado</option>
+        <option value="7">Domingo</option>        
+    </select>
+</p>
+<p class="align-left">
+    <label class="label-block">Dias Hasta : </label>
+    <select id="pref-dias-hasta" class="combos-normal">
+        <option selected value="<!--#4DVAR vDiasHastaCodP-->"><!--#4DVAR vDiasHastaNameP--></option>
+        <option value="1">Lunes</option>
+        <option value="2">Martes</option>
+        <option value="3">Miercoles</option>
+        <option value="4">Jueves</option>
+        <option value="5">Viernes</option>
+        <option value="6">S&aacute;bado</option>
+        <option value="7">Domingo</option>        
+    </select>
+</p>
+
+<hr/>
+
+<p class="align-left">
+    <label class="label-block">Hora Inicio : </label>
+    <select id="pref-hora-desde" class="combos-medium">
+        <option selected value="<!--#4DVAR vHoraDesdeP-->"><!--#4DVAR vHoraDesdeP-->:00</option>
+        <option value="1">1:00</option>
+        <option value="2">2:00</option>
+        <option value="3">3:00</option>
+        <option value="4">4:00</option>
+        <option value="5">5:00</option>
+        <option value="6">6:00</option>
+        <option value="7">7:00</option>
+        <option value="8">8:00</option>
+        <option value="9">9:00</option>
+        <option value="10">10:00</option>
+        <option value="11">11:00</option>
+        <option value="12">12:00</option>     
+    </select>
+</p>
+
+<p class="align-left">
+    <label class="label-block">Hora Fin : </label>
+    <select id="pref-hora-hasta" class="combos-medium">
+        <option selected value="<!--#4DVAR vHoraHastaP-->"><!--#4DVAR vHoraHastaP-->:00</option>      
+        <option value="12">12:00</option>
+        <option value="13">13:00</option>
+        <option value="14">14:00</option>
+        <option value="15">15:00</option>
+        <option value="16">16:00</option>
+        <option value="17">17:00</option>
+        <option value="18">18:00</option>
+        <option value="19">19:00</option>
+        <option value="20">20:00</option>
+        <option value="21">21:00</option>
+        <option value="22">22:00</option>
+        <option value="23">23:00</option>     
+    </select>
+</p>
+
+<hr/>
+
+<p class="set-botones-pop">
+    <button title="Cancelar" class="button-new" id="close-pop-preferencias" type="button">                       
+        <span>Cancelar</span>
+    </button>
+    <button title="Aceptar" class="button-new" id="save-pop-preferencias" type="button">                       
+        <span>Aceptar</span>
+    </button>
+</p>

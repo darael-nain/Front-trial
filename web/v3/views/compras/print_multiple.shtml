@@ -1,0 +1,94 @@
+<!--#4DSCRIPT/_V3_serverInfo-->
+<!--#4DSCRIPT/_v3_print_oc_batch-->
+<!--#4DLOOP aIds-->
+<!--#4DHTML _V3_print_oc_batch_proxy(aIds{aIds})-->
+<!DOCTYPE HTML>
+<html>
+<head>
+    <!--#4DSCRIPT/_v3_print_oc-->
+    <meta charset="utf-8"/>
+    <script src="/v3/script/jquery/jquery.js"></script>
+    <!-- <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700' rel='stylesheet' type='text/css'> -->
+    <link rel="stylesheet" media="print" href="/v3/design/print.css"/>
+    <title>NRO <!--#4DTEXT [Orden_de_compra]Folio_OC--></title>
+    <style>
+    @media print {
+
+      <!--#4DIF (nullified="true")-->
+      html > body:before {
+        display: block;
+        position: absolute;
+        top: 235px;
+        left: 120px;
+        width: 100vw;
+        text-align: center;
+        content: 'ANULADO';
+        color: rgba(0,0,0,.3);
+        font-size: 145px;
+        font-weight: bold;
+        -webkit-transform: rotate(-45deg);
+      }
+      <!--#4DELSE-->
+      <!--#4DIF (preview="true")-->
+      html > body:before {
+        display: block;
+        position: absolute;
+        top:180px;
+        left:50px;
+        width:100vw;
+        text-align: center;
+        content: 'COPIA NO VALIDA';
+        color: rgba(0,0,0,.3);
+        font-size:140px;
+        font-weight: bold;
+        -webkit-transform: rotate(-45deg);
+      }
+      <!--#4DENDIF-->
+      <!--#4DENDIF-->
+      body {
+        font-family: 'Open Sans', sans-serif !important;
+      }
+    }
+
+       .cuadradito {
+          background-color: <!--#4DVAR vColorCorporativoCSS--> !important;
+      }
+      .underline{
+        text-decoration:underline;
+      }
+      .borders td, th{
+        border:1px solid gray;
+        padding:2px;
+      }
+
+      .info-extra{
+        padding:0px;
+        position:absolute;
+        right:-100px;
+        top:70px;
+        font-size:20px;
+      }
+      .info-extra > span{
+        display:block;
+        font-weight:bold;
+        text-align: right;
+      }
+
+      .tituloSuperior{
+        text-align:right;
+        margin-top:5px;
+        font-size:25px;
+        color:rgb(67,175,124);
+        font-weight: bold;
+      }
+
+    </style>
+</head>
+<body>
+<!--#4DINCLUDE print.shtml-->
+</body>
+</html>
+<!--#4DIF aIds{aIds}#aIds{Size of array(aIds)}-->
+<div style="page-break-before: always !important;"></div>
+<!--#4DENDIF-->
+<!--#4DENDLOOP-->

@@ -1,0 +1,44 @@
+<!--#4DINCLUDE head.shtml-->
+<body>
+<!--#4DINCLUDE menuSuperior.shtml-->
+<!--#4DINCLUDE mensajes2.shtml-->
+<section>
+
+    <a class="link-crear" title="Crear Proveedor" href="/4DACTION/W_CREA_CONT/<!--#4DVAR vOpcionCrear-->">
+        <p>
+            <img src="/imagenes/add2.png" border="0" />
+            <span>Nuevo Proveedor</span>
+        </p>
+    </a>
+	
+     <h1>Buscar Proveedor</h1>
+     <article>         
+        <form id="frmbuscadores" class="frmbuscadores" action="/4DACTION/W_BUSCAR_CONTACTOS" method="post" >
+            <label for="cboBuscarpor">Buscar x:</label>      
+            <select name="opcionbuscarneg" id="opcionbuscarneg" class="listas-especiales2" >
+                <option value="razon" selected="selected">Razon Social</option>
+                <option value="rut">Rut</option>                
+            </select>     
+            <input required autofocus class="txtbuscar" id="txtbuscar" name="txtbuscar" type="text"/>
+            <input name="opcioncrear" type="hidden" value="<!--#4DVAR vOpcionCrear-->"/>
+            <button  id="buttonbuscar"class="buttonbuscar" type="submit">
+                <img src="/imagenes/search.gif" border="0" />Buscar
+            </button>
+        </form>    
+     </article>
+     <article>
+        <form id="frm-crear-oc" class="frm-crear-oc"  action="/4DACTION/WCREAROC" method="post" >
+            <input id="idproveedor" name="idproveedor" type="hidden" value="" />
+            <input id="tipocrea" name="tipocrea" type="hidden" value="" />                    
+            <!--#4DIF vCantProv>0-->
+                <h3>Encontrados: <!--#4DVAR vCantProv--></h3>
+                <p><!--#4DINCLUDE cbo_proyectos.shtml--></p>                
+                <p><!--#4DINCLUDE lista_contactos.shtml--></p>
+            <!--#4DELSE-->                                		
+                <h3>No se encontraron proveedores!</h3>              
+            <!--#4DENDIF-->
+        </form>
+     </article>         
+</section>
+</body>
+</html>

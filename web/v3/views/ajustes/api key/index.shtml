@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Api Key V3</title>
+		<script type="text/javascript" src="/v3/views/ajustes/api key/index.js"></script>
+
+    	<link href="/css/form1.css" rel="stylesheet">
+    	<link href="/v3/views/ajustes/parametros/css/params.css" rel="stylesheet">
+</head>
+<script type="text/javascript">
+	$(document).ready(function(){
+
+	  	unaBase.ui.block();    
+	  	ParamConnect.menu();
+	  	ParamConnect.init();
+	  	unaBase.ui.unblock();
+	  	unaBase.ui.expandable.init();
+	  
+
+	});
+
+</script>
+
+<body>
+	<section class="sheet" id="ParamConnect">
+		<footer>
+			<article>
+				<h1>Generador de Api Key</h1>
+				<ul class="editable">
+					<li>
+						<br>
+					</li>
+					<li>
+						<label for="apiKeyV3">Generar Api Key</label>
+						<li>
+						<textarea class="key" id="apiKeyV3" name="apiKeyV3" rows="8" cols="100" disabled />
+						<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" id="generarApiKeyV3">
+								<span class="ui-button-text">GENERAR</span>
+							</button>
+						</li>
+					</li>
+				</ul>
+			</article>
+			
+		</footer>
+		
+	</section>
+</body>
+</html>

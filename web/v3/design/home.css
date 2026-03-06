@@ -1,0 +1,3102 @@
+@import url('menu.css');
+
+::-webkit-input-placeholder {
+	/* Chrome/Opera/Safari */
+	color: rgb(103, 103, 103) !important;
+}
+
+body {
+	display: flex;
+	justify-content: center;
+	/* Centra horizontalmente */
+	align-items: center;
+	/* Centra verticalmente */
+	min-height: 100vh;
+	/* Asegura que el body ocupe al menos toda la altura de la ventana */
+	margin: 0;
+	/* Elimina márgenes predeterminados */
+}
+
+
+@font-face {
+	font-family: 'OpenSans-Regular';
+	src: url('../font/Open_Sans/OpenSans-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'OpenSans-Bold';
+	src: url('../font/Open_Sans/OpenSans-Bold.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+html>body.home>div.toggle.menu {
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	z-index: 999;
+	width: 25px;
+	height: 25px;
+	background-image: url('html/body.home/section/div.toggle.menu.png');
+	cursor: pointer;
+	-webkit-filter: opacity(60%);
+	transition: -webkit-filter .5s ease-in-out;
+}
+
+.jcalendar-content {
+	position: fixed !important;
+}
+
+html>body.home>div.toggle.menu:hover,
+html>body.home.tablet>div.toggle.menu {
+	-webkit-filter: opacity(80%);
+	transition: -webkit-filter .5s ease-in-out;
+}
+
+html>body.home>.header>fieldset {
+	position: absolute;
+}
+
+html>body.home>section {
+	position: relative;
+}
+
+html>body.home>section>h1 {
+	/* display: inline-block; */
+	display: none !important;
+	height: calc(32px - 10px * 2);
+	margin-left: 45px;
+	padding: 10px 24px;
+	border: 1px outset rgb(121, 121, 121);
+	border-bottom: none;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	background-color: rgb(121, 121, 121);
+	color: white;
+	font-size: 12px;
+	text-transform: uppercase;
+	text-align: center;
+	cursor: pointer;
+}
+
+html>body.home>section>img,
+html>body.home>section>h2 {
+	display: inline-block;
+	margin-top: 200px;
+	vertical-align: top;
+}
+
+html>body.home>section>img {
+	float: left;
+	margin-left: 100px;
+	max-width: 150px;
+	max-height: 200px;
+}
+
+html>body.home>section>h2,
+html>body.home>section>p {
+	display: inline-block;
+	width: 420px;
+	margin-left: 20px;
+	margin-bottom: 10px;
+	color: rgb(103, 103, 103);
+}
+
+html>body.home>section>h2 {
+	font-size: 40px;
+	text-transform: capitalize;
+}
+
+html>body.home>section>p {
+	font-size: 14px;
+}
+
+html>body.home>section>section#iframe {
+	/* margin-top: 10px; */
+	/* margin-top: 30px; */
+	padding: 5px;
+	background-color: white;
+	/*border-radius: 10px;
+	border-top: 23px solid grey;
+	border-bottom: 8px solid white;*/
+
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-bottom: 5px solid white;
+	border-left: 5px solid white;
+	border-right: 5px solid white;
+	overflow: auto;
+
+	overflow: auto;
+}
+
+html>body.home>section>header.full-height {
+	position: relative;
+	/* Added */
+	margin-top: 25px;
+	min-height: 25px;
+	padding: 7px;
+	background-color: #F0F0F0;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	border: 1px solid white;
+	/* overflow: hidden; */
+	color: rgb(139, 139, 140);
+	text-transform: uppercase;
+}
+
+html>body.menu.tablet>section>header.full-height {
+	/*min-height: 40px;*/
+	zoom: 0.85;
+	margin-left: 46px;
+	margin-top: 10px;
+	display: block;
+}
+
+html>body.home>section>header.full-height {
+	zoom: 0.85;
+	margin-left: 90px;
+	margin-top: 20px;
+	padding: 12px;
+	display: block;
+	border-radius: 20px;
+}
+
+html>body.home>section>header.full-height {
+	min-height: 40px;
+}
+
+html>body.home>section>header.full-height>fieldset {
+	position: relative;
+	display: inline-block;
+	/*height: 50px;*/
+	min-height: 50px;
+	/* overflow: hidden; */
+}
+
+/* html > body.home > section > header > fieldset { */
+.ui-dialog fieldset.toolbox {
+	position: relative;
+	/*display: inline-block;*/
+	height: 50px;
+	overflow: hidden;
+}
+
+/*html > body.home > section > header > fieldset > legend {*/
+fieldset.toolbox>legend {
+	/*position: absolute;
+	top: 8px;
+	left: 30px;*/
+	display: none;
+}
+
+fieldset.toolbox label.date {
+	margin-left: 2px;
+	margin-right: 2px;
+	border: 1px solid lightgrey;
+	display: inline-block;
+	padding-top: 1px;
+	border-radius: 5px;
+	background-color: white;
+	padding-bottom: 1px;
+	padding-left: 1px;
+}
+
+fieldset.toolbox label.date input::-webkit-input-placeholder {
+	color: black;
+}
+
+fieldset.toolbox label.date button {
+	border: none !important;
+}
+
+
+fieldset.toolbox label.autocomplete {
+	margin-left: 2px;
+	margin-right: 2px;
+	border: 1px solid lightgrey;
+	display: inline-block;
+	padding-top: 1px;
+	border-radius: 5px;
+	background-color: white;
+	padding-bottom: 1px;
+	padding-left: 1px;
+}
+
+fieldset.toolbox label.autocomplete button {
+	border: none !important;
+}
+
+/* html > body.home > section > header > fieldset > label:not(:first-of-type) { */
+fieldset.toolbox>label:not(:first-of-type) {
+	/*margin-left: 90px;*/
+	/*margin-left: 5px;*/
+	margin-top: 5px;
+}
+
+/*html > body.home > section > header > fieldset > label:not(:first-of-type) > span:first-of-type {*/
+fieldset.toolbox>label:not(:first-of-type)>span:first-of-type {
+	display: none;
+}
+
+/*html > body.home > section > header > fieldset > label:first-of-type > input[type="search"] {*/
+fieldset.toolbox>label:first-of-type>input[type="search"],
+fieldset.toolbox>label:nth-of-type(2)>input[type="search"] {
+	width: 163px !important;
+	height: 26px;
+	background-image: url('html/body.home/section/header/fieldset/label/input.png');
+	background-position-x: -40px;
+	padding: 0 30px 0 8px;
+	margin: 0px 4px 0px 2px;
+	border-radius: 6px 0 0 6px;
+}
+
+/*dialogos*/
+.ui-dialog input[type="search"] {
+	/*width: calc(203px) !important;
+	height: 26px;
+	padding-right: 28px;
+	background-image: url('html/body.home/section/header/fieldset/label/input.png');*/
+
+	width: calc(100% - 0px);
+	padding-right: 11px;
+	background-image: url('_misc/input_type_search.png');
+	background-repeat: no-repeat;
+	background-position: right center;
+}
+
+/*html > body.home > section > header > fieldset > label > input[type="checkbox"] {*/
+fieldset.toolbox>label>input[type="checkbox"] {
+	width: 20px;
+	height: 20px;
+	vertical-align: middle;
+	margin-top: -5px;
+}
+
+/*
+
+html > body.home > section > header > fieldset > button {
+	display: inline-block;
+	width: 176px;
+	height: 24px;
+	background-image: url('html/body.home/section/header/fieldset/button.png');
+	background-position-y: 0;
+	color: white;
+	text-transform: inherit;
+}
+
+html > body.home > section > header > fieldset > button > span {
+	text-align: center;
+	margin-left: 12px;
+}
+
+html > body.home > section > header > fieldset > button:hover,
+html > body.home > section > header > fieldset > button.active {
+	background-position-y: 48px;
+}
+
+html > body.home > section > header > fieldset > button.enabled {
+	background-position-y: 24px;
+}
+
+html > body.home > section > header > fieldset,
+html > body.home > section > header > nav {
+	display: inline-block;
+}
+
+html > body.home > section > header > fieldset > fieldset {
+	position: fixed;
+	left: 516px;
+	width: 512px;
+	padding: 20px;
+	border-radius: 4px;
+	z-index: 1;
+	background-color: rgb(139,139,140);
+	text-align: right;
+}
+
+html > body.home > section > header > fieldset > fieldset > legend {
+	display: none;
+}
+
+html > body.home > section > header > fieldset > fieldset > label {
+	display: inline-block;
+	width: calc(100% - 10px * 2);
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+html > body.home > section > header > fieldset > fieldset > span.title {
+	display: block;
+	width: calc(100% - 10px * 2);
+	margin-top: 5px;
+	margin-bottom: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
+	color: white;
+	text-align: left;
+}
+
+html > body.home > section > header > fieldset > fieldset > label.half-width {
+	width: calc(50% - 10px * 2 - 2px);
+}
+
+html > body.home > section > header > fieldset > fieldset > label > span {
+	display: inline-block;
+	width: calc(50% - 2px - 5px);
+	padding-right: 5px;
+	color: white;
+	vertical-align: middle;
+}
+
+html > body.home > section > header > fieldset > fieldset > label > input,
+html > body.home > section > header > fieldset > fieldset > label > select {
+	display: inline-block;
+	width: calc(50% - 2px);
+	height: 16px;
+	border-radius: 4px;
+	background-color: white;
+	vertical-align: middle;
+	font: inherit;
+}
+
+html > body.home > section > header > fieldset > fieldset > label.half-width > span {
+	width: calc(35% - 4px);
+}
+
+html > body.home > section > header > fieldset > fieldset > label.half-width > input,
+html > body.home > section > header > fieldset > fieldset > label.half-width > select {
+	width: calc(65% - 4px);
+}
+
+html > body.home > section > header > fieldset > fieldset > label.checkbox {
+	display: inline-block;
+	width: auto;
+	color: white;
+}
+
+html > body.home > section > header > fieldset > fieldset > label.checkbox > input {
+	width: auto;
+}
+
+html > body.home > section > header > fieldset > fieldset > button {
+	display: inline-block;
+	width: 77px;
+	height: 23px;
+	margin-top: 10px;
+	margin-right: 10px;
+	background-image: url('html/body.home/section/header/fieldset/fieldset/button.png');
+	color: white;
+	text-transform: inherit;
+}
+
+html > body.home > section > header > fieldset > fieldset > button > span {
+	display: block;
+	text-align: center;
+}
+
+*/
+
+.dialog header {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+#dialog-viewport {
+	/* height: calc(100% - 100px); */
+	height: calc(100% - 50px);
+	overflow: auto;
+}
+
+header[style*="display: none"]+#dialog-viewport {
+	height: calc(100%);
+	overflow: auto;
+}
+
+/*.dialog > section > label {*/
+#dialog-viewport>section>label {
+	display: block;
+	margin-top: 10px;
+}
+
+/*.dialog > section > label > input[type="checkbox"] {*/
+#dialog-viewport>section>label>input[type="checkbox"] {
+	width: auto !important;
+	vertical-align: top;
+}
+
+nav#menu,
+nav#dialog-menu {
+	display: inline-block;
+	width: auto;
+	vertical-align: top;
+}
+
+nav#menu>ul,
+nav#dialog-menu>ul {
+	display: inline-block;
+}
+
+nav#menu>ul>li,
+nav#dialog-menu>ul>li {
+	display: inline-block;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+
+/* TODO: Este estilo al parecer no se usa en ninguna parte, se debería verificar y eliminar si corresponde */
+html>body.home>section>header>nav>ul>li>a {
+	text-align: center;
+}
+
+/* TODO: Este estilo al parecer no se usa en ninguna parte, se debería verificar y eliminar si corresponde */
+html>body.home>section>header>nav>ul>li>a>div {
+	display: block;
+	width: 38px;
+	height: 38px;
+	margin: 0 auto;
+	background-image: url('html/body.home/section/header/nav/ul/li/a.png');
+	background-repeat: repeat-x;
+	opacity: .5;
+	transition: opacity .5s ease-in-out;
+}
+
+/* TODO: Este estilo al parecer no se usa en ninguna parte, se debería verificar y eliminar si corresponde */
+html>body.home>section>header>nav>ul>li:hover>a>div {
+	opacity: 1;
+}
+
+/* TODO: Este estilo al parecer no se usa en ninguna parte, se debería verificar y eliminar si corresponde */
+html>body.home>section>header>nav>ul>li.add>a>div {
+	background-position-x: calc((38px * 1) - 38px);
+}
+
+/* TODO: Este estilo al parecer no se usa en ninguna parte, se debería verificar y eliminar si corresponde */
+html>body.home>section>header>nav>ul>li.export>a>div {
+	background-position-x: calc((38px * 2) - 38px);
+}
+
+/* TODO: Este estilo al parecer no se usa en ninguna parte, se debería verificar y eliminar si corresponde */
+html>body.home>section>header>nav>ul>li.print>a>div {
+	background-position-x: calc((38px * 3) - 38px);
+}
+
+/* TODO: Este estilo al parecer no se usa en ninguna parte, se debería verificar y eliminar si corresponde */
+html>body.home>section>header>nav>ul>li.delete>a>div {
+	background-position-x: calc((38px * 4) - 38px);
+}
+
+/* TODO: Este estilo al parecer no se usa en ninguna parte, se debería verificar y eliminar si corresponde */
+html>body.home>section>header>nav>ul>li>a>span {
+	display: block;
+	font-size: 8px;
+	text-align: center;
+}
+
+
+
+html>body.menu.tablet>section>section#viewport {
+	padding: 5px;
+	background-color: white;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-bottom: 1px solid white;
+	border-left: 1px solid white;
+	border-right: 1px solid white;
+	overflow: auto;
+	margin-left: 40px;
+}
+
+html>body.home>section>section#viewport {
+	padding: 5px;
+	background-color: white;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+	border-bottom: 1px solid white;
+	border-left: 1px solid white;
+	border-right: 1px solid white;
+	overflow: auto;
+	margin-left: 77px;
+	margin-top: 10px;
+	border-radius: 20px;
+}
+
+html>body.menu.tablet>section>section#iframe {
+	/* margin-top: 15px;  */
+	margin-left: 40px;
+
+}
+
+html>body.menu>section>section#iframe {
+	margin-top: 15px;
+	margin-left: 80px;
+
+}
+
+html>body.home>section>section#viewport.standalone {
+	margin-top: 5px;
+	padding: 0;
+	background-color: transparent;
+	border: none;
+	overflow: auto;
+}
+
+html>body.home>section>section#viewport>section {
+	min-width: 1130px;
+}
+
+html>body.home>section>section#viewport>h1 {}
+
+html>body.home>section>section#viewport>section#tabs>ul>li a {
+	background-color: rgb(198, 198, 200);
+	color: white;
+	font-size: 12px;
+}
+
+html>body.home>section>section#viewport>section#tabs>ul li.active a {
+	background-color: rgb(165, 165, 167);
+}
+
+html>body.home>section>section#viewport>section#tabs>ul>li a:not(.previous-tab):not(.next-tab) {
+	margin-right: 1px;
+}
+
+html>body.home>section>section#viewport>section#tabs>article {
+	padding: 15px;
+	background-color: rgb(165, 165, 167);
+	color: white;
+}
+
+html>body.home>section>section#viewport>section#tabs>article>h1 {
+	margin-bottom: -30px;
+	font-size: 14px;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+html>body.home>section>section#viewport>section#tabs>article>fieldset {
+	display: inline-block;
+	width: calc(50% - 2px - 7px * 2 - 15px * 2);
+	margin-bottom: 10px;
+	padding: 0 15px 15px 15px;
+	background-color: rgb(227, 227, 228);
+	border-radius: 10px;
+	text-align: right;
+}
+
+html>body.home>section>section#viewport>section#tabs>article>fieldset:nth-of-type(2n+1) {
+	margin-right: 7px;
+}
+
+html>body.home>section>section#viewport>section#tabs>article>fieldset:nth-of-type(2n) {
+	margin-left: 7px;
+}
+
+html>body.home>section>section#viewport>section#tabs>article>fieldset>legend {
+	display: block;
+	padding-top: 70px;
+	padding-bottom: 20px;
+	color: rgb(121, 121, 121);
+	text-transform: uppercase;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: left;
+}
+
+html>body.home>section>section#viewport>section#tabs>article>fieldset>label {
+	display: block;
+	margin-bottom: 10px;
+	text-align: right;
+}
+
+html>body.home>section>section#viewport>section#tabs>article>fieldset>label>span {
+	display: inline-block;
+	width: calc(30% - 2px - 10px);
+	margin-right: 10px;
+	font-size: 11px;
+	text-transform: uppercase;
+}
+
+html>body.home>section>section#viewport>section#tabs>article>fieldset>label>input,
+html>body.home>section>section#viewport>section#tabs>article>fieldset>label>select {
+	display: inline-block;
+	width: calc(70% - 2px);
+	height: 23px;
+	background-color: white;
+	border: 1px solid rgb(214, 214, 215);
+	border-radius: 5px;
+}
+
+html>body.home>section>section#viewport>section#tabs>article>fieldset>label>span {
+	color: rgb(121, 121, 121);
+	text-transform: uppercase;
+}
+
+html>body.home>section>section#viewport>section#tabs>article>fieldset>button {
+	display: inline-block;
+}
+
+html>body.home>section>section#viewport section.sheet {
+	min-height: calc(100vh - 220px);
+}
+
+html>body.home>section>section#viewport section.sheet>header {
+	position: relative;
+	height: 40px;
+	background-color: rgb(245, 242, 242);
+}
+
+html>body.home>section>section#viewport section.sheet>header>h1>img {
+	width: 100px;
+}
+
+html>body.home>section>section#viewport section.sheet>header>span,
+html>body.home>section>section#viewport section.sheet>header>time,
+html>body.home>section>section#viewport section.sheet>header>ul {
+	position: absolute;
+}
+
+html>body.home>section>section#viewport section.sheet>header>span:first-of-type {
+	right: 5px;
+	top: 5px;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+html>body.home>section>section#viewport section.sheet>header>time {
+	right: 5px;
+	top: 20px;
+}
+
+html>body.home>section>section#viewport section.sheet>header>ul {
+	left: 5px;
+	top: 8px;
+	font-size: 11px;
+}
+
+html>body.home>section>section#viewport section.sheet>header>ul>li {
+	display: block;
+}
+
+html>body.home>section>section#viewport section.sheet>header>ul>li>strong {
+	font-weight: bold;
+}
+
+
+html>body.home>section>section#viewport section.sheet>header>ul>li>strong::after {
+	content: '\3A';
+}
+
+
+/*html > body.home > section > section#viewport section.sheet > header > span:last-of-type > input {
+	display: inline-block;
+	width: 140px;
+	margin-left: 20px;
+	padding-right: 11px;
+	background-image: url('_misc/input.png');
+	background-position: right center;
+	background-repeat: no-repeat;
+	border-bottom: 1px ridge rgb(230,230,230);
+	text-align: right;
+	text-decoration: inherit;
+	text-transform: inherit;
+	font-weight: inherit;
+}
+
+html > body.home > section > section#viewport section.sheet > header > span:last-of-type > input:focus {
+	border-bottom: 1px ridge black;
+	background-image: url('_misc/input_focus.png');
+}*/
+
+html>body.home>section>section#viewport section.sheet>footer {
+	margin-bottom: 5px;
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article {
+	position: relative;
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article.general {
+	position: fixed;
+	top: 0;
+	background: none !important;
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article.general>h1 {
+	display: none !important;
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>h2>span>span.numeric.percent:before {
+	content: "(";
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>h2>span>span.numeric.percent:after {
+	content: ")";
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article input[name="cotizacion[montos][subtotal_neto]"].ajustado {
+	color: rgb(67, 175, 124);
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>ul.editable {
+	display: inline-block;
+	width: calc(50% - 2px);
+	margin-top: 35px;
+	margin-bottom: 15px;
+	vertical-align: top;
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>ul.editable>li.margin-after,
+html>body.home>section>section#viewport section.sheet footer ul>li.margin-after {
+	margin-bottom: 18px;
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>ul.editable>li.margin-before,
+html>body.home>section>section#viewport section.sheet footer ul>li.margin-before {
+	margin-top: 18px;
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>ul.editable>li>span:first-of-type {
+	display: inline-block;
+	width: calc(20% - 2px);
+	font-weight: bold;
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>ul.editable>li>span:nth-of-type(2) {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>ul.editable>li>span:nth-of-type(2):not(.ui-icon) {
+	width: calc(60% - 2px);
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>ul.editable>li>span.main:nth-of-type(2) {
+	width: calc(60% - 2px - 70px);
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>ul.editable>li>span.secondary:nth-of-type(3) {
+	display: inline-block;
+	width: calc(70px);
+	text-align: right;
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>ul.editable>li>span.hidden {
+	display: none;
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>button.expand {
+	position: absolute;
+	/*	right: 10px;
+	top: 23px;
+*/
+	top: 25px;
+	display: inline-block;
+	margin: 0 !important;
+	padding: 0 !important;
+	width: 1.5rem !important;
+	height: 1.5rem !important;
+	/*	width: 18px !important;
+	height: 18px !important;*/
+}
+
+
+html>body.home>section>section#viewport table:not(.default),
+.ui-dialog table {
+	/* position: relative; */
+	width: 100%;
+	text-align: left;
+	font-size: 10px;
+	text-transform: uppercase;
+}
+
+html>body.home>section>section#viewport table:not(.default)>tbody,
+html>body.home>section>section#viewport table:not(.default)>tfoot,
+.ui-dialog table>tbody,
+.ui-dialog table>tfoot {
+	margin-top: 5px;
+}
+
+html>body.home>section>section#viewport table:not(.default)>tfoot,
+.ui-dialog table>tfoot {
+	font-weight: bold;
+}
+
+html>body.home>section>section#viewport table:not(.default)>thead>tr,
+.ui-dialog table>thead>tr {
+	background-color: #20A789;
+	color: white;
+
+}
+
+html>body.home>section>section#viewport table:not(.default)>thead>tr>th,
+.ui-dialog table>thead>tr>th {
+	text-align: center;
+	text-transform: uppercase;
+}
+
+html>body.home>section>section#viewport table:not(.default)>tbody,
+.ui-dialog table>tbody {
+	color: rgb(103, 103, 103);
+}
+
+/* html > body.home > section > section#viewport table > tbody:empty:after,
+.ui-dialog table > tbody:empty:after {
+	content: "Aún no hay datos";
+	display: table-cell;
+} */
+
+/*html > body.home > section > section#viewport table:not(fc-*) > tbody > tr:nth-of-type(odd),*/
+html>body.home>section>section#viewport>table:not(.default)>tbody>tr:nth-of-type(odd),
+html>body.home>section>section#viewport>*:not(.fc) table>tbody>tr:nth-of-type(odd),
+.ui-dialog table>tbody>tr:nth-of-type(odd) {
+	/* background-color: rgb(240,240,241); */
+	border-bottom: 1px solid #E4E7EC;
+}
+
+/*html > body.home > section > section#viewport table:not(fc-*) > tbody > tr:nth-of-type(even),*/
+html>body.home>section>section#viewport>table:not(.default)>tbody>tr:nth-of-type(even),
+html>body.home>section>section#viewport>*:not(.fc) table:not(.default)>tbody>tr:nth-of-type(even),
+.ui-dialog table>tbody>tr:nth-of-type(even) {
+	/* background-color: white; */
+	border-bottom: 1px solid #E4E7EC;
+}
+
+html>body.home>section>section#viewport table:not(.default)>tbody>tr[data-status="false"],
+.ui-dialog table>tbody>tr[data-status="false"] {
+	text-decoration: line-through;
+}
+
+html>body.home>section>section#viewport table:not(.default)>tbody>tr.ui-selecting,
+.ui-dialog table>tbody>tr.ui-selecting {
+	background: #FECA40;
+	opacity: .7;
+}
+
+html>body.home>section>section#viewport table:not(.default)>tbody>tr.ui-selected,
+.ui-dialog table>tbody>tr.ui-selected {
+	background: #FECA40;
+}
+
+html>body.home>section>section#viewport>table:not(.default)>*>tr,
+html>body.home>section>section#viewport>*:not(.fc) table:not(.default)>*>tr,
+.ui-dialog table>*>tr {
+	height: 39px;
+	padding: 3px;
+}
+
+html>body.home>section>section#viewport table:not(.default)>*>tr>*,
+.ui-dialog table>*>tr>* {
+	padding: 3px;
+	vertical-align: middle;
+	text-align: center;
+}
+
+html>body.home>section>section#viewport table:not(.default)>*>tr>*.text,
+.ui-dialog table>*>tr>*.text {
+	text-align: left;
+}
+
+html>body.home>section>section#viewport table:not(.default)>*>tr>td.currency,
+html>body.home>section>section#viewport table:not(.default)>*>tr>td.number,
+.ui-dialog table>*>tr>td.currency,
+.ui-dialog table>*>tr>td.number {
+	position: relative;
+	text-align: right;
+	/* padding-left: 10px; */
+	padding-left: 20px;
+	white-space: nowrap;
+}
+
+html>body.home>section>section#viewport table:not(.default)>tbody>tr>td.fit,
+.ui-dialog table>tbody>tr>td.fit {
+	width: 20px;
+}
+
+html>body.home>section>section#viewport table:not(.default)>tbody>tr>td.options>button,
+.ui-dialog table>tbody>tr>td.options>button {
+	width: 20px;
+	height: 20px;
+}
+
+html>body.home>section>section#viewport table:not(.default)>tbody>tr>td.options2,
+.ui-dialog table>tbody>tr>td.options2 {
+	width: 300px;
+}
+
+html>body.home>section>section#viewport table:not(.default)>tbody>tr>td.options2>button,
+.ui-dialog table>tbody>tr>td.options2>button {
+	height: 24px;
+}
+
+html>body.home>section>section#viewport table:not(.default, .default-ub)>*>tr>td.currency>span.symbol,
+.ui-dialog table>*>tr>td.currency>span.symbol {
+	position: absolute;
+	left: 0;
+}
+
+html>body.home>section>section#viewport table:not(.default)>*>tr>td.currency>span.negative,
+.ui-dialog table>*>tr>td.currency>span.negative {
+	color: red;
+}
+
+html>body.home>section>section#viewport table:not(.default)>*>tr>td>time>span,
+.ui-dialog table>*>tr>td>time>span {
+	color: rgb(67, 165, 24);
+}
+
+
+html>body.home>section>section#viewport section.sheet table.items,
+.ui-dialog section.sheet table.items {
+	width: 100%;
+	color: rgb(0, 51, 51);
+	/* margin-bottom: 50px; */
+	margin-bottom: 5px;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>caption,
+.ui.dialog section.sheet table.items>caption {
+	padding: 10px;
+	font-size: 14px;
+	font-weight: bold;
+	text-align: left;
+	text-transform: uppercase;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>thead,
+.ui-dialog section.sheet table.items>thead {
+	background-color: black;
+	color: white;
+	font-size: 11px;
+	font-weight: bold;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>thead th,
+.ui-dialog section.sheet table.items>thead th {
+	/* background-color: inherit; */
+	/* z-index: 100; */
+}
+
+html>body.home>section>section#viewport section.sheet table.items>thead div,
+.ui-dialog section.sheet table.items>thead div {
+	background-color: inherit;
+}
+
+/*html > body.home > section > section#viewport section.sheet table.items > tfoot,
+.ui-dialog section.sheet table.items > tfoot {
+	background-color: rgb(247,247,221);
+	border-top: 3px solid lightgrey;
+	font-weight: bold;
+}*/
+
+html>body.home>section>section#viewport section.sheet table.items>tfoot tr,
+.ui-dialog section.sheet table.items>tfoot tr {}
+
+html>body.home>section>section#viewport section.sheet table.items>tfoot th,
+.ui-dialog section.sheet table.items>tfoot th {
+	background-color: rgb(247, 247, 221);
+	border-top: 3px solid lightgrey;
+	font-weight: bold;
+	z-index: 100;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>tfoot div,
+.ui-dialog section.sheet table.items>tfoot div {
+	background-color: inherit;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>tbody,
+.ui-dialog section.sheet table.items>tbody {
+	counter-reset: item;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr:not(.title)>td:nth-of-type(2):before,
+.ui-dialog section.sheet table.items>tbody>tr:not(.title)>td:nth-of-type(2):before {
+	font-weight: bold;
+	margin-right: 10px;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr:not(.title)>td:nth-of-type(2):not(.no-counter):before,
+.ui-dialog section.sheet table.items>tbody>tr:not(.title)>td:nth-of-type(2):not(.no-counter):before {
+	counter-increment: item;
+	content: counter(item);
+}
+
+td.counter:after {
+	counter-increment: item;
+	content: counter(item);
+	font-weight: bold;
+	margin-right: 0;
+	margin-left: 5px;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>*>tr,
+.ui-dialog section.sheet table.items>*>tr {
+	color: inherit;
+	height: inherit;
+	background-color: inherit;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>*>tr>*>span,
+.ui-dialog section.sheet table.items>*>tr>*>span {
+	display: inline-block;
+	white-space: nowrap;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>thead>tr>*,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>*,
+html>body.home>section>section#viewport section.sheet table.items>tfoot>tr>*,
+.ui-dialog section.sheet table.items>thead>tr>*,
+.ui-dialog section.sheet table.items>tbody>tr>*,
+.ui-dialog section.sheet table.items>tfoot>tr>* {
+	vertical-align: middle;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>thead>tr>th,
+.ui-dialog section.sheet table.items>thead>tr>th {
+	padding: 4px;
+	/*vertical-align: middle;*/
+	vertical-align: middle;
+	text-transform: none;
+	text-align: center;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>thead>tr>th:last-of-type,
+.ui-dialog section.sheet table.items>thead>tr>th:last-of-type {
+	/* position: relative; */
+}
+
+html>body.home>section>section#viewport section.sheet table.items>thead>tr>th:last-of-type>.ui-button,
+.ui-dialog section.sheet table.items>thead>tr>th:last-of-type>.ui-button {
+	width: 20px !important;
+	height: 20px !important;
+	margin-left: 0 !important;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>thead>tr:first-of-type>th:first-of-type,
+.ui-dialog section.sheet table.items>thead>tr:first-of-type>th:first-of-type {
+	width: 70px;
+	background-color: #EA4E49;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>th,
+.ui-dialog section.sheet table.items>tbody>tr>th {
+	padding: 2px;
+	/* background-color: rgb(204,204,204); */
+	/* background-color: rgb(220,220,220); */
+	background-color: #d5e8e1;
+	text-align: left;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>th,
+html>body.home>section>section#viewport section.sheet table.items>tfoot>tr>th,
+.ui-dialog section.sheet table.items>tbody>tr>th,
+.ui-dialog section.sheet table.items>tfoot>tr>th {
+	text-transform: uppercase;
+	font-weight: bold;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>*>tr>*>button,
+html>body.home>section>section#viewport section.sheet table.items>*>tr>*>span,
+.ui-dialog section.sheet table.items>*>tr>*>button,
+.ui-dialog section.sheet table.items>*>tr>*>span {
+	display: inline-block;
+	vertical-align: initial;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td input.edited,
+.ui-dialog section.sheet table.items>tbody>tr>td input.edited {
+	color: #305ab3;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td input.edited.special,
+.ui-dialog section.sheet table.items>tbody>tr>td input.edited.special {
+	color: red;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td input.warning,
+.ui-dialog section.sheet table.items>tbody>tr>td input.warning {
+	background-color: red;
+	color: white;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td input.info,
+.ui-dialog section.sheet table.items>tbody>tr>td input.info {
+	background-color: yellow;
+	color: black;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>*>tr>*>input[type="checkbox"],
+.ui-dialog section.sheet table.items>*>tr>*>input[type="checkbox"] {
+	/* display: block; */
+	width: 18px;
+	margin: 0 auto;
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>h1 {
+	display: block;
+	background-color: #2C3F4D;
+	color: white;
+	margin-left: -10px !important;
+	margin-top: -10px !important;
+	padding: 5px !important;
+	font-weight: bold;
+	margin-bottom: 10px !important;
+	font-size: 11px;
+	text-transform: none !important;
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>h2:not(.custom-h2) {
+	font-size: 16px;
+	font-weight: bold;
+	/* Debería ser capitalizado, pero no queda otra */
+	text-transform: uppercase;
+	margin-bottom: 8px;
+	margin-left: 30px;
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>h2.custom-h2 {
+	font-size: 16px;
+	font-weight: bold;
+	/* Debería ser capitalizado, pero no queda otra */
+	text-transform: uppercase;
+	margin-bottom: 8px;
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>h2>span>span.percent {
+	padding-left: 5px;
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>h2>*:not(:first-child):not(:empty):not([style*="display: none"]):before {
+	content: '\2022';
+	color: black;
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>h2>span:last-of-type {
+	display: inline;
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>h2>input,
+html>body.home>section>section#viewport section.sheet>footer>article>h2>span:last-of-type>input {
+	width: calc(100% - 350px) !important;
+	height: 19px;
+	margin: 0;
+	padding: 0;
+	padding-bottom: 2px;
+	border-bottom: 1px solid grey;
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>h2>span>input {
+	border-bottom: none;
+	display: inline;
+	width: auto;
+	cursor: default;
+	background-image: none;
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>h2>strong {
+	color: rgb(67, 175, 124);
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>ul.editable>li>button:not(.ui-button-text-icon-primary),
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li>button:not(.ui-button-text-icon-primary),
+html>body.home .ui-dialog>div>div>div button.ui-button:not(.ui-button-text-icon-primary),
+html>body.home>section>section#viewport section button.ui-button:not(.ui-button-text-icon-primary) {
+	/* TODO: reestructurar el código html en otros módulos distintos al de cotización */
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+	width: 18px;
+	height: 18px;
+	margin-left: 5px;
+}
+
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li>span {
+	vertical-align: middle;
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>ul.editable>li>span>input,
+html>body.home>section>section#viewport section.sheet table.items>caption>input,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>th>input,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td>input,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>th>span>input,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td>span>input,
+html>body.home>section>section#viewport section.sheet table.items>tfoot>tr>th>input,
+html>body.home>section>section#viewport section.sheet table.items>tfoot>tr>th>div>input,
+html>body.home>section>section#viewport section.sheet table.items>tfoot>tr>th>span>input,
+html>body.home>section>section#viewport section.sheet table.items>tfoot>tr>th>div>span>input,
+.ui-dialog section.sheet table.items>caption>input,
+.ui-dialog section.sheet table.items>tbody>tr>th>input,
+.ui-dialog section.sheet table.items>tbody>tr>td>input,
+.ui-dialog section.sheet table.items>tbody>tr>th>span>input,
+.ui-dialog section.sheet table.items>tbody>tr>td>span>input,
+.ui-dialog section.sheet table.items>tfoot>tr>th>input,
+.ui-dialog section.sheet table.items>tfoot>tr>th>div>input,
+.ui-dialog section.sheet table.items>tfoot>tr>th>span>input,
+.ui-dialog section.sheet table.items>tfoot>tr>th>div>span>input,
+.ui-dialog section.sheet footer>article>section>ul>li>span>input,
+#dialog-viewport fieldset>label input,
+/*html > body.home > .ui-dialog input,*/
+html>body.home>.ui-dialog .toolbox+* input,
+html>body.home>section>section#viewport section input:not([type="checkbox"]) {
+	/* TODO: reestructurar el código html en otros módulos distintos al de cotización */
+	display: inline-block;
+	/* width: calc(100% - 11px); */
+	width: calc(100% - 16px);
+	height: 18px;
+	padding-right: 11px;
+	/*background-image: url('_misc/input.png');*/
+	background-position: right center;
+	background-repeat: no-repeat;
+	/*border-bottom: 1px ridge rgb(210,210,210);*/
+	/* border-bottom: 1px ridge rgb(180,180,180); */
+	text-align: inherit;
+	text-decoration: inherit;
+	text-transform: uppercase;
+	font-weight: inherit;
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>ul.editable>li>span>input:focus,
+html>body.home>section>section#viewport section.sheet table.items>caption>input:focus,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>th>input:focus,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td>input:focus,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td>span>input:focus,
+html>body.home>section>section#viewport section.sheet table.items>tfoot>tr>th>input:focus,
+html>body.home>section>section#viewport section.sheet table.items>tfoot>tr>th>span>input:focus,
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li>span>input:focus,
+#dialog-viewport fieldset>label input:focus {
+	border-bottom: 1px ridge black;
+	/*background-image: url('_misc/input_focus.png');*/
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>ul.editable>li>span:nth-of-type(3)>label>input[type="checkbox"],
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li>span>input[type="checkbox"],
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li>span>label>input[type="checkbox"],
+html>body.home>section>section#viewport section.sheet>table>tbody>tr>td>span>input[type="checkbox"] {
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	margin: 3px 0 0 3px;
+	vertical-align: text-bottom;
+}
+
+html>body.home>section>section#viewport section.sheet>table>tbody>tr>td>span>input[type="checkbox"] {
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	vertical-align: middle;
+	text-align: center;
+}
+
+/* html > body.home > section > section#viewport section.sheet > ul > li > span > input:not([type="search"]):not([type="checkbox"]):not([readonly]) { */
+.editable input:not([type="search"]):not([type="checkbox"]):not([readonly]):not(.always-open),
+.editable textarea:not([readonly]):not(.always-open) {
+	/* background-color: yellow; */
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>ul.editable>li>span>input[readonly],
+html>body.home>section>section#viewport section.sheet table.items>caption>input[readonly],
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>th>input[readonly],
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td>input[readonly],
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>th>span>input[readonly],
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td>span>input[readonly],
+html>body.home>section>section#viewport section.sheet table.items>tfoot>tr>th>input[readonly],
+html>body.home>section>section#viewport section.sheet table.items>tfoot>tr>th>span>input[readonly],
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li>span>input[readonly],
+/*html > body.home > .ui-dialog input[readonly],*/
+html>body.home>.ui-dialog .toolbox+* input[readonly],
+html>body.home>section>section#viewport section input[readonly] {
+	/* TODO: reestructurar el código html en otros módulos distintos al de cotización */
+	background-image: url('_misc/input_readonly.png');
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>ul.editable>li>span>input[readonly]:focus,
+html>body.home>section>section#viewport section.sheet table.items>caption>input[readonly]:focus,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>th>input[readonly]:focus,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td>input[readonly]:focus,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>th>span>input[readonly]:focus,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td>span>input[readonly]:focus,
+html>body.home>section>section#viewport section.sheet table.items>tfoot>tr>th>input[readonly]:focus,
+html>body.home>section>section#viewport section.sheet table.items>tfoot>tr>th>span>input[readonly]:focus,
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li>span>input[readonly]:focus,
+/*html > body.home > .ui-dialog input[readonly]:focus,*/
+html>body.home>.ui-dialog .toolbox+* input[readonly]:focus,
+html>body.home>section>section#viewport section input[readonly]:focus {
+	/* TODO: reestructurar el código html en otros módulos distintos al de cotización */
+	background-image: url('_misc/input_readonly_focus.png');
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>ul.editable>li>span>input[type="search"],
+html>body.home>section>section#viewport section.sheet table.items>caption>input[type="search"],
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>th>input[type="search"],
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td>input[type="search"],
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td>span>input[type="search"],
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li>span>input[type="search"],
+/*html > body.home > .ui-dialog input[type="search"],*/
+html>body.home>.ui-dialog .toolbox+* input[type="search"],
+html>body.home>section>section#viewport section input[type="search"] {
+	/* TODO: reestructurar el código html en otros módulos distintos al de cotización */
+	width: calc(100% - 0px);
+	padding-right: 11px;
+	/* background-image: url('_misc/input_type_search.png'); */
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>ul.editable>li>span>input[type="search"][readonly],
+html>body.home>section>section#viewport section.sheet table.items>caption>input[type="search"][readonly],
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>th>input[type="search"][readonly],
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td>input[type="search"][readonly],
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td>span>input[type="search"][readonly],
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li>span>input[type="search"][readonly],
+/*html > body.home > .ui-dialog input[type="search"][readonly],*/
+html>body.home>.ui-dialog .toolbox+* input[type="search"][readonly],
+html>body.home>section>section#viewport section input[type="search"][readonly] {
+	/* TODO: reestructurar el código html en otros módulos distintos al de cotización */
+	width: calc(100% - 0px);
+	/*padding-right: 11px;
+	background-image: url('_misc/input_type_search.png');*/
+	padding-right: 0;
+	background-image: none;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>th:nth-of-type(3)>input[type="search"],
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td:nth-of-type(3)>input[type="search"] {
+	/* width: calc(100% - 48px); */
+	width: calc(100% - 68px);
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>ul.editable>li>span>input[type="search"]:focus,
+html>body.home>section>section#viewport section.sheet table.items>caption>input[type="search"]:focus,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>th>input[type="search"]:focus,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td>input[type="search"]:focus,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td>span>input[type="search"]:focus,
+html>body.home>section>section#viewport section input[type="search"]:focus {
+	/* TODO: reestructurar el código html en otros módulos distintos al de cotización */
+	background-image: url('_misc/input_type_search_focus.png');
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>ul.editable>li>span>input[type="search"][readonly]:focus,
+html>body.home>section>section#viewport section.sheet table.items>caption>input[type="search"][readonly]:focus,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>th>input[type="search"][readonly]:focus,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td>input[type="search"][readonly]:focus,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td>span>input[type="search"][readonly]:focus,
+/*html > body.home > .ui-dialog input[type="search"][readonly]:focus,*/
+html>body.home>.ui-dialog .toolbox+* input[type="search"][readonly]:focus,
+html>body.home>section>section#viewport section input[type="search"][readonly]:focus {
+	/* TODO: reestructurar el código html en otros módulos distintos al de cotización */
+	/* background-image: url('_misc/input_type_search_focus.png'); */
+	background-image: none;
+}
+
+html>body.home>section>section#viewport section.sheet>footer>article>ul.editable>li>span>input[type="search"][readonly]::-webkit-search-cancel-button,
+html>body.home>section>section#viewport section.sheet table.items>caption>input[type="search"][readonly]::-webkit-search-cancel-button,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>th>input[type="search"][readonly]::-webkit-search-cancel-button,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td>input[type="search"][readonly]::-webkit-search-cancel-button,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td>span>input[type="search"][readonly]::-webkit-search-cancel-button,
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li>span>input[type="search"][readonly]::-webkit-search-cancel-button,
+/*html > body.home > .ui-dialog input[type="search"][readonly]::-webkit-search-cancel-button,*/
+html>body.home>.ui-dialog .toolbox+* input[type="search"][readonly]::-webkit-search-cancel-button,
+html>body.home>section>section#viewport section input[type="search"][readonly]::-webkit-search-cancel-button {
+	/* TODO: reestructurar el código html en otros módulos distintos al de cotización */
+	-webkit-appearance: none;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td,
+html>body.home>section>section#viewport section.sheet table.items>tfoot>tr>th,
+.ui-dialog section.sheet table.items>tbody>tr>td,
+.ui-dialog section.sheet table.items>tfoot>tr>th {
+	padding: 2px;
+	white-space: nowrap;
+	padding-right: 10px;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>*>tr>*,
+.ui-dialog section.sheet table.items>*>tr>* {
+	text-align: inherit;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>th.numeric,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td.numeric,
+html>body.home>section>section#viewport section.sheet table.items>tfoot>tr>th.numeric,
+.ui-dialog section.sheet table.items>tbody>tr>th.numeric,
+.ui-dialog section.sheet table.items>tbody>tr>td.numeric,
+.ui-dialog section.sheet table.items>tfoot>tr>th.numeric,
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li>span.numeric>* {
+	/* text-align: right; */
+}
+
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>th.numeric input,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td.numeric input,
+html>body.home>section>section#viewport section.sheet table.items>tfoot>tr>th.numeric input,
+.ui-dialog section.sheet table.items>tbody>tr>th.numeric input,
+.ui-dialog section.sheet table.items>tbody>tr>td.numeric input,
+.ui-dialog section.sheet table.items>tfoot>tr>th.numeric input,
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li>span.numeric>input {
+	text-align: right;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>th.numeric>span,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td.numeric>span,
+html>body.home>section>section#viewport section.sheet table.items>tfoot>tr>th.numeric>span,
+html>body.home>section>section#viewport section.sheet table.items>tfoot>tr>th.numeric>div>span,
+.ui-dialog section.sheet table.items>tbody>tr>th.numeric>span,
+.ui-dialog section.sheet table.items>tbody>tr>td.numeric>span,
+.ui-dialog section.sheet table.items>tfoot>tr>th.numeric>span,
+.ui-dialog section.sheet table.items>tfoot>tr>th.numeric>div>span {
+	display: inline-block;
+	text-align: right;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td.numeric>span.unit,
+.ui-dialog section.sheet table.items>tbody>tr>td.numeric>span.unit {
+	width: 10px;
+	text-align: left;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td.numeric.code,
+.ui-dialog section.sheet table.items>tbody>tr>td.numeric.code {
+	/* width: 55px; */
+	width: 35px;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td.numeric.code>*,
+.ui-dialog section.sheet table.items>tbody>tr>td.numeric.code>* {
+	width: 70px;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>th.numeric.currency,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td.numeric.currency,
+html>body.home>section>section#viewport section.sheet table.items>tfoot>tr>th.numeric.currency,
+.ui-dialog section.sheet table.items>tbody>tr>th.numeric.currency,
+.ui-dialog section.sheet table.items>tbody>tr>td.numeric.currency,
+.ui-dialog section.sheet table.items>tfoot>tr>th.numeric.currency,
+{
+width: 90px;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>th.numeric.currency.extended,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td.numeric.currency.extended,
+html>body.home>section>section#viewport section.sheet table.items>tfoot>tr>th.numeric.currency.extended,
+.ui-dialog section.sheet table.items>tbody>tr>th.numeric.currency.extended,
+.ui-dialog section.sheet table.items>tbody>tr>td.numeric.currency.extended,
+.ui-dialog section.sheet table.items>tfoot>tr>th.numeric.currency.extended {
+	width: 105px;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>th.numeric.currency>span>*,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td.numeric.currency>span>*,
+html>body.home>section>section#viewport section.sheet table.items>tfoot>tr>th.numeric.currency>span>*,
+html>body.home>section>section#viewport section.sheet table.items>tfoot>tr>th.numeric.currency>div>span>*,
+.ui-dialog section.sheet table.items>tbody>tr>th.numeric.currency>span>*,
+.ui-dialog section.sheet table.items>tbody>tr>td.numeric.currency>span>*,
+.ui-dialog section.sheet table.items>tfoot>tr>th.numeric.currency>span>*,
+.ui-dialog section.sheet table.items>tfoot>tr>th.numeric.currency>div>span>* {
+	width: 85px;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>th.numeric.percent,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td.numeric.percent,
+html>body.home>section>section#viewport section.sheet table.items>tfoot>tr>th.numeric.percent,
+.ui-dialog section.sheet table.items>tbody>tr>th.numeric.percent,
+.ui-dialog section.sheet table.items>tbody>tr>td.numeric.percent,
+.ui-dialog section.sheet table.items>tfoot>tr>th.numeric.percent {
+	/* width: 90px; */
+	width: 65px;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>th.numeric.percent>span>*,
+html>body.home>section>section#viewport section.sheet table.items>tbody>tr>td.numeric.percent>span>*,
+html>body.home>section>section#viewport section.sheet table.items>tfoot>tr>th.numeric.percent>span>*,
+html>body.home>section>section#viewport section.sheet table.items>tfoot>tr>th.numeric.percent>div>span>*,
+.ui-dialog section.sheet table.items>tbody>tr>th.numeric.percent>span>*,
+.ui-dialog section.sheet table.items>tbody>tr>td.numeric.percent>span>*,
+.ui-dialog section.sheet table.items>tfoot>tr>th.numeric.percent>span>*,
+.ui-dialog section.sheet table.items>tfoot>tr>th.numeric.percent>div>span>* {
+	/* width: 65px; */
+	width: 40px;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>*>tr>*.numeric.qty,
+.ui-dialog section.sheet table.items>*>tr>*.numeric.qty {
+	/*width: 80px;*/
+	width: 55px;
+	margin-right: 15px;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>*>tr>*.numeric.qty.abs,
+.ui-dialog section.sheet table.items>*>tr>*.numeric.qty.abs {
+	/*width: 60px;*/
+	width: 50px;
+	margin-right: 0;
+}
+
+html>body.home>section>section#viewport section.sheet table.items>*>tr>*.numeric.qty>*,
+.ui-dialog section.sheet table.items>*>tr>*.numeric.qty>* {
+	/*width: 45px;*/
+	width: 50px;
+	/* padding-right: 5px; */
+}
+
+html>body.home>section>section#viewport section.sheet table.items>*>tr>*.numeric.qty>span,
+.ui-dialog section.sheet table.items>*>tr>*.numeric.qty>span {
+	padding-right: 0;
+}
+
+html>body.home>section>section#viewport section.sheet footer>article {
+	/*
+	width: calc(100% - 110px);
+	margin: 20px auto;
+	padding: 10px;
+	background-color: rgb(247,247,248);
+	border: 1px groove lightgrey;
+	box-shadow: 2px -2px 2px grey;
+	border-radius: 10px;
+	color: black;
+	*/
+
+	/* width: calc(100% - 110px); */
+	/* width: calc(100%); */
+	width: calc(100% - 10px);
+	/*margin: 20px auto;*/
+	margin: 0 auto;
+	/* padding: 10px; */
+	padding: 10px 10px 10px 10px;
+	/* border: 1px groove lightgrey; */
+	border-bottom: 1px solid rgb(240, 240, 240);
+	color: black;
+
+	background-color: rgb(247, 247, 248);
+}
+
+
+html>body.home>section>section#viewport section.sheet footer>article:nth-of-type(3n + 1) {
+	background-color: rgb(237, 237, 238);
+}
+
+
+html>body.home>section>section#viewport section.sheet footer>article:nth-of-type(3n + 2) {
+	background-color: rgb(242, 242, 243);
+}
+
+
+html>body.home>section>section#viewport section.sheet footer>article:nth-of-type(3n) {
+	background-color: rgb(252, 252, 253);
+}
+
+
+html>body.home>section>section#viewport section.sheet footer>article:last-of-type {
+	border-bottom: none;
+}
+
+html>body.home>section>section#viewport section.sheet footer>article>section {
+	display: inline-block;
+	width: calc(50% - 4px);
+	margin-bottom: 15px;
+	vertical-align: top;
+}
+
+html>body.home>section>section#viewport section.sheet footer>article>section.full-width {
+	width: calc(100% - 4px);
+}
+
+html>body.home>section>section#viewport section.sheet footer>article>section.third-width {
+	width: calc(100% / 3 - 4px);
+}
+
+html>body.home>section>section#viewport section.sheet footer>article>section>h1 {
+	font-size: 13px;
+	font-weight: bold;
+	/* margin-top: 15px;
+	margin-bottom: 10px; */
+	margin: 15px 0 10px 0 !important;
+	text-transform: none !important;
+}
+
+/* Begin sobrecargos */
+
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li {
+	margin-bottom: 5px;
+}
+
+html>body.home>section>section#viewport section.sheet footer>article>section>ul.summary>li,
+html>body.home>section>section#viewport section.sheet footer>article>section>ul.summary>li>span {
+	font-size: 14px !important;
+}
+
+html>body.home>section>section#viewport section.sheet footer>article>section>ul.summary>li>span:first-of-type {
+	text-align: right;
+	margin-right: 10px;
+}
+
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li input[type="number"],
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li input.number {
+	text-align: right;
+}
+
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li>span:first-of-type {
+	display: inline-block;
+	/*width: calc(50% - 2px - 45px);*/
+	width: calc(30% - 2px - 35px);
+	font-weight: bold;
+	text-transform: uppercase;
+	font-size: 9px;
+}
+
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li>span:nth-of-type(2) {
+	display: inline-block;
+	width: calc(80px - 2px + 10px);
+}
+
+html>body.home>section>section#viewport section.sheet footer>article>section>ul.summary>li>span:nth-of-type(2) {
+	width: calc(140px - 2px + 10px);
+}
+
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li>span:nth-of-type(2)>input {
+	display: inline-block;
+	width: calc(100% - 25px);
+}
+
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li>span.full-width {
+	width: 50%;
+}
+
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li>span.percent {
+	display: inline-block;
+	width: calc(65px - 2px + 10px);
+	text-align: right;
+}
+
+html>body.home>section>section#viewport section.sheet footer>article>section.sobrecargos>ul>li>span.percent,
+html>body.home>section>section#viewport section.sheet footer>article>section.cinemagica>ul>li>span.percent {
+	width: calc(85px - 2px + 10px);
+}
+
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li>span.percent>input {
+	width: calc(100% - 20px);
+}
+
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li>span:last-of-type.percent>input {
+	width: 40px !important;
+}
+
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li>span.currency {
+	/*width: 70px;*/
+	/*width: 90px;*/
+	width: 130px;
+}
+
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li>span.currency>input {
+	/*width: 50px;*/
+	width: 11em;
+}
+
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li>span>textarea {
+	/*width: 100%;*/
+	width: 345%;
+	height: 150px;
+}
+
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li>span.options {
+	/* display: inline-block;
+	width: calc(70px);
+	text-align: right; */
+}
+
+html>body.home>section>section#viewport section.sheet footer>article>section>ul>li>span>input {}
+
+/* End sobrecargos */
+
+
+
+
+/* Clases generales */
+.left {
+	text-align: left !important;
+}
+
+.right {
+	text-align: right !important;
+}
+
+.center {
+	text-align: center !important;
+}
+
+.ui-dialog.alert *,
+.ui-dialog.confirm *,
+.ui-dialog.prompt * {
+	font-size: 14px !important;
+
+}
+
+.ui-dialog>.ui-dialog-content>header {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	background-color: rgb(227, 227, 228);
+}
+
+.ui-dialog>.ui-dialog-content>fieldset {
+	margin-top: 5px;
+}
+
+.ui-dialog>.ui-dialog-content>fieldset>legend {
+	display: block;
+	width: calc(100% - 10px);
+	margin-bottom: 10px;
+	padding: 10px 5px;
+	font-size: 11px;
+	font-weight: bold;
+	background-color: rgb(245, 242, 242);
+}
+
+.ui-dialog>.ui-dialog-content>fieldset>label {
+	display: block;
+	margin-bottom: 5px;
+}
+
+.ui-dialog>.ui-dialog-content>fieldset>label>span:first-of-type {
+	display: inline-block;
+	width: calc(30% - 5px) !important;
+}
+
+.ui-dialog>.ui-dialog-content>fieldset>label>input[type="search"] {
+	display: inline-block;
+	width: calc(70% - 25px) !important;
+}
+
+.ui-dialog>.ui-dialog-content>fieldset>label>input[type="text"],
+.ui-dialog>.ui-dialog-content>fieldset>label>input[type="file"] {
+	display: inline-block;
+	width: calc(70% - 15px) !important;
+}
+
+.ui-dialog>.ui-dialog-content>fieldset>label>button {
+	width: 18px;
+	height: 18px;
+}
+
+.ui-dialog fieldset {
+	padding: 10px 5px;
+	background-color: rgb(227, 227, 228);
+}
+
+.ui-dialog fieldset>legend {
+	display: block;
+	width: 100%;
+	margin-left: -5px;
+	padding: 5px;
+	background-color: rgb(108, 108, 108);
+	color: white;
+	font-size: 11px;
+	font-weight: bold;
+}
+
+#dialog-viewport fieldset>label {
+	display: inline-block;
+	width: calc(50% - 4px);
+	margin-top: 5px;
+	margin-bottom: 5px;
+
+}
+
+.ui-dialog fieldset>label>span:nth-of-type(1) {
+	display: inline-block;
+	width: calc(30% - 2px);
+	font-weight: bold;
+}
+
+.ui-dialog fieldset>label>span:nth-of-type(2),
+.ui-dialog fieldset>label>input {
+	display: inline-block;
+	width: auto !important;
+	padding: 0 4px;
+}
+
+.ui-dialog fieldset>label>span.numeric>input {
+	text-align: right;
+	width: calc(50% - 10px);
+	padding-right: 0;
+}
+
+.ui-dialog fieldset>label>button {
+	width: 16px;
+	height: 16px;
+}
+
+.ui-dialog fieldset>label.full-width {
+	width: calc(100% - 8px);
+}
+
+.ui-dialog fieldset>label.full-width>textarea {
+	display: block;
+	margin-top: 5px;
+	width: 100%;
+	height: 40px;
+}
+
+.ui-dialog fieldset>span {
+	display: block;
+	width: 100%;
+	text-align: right;
+}
+
+thead>tr>th[data-sort-by] {
+	cursor: pointer;
+}
+
+thead>tr>th[data-sort-by]:hover {
+	color: yellow;
+}
+
+thead>tr>th[data-sort-by]:before {
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	letter-spacing: -4px;
+	margin-right: 5px;
+	content: '\25B2\25BC';
+	font-weight: bold;
+}
+
+thead>tr>th[data-sort-by].sort-order-asc:before {
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	content: '\25B2';
+	color: rgb(200, 255, 200);
+}
+
+thead>tr>th[data-sort-by].sort-order-desc:before {
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+	content: '\25BC';
+	color: rgb(255, 200, 200);
+}
+
+div.enjoy_hint_label strong {
+	font-weight: bold;
+}
+
+div.enjoy_hint_label em {
+	font-style: italic;
+}
+
+.fht-table tbody tr td:not(:last-of-type),
+table.list tbody tr td:not(:last-of-type) {
+	box-sizing: border-box;
+	/* border-right: 1px solid lightgrey !important; */
+}
+
+.fht-table tbody tr.locked td:first-of-type,
+table.list tbody tr.locked td:first-of-type {
+	position: relative;
+}
+
+.fht-table tbody tr.locked,
+.fht-table tbody tr.locked:hover,
+.fht-table tbody tr.locked:active,
+.fht-table tbody tr.locked:target,
+table.list tbody tr.locked,
+table.list tbody tr.locked:hover,
+table.list tbody tr.locked:active,
+table.list tbody tr.locked:target {
+	background-color: orange !important;
+}
+
+.redBold {
+	color: red !important;
+	font-weight: 700 !important;
+}
+
+
+#menu>ul>li[data-name="convert_negocio"] button {
+	border-color: #34CC02;
+	border-width: 2px;
+}
+
+html>body.home li {
+	cursor: pointer !important;
+}
+
+html>body.home li a {
+	cursor: pointer !important;
+}
+
+html>body.home li a span {
+	cursor: pointer !important;
+}
+
+.rotate {
+	transform: rotate(180deg);
+}
+
+.toolbox>ul>li>button.ui-button {
+	background: white !important;
+}
+
+fieldset>label[title='Fecha de vencimiento'] {
+	border: 2px solid #F47975 !important
+}
+
+.toolbox>ul>li>button.ui-button:hover {
+	background-color: #E8FBF5 !important;
+}
+
+input[type=checkbox] {
+	accent-color: #20A789;
+}
+
+html>body.home li a {
+	cursor: pointer !important;
+	transition: transform 0.2s ease-in-out;
+}
+
+input.input-custom {
+	background-color: white;
+	border-radius: 5px;
+	border: 1px solid #D0D0D0
+}
+
+table input[type="checkbox"] {
+	max-width: 12px;
+}
+
+/* Aplica border-top-left-radius a la primera columna de las tablas sin la clase 'items' en el header */
+table:not(.items) thead th:first-child {
+	border-top-left-radius: 20px;
+}
+
+/* Aplica border-top-right-radius a la última columna de las tablas sin la clase 'items' en el header */
+table:not(.items) thead th:last-child {
+	border-top-right-radius: 20px;
+}
+
+
+.inputCustom {
+	width: 100%;
+	max-width: 250px;
+	outline: none;
+	border-radius: 4px;
+	background-color: #fff;
+	padding: 2px 10px;
+	box-sizing: border-box;
+	box-shadow: #939393 0px 0px 0px 0.5px;
+	transition: 0.3s;
+	caret-color: #2c3f4d;
+	color: #2c3f4d;
+	transition: 0.3s;
+}
+
+.inputCustom::placeholder {
+	color: #98a2b3;
+	transition: 0.3s;
+}
+
+.inputCustom:hover {
+	box-shadow: #93939300 0px 0px 0px 1px;
+	border: 1px solid #69dfc0 !important;
+	transition: 0.3s;
+}
+
+.inputCustom:active,
+.inputCustom:focus {
+	caret-color: #3ac7a5;
+	border: 1px solid #3ac7a5;
+	box-shadow: #3ac7a5 0px 0px 0px 1px;
+}
+
+input.inputCustom:disabled,
+input.inputCustom:disabled:active {
+	cursor: not-allowed;
+	border: 1px solid #d0d5dd;
+	box-shadow: transparent 0px 0px 0px 1px;
+}
+
+input.inputCustom:disabled,
+input.inputCustom:disabled::placeholder {
+	color: #d0d5dd;
+}
+
+input.inputCustom:disabled:hover {
+	border: 1px solid #d0d5dd;
+}
+
+.ts-control {
+	font-size: 10px !important;
+	border-radius: 5px !important;
+	padding: 2px !important;
+}
+
+.ts-dropdown-content {
+	font-size: 10px;
+}
+
+/*EFECTO BORROSO PARA IMPLEMENTAR ALGUN DIA O NO */
+
+.blur-effect {
+	transition: filter 0.3s ease;
+	filter: blur(2px);
+}
+
+.btn-custom-vx {
+	color: #A0A9B9;
+	border: 1px solid #20A789;
+	border-radius: 5px;
+}
+
+.btn-custom-vx.active {
+	color: white;
+	background-color: #20A789;
+	border-radius: 5px;
+	transition: 1s;
+}
+
+
+/* CSS PARA NUEVO SELECTOR DE PRUEBA */
+
+.custom-select-wrapper {
+	position: relative;
+	width: 170px;
+}
+
+
+
+.custom-select-icon {
+	transition: transform 0.3s;
+}
+
+.custom-select-new {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border: 1px solid #ccc;
+	padding: 8px;
+	cursor: pointer;
+	border-radius: 10px;
+	font-size: 10px;
+	background-color: white;
+	max-height: 25px;
+}
+
+.custom-select-dropdown {
+	display: none;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	width: 100%;
+	border: 1px solid #ccc;
+	border-top: none;
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 10px;
+	z-index: 9999;
+	font-weight: bold;
+	max-height: 250px;
+	overflow-y: auto;
+}
+
+.custom-select-option {
+	padding: 10px;
+	cursor: pointer;
+	background-color: white;
+}
+
+.custom-select-option:hover {
+	background-color: #E8FBF5;
+}
+
+/* Estilo cuando el dropdown está activo */
+.custom-select-dropdown-active .custom-select-icon {
+	transform: rotate(180deg);
+}
+
+.custom-select-dropdown-active+.custom-select-dropdown {
+	display: block;
+}
+
+.custom-select-open {
+	border-color: #3AC7A5;
+	/* Color de borde cuando el menú está abierto */
+}
+
+.custom-select-dropdown .custom-select-option:last-child {
+	border-bottom-right-radius: 10px;
+	/* Bordes redondeados en la esquina inferior derecha */
+	border-bottom-left-radius: 10px;
+	/* Bordes redondeados en la esquina inferior izquierda */
+}
+
+.custom-select-open .custom-select-icon {
+	color: #3AC7A5;
+	/* El mismo color que el borde cuando está abierto */
+}
+
+.custom-select-new:hover {
+	border-color: #3AC7A5;
+	/* Cambia el color del borde en hover al mismo color que cuando está abierto */
+}
+
+.custom-select-new:hover .custom-select-icon i {
+	color: #3AC7A5;
+	/* Cambia el color del borde en hover al mismo color que cuando está abierto */
+}
+
+.loading-screen {
+	position: fixed;
+	z-index: 9999;
+	top: 45%;
+	left: 20%;
+	min-width: 400px;
+}
+
+
+.loading-screen-image-2 {
+	position: fixed;
+	z-index: 9999;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.ul-custom li {
+	padding-bottom: 5px;
+
+}
+
+.ul-custom {
+	margin-top: 0px !important;
+}
+
+.ul-custom-one li {
+	padding-bottom: 5px;
+
+}
+
+
+.custom-flex-container {
+	display: flex;
+	align-items: center;
+	flex-wrap: nowrap;
+}
+
+.custom-label {
+	margin-right: 5px;
+	min-width: 160px !important;
+}
+
+.custom-input-text {
+	flex-grow: 1;
+	margin-right: 5px;
+}
+
+.nas.show {
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+.custom-input-text {
+	max-width: 250px;
+	min-width: 200px
+}
+
+/* NUEVO SELECT CON BUSCADOR */
+/* Estilos Base para el Contenedor del Select */
+.custom-autocomplete-wrapper {
+	position: relative;
+	width: 170px;
+}
+
+/* Estilos para el Select con Búsqueda */
+.custom-autocomplete-select {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border: 1px solid #ccc;
+	padding: 8px;
+	cursor: pointer;
+	border-radius: 10px;
+	font-size: 10px;
+	background-color: white;
+	max-height: 25px;
+}
+
+/* Campo de Búsqueda */
+.custom-select-search {
+	flex-grow: 1;
+	border: none;
+	outline: none;
+	padding-left: 8px;
+	font-size: 10px;
+}
+
+/* Icono del Select */
+.custom-select-icon {
+	transition: transform 0.3s;
+	color: #3AC7A5;
+}
+
+/* Dropdown del Select */
+.custom-select-dropdown {
+	display: none;
+	position: absolute;
+	top: 100%;
+	left: 0;
+	width: 100%;
+	border: 1px solid #ccc;
+	border-top: none;
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 10px;
+	z-index: 9999;
+	font-weight: bold;
+	max-height: 250px;
+	overflow-y: auto;
+}
+
+/* Opción dentro del Dropdown */
+.custom-select-option {
+	padding: 10px;
+	cursor: pointer;
+	background-color: white;
+}
+
+.custom-select-option:hover {
+	background-color: #E8FBF5;
+}
+
+/* Estilos cuando el Dropdown está Activo */
+.custom-select-dropdown-active .custom-select-icon {
+	transform: rotate(180deg);
+}
+
+.custom-select-dropdown-active+.custom-select-dropdown {
+	display: block;
+}
+
+.custom-select-open {
+	border-color: #3AC7A5;
+	/* Color de borde cuando el menú está abierto */
+}
+
+.custom-select-dropdown .custom-select-option:last-child {
+	border-bottom-right-radius: 10px;
+	/* Bordes redondeados en la esquina inferior derecha */
+	border-bottom-left-radius: 10px;
+	/* Bordes redondeados en la esquina inferior izquierda */
+}
+
+.custom-select-open .custom-select-icon {
+	color: #3AC7A5;
+	/* El mismo color que el borde cuando está abierto */
+}
+
+.custom-autocomplete-select:hover {
+	border-color: #3AC7A5;
+	/* Cambia el color del borde en hover */
+}
+
+.custom-autocomplete-select:hover .custom-select-icon i {
+	color: #3AC7A5;
+	/* Cambia el color del icono en hover */
+}
+
+/* Ajustes para el Input de Búsqueda */
+.custom-select-search::placeholder {
+	color: #ccc;
+}
+
+.custom-select-subtitle {
+	font-size: 8px;
+	color: #666;
+	margin-top: 5px;
+}
+
+
+.ts-control {
+	border: none !important;
+}
+
+/* Loading para listados */
+.unique-overlay {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 9999;
+	/* Asegúrate de que esté por encima de otros elementos */
+}
+
+.unique-loading-container {
+	display: flex;
+	align-items: center;
+}
+
+.unique-loading-text {
+	font-size: 12px;
+	color: #333;
+	animation: unique-blink 1s infinite;
+	margin-left: 10px;
+	/* Espacio entre la rueda y el texto */
+}
+
+@keyframes unique-blink {
+	0% {
+		opacity: 1;
+	}
+
+	50% {
+		opacity: 0.5;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+.unique-spinner {
+	width: 40px;
+	height: 40px;
+	border: 4px solid #20A789;
+	border-radius: 50%;
+	border-top-color: white;
+	animation: unique-spin 1s ease-in-out infinite;
+}
+
+@keyframes unique-spin {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+/* Adrchivos adjuntos */
+.file-upload-container .file-text {
+	color: #555;
+	padding-left: 5px;
+	font-size: 0.9em;
+}
+
+.file-upload-container .file-upload-text {
+	color: white;
+	padding-left: 5px;
+	font-size: 0.9em;
+}
+
+
+.file-upload-container .file-text-name {
+	color: #22A589;
+	font-size: 0.8em;
+}
+
+
+.file-upload-container {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 290px;
+	/* Adjust as needed */
+	border: 1px solid #ccc;
+	padding: 10px;
+	border-radius: 5px;
+	height: 28px;
+	background-color: white;
+}
+
+.file-upload-frame {
+	display: flex;
+	flex-direction: column;
+	width: 120px;
+}
+
+.file-upload-frame-name {
+	display: flex;
+}
+
+.file-upload-frame-name i {
+	padding-left: 2px;
+	color: #9CA2B0;
+}
+
+.file-upload-frame-name i:hover {
+	color: #22A589;
+}
+
+.file-indicator {
+	font-size: 10px;
+	color: #888;
+}
+
+.file-upload-btn {
+	background-color: #22A589;
+	border: none;
+	color: white;
+	padding: 6px 20px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 0.9em;
+	border-radius: 5px;
+	cursor: pointer;
+	white-space: nowrap;
+	max-height: 25px;
+	width: 100px;
+}
+
+
+body {
+	margin: 0;
+	overflow: hidden;
+}
+
+canvas {
+	display: block;
+}
+
+#jumpGameCanvas {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+#jumpGameResetButton {
+	position: absolute;
+	left: 50%;
+	top: 60%;
+	transform: translate(-50%, -50%);
+	padding: 10px 20px;
+	font-size: 16px;
+	display: none;
+}
+
+.custom-image-overlay {
+	position: fixed;
+	bottom: 50px;
+	right: 20px;
+	width: 45px;
+	height: 45px;
+	z-index: 1000;
+	border-radius: 50%;
+	overflow: hidden;
+	cursor: pointer;
+}
+
+.custom-image-overlay img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	/* Asegura que la imagen se ajuste bien al contenedor circular */
+}
+
+.unique-image-overlay {
+	position: fixed;
+	bottom: 20px;
+	/* Ajusta según tu preferencia */
+	right: 20px;
+	/* Ajusta según tu preferencia */
+	width: 100px;
+	/* Ajusta el tamaño de la imagen */
+	height: 100px;
+	/* Ajusta el tamaño de la imagen */
+	z-index: 1000;
+	/* Asegura que la imagen esté por encima de todos los elementos */
+	border-radius: 50%;
+	/* Hace la imagen circular */
+	overflow: hidden;
+	/* Esconde cualquier parte de la imagen que salga del contenedor circular */
+	cursor: pointer;
+	/* Cambia el cursor a pointer */
+}
+
+.unique-image-overlay img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	/* Asegura que la imagen se ajuste bien al contenedor circular */
+}
+
+.unique-modal {
+	display: none;
+	/* Esconde el modal por defecto */
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 80%;
+	/* Ajusta el ancho del modal */
+	max-width: 600px;
+	/* Ajusta el ancho máximo del modal */
+	background-color: white;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	z-index: 1001;
+	/* Asegura que el modal esté por encima de todos los elementos */
+	padding: 20px;
+	border-radius: 10px;
+}
+
+.unique-modal-content {
+	position: relative;
+}
+
+.unique-close-button {
+	position: absolute;
+	top: -15px;
+	right: -10px;
+	font-size: 24px;
+	cursor: pointer;
+}
+
+.unique-iframe {
+	width: 100%;
+	height: 300px;
+	/* Ajusta la altura del iframe */
+	border: none;
+}
+
+
+.custom-progressbar {
+	background-color: #20A789 !important;
+	border-radius: 10px !important;
+	padding: 10px !important;
+	font-size: 12px !important;
+	width: 300px !important;
+}
+
+.custom-progressbar .pnotify-closer {
+	top: 5px !important;
+	right: 5px !important;
+}
+
+
+.material-container {
+	background-color: transparent !important;
+	border-radius: 10px !important;
+	padding: 10px !important;
+	font-size: 12px !important;
+	width: 300px !important;
+	color: white !important;
+}
+
+.pnotify-container {
+	right: 10px !important;
+
+}
+
+
+
+
+.super-unique-spinner-content img {
+	width: 50px;
+}
+
+.dtv-ul li {
+	padding-bottom: 5px;
+}
+
+.inventario_dtc {
+	display: flex;
+	margin-top: 10px;
+	gap: 10px;
+	align-items: center;
+}
+
+.tooltipster-content .col-6 strong {
+	font-size: 14px;
+}
+
+.notification-button {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	z-index: 1000;
+	background: transparent;
+	border: none;
+	cursor: pointer;
+}
+
+.notification-button i {
+	font-size: 24px;
+	color: #007bff;
+}
+
+.notification-button .badge {
+	position: absolute;
+	top: -10px;
+	right: -10px;
+	font-size: 12px;
+	padding: 5px 8px;
+}
+
+.notification-panel {
+	display: none;
+	position: fixed;
+	top: 70px;
+	right: 20px;
+	width: 300px;
+	max-height: 400px;
+	overflow-y: auto;
+	z-index: 999;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos exclusivos para el select de cuentas contables */
+.cuenta-contable-unique-123 {
+    width: 100%; /* Ocupa todo el ancho disponible */
+    max-width: 350px; /* Ancho máximo para evitar que se deforme el diálogo */
+    padding: 8px 12px;
+    font-size: 14px;
+    background: #fff;
+    transition: border-color 0.3s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Efecto al hacer hover */
+.cuenta-contable-unique-123:hover {
+    border-color: #007bff;
+}
+
+/* Efecto cuando el select está enfocado */
+.cuenta-contable-unique-123:focus {
+    outline: none;
+    border-color: #0056b3;
+    box-shadow: 0 0 5px rgba(0, 91, 187, 0.5);
+}
+
+/* Alinear los valores de los inputs a la derecha */
+.input-align-right {
+    text-align: right;
+}
+
+/* Estilos adicionales para mejorar la apariencia */
+.input-debe, .input-haber {
+    width: 100%;
+    max-width: 150px; /* Ajusta según sea necesario */
+    padding: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s ease-in-out;
+}
+
+/* Efecto cuando el input está enfocado */
+.input-debe:focus, .input-haber:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+
+/* Estilos para la tabla */
+.table.detail-accounting-dtv {
+    width: 100%;
+    border-collapse: collapse;
+    position: relative;
+}
+
+/* Fija el tfoot en la parte inferior de la tabla */
+.table.detail-accounting-dtv tfoot {
+    position: sticky;
+	z-index: 8;
+    bottom: 0;
+    background: white; 
+    font-weight: bold;
+}
+
+/* Asegura que los totales estén alineados a la derecha */
+.table.detail-accounting-dtv tfoot td {
+    text-align: right;
+    padding: 10px;
+}
+
+/* Contenedor para que el input y el texto estén alineados */
+.row.p2.container-folio-dtv {
+    display: flex;
+    align-items: center; /* Alinea verticalmente en el centro */
+    gap: 8px; /* Espacio entre el texto y el input */
+	padding-bottom: 8px;
+}
+
+/* Mejora la apariencia del input */
+.folio-facturar-dtv {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 4px 10px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s ease-in-out;
+    width: 120px; /* Ajusta el tamaño del input */
+}
+
+/* Efecto al hacer hover */
+.folio-facturar-dtv:hover {
+    border-color: #007bff;
+}
+
+/* Efecto cuando el input está enfocado */
+.folio-facturar-dtv:focus {
+    border-color: #0056b3;
+    box-shadow: 0 0 5px rgba(0, 91, 187, 0.5);
+}
+
+.fht-table-wrapper.blur-effect {
+    position: relative;
+    overflow: hidden;
+}
+
+.fht-table-wrapper.blur-effect::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(5px);
+    background: rgba(255, 255, 255, 0.3);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.fht-table-wrapper.blur-effect .fht-table {
+    opacity: 0.5;
+}
+
+
+.magic-button {
+	position: relative;
+	padding: 15px 30px;
+	font-size: 18px;
+	color: white;
+	background-color: #28a745;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	overflow: visible;
+}
+
+.magic-dust {
+	position: absolute;
+	width: 6px;
+	height: 6px;
+	background: radial-gradient(circle, #6feb3e 0%, rgba(255, 255, 180, 0.9) 40%, rgba(255, 255, 255, 0) 100%);
+	border-radius: 50%;
+	box-shadow: 0 0 10px rgba(111, 235, 62, 0.9), 0 0 20px rgba(111, 235, 62, 0.8);
+	opacity: 1;
+	pointer-events: none;
+	animation: float-away 1.5s forwards ease-out;
+}
+@keyframes float-away {
+	0% {
+		transform: translate(0, 0) scale(1);
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.8;
+		transform: translate(calc(-20px + 40px * random()), calc(-20px + 40px * random())) scale(1.2);
+	}
+	100% {
+		transform: translate(calc(-50px + 100px * random()), calc(-50px + 100px * random())) scale(0.6);
+		opacity: 0;
+	}
+}
+
+
+.notData{
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    height: 170px;
+    justify-content: center;
+    left: 0;
+    width: 100%;
+}
+
+.no-data-results {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #757575; /* Esto aplica el color gris al texto */
+    font-family: Arial, sans-serif; /* Asegúrate de usar la fuente deseada */
+    font-size: 16px; /* Ajusta el tamaño de la fuente según necesites */
+}
+
+.no-data-results svg {
+    fill: #98a2b3; /* Color del SVG, ajusta según necesites */
+    width: 80px; /* Ajusta el tamaño del SVG según necesites */
+    height: auto;
+}
+
+.no-data-results span {
+    margin-top: 10px; /* Espacio entre el SVG y el texto */
+}
+//////// 
+.contable-planilla {
+	background: #f9f9f9;
+	padding: 18px 18px 14px 18px;
+	border: 2px solid #bbb;
+	border-radius: 12px;
+	width: 320px;
+	margin: auto;
+	box-shadow: 0 2px 16px #0001;
+	font-family: 'Segoe UI', Arial, sans-serif;
+  }
+  
+  .contable-planilla .titulo {
+	font-size: 17px;
+	margin-bottom: 16px;
+	font-weight: 500;
+	color: #333;
+	letter-spacing: 1px;
+  }
+
+  .contable-planilla select#filtro-ano {
+	font-size: 15px;
+	padding: 2px 10px;
+	border-radius: 6px;
+	border: 1.5px solid #bbb;
+	background: #fff;
+	margin-left: 6px;
+	outline: none;
+	transition: border 0.2s;
+  }
+
+  .contable-planilla select#filtro-ano:focus {
+	border: 1.5px solid #4caf50;
+  }
+
+  .contable-planilla .mes {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 7px;
+	font-size: 14px;
+	letter-spacing: 0.5px;
+  }
+  
+  .contable-planilla .mes span:first-child {
+	width: 80px;
+	text-align: right;
+	color: #444;
+	font-weight: 500;
+  }
+  
+  .contable-planilla .switch {
+	display: flex;
+	gap: 6px;
+	justify-content: center;
+	flex: 1;
+  }
+  
+  .contable-planilla .switch button {
+	border: none;
+	padding: 4px 12px;
+	border-radius: 16px;
+	font-size: 13px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+	background: #e0e0e0;
+	color: #555;
+	opacity: 0.85;
+	box-shadow: 0 1px 4px #0001;
+  }
+  
+  .contable-planilla .switch .abierto {
+	background: #b7e4c7;
+	color: #256029;
+  }
+  .contable-planilla .switch .cerrado {
+	background: #f8bcbc;
+	color: #a12a2a;
+  }
+  
+  .contable-planilla .switch .active.abierto {
+	background: #4caf50 !important;
+	color: #fff !important;
+	border: 2px solid #388e3c;
+	opacity: 1;
+	box-shadow: 0 2px 8px #4caf5022;
+  }
+  .contable-planilla .switch .active.cerrado {
+	background: #e53935 !important;
+	color: #fff !important;
+	border: 2px solid #b71c1c;
+	opacity: 1;
+	box-shadow: 0 2px 8px #e5393522;
+  }
+  
+  .contable-planilla .boton-cerrar {
+	font-size: 15px;
+	padding: 10px 0;
+	border-radius: 22px;
+	border: 2px solid #4caf50;
+	background: linear-gradient(90deg, #e8f5e9 0%, #fff 100%);
+	margin-top: 18px;
+	text-align: center;
+	display: block;
+	width: 100%;
+	font-weight: bold;
+	color: #256029;
+	letter-spacing: 1px;
+	cursor: pointer;
+	transition: background 0.2s, border 0.2s, color 0.2s;
+	box-shadow: 0 2px 8px #4caf5011;
+  }
+  .contable-planilla .boton-cerrar:hover {
+	background: #4caf50;
+	color: #fff;
+	border: 2px solid #388e3c;
+  }
+
+
+  .contable-planilla .switch .abierto {
+	background: #fff !important;
+	color: #388e3c !important;
+	border: 2px solid #388e3c;
+	opacity: 1;
+	transition: background 0.2s, color 0.2s;
+  }
+  .contable-planilla .switch .cerrado {
+	background: #fff !important;
+	color: #b71c1c !important;
+	border: 2px solid #b71c1c;
+	opacity: 1;
+	transition: background 0.2s, color 0.2s;
+  }
+  
+  .contable-planilla .switch .abierto:hover {
+	background: #8ee792 !important;
+	color: #fff !important;
+  }
+  .contable-planilla .switch .cerrado:hover {
+	background: #f1a3a3 !important;
+	color: #fff !important;
+  }
+  
+  /* Si tienes una clase .active para el botón seleccionado, puedes mantener el color de fondo */
+  .contable-planilla .switch .abierto.active {
+	background: #388e3c !important;
+	color: #fff !important;
+  }
+  .contable-planilla .switch .cerrado.active {
+	background: #b71c1c !important;
+	color: #fff !important;
+  }
+
+  .contable-planilla .switch .abierto,
+.contable-planilla .switch .cerrado {
+  background: #fff !important;
+  color: #222 !important;
+  border: 2px solid #e0e0e0;
+  opacity: 1;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+}
+
+
+
+/* Botones de los meses: base */
+.contable-planilla .switch .abierto,
+.contable-planilla .switch .cerrado {
+  background: #fff !important;
+  color: #222 !important;
+  border: 2px solid #e0e0e0;
+  opacity: 1;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+}
+
+
+
+/* Botón CERRAR AÑO 2024: base */
+.contable-planilla .boton-cerrar {
+  font-size: 15px;
+  padding: 10px 0;
+  border-radius: 22px;
+  border: 2px solid #4caf50;
+  background: linear-gradient(90deg, #e8f5e9 0%, #fff 100%);
+  margin-top: 18px;
+  text-align: center;
+  display: block;
+  width: 100%;
+  font-weight: bold;
+  color: #256029;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background 0.2s, border 0.2s, color 0.2s;
+  box-shadow: 0 2px 8px #4caf5011;
+}
+
+/* Botón CERRAR AÑO 2024: hover a rojo con letras negras */
+.contable-planilla .boton-cerrar:hover {
+  background: #b71c1c !important;
+  color: #111 !important;
+  border: 2px solid #b71c1c;
+}
+
+.contable-planilla .mes span:first-child {
+	width: px;           /* Puedes ajustar el ancho si lo deseas */
+	text-align: left;       /* Alinea el texto a la izquierda */
+	color: #256029;
+	font-weight: bold;
+	padding-left: 8px;      /* Opcional: agrega un pequeño padding si quieres separar del borde */
+  }
+  
+  .contable-planilla .switch button {
+	font-weight: normal !important; /* Quita la negrita de los botones */
+  }
+  .contable-planilla .mes span:first-child {
+	width: 80px;
+	text-align: rleft;
+	color: #256029;      /* Mismo verde del botón */
+	font-weight: bold;   /* Negrita */
+  }
+  .contable-planilla .mes {
+	display: flex;
+	align-items: center;
+	margin-bottom: 7px;
+	font-size: 14px;
+	letter-spacing: 0.5px;
+  }
+  
+  .contable-planilla .nombre-mes {
+	flex: 0 0 120px;      /* Fijo, no crece ni se encoge */
+	text-align: left;     /* Alinea a la izquierda */
+	color: #256029;
+	font-weight: bold;
+	margin-right: 12px;
+	padding-left: 0;
+	display: block;
+  }
+  .contable-planilla .switch {
+	flex: 1;
+	display: flex;
+	gap: 6px;
+	justify-content: flex-start;
+  }
+
+  .contable-planilla .mes {
+	display: flex;
+	align-items: center;
+	margin-bottom: 7px;
+	font-size: 14px;
+	letter-spacing: 0.5px;
+  }
+  .contable-planilla .nombre-mes {
+	flex: 0 0 120px;
+	text-align: left;
+	color: #256029;
+	font-weight: bold;
+	margin-right: 12px;
+	padding-left: 0;
+	display: block;
+  }
+  .contable-planilla .switch {
+	flex: 1;
+	display: flex;
+	gap: 6px;
+	justify-content: flex-start;
+  }

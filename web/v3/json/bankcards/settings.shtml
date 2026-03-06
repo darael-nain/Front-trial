@@ -1,0 +1,27 @@
+{
+	"default_account" : {
+		"id" : <!--#4DTEXT $id_ctacte_defecto-->,
+		"banco" : "<!--#4DTEXT $banco_ctacte-->",
+		"numero" : "<!--#4DTEXT $nro_ctacte-->",
+		"saldo_final" : <!--#4DHTML String($saldo_final_ctacte_actual;"&xml")-->,
+		"saldo_lc" : <!--#4DHTML String($saldo_lc_ctacte_actual;"&xml")-->
+	},
+	"currency" : {
+		"code": "<!--#4DTEXT _V3_defaultCurrencyCode-->",
+		"name": "<!--#4DTEXT _V3_escapeString(_V3_defaultCurrencyName)-->",
+		"symbol": "<!--#4DHTML _V3_escapeString(_V3_defaultCurrencySymbol)-->",
+		"is_right": <!--#4DIF _V3_defaultCurrencyRight-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+		"decimals": <!--#4DHTML String(_V3_defaultCurrencyDecimals;"&xml")-->,
+		"thousands_sep": "<!--#4DTEXT _V3_defaultCurrencyThousandSep-->",
+		"decimals_sep": "<!--#4DTEXT _V3_defaultCurrencyDecimalSep-->"
+	},
+	"all_account": [
+	<!--#4DLOOP a_id_ctacte-->
+		{	
+			"id": <!--#4DTEXT a_id_ctacte{a_id_ctacte}-->,
+			"numero": "<!--#4DTEXT a_nro_ctacte{a_id_ctacte}-->",
+			"banco": "<!--#4DTEXT a_banco_ctacte{a_id_ctacte}-->"
+		}<!--#4DIF NOT(a_id_ctacte{a_id_ctacte} = a_id_ctacte{Size of array(a_id_ctacte)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

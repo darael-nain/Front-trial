@@ -1,0 +1,16 @@
+{
+	"rows": [
+<!--#4DLOOP aIdCobro-->
+		{
+			"id": <!--#4DHTML aIdCobro{aIdCobro}-->,
+			"id_cuenta_cte": <!--#4DHTML aIdCuentaCte{aIdCobro}-->,
+			"nro": "<!--#4DHTML _V3_escapeString(aNroCobro{aIdCobro})-->",
+			"fecha": "<!--#4DHTML aEmisionCobro{aIdCobro}-->",
+			"tipo": "<!--#4DHTML aTipoCobro{aIdCobro}-->",
+			"cta": "<!--#4DHTML aCtaCobro{aIdCobro}-->",
+			"estado": "<!--#4DHTML aEstadoCobro{aIdCobro}-->",
+			"monto": "<!--#4DHTML _V3_formatCurrency(aMontoCobro{aIdCobro})-->"	
+		}<!--#4DIF NOT(aIdCobro{aIdCobro} = aIdCobro{Size of array(aIdCobro)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

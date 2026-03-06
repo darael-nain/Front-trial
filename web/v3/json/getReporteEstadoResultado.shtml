@@ -1,0 +1,212 @@
+{
+	"moneda" : "<!--#4DTEXT vTIPOMONEDA-->",
+	"valor_cambio" : <!--#4DTEXT String(vVALORCAMBIO;"&xml")-->,
+	"ventas": {
+		"areas_negocio": [
+			<!--#4DLOOP aVentaAreaId-->
+			{
+				"id": <!--#4DTEXT String(aVentaAreaId{aVentaAreaId};"&xml")-->,
+				"name": "<!--#4DHTML _V3_escapeString(aVentaAreaName{aVentaAreaId})-->",
+				"months": [
+					{ "value": <!--#4DTEXT String(aVentaAreaValueJan{aVentaAreaId};"&xml")-->, "percent": <!--#4DTEXT String(aVentaAreaPercentJan{aVentaAreaId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aVentaAreaValueFeb{aVentaAreaId};"&xml")-->, "percent": <!--#4DTEXT String(aVentaAreaPercentFeb{aVentaAreaId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aVentaAreaValueMar{aVentaAreaId};"&xml")-->, "percent": <!--#4DTEXT String(aVentaAreaPercentMar{aVentaAreaId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aVentaAreaValueApr{aVentaAreaId};"&xml")-->, "percent": <!--#4DTEXT String(aVentaAreaPercentApr{aVentaAreaId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aVentaAreaValueMay{aVentaAreaId};"&xml")-->, "percent": <!--#4DTEXT String(aVentaAreaPercentMay{aVentaAreaId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aVentaAreaValueJun{aVentaAreaId};"&xml")-->, "percent": <!--#4DTEXT String(aVentaAreaPercentJun{aVentaAreaId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aVentaAreaValueJul{aVentaAreaId};"&xml")-->, "percent": <!--#4DTEXT String(aVentaAreaPercentJul{aVentaAreaId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aVentaAreaValueAug{aVentaAreaId};"&xml")-->, "percent": <!--#4DTEXT String(aVentaAreaPercentAug{aVentaAreaId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aVentaAreaValueSep{aVentaAreaId};"&xml")-->, "percent": <!--#4DTEXT String(aVentaAreaPercentSep{aVentaAreaId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aVentaAreaValueOct{aVentaAreaId};"&xml")-->, "percent": <!--#4DTEXT String(aVentaAreaPercentOct{aVentaAreaId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aVentaAreaValueNov{aVentaAreaId};"&xml")-->, "percent": <!--#4DTEXT String(aVentaAreaPercentNov{aVentaAreaId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aVentaAreaValueDec{aVentaAreaId};"&xml")-->, "percent": <!--#4DTEXT String(aVentaAreaPercentDec{aVentaAreaId};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aVentaAreaValueAcum{aVentaAreaId};"&xml")-->, "percent": <!--#4DTEXT String(aVentaAreaPercentAcum{aVentaAreaId};"&xml")--> }
+				]
+			}<!--#4DIF NOT(aVentaAreaId{aVentaAreaId} = aVentaAreaId{Size of array(aVentaAreaId)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		],
+		"suma": {
+			"months": [
+				{ "value": <!--#4DTEXT String(totalVentaAreaValueJan;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalVentaAreaValueFeb;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalVentaAreaValueMar;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalVentaAreaValueApr;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalVentaAreaValueMay;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalVentaAreaValueJun;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalVentaAreaValueJul;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalVentaAreaValueAug;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalVentaAreaValueSep;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalVentaAreaValueOct;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalVentaAreaValueNov;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalVentaAreaValueDec;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalVentaAreaValueAcum;"&xml")-->, "percent": 1 }
+			]
+		}
+	},
+	"costos_directos": {
+		"tipos": [
+			{
+				"name": "COSTOS DIRECTOS",
+				"months": [
+					{ "value": <!--#4DTEXT String(aCostosDirectosValueJan;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentJan;"&xml")--> },
+					{ "value": <!--#4DTEXT String(aCostosDirectosValueFeb;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentFeb;"&xml")--> },
+					{ "value": <!--#4DTEXT String(aCostosDirectosValueMar;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentMar;"&xml")--> },
+					{ "value": <!--#4DTEXT String(aCostosDirectosValueApr;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentApr;"&xml")--> },
+					{ "value": <!--#4DTEXT String(aCostosDirectosValueMay;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentMay;"&xml")--> },
+					{ "value": <!--#4DTEXT String(aCostosDirectosValueJun;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentJun;"&xml")--> },
+					{ "value": <!--#4DTEXT String(aCostosDirectosValueJul;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentJul;"&xml")--> },
+					{ "value": <!--#4DTEXT String(aCostosDirectosValueAug;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentAug;"&xml")--> },
+					{ "value": <!--#4DTEXT String(aCostosDirectosValueSep;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentSep;"&xml")--> },
+					{ "value": <!--#4DTEXT String(aCostosDirectosValueOct;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentOct;"&xml")--> },
+					{ "value": <!--#4DTEXT String(aCostosDirectosValueNov;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentNov;"&xml")--> },
+					{ "value": <!--#4DTEXT String(aCostosDirectosValueDec;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentDec;"&xml")--> },
+					{ "value": <!--#4DTEXT String(aCostosDirectosValueAcum;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentAcum;"&xml")--> }
+				]
+			}
+		],
+		"suma": {
+			"months": [
+				{ "value": <!--#4DTEXT String(aCostosDirectosValueJan;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentJan;"&xml")--> },
+				{ "value": <!--#4DTEXT String(aCostosDirectosValueFeb;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentFeb;"&xml")--> },
+				{ "value": <!--#4DTEXT String(aCostosDirectosValueMar;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentMar;"&xml")--> },
+				{ "value": <!--#4DTEXT String(aCostosDirectosValueApr;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentApr;"&xml")--> },
+				{ "value": <!--#4DTEXT String(aCostosDirectosValueMay;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentMay;"&xml")--> },
+				{ "value": <!--#4DTEXT String(aCostosDirectosValueJun;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentJun;"&xml")--> },
+				{ "value": <!--#4DTEXT String(aCostosDirectosValueJul;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentJul;"&xml")--> },
+				{ "value": <!--#4DTEXT String(aCostosDirectosValueAug;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentAug;"&xml")--> },
+				{ "value": <!--#4DTEXT String(aCostosDirectosValueSep;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentSep;"&xml")--> },
+				{ "value": <!--#4DTEXT String(aCostosDirectosValueOct;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentOct;"&xml")--> },
+				{ "value": <!--#4DTEXT String(aCostosDirectosValueNov;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentNov;"&xml")--> },
+				{ "value": <!--#4DTEXT String(aCostosDirectosValueDec;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentDec;"&xml")--> },
+				{ "value": <!--#4DTEXT String(aCostosDirectosValueAcum;"&xml")-->, "percent": <!--#4DTEXT String(aCostosDirectosPercentAcum;"&xml")--> }
+			]
+		}
+	},
+	"por_gastar": {
+		"tipos": [
+			{
+				"name": "POR GASTAR",
+				"months": [
+					{ "value": <!--#4DTEXT String(aPorGastarValueJan;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentJan;"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorGastarValueFeb;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentFeb;"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorGastarValueMar;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentMar;"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorGastarValueApr;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentApr;"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorGastarValueMay;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentMay;"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorGastarValueJun;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentJun;"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorGastarValueJul;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentJul;"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorGastarValueAug;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentAug;"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorGastarValueSep;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentSep;"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorGastarValueOct;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentOct;"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorGastarValueNov;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentNov;"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorGastarValueDec;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentDec;"&xml")--> },
+					{ "value": <!--#4DTEXT String(aPorGastarValueAcum;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentAcum;"&xml")--> }
+				]
+			}
+		],
+		"suma": {
+			"months": [
+				{ "value": <!--#4DTEXT String(aPorGastarValueJan;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentJan;"&xml")--> },
+				{ "value": <!--#4DTEXT String(aPorGastarValueFeb;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentFeb;"&xml")--> },
+				{ "value": <!--#4DTEXT String(aPorGastarValueMar;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentMar;"&xml")--> },
+				{ "value": <!--#4DTEXT String(aPorGastarValueApr;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentApr;"&xml")--> },
+				{ "value": <!--#4DTEXT String(aPorGastarValueMay;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentMay;"&xml")--> },
+				{ "value": <!--#4DTEXT String(aPorGastarValueJun;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentJun;"&xml")--> },
+				{ "value": <!--#4DTEXT String(aPorGastarValueJul;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentJul;"&xml")--> },
+				{ "value": <!--#4DTEXT String(aPorGastarValueAug;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentAug;"&xml")--> },
+				{ "value": <!--#4DTEXT String(aPorGastarValueSep;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentSep;"&xml")--> },
+				{ "value": <!--#4DTEXT String(aPorGastarValueOct;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentOct;"&xml")--> },
+				{ "value": <!--#4DTEXT String(aPorGastarValueNov;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentNov;"&xml")--> },
+				{ "value": <!--#4DTEXT String(aPorGastarValueDec;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentDec;"&xml")--> },
+				{ "value": <!--#4DTEXT String(aPorGastarValueAcum;"&xml")-->, "percent": <!--#4DTEXT String(aPorGastarPercentAcum;"&xml")--> }
+			]
+		}
+	},
+
+	"resultado_operacion": {
+		"months": [
+		{ "value": <!--#4DTEXT String(resultadoOperacionValueJan;"&xml")-->, "percent": <!--#4DTEXT String(resultadoOperacionPercentJan;"&xml")--> },
+		{ "value": <!--#4DTEXT String(resultadoOperacionValueFeb;"&xml")-->, "percent": <!--#4DTEXT String(resultadoOperacionPercentFeb;"&xml")--> },
+		{ "value": <!--#4DTEXT String(resultadoOperacionValueMar;"&xml")-->, "percent": <!--#4DTEXT String(resultadoOperacionPercentMar;"&xml")--> },
+		{ "value": <!--#4DTEXT String(resultadoOperacionValueApr;"&xml")-->, "percent": <!--#4DTEXT String(resultadoOperacionPercentApr;"&xml")--> },
+		{ "value": <!--#4DTEXT String(resultadoOperacionValueMay;"&xml")-->, "percent": <!--#4DTEXT String(resultadoOperacionPercentMay;"&xml")--> },
+		{ "value": <!--#4DTEXT String(resultadoOperacionValueJun;"&xml")-->, "percent": <!--#4DTEXT String(resultadoOperacionPercentJun;"&xml")--> },
+		{ "value": <!--#4DTEXT String(resultadoOperacionValueJul;"&xml")-->, "percent": <!--#4DTEXT String(resultadoOperacionPercentJul;"&xml")--> },
+		{ "value": <!--#4DTEXT String(resultadoOperacionValueAug;"&xml")-->, "percent": <!--#4DTEXT String(resultadoOperacionPercentAug;"&xml")--> },
+		{ "value": <!--#4DTEXT String(resultadoOperacionValueSep;"&xml")-->, "percent": <!--#4DTEXT String(resultadoOperacionPercentSep;"&xml")--> },
+		{ "value": <!--#4DTEXT String(resultadoOperacionValueOct;"&xml")-->, "percent": <!--#4DTEXT String(resultadoOperacionPercentOct;"&xml")--> },
+		{ "value": <!--#4DTEXT String(resultadoOperacionValueNov;"&xml")-->, "percent": <!--#4DTEXT String(resultadoOperacionPercentNov;"&xml")--> },
+		{ "value": <!--#4DTEXT String(resultadoOperacionValueDec;"&xml")-->, "percent": <!--#4DTEXT String(resultadoOperacionPercentDec;"&xml")--> },
+		{ "value": <!--#4DTEXT String(resultadoOperacionValueAcum;"&xml")-->, "percent": <!--#4DTEXT String(resultadoOperacionPercentAcum;"&xml")-->}
+		]
+	},
+	"gastos_generales": {
+		"clasificaciones": [
+			<!--#4DLOOP aGastoClasifIndex-->
+			{
+				"id": <!--#4DTEXT aGastoClasifId{aGastoClasifIndex}-->,
+				"name": "<!--#4DHTML _V3_escapeString(aGastoClasifName{aGastoClasifIndex})-->",
+				"months": [
+					{ "value": <!--#4DTEXT String(aGastoClasifValueJan{aGastoClasifIndex};"&xml")-->, "percent": <!--#4DTEXT String(aGastoClasifPercentJan{aGastoClasifIndex};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aGastoClasifValueFeb{aGastoClasifIndex};"&xml")-->, "percent": <!--#4DTEXT String(aGastoClasifPercentFeb{aGastoClasifIndex};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aGastoClasifValueMar{aGastoClasifIndex};"&xml")-->, "percent": <!--#4DTEXT String(aGastoClasifPercentMar{aGastoClasifIndex};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aGastoClasifValueApr{aGastoClasifIndex};"&xml")-->, "percent": <!--#4DTEXT String(aGastoClasifPercentApr{aGastoClasifIndex};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aGastoClasifValueMay{aGastoClasifIndex};"&xml")-->, "percent": <!--#4DTEXT String(aGastoClasifPercentMay{aGastoClasifIndex};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aGastoClasifValueJun{aGastoClasifIndex};"&xml")-->, "percent": <!--#4DTEXT String(aGastoClasifPercentJun{aGastoClasifIndex};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aGastoClasifValueJul{aGastoClasifIndex};"&xml")-->, "percent": <!--#4DTEXT String(aGastoClasifPercentJul{aGastoClasifIndex};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aGastoClasifValueAug{aGastoClasifIndex};"&xml")-->, "percent": <!--#4DTEXT String(aGastoClasifPercentAug{aGastoClasifIndex};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aGastoClasifValueSep{aGastoClasifIndex};"&xml")-->, "percent": <!--#4DTEXT String(aGastoClasifPercentSep{aGastoClasifIndex};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aGastoClasifValueOct{aGastoClasifIndex};"&xml")-->, "percent": <!--#4DTEXT String(aGastoClasifPercentOct{aGastoClasifIndex};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aGastoClasifValueNov{aGastoClasifIndex};"&xml")-->, "percent": <!--#4DTEXT String(aGastoClasifPercentNov{aGastoClasifIndex};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aGastoClasifValueDec{aGastoClasifIndex};"&xml")-->, "percent": <!--#4DTEXT String(aGastoClasifPercentDec{aGastoClasifIndex};"&xml")--> },
+					{ "value": <!--#4DTEXT String(aGastoClasifValueAcum{aGastoClasifIndex};"&xml")-->, "percent": <!--#4DTEXT String(aGastoClasifPercentAcum{aGastoClasifIndex};"&xml")--> }
+				]
+			}<!--#4DIF NOT(aGastoClasifIndex{aGastoClasifIndex} = aGastoClasifIndex{Size of array(aGastoClasifIndex)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		],
+		"suma": {
+			"months": [
+				{ "value": <!--#4DTEXT String(totalGastoClasifValueJan;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalGastoClasifValueFeb;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalGastoClasifValueMar;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalGastoClasifValueApr;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalGastoClasifValueMay;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalGastoClasifValueJun;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalGastoClasifValueJul;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalGastoClasifValueAug;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalGastoClasifValueSep;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalGastoClasifValueOct;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalGastoClasifValueNov;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalGastoClasifValueDec;"&xml")-->, "percent": 1 },
+				{ "value": <!--#4DTEXT String(totalGastoClasifValueAcum;"&xml")-->, "percent": 1 }
+			]
+		}
+	},
+	"resultado": {
+		"months": [
+			{ "value": <!--#4DTEXT String(totalValueJan;"&xml")-->, "percent": <!--#4DTEXT String(totalPercentJan;"&xml")--> },
+			{ "value": <!--#4DTEXT String(totalValueFeb;"&xml")-->, "percent": <!--#4DTEXT String(totalPercentFeb;"&xml")--> },
+			{ "value": <!--#4DTEXT String(totalValueMar;"&xml")-->, "percent": <!--#4DTEXT String(totalPercentMar;"&xml")--> },
+			{ "value": <!--#4DTEXT String(totalValueApr;"&xml")-->, "percent": <!--#4DTEXT String(totalPercentApr;"&xml")--> },
+			{ "value": <!--#4DTEXT String(totalValuemay;"&xml")-->, "percent": <!--#4DTEXT String(totalPercentMay;"&xml")--> },
+			{ "value": <!--#4DTEXT String(totalValueJun;"&xml")-->, "percent": <!--#4DTEXT String(totalPercentJun;"&xml")--> },
+			{ "value": <!--#4DTEXT String(totalValueJul;"&xml")-->, "percent": <!--#4DTEXT String(totalPercentJul;"&xml")--> },
+			{ "value": <!--#4DTEXT String(totalValueAug;"&xml")-->, "percent": <!--#4DTEXT String(totalPercentAug;"&xml")--> },
+			{ "value": <!--#4DTEXT String(totalValueSep;"&xml")-->, "percent": <!--#4DTEXT String(totalPercentSep;"&xml")--> },
+			{ "value": <!--#4DTEXT String(totalValueOct;"&xml")-->, "percent": <!--#4DTEXT String(totalPercentOct;"&xml")--> },
+			{ "value": <!--#4DTEXT String(totalValueNov;"&xml")-->, "percent": <!--#4DTEXT String(totalPercentNov;"&xml")--> },
+			{ "value": <!--#4DTEXT String(totalValueDec;"&xml")-->, "percent": <!--#4DTEXT String(totalPercentDec;"&xml")--> },
+			{ "value": <!--#4DTEXT String(totalValueAcum;"&xml")-->, "percent": <!--#4DTEXT String(totalPercentAcum;"&xml")--> }
+		]
+	},
+	"currency" : {
+		"code" : "<!--#4DTEXT _V3_defaultCurrencyCode-->",
+		"name" : "<!--#4DTEXT _V3_defaultCurrencyName-->",
+		"symbol" : "<!--#4DTEXT _V3_defaultCurrencySymbol-->",
+		"right" : <!--#4DIF _V3_defaultCurrencyRight-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+		"decimal": <!--#4DTEXT _V3_defaultCurrencyDecimals-->,
+		"decimal_sep": "<!--#4DTEXT _V3_defaultCurrencyDecimalSep-->",
+		"thousand_sep" : "<!--#4DTEXT _V3_defaultCurrencyThousandSep-->",
+		"decimal_text_excel" : "<!--#4DTEXT _V3_defaultCurrencyDecimalsText-->",
+		"format_code_excel" : "<!--#4DTEXT _V3_defaultCurrencyFormatCode-->"
+	}
+}

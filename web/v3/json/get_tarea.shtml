@@ -1,0 +1,17 @@
+{
+    "rows": [
+        <!--#4DLOOP a_tareas_id-->
+            {
+                "id": <!--#4DVAR a_tareas_id{a_tareas_id}-->,
+                "referencia": "<!--#4DHTML _V3_escapeString(a_tareas_nombre{a_tareas_id})-->",
+                "folio": "<!--#4DHTML _V3_escapeString(a_tareas_folio{a_tareas_id})-->",
+                "fecha": "<!--#4DVAR String(a_tareas_fecha{a_tareas_id})-->",
+                "fecha_raw": "<!--#4DVAR Substring(String(a_tareas_fecha{a_tareas_id};ISO Date);1;10)-->",
+                "responsable": "<!--#4DVAR a_tareas_responsable{a_tareas_id}-->",
+                "responsable_raw": "<!--#4DVAR a_tareas_responsable{a_tareas_id}-->",
+                "realizada": <!--#4DIF a_tareas_realizada{a_tareas_id}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+                "open": <!--#4DIF a_tareas_open{a_tareas_id}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+            }<!--#4DIF NOT(a_tareas_id{a_tareas_id} = a_tareas_id{Size of array(a_tareas_id)})-->,<!--#4DENDIF-->
+        <!--#4DENDLOOP-->
+    ]
+}

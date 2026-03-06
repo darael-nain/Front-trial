@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Tipos de Pago</title>
+		<!-- <titlef hidden >Tipos de Pago</titlef> -->
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="/css/maestros/list.css">
+		<script type="text/javascript" src="/v3/script/list.js"></script>
+		<script>
+
+			$(document).ready(function() {
+
+				unaBase.toolbox.init();
+
+				// Inicializamos un buscador
+				var params = {
+					searchOff: true,
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/api_tipospago' },
+					entity: 'api_tipospago',
+					callback : function(){
+						//$('table').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false });
+					},
+					// Función que genera cada fila de la tabla, dado el valor de i (índice de posición)
+					// y el valor de rows (array con todos los resultados)
+					// El contenido de rows corresponde al objeto de mismo nombre generado mediante la llamada
+					// a la api JSON. Ver /v3/json/get_cotizacion.shtml para conocer el formato.
+					row: {
+						html: function(i, rows) {
+							
+							//verifica si esta activo y guarda un checkbox activo o inactivo segun sea el caso			
+							if(rows[i].estado === true){
+								act = '<span>Si</span>';
+							}else{
+								act = '<span>No</span>';
+							}
+							var htmlData = '';
+								htmlData = `<tr data-id="${rows[i].id}" >
+									<td colspan="3">${rows[i].descripcion}</td>
+									<td>${rows[i].codigo}</td>
+									<td><input name="ingreso" class="check" type="checkbox" disabled ${rows[i].ingreso ? 'checked' : ''}></td>	
+									<td><input name="egreso" class="check" type="checkbox" disabled ${rows[i].egreso ? 'checked' : ''}></td>	
+									<td>${act}</td>			
+								</tr>`;
+							return htmlData;
+						}
+					},
+
+
+					detail: {
+						url: function(id) { return '/v3/views/ajustes/tipos_pago/content.shtml?id=' + id},
+						iframe: false
+					},
+					// Inflexiones
+					inflection: {
+						singular: 'regla',
+						plural: 'reglas',
+						none: 'ninguna'
+					},
+					// Filtros
+					filters: [
+						
+					/*	{ name: 'created_at', type: 'month', caption: 'Fecha de creación', range: true },*/
+						//{ name: 'updated_at', type: 'month', caption: 'Fecha últ. modificación', range: true },
+						// Pendiente: agregar datasource remoto y convertir a checkbox
+						// con jquery ui autocomplete
+						/*{ name: 'area_negocio', type: 'autocomplete', caption: 'Área de negocio', dataSource: 'getAreaNegocio' },
+						{ name: 'ejecutivo_responsable', type: 'autocomplete', caption: 'Ejecutivo responsable', dataSource: 'getUsuario' },*/
+						{ name: 'estado', type: 'checkbox', caption: 'Estado del tipo de pago', options: [
+							{ caption: 'activo', name: 'activo', value: true },
+							{ caption: 'inactivo', name: 'inactivo', value: false },
+							{ caption: 'ingreso', name: 'ingreso', value: false },
+							{ caption: 'egreso', name: 'egreso', value: false }
+						] }
+
+
+					]
+				};
+
+				unaBase.toolbox.search.init(params);
+				unaBase.toolbox.menu.init({
+					entity: 'tipospago',
+					buttons: [ 'searchOff','create_crud','exit' ]
+				});
+
+
+
+
+
+			});
+		</script>
+	</head>
+	<body style="min-width: 900px !important;">
+			<div class='maintitle'>
+				<h1></h1>
+			</div>
+		<!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->
+		<table class="results">
+			<thead>
+				<tr>
+					<th colspan="3">Descripcion</th>
+					<th>Codigo</th>			
+					<th>Ingreso</th>			
+					<th>Egreso</th>			
+					<th>Habilitado</th>			
+				</tr>
+			</thead>
+			<tfoot></tfoot>
+			<tbody></tbody>
+		</table>
+	</body>
+
+</html>

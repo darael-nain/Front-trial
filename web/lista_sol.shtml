@@ -1,0 +1,48 @@
+<!--#4DINCLUDE head.shtml-->
+<body>
+<div id="content">
+<!--#4DINCLUDE menuSuperior.shtml-->
+<!--#4DINCLUDE mensajes2.shtml-->
+    <section>
+        
+        <form id="nueva-sol" action="/4DACTION/WPROVSOL" method="post" onSubmit="return valida_creacion_fxr()">
+            <p class="btn-crear">
+                <button id="new-sol" title="Nueva solicitud" class="button-inf2" type="submit">
+                    <img src="/imagenes/add2.png" border="0" />
+                    <span>Nueva Rendici&oacute;n</span>
+                </button>
+            </p>
+        </form>
+        
+    	<h1>Lista de Rendiciones</h1>    	  
+         <article>
+			<h3>Total Rendiciones : <!--#4DVAR vcantsolf--></h3>
+			<div class="buscar-negocios">
+                <form id="frmbuscadores" class="frmbuscadores"  action="/4DACTION/W_BUSCAR_SOLICITUD" method="post" >
+                    <label for="cbo-buscadores">Buscar x : </label>
+                    <select name="opcionbuscarneg" id="opcionbuscarneg" class="listas-especiales2" >
+                            <option selected value="nro">Numero</option>
+                            <option value="referencia">Referencia</option>
+                            <option value="proyecto">Proyecto</option>                          
+                    </select>
+                    <input required autofocus class="txtbuscar" id="txtbuscar" name="txtbuscar" type="text"/>
+                    <button  id="buttonbuscar"class="buttonbuscar" type="submit">
+                            <img src="/imagenes/search.gif" border="0" /> Buscar
+                    </button>
+                </form>
+            </div>
+			<!--#4DIF vcantsolf>0-->
+				<p><!--#4DINCLUDE lista_sol_encontradas.shtml--></p>
+				<!--#4DIF vcantsolf>20-->
+					<p><!--#4DVAR vcantsolf--> Reg.</p>
+				<!--#4DELSE-->
+					<p><!--#4DVAR vcantsolf--> Reg.</p>
+				<!--#4DENDIF-->
+			<!--#4DELSE-->
+				<p>NO SE ENCONTRARON RENDICIONES.</p>
+			<!--#4DENDIF-->
+         </article>         
+    </section>
+</div>  
+</body>
+</html>

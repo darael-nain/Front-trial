@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!--#4DSCRIPT/_V3_proxy_getCotizacionContent-->
+        <meta charset="utf-8">
+        <title>Cotización</title>
+        <!--<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">-->
+        <style>
+            @font-face {
+                font-family: 'Lato-Regular';
+                src: url('./font/Lato-Regular.ttf')  format('truetype');
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            @font-face {
+                font-family: 'Lato-Bold';
+                src: url('./font/Lato-Bold.ttf')  format('truetype');
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+            }
+
+            header div.primary-container {
+                height: 150px;
+            }
+
+            header div.primary-container img {
+                float: left;
+                max-width: 500px;
+                max-height: 500px;
+            }
+
+            header section.primary-info {
+                float: right;
+                text-align: right;
+            }
+
+            header section.primary-info h1{
+                font-family: 'Lato-Bold';
+                text-transform: uppercase;
+                font-size: 26px;
+                font-weight:bold;
+            }
+
+            header section.primary-info h2{
+                font-family: 'Lato-Bold';
+                font-size: 18px;
+                margin-top: 10px;
+            }
+
+             header section.primary-info p{
+                font-family: 'Lato-Regular';
+                font-size: 14px;
+            }
+
+        </style>
+    </head>
+    <body>
+        <header>
+            <div class="primary-container">
+                <img src="<!--#4DTEXT vUrlImagenLogo-->" width="<!--#4DTEXT vAnchoPicture-->" height="<!--#4DTEXT vAltoPicture-->">
+                <section class="primary-info">
+                    <h1>Cotización</h1>
+                    <h2><!--#4DIF idNegocioPrint#0--><!--#4DIF idNegocioPrint#-1-->N&deg; <!--#4DTEXT idNegocioPrint--><!--#4DELSE-->Plantilla<!--#4DENDIF--><!--#4DELSE-->Borrador<!--#4DENDIF--></h2>
+                    <p><!--#4DTEXT vFechaImpresion--></p>
+                    <p>Versión <!--#4DTEXT Substring(vVersionActual;5;Position("-";vVersionActual;5)-5)--></p>
+                </section>
+            </div>
+        </header>
+    </body>
+</html>

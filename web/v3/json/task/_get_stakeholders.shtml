@@ -1,0 +1,13 @@
+{
+	"rows":[
+		<!--#4DLOOP aIdSh -->
+		{
+			"id":<!--#4DHTML aIdSh{aIdSh}-->,
+			"id_task":<!--#4DHTML aIdTaskSh{aIdSh}-->,
+			"login":"<!--#4DHTML aLoginSh{aIdSh}-->",
+			"name":"<!--#4DHTML _V3_escapeString(aNameSh{aIdSh})-->",
+			"email":"<!--#4DHTML _V3_escapeString(aEmailSh{aIdSh})-->"
+		}<!--#4DIF NOT(aIdSh{aIdSh} = aIdSh{Size of array(aIdSh)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	]
+}

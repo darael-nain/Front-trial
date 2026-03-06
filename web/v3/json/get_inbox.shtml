@@ -1,0 +1,36 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([inbox]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP aInboxId -->
+		{
+			"id": <!--#4DHTML aInboxId{aInboxId}-->,
+			"index": "<!--#4DHTML aInboxIndex{aInboxId}-->",
+			"from": {
+				"username": "<!--#4DHTML _V3_escapeString(aInboxFromUsername{aInboxId})-->",
+				"text": "<!--#4DHTML _V3_escapeString(aInboxFromText{aInboxId})-->"
+			},
+			"to": "<!--#4DHTML aInboxTo{aInboxId}-->",
+			"created_at": "<!--#4DHTML Substring(String(aInboxDate{aInboxId};8);1;10)-->T<!--#4DHTML aInboxTime{aInboxId}-->-03:00",
+			"subject": "<!--#4DHTML _V3_escapeString(aInboxSubject{aInboxId})-->",
+			"text": "<!--#4DHTML _V3_escapeString(aInboxText{aInboxId})-->",
+			"action": "<!--#4DHTML aInboxAction{aInboxId}-->",
+			"read_mark": <!--#4DIF aInboxReadMark{aInboxId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"tag": "<!--#4DHTML aInboxTag{aInboxId}-->"
+		}<!--#4DIF NOT(aInboxId{aInboxId} = aInboxId{Size of array(aInboxId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	],
+	"total": {
+		"solicitudes": <!--#4DVAR total_solicitudes-->,
+		"avisos": <!--#4DVAR total_avisos-->,
+		"reportes": <!--#4DVAR total_reportes-->,
+		"archivado": <!--#4DVAR total_archivado-->
+	}
+}

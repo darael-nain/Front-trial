@@ -1,0 +1,56 @@
+<!--#4DINCLUDE head.shtml-->
+<body>
+<div id="content">
+<!--#4DIF vSesion>0-->
+<!--#4DINCLUDE menuSuperior.shtml-->
+<!--#4DINCLUDE mensajes.shtml-->
+    <section>     
+    	<h1>Lista de proyectos en proceso</h1>
+         <article>
+            <h3>Total Proyectos : <!--#4DVAR vcantneg--></h3>
+            <div class="buscar-negocios">
+                <form id="frmbuscadores" class="frmbuscadores"  action="/4DACTION/W_BUSCAR_NEG" method="post" >
+                    <label for="cbo-buscadores">Buscar x : </label>
+                    <select name="opcionbuscarneg" id="opcionbuscarneg" class="listas-especiales2" >
+                            <option selected value="nro">Nro del Proyecto</option>
+                            <option value="cliente">Cliente</option>
+                            <option value="referencia">Referencia</option>                          
+                    </select>
+                    <input required autofocus class="txtbuscar" id="txtbuscar" name="txtbuscar" type="text"/>
+                    <button  id="buttonbuscar"class="buttonbuscar" type="submit">
+                            <img src="/imagenes/search.gif" border="0" /> Buscar
+                    </button>
+                </form>
+            </div>                  
+    
+                                 
+                <!--#4DIF vcantneg>0-->
+                	<p><!--#4DINCLUDE lista_neg_encontradas.shtml--></p>
+                    <!--#4DIF vcantneg>20-->
+                    		<p><!--#4DVAR vcantneg--> Reg.</p>
+                    <!--#4DELSE-->
+                    		<p><!--#4DVAR vcantneg--> Reg.</p>
+                    <!--#4DENDIF-->
+                <!--#4DELSE-->
+                	<p>                    		
+                           NO SE ENCONTRARON NEGOCIOS...!!!                                 
+                    </p>
+                <!--#4DENDIF-->                
+         </article> 
+
+       <!-- <div class="paginador-box">    
+            <div id="paginador-link"></div>
+        </div>-->
+
+    </section>
+<!--#4DELSE-->
+  <p>
+    	LA SESI&Oacute;N HA EXPIRADO...!!!
+		<a class="enlaces" href="index.shtml?t=<!--#4DVAR String(Milliseconds+Random(2))-->">VOLVER A INICIAR</a>
+    </p>
+<!--#4DENDIF--> 
+
+</div>
+
+</body>
+</html>

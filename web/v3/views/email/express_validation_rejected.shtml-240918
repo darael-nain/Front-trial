@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+	<!--#4DSCRIPT/_V3_serverInfo-->
+	<!--#4DSCRIPT/_V3_proxy_getValidaExpressOK-->
+	<head>
+		<script>
+		var loginValidador = "<!--#4DHTML loginValidador-->";
+		var current_username = "<!--#4DHTML loginValidador-->";
+		var v3_data_username = "<!--#4DHTML loginValidador-->";
+		var v3_data_username_name = "<!--#4DTEXT nombreValidador-->";
+		var v3_data_username_email = "<!--#4DTEXT emailValidador-->";
+
+		// files names cot, oc , fxr
+		var file_name_internal_cot = '<!--#4DTEXT file_name_internal_cot-->';
+		var file_name_oficial_cot = '<!--#4DTEXT file_name_oficial_cot-->';
+		var file_name_oficial_oc = '<!--#4DTEXT file_name_oficial_oc-->';
+		var file_name_oficial_fxr = '<!--#4DTEXT file_name_oficial_fxr-->';
+		</script>
+		<title>Validación rechazada</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<script src="/v3/script/jquery/jquery.js"></script>
+		<script src="/v3/script/jquery/plugins/jquery-ui/js/jquery-ui.js"></script>
+		<script src="/v3/script/jquery/plugins/jquery-cookie/jquery.cookie.js"></script>
+		<script src="/v3/script/unabase.js?<!--#4DTEXT _V3_version-->"></script>
+		<script src="/v3/script/home.js?<!--#4DTEXT _V3_version-->"></script>
+		<script src="/v3/script/jquery/plugins/bindWithDelay/bindWithDelay.js"></script>
+		<script src="/v3/script/jquery/plugins/tooltipster/js/jquery.tooltipster.js"></script>
+		<script src="/v3/script/chat.js?<!--#4DTEXT _V3_version-->"></script>
+		<script src="/v3/script/help.js?<!--#4DTEXT _V3_version-->"></script>
+		<script src="/v3/script/jquery/plugins/toastr/toastr.js"></script>
+		<script>
+
+			window.onbeforeunload = undefined;
+
+			var hash = '<!--#4DHTML _V3_hash-->';
+			var nodejs_port = "<!--#4DHTML _V3_nodejs_port-->";
+			var nodejs_public_ipaddr = "<!--#4DHTML _V3_nodejs_public_ipaddr-->";
+
+			var setLogValidacion = function(id, subject, approved){
+				$.ajax({
+					url: '/4DACTION/_V3_setLogValidacion',
+					data: {
+						id: id,
+						approved: approved,
+						observacion: subject
+					},
+					dataType: 'json',
+					async: false,
+					success: function(data) {
+						if (data.success) {
+							$(".status").text("El documento ha sido rechazado.").addClass('statusOK');
+							var username = data.valida_user_emisor;
+							var record_name = data.valida_record_name;
+							var id_tipo_gasto = data.id_tipo_gasto;
+							var index = data.valida_index;
+							var text = data.valida_text;
+							var id = data.valida_id;
+							var usernameValidador = data.valida_user_validador;
+							var nameValidador = data.valida_name_validador;
+							var emailValidator = data.valida_email_validador;
+							if (record_name == "Gasto") {
+								if (id_tipo_gasto == "OC") {
+									record_name = "Orden de Compra"
+								}else{
+									record_name = "Rendición de fondos"
+								}
+								//unaBase.email.notify(username, 'validation_rejected', record_name, index, text, null, 'compras/content.shtml', id, undefined, usernameValidador, nameValidador, emailValidator);
+								unaBase.email.notify(username, 'validation_rejected', record_name, index, text, null, 'compras/content.shtml', id, undefined, usernameValidador, nameValidador, emailValidator, undefined, undefined, undefined, undefined, true);
+								unaBase.inbox.send({
+									to: username,
+									subject: 'Rechazó validar ' + record_name + ' Nº ' + index + ' / ' + text,
+									into: 'viewport',
+									href: '/v3/views/compras/content.shtml?id=' + id,
+									tag: 'avisos'
+								});
+								unaBase.log.save('Ha rechazado validar el gasto', 'cotizaciones', index, id);
+							}else{
+								unaBase.email.notify(username, 'validation_rejected', record_name, index, text, null, 'cotizaciones/content.shtml', id, undefined, usernameValidador, nameValidador, emailValidator);
+								unaBase.inbox.send({
+									to: username,
+									subject: 'Rechazó validar ' + record_name + ' Nº ' + index + ' / ' + text,
+									into: 'viewport',
+									href: '/v3/views/cotizaciones/content.shtml?id=' + id,
+									tag: 'avisos'
+								});
+								unaBase.log.save('Ha rechazado validar la cotización', 'cotizaciones', index, id);
+							}
+							window.close();
+						}else{
+							$(".status").text("No se pudo rechazar el documento. Por favor intentar nuevamente.").addClass('statusFail');
+						}
+					}
+				});
+
+			}
+			$(document).ready(function(){
+				$(".ocultar").hide();
+
+				// ini -- Verifica si docuemento ya tiene accion realizada
+				$.ajax({
+					url: '/4DACTION/_V3_setLogValidacionComprobar',
+					data: {
+						id: <!--#4DTEXT id-->
+					},
+					dataType: 'json',
+					success: function(data) {
+						if (data.success) {
+							if (data.accion_realizada != "") {
+								if(data.accion_realizada == "VALIDADA"){
+									$(".texto").html("<span class='caution'>No se pudo realizar la acción.<br>El documento ya se encuentra validado por el mismo criterio.</span>");
+								}else{
+									$(".texto").html("<span class='caution'>No se pudo realizar la acción.<br>El documento ya se encuentra rechazado.</span>");
+								}
+								setTimeout(function(){
+									window.close();
+								}, 3000);
+							}else{
+								$(".ocultar").show();
+							}
+						}else{
+							$(".status").text("No se pudo validar el documento. Por favor intente nuevamente.");
+							setTimeout(function(){
+								window.close();
+							}, 2000);
+						}
+					}
+				});
+				// fin -- Verifica si docuemento ya tiene accion realizada
+
+				$(".action.validar").click(function(){
+					setLogValidacion(<!--#4DTEXT id-->, "", true);
+				});
+
+				$(".action.rejected").click(function(){
+					var subject = $('textarea[name="subject"]').val();
+					if (subject!="") {
+						setLogValidacion(<!--#4DTEXT id-->, subject, false);
+					}else{
+						$(".status").text("Falta ingresar motivo del rechazo.").addClass('statusFail');
+						setTimeout(function(){
+							$(".status").text("Ingrese motivo de rechazo:").removeClass('statusFail');
+						},1000);
+						$('textarea[name="subject"]').focus();
+					}
+
+				});
+			});
+		</script>
+		<style type="text/css">
+			@media (max-width: 480px){
+				#container{
+					width: 320px;
+				}
+				#container .texto{
+					width:100%;
+				}
+					#container .texto span{
+						font-size:15px;
+						display: inline-block;
+						text-align:left!important;
+					}
+					#container .texto textarea{
+						margin: auto;
+						width:95%;
+						height:100px;
+					}
+				#container .status{
+					font-size:15px;
+				}
+				#container .statusOk{
+					color:green;
+				}
+				#container .statusFail{
+					color:red;
+				}
+			}
+
+			body{
+				font-size:20pt!important;
+			}
+			div.status{
+				text-align:center;
+				color:green;
+				font-size: 1em;
+				font-weight:bold;
+			}
+			h1{
+				text-align: center;
+				margin:2px;
+			}
+			.texto{
+				text-align:center;
+			}
+			.texto textarea{
+				width: 50%;
+				height:100px;
+				font-size:15px;
+			}
+			.texto span{
+				text-align: auto;
+				display: block;
+			}
+			#container .statusOk{
+				color:green;
+			}
+			#container .statusFail{
+				color:red;
+			}
+			.caution{
+				text-align:center;
+				color:#FF800D;
+				font-size: 1em;
+				font-weight:bold;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="container">
+			<h1><img src="/v3/design/html/body.menu/nav/h1.png"></h1>
+			<div class="texto">
+				<span class="status ocultar">Ingrese motivo de rechazo:</span>
+				<textarea class="ocultar" name="subject"></textarea>
+			</div>
+			<div style="text-align:center" class="ocultar"><a class="action rejected" style="font-size:20px !important; display: inline-block !important; padding: 10px!important; background-color: rgb(204,51,0) !important; border: 1px solid rgb(204,51,0) !important; border-radius: 3px !important; margin: 5px 10px 5px 10px!important; color: white; text-decoration: none" href="#">Confirmar rechazo</a><!--<a class="action validar" style="font-size:20px!important; display: inline-block !important; padding: 10px!important; background-color: rgb(67,175,124) !important; border: 1px solid rgb(67,175,124) !important; border-radius: 3px !important; margin: 5px 10px 5px 10px!important; color: white; text-decoration: none" href="#">Validar</a>--></div>
+		</div>
+	</body>
+</html>

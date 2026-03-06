@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    	<script src="/v3/script/jquery/jquery.js"></script>
+
+        <!--Import Google Icon Font-->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+        <!-- Compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+        <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+        <script>
+        	var getClientesPorCobrar = function(){
+        		var containerBody = $('#list-cpc > tbody');
+        		$.ajax({
+					url: '/4DACTION/_V3_getClientesPorCobrarREP',
+					data: {},
+					dataType: 'json',
+					success: function(data) {
+						containerBody.find('*').remove();
+						var htmlObject;
+						$.each(data.por_cobrar, function(key, item) {
+							htmlObject = $('<tr>' +
+							'<td style="text-align:left;width:250px"><div>'+ item.cliente + '</div></td>' +
+							'<td style="width:100px;text-align:center"><div class="ver-facturas">'+ item.cantidad +'</div></td>' +
+							'<td style="width:100px;text-align:right"><div style="font-weight:bold;">'+ item.monto +'</div></td>' +
+							'</tr>');
+							containerBody.append(htmlObject);
+						});
+					},
+					error: function(xhr, text, error) {
+						console.log("error:" + error);
+					}
+				});
+            }
+            $(document).ready(function(){
+            	getClientesPorCobrar();
+            });
+        </script>
+
+    </head>
+<body style="font-size:13px;">
+<div class="container">
+	<div class="row">
+		<div class="col s6">
+		  <div class="row">
+		    <div class="input-field col s6">
+		      <i class="material-icons prefix">textsms</i>
+		      <input type="text" id="autocomplete-input" class="autocomplete">
+		      <label for="autocomplete-input">Autocomplete</label>
+		    </div>
+		  </div>
+		  <div class="row">
+		    <button>lalala</button>
+		  </div>
+		</div>
+	</div>
+    <table id="list-cpc" class="centered" style="font-size:12px;">
+		<thead>
+		  <tr>
+		      <th>Clientes</th>
+		      <th>Facturas pendientes</th>
+		      <th>Monto pendiente</th>
+		  </tr>
+		</thead>
+		<tbody>
+		  <tr>
+		    <td colspan="3">Cargando...</td>
+		  </tr>
+		</tbody>
+	</table>
+</div>
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
+
+
+        

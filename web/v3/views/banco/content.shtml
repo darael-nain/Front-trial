@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getMovimientoContent-->
+		<title>Añadir movimiento bancario</title></title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/script/datepicker_es.js"></script>
+		<!--<link rel="stylesheet" href="/v3/design/gray_and_white.css">-->
+		<script>
+			var ocb = {
+				"dialog" : $('#dialog-menu'),
+				"container" : $('section#sheetocb'),
+				"estado" : $('section#sheetocb').data('estado'),
+				display: function(){
+					switch(ocb.estado) {
+					    case 'POR EMITIR':
+					   		ocb.dialog.find('li[data-name="discard"]').hide();
+					    	break;
+					    case 'EMITIDA':
+					    	if(!access._499){ // anular pago
+								ocb.dialog.find('li[data-name="discard"]').hide();
+							} else {
+								ocb.dialog.find('li[data-name="discard"]').show();
+							}
+					        break;
+					    case 'PAGADA':
+					    	ocb.dialog.find('li[data-name="discard"]').hide();
+					    	break;
+					    case 'ANULADA':
+					    	ocb.dialog.find('li[data-name="discard"]').hide();
+					    	break;
+					}
+				}
+
+			};
+
+			$(document).ready(function() {
+
+				$('.ui-dialog fieldset').find('.numeric.currency input').number(true, currency.decimals, ',', '.');
+
+				unaBase.toolbox.init();
+				unaBase.toolbox.menu.init({
+					//entity: 'MovimientoBanco',
+					entity: 'MovBancoCopyPaste',
+					buttons: ['saveCartolaBanco', 'discard'],
+					data: function() {
+						var from = $('html > body > aside > div > div > ul > li.active').data('name');
+						return {
+							'movimiento[cuenta]': $('.ui-dialog [name="movimiento[cuenta]"]').data('id'),
+							'movimiento[date]': document.querySelector('textarea[name="col_date"]').value,
+              				'movimiento[number]': document.querySelector('textarea[name="col_number"]').value,
+              				'movimiento[amount]': document.querySelector('textarea[name="col_amount"]').value,
+							'movimiento[ref]': document.querySelector('textarea[name="col_ref"]').value
+						};
+					},
+					validate: function() {
+						var status = true;
+						$('.ui-dialog fieldset.ingreso input:required').removeClass('invalid');
+						$('.ui-dialog fieldset.ingreso input:required').each(function() {
+							if ($(this).val() == '') {
+								status = false;
+								$(this).addClass('invalid');
+							}
+						});
+
+						if (status) {
+							setTimeout(function() {
+								$('.ui-dialog').find('.ui-dialog-titlebar-close').trigger('click');
+								unaBase.toolbox.search._advancedSearch();
+							}, 2000);
+						}
+						return status;
+					}
+				});
+
+				$('.ui-dialog input[name="movimiento[cuenta]"]').autocomplete({
+					source: function(request, response) {
+						$.ajax({
+							url: '/4DACTION/_V3_' + 'getCuentaBancaria',
+							dataType: 'json',
+							data: {
+								q: request.term
+							},
+							success: function(data) {
+								response($.map(data.rows, function(item) {
+									return item;
+								}));
+							}
+						});
+					},
+					minLength: 0,
+					autoFocus: true,
+					delay: 5,
+					position: { my: "left top", at: "left bottom", collision: "flip" },
+					open: function() {
+						$(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+					},
+					close: function() {
+						$(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+					},
+					focus: function(event, ui) {
+						return false;
+					},
+					response: function(event, ui) {
+					},
+					select: function(event, ui) {
+						$('.ui-dialog input[name="movimiento[cuenta]"]').data('id', ui.item.id);
+						$('.ui-dialog input[name="movimiento[cuenta]"]').val(ui.item.text);
+						return false;
+					}
+
+				}).data('ui-autocomplete')._renderItem = function(ul, item) {
+					return $('<li><a><span>' + item.text + '</span></a></li>').appendTo(ul);
+				};
+
+				$('.ui-dialog button.show.cuenta-movimiento').button({
+					icons: {
+						primary: 'ui-icon-carat-1-s'
+					},
+					text: false
+				}).click(function() {
+					$('.ui-dialog input[name="movimiento[cuenta]"]').autocomplete('search', '@').focus();
+				});
+			});
+
+			function contar(target){
+				var filas = target.value.split("\n");
+				var colName = target.name;
+				var filasCant = filas.length;
+				if (colName == "col_date") {
+					document.querySelector('.col-date').innerHTML = filasCant + " " + (filasCant > 1 ? "filas" : "fila");
+				}
+				if (colName == "col_number") {
+					document.querySelector('.col-number').innerHTML = filasCant + " " + (filasCant > 1 ? "filas" : "fila");
+				}
+				if (colName == "col_amount") {
+					document.querySelector('.col-amount').innerHTML = filasCant + " " + (filasCant > 1 ? "filas" : "fila");
+				}
+				if (colName == "col_ref") {
+					document.querySelector('.col-ref').innerHTML = filasCant + " " + (filasCant > 1 ? "filas" : "fila");
+				}
+			}
+
+			function getValue(target){
+				var filas = target.value.split("\n");
+				for(i=0 ; i < filas.length-1; i++){
+					console.log("valor[" + i + "]: " + filas[i]);
+				}
+			}
+
+		</script>
+		<style>
+			.ui-dialog fieldset > label > span > input {
+				display: inline-block;
+				width: calc(100% - 30px) !important;
+			}
+			.estado {
+				font-weight:bold;
+				display: block;
+				text-align: left;
+				text-decoration: underline;
+			}
+
+			.check{
+				position: absolute !important;
+				left:-40px !important;
+
+			}
+
+			.container-cartola{
+				width:100%;
+				border-collapse: collapse;
+			}
+				.container-cartola > tbody > tr{
+					background-color:lightgray;
+				}
+					.container-cartola > tbody > tr > td{
+						border-spacing: 0;
+						border:1px solid gray;
+					}
+		</style>
+	</head>
+	<body>
+		<section id="sheetocb" class="sheet-ocb" data-folio="<!--#4DTEXT [Orden_de_Cobro]Folio_OCobro-->" data-currentdate="<!--#4DTEXT Current date(*)-->" data-estado="<!--#4DTEXT vEstado-->">
+			<fieldset class="ingreso"<!--#4DIF Not(Undefined(id))--> data-id="<!--#4DTEXT id-->"<!--#4DENDIF--><!--#4DIF ([Orden_de_Cobro]Estado="PAGADA")--> data-paid="true"<!--#4DENDIF--> <!--#4DIF ([Orden_de_Cobro]Estado="ANULADA")--> data-nullified="true"<!--#4DENDIF-->>
+				<strong name="ingreso[estado]" class="estado"><!--#4DTEXT vEstado--></strong>
+				<legend>Datos del movimiento <span><label class="nro-orden"><!--#4DIF Not(Undefined(id))-->Nº <!--#4DTEXT [Orden_de_Cobro]Folio_OCobro--><!--#4DENDIF--></label></span></legend>
+				<label>
+					<span>Cuenta bancaria</span>
+					<input required readonly type="search" name="movimiento[cuenta]" value="<!--#4DTEXT vCuentaMovimiento-->" data-id="<!--#4DTEXT [Cartola_Bancaria]cta_corriente-->"><button class="show cuenta-movimiento"></button>
+				</label>
+			</fieldset>
+		</section>
+
+		<form>
+			<table class="container-cartola">
+				<thead>
+					<tr>
+						<th>Fecha operación</th>
+						<th>Nro. operación</th>
+						<th>Importe</th>
+						<th>Glosa</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td><textarea name="col_date" cols="10" rows="15" onkeydown="" onblur="contar(this)"></textarea></td>
+						<td><textarea name="col_number" cols="5" rows="15"  onkeydown="contar(this)" onblur="contar(this)"></textarea></td>
+						<td><textarea name="col_amount" cols="10" rows="15" onkeydown="contar(this)" onblur="contar(this)"></textarea></td>
+						<td><textarea name="col_ref" cols="50" rows="15" onkeydown="contar(this)" onblur="contar(this)"></textarea></td>
+					</tr>
+					<tr>
+						<td class="col-date">0 filas</td>
+						<td class="col-number">0 filas</td>
+						<td class="col-amount">0 filas</td>
+						<td class="col-ref">0 filas</td>
+					</tr>
+				</tbody>
+			</table>
+			<div>Copiar / Pegar</div>
+			<div>Agregar información uno de bajo del otro</div>
+			<div>Solo se crearan aquellos que no se repitan</div>
+		</form>
+
+	</body>
+</html>

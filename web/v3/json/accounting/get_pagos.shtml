@@ -1,0 +1,30 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": 1,
+		"total": <!--#4DHTML $total-->
+	},
+	"sort": {
+		"by": "<!--#4DTEXT sort_by-->",
+		"order": "<!--#4DTEXT sort_order-->"
+	},
+	"rows": [
+	<!--#4DLOOP aPagoId -->
+	{
+		"id": <!--#4DHTML aPagoId{aPagoId}-->,
+		"folio": "<!--#4DHTML aPagoFolio{aPagoId}-->",
+		"libro": "PAGOS",
+		"fechaEmision": "<!--#4DHTML String(aFechaPago{aPagoId})-->",
+		"referencia": "<!--#4DHTML _V3_escapeString(aPagoNombre{aPagoId})-->",
+		"doc": "Pago",
+		"total": "<!--#4DHTML _V3_formatCurrency(aPagoTotalPago{aPagoId})-->",
+		"cliente": "<!--#4DHTML _V3_escapeString(aPagoEmpresaRazonSocial{aPagoId})-->"
+	}<!--#4DIF NOT(aPagoId{aPagoId} = aPagoId{Size of array(aPagoId)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+	
+}

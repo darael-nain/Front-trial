@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getHistorial-->
+		<title>Comentarios</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="/v3/design/grays.css?<!--#4DTEXT Random-->">
+	</head>
+	<body>
+		<section class="sheet-comentarios css-grays">
+			<article class="css-section-comments">
+				<ul>
+					<!--#4DIF Size of array(aIdMensaje) > 0-->
+						<!--#4DLOOP aIdMensaje-->
+								<li>
+									<div><a href="#"><!--#4DTEXT Lowercase(aNombreMensaje{aIdMensaje};*)--></a><time><!--#4DTEXT aFechaMensaje{aIdMensaje}--> <!--#4DTEXT aHoraMensaje{aIdMensaje}--></time></div>
+									<p style="white-space: pre-wrap; line-height: 1.2em;"><!--#4DTEXT Replace string(Replace string(Replace string(Replace string(Replace string(aComentarioMensaje{aIdMensaje};"la cotización";etiqueta_cotizacion);"el negocio";etiqueta_negocio);"al negocio";"a "+etiqueta_negocio);"cotización";etiqueta_cotizacion);"negocio";etiqueta_negocio)--></p>
+									<strong><!--#4DTEXT aTipoMensaje{aIdMensaje}--></strong>
+									<!--#4DIF aDescLarga{aIdMensaje}#""--><p>"Mensaje: <!--#4DTEXT aDescLarga{aIdMensaje}-->"</p><!--#4DENDIF-->
+								</li>
+						<!--#4DENDLOOP-->
+					<!--#4DELSE-->
+						<h1 style="padding:10px!important;font-weight:bold!important">No se encontró historial asociado.</h1>
+					<!--#4DENDIF-->
+
+				</ul>
+			</article>
+		</section>
+	</body>
+</html>

@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getProyectoContent-->
+		<title>Proyectos</title>
+		<meta charset="utf-8">
+		<script>
+		</script>
+		<script type="text/javascript" src="/v3/views/proyectos/script/library/content.js"></script>
+		<script type="text/javascript" src="/v3/views/proyectos/script/startup/content.js"></script>
+		<style>
+			div.fechas input{
+				width: 20% !important;
+				display: block !important;
+			}
+			div.fechas{
+				list-style-type: none;
+			}
+
+			.invalid {
+    			background-color: rgba(255,0,0,.5) !important;
+    			color: black !important;
+			}
+
+			table.items > tbody {
+				counter-reset: item;
+			}
+
+			table.items > tbody > tr:not(.title) > td:nth-of-type(2):before {
+				counter-increment: item;
+				content: counter(item);
+				font-weight: bold;
+			}
+
+
+			section.sheet table .collapsed {
+				display: none;
+			}
+
+			table .moving-src, table .moving-dst {
+				outline: 1px dashed black;
+				opacity: .3;
+			}
+
+			section.sheet table th:last-of-type {
+				width: 28px;
+			}
+
+			/* Nuevo */
+
+			input.movimiento {
+				background-color: #94BDFF;
+			}
+
+			input.indicador {
+				background-color: #ADAD84;
+			}
+
+			.checklist > li > span:first-of-type {
+				width: calc(40% - 2px) !important;
+				font-size: 14px;
+				font-weight: normal !important;
+			}
+
+			.checklist > li > span:first-of-type > em {
+				/* color: #84ADEF;*/
+				color: #648DCF;
+			}
+
+			li.strikeout > span {
+				text-decoration: line-through !important;
+			}
+
+			div.tareas > div:first-of-type,
+			div.tareas > div:last-of-type {
+				display: inline-block;
+				vertical-align: top;
+			}
+
+			div.tareas > div:first-of-type {
+				width: 150px;
+			}
+
+			div.tareas > div:last-of-type input {
+				display: inline-block !important;
+				background-color: white;
+				border: none !important;
+				border-radius: 5px !important;
+				padding: 2px !important;
+				height: 18px !important;
+			}
+
+			div.tareas > div:last-of-type input:nth-of-type(1) {
+				width: 350px !important;
+			}
+
+			div.tareas > div:last-of-type input:nth-of-type(2) {
+				width: 120px !important;
+			}
+
+			div.tareas > div:last-of-type input:nth-of-type(3) {
+				width: 150px !important;
+				height: 22px !important;
+			}
+
+			div.tareas > div:last-of-type > div.task {
+				margin-bottom: 5px;
+				padding: 3px;
+			}
+
+			div.tareas ::-webkit-input-placeholder,
+			div.tareas input:disabled {
+				color: rgb(180,180,180) !important;
+			}
+
+			div.tareas ::-webkit-input-placeholder {
+				text-transform: none !important;
+			}
+
+		</style>
+		<script>
+			$(document).ready(function() {
+
+				$('div.tareas').on('focus', 'input.invalid', function(event) {
+					$(event.target).removeClass('invalid');
+				});
+
+				$('div.tareas button.add.task').click(function(event) {
+					var unique_id = 'id_' + Math.random();
+					var task = $('\
+					<div class="task">\
+						<input type="text" name="proyecto[tarea][][nombre]" placeholder="Ingrese nombre tarea...">\
+						<input type="text" name="proyecto[tarea][][vencimiento_datepicker]" placeholder="Fecha tarea">\
+						<input type="search" name="proyecto[tarea][][responsable][id]" placeholder="Responsable tarea">\
+						<button class="show ejecutivo">Ver todos los ejecutivos</button>\
+						<input type="hidden" name="proyecto[tarea][][responsable]">\
+						<input type="hidden" name="proyecto[tarea][][vencimiento]" id="' + unique_id + '">\
+						<label style="display: inline-block; width: auto !important;">\
+							<input style="width: 14px !important; height: 14px !important;" type="checkbox" name="proyecto[tarea][][realizada]" value="true">\
+							¿Realizada?\
+						</label>\
+						<button class="delete task">Eliminar</button>\
+					</div>\
+					');
+					task.find('input, select').val('');
+
+					/*task.find('input[name="proyecto[tarea][][vencimiento_datepicker]"]').datepicker({
+						dateFormat: 'dd-mm-yy',
+						altField: 'input[name="proyecto[tarea][][vencimiento]"]#' + unique_id,
+						altFormat: 'yy-mm-dd'
+					});*/
+
+					task.find('input[name="proyecto[tarea][][responsable][id]"]').autocomplete({
+						source: function(request, response) {
+							$.ajax({
+								url: '/4DACTION/_V3_' + 'getUsuario',
+								dataType: 'json',
+								data: {
+									q: request.term
+								},
+								success: function(data) {
+									response($.map(data.rows, function(item) {
+										return item;
+									}));
+								}
+							});
+						},
+						minLength: 0,
+						autoFocus: true,
+						delay: 5,
+						position: { my: "left top", at: "left bottom", collision: "flip" },
+						open: function() {
+							$(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+						},
+						close: function() {
+							$(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+						},
+						focus: function(event, ui) {
+							//$(this).val(ui.item.text);
+							return false;
+						},
+						response: function(event, ui) {
+						},
+						select: function(event, ui) {
+							$(event.target).closest('div.task').find('input[name="proyecto[tarea][][responsable][id]"]').val(ui.item.nombres + ' ' + ui.item.ap_pat + ((ui.item.ap_mat)? ' ' + ui.item.ap_mat : ''));
+							$(event.target).closest('div.task').find('input[name="proyecto[tarea][][responsable]"]').val(ui.item.id);
+							return false;
+						}
+
+					}).data('ui-autocomplete')._renderItem = function(ul, item) {
+						return $('<li><a><strong class="highlight">' +  item.nombres + ' ' + item.ap_pat + ((item.ap_mat)? ' ' + item.ap_mat : '') + '</strong><em>' + item.cargo + '</em><span>' + item.email + '</span></a></li>').appendTo(ul);
+					};
+
+					task.find('button.show.ejecutivo').click(function() {
+						var target = $(this).parentTo('ul');
+						target.find('input[name="proyecto[tarea][][responsable][id]"][type="search"]').autocomplete('search', '@').focus();
+					}).button({
+						icons: {
+							primary: 'ui-icon-carat-1-s'
+						},
+						text: false
+					});
+
+					task.find('input[name="proyecto[tarea][][responsable][id]"]').val('<!--#4DVAR _V3_data_username-->');
+					task.find('input[name="proyecto[tarea][][responsable]"]').val('<!--#4DVAR _V3_data_username-->');
+					task.find('input[name="proyecto[tarea][][vencimiento]"]').val('<!--#4DVAR Current date(*)-->');
+					task.find('input[name="proyecto[tarea][][vencimiento_datepicker]"]').val('<!--#4DVAR Current date(*)-->');
+
+					$('div.task-container').append(task);
+
+					saveTask({ target: task.find('input[name="proyecto[tarea][][nombre]"]') });
+				});
+
+				var saveTask = function(event) {
+					var fields = {
+						id: $(event.target).closest('div.task').data('id'),
+						fk: <!--#4DVAR [Proyectos_V3]id-->,
+						nombre: $(event.target).closest('div.task').find('input[name="proyecto[tarea][][nombre]"]').val(),
+						vencimiento: $(event.target).closest('div.task').find('input[name="proyecto[tarea][][vencimiento]"]').val(),
+						ejecutivo_responsable: $(event.target).closest('div.task').find('input[name="proyecto[tarea][][responsable]"]').val(),
+						realizada: $(event.target).closest('div.task').find('input[name="proyecto[tarea][][realizada]"]').is(':checked'),
+						origen: '/v3/views/proyectos/content.shtml?id=<!--#4DVAR [Proyectos_V3]id-->'
+					};
+
+					//if (fields.nombre && fields.vencimiento && fields.ejecutivo_responsable) {
+					if (fields.vencimiento && fields.ejecutivo_responsable) {
+						$.ajax({
+							url: '/4DACTION/_V3_setTarea',
+							data: fields,
+							dataType: 'json',
+							async: false,
+							success: function(data) {
+								if (data.success) {
+									$(event.target).closest('div.task').data('id', data.id);
+									toastr.success('Tarea guardada con éxito.');
+									if ($('#ui-datepicker-div').length == 0 || !$('#ui-datepicker-div').is('visible')) {
+										refreshTaskList(data.id);
+									}
+								} else {
+									toastr.error('Error al guardar la tarea.');
+								}
+							}
+						});
+					} else {
+						toastr.error('Faltan datos por completar en la tarea.');
+						if (!$(event.target).closest('div.task').find('input[name="proyecto[tarea][][nombre]"]').val())
+							$(event.target).closest('div.task').find('input[name="proyecto[tarea][][nombre]"]').addClass('invalid');
+						if (!$(event.target).closest('div.task').find('input[name="proyecto[tarea][][vencimiento_datepicker]"]').val())
+							$(event.target).closest('div.task').find('input[name="proyecto[tarea][][vencimiento_datepicker]"]').addClass('invalid');
+						if (!$(event.target).closest('div.task').find('input[name="proyecto[tarea][][responsable][id]"]').val())
+							$(event.target).closest('div.task').find('input[name="proyecto[tarea][][responsable][id]"]').addClass('invalid');
+					}
+				};
+
+				$('div.tareas').on('click', 'button.notify.task', function(event) {
+					var id = $(event.target).closest('div.task').data('id');
+					alert('notificar');
+				});
+
+				$('div.tareas').on('click', 'button.delete.task', function(event) {
+					if ($(event.target).closest('div.task').data('id')) {
+						$.ajax({
+							url: '/4DACTION/_V3_setTarea',
+							data: {
+								id: $(event.target).closest('div.task').data('id'),
+								delete: true
+							},
+							dataType: 'json',
+							success: function(data) {
+								if (data.success) {
+									$(event.target).closest('div.task').remove();
+									refreshTaskList();
+								}
+							}
+						});
+					} else {
+						$(event.target).closest('div.task').remove();
+					}
+				});
+				
+
+				var refreshTaskList = function(id) {
+					$.ajax({
+						url: '/4DACTION/_V3_getTareaByProyecto',
+						data: {
+							id: <!--#4DVAR [Proyectos_V3]id-->
+						},
+						dataType: 'json',
+						async: false,
+						success: function(data) {
+							$('div.task-container').find('div.task').remove();
+							var tareas_completadas = 0;
+							$.each(data.rows, function(key, item) {
+								if (item.realizada) {
+									tareas_completadas++;
+								}
+								var datepicker_unique_id = 'id_datepicker_' + item.id;
+								var autocomplete_unique_id = 'id_autocomplete_' + item.id;
+								var responsable_unique_id = 'id_responsable_' + item.id;
+								var task = $('\
+								<div data-id="' + item.id + '" class="task">\
+									<input value="' + item.referencia + " (Nro. "+item.folio+")" + '" type="text" readonly name="proyecto[tarea][][nombre]" placeholder="Ingrese nombre tarea...">\
+									<input value="' + item.fecha + '" type="text" readonly name="proyecto[tarea][][vencimiento_datepicker]" placeholder="Fecha tarea">\
+									<input value="' + item.responsable + '" type="text" readonly name="proyecto[tarea][][responsable][id]" placeholder="Responsable tarea" id="' + autocomplete_unique_id + '">\
+									<button class="show ejecutivo" style="display:none">Ver todos los ejecutivos</button>\
+									<input value="' + item.responsable_raw + '" type="hidden" name="proyecto[tarea][][responsable]" id="' + responsable_unique_id + '">\
+									<input value="' + item.fecha_raw + '" type="hidden" name="proyecto[tarea][][vencimiento]" id="' + datepicker_unique_id + '">\
+									<label style="display: inline-block; width: auto !important;">\
+										<input' + (item.realizada? ' checked' : '') + ' style="width: 14px !important; height: 14px !important;" type="checkbox" disabled name="proyecto[tarea][][realizada]" value="true">\
+										¿Realizada?\
+									</label>\
+									<button class="notify task" style="display:none">Notificar</button>\
+									<button class="delete task" style="display:none">Eliminar</button>\
+									<button class="goto" style="text-decoration:underline">Ir a la tarea</button>\
+								</div>\
+								');
+
+								/*task.find('input[name="proyecto[tarea][][vencimiento_datepicker]"]').datepicker({
+									dateFormat: 'dd-mm-yy',
+									altField: 'input[name="proyecto[tarea][][vencimiento]"]#' + datepicker_unique_id,
+									altFormat: 'yy-mm-dd'
+								});*/
+
+								task.find('input[name="proyecto[tarea][][responsable][id]"]#' + autocomplete_unique_id).autocomplete({
+									source: function(request, response) {
+										$.ajax({
+											url: '/4DACTION/_V3_' + 'getUsuario',
+											dataType: 'json',
+											data: {
+												q: request.term
+											},
+											success: function(data) {
+												response($.map(data.rows, function(item) {
+													return item;
+												}));
+											}
+										});
+									},
+									minLength: 0,
+									autoFocus: true,
+									delay: 5,
+									position: { my: "left top", at: "left bottom", collision: "flip" },
+									open: function() {
+										$(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+									},
+									close: function() {
+										$(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+									},
+									focus: function(event, ui) {
+										//$(this).val(ui.item.text);
+										return false;
+									},
+									response: function(event, ui) {
+									},
+									select: function(event, ui) {
+										$(event.target).closest('div.task').find('input[name="proyecto[tarea][][responsable][id]"]#' + autocomplete_unique_id).val(ui.item.nombres + ' ' + ui.item.ap_pat + ((ui.item.ap_mat)? ' ' + ui.item.ap_mat : ''));
+										$(event.target).closest('div.task').find('input[name="proyecto[tarea][][responsable]"]#' + responsable_unique_id).val(ui.item.id);
+										return false;
+									}
+
+								}).data('ui-autocomplete')._renderItem = function(ul, item) {
+									return $('<li><a><strong class="highlight">' +  item.nombres + ' ' + item.ap_pat + ((item.ap_mat)? ' ' + item.ap_mat : '') + '</strong><em>' + item.cargo + '</em><span>' + item.email + '</span></a></li>').appendTo(ul);
+								};
+
+								task.find('button.show.ejecutivo').click(function() {
+									var target = $(this).parentTo('ul');
+									target.find('input[name="proyecto[tarea][][responsable][id]"][type="search"]#' + autocomplete_unique_id).autocomplete('search', '@').focus();
+								}).button({
+									icons: {
+										primary: 'ui-icon-carat-1-s'
+									},
+									text: false
+								});
+
+								task.find('button.goto').click(function() {
+									var id = $(this).closest('div').data('id');
+									if (g_uso_tareas_easy) {
+										window.open(nodeUrl +  '/tareas/' + id);
+									}else{
+										window.open('/ot.shtml?i=' + id);
+									}
+								});
+
+								$('div.task-container').append(task);
+								if (typeof id != 'undefined' && id == item.id) {
+									task.find('> input:first-of-type').trigger('focus');
+								}
+
+								if (item.realizada) {
+									task.find('> input:not([type="checkbox"])').css('color', 'gray').prop('readonly', true);
+									task.find('> button.show.ejecutivo').css('color', 'gray').prop('readonly', true);
+									task.find('button.delete.task').remove();
+									task.find('button.notify.task').remove();
+								}
+
+								if (item.open == false) {
+									task.find('button.goto').hide();
+								}
+
+							});
+							var porcentaje_completado = (data.rows.length > 0)? Math.round((tareas_completadas / data.rows.length) * 100) : 0;
+							$('span.completed').text(porcentaje_completado);
+							$('span.current').text(tareas_completadas);
+							$('span.total-tasks').text(data.rows.length);
+						}
+					});
+				};
+
+				refreshTaskList();
+
+				$('div.tareas').on('focus', 'div.task', function(event) {
+					// $(event.target).closest('div.task').css('background-color', 'rgba(67,175,124,.7)');
+				});
+
+				$('div.tareas').on('blur', 'div.task', function(event) {
+					$(event.target).closest('div.task').css('background-color', '');
+				});
+
+				$('div.tareas').on('change', 'div.task input:not([type="search"])', saveTask);
+
+				$('div.tareas').on('blur', 'div.task input[type="search"]', saveTask);
+
+				$('div.tareas').on('keyup', 'div.task input[name="proyecto[tarea][][nombre]"]', function(event) {
+					if (event.keyCode === 13) {
+						if ($(event.target).closest('div.task').next().length === 0) {
+							$('button.add.task').trigger('click');
+						} else {
+							$(event.target).closest('div.task').next().find('input[name="proyecto[tarea][][nombre]"]').focus();
+						}
+					}
+				});
+
+			});
+		</script>
+	</head>
+	<body>
+		<!-- Formularios de contenido -->
+		<section class="sheet" data-id="<!--#4DVAR [Proyectos_V3]id-->" data-index="<!--#4DVAR [Proyectos_V3]folio-->"<!--#4DIF [Proyectos_V3]folio=0--> data-new="true"<!--#4DENDIF--><!--#4DIF [Proyectos_V3]nulo--> data-readonly="true"<!--#4DENDIF-->>
+			<footer>
+				<article class="general-data">
+					<h1>Información general</h1>
+					<h2><span id="index"><!--#4DIF [Proyectos_V3]folio=0-->Borrador<!--#4DELSE-->Nº <!--#4DVAR [Proyectos_V3]folio--><!--#4DENDIF--></span> <strong>Proyecto</strong> <input data-text placeholder="Ingresa el nombre del proyecto..." type="text" name="cotizacion[titulo][text]" value="<!--#4DVAR [Proyectos_V3]referencia-->"></h2>
+					<p><!--#4DVAR [Proyectos_V3]estado--> - Creado por <!--#4DVAR [Proyectos_V3]login--> el <!--#4DVAR [Proyectos_V3]created_at_date--> a las <!--#4DVAR [Proyectos_V3]created_at_time--></p>
+
+					<ul class="editable">
+						<li><span>Empresa</span> <span><input data-help="Acá buscas o creas al cliente, por ejemplo: &laquo;UNA SISTEMAS&raquo;" required id="empresa" type="search" name="cotizacion[empresa][id]" data-id="<!--#4DVAR vid_empresa-->" value="<!--#4DVAR valias-->" placeholder="Buscar por alias, RUT, razón social..."></span><button class="show empresa">Ver todas las empresas</button><button class="unlock empresa">Modificar datos de cliente</button><button class="profile empresa">Perfil</button><button class="edit save empresa">Guardar cambios a datos de empresa</button><button class="edit discard empresa">Descartar cambios a datos de empresa</button></li>
+
+						<li><span>Responsable</span> <span><input readonly required data-help="Jefe del proyecto actual" id="jefeProyecto" value="<!--#4DVAR jefeProyectoNombre-->" type="search" data-login="<!--#4DVAR jefeProyecto-->" name="cotizacion[jefeProyecto]"  placeholder="Buscar por Alias, Nombre o Apellidos..."></span><button class="show jefeProyecto">Ver todos los contactos</button></li>
+
+						 <li><span>Área de negocio</span> <span><input readonly required data-help="Área de negocio" id="areaNegocio" value="<!--#4DVAR areaNegocio -->" type="search" name="cotizacion[areaNegocio]" ></span><button class="show areaNegocio">Ver todos las áreas</button></li>
+					
+					</ul>
+					<ul class="editable">
+						<li><span>Contacto</span> <span><input required data-help="Acá ingresas a quien enviarás la cotización, por ejemplo: &laquo;JUAN PÉREZ&raquo;" id="contacto" type="search" name="cotizacion[empresa][contacto][id]" data-id="<!--#4DVAR vid_contacto-->" value="<!--#4DVAR vnombrecontacto-->" placeholder="Buscar por Alias, Nombre o Apellidos..."></span><button class="show contacto">Ver todos los contactos</button><button class="unlock contacto">Modificar datos de contacto</button><button class="profile contacto">Perfil</button></li>
+						<li><span>Cargo</span> <span><input readonly type="text" name="cotizacion[empresa][contacto][cargo]" value="<!--#4DVAR vcargocontacto-->"></span></li>
+						<li><span>E-mail</span> <span><input readonly type="email" name="cotizacion[empresa][contacto][email]" value="<!--#4DVAR vemailcontacto-->"></span><button class="edit save contacto">Guardar cambios a datos de contacto</button><button class="edit discard contacto">Descartar cambios a datos de contacto</button></li>
+					</ul>
+				</article>
+				<article>
+					<h1>Información adicional</h1>
+					<div class="fechas">
+							<li><span>Fecha de inicio</span> <span><input type="text" name="proyecto[fecha_inicio_datepicker]" value="<!--#4DVAR Substring(String([Proyectos_V3]fecha_inicio);1;10)-->"><input type="hidden" name="proyecto[fecha_inicio]" value="<!--#4DVAR Substring(String([Proyectos_V3]fecha_inicio;ISO Date);1;10)-->"></span></li>
+							<script>
+							$(document).ready(function() {
+								$('input[name="proyecto[fecha_inicio_datepicker]"]').datepicker({
+									dateFormat: 'dd-mm-yy',
+									altField: 'input[name="proyecto[fecha_proyecto]',
+									altFormat: 'yy-mm-dd'
+								});
+							});
+							</script>
+							<br>
+							<li><span>Fecha de término</span> <span><input type="text" name="proyecto[fecha_termino_datepicker]" value="<!--#4DVAR Substring(String([Proyectos_V3]fecha_termino);1;10)-->"><input type="hidden" name="proyecto[fecha_termino]" value="<!--#4DVAR Substring(String([Proyectos_V3]fecha_termino;ISO Date);1;10)-->"></span></li>
+							<script>
+							$(document).ready(function() {
+								$('input[name="proyecto[fecha_termino_datepicker]"]').datepicker({
+									dateFormat: 'dd-mm-yy',
+									altField: 'input[name="proyecto[fecha_entrega]',
+									altFormat: 'yy-mm-dd'
+								});
+
+								var list = $('ul.sidebar li');
+
+								for(var i =0; i < list.length; i++){ 
+									if( list[i].dataset.name != "proyectos"){
+										list[i].classList.remove('active')  
+									}
+								};
+
+							});
+							</script>
+					</div>
+				</article>
+
+				<article>
+					<h1>Tareas</h1>
+					<div class="tareas">
+						<div>
+							<!--<button class="add task">+ Agregar tarea</button>-->
+							<div style="margin-top: 40px; margin-bottom: 10px; font-size: 24px; text-align: center;"><span class="completed"></span>% completado</div>
+							<div style="text-align: center;"><span class="current"></span> de <span class="total-tasks"></span> tareas</div>
+						</div>
+						<div class="task-container">
+
+						</div>
+					</div>
+				</article>
+
+			</footer>
+		</section>
+	</body>
+</html>

@@ -1,0 +1,38 @@
+{
+	"info" : {
+		"title" : "UNABASE V3 - Registro de cambios",
+		"year" : "2014",
+		"current_version" : "0.0.19"
+	},
+	"version": [
+		{
+			"number": "0.0.19",
+			"date":"A la fecha",
+			"improve": [
+				
+			],
+			"bug": [
+				
+			]
+		},
+		{
+			"number": "0.0.18",
+			"date":"30-07-2014",
+			"improve": [
+				{"title":"Al asignar permisos de usuarios", "new":"", "module":"accesos", "notes":"ya no es necesario actualizar la página para activar. Sólo con volver a ingresar al módulo o documento queda realizado."},
+				{"title":"Al imprimir gastos", "new":"", "module":"gastos", "notes":"se agregó información de facturación."},
+				{"title":"Se creó registro de cambios", "new":"true", "module":"versiones", "notes":"donde se podrá ir revisando las mejoras y correciones del sistema según versión."},
+				{"title":"Mejora al inciar servicios del servidor node", "new":"true", "module":"general", "notes":"a partir de ahora se iniciará automáticamente junto con el 4D Server, tanto en Mac como en Windows."},
+				{"title":"Mejora al configuar puerto del servidor node", "new":"true", "module":"general", "notes":"esto permitirá poder realizar la configuración desde la ventana Parámetros del sistema."},
+				{"title":"Opción de cambiar contraseña", "new":"true",  "module":"usuarios", "notes":"permite al usuario cambiar su contraseña. Desde su perfil."},
+				{"title":"Comentario al solicitar permiso", "new":"", "module":"accesos", "notes":"a partir de ahora es obligatorio su ingreso."},
+				{"title":"Permiso para editar Staff", "new":"true", "module":"cotizaciones", "notes":"fue agregado tanto para Cotizaciones y Negocios."},
+				{"title":"Opción de visualizar enlaces en correos", "new":"true", "module":"generales ", "notes":"permite visualizar en el caso de estar habilitada. La configuración se debe realizar en parametros generales del sistema. Seleccionando la opción 'Habilitar envío de enlaces en los correos' de la pestaña 'web'."}	
+			],
+			"bug": [
+				{"title":"Al cerrar sesión", "module":"sesion web", "notes":"se detectó que cuando los usuarios cierran su sesión en el navegador, el número contador de usuario no disminuía y tampoco el usuario desaparecía del listado. Esto se corrigió, de modo que cuando un usuario se desconecta, el número de usuarios disminuye y el usuario respectivo desaparece de la lista."},
+				{"title":"Al crear un gasto y validar 'excede gasto prepuestado' de un ítem", "module":"gastos", "notes":"se detectó que la validación, al ser el ítem de 'otros gastos' se realizaba de forma incorrecta, y a partir de eso, producía calculos erroneos en los montos totales al momento de justificar. Esto se corrigió y quedó funcionando correctamente."}
+			]
+		}
+	]
+}

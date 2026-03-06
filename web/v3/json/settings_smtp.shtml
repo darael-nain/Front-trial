@@ -1,0 +1,15 @@
+{
+    "SMTP": [
+    	<!--#4DLOOP aSMTPId-->
+	    {
+	        "host": "<!--#4DHTML aSMTPHost{aSMTPId}-->",
+	        "port": <!--#4DHTML aSMTPPort{aSMTPId}-->,
+	        "ssl": <!--#4DIF aSMTPSSL{aSMTPId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	        "use_authentication": <!--#4DIF aSMTPUseAuthentication{aSMTPId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	        "user": "<!--#4DHTML aSMTPUser{aSMTPId}-->",
+	        "pass": "<!--#4DHTML aSMTPPass{aSMTPId}-->"
+	    }<!--#4DIF Not(aSMTPId{Size of array(aSMTPId)} = aSMTPId{aSMTPId})-->,<!--#4DENDIF-->
+	    <!--#4DENDLOOP-->
+	],
+	"internal": <!--#4DIF servidorPropio-->true<!--#4DELSE-->false<!--#4DENDIF-->
+}

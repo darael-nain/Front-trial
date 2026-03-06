@@ -1,0 +1,16 @@
+{
+	"id": <!--#4DIF Not(Undefined(id))--><!--#4DHTML id--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"id_comment": <!--#4DIF Not(Undefined(idComment))--><!--#4DHTML idComment--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"folio": "<!--#4DHTML vFolio-->",
+	"ref": "<!--#4DHTML vRef-->",
+	"success": <!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"opened": <!--#4DIF opened-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"readonly": <!--#4DIF Not(Undefined(readonly))--><!--#4DIF readonly-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"members": [
+<!--#4DLOOP membersLogin-->
+		{
+			"login": "<!--#4DHTML membersLogin{membersLogin}-->"			
+		}<!--#4DIF NOT(membersLogin{membersLogin} = membersLogin{Size of array(membersLogin)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

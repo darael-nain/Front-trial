@@ -1,0 +1,44 @@
+<style type="text/css">
+    table{text-align:center}
+</style>
+
+<table border="1" align="center" width="100%" cellspacing="0" cellspadding="0" >
+    <thead>
+        <tr>
+            <th>Folio</th>
+            <th>Emision</th>       
+            <th>F.Vcto</th>
+            <th>H.Vcto</th>
+            <th>Horas</th>
+            <th>Cliente</th>
+            <th>Origen</th>
+            <th>Referencia</th>
+            <th>Responsable</th>
+            <th>Emisor</th>
+            <th>Estado</th>
+        </tr>        
+    </thead>
+     <tbody>   
+        <!--#4DLOOP aIdOT-->
+        <!--#4dif aResponsableOT{aIdOT}#""-->
+        <tr>
+            <td><!--#4DVAR aFolioOT{aIdOT}--></td>
+            <td><!--#4DVAR aFechaEmiOT{aIdOT}--></td>     
+            <td><!--#4DVAR aFechaVctoOT{aIdOT}--></td>    
+            <td><!--#4DVAR aHoraVctoOT{aIdOT}--></td>
+            <td><!--#4DVAR aHrsAsignadasOT{aIdOT}--></td>
+            <td><!--#4DVAR aClienteProvOT{aIdOT}--></td>
+            <!--#4dif aTipoOT{aIdOT}="GENERAL"-->
+                <td>General</td>
+            <!--#4delse-->
+                 <td><!--#4DVAR aRefProyOT{aIdOT}--></td>
+            <!--#4dendif-->            
+            <td><!--#4DVAR aReferenciaOT{aIdOT}--></td>
+            <td><!--#4DVAR aResponsableOT{aIdOT}--></td>
+            <td><!--#4DVAR aEmitidoPorOT{aIdOT}--></td>            
+            <td><!--#4DVAR aEstadoOT{aIdOT}--></td>                              
+        </tr>
+        <!--#4DENDIF-->
+        <!--#4DENDLOOP-->   
+    </tbody>	
+</table>

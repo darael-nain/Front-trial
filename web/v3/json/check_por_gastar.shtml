@@ -1,0 +1,11 @@
+{
+	"rows": [
+<!--#4DLOOP aId -->
+		{
+			"id": "<!--#4DHTML aId{aId}-->",
+			"gastable": <!--#4DIF aGastable{aId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"por_gastar": <!--#4DHTML String(aPorGastar{aId};"&xml")-->
+		}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

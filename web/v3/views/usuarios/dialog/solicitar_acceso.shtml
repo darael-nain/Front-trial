@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html>
+<head>   
+    <title>SOLICITUD DE PAGO</title>
+	<meta charset="utf-8">
+    <script>	    
+		$(document).ready(function() {
+			var container = $('#solictud-acceso');			
+			unaBase.toolbox.init();
+			unaBase.toolbox.menu.init({
+				entity: 'usuarios',
+				buttons: ['solicitar_acceso'],
+				data: function(){     
+				  return $('#solictud-acceso').serializeAnything();            
+				},
+				validate:function(){
+				  return true;
+				}    
+			});
+			var folio = containerCompras.data('folio');
+			var tipo = containerCompras.find('input[name="oc[tipo_gastos][des]"]').val();
+			var total = containerCompras.data('total');
+			var fecha = containerCompras.data('currentdate');
+			var descripcion = "Solicito pago de la "+tipo+" número "+folio+" por el total de "+total+" para el día "+fecha;
+			container.find('textarea').val(descripcion);
+		});
+    </script>
+    <style>
+		#sheet-payment > textarea{
+			width:100%;
+			height:200px;
+		}
+    </style>
+</head>
+<body>
+	<section class="sheet" id="solictud-acceso">
+		<textarea></textarea>	
+	</section>
+</body>
+</html>

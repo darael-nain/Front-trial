@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_proxy_getDetalleItems-->
+<html>
+	<head>
+		<title>Items</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/views/items/script/startup/content.js"></script>
+		<link rel="stylesheet" href="/v3/design/temporal.css?<!--#4DTEXT random-->">
+		<script>
+			$(document).ready(function() {
+				var container = $('#form-detalle-items');
+
+				container.find('a[href="#tabs-1"]').click(function() {
+					unaBase.interval.clearAll();
+					container.find("#tabs-1").parentTo('section').find('article').empty();
+					container.find("#tabs-1").load('/v3/views/items/general.shtml', 'id=<!--#4DTEXT [Detalle_NV]Llave_NV-->');
+				}).trigger('click');
+	
+				container.find('a[href="#tabs-2"]').click(function() {
+					unaBase.interval.clearAll();
+					container.find("#tabs-2").parentTo('section').find('article').empty();
+					container.find("#tabs-2").load('/v3/views/negocios/compras_items.shtml', 'id=<!--#4DTEXT [Detalle_NV]Llave_NV-->&detail=true');
+				});
+
+				container.find('a[href="#tabs-3"]').click(function() {
+					unaBase.interval.clearAll();
+					container.find("#tabs-3").parentTo('section').find('article').empty();
+					container.find("#tabs-3").load('/v3/views/negocios/rendiciones_items.shtml', 'id=<!--#4DTEXT [Detalle_NV]Llave_NV-->&detail=true');
+				});
+
+				container.find('a[href="#tabs-3"]').click(function() {
+					unaBase.interval.clearAll();
+					container.find("#tabs-4").parentTo('section').find('article').empty();
+					container.find("#tabs-4").load('/v3/views/negocios/ots.shtml', 'id=<!--#4DTEXT [Detalle_NV]Llave_NV-->&detail=true');
+				});
+		
+
+			});
+		</script>
+		<style>
+			.ui-tabs .ui-tabs-panel {
+				padding: 0 !important;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="form-detalle-items" class="form-popup" data-llave="<!--#4DTEXT [Detalle_NV]Llave_NV-->">
+			<input type="hidden" name="id" value="<!--#4DTEXT [Detalle_NV]Llave_NV-->">
+			<section id="dialog-profile-detalleItem">
+				<ul class="infinite-tabs">
+					<li><a href="#tabs-1">General</a></li>
+					<li class="load-gastos" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-2">Órdenes de compra</a></li>
+					<li class="load-rendiciones" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-3">Rendiciones</a></li>
+					<li class="load-ots" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-4">Órdenes de trabajo</a></li>
+				</ul>
+				<article id="tabs-1"></article>
+				<article id="tabs-2"></article>
+				<article id="tabs-3"></article>
+				<article id="tabs-4"></article>
+			</section>
+		</div>
+	</body>
+</html>

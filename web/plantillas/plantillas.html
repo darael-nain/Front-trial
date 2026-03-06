@@ -1,0 +1,209 @@
+<html>
+<head>
+	<title>Plantillas</title>
+	<style type="text/css">
+
+		.bloques{
+			border-radius:5px;
+			border:3px ridge blue ;
+			padding:10px;
+			margin:10px;
+		}
+
+		.bloques h2{
+			color:black;
+		}
+
+		.f-atrazadas{
+			background:#F2F2F2;				
+			min-height:100px;
+			padding:10px;
+			font-family:arial;
+			font-size:15px;
+			margin:0;
+		}
+		.f-atrazadas h3{
+			color:black;
+			margin:0;
+			font-weight:normal;
+		}
+		.f-atrazadas .ots{
+			background:white;
+			border:1px solid red;
+			border-radius:5px;			
+			min-height:100px;
+			padding:10px;
+			margin:2px;
+		}
+		.f-atrazadas .ots label{
+			color:#2E64FE;
+			margin:2px;			
+		}
+		.f-atrazadas .ots .capital{
+			text-transform:capitalize;
+		}
+		.f-atrazadas .ots div a{
+			color:green;
+			margin:5px;	
+		}
+	</style>
+
+<script src="/script/jQuery_v1.7.2.js"></script>
+
+<script src="/script/jquery-ui-1.10.2.custom/js/jquery-ui-1.10.2.custom.min.js"></script>
+	<link rel="stylesheet" href="/script/jquery-ui-1.10.2.custom/css/custom-theme-base1/jquery-ui-1.10.2.custom.min.css"/>
+
+  <script>
+  $(function() {
+    var availableTags = [
+      "ActionScript",
+      "AppleScript",
+      "Asp",
+      "BASIC",
+      "C",
+      "C++",
+      "Clojure",
+      "COBOL",
+      "ColdFusion",
+      "Erlang",
+      "Fortran",
+      "Groovy",
+      "Haskell",
+      "Java",
+      "JavaScript",
+      "Lisp",
+      "Perl",
+      "PHP",
+      "Python",
+      "Ruby",
+      "Scala",
+      "Scheme"
+    ];
+    $( "#tags" ).autocomplete({
+      source: availableTags
+    });
+  });
+  </script>
+
+</head>
+
+
+<body>
+
+<div class="ui-widget">
+  <label for="tags">Tags: </label>
+  <input id="tags" />
+</div>
+
+	<div class="bloques">
+		<h2>Formato ot atrasadas</h2>
+			<div class="f-atrazadas">
+				<h3>Lista de OT. Atrasadas hasta el 22-02-13</h3>
+				<div class="ots">
+					<div>
+						<label>Folio:</label><span>000012</span>
+					</div>
+					<div>
+						<label>Emitida por:</label><span>Gin Flores</span>
+						<label>Fecha emisión:</label><span>01-02-13</span>
+						<label>Fecha vcto:</label><span>01-02-13</span>
+					</div>
+					<div>
+						<label>Referencia:</label><span>hvghvgvgvgvgvghvghnmn n</span>
+					</div>
+					<div>
+						<label>Responsable:</label><span>Juan Carlos</span>
+					</div>
+					<div>
+						<label>Participantes:</label>
+						<span>Juan Carlos</span>, <span>Juan Carlos</span>, <span>Juan Carlos</span>
+					</div>
+					<div>
+						<label>Tipo:</label><span>General</span>
+						<label>Cliente:</label><span>Comercial Una Ltda.</span>
+					</div>			
+					<div><a href="#">Visualizar OT</a></div>
+				</div>				
+			</div>
+	</div>
+	
+
+	<!--===================================-->
+
+	<style type="text/css">
+		#report-main-atrazadas{				
+			font-family:arial;
+			font-size:12px;
+			padding:10px;
+			text-align:center;
+		}
+		#report-main-atrazadas .contenedor{
+			background-color:white;	
+			border:2px solid red;
+			margin:auto;		
+			min-width:500px;		
+			min-height:200px;
+			width:500px;
+		}
+		#report-main-atrazadas .contenedor .encabezado{
+			background-color:red;
+			height:80px;		
+		}
+		#report-main-atrazadas .contenedor .encabezado h2{
+			color:white;
+			display:inline-block;
+			vertical-align:middle;		
+		}
+		#report-main-atrazadas .contenedor .cuerpo table{			
+			text-align:center;
+			width:100%;
+		}
+		#report-main-atrazadas .contenedor .cuerpo table tr td{
+			/*border:1px solid gray;*/
+			margin:0;
+			width:50%;
+		}
+		#report-main-atrazadas .contenedor .cuerpo table tr .left{
+			font-size:15px;
+			font-weight:bold;
+			width:70%;
+		}
+		#report-main-atrazadas .contenedor .cuerpo table tr .right{			
+			font-size:20px;	
+			width:30%;
+		}
+	</style>
+
+	<div class="bloques">
+		<h2>Formato Reporte OT Atrasadas</h2>
+		<div id="report-main-atrazadas">
+			<div class="contenedor">
+				<div class="encabezado">
+					<h2>Reporte de OT atrasadas - Triciklo</h2>
+				</div>
+				<div class="cuerpo" >
+					<table width="100%" border="1">
+						<tr>
+							<td class="left">aaaa</td>
+							<td class="right">37</td>
+						</tr>
+						<tr>
+							<td class="left">bbbb</td>
+							<td class="right">20</td>
+						</tr>
+						<tr>
+							<td class="left">cccc</td>
+							<td class="right">10</td>
+						</tr>
+						<tr>
+							<td class="left">dddd</td>
+							<td class="right">0</td>
+						</tr>
+					</table>	
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

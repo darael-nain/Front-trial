@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_proxy_getProductoContent-->
+<html>
+	<head>
+		<title>Perfil</title>
+		<meta charset="utf-8">
+		<script type="text/javascript">
+			var fileUploadOptions = function() {
+				return {
+					dataType: 'json',
+					formData: {
+						index: (function() { return 'Servicio|' + $('.dialog input[name="id"]').val(); })(),
+						filename: (function() { return (($('input[name="file"]')[0].files.length > 0)? $('input[name="file"]')[0].files[0].name : '') })()
+					},
+					add: function (e, data) {
+						data.submit();
+					},
+					done: function (e, data) {
+						console.log(data);
+						toastr.success('Imagen cambiada!');
+						if ($('img.picture').css('display') == 'none') {
+							$('div.no-picture').hide();
+							$('img.picture').show();
+						}
+						var href = '/4DACTION/_V3_getUpload?index=Servicio|' + $('.dialog input[name="id"]').val() + '&_r=' + (Math.random() * 10000);
+						$('img.picture').attr('src', href);
+						console.log($('img.picture').attr('src'));
+						$('#viewport').find('table > tbody > tr[data-id="<!--#4DTEXT [Servicio]Id_Servicio-->"]').find('img').attr('src', href);
+					}
+				}
+			};
+			var container = $('.form-contact');
+			var full_fields = function(){
+				container.find('input:not([type="radio"])').each(function() {
+					if ($(this).val() != "") {
+						$(this).css("background-color","#FECA40");
+					}
+				});
+				if (container.find('textarea').val() != "") {
+					container.find('textarea').css("background-color","#FECA40");
+				}
+			}
+
+			var get_categoria = function(){
+				var optionsObject;
+		        var select1 = $('select[name="categoria[id]"]');
+		        $.ajax({
+		          url: '/4DACTION/_V3_' + 'getCategoria',
+		          dataType: 'json',
+		          data:{
+		          	q: ''
+		          },
+		          success: function(data) {
+		            $.each(data.rows, function(key, item){
+		              optionsObject = $('<option' + ((item.id == <!--#4DTEXT [Servicio]ID_CAT-->)? ' selected' : '') + ' value="'+ item.id +'">'+ item.text +'</option>');
+		              select1.append(optionsObject);
+		            });
+		            if (access._487) {
+		            	optionsObject = $('<option value="-1">NUEVA...</option>');
+		            	select1.prepend(optionsObject);
+			            select1.bind('change', function(event) {
+			            	if ($(this).val() == -1) {
+			            		select1.parentTo('div').append('<input type="text" name="categoria[text]" placeholder="Ingrese categoría...">');
+			            		select1.remove();
+			            	}
+			            });
+			        }
+		          }
+		        });
+			}
+
+
+			$(document).ready(function() {
+			    $("#radio").buttonset();
+			    $('.hide').hide();
+			    full_fields();
+			    $(".tags li").click(function(){
+			    	$(this).fadeOut('slow');
+			    });
+			    get_categoria();
+
+			    <!--#4DIF [Servicio]Id_Servicio > 0-->
+			    $('input[name="file"]').fileupload(fileUploadOptions());
+			    <!--#4DENDIF-->
+
+				$('.inline3 figure button').button({
+					icons: {
+						primary: 'ui-icon-image'
+					}
+				});
+
+
+				// set estado
+			    $('input[name="check[estado]"]').click(function(){
+			    	if ($(this).prop('checked')) {
+			    		$('input[name="producto[estado]"]').val('true');
+			    	}else{
+			    		$('input[name="producto[estado]"]').val('false');
+			    	}
+			    });
+
+
+			});
+		</script>
+
+		<style>
+			/* ajustes diseño */
+			.labels > span{
+				display: inline-block;
+				border: 1px solid rgb(220,220,220);
+				/*background-color: #C9DECB;*/
+				background-color:rgb(232, 247, 232);
+				padding:3px;
+				border-radius:3px;
+				font-size:10px!important;
+				font-weight: bold;
+				text-transform: uppercase;
+				margin:2px;
+			}
+			.labels > span.link{
+				text-decoration: underline;
+				cursor: pointer;
+			}
+			.labels > span.false{
+				color:red!important
+			}
+			.labels > span.important{
+				color:red!important
+			}
+		</style>
+
+	</head>
+	<body>
+		<section class="sheet" data-id="<!--#4DVAR [Servicio]Id_Servicio-->" data-index="<!--#4DVAR [Servicio]Codigo_Servicio-->"<!--#4DIF false--> data-new="true"<!--#4DENDIF--><!--#4DIF [Servicio]Estado=False--> data-readonly="true"<!--#4DENDIF-->>
+
+			<p class="labels" style="margin:10px;">
+				<span>Creada por <!--#4DTEXT Uppercase([Servicio]Crea_Responsable;*)--> el <!--#4DTEXT [Servicio]Crea_Fecha--> a las <!--#4DTEXT [Servicio]v3_crea_hora--> hrs.</span>
+			</p>
+
+			<nav style="height:30px;">
+
+				<div style="margin:10px">
+					<!--#4DIF [Servicio]Id_Servicio>0-->
+						<!--#4DIF [Servicio]Estado-->
+							<span style="display:inline-block;vertical-align:middle"><input name="check[estado]" type="checkbox" checked="checked"></span>
+							<input name="producto[estado]" type="hidden" value="true">
+						<!--#4DELSE-->
+							<span style="display:inline-block;vertical-align:middle"><input name="check[estado]" type="checkbox"></span>
+							<input name="producto[estado]" type="hidden" value="false">
+						<!--#4DENDIF-->
+					<!--#4DELSE-->
+						<span style="display:inline-block;vertical-align:middle"><input name="contact[estado]" type="checkbox" checked="checked"></span>
+						<input name="producto[estado]" type="hidden" value="true">
+					<!--#4DENDIF-->
+					<span style="display:inline-block;vertical-align:middle;font-weight:bold">Activo</span>
+				</div>
+
+			</nav>
+
+			<fieldset>
+			<legend><strong>Información básica</strong></legend>
+
+				<article class="inline inline3">
+					<figure>
+						<img class="picture" style="max-width: 235px; max-height: 235px;" src="/4DACTION/_V3_getUpload?index=Servicio/<!--#4DTEXT [Servicio]Id_Servicio-->" onerror="$(this).hide(); $('div.no-picture').show();">
+						<div class="no-picture" style="display: none; font-size: 18px; line-height: 112px;">Sin foto</div>
+						<input style="display: none;" type="file" name="file" data-url="/4DACTION/_V3_setUpload">
+						<!--#4DIF Not(is_linked)-->
+						<button onclick="if ($('.dialog input[name=\'id\']').val() > 0) $('input[name=&quot;file&quot;]').trigger('click'); else toastr.warning('Es necesario guardar el nuevo ítem de catálogo antes de agregar una foto.');">Cambiar foto</button>
+						<!--#4DENDIF-->
+					</figure>
+				</article>
+				<article class="inline inline3">
+				 	<div><label>Nombre:</label><input name="text" value="<!--#4DTEXT Uppercase([Servicio]Nombre_Servicio;*)-->" type="text"<!--#4DIF is_linked--> disabled<!--#4DENDIF-->></div>
+	                <div><label>Código:</label><input name="index" value="<!--#4DTEXT Uppercase([Servicio]Codigo_Servicio;*)-->" type="text"<!--#4DIF is_linked--> disabled<!--#4DENDIF-->></div>
+	                <div>
+		              <label>Categoría:</label>
+		              <select name="categoria[id]" id="categoria" style="width: 225px;"<!--#4DIF is_linked--> disabled="disabled"<!--#4DENDIF-->>
+		              	<option>SELECCIONAR...</option>
+		              </select>
+		            </div>
+	            </article>
+	            <article class="inline inline3"> 
+
+                	<div><label>Precio [<!--#4DTEXT _V3_defaultCurrencySymbol-->]</label><input name="producto[precio]" value="<!--#4DTEXT [Servicio]Precio_Servicio-->" type="tel"<!--#4DIF is_linked--> disabled="disabled"<!--#4DENDIF-->></div>
+                	<div><label>Costo [<!--#4DTEXT _V3_defaultCurrencySymbol-->]</label><input name="producto[costo]" value="<!--#4DTEXT [Servicio]Precio_costo-->" type="tel"<!--#4DIF is_linked--> disabled="disabled"<!--#4DENDIF-->></div>
+					
+					<!--#4DIF _V3_defaultCurrencyCode="CLP"-->
+                	<div><label>Precio [UF]:</label><input name="producto[precio_uf]" value="<!--#4DTEXT [Servicio]PrecioUF-->" type="tel"<!--#4DIF is_linked--> disabled="disabled"<!--#4DENDIF-->></div>
+                	<div><label>Costo [UF]:</label><input name="producto[costo_uf]" value="<!--#4DTEXT [Servicio]PrecioCosto_UF-->" type="tel"<!--#4DIF is_linked--> disabled="disabled"<!--#4DENDIF-->></div>
+                	<!--#4DENDIF-->
+
+					<div><label>Margen [%]:</label><input name="producto[margen]" value="<!--#4DTEXT [Servicio]Porc_costo-->" type="tel"<!--#4DIF is_linked--> disabled="disabled"<!--#4DENDIF-->></div>
+
+                	<div>
+		              <label style="display: block; margin-bottom: 5px;">Tipo:</label>
+		              <span style="color: black; display: inline-block; width: 70px;"><input style="width: auto !important;" type="radio" name="producto[tipo]" value="PRODUCTO"<!--#4DIF [Servicio]Tipo="PRODUCTO"--> checked<!--#4DENDIF--><!--#4DIF is_linked--> disabled<!--#4DENDIF-->> Producto</span>
+		              <span style="color: black; display: inline-block; width: 70px;"><input style="width: auto !important;" type="radio" name="producto[tipo]" value="SERVICIO"<!--#4DIF [Servicio]Tipo="SERVICIO"--> checked<!--#4DENDIF--><!--#4DIF is_linked--> disabled<!--#4DENDIF-->> Servicio</span>
+		              <span style="color: black; display: inline-block; width: 70px;"><input style="width: auto !important;" type="radio" name="producto[tipo]" value="INVENTARIO"<!--#4DIF [Servicio]Tipo="INVENTARIO"--> checked<!--#4DENDIF--><!--#4DIF is_linked--> disabled<!--#4DENDIF-->> Inventario</span>
+		            </div>
+              	</article>
+			</fieldset>
+			<fieldset>
+				<legend><strong>Observaciones (a cliente)</strong></legend>
+				<div><textarea name="producto[observacion]"<!--#4DIF is_linked--> disabled<!--#4DENDIF-->><!--#4DTEXT Uppercase([Servicio]Observaciones;*)--></textarea></div>
+			</fieldset>
+			<fieldset>
+				<legend><strong>Observaciones (internas)</strong></legend>
+				<div><textarea name="producto[observacion_interna]"<!--#4DIF is_linked--> disabled<!--#4DENDIF-->><!--#4DTEXT Uppercase([Servicio]v3_observaciones_internas;*)--></textarea></div>
+			</fieldset>
+			<fieldset style="display: none !important;">
+		        <legend><strong>Actividad</strong></legend>
+		        <ul class="activity">
+		        	<li class="venta">Cotización Nº 123 en proceso $120.0</li>
+		        	<li class="compra">Compra Nº 123 emitida $120.0</li>
+		        </ul>
+	      	</fieldset>
+		</section>
+	</body>
+
+</html>

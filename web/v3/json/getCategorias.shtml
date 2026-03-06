@@ -1,0 +1,20 @@
+	{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Orden_de_compra]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP aIdCuenta -->
+		{
+			"id": "<!--#4DHTML aIdCuenta{aIdCuenta}-->",
+			"text": "<!--#4DHTML _V3_escapeString(aNombreCuenta{aIdCuenta})-->"
+			
+		}<!--#4DIF NOT(aIdCuenta{aIdCuenta} = aIdCuenta{Size of array(aIdCuenta)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

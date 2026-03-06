@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<!--#4DSCRIPT/_V3_proxy_getAccounting-->
+	<title>Cuenta Contable</title>
+	<meta charset="utf-8">
+	<script type="text/javascript" src="/v3/views/ajustes/accounting/accounting.js"></script>
+	<!-- <script type="text/javascript" src="/v3/views/reportes2/content.js"></script> -->
+	<style type="text/css">
+		.newcolor input,
+		textarea {
+			background-color: #ffffff !important;
+		}
+
+		table #usuario_asignado thead tr {
+			background-color: rgb(189, 189, 192) !important;
+		}
+
+		section footer article div {
+			margin-bottom: 4px;
+		}
+
+		html>body.home>section>section#viewport section.sheet>footer>article:nth-child(2)>h1 {
+			margin-bottom: 5px !important;
+		}
+
+		input[name=select_user].ui-autocomplete-input {
+			width: 20% !important;
+			margin-bottom: 0.5em;
+			margin-top: 0.5em;
+			margin-left: 0.5em;
+		}
+
+		.show.user {
+			width: 18px;
+			height: 18px;
+		}
+
+		article ul {
+			margin-top: 5px !important;
+			margin-bottom: 5px !important;
+		}
+
+		article:nth-child(2) div {
+			margin-top: 10px !important;
+			margin-bottom: 10px !important;
+		}
+
+		.li {
+			max-width: 250px;
+		}
+	</style>
+	<link href="/css/form1.css" rel="stylesheet">
+	<script type="text/javascript">
+
+		let name = "<!--#4DHTML name-->";
+		let type = "<!--#4DHTML type-->";
+		let number = "<!--#4DHTML number-->";
+		let id = "<!--#4DHTML id-->";
+
+		$(document).ready(function () {
+
+
+			unaBase.ui.block();
+			accounting.menu();
+			
+			unaBase.ui.unblock();
+			unaBase.ui.expandable.init();
+
+			// document.querySelector('input[name="name"]').value = name;
+			// document.querySelector('input[name="number"]').value = number;
+
+			// document.querySelector('select[name="tipo"]').value = accType
+			// Get tipos cuentas contables
+			
+
+			accounting.init($('section#accounting').data('id'));
+
+		});
+
+	</script>
+</head>
+
+<body>
+	<section class="sheet" id="accounting" data-id="<!--#4DTEXT id-->">
+		<footer>
+			<article>
+				<h1>Información general - Cuenta contable</h1>
+				<ul class="editable newcolor">
+
+
+					<li class="li">
+						<span class="sg-input-title">Nombre</span>
+						<br>
+						<input type="text" class="form-control" name="name">
+					</li>
+
+					<li class="li">
+						<span class="sg-input-title">Número cuenta contable </span>
+						<br>
+						<input type="text" class="form-control" name="number">
+
+					</li>
+					<li class="li">
+						<span class="sg-input-title">Tipo</span>
+						<br>
+						<select class="form-control" name="tipo_cuenta">
+						</select>
+					</li>
+
+					<li class="li">
+						<span class="sg-input-title">Tipo cuenta</span>
+						<br>
+						<select class="form-control" name="tipo">
+
+						</select>
+					</li>
+					<li class="li">
+						<span class="sg-input-title">Nivel</span>
+						<br>
+
+						<select class="form-control" name="nivel">
+							<option value="" selected>Seleccionar</option>
+							<option value="CUENTA">Cuenta</option>
+							<option value="TITULO">Título</option>
+						</select>
+					</li>
+
+				</ul>
+			</article>
+
+		</footer>
+	</section>
+</body>
+
+</html>

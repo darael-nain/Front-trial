@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_proxy_getProyectoContent-->
+<html>
+	<head>
+		<title>Proyectos</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/views/proyectos/content.js"></script>
+		<link rel="stylesheet" href="/v3/design/temporal.css?<!--#4DTEXT random-->">
+		<script>
+
+			/* Proyecto */
+
+			var contentLoaded = false;
+			var contentChanged = false;
+			var contentReady = false;
+
+			var summaryNegocioData = {};
+
+			$(document).ready(function() {
+
+				if ($('#main-container').data('closed')) {
+					$('[data-name="open_compras_negocio"]').hide();
+					$('[data-name="convert_cotizacion"]').hide();
+				}
+
+				$('#tabs-1').load('/v3/views/proyectos/general.shtml', 'id=<!--#4DVAR [Proyectos_V3]id-->');
+
+
+				$('a[href="#tabs-1"]').click(function() {
+					unaBase.interval.clearAll();
+				}).trigger('click');
+
+
+				$('a[href="#tabs-2"]').click(function() {
+					unaBase.interval.clearAll();
+					$("#tabs-2").load('/v3/views/proyectos/cotizaciones.shtml', 'id=<!--#4DVAR [Proyectos_V3]id-->');
+				});
+
+				$('a[href="#tabs-3"]').click(function() {
+					unaBase.interval.clearAll();
+					$("#tabs-3").load('/v3/views/proyectos/negocios.shtml', 'id=<!--#4DVAR [Proyectos_V3]id-->');
+				});
+
+				$('a[href="#tabs-4"]').click(function() {
+					unaBase.interval.clearAll();
+					$("#tabs-4").load('/v3/views/proyectos/ots.shtml', 'id=<!--#4DVAR [Proyectos_V3]id-->');
+					// $("#tabs-4").load('/v3/views/proyectos/ots.shtml', 'id=<!--#4DVAR [Proyectos_V3]id-->');
+				});
+
+
+
+			});
+
+
+		</script>
+		<style>
+			.ui-tabs .ui-tabs-panel {
+				padding: 0 !important;
+				overflow: hidden;
+			}
+
+			section#dialog-profile-negocio{
+				width:100%!important;
+			}
+			.infinite-tabs.ui-tabs-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all{
+				width:99%!important;
+			}
+
+		</style>
+	</head>
+	<body>
+		<section id="content-cot-neg-fixed" data-id="<!--#4DVAR id-->"></section>
+
+		<div id="main-container" data-id="<!--#4DTEXT [Proyectos_V3]id-->" data-index="<!--#4DTEXT [Proyectos_V3]folio-->">
+			<section id="dialog-profile-negocio">
+				<ul class="infinite-tabs">
+					<li><a href="#tabs-1">General</a></li>
+					<li><a href="#tabs-2">Cotizaciones</a></li>
+					<li><a href="#tabs-3">Negocios</a></li>
+					<li><a href="#tabs-4">Tareas</a></li>
+				</ul>
+				<article id="tabs-1"></article>
+				<article id="tabs-2"></article>
+				<article id="tabs-3"></article>
+				<article id="tabs-4"></article>
+				<!-- <article id="tabs-4"></article> -->
+			</section>
+		</div>
+	</body>
+	
+</html>

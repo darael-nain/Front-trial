@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_proxy_getProductoContent-->
+<html>
+	<head>		
+		<title>Perfil</title>
+		<meta charset="utf-8">		
+		<script type="text/javascript">
+			var container = $('.form-contact');
+			var full_fields = function(){				
+				container.find('input:not([type="radio"])').each(function() {
+					if ($(this).val() != "") {						
+						$(this).css("background-color","#FECA40");
+					}
+				});
+				if (container.find('textarea').val() != "") {						
+					container.find('textarea').css("background-color","#FECA40");
+				}
+			}
+
+
+			$(document).ready(function() {	
+				
+				  // Declara una variable global para almacenar el valor seleccionado
+
+			    $("#radio").buttonset();
+			    $('.hide').hide();
+			    full_fields();			   
+			    $(".tags li").click(function(){
+			    	$(this).fadeOut('slow');
+			    });
+
+				if(accountingMode){
+					$.ajax({
+						url: window.origin + "/4DACTION/_force_getPlanAccounts",
+						data: {
+							only_accounts: true
+						},
+						dataType: "json",
+						async: false,
+						success: function (data) {
+							let div = document.getElementById('contenedor_cuenta')
+							var inputElement = document.querySelector('.codigo_contable_servicio');
+							inputElement.style.display = "none"
+							let account = inputElement.value
+							div.children[1].style.display = ''
+							let select = document.getElementById('cuentas_contables_catalogo')
+							data.rows.forEach(v => {
+								let option = document.createElement('option');
+								option.text = v.number + ' / ' + v.name; 
+								option.value = v.number; 
+								select.appendChild(option); 
+							})
+	
+							
+							// Inicializar Tom Select
+							let settings = {
+								sortField: {
+									field: "text",
+									direction: "asc"
+								}
+							};
+							let tomSelect = new TomSelect(select, settings);
+
+							
+
+							// Manejar la adición de items
+							tomSelect.on('change', function(value, item) {
+								
+								inputElement.value = value
+							});
+
+							tomSelect.setValue(account);
+							
+							
+						},
+						error: function (xhr, text, error) {
+							toastr.error(
+							NOTIFY.get("ERROR_INTERNAL", "Error")
+							);
+						}
+					});
+				} 
+
+			});
+		</script>		
+		
+		<style>
+			#tabs-2-dialog{
+				min-height: 420px;
+			}
+		</style>
+	</head>
+	<body>		
+		<section class="sheet" data-id="<!--#4DVAR [Servicio]Id_Servicio-->" data-index="<!--#4DVAR [Servicio]Codigo_Servicio-->"<!--#4DIF false--> data-new="true"<!--#4DENDIF--><!--#4DIF [Servicio]Estado=False--> data-readonly="true"<!--#4DENDIF-->>
+
+			<fieldset>
+				<legend><strong>Adicional</strong></legend>
+				<article>
+				 	<div><label>Marca:</label><input name="producto[marca]" value="<!--#4DTEXT Uppercase([Servicio]marca;*)-->" type="text"<!--#4DIF is_linked--> disabled<!--#4DENDIF-->></div>
+	                <div>
+	                	<label>Unidad:</label>
+	                	<select name="producto[unidad]"<!--#4DIF is_linked--> disabled<!--#4DENDIF-->>
+	                		<option<!--#4DIF [Servicio]Unidad=""--> selected<!--#4DENDIF--> value="">Sin unidad</option>
+	                		<option<!--#4DIF [Servicio]Unidad="C/U"--> selected<!--#4DENDIF--> value="C/U">C/U</option>
+	                		<option<!--#4DIF [Servicio]Unidad="UN"--> selected<!--#4DENDIF--> value="UN">UN</option>
+	                		<option<!--#4DIF [Servicio]Unidad="HH"--> selected<!--#4DENDIF--> value="HH">HH</option>
+	                		<option<!--#4DIF [Servicio]Unidad="Hr"--> selected<!--#4DENDIF--> value="Hr">Hr</option>
+	                		<option<!--#4DIF [Servicio]Unidad="Día"--> selected<!--#4DENDIF--> value="Día">Día</option>
+							<option<!--#4DIF [Servicio]Unidad="Mes"--> selected<!--#4DENDIF--> value="Mes">Mes</option>
+							<option<!--#4DIF [Servicio]Unidad="Año"--> selected<!--#4DENDIF--> value="Año">Año</option>
+							<option<!--#4DIF [Servicio]Unidad="mm"--> selected<!--#4DENDIF--> value="mm">mm</option>
+							<option<!--#4DIF [Servicio]Unidad="Cm"--> selected<!--#4DENDIF--> value="Cm">Cm</option>
+							<option<!--#4DIF [Servicio]Unidad="Mt"--> selected<!--#4DENDIF--> value="Mt">Mt</option>
+							<option<!--#4DIF [Servicio]Unidad="Km"--> selected<!--#4DENDIF--> value="Km">Km</option>
+							<option<!--#4DIF [Servicio]Unidad="ml."--> selected<!--#4DENDIF--> value="ml.">ml.</option>
+							<option<!--#4DIF [Servicio]Unidad="GL"--> selected<!--#4DENDIF--> value="GL">GL</option>
+							<option<!--#4DIF [Servicio]Unidad="Lt"--> selected<!--#4DENDIF--> value="Lt">Lt</option>
+	                	</select>
+	                </div>
+	                <div><label>Nº de serie:</label><input name="producto[serie]" value="<!--#4DTEXT Uppercase([Servicio]serie;*)-->" type="text"<!--#4DIF is_linked--> disabled<!--#4DENDIF-->></div>
+	                <div style="display: flex; align-items: center;" id="contenedor_cuenta">
+						<label>Cuenta contable:</label>
+						<select class="cuentas_contables" id="cuentas_contables_catalogo" style="display: none;"></select>
+						<input value="<!--#4DTEXT Uppercase([Servicio]Codigo_cuenta_contable;*)-->" name="producto[cod_contable]" class="codigo_contable_servicio" type="hidden">
+					  </div>
+					  
+	            </article>
+			</fieldset>			
+		</section>
+
+		
+		
+	</body>
+
+</html>

@@ -1,0 +1,433 @@
+<!--#4DSCRIPT/_V3_proxy_list_ot-->
+<!--#4DSCRIPT/_V3_serverInfo-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<title>INTRANET ::: UNA BASE</title>
+	<meta charset="utf-8"/>
+
+	<script>
+
+	var uVar = {};
+	uVar.unableChatOnline = <!--#4DIF chatOnline -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+	uVar.unableSocket = <!--#4DIF unableSocket -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+	uVar.enableChatOnline = <!--#4DIF chatOnline -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+	uVar.enableSocket = <!--#4DIF unableSocket -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+	var show_dates_final = <!--#4DIF _V3_show_final-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+	var current_username = "<!--#4DHTML vLogin-->";
+	var v3_data_username = "<!--#4DHTML vLogin-->";
+	var v3_data_username_name = "<!--#4DTEXT vNomUsr2-->";
+	var v3_data_username_email = "<!--#4DTEXT vEmail-->";
+
+	// files names cot, oc , fxr
+	var file_name_internal_cot = '<!--#4DTEXT file_name_internal_cot-->';
+	var file_name_oficial_cot = '<!--#4DTEXT file_name_oficial_cot-->';
+	var file_name_oficial_oc = '<!--#4DTEXT file_name_oficial_oc-->';
+	var file_name_oficial_fxr = '<!--#4DTEXT file_name_oficial_fxr-->';
+
+	uVar.serviceNode = <!--#4DIF serviceNode -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+	uVar.serviceNodeUrl = "<!--#4DTEXT serviceNodeUrl-->";
+	var g_uso_tareas_easy = <!--#4DIF g_uso_tareas_easy -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+	
+	</script>
+
+	<script>
+	
+
+		var hash = '<!--#4DHTML _V3_hash-->';
+		var nodejs_port = <!--#4DHTML _V3_nodejs_port-->;
+		var nodejs_public_ipaddr = "<!--#4DHTML _V3_nodejs_public_ipaddr-->";
+		var is_demo = <!--#4DIF _V3_demo -->true<!--#4DELSE-->false<!--#4DENDIF-->;
+		var login = "<!--#4DTEXT vLogin-->";
+
+		var nodeUrl = uVar.serviceNode ? uVar.serviceNodeUrl : `https://frank.unabase.com`;
+		/*var currency = {
+			code: '<!--#4DVAR _V3_defaultCurrencyCode-->',
+			name: '<!--#4DVAR _V3_escapeString(_V3_defaultCurrencyName)-->',
+			symbol: '<!--#4DHTML _V3_escapeString(_V3_defaultCurrencySymbol)-->',
+			is_right: <!--#4DIF _V3_defaultCurrencyRight-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			decimals: <!--#4DHTML String(_V3_defaultCurrencyDecimals;"&xml")-->
+		};*/
+
+		</script>
+
+	<link rel="stylesheet" href="/v3/design/reset.css">
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="/v3/script/jquery/jquery.js"></script>
+	<script src="/v3/script/jquery/plugins/jquery-migrate/jquery-migrate.js"></script>
+	<script src="/v3/script/jquery/plugins/jquery-ui/js/jquery-ui.js"></script>
+	<link rel="stylesheet" href="/v3/script/jquery/jquery-plugins.css">
+	<!--<script src="/script/jquery.tablesorter/jquery.tablesorter.js"></script>-->
+
+	<!-- add for export-->
+	<script src="/v3/script/jquery/plugins/serializeanything/jquery.serializeanything.js"></script>
+	
+	<script src="/v3/script/jquery/plugins/jquery-cookie/jquery.cookie.js"></script>
+	<script src="/v3/script/unabase.js?<!--#4DTEXT _V3_version-->"></script>
+	<script src="/v3/script/home.js?<!--#4DTEXT _V3_version-->"></script>
+	<script>
+	window.onbeforeunload = undefined;
+	</script>
+	<script src="/v3/script/hashref.js?<!--#4DTEXT _V3_version-->"></script>
+	<script src="/v3/script/help.js?<!--#4DTEXT _V3_version-->"></script>
+	<script src="/v3/script/jquery/plugins/tooltipster/js/jquery.tooltipster.js"></script>
+	<script src="/v3/script/jquery/plugins/bindWithDelay/bindWithDelay.js"></script>
+	<!-- add for export-->
+
+	<script src="/script/list_ot.js?<!--#4DTEXT String(Milliseconds+Random)-->"></script>
+	<link rel="stylesheet" href="/v3/views/ots/ots.css"/>
+
+	<script src="/v3/script/jquery/plugins/jquery-ui-monthpicker/jquery.ui.monthpicker.js"></script>
+
+		<script  src="/v3/script/access.js?<!--#4DTEXT _V3_version-->"></script>
+	<!--<link rel="stylesheet" href="/v3/chosen_v1.0.0/docsupport/style.css">
+  	<link rel="stylesheet" href="/v3/chosen_v1.0.0/docsupport/prism.css">-->
+
+
+  	<!--<link rel="stylesheet" href="/v3/script/chosen_v1.0.0/chosen.css">
+	<script src="/v3/script/chosen_v1.0.0/chosen.jquery.js" type="text/javascript"></script>
+	<script src="/v3/script/chosen_v1.0.0/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>-->
+
+
+
+
+
+	<!--<script type="text/javascript">
+		var config = {
+		  '.chosen-select'           : {},
+		  '.chosen-select-deselect'  : {allow_single_deselect:true},
+		  '.chosen-select-no-single' : {disable_search_threshold:10},
+		  '.chosen-select-no-results': {no_results_text:'Oops, nothing found!'},
+		  '.chosen-select-width'     : {width:"95%"}
+		}
+		for (var selector in config) {
+		  $(selector).chosen(config[selector]);
+		}
+	</script>-->
+
+
+	<style type="text/css">
+		.dates{
+			margin:10px;
+		}
+	</style>
+
+	<script>
+        $(document).ready(function(){
+
+        	/*$('button.access').button({icons: {primary: 'ui-icon-person'},text: false});
+        	$('button.access').click(function() {
+				var modulo = "ot";
+				window.parent.unaBase.loadInto.dialog('/v3/views/usuarios/dialog/acceso.shtml?m=' + modulo, 'Permisos '+modulo, 'medium');
+			});*/
+
+			var htmlDatesInicio = $('\
+			    <div class="dates"><button class="today">Hoy</button></div>\
+			    <div class="dates"><button class="week">Esta semana</button></div>\
+			');
+        	$('input[name="fecha_inicio"]').monthpicker({
+                changeMonth: true,
+                changeYear: true,
+                yearRange: 'c-10:c',
+                onSelect: function() {
+					$('input[name="fecha_termino"]').val("");
+            		$('input[name="fecha_final"]').val("");
+            		getOts();
+				}
+            }).click(function(){
+            	var text = $(this);
+            	$('.ui-datepicker').append(htmlDatesInicio);
+            	htmlDatesInicio.find('button.today').click(function(){
+            		text.val("Hoy").monthpicker("hide");
+            		$('input[name="fecha_termino"]').val("");
+            		$('input[name="fecha_final"]').val("");
+            		getOts();
+            		return false;
+            	});
+            	htmlDatesInicio.find('button.week').click(function(){
+            		text.val("Esta semana").monthpicker("hide");
+            		$('input[name="fecha_termino"]').val("");
+            		$('input[name="fecha_final"]').val("");
+            		getOts();
+            		return false;
+            	});
+            });
+
+            var htmlDatesTermino = $('\
+			    <div class="dates"><button class="today">Hoy</button></div>\
+			    <div class="dates"><button class="week">Esta semana</button></div>\
+			');
+            $('input[name="fecha_termino"]').monthpicker({
+                changeMonth: true,
+                changeYear: true,
+                yearRange: 'c-10:c',
+                onSelect: function() {
+					$('input[name="fecha_inicio"]').val("");
+            		$('input[name="fecha_final"]').val("");
+            		getOts();
+				}
+            }).click(function(){
+            	var text = $(this);
+            	$('.ui-datepicker').append(htmlDatesTermino);
+            	htmlDatesTermino.find('button.today').click(function(){
+            		text.val("Hoy").monthpicker("hide");
+            		$('input[name="fecha_inicio"]').val("");
+            		$('input[name="fecha_final"]').val("");
+            		getOts();
+            		return false;
+            	});
+            	htmlDatesTermino.find('button.week').click(function(){
+            		text.val("Esta semana").monthpicker("hide");
+            		$('input[name="fecha_inicio"]').val("");
+            		$('input[name="fecha_final"]').val("");
+            		getOts();
+            		return false;
+            	});
+            });
+
+            var htmlDatesFinal = $('\
+			    <div class="dates"><button class="today">Hoy</button></div>\
+			    <div class="dates"><button class="week">Esta semana</button></div>\
+			');
+            $('input[name="fecha_final"]').monthpicker({
+                changeMonth: true,
+                changeYear: true,
+                yearRange: 'c-10:c',
+                onSelect: function() {
+					$('input[name="fecha_inicio"]').val("");
+            		$('input[name="fecha_termino"]').val("");
+            		getOts();
+				}
+            }).click(function(){
+            	var text = $(this);
+            	$('.ui-datepicker').append(htmlDatesFinal);
+            	htmlDatesFinal.find('button.today').click(function(){
+            		text.val("Hoy").monthpicker("hide");
+            		$('input[name="fecha_inicio"]').val("");
+            		$('input[name="fecha_termino"]').val("");
+            		getOts();
+            		return false;
+            	});
+            	htmlDatesFinal.find('button.week').click(function(){
+            		text.val("Esta semana").monthpicker("hide");
+            		$('input[name="fecha_inicio"]').val("");
+            		$('input[name="fecha_termino"]').val("");
+            		getOts();
+            		return false;
+            	});
+            });
+
+            //$('select[name="ots[estados]"]').trigger("chosen:updated");
+            //$('select[name="estados"], select[name="validadas"], select[name="prioridades"], select[name="motivos"], select[name="areas"]').chosen();
+
+            $('.boton.create').click(function(){
+				if (g_uso_tareas_easy) {
+            		$.ajax({
+						url: '/4DACTION/_V3_setTareas',
+						data: {},
+						dataType: 'json',
+						async: false,
+						success: function(data) {
+							if(data.success){
+								var sid = '';
+								$.each($.cookie(),function(clave, valor) { if (clave == hash && valor.match(/UNABASE/g)) sid = valor; });
+								window.open('http://'+nodejs_public_ipaddr + ':' + nodejs_port + '/tareas/' + data.id);
+							}else{
+								if (data.readonly) {
+									toastr.error(NOTIFY.get('ERROR_RECORD_READONLY', 'Error'));
+								}else{
+									toastr.error(NOTIFY.get('ERROR_INTERNAL'));
+								}
+							}
+						}
+					});
+            	}else{
+            		$.ajax({
+						url: '/4DACTION/_V3_setOts',
+						data: {},
+						dataType: 'json',
+						async: false,
+						success: function(data) {
+							if(data.success){
+								window.open("/ot.shtml?i="+ data.id);
+							}else{
+								if (data.readonly) {
+									toastr.error(NOTIFY.get('ERROR_RECORD_READONLY', 'Error'));
+								}else{
+									toastr.error(NOTIFY.get('ERROR_INTERNAL'));
+								}
+							}
+						}
+					});
+            	}
+
+            });
+
+            // $('table.items thead').hide();
+            // $('table.items tfoot').hide();
+
+        });
+    </script>
+
+   <!-- <style type="text/css">
+    	table.calendar-view thead, tfoot{
+    		display:none;
+    	}
+    	table.calendar-view tbody tr{
+    		display:inline-block;
+    		width: 300px;
+    		height:500px;
+    		margin:5px;
+    		border:1px solid red;
+    	}
+    </style>-->
+
+</head>
+
+<body>
+<section id="main-container">
+
+	<nav>
+
+		<!--#4DIF _V3_verifica_permisos_web (vLogin;19)-->
+		<button class="boton create">Crear</button>
+		<!--<a class="boton create" target="_blank" href="/4DACTION/nueva_ot">Crear</a>-->
+		<!--#4DENDIF-->
+
+		<a class="boton export" href="#">Exportar a excel</a>
+
+		<a class="boton export_monthly_report" href="#">Exportar informe mensual</a>
+
+		<!--<a  href="">test</a>-->
+
+		<!--<a class="boton download" href="/4DACTION/exportar_ot/PA/<!- -#4DVAR vLogin- ->/all/all/all/all/all" target="black_">Descargar Excel</a>-->
+
+	</nav>
+
+	<header>
+		<form id="search-form-ots" style="position:relative">
+
+
+			<!--<div style="position:absolute;left:0;top:60px">
+				<label>Fecha término</label>
+				<select name="agendas" class="combinadas">
+					<option value="" selected>[Según agenda]</option>
+					<option value="hoy">Hoy</option>
+					<option value="semana">Esta semana</option>
+				</select>
+
+				<label>Fecha final</label>
+				<select name="agendas" class="combinadas">
+					<option value="" selected>[Según agenda]</option>
+					<option value="hoy">Hoy</option>
+					<option value="semana">Esta semana</option>
+				</select>
+
+			</div>-->
+
+			<div class="search2">
+	    		<strong>Mostrar copiados</strong><input type="Checkbox" name="copiados" class="combinadas">
+	    	</div>
+			<div class="search2">
+	    		<label>Buscar por</label>
+	    		<input style="height:12px" name="texto" type="text" class="combinadas" placeholder="Folio, Referencia, Negocio, Cliente" >
+	    	</div>
+			<div>
+				<label>Estado</label>
+				<select style="width:150px" name="estados" class="combinadas">
+					<option selected="selected" value="pa">Pendiente / Atrasada</option>
+					<option value="pendiente">Pendiente</option>
+					<option value="atrasada">Atrasada</option>
+					<option value="cerrada">Cerrada</option>
+					<option value="anulada">Anulada</option>
+					<option value="todos">Todas</option>
+				</select>
+			</div>
+
+			<div>
+                <label>Fecha inicio</label>
+                <input type="text" placeholder="[Seleccionar]" class="combinadas fecha-inicio" readonly name="fecha_inicio" style="width:100px;padding:4px;cursor:pointer;height:15px">
+            </div>
+
+            <div>
+                <label>Fecha termino</label>
+                <input type="text" placeholder="[Seleccionar]" class="combinadas fecha-termino" readonly name="fecha_termino" style="width:100px;padding:4px;cursor:pointer;height:15px">
+            </div>
+
+            <!--#4DIF _V3_verifica_permisos_web(vLogin;610)-->
+             <div>
+                <label>Fecha final</label>
+                <input type="text" placeholder="[Seleccionar]" class="combinadas fecha-final" readonly name="fecha_final" style="width:100px;padding:4px;cursor:pointer;height:15px">
+            </div>
+            <!--#4DENDIF-->
+
+			<div>
+                <label>Validación</label>
+                <select style="width:80px" name="validadas" class="combinadas">
+                    <option selected="selected" value="todos">Todas</option>
+                    <option value="true">Sí</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
+
+
+			<div>
+				<label for="">Prioridad</label>
+				<select style="width:80px" name="prioridades" class="combinadas">
+					<option selected="selected" value="todos">Todas</option>
+					<option value="alta">Alta</option>
+					<option value="media">Media</option>
+					<option value="baja">Baja</option>
+				</select>
+			</div>
+
+			<div>
+                <label>Motivo</label>
+                <select style="width:140px" name="motivos" class="combinadas">
+										<option selected="selected" value="todos">Todas</option>
+		                <!--#4DLOOP aMotivoIds-->
+		                <option value="<!--#4DTEXT aMotivoNombres{aMotivoIds}-->"><!--#4DTEXT _V3_capitalizeString(aMotivoNombres{aMotivoIds})--></option>
+		                <!--#4DENDLOOP-->
+                </select>
+            </div>
+
+			<div>
+				<label for="">Área de trabajo</label>
+				<!--#4DIF size of array(aIdAreas)=1-->
+					<select style="text-transform:capitalize" name="areas" class="combinadas">
+						<option selected="selected" value="<!--#4DTEXT aIdAreas{1}-->"><!--#4DTEXT aNamesAreas{1}--></option>
+					</select>
+				<!--#4delse-->
+					<select style="text-transform:capitalize" name="areas" class="combinadas">
+						<option selected="selected" value="todos">Todas</option>
+						<!--#4DLOOP aIdAreas-->
+							<option value="<!--#4DTEXT aIdAreas{aIdAreas}-->"><!--#4DTEXT Lowercase(aNamesAreas{aIdAreas};*)--></option>
+						<!--#4DENDLOOP-->
+						<option value="todos">Todas</option>
+					</select>
+				<!--#4dendif-->
+			</div>
+
+			<div>
+				<label for="">Responsables</label>
+				<select style="text-transform:capitalize" name="responsables" multiple="multiple" class="combinadas">
+					<!--#4DIF Size of array(aLoginResp)>1-->
+						<option selected="selected" value="todos">Todos</option>
+                    	<option value="<!--#4DTEXT vLogin-->"><!--#4DTEXT Lowercase(vNomUsr2;*)--></option>
+                    <!--#4DELSE-->
+					 	<option selected="selected" value="<!--#4DTEXT vLogin-->"><!--#4DTEXT Lowercase(vNomUsr2;*)--></option>
+                    <!--#4DENDIF-->
+                    <!--#4DLOOP aLoginResp-->
+                        <!--#4DIF aLoginResp{aLoginResp}#vLogin-->
+                        <option value="<!--#4DTEXT aLoginResp{aLoginResp}-->"><!--#4DTEXT Lowercase(aNamesResp{aLoginResp};*)--></option>
+                        <!--#4DENDIF-->
+                    <!--#4DENDLOOP-->
+                </select>
+			</div>
+		</form>
+	</header>
+	<article><!--#4DINCLUDE /v3/views/ots/list.shtml--></article>
+</section>
+</body>
+</html>

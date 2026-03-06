@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getBanco-->
+		<title>Bancos</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/views/ajustes/banco/banco.js"></script>
+    	<script type="text/javascript" src="/v3/views/ajustes/banco/content.js"></script>
+    	<style type="text/css">
+    		.newcolor input,textarea{
+    			background-color: #ffffff !important;
+    		}
+    	</style>
+    	<link href="/css/form1.css" rel="stylesheet">
+	</head>
+	<style type="text/css">
+
+	</style>
+	<body>
+		<section class="sheet" id="banco" data-id="<!--#4DTEXT id-->">
+			<footer>
+				<article>
+					<h1>Información general - Bancos</h1>
+					<ul class="editable newcolor">
+						<li> <label class="sg-input-title" ><input name="estado" class="checkbox" type="checkbox">Activo</label></li>
+						<li> <label class="sg-input-title" ><input name="nomina_bci" class="checkbox" type="checkbox">Nomina Bci</label></li>
+						<li><label class="sg-input-title">Banco<span><input class="form-control rise" type="text" name="banco"></span></label> </li>
+						<li><label class="sg-input-title">Codigo banco<span><input class="form-control rise" type="text" name="codigo_banco"></span></label> </li>
+						<li><label class="sg-input-title">Teléfono<span><input class="form-control rise" type="text" name="telefono"></span></label> </li>
+					</ul>
+				</article>
+			</footer>
+		</section>
+	</body>
+</html>

@@ -1,0 +1,1834 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!--#4DSCRIPT/_V3_proxy_getFacturaParcial-->
+  <title>Facturas agrupadas programadas</title>
+  <meta charset="utf-8" />
+  <script type="text/javascript" src="/v3/script/datepicker_es.js?<!--#4DTEXT _V3_version-->"></script>
+
+  <script>
+    var emitir_facturas_mayor_negocio = <!--#4DTEXT emitir_facturas_mayor_negocio-->;
+
+    // Helpers
+    function parseNumberLoose(v) {
+      if (v === null || typeof v === "undefined") return 0;
+      if (typeof v === "number") return v;
+
+      let s = String(v).trim();
+      if (!s) return 0;
+
+      s = s.replace(/[^\d.,-]/g, "");
+      const lastDot = s.lastIndexOf(".");
+      const lastComma = s.lastIndexOf(",");
+
+      if (lastDot !== -1 && lastComma !== -1) {
+        if (lastComma > lastDot) s = s.replace(/\./g, "").replace(",", ".");
+        else s = s.replace(/,/g, "");
+      } else if (lastComma !== -1) {
+        if (/,\d{1,2}$/.test(s)) s = s.replace(",", ".");
+        else s = s.replace(/,/g, "");
+      } else if (lastDot !== -1) {
+        if (!/\.\d{1,2}$/.test(s)) s = s.replace(/\./g, "");
+      }
+
+      const n = parseFloat(s);
+      return Number.isFinite(n) ? n : 0;
+    }
+
+    var toNumberJS = function (value, decimals_sep) {
+      if (typeof value === "number") return value;
+      if (typeof value !== "string") return 0;
+
+      let s = value.trim();
+      if (!s) return 0;
+
+      s = s.replace(/[^\d.,-]/g, "");
+
+      if (decimals_sep === ",") {
+        s = s.replace(/\./g, "");
+        s = s.replace(",", ".");
+      } else {
+        s = s.replace(/,/g, "");
+      }
+
+      const n = parseFloat(s);
+      return Number.isFinite(n) ? n : 0;
+    };
+
+    // ====== Moneda por fila + conversión a CLP ======
+    function normCur(v) {
+      const s = String(v || "").trim().toUpperCase();
+      return (s === "" || s === "CLP") ? "CLP" : s;
+    }
+
+    function rowRateToCLP($tr) {
+      // si no hay rate, cae a rate global o 1
+      const r = parseNumberLoose($tr.data("exchangerate"));
+      if (Number.isFinite(r) && r > 0) return r;
+      if (Number.isFinite(payout.rateExchangeGlobal) && payout.rateExchangeGlobal > 0) return payout.rateExchangeGlobal;
+      return 1;
+    }
+
+    function fmtMoney(cur, n) {
+      // CLP => formato de currency; no CLP => 2 decimales (estilo USD: 1.234,56)
+      if (cur !== "CLP") return $.number(n, 2, ",", ".");
+      return $.number(n, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+    }
+
+    function setRowMonto($tr, montoDisplay) {
+      const cur = normCur($tr.data("exchangetype"));
+      const rate = rowRateToCLP($tr);
+
+      const m = Number(montoDisplay);
+      const monto = Number.isFinite(m) ? m : 0;
+
+      const montoCLP = (cur === "CLP") ? monto : (monto * rate);
+
+      $tr.data("monto", monto);
+      $tr.data("monto_clp", montoCLP);
+    }
+
+
+    // ============= Modulo Principal =================
+    var payout = {
+      container: $("#dtvporfacturar"),
+      textExchangeLabel: "",
+      rateExchangeGlobal: 0,
+
+      // =========== Funciones de Módulo ==============
+      _calcInfoTbody: function ($tbody) {
+        let sumDisplay = 0; // suma en la moneda "display" de cada fila (solo útil si es moneda única)
+        let sumCLP = 0;     // suma convertida a CLP (siempre útil)
+        const set = new Set();
+
+        $tbody.find('tr[data-id]').each(function (_, tr) {
+          const $tr = $(tr);
+          const cur = normCur($tr.data("exchangetype")); // CLP / USD / etc
+          set.add(cur);
+
+          const m = parseNumberLoose($tr.data("monto"));      // monto en su moneda
+          const mclp = parseNumberLoose($tr.data("monto_clp"));// monto ya convertido a CLP
+
+          if (Number.isFinite(m)) sumDisplay += m;
+          if (Number.isFinite(mclp)) sumCLP += mclp;
+        });
+
+        const currencies = Array.from(set);
+        return {
+          currencies,
+          mixed: currencies.length > 1,
+          only: currencies.length === 1 ? currencies[0] : "CLP",
+          sumDisplay,
+          sumCLP
+        };
+      },
+
+      _updateTotalGrupo: function ($tbody) {
+        const info = payout._calcInfoTbody($tbody);
+
+        const $wrap = $tbody.closest(".group-wrap");
+        const $out = $wrap.find(".group-total-value");
+        const $lab = $wrap.find(".group-total-label");
+
+        // Si hay mezcla de monedas dentro del grupo => CLP convertido
+        if (info.mixed) {
+          $lab.text("CLP");
+          $out.text(fmtMoney("CLP", info.sumCLP));
+        } else {
+          $lab.text(info.only);
+          $out.text(fmtMoney(info.only, info.sumDisplay));
+        }
+
+        payout._updateTotalGeneral();
+      },
+
+      _updateTotalGeneral: function () {
+        let sumCLP = 0;
+        const set = new Set();
+
+        $("#groupsAccordion").find("tbody").each(function () {
+          const info = payout._calcInfoTbody($(this));
+          sumCLP += info.sumCLP;
+          info.currencies.forEach(c => set.add(c));
+        });
+
+        const mixed = set.size > 1;
+        const only = set.size === 1 ? Array.from(set)[0] : "CLP";
+
+        // Si no existe UI de total general, salimos sin romper
+        const $total = $(".total-facturar");
+        const $lab = $(".exchange-label");
+        if (!$total.length || !$lab.length) return;
+
+        if (mixed) {
+          // Mezcla de monedas => CLP convertido
+          $lab.text("CLP");
+          $total.text(fmtMoney("CLP", sumCLP));
+          $(".valor-cambio").show();
+        } else {
+          // Moneda única => mostrar en esa moneda (sumDisplay)
+          let sumDisplay = 0;
+          $("#groupsAccordion").find("tbody").each(function () {
+            sumDisplay += payout._calcInfoTbody($(this)).sumDisplay;
+          });
+
+          $lab.text(only);
+          $total.text(fmtMoney(only, sumDisplay));
+
+          // solo muestro valor-cambio si no es CLP
+          if (only !== "CLP") $(".valor-cambio").show();
+          else $(".valor-cambio").hide();
+        }
+      },
+
+      _setGlobalExchange: function (exchangeValue) {
+        if (!exchangeValue) return;
+
+        let rate = exchangeValue;
+        if (typeof rate === "string") rate = rate.replaceAll(",", ".");
+        payout.rateExchangeGlobal = parseNumberLoose(rate);
+
+        const $inp = $('input[name="exchange_rate_global"]');
+        if ($inp.length) {
+          $inp.data("value", payout.rateExchangeGlobal);
+          $inp.val(unaBase.utilities.transformNumber(payout.rateExchangeGlobal, "int"));
+        }
+      },
+
+      _renderNegocioRow: function (item, montoInicial) {
+        if (payout.textExchangeLabel === "" && item.exchange_type) {
+          payout.textExchangeLabel = item.exchange_type;
+        }
+
+        var saldoAux = item.saldo;
+        if (item.exchange_type != "") {
+          saldoAux = item.saldo / item.exchange_rate;
+        }
+
+        const montoInit = (typeof montoInicial === "number" && montoInicial > 0) ? montoInicial : saldoAux;
+
+        const exchange_type = item.exchange_type || "";
+        const exchange_rate = item.exchange_rate || 1;
+
+        const htmlObject = $(
+          '<tr data-id="' +
+          item.id +
+          '" data-idpro="' +
+          item.idproveedor +
+          '" ' +
+          'data-cliente="' +
+          item.proveedor +
+          '" data-referencia="' +
+          item.referencia +
+          '" ' +
+          'data-saldo="' +
+          saldoAux +
+          '" data-neto-negocio="' +
+          item.neto_negocio +
+          '" ' +
+          'data-rut-cliente="' +
+          item.rut +
+          '" data-monto="' +
+          montoInit +
+          '" ' +
+          'data-exchangetype="' +
+          exchange_type +
+          '" data-exchangerate="' +
+          exchange_rate +
+          '">' +
+          "<td>" +
+          item.numero +
+          "</td>" +
+          "<td>" +
+          item.vencimiento +
+          "</td>" +
+          "<td>" +
+          item.proveedor +
+          "</td>" +
+          '<td class="right">' +
+          item.referencia +
+          "</td>" +
+          '<td class="right">' +
+          unaBase.utilities.transformNumber(exchange_rate, "int") +
+          "</td>" +
+          (exchange_type != ""
+            ? '<td>' +
+            exchange_type +
+            ' <input style="font-weight:bold;width:120px;" data-value="' +
+            montoInit +
+            '" class="fill1" name="monto" type="text" value="' +
+            montoInit.numberFormat(2, ",", ".") +
+            '"></td>'
+            : '<td class="numeric currency">' +
+            currency.symbol +
+            ' <input style="font-weight:bold;width:120px;" data-value="' +
+            montoInit +
+            '" class="fill1" name="monto" type="text" value="' +
+            $.number(
+              montoInit,
+              currency.decimals,
+              currency.decimals_sep,
+              currency.thousands_sep
+            ) +
+            '"></td>') +
+          '<td class="numeric percent">' +
+          ' <input style="width:60px;" class="fill2" type="text" name="porcentaje" value="100" data-porcentaje="100"> % ' +
+          "</td>" +
+          '<td class="numeric currency"><label class="exchange-label">' +
+          currency.symbol +
+          '</label> <input style="width: 90px; background-color: transparent !important;" readonly class="fill1" type="text" data-value="0" name="saldo" value="0"></td>' +
+          "</tr>"
+        );
+
+        payout._bindRowHandlers(htmlObject);
+        return htmlObject;
+      },
+
+      _bindRowHandlers: function (htmlObject) {
+        htmlObject.find('input[name="monto"]').on("focus", function (event) {
+          var deciAux = currency.decimals + 2;
+          $(event.target).number(
+            true,
+            deciAux,
+            currency.decimals_sep,
+            currency.thousands_sep
+          );
+          $(event.target).val($(event.target).data("value"));
+        });
+
+        htmlObject.find('input[name="monto"]').on("keypress", function () {
+          payout.dtc.dtcTypeNumber = true;
+        });
+
+        htmlObject.find('input[name="monto"]').on("blur", function (event) {
+          if (payout.dtc.dtcTypeNumber) {
+            var tr = $(event.target).closest("tr");
+            var $tbody = tr.closest("tbody");
+
+            const exchange_type = String(tr.data("exchangetype") || "").trim(); // "USD" o "CLP"
+            const isFx = exchange_type !== "" && exchange_type !== "CLP";
+
+            let montoRaw = toNumberJS($(event.target).val(), currency.decimals_sep);
+            let saldoRaw = toNumberJS(tr.data("saldo"), currency.decimals_sep);
+
+            var monto = montoRaw;
+            var saldo = saldoRaw;
+
+            if (monto > 0) {
+              let dif = 0;
+
+              if (!emitir_facturas_mayor_negocio) {
+                if (saldo < monto) {
+                  toastr.warning("El monto de facturación no puede exceder el saldo.");
+
+                  tr.find('input[name="porcentaje"]').val(100);
+                  tr.find('input[name="porcentaje"]').data("porcentaje", 100);
+
+                  $(event.target)
+                    .data("value", saldo)
+                    .val(saldo)
+                    .number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+                  dif = 0;
+                } else {
+                  let percentage = (monto / saldo) * 100.0;
+
+                  tr.find('input[name="porcentaje"]').val($.number(percentage, 2, ",", "."));
+                  tr.find('input[name="porcentaje"]').data("porcentaje", percentage);
+
+                  dif = saldo - monto;
+                  const cur = normCur(tr.data("exchangetype"));
+                  tr.find('input[name="saldo"]').val(isFx ? $.number(dif, 2, ",", ".") : $.number(dif, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+                  $(event.target).data("value", monto).val(monto);
+
+                  setRowMonto(tr, montoRaw);
+                }
+              } else {
+                let percentage = (monto / saldo) * 100.0;
+
+                tr.find('input[name="porcentaje"]').val($.number(percentage, 2, ",", "."));
+                tr.find('input[name="porcentaje"]').data("porcentaje", percentage);
+
+                dif = saldo - monto;
+                const cur = normCur(tr.data("exchangetype"));
+                tr.find('input[name="saldo"]').val(isFx ? $.number(dif, 2, ",", ".") : $.number(dif, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+                $(event.target).data("value", monto).val(monto);
+
+                setRowMonto(tr, montoRaw);
+              }
+            } else {
+              $(event.target)
+                .data("value", saldo)
+                .val(saldo)
+                .number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+            }
+
+            $(event.target).unbind(".format");
+            $(event.target).number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+            payout._updateTotalGrupo($tbody);
+          }
+        });
+
+        htmlObject.find('input[name="porcentaje"]').focus(function (event) {
+          var porcentaje = $(event.target).data("porcentaje");
+          $(event.target).number(true, 2, ",", ".");
+          $(event.target).val(porcentaje);
+        });
+
+        htmlObject.find('input[name="porcentaje"]').on("keypress", function () {
+          payout.dtc.dtcTypeNumber = false;
+        });
+
+        htmlObject.find('input[name="porcentaje"]').blur(function (event) {
+          if (!payout.dtc.dtcTypeNumber) {
+            var porcentajeRaw = toNumberJS($(event.target).val(), ",");
+            var porcentaje = porcentajeRaw;
+
+            var tr = $(event.target).closest("tr");
+            var $tbody = tr.closest("tbody");
+
+            if (porcentaje > 0 && porcentaje < 101) {
+              $(event.target).data("value", porcentaje);
+              $(event.target).data("porcentaje", porcentaje);
+              $(event.target).number(true, 2, ",", ".");
+
+              const exchange_type = String(tr.data("exchangetype") || "").trim();
+              const isFx = exchange_type !== "" && exchange_type !== "CLP";
+              var saldoActual = toNumberJS(tr.data("saldo"), currency.decimals_sep);
+
+              let factor = porcentaje / 100;
+              let monto = saldoActual * factor;
+              let saldoFinal = saldoActual - monto;
+
+              if (exchange_type != "") {
+                tr.find('input[name="monto"]').data("value", monto).val($.number(monto, 2, ",", "."));
+                tr.find('input[name="saldo"]').val($.number(saldoFinal, 2, ",", "."));
+              } else {
+                tr.find('input[name="monto"]')
+                  .data("value", monto)
+                  .val($.number(monto, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+                tr.find('input[name="saldo"]')
+                  .data("value", saldoFinal)
+                  .val($.number(saldoFinal, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+              }
+
+              tr.data("monto", monto);
+
+              payout._updateTotalGrupo($tbody);
+            } else {
+              let p = parseFloat($(event.target).data("porcentaje"));
+              $(event.target).val(p);
+              $(event.target).number(true, 2, ",", ".");
+            }
+          }
+        });
+
+        
+      },
+
+      dtc: { dtcTypeNumber: true },
+
+      groups: {},
+    };
+
+    $(document).ready(function () {
+      $("#dialog-menu").hide();
+
+      let moneyDefault = unaBase.money.find((v) => v.default);
+
+      let counter = $(`
+          <div class="top-bar">
+            <span class="counter global-exchange-rate"
+              style="font-weight:bold; font-size:12px; color:#222; ${unaBase.doc.currencyCode == moneyDefault.codigo ? "display:none;" : ""
+        }">
+          </div>
+        `);
+
+      $("#dtvporfacturar").prepend(counter);
+
+      let $rate = counter.find('input[name="exchange_rate_global"]');
+      $rate.on("focusout", function () {
+        this.value = unaBase.utilities.transformNumber(this.value, "view", true);
+      });
+    });
+
+    (function () {
+
+      function debounce(fn, ms) {
+        let t = null;
+        return function () {
+          const ctx = this, args = arguments;
+          clearTimeout(t);
+          t = setTimeout(() => fn.apply(ctx, args), ms);
+        };
+      }
+
+      // Convierte input date (YYYY-MM-DD) a formato 4D (DD-MM-YYYY)
+      function normalizeProgramacionDate(value) {
+        if (!value) return "00-00-00";
+        const str = String(value).slice(0, 10);
+        if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+          const parts = str.split("-");
+          return parts[2] + "-" + parts[1] + "-" + parts[0];
+        }
+        if (/^\d{2}-\d{2}-\d{4}$/.test(str)) return str;
+        return "00-00-00";
+      }
+
+      // Convierte 4D (DD-MM-YYYY) a input (YYYY-MM-DD)
+      function toInputDate(value) {
+        if (!value) return "";
+        const str = String(value).trim();
+        if (str === "00-00-00" || str === "00-00-0000") return "";
+        if (/^\d{4}-\d{2}-\d{2}/.test(str)) return str.slice(0, 10);
+        if (/^\d{2}-\d{2}-\d{4}$/.test(str)) {
+          const p = str.split("-");
+          return p[2] + "-" + p[1] + "-" + p[0];
+        }
+        return "";
+      }
+
+      function escapeHtml(s) {
+        return String(s || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function openNegocio(idnv) {
+        if (!idnv) return;
+        const s = String(idnv);
+        window.open(
+          "http://" + window.location.host + "/4DACTION/wbienvenidos#negocios/content.shtml?id=" + encodeURIComponent(s),
+          "_blank"
+        );
+      }
+
+      payout.groups.state = {};     // groupKey -> state
+      payout.groups._timers = {};   // groupKey -> timers
+
+      payout.rows = payout.rows || {};
+      payout.rows._glosaTimers = payout.rows._glosaTimers || {};  // negocioId -> timeoutId
+      payout.rows._glosaSaving = payout.rows._glosaSaving || {};  // negocioId -> bool
+
+      payout.rows._saveGlosaForNegocio = function (negocioId, glosa, $tr) {
+        const id = String(negocioId || "").trim();
+        if (!id) return;
+
+        const newGlosa = String(glosa || "").trim();
+        const prev = String($tr.data("glosa") || "").trim();
+
+        // no hagas llamadas si no cambió
+        if (newGlosa === prev) return;
+
+        if (payout.rows._glosaSaving[id]) return;
+        payout.rows._glosaSaving[id] = true;
+
+        return $.ajax({
+          url: "/4DACTION/_MASIVO_setNegocio",
+          method: "POST",
+          dataType: "json",
+          data: {
+            negocio_id: id,
+            glosa_programacion: newGlosa
+          }
+        })
+          .done(function () {
+            // actualiza estado local de la fila
+            $tr.data("glosa", newGlosa);
+            $tr.attr("data-glosa", newGlosa);
+            toastr.success("Glosa actualizada.");
+          })
+          .fail(function () {
+            toastr.error("No fue posible actualizar la glosa.");
+            // opcional: revertir input al valor previo
+            $tr.find("input.row-glosa-input").val(prev);
+          })
+          .always(function () {
+            payout.rows._glosaSaving[id] = false;
+          });
+      };
+
+      payout.rows._scheduleGlosaSave = function (negocioId, glosa, $tr, delayMs) {
+        const id = String(negocioId || "").trim();
+        if (!id) return;
+
+        clearTimeout(payout.rows._glosaTimers[id]);
+        payout.rows._glosaTimers[id] = setTimeout(function () {
+          payout.rows._saveGlosaForNegocio(id, glosa, $tr);
+        }, typeof delayMs === "number" ? delayMs : 700);
+      };
+
+      payout.groups._markDirty = function (st, what) {
+        st._dirty = st._dirty || {};
+        if (what) st._dirty[what] = true;
+      };
+
+      payout.groups._scheduleCommit = function (groupKey, delayMs) {
+        const st = payout.groups.state[groupKey];
+        if (!st) return;
+
+        clearTimeout(payout.groups._timers[groupKey]);
+        payout.groups._timers[groupKey] = setTimeout(function () {
+          payout.groups._commit(groupKey);
+        }, typeof delayMs === "number" ? delayMs : 350);
+      };
+
+      payout.groups._syncScheduleControls = function ($wrap, st) {
+        const tipo = String(st.tipo_fecha_programacion || "monthly").trim();
+
+        $wrap.find(".group-fecha-wrap").toggle(tipo === "monthly");
+        $wrap.find(".group-dia-wrap").toggle(tipo === "weekly");
+        $wrap.find(".group-daily-wrap").toggle(tipo === "daily");
+      };
+
+
+
+      // reconstruye montosStr desde el DOM (centralizado)
+      payout.groups._rebuildMontosFromDOM = function (groupKey) {
+        const $wrap = $('#groupsAccordion .group-wrap[data-group="' + groupKey + '"]');
+        const $tbody = $wrap.find("tbody");
+        const built = payout.groups._rebuildMontosStrFromTbody($tbody);
+
+        const st = payout.groups.state[groupKey];
+        if (!st) return;
+
+        st.negociosStr = built.idsStr;
+        st.montosStr = built.montosStr;
+      };
+
+      payout.groups._commit = function (groupKey) {
+        const st = payout.groups.state[groupKey];
+        if (!st) return;
+
+        // serializa guardados: si hay uno en curso, marca pendiente
+        if (st._saving) {
+          st._pendingCommit = true;
+          return;
+        }
+
+        // si no hay cambios, no hagas nada
+        if (!st._dirty || (!st._dirty.core && !st._dirty.montos && !st._dirty.delete && !st._dirty.cliente)) return;
+
+        // si cambió montos, reconstruye antes de enviar
+        if (st._dirty.montos) {
+          payout.groups._rebuildMontosFromDOM(groupKey);
+        }
+
+        const payload = payout.groups._buildPayloadFromState(groupKey);
+        if (!payload) return;
+
+        const isDeleteCommit = !!st._dirty.delete;
+        const shouldPatchCliente = !!st._dirty.cliente && !isDeleteCommit;
+        
+        st._saving = true;
+
+        $.ajax({
+          url: "/4DACTION/_MASIVO_setGrupoFacturacion",
+          method: "POST",
+          dataType: "json",
+          data: payload
+        })
+          .done(function () {
+            toastr.success(isDeleteCommit ? "Se ha eliminado grupo facturación" : "Se ha guardado exitosamente");
+            $(document).trigger("pm:refreshRows");
+          }).then(function () {
+            // si no hay cambio de cliente, listo
+            if (!shouldPatchCliente) {
+              $(document).trigger("pm:refreshRows");
+              return;
+            }
+
+            const clienteId = String(st.cliente_id || st.id_clientes_programacion || "").trim();
+            const ids = String(st.negociosStr || "").split("|").map(x => x.trim()).filter(Boolean);
+
+            if (!clienteId || !ids.length) {
+              $(document).trigger("pm:refreshRows");
+              return;
+            }
+
+            let chain = $.Deferred().resolve();
+            ids.forEach(function (negId) {
+              chain = chain.then(function () {
+                return $.ajax({
+                  url: "/4DACTION/_MASIVO_setNegocio",
+                  method: "POST",
+                  dataType: "json",
+                  data: {
+                    negocio_id: negId,
+                    cliente_id: clienteId
+                  }
+                });
+              });
+            });
+
+            return chain.then(function () {
+              $(document).trigger("pm:refreshRows");
+            });
+          })
+          .always(function () {
+            st._saving = false;
+
+            // limpia dirty
+            st._dirty = {};
+
+            // si hubo cambios durante el guardado, vuelve a commitear
+            if (st._pendingCommit) {
+              st._pendingCommit = false;
+              payout.groups._scheduleCommit(groupKey, 0);
+            }
+          });
+
+
+      };
+
+      payout.groups._groupKey = function (g, idx) {
+        return String(g.id_grupo || g.id || ("idx_" + (idx + 1)));
+      };
+
+      payout.groups._buildPayloadFromState = function (groupKey) {
+        const st = payout.groups.state[groupKey];
+        if (!st) return null;
+
+        return {
+          id_grupo: st.id_grupo,
+          estado_programacion: !!st.estado_programacion,
+          is_activated_programacion: !!st.is_activated_programacion,
+          id_clientes_programacion: st.id_clientes_programacion || "",
+          id_negocios_programacion: st.negociosStr || "",
+          monto_facturar_programacion: st.montosStr || "",
+          tipo_fecha_programacion: st.tipo_fecha_programacion || "monthly",
+          fecha_programacion: normalizeProgramacionDate(st.fecha_programacion || ""),
+          dia_semanal_programacion: st.dia_semanal_programacion || "1",
+
+        };
+      };
+
+      payout.groups._initGroupState = function (groupKey, g) {
+        const st = payout.groups.state[groupKey] || {};
+        st.id_grupo = String(g.id_grupo || groupKey);
+
+        st.negociosStr = String(g.id_negocios_programacion || "").trim();
+        st.montosStr = String(g.monto_facturar_programacion || "").trim();
+
+        st.estado_programacion = !!g.estado_programacion;
+        st.is_activated_programacion = (typeof g.is_activated_programacion !== "undefined") ? !!g.is_activated_programacion : true;
+
+        st.fecha_programacion = toInputDate(g.fecha_programacion || "");
+        st.tipo_fecha_programacion = String(g.tipo_fecha_programacion || "monthly").trim();
+        if (!st.tipo_fecha_programacion) st.tipo_fecha_programacion = "monthly";
+
+        st.dia_semanal_programacion = String(g.dia_semanal_programacion || "1").trim();
+        if (!st.dia_semanal_programacion) st.dia_semanal_programacion = "1";
+
+
+        st.id_clientes_programacion =
+          (g.id_clientes_programacion !== null && typeof g.id_clientes_programacion !== "undefined")
+            ? String(g.id_clientes_programacion).trim()
+            : "";
+
+        st.cliente_label = String(g.cliente_programacion || g.cliente || "").trim();
+
+        st.cliente_id = st.id_clientes_programacion;
+        st.email = (g.correo_programacion !== null && typeof g.correo_programacion !== "undefined") ? String(g.correo_programacion).trim() : "";
+        payout.groups.state[groupKey] = st;
+        return st;
+      };
+
+
+      payout.groups._updateGroupHeaderText = function (groupKey) {
+        const st = payout.groups.state[groupKey];
+        const $h = $('#groupsAccordion .group-header[data-group="' + groupKey + '"]');
+        if (!$h.length || !st) return;
+
+        const parts = [
+          "Grupo " + (st.displayIndex || ""),
+          st.fecha_programacion ? ("Fecha: " + st.fecha_programacion) : "",
+          "Programación: " + (st.estado_programacion ? "Activa" : "Inactiva")
+        ].filter(Boolean);
+
+        $h.text(parts.join(" — "));
+      };
+
+      payout.groups._syncGroupRowCells = function (groupKey) {
+        const st = payout.groups.state[groupKey];
+        const $wrap = $('#groupsAccordion .group-wrap[data-group="' + groupKey + '"]');
+        if (!$wrap.length || !st) return;
+
+        const tipo = String(st.tipo_fecha_programacion || "monthly").trim();
+        $wrap.find(".group-tipo-fecha-select").val(tipo);
+        $wrap.find(".group-dia-select").val(String(st.dia_semanal_programacion || ""));
+        $wrap.find(".group-dia-wrap").toggle(tipo === "weekly");
+        $wrap.find(".group-glosa-input").val(st.glosa_programacion || "");
+
+
+        $wrap.find("tbody tr[data-id]").each(function () {
+          const $tr = $(this);
+          const clienteFallback = $tr.data("cliente") || $tr.attr("data-cliente") || "—";
+          const clienteFinal = (st.cliente_label && st.cliente_label.trim()) ? st.cliente_label : clienteFallback;
+
+          const glosaFallback =  $tr.data("glosaBase") || $tr.data("referencia") || $tr.attr("data-referencia") || "—";
+          const glosaFinal = String($tr.data("glosa") || glosaFallback || "").trim();
+          const $gi = $tr.find("input.row-glosa-input");
+          if ($gi.length) $gi.val(glosaFinal);
+
+          $tr.find(".cell-fecha-prog").text(st.fecha_programacion || "—");
+          $tr.find(".cell-cliente").text(clienteFinal || "—");
+
+          if (st.cliente_label && st.cliente_label.trim()) {
+            $tr.data("cliente", st.cliente_label);
+          }
+        });
+
+
+        $wrap.find(".group-active-toggle").prop("checked", !!st.estado_programacion);
+        $wrap.find(".group-fecha-input").val(st.fecha_programacion || "");
+        $wrap.find(".group-glosa-input").val(st.glosa || "");
+        $wrap.find(".group-email-input").val(st.email || "");
+
+        const sel = $wrap.find("select.group-cliente-select").get(0);
+        if (sel && sel.tomselect && st.cliente_id) {
+          if (sel.tomselect.getValue() !== st.cliente_id) sel.tomselect.setValue(st.cliente_id, true);
+        }
+        payout.groups._syncScheduleControls($wrap, st);
+      };
+
+      payout.groups._rebuildMontosStrFromTbody = function ($tbody) {
+        const ids = [];
+        const montos = [];
+        $tbody.find('tr[data-id]').each(function () {
+          const id = String($(this).data("id"));
+          const m = parseFloat($(this).data("monto"));
+          ids.push(id);
+          montos.push(Number.isFinite(m) ? String(m) : "0");
+        });
+        return { idsStr: ids.join("|"), montosStr: montos.join("|") };
+      };
+
+      payout.groups._emailTimers = {};
+
+      payout.groups._saveEmailForCliente = function (groupKey) {
+        const st = payout.groups.state[groupKey];
+        if (!st) return;
+
+        const clienteId = String(st.cliente_id || st.id_clientes_programacion || "").trim();
+        const newEmail = String(st.email || "").trim();
+
+        if (!clienteId) {
+          toastr.warning("Seleccione un cliente antes de editar el correo.");
+          return;
+        }
+
+        return $.ajax({
+          url: "/4DACTION/_MASIVO_setNegocio",
+          method: "POST",
+          dataType: "json",
+          data: {
+            cliente_id: clienteId,
+            correo_programacion: newEmail
+          }
+        })
+          .done(function () {
+            toastr.success("Correo actualizado.");
+            $(document).trigger("pm:refreshRows");
+
+            Object.keys(payout.groups.state).forEach(function (gk) {
+              const s2 = payout.groups.state[gk];
+              if (String(s2.cliente_id || s2.id_clientes_programacion || "") === clienteId) {
+                s2.email = newEmail;
+                payout.groups._syncGroupRowCells(gk);
+
+                const sel = $('#groupsAccordion .group-wrap[data-group="' + gk + '"]').find("select.group-cliente-select").get(0);
+                if (sel && sel.tomselect && sel.tomselect.options && sel.tomselect.options[clienteId]) {
+                  const opt = sel.tomselect.options[clienteId];
+                  opt.email = newEmail;
+                  sel.tomselect.updateOption(clienteId, opt);
+                }
+              }
+            });
+          })
+          .fail(function () {
+            toastr.error("No fue posible actualizar el correo.");
+          });
+      };
+
+      payout.groups._scheduleEmailSave = function (groupKey, delayMs) {
+        clearTimeout(payout.groups._emailTimers[groupKey]);
+        payout.groups._emailTimers[groupKey] = setTimeout(function () {
+          payout.groups._saveEmailForCliente(groupKey);
+        }, typeof delayMs === "number" ? delayMs : 600);
+      };
+
+
+      payout.groups.applyChange = function (groupKey, patch, opts) {
+        const st = payout.groups.state[groupKey];
+        if (!st) return;
+
+        Object.assign(st, patch || {});
+
+        payout.groups._syncGroupRowCells(groupKey);
+        payout.groups._updateGroupHeaderText(groupKey);
+
+        const dirty = (opts && opts.dirty) || "core";
+        payout.groups._markDirty(st, dirty);
+
+        payout.groups._scheduleCommit(groupKey, (opts && opts.delayMs) || 350);
+      };
+
+      // ===== Cliente: TomSelect por grupo =====
+      payout.groups._initGroupClienteSelect = function ($wrap, groupKey) {
+        const sel = $wrap.find("select.group-cliente-select").get(0);
+        if (!sel) return;
+
+        if (typeof window.TomSelect !== "function") return;
+
+        if (sel.tomselect) return;
+        sel.classList.add("cliente-select");
+        const st = payout.groups.state[groupKey];
+        const $dlg = $wrap.closest(".ui-dialog");
+        const dropdownParentEl = $dlg.length ? $dlg.get(0) : document.body;
+
+        const ts = new TomSelect(sel, {
+          dropdownParent: dropdownParentEl,
+          valueField: "id",
+          labelField: "nombre",
+          searchField: ["nombre"],
+          preload: false,
+          create: false,
+
+          load: function (query, callback) {
+            $.ajax({
+              url: "/4DACTION/_V3_getContactos",
+              dataType: "json",
+              data: { q: query || "" },
+              success: function (resp) {
+                const rows = Array.isArray(resp.rows) ? resp.rows : [];
+                const options = rows
+                  .filter(r => String(r.tipo_empresa || "").trim().toUpperCase() === "CLIENTE")
+                  .map(r => {
+                    const base =
+                      (r.alias && r.alias.trim()) ||
+                      (r.razon && r.razon.trim()) ||
+                      (r.nombre_completo && r.nombre_completo.trim()) ||
+                      "Sin nombre";
+
+                    const id = String(r.id_empresa || r.empresa_id || r.id || "");
+                    return {
+                      id,
+                      nombre: r.rut ? `${base} | ${r.rut}` : base,
+                      email: (r.email || "").trim()
+                    };
+                  })
+                  .filter(o => o.id);
+
+                callback(options);
+              },
+              error: function () { callback(); }
+            });
+          },
+
+          onInitialize: function () {
+            this.wrapper.classList.add("cliente-select");
+
+            const self = this;
+            const id = (st && st.id_clientes_programacion) ? String(st.id_clientes_programacion).trim() : "";
+            if (!id) return;
+
+            if (!self.options[id]) {
+              self.addOption({ id, nombre: st.cliente_label || "Cargando cliente...", email: "" });
+            }
+            self.setValue(id, true);
+            $.ajax({
+              url: "/4DACTION/_V3_getContacto", // Se obtienen datos por IDs
+              dataType: "json",
+              data: { q: id, filter: "id" }
+            }).done(function (resp) {
+              const rows = Array.isArray(resp.rows) ? resp.rows : [];
+              const bestRow = rows.find(r => String(r.id_empresa || r.empresa_id || r.id || "").trim() === id);
+              if (!bestRow) return;
+
+              const base =
+                (bestRow.alias && bestRow.alias.trim()) ||
+                (bestRow.razon && bestRow.razon.trim()) ||
+                (bestRow.nombre_completo && bestRow.nombre_completo.trim()) ||
+                "Sin nombre";
+
+              const option = {
+                id,
+                nombre: bestRow.rut ? `${base} | ${bestRow.rut}` : base,
+                email: (bestRow.email_programacion || "").trim()
+              };
+
+              if (typeof self.updateOption === "function") self.updateOption(id, option);
+              else self.addOption(option);
+
+              st.cliente_label = option.nombre;
+              console.log(option)
+              st.email = option.email;
+            });
+          },
+
+          onChange: function (value) {
+            const v = String(value || "").trim();
+            const st = payout.groups.state[groupKey];
+            if (!st) return;
+
+            const prevCliente = String(st.cliente_id || st.id_clientes_programacion || "").trim();
+
+            const opt = (v && this.options && this.options[v]) ? this.options[v] : null;
+            const nombre = opt ? String(opt.nombre || "").trim() : "";
+            const email = opt ? String(opt.email || "").trim() : "";
+
+            payout.groups.applyChange(
+              groupKey,
+              {
+                id_clientes_programacion: v,
+                cliente_id: v,
+                cliente_label: nombre,
+                email: email || (st.email || "")
+              },
+              { dirty: "core", delayMs: 0 }
+            );
+
+            // 👇 SOLO si cambió realmente
+            if (v && v !== prevCliente) {
+              payout.groups._markDirty(st, "cliente");
+            }
+          },
+        });
+
+        if (ts && ts.control_input) ts.control_input.placeholder = "Buscar cliente...";
+      };
+
+      payout._renderNegocioRow = function (item, montoInicial, groupKey) {
+        const st = payout.groups.state[groupKey] || {};
+        if (payout.textExchangeLabel === "" && item.exchange_type) payout.textExchangeLabel = item.exchange_type;
+
+        var saldoAux = item.saldo;
+        if (item.exchange_type != "") saldoAux = item.saldo / item.exchange_rate;
+        const exchange_type = normCur(item.exchange_type);
+        const exchange_rate = parseNumberLoose(item.exchange_rate) || 1;
+        const montoInit = (typeof montoInicial === "number" && montoInicial > 0) ? montoInicial : saldoAux;
+        const saldoRest = saldoAux - montoInit;
+        const labelMoneda = exchange_type;
+
+        const fmt = (n) => fmtMoney(exchange_type, n);
+
+        const fechaProgText = st.fecha_programacion ? st.fecha_programacion : "—";
+        const referencia = String(item.referencia || "").trim();
+        const glosaVal = (String(item.glosa_programacion || "").trim()) || referencia;
+        const clienteText = st.cliente_label || item.proveedor || "";
+
+        const htmlObject = $(
+          '<tr ' +
+            'data-group="' + escapeHtml(groupKey) + '" ' +
+            'data-id="' + item.id + '" ' +
+            'data-idpro="' + item.idproveedor + '" ' +
+            'data-cliente="' + escapeHtml(clienteText) + '" ' +
+            'data-referencia="' + escapeHtml(referencia) + '" ' +
+            'data-glosa-base="' + escapeHtml(glosaVal) + '" ' +
+            'data-glosa="' + escapeHtml(glosaVal) + '" ' +
+            'data-saldo="' + saldoAux + '" ' +
+            'data-neto-negocio="' + item.neto_negocio + '" ' +
+            'data-rut-cliente="' + item.rut + '" ' +
+            'data-monto="' + montoInit + '" ' +
+            'data-exchangetype="' + exchange_type + '" ' +
+            'data-exchangerate="' + exchange_rate + '"' +
+          '>' +
+
+          '<td class="center">' +
+            '<a href="#" class="negocio-link" data-negocio="' + escapeHtml(String(item.id)) + '">' +
+              escapeHtml(item.numero) +
+            '</a>' +
+          '</td>' +
+
+          '<td class="center cell-fecha-prog">' + escapeHtml(fechaProgText) + '</td>' +
+          '<td class="left cell-cliente">' + escapeHtml(clienteText) + '</td>' +
+          
+          '<td class="left cell-referencia">' +
+            '<input type="text" class="row-glosa-input" ' +
+            'value="' + escapeHtml(glosaVal || "") + '" ' +
+            'placeholder="' + escapeHtml(referencia || "—") + '">' + '</td>' +
+
+          '<td class="right">' + unaBase.utilities.transformNumber(exchange_rate, "int") + '</td>' +
+          '<td class="numeric currency">' +
+            '<div class="money-cell">' +
+              '<label class="exchange-label">' + escapeHtml(labelMoneda) + '</label>' +
+              '<input style="font-weight:bold;width:80px;" data-value="' + montoInit + '" class="fill1" name="monto" type="text" ' +
+                'value="' + fmtMoney(exchange_type, montoInit) + '">' +
+            '</div>' +
+          '</td>' +
+
+          '<td class="numeric currency">' +
+            '<div class="money-cell">' +
+              '<label class="exchange-label">' + escapeHtml(labelMoneda) + '</label>' +
+              '<input style="width:90px;background-color:transparent !important;" readonly class="fill1" type="text" ' +
+                'data-value="' + saldoRest + '" name="saldo" value="' + fmtMoney(exchange_type, saldoRest) + '">' +
+            '</div>' +
+          '</td>' +
+
+        '</tr>'
+      );
+        
+        setRowMonto(htmlObject, montoInit);
+
+
+        payout._bindRowHandlers(htmlObject);
+        return htmlObject;
+      };
+
+      const _Bind = payout._bindRowHandlers;
+      payout._bindRowHandlers = function (htmlObject) {
+        _Bind.call(payout, htmlObject);
+
+        const hookSchedule = function () {
+          const tr = htmlObject.closest("tr");
+          const groupKey = String(tr.data("group") || "");
+          const st = payout.groups.state[groupKey];
+          if (!st) return;
+
+          payout.groups._markDirty(st, "montos");
+          payout.groups._scheduleCommit(groupKey, 400);
+        };
+
+        htmlObject.find('input[name="monto"]').on("blur.pmSaveGroupAmounts", function () {
+          hookSchedule();
+        });
+        htmlObject.find('input[name="porcentaje"]').on("blur.pmSaveGroupAmounts", function () {
+          hookSchedule();
+        });
+
+        // Glosa por fila
+        htmlObject.find("input.row-glosa-input").on(
+          "input.pmRowGlosa",
+          debounce(function () {
+            const $tr = $(this).closest("tr");
+            const negocioId = $tr.data("id");
+            payout.rows._scheduleGlosaSave(negocioId, $(this).val(), $tr, 700);
+          }, 250)
+        );
+
+        htmlObject.find("input.row-glosa-input").on("blur.pmRowGlosa", function () {
+          const $tr = $(this).closest("tr");
+          const negocioId = $tr.data("id");
+          payout.rows._scheduleGlosaSave(negocioId, $(this).val(), $tr, 0);
+        });
+      };
+
+      // =============== UI BINDING ==========================================
+      if ($.fn && $.fn.off) $(document).off(".pmGroupControls");
+
+      $(document).on("change.pmGroupControls", "#groupsAccordion .group-active-toggle", function () {
+        const groupKey = String($(this).closest(".group-wrap").data("group"));
+        payout.groups.applyChange(groupKey, {
+          estado_programacion: !!this.checked
+        }, { dirty: "core", delayMs: 0 });
+      });
+
+      $(document).on("change.pmGroupControls", "#groupsAccordion .group-fecha-input", function () {
+        const groupKey = String($(this).closest(".group-wrap").data("group"));
+        payout.groups.applyChange(groupKey, {
+          fecha_programacion: String(this.value || "").trim()
+        }, { dirty: "core", delayMs: 0 });
+      });
+
+      $(document).on("change.pmGroupControls", "#groupsAccordion .group-tipo-fecha-select", function () {
+        const $wrap = $(this).closest(".group-wrap");
+        const groupKey = String($wrap.data("group"));
+        payout.groups.applyChange(groupKey, {
+          tipo_fecha_programacion: String(this.value || "monthly").trim()
+        }, { dirty: "core", delayMs: 0 });
+      });
+
+      $(document).on("change.pmGroupControls", "#groupsAccordion .group-dia-select", function () {
+        const $wrap = $(this).closest(".group-wrap");
+        const groupKey = String($wrap.data("group"));
+        payout.groups.applyChange(groupKey, {
+          dia_semanal_programacion: String(this.value || "1").trim()
+        }, { dirty: "core", delayMs: 0 });
+      });
+
+      $(document).on("click.pmGroupControls", "#groupsAccordion .negocio-link", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        openNegocio($(this).data("negocio"));
+      });
+
+      $(document).on("input.pmGroupControls", "#groupsAccordion .group-glosa-input", debounce(function () {
+        const groupKey = String($(this).closest(".group-wrap").data("group"));
+        payout.groups.applyChange(groupKey, {
+          glosa_programacion: String($(this).val() || "").trim()
+        }, { dirty: "core", delayMs: 350 });
+      }, 250));
+
+      $(document)
+        .off("click.pmGroupControls", "#groupsAccordion .group-delete-btn")
+        .on("click.pmGroupControls", "#groupsAccordion .group-delete-btn", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          const $btn = $(this);
+          const $acc = $("#groupsAccordion");
+
+          const $wrap = $btn.closest(".group-wrap");
+          const groupKey = String($wrap.data("group") || "");
+
+          payout.groups.applyChange(
+            groupKey,
+            {
+              is_activated_programacion: false,
+              estado_programacion: false
+            },
+            { dirty: "delete", delayMs: 0 }
+          );
+
+          const $header = $acc.find('.group-header[data-group="' + groupKey + '"]').first();
+
+          const $panel = ($header.length && $header.next().length) ? $header.next() : $wrap;
+
+          if ($acc.data("uiAccordion")) {
+            $acc.accordion("option", "active", false);
+          }
+
+          $panel.remove();
+          $header.remove();
+
+          if ($acc.data("uiAccordion")) {
+            const headersLeft = $acc.find(".group-header, .ui-accordion-header").length;
+            if (headersLeft > 0) {
+              $acc.accordion("refresh");
+            } else {
+              $acc.accordion("destroy");
+              $("#pm-empty").show();
+            }
+          }
+        });
+
+
+      payout.groups.get = function () {
+        const $acc = $("#groupsAccordion");
+        $acc.empty();
+
+        $.ajax({
+          url: "/4DACTION/_MASIVO_getGruposFacturacion",
+          dataType: "json",
+          success: function (data) {
+            const grupos = (data && (data.grupo || data.rows || [])) || [];
+            if (!grupos.length) {
+              $acc.append('<div class="empty">No hay facturas agrupadas programadas para mostrar.</div>');
+              payout._updateTotalGeneral();
+              return;
+            }
+
+            const pendings = [];
+            grupos.forEach(function (g, idx) {
+              const groupKey = String(g.id_grupo);
+              const st = payout.groups._initGroupState(groupKey, g);
+              st.displayIndex = (idx + 1);
+
+              const negociosStr = (g.id_negocios_programacion || "").trim();
+              const montosStr = (g.monto_facturar_programacion || "").trim();
+
+              const $h = $('<h3 class="group-header" data-group="' + escapeHtml(groupKey) + '"></h3>');
+              $acc.append($h);
+
+              // ============ HEADER GRUPOS ==============================
+              const $wrap = $(`
+            <div class="group-wrap" data-group="${escapeHtml(groupKey)}">
+              <div class="group-controls">
+                <div class="gc-item">
+                  Activar programación
+                  <label class="switch">
+                    <input type="checkbox" class="group-active-toggle" aria-label="Activar programación">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+
+                <div class="gc-pairbox">
+                  <label class="gc-item">
+                    Tipo programación
+                    <select class="group-tipo-fecha-select" style="width:140px;">
+                      <option value="monthly">Mensual</option>
+                      <option value="weekly">Semanal</option>
+                      <option value="daily">Diaria</option>
+                    </select>
+                  </label>
+
+                  <!-- mensual -->
+                  <label class="gc-item group-fecha-wrap">
+                    Fecha programación
+                    <input type="date" class="group-fecha-input" style="width:160px;">
+                  </label>
+
+                  <!-- semanal -->
+                  <label class="gc-item group-dia-wrap" style="display:none;">
+                    Día (semanal)
+                    <select class="group-dia-select" style="width:160px;">
+                      <option value="1">Lunes</option>
+                      <option value="2">Martes</option>
+                      <option value="3">Miércoles</option>
+                      <option value="4">Jueves</option>
+                      <option value="5">Viernes</option>
+                      <option value="6">Sábado</option>
+                      <option value="7">Domingo</option>
+                    </select>
+                  </label>
+
+                  <!-- diaria -->
+                  <div class="gc-item group-daily-wrap" style="display:none;">
+                    Programación diaria
+                    <div class="gc-pill" >TODOS LOS DÍAS</div>
+                  </div>
+                </div>
+
+
+                <label class="gc-item" style="min-width:260px;">
+                  Cliente
+                  <select class="group-cliente-select"></select>
+                </label>
+                <label class="gc-item" style="min-width:260px;">
+                  Email (contacto)
+                  <input type="email" class="group-email-input" placeholder="correo@cliente">
+                </label>
+                <button type="button" class="group-delete-btn">Eliminar grupo</button>
+              </div>
+              
+              <div class="group-table-scroll">
+              <table class="group-table" style="width:100%; table-layout: fixed;">
+                <thead>
+                  <tr>
+                    <th width="7%" class="center">Número</th>
+                    <th width="12%" class="center">Fecha programación</th>
+                    <th width="15%" class="center">Cliente</th>
+                    <th width="15%" class="center">Glosa</th>
+                    <th width="8%" class="center">Valor cambio</th>
+                    <th width="13%" class="center">Monto a facturar <label class="exchange-label">[$]</label></th>
+                    <th width="15%" class="center">Saldo <label class="exchange-label">[$]</label></th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+              </div>
+
+              <div class="group-footer">
+                <span><b>Total grupo:</b> <label class="group-total-label">[$]</label> <span class="group-total-value">0</span></span>
+              </div>
+            </div>
+          `);
+
+              $acc.append($wrap);
+
+              payout.groups._initGroupClienteSelect($wrap, groupKey);
+              payout.groups._syncGroupRowCells(groupKey);
+              payout.groups._updateGroupHeaderText(groupKey);
+              payout.groups.loaded = {};
+
+              pendings.push({ groupKey, negociosStr, montosStr, $wrap });
+            });
+
+            if ($acc.accordion) {
+              $acc.accordion({
+                collapsible: true,
+                heightStyle: "content",
+                active: false,
+                activate: function (_e, ui) {
+                  const $panel = ui.newPanel;
+
+                  if (!$panel || !$panel.length) return;
+
+                  const groupKey = String($panel.attr("data-group") || "").trim();
+                  if (!groupKey) return;
+
+                  const st = payout.groups.state[groupKey];
+                  if (!st) return;
+
+                  if (payout.groups.loaded[groupKey]) return;
+                  payout.groups.loaded[groupKey] = true;
+
+                  const $tbody = $panel.find("tbody");
+
+                  $tbody.html('<tr><td colspan="8" class="center">Cargando...</td></tr>');
+
+                  const ids = String(st.negociosStr || "").split("|").filter(Boolean);
+                  const montos = String(st.montosStr || "").split("|");
+                  const montoMap = {};
+                  ids.forEach((id, k) => (montoMap[id] = parseNumberLoose(montos[k])));
+
+                  $tbody.empty();
+                  payout.groups._loadGroupDetails(
+                    st.negociosStr,
+                    montoMap,
+                    $tbody,
+                    function () {
+                      payout._updateTotalGrupo($tbody);
+                      payout.groups._syncGroupRowCells(groupKey);
+                    },
+                    groupKey
+                  );
+                }
+              });
+            }
+
+            const cargar = (i) => {
+              if (i >= pendings.length) {
+                if ($acc.accordion) $acc.accordion("refresh");
+                payout._updateTotalGeneral();
+                return;
+              }
+
+              const p = pendings[i];
+              const groupKey = p.groupKey;
+              const negociosStr = p.negociosStr;
+              const montosStr = p.montosStr;
+              const $tbody = p.$wrap.find("tbody");
+
+              if (!negociosStr) {
+                $tbody.append('<tr><td colspan="8" class="center">Sin negocios para este grupo.</td></tr>');
+                cargar(i + 1);
+                return;
+              }
+
+              const ids = String(negociosStr).split("|").map(x => x.trim()).filter(Boolean);
+              const montos = String(montosStr).split("|").map(x => x.trim());
+              const montoMap = {};
+              ids.forEach((id, k) => { montoMap[id] = parseNumberLoose(montos[k]); });
+
+              payout.groups._loadGroupDetails(negociosStr, montoMap, $tbody, function () {
+                payout._updateTotalGrupo($tbody);
+                payout.groups._syncGroupRowCells(groupKey);
+                cargar(i + 1);
+              }, groupKey);
+            };
+
+            cargar(0);
+          },
+          error: function () {
+            $("#groupsAccordion").html('<div class="empty">Error cargando grupos.</div>');
+          }
+        });
+      };
+
+      payout.groups._loadGroupDetails = function (negociosStr, montoMap, $tbody, done, groupKey) {
+        $.ajax({
+          url: "/4DACTION/_V3_get_dtv_to_create",
+          data: { negocios: negociosStr, direct: false },
+          dataType: "json",
+          success: function (data) {
+            if (data && data.exchange && data.exchange.value) payout._setGlobalExchange(data.exchange.value);
+
+            const rows = (data && data.rows) || [];
+            if (!rows.length) {
+              $tbody.append('<tr><td colspan="8" class="center">Sin filas para mostrar.</td></tr>');
+              done && done();
+              return;
+            }
+
+            rows.forEach(function (item) {
+              const montoInicial = montoMap[String(item.id)];
+              const glosa = item.glosa_programacion || item.referencia || "";
+              const $row = payout._renderNegocioRow(item, montoInicial, groupKey);
+              $tbody.append($row);
+            });
+
+            done && done();
+          },
+          error: function () {
+            $tbody.append('<tr><td colspan="8" class="center">Error cargando detalle.</td></tr>');
+            done && done();
+          }
+        });
+      };
+
+    })();
+
+    $(function () {
+      payout.groups.get();
+    });
+
+  </script>
+
+  <style type="text/css">
+    .fill1 {
+      background: #f2fe8a;
+      text-align: right;
+      padding: 5px;
+    }
+
+    .fill2 {
+      background: #f2fe8a;
+      text-align: center;
+      padding: 5px;
+    }
+
+    .top-bar {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      padding: 6px 8px;
+      margin-bottom: 10px;
+    }
+
+    /* Acordeón */
+    #groupsAccordion .empty {
+      padding: 14px;
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+    }
+
+    .group-wrap {
+      padding: 10px 4px 6px;
+    }
+
+    .group-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 6px 10px;
+      margin-bottom: 10px;
+      background: #f7f7f7;
+      border: 1px solid #e7e7e7;
+      border-radius: 8px;
+      font-size: 12px;
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+    }
+
+    .warn {
+      color: #b45309;
+      font-weight: bold;
+      margin-top: 6px;
+    }
+
+    .group-table {
+      width: 100%;
+      table-layout: fixed;
+    }
+
+    .group-table th,
+    .group-table td {
+      overflow: hidden;
+    }
+
+    .right {
+      text-align: right;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .left {
+      text-align: left;
+    }
+
+    .group-footer {
+      display: flex;
+      justify-content: flex-end;
+      padding: 10px 10px 4px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .ui-accordion .ui-accordion-header {
+      font-weight: bold;
+    }
+
+    .group-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+      align-items: center;
+      padding: 10px 10px 12px;
+      border: 1px solid #e7e7e7;
+      border-radius: 10px;
+      background: #f7f7f7;
+      margin: 8px 0 10px;
+    }
+
+    .group-controls .gc-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #111;
+    }
+
+
+    /* Recuadro: Tipo + Fecha (+ Día si semanal) */
+    .gc-pairbox {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 12px;
+      align-items: flex-end;
+      padding: 10px 12px;
+      border: 1px solid #e7e7e7;
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .gc-pill {
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      padding: 7px 10px;
+      background: #f7f7f7;
+      font-size: 13px;
+      white-space: nowrap;
+      width: 160px;
+    }
+
+
+    .group-controls .gc-pairbox {
+      flex: 0 0 auto;
+    }
+
+    .group-controls {
+      overflow-x: auto;
+    }
+
+
+    .group-controls input[type="text"],
+    .group-controls input[type="email"],
+    .group-controls input[type="date"],
+    .group-controls select {
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: 13px;
+      background: #fff;
+      outline: none;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .group-table td.numeric.currency {
+      white-space: nowrap;
+    }
+
+
+    .group-table td.numeric.currency .money-cell {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+
+    .group-table td.numeric.currency .money-cell input {
+      width: 90px;
+      min-width: 0;
+    }
+
+
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 42px;
+      height: 22px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .switch .slider {
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      background: #e2e6ed;
+      transition: .2s;
+    }
+
+    .switch .slider:before {
+      content: "";
+      position: absolute;
+      height: 18px;
+      width: 18px;
+      left: 2px;
+      bottom: 2px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .15);
+      transition: .2s;
+    }
+
+    .switch input:checked+.slider {
+      background: #34d399;
+    }
+
+    .switch input:checked+.slider:before {
+      transform: translateX(20px);
+    }
+
+    .group-controls .gc-item .switch {
+      align-self: flex-start;
+    }
+
+    /*   Boton Delete   */
+    .group-delete-btn {
+      border: 1px solid #dc2626;
+      color: #dc2626;
+      background: #fff;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .group-delete-btn:hover {
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, .15);
+    }
+
+    /* TomSelect */
+
+    .ui-dialog .ts-wrapper {
+      position: relative;
+    }
+
+    .ui-dialog .ts-dropdown {
+      position: absolute !important;
+      z-index: 999999 !important;
+    }
+
+    .ui-dialog {
+      overflow: visible !important;
+    }
+
+    .ui-dialog-content {
+      overflow: visible !important;
+    }
+
+    .ui-dialog .ts-dropdown {
+      z-index: 999999 !important;
+    }
+
+    .group-table-scroll {
+      overflow-x: auto;
+    }
+
+    .group-wrap {
+      overflow: visible;
+      /* importante para overlays */
+    }
+
+    #groupsAccordion .ui-accordion-content {
+      overflow: hidden !important;
+    }
+
+    #groupsAccordion select.cliente-select {
+      display: none !important;
+    }
+
+    #groupsAccordion .ts-wrapper.cliente-select {
+      width: 200px;
+      display: inline-block !important;
+      text-align: left;
+    }
+
+    #groupsAccordion .ts-wrapper.cliente-select .ts-control {
+      border: 1px solid #d0d0d0;
+      border-radius: 6px;
+      padding: 4px 8px;
+      background: #fff;
+      box-shadow: 0 0 4px rgba(0, 0, 0, 0.05);
+
+      display: flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+    }
+
+    #groupsAccordion .ts-wrapper.cliente-select.single .ts-control {
+      flex-wrap: nowrap !important;
+      min-height: 34px;
+      overflow: hidden !important;
+      padding-right: 28px !important;
+    }
+
+    #groupsAccordion .ts-wrapper.cliente-select.single .ts-control>.item {
+      flex: 1 1 auto !important;
+      min-width: 0 !important;
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+    }
+
+    #groupsAccordion .ts-wrapper.cliente-select.single .ts-control>input[type="text"],
+    #groupsAccordion .ts-wrapper.cliente-select.single .ts-control>input {
+      width: 2px;
+      min-width: 2px;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: 0 !important;
+      box-shadow: none !important;
+      background: transparent !important;
+    }
+
+    #groupsAccordion .ts-wrapper.cliente-select .ts-dropdown .option {
+      white-space: nowrap !important;
+      overflow: hidden !important;
+      text-overflow: ellipsis !important;
+      line-height: 1.4 !important;
+    }
+
+    #groupsAccordion .ts-wrapper.cliente-select .ts-control .item {
+      padding: 0 !important;
+      margin: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+
+    .row-glosa-input{
+      width:100%;
+      border: 1px solid #d0d7de;
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: 13px;
+      background: #fff;
+      outline: none;
+    }
+
+    #groupsAccordion .group-table td.cell-referencia{
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Evita que se corte Glosa Input */
+    #groupsAccordion .group-table td.cell-referencia{
+      overflow: visible !important;
+      padding: 6px 8px;
+    }
+
+    #groupsAccordion .group-table td.cell-referencia .row-glosa-input{
+      display: block;
+      width: 100%;
+      margin: 0;
+      box-sizing: border-box;
+    }
+
+
+  </style>
+</head>
+
+<body>
+  <section id="dtvporfacturar" class="sheet" style="width: calc(100% - 10px);">
+
+    <!-- Acordeón -->
+    <div id="groupsAccordion"></div>
+  </section>
+</body>
+
+</html>

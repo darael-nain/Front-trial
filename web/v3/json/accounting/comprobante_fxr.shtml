@@ -1,0 +1,27 @@
+{	
+	"ok": <!--#4DIF Not(Undefined(okey))--><!--#4DIF okey-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+	"details": [
+	<!--#4DLOOP aIdDetail -->
+			{
+				"id": <!--#4DHTML aIdDetail{aIdDetail}-->,
+				"folioDoc": "<!--#4DHTML aFolioDoc{aIdDetail}-->",
+				"aIdComp": "<!--#4DHTML aIdComprobante{aIdDetail}-->",
+				"aTypeComp": "<!--#4DHTML aTypeComp{aIdDetail}-->",
+				"idDoc": <!--#4DHTML aIdDoc{aIdDetail}-->,
+				"idCont": <!--#4DIF Not(Undefined(aIdCont{aIdDetail}))--><!--#4DHTML aIdCont{aIdDetail}--><!--#4DELSE-->0<!--#4DENDIF-->,
+				"debe": <!--#4DHTML aDebe{aIdDetail}-->,
+				"codigoCuenta": "<!--#4DHTML _V3_escapeString(aCodigoCuenta{aIdDetail})-->",
+				"cuentaContable": "<!--#4DHTML _V3_escapeString(aCuentacontable{aIdDetail})-->",
+				"typeDoc": "<!--#4DHTML _V3_escapeString(aTypeDoc{aIdDetail})-->",
+				"auxiliar_desc" : <!--#4DIF Not(Undefined(aAuxiliarDesc{aIdDetail}))-->"<!--#4DHTML _V3_escapeString(aAuxiliarDesc{aIdDetail})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"auxiliar_rut" : <!--#4DIF Not(Undefined(aAuxiliarRut{aIdDetail}))-->"<!--#4DHTML _V3_escapeString(aAuxiliarRut{aIdDetail})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"debe": <!--#4DHTML aDebe{aIdDetail}-->,
+				"haber": <!--#4DHTML aHaber{aIdDetail}-->
+			}<!--#4DIF NOT(aIdDetail{aIdDetail} = aIdDetail{Size of array(aIdDetail)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+		]
+}
+
+
+
+

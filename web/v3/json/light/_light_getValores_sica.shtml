@@ -1,0 +1,20 @@
+{
+	"records": {
+		"total": <!--#4DVAR $total-->
+	},
+	"rows": [
+<!--#4DLOOP aId -->
+		{
+			"id": <!--#4DVAR aId{aId}-->,
+			"id_servicio": <!--#4DVAR aIdServicio{aId}-->,
+			"nombre_servicio": "<!--#4DHTML aNombreServicio{aId}-->",
+			"nombre_valor": "<!--#4DHTML aNombreValor{aId}-->",
+			"rate": "<!--#4DHTML aRate{aId}-->",
+			"cantidad": "<!--#4DHTML aCantidad{aId}-->",
+			"dias": "<!--#4DHTML aDias{aId}-->",
+			"subtotal": "<!--#4DHTML aSubtotal{aId}-->"
+		}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+
+}

@@ -1,0 +1,14 @@
+{
+	"rows": [
+<!--#4DLOOP aItemCount -->
+		{
+			"count": <!--#4DHTML aItemCount{aItemCount}-->,
+			"text": "<!--#4DHTML aItemText{aItemCount}-->",
+			"producto": {
+				"id": <!--#4DHTML aItemProductoId{aItemCount}-->,
+				"text" <!--#4DHTML aItemProductoText{aItemCount}-->
+			}
+		}<!--#4DIF NOT(aItemCount{aItemCount} = aItemCount{Size of array(aItemCount)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

@@ -1,0 +1,12 @@
+{
+	"OI" : {
+		"id" : <!--#4DHTML id-->,
+		"estado" : "<!--#4DTEXT vEstado-->",
+		"cliente" : "<!--#4DHTML _V3_escapeString(nombre_Cliente)-->",
+		"monto_a_cobrar" : <!--#4DHTML String(monto_total_cobro;"&xml")-->,
+		"total_por_cobrar" : <!--#4DHTML String(monto_total_cobro;"&xml")-->,
+		"observacion" : "<!--#4DHTML _V3_escapeString(observacion)-->",
+		"fecha_vcto" : "<!--#4DTEXT vDatePropuesta-->",
+		"valor_cambio" : <!--#4DHTML String(monedaValorCambio;"&xml")-->
+	}
+}

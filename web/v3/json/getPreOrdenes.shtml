@@ -1,0 +1,19 @@
+{
+	"rows": [
+<!--#4DLOOP aId -->
+	{
+		"id": <!--#4DTEXT aId{aId}-->,
+		"idProveedor": <!--#4DTEXT aIdProv{aId}-->,
+		"nomProveedor": "<!--#4DHTML _V3_escapeString(aNomProv{aId})-->",
+		"idDoc": "<!--#4DTEXT aIdDoc{aId}-->",
+		"nomDoc": "<!--#4DHTML _V3_escapeString(aNomDoc{aId})-->",
+		"llaveItem": "<!--#4DTEXT aItemLLave{aId}-->",
+		"nombreItem": "<!--#4DHTML _V3_escapeString(aItemNombre{aId})-->",
+		"moneda": "<!--#4DTEXT aMoneda{aId}-->",
+		"monto": <!--#4DHTML String(aMonto{aId};"&xml")-->,
+		"observacion": "<!--#4DHTML _V3_escapeString(aObservacion{aId})-->",
+		"idgasto": <!--#4DTEXT aidGastoAsociado{aId}-->
+	}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

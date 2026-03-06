@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_serverInfo-->
+<html>
+	<head>
+		<title>Órdenes de trabajo</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="/v3/views/compras/lista.css">
+		<!--<script type="text/javascript" src="/v3/views/compras/script/active_menu.js"></script>-->
+		<script>
+
+			$(document).ready(function() {
+				unaBase.toolbox.init();
+				var params = {
+					url: function() { return '/4DACTION/_V3_getOtsNew' },
+					entity: 'Ot',				
+					row: {
+						html: function(i, rows) {
+							return '<tr data-id="' + rows[i].id + '">' +											
+								'<td width="5%">' + rows[i].folio + '</td>' +								
+								'<td class="center" width="5%">' + rows[i].doc + '</td>' +
+								'<td width="5%">' + rows[i].fecha + '</td>' +
+								'<td width="5%">' + rows[i].vencimiento + '</td>' +
+								'<td width="5%">' + rows[i].estado + '</td>' +
+								'<td class="left" width="15%">' + rows[i].proveedor + '</td>' +						
+								'<td class="left" width="25%">' + rows[i].referencia + '</td>' +														
+								'<td class="neto_c right" width="5%">' + rows[i].neto + '</td>' +
+								'<td class="neto_c right" width="5%">' + rows[i].exento + '</td>' +
+								'<td class="total_c right" width="5%">' + rows[i].total + '</td>' +
+								'<td class="total_c right" width="5%">' + rows[i].pago + '</td>' +
+							'</tr>'
+						}
+					},
+					detail: {
+						url: function(id) { return '/v3/views/ots/v3/content.shtml?id=' + id},
+						iframe: false
+					},
+					// Inflexiones
+					inflection: {
+						singular: 'Ot',
+						plural: 'Ots',
+						none: 'ningúna'
+					},									
+					filters: [
+						{ name: 'created_at', type: 'month', caption: 'Fecha de creación', range: true, currentMonth: false },
+						{ name: 'prioridad', type: 'autocomplete', caption: 'Prioridad', dataObject: [
+							{ id: 'ALTA', text: 'ALTA' },
+							{ id: 'MEDIA', text: 'MEDIA' },
+							{ id: 'BAJA', text: 'BAJA' }
+						]},
+						{ name: 'areas', type: 'autocomplete', caption: 'Áreas de trabajo', dataSource: 'getAreasOts' }, // _V3_getAreasOts
+						{ name: 'responsables', type: 'autocomplete', caption: 'Responsables', dataSource: 'getResponsablesOts' }, // _V3_getResponsablesOts
+						{ name: 'estado', type: 'checkbox', caption: 'Estado de la compra', options: [
+							{ caption: 'Pendiente', name: 'estado_pendiente', value: true },
+							{ caption: 'Atrasada', name: 'estado_atrasada', value: true },							
+							{ caption: 'Cerrada', name: 'estado_cerrada', value: false },
+							{ caption: 'Anulada', name: 'estado_nulo', value: false }					
+						]}
+					]
+				};
+
+				unaBase.toolbox.search.init(params);
+				unaBase.toolbox.menu.init({
+					entity: 'Ots',
+					buttons: ["create_ot", "export_list"]
+				});
+
+				/*if(!access._437) { // crear compra
+					$('#menu ul').find('li[data-name="create_gasto_from_oc"]').hide();
+    			}*/
+
+			});
+		</script>
+	</head>
+
+	<body style="min-width: 900px !important;">
+		<table style="min-width: 900px !important; width: 100% !important;" data-tipogasto="OC" class="especial">
+				<thead>
+					<tr>
+						<th data-sort-by="folio" data-sort-default="desc">Número</th>
+						<th data-sort-by="fecha" data-sort-default="desc">Emisión</th>
+						<th data-sort-by="vencimiento" data-sort-default="desc">Vencimiento</th>
+						<th data-sort-by="doc" data-sort-default="desc">H.VCTO</th>
+						<th data-sort-by="estado" data-sort-default="asc">HORAS</th>
+						<th data-sort-by="proveedor" data-sort-default="asc">CLIENTE</th>
+						<th data-sort-by="origen" data-sort-default="asc">ORIGEN</th>
+						<th data-sort-by="referencia" data-sort-default="asc">REFERENCIA</th>
+						<th data-sort-by="responsable" data-sort-default="asc">RESPONSABLE</th>
+						<th data-sort-by="emisor" data-sort-default="asc">EMISOR</th>
+						<th data-sort-by="estado" data-sort-default="asc">ESTADO</th>
+					</tr>
+				</thead>
+				<tbody></tbody>			
+			</table>
+	</body>
+</html>

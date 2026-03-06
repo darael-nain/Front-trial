@@ -1,0 +1,10 @@
+{	
+	"rows": [
+<!--#4DLOOP aIdBanco -->
+		{
+			"id": "<!--#4DTEXT aIdBanco{aIdBanco}-->",
+			"des": "<!--#4DTEXT _v3_escapeString(aDesBanco{aIdBanco})-->"
+		}<!--#4DIF NOT(aIdBanco{aIdBanco} = aIdBanco{Size of array(aIdBanco)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_serverInfo-->
+
+		<title>Autorización aceptada</title>
+		<meta charset="utf-8">
+		<script src="/v3/script/jquery/jquery.js"></script>
+		<script src="/v3/script/jquery/plugins/jquery-ui/js/jquery-ui.js"></script>
+		<script src="/v3/script/jquery/plugins/jquery-cookie/jquery.cookie.js"></script>
+		<script src="/v3/script/unabase.js?<!--#4DTEXT _V3_version-->"></script>
+		<script src="/v3/script/home.js?<!--#4DTEXT _V3_version-->"></script>
+		<script src="/v3/script/jquery/plugins/bindWithDelay/bindWithDelay.js"></script>
+		<script src="/v3/script/jquery/plugins/tooltipster/js/jquery.tooltipster.js"></script>
+		<script type="text/javascript" src="//<!--#4DVAR _V3_nodejs_public_ipaddr-->:<!--#4DVAR _V3_nodejs_port-->/socket.io/socket.io.js"></script>
+		<script src="/v3/script/chat.js?<!--#4DTEXT _V3_version-->"></script>
+		<script src="/v3/script/help.js?<!--#4DTEXT _V3_version-->"></script>
+		<script src="/v3/script/jquery/plugins/toastr/toastr.js"></script>
+		<script src="/v3/script/sprintf.js"></script>
+		<script>
+
+
+
+			window.onbeforeunload = undefined;
+
+			var hash = '<!--#4DHTML _V3_hash-->';
+			var nodejs_port = <!--#4DHTML _V3_nodejs_port-->;
+			var nodejs_public_ipaddr = "<!--#4DHTML _V3_nodejs_public_ipaddr-->";
+
+			$(document).ready(function(){
+
+
+				$.ajax({
+					url: '/4DACTION/_V3_setAutorizacionByNegocio',
+					data: {
+						id: $.urlParam('autorizacion', window.location.href),
+						accion_autorizar: true
+					},
+					dataType: 'json',
+					success: function(data) {
+						if (data.success) {
+							if (typeof data.detail != 'undefined') {
+								if (data.detail.result) {
+									$(".status").html('El usuario ' + data.detail.data + ' fue autorizado con éxito.');
+
+									unaBase.email.notify(data.detail.data, 'notify_autorizacion_aceptada_negocio', 'Autorización aceptada para modificar negocio Nº ' + data.folio, data.folio, undefined, undefined, 'negocios/content.shtml', data.id_negocio, undefined, undefined, data.valida_name_validador.capitalizeAllWords());
+
+								} else {
+									$(".status").html("<span class='caution'>" + data.detail.data + "</span>");
+								}
+
+								setTimeout(function(){
+									window.close();
+								}, 2000);
+
+							}
+						}
+					}
+				});
+
+			});
+		</script>
+
+		<style type="text/css">
+			body{
+				font-size:20pt!important;
+			}
+
+			div.status, div.sendmail {
+				text-align:center;
+			}
+
+			div.status{
+				color:green;
+				font-size: 1em;
+				font-weight:bold;
+			}
+			.caution{
+				text-align:center;
+				color:#FF800D;
+				font-size: 1em;
+				font-weight:bold;
+			}
+			h1{
+				text-align: center;
+			}
+		</style>
+
+	</head>
+	<body>
+		<h1><img src="/v3/design/html/body.menu/nav/h1.png"></h1>
+		<div class="status"></div>
+	</body>
+</html>

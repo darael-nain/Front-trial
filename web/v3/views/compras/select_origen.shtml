@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>	
+	<title>Seleccionar origen</title>
+	<meta charset="utf-8">
+	<script type="text/javascript">		
+		$(document).ready(function() {					
+		});		
+	</script>
+	<link rel="stylesheet" href="/v3/design/temporal.css?<!--#4DTEXT random-->">
+</head>
+<body>
+<section id="select-origen" class="sheet">
+</section>	
+</body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--#4DSCRIPT/_V3_serverInfo-->
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+	<script src="libs/jquery.js"></script>
+	<script src="/v3/script/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="bootstrap-4.5.3-dist/css/bootstrap.min.css">
+	<script type="text/javascript" src="bootstrap-4.5.3-dist/js/bootstrap.min.js"></script>
+	 
+	<script  type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js"></script>
+   	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN"
+    crossorigin="anonymous">
+   	<link rel="stylesheet" type="text/css" media="screen" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/base/jquery-ui.css">
+
+  <!-- JQUERY UI -->
+  <!-- FORMAT NUMBERS -->
+  <script src="/v3/script/jquery/plugins/jquery-number/jquery.number.js"></script>
+  <!-- FORMAT CURRENCY -->
+  <script src="/v3/script/jquery/plugins/format-currency/jquery.formatCurrency.js"></script>
+
+  <script src="libs/bootstrap-datepicker/js/bootstrap-datepicker.js" charset="utf-8"></script>
+  <link rel="stylesheet" href="libs/bootstrap-datepicker/css/bootstrap-datepicker3.css">
+  
+ 
+
+  <title>Listado Negocios</title>
+  
+  
+  <script type="text/javascript">
+
+
+
+
+
+
+
+   $('#ui-datepicker-div').addClass('fixed-top');
+     
+
+
+
+
+    const node= '<!--#4DTEXT nodeUrl-->';
+
+   
+   
+    localStorage.setItem("nodeUrl",node );
+   
+  
+
+    $(document).ready(function () {
+      //business.search.business("");
+
+    
+        let starterdate=$("#dp-input").val();
+        debugger
+        business.starter.list.charge(starterdate,"");
+        
+        $("#businessSearch").on("keyup", function () {
+
+          var value = $(this).val().toLowerCase();
+            
+            if (value.length<1) {
+             let target= $('datalist#bl');
+
+              target.empty();
+            }
+
+
+               if (value.length >=1) {
+                  business.search.business(value);
+                  $("#businesslist div.business").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                  });
+              }
+        });
+
+
+         $("#businessSearch").on("change", function () {
+
+          var value = $(this).val().toLowerCase();
+            
+              setTimeout(() => {
+            $("#businesslist div.business").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                  });
+        }, 1000);
+          
+               
+              
+        });
+
+        $("#dp-input").on("change", function () {
+
+         
+          var value = $(this).val();
+          let listado = $('div#businesslist');
+
+          listado.empty();
+          business.starter.list.charge(value)
+        });
+
+
+       $(document).on('change', 'input#businessSearch', function(){
+          
+            var options = $('datalist')[0].options;
+            for (var i=0;i<options.length;i++){
+
+
+               if (options[i].value == $(this).val()) {
+                let target=options[i];
+                 // {alert($(this).val());break;}
+                  business.search.selected.business(target);
+                }
+            }
+        });
+    
+
+
+
+    });
+  </script>
+  <style type="text/css">
+  
+
+
+   .ui-datepicker-calendar {
+    display: none;
+    
+    }
+    .ui-widget {
+        font-size:.7em;
+         
+    }
+  
+    .searchbar{
+    
+      background-color: white;
+      
+      
+    
+    }
+
+
+    .searchbar i{
+      height: 3rem;
+      width: 3rem;
+      
+      justify-content: center;
+      align-items: center;
+      border-radius: 100%;
+      color:orange;
+      text-decoration:none;
+      border-color: green;
+      background-color:  white; 
+    }
+
+  
+    html {
+      font-size: 0.5rem;
+    }
+
+
+
+    body {
+      
+      padding-top: 10rem;
+    }
+
+    
+    @media (min-width: 800px) { 
+       html {
+        font-size: 0.9rem;
+      }
+      body {
+       
+        padding-top: 5rem;
+      }
+      div#businesslist span{
+
+      font-weight: bold;
+       font-size: 1.2rem;
+
+      }
+    }
+   
+   
+    #WindowLoad
+    {
+        position:fixed;
+        top:0px;
+        left:0px;
+        z-index:3200;
+        filter:alpha(opacity=65);
+       -moz-opacity:65;
+        opacity:0.65;
+        background:#999;
+    }
+
+    div#businesslist span{
+
+      font-weight: bold;
+      
+
+    }
+
+    .ts-control {
+      overflow: hidden!important;  
+      white-space: nowrap!important;  
+      text-overflow: ellipsis!important;  
+      width: 100%!important; 
+      box-sizing: border-box!important;  
+      border: none!important;    
+      padding: 0!important;       
+      box-shadow: none!important;
+    }
+
+    .hide-element {
+      display: none!important
+    }
+     
+  </style>
+</head>
+
+<body>
+
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top   shadow-lg p-3 mb-5 bg-white rounded" id="bloque">
+        <div class="  container ">
+          <div class=" row container ">
+            <div class="h3 col-md-4 float-left">
+              <span  style="color:#787878" >Listado de negocios</span>
+            </div>
+
+            <div class="col-md-8  ">
+              	<div class=" row ">
+          		 	<div class="fecha col-3  col-md-3" style="display:none;">
+                   		<div class="input-group date dp" data-provide="datepicker">
+					             <input type="text" class="form-control bg-white" id="dp-input" readonly>
+        					       <div class="input-group-addon">
+        					        <span class="glyphicon glyphicon-th"></span>
+        					      </div>
+        					    </div>
+                         
+                    </div>
+                    <div class="searchbar col-9  col-md-9  ">
+                         
+                        <i class=" fas fa-search fa-2x float-left"></i>
+                        <input list="bl" id="businessSearch"  class="form-control "  type="text" style="width: 80%"  placeholder="Buscar negocio..." autocomplete="off">
+                    </div>
+                    <div id="search_list">
+                        <datalist id="bl" >
+
+                        </datalist>
+                    </div> 
+
+              	</div> 
+            </div>   
+                     
+          </div>  
+        </div>   
+      </nav>        
+
+  <div id="b-list" class="" style="padding: 3%; ">
+    
+    <div id="list" class="list-group">
+      <div class="col container h-100">
+          <div class="d-flex float-left h-100">
+            
+          </div>
+      </div>
+      <hr>
+      <div class="accordion" id="businesslist">
+      
+      </div>
+      <div class="accordion" id="errorArea">
+      
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript" src="scripts/business.js?v=118988456456544564563"></script>
+  <script type="text/javascript" src="scripts/general_script.js"></script>
+  <script type="text/javascript">
+
+	$('.dp').datepicker({
+	      format: "mm-yyyy",
+	      minViewMode: 1,
+	    	maxViewMode: 2,
+	      language: "es"
+	    });
+
+	$('.dp').datepicker("setDate", new Date());
+
+
+
+
+    $(document).ready(function () {
+    //  setInterval('business.session.verify()',5000);
+    });
+  </script>
+</body>
+
+
+</html>
+
+

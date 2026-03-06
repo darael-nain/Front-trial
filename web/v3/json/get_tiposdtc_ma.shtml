@@ -1,0 +1,29 @@
+{	
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Doc_Tributario_Compra]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"sort": {
+		"by": "<!--#4DTEXT sort_by-->",
+		"order": "<!--#4DTEXT sort_order-->"
+	},
+	"rows": [
+<!--#4DLOOP aIdTipodoc -->
+		{
+			"id": "<!--#4DHTML aIdTipodoc{aIdTipodoc}-->",
+			"descripcion": "<!--#4DHTML _V3_escapeString(aDescripcionTipo{aIdTipodoc})-->",
+			"abreviatura": "<!--#4DHTML _V3_escapeString(aAbreviatura{aIdTipodoc})-->",
+			"export": "<!--#4DHTML _V3_escapeString(aCtbleTipodocsoftland{aIdTipodoc})-->",
+			"valido": <!--#4DIF aValido{aIdTipodoc}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"docSii": <!--#4DIF aDocSii{aIdTipodoc}-->true<!--#4DELSE -->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aIdTipodoc{aIdTipodoc} = aIdTipodoc{Size of array(aIdTipodoc)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}
+
+

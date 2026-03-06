@@ -1,0 +1,31 @@
+ <!--#4dif vFolioOt#"S/N"-->
+<article>
+	<div>
+		<label>Emisión:</label>
+		<span> <!--#4DTEXT String(vFechaEmision;Internal date long)--></span>
+	</div>
+	<div>
+		<label>Hora:</label>
+		<span> <!--#4DTEXT String(vHoraEmision;HH MM AM PM)--></span>
+	</div>
+	<div>
+		<label>Emisor:</label>
+		<span> <!--#4DTEXT vNombreEmisor--></span>
+	</div>
+</article>
+<article>
+	<div class="notificado">
+		<!--#4dif vNotify-->
+				<span class="si">Notificado</span>
+		<!--#4DELSE-->
+				<span class="no">Por Notificar</span>
+		<!--#4DENDIF-->	
+	</div>
+</article>
+<!--#4dendif-->
+
+<article class="derecho">
+	<h4><!--#4dif vFolioOt#"S/N"-->Nº <!--#4DTEXT vFolioOt--><!--#4delse-->S/N<!--#4dendif--></h4>
+	<h3> <!--#4dif vFolioOt#"S/N"--><!--#4DTEXT Uppercase(vEstadoOT_;*)--><!--#4delse-->NUEVA OT<!--#4dendif--></h3>
+	<h2><!--#4DTEXT Uppercase(vReferencia;*)--></h2>
+</article>

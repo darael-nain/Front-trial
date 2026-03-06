@@ -1,0 +1,23 @@
+{
+  "dtcAnular": <!--#4DHTML sizeDtcTotalAnular-->,
+  "dtcApertura": <!--#4DHTML sizeDtcTotalApertura-->,
+  "rowsAnular": [
+<!--#4DLOOP aDtcsAnular -->
+    { "id": <!--#4DHTML aDtcsAnular{aDtcsAnular}-->, "folio": "<!--#4DHTML aFoliosAnular{aDtcsAnular}-->" }<!--#4DIF NOT(aDtcsAnular{aDtcsAnular} = aDtcsAnular{Size of array(aDtcsAnular)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+  ],
+  "rowsApertura": [
+<!--#4DLOOP aDtcsApertura -->
+    { "id": <!--#4DHTML aDtcsApertura{aDtcsApertura}-->, "folio": "<!--#4DHTML aFoliosApertura{aDtcsApertura}-->" }<!--#4DIF NOT(aDtcsApertura{aDtcsApertura} = aDtcsApertura{Size of array(aDtcsApertura)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+  ],
+  "pagos_dtc": [
+<!--#4DLOOP aPagoId -->
+    {
+      "id_doc": <!--#4DHTML aPagoDocId{aPagoId}-->,
+      "id_opago": <!--#4DHTML aPagoOpagoId{aPagoId}-->,
+      "id_pago": <!--#4DHTML aPagoId{aPagoId}-->
+    }<!--#4DIF NOT(aPagoId{aPagoId} = aPagoId{Size of array(aPagoId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+  ]
+}

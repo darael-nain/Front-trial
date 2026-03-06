@@ -1,0 +1,33 @@
+<div class="box-lightBox">
+	<form id="new-proveedor-rf">
+		<h2>Nuevo Proveedor</h2>	
+		<div>
+			<label>Alias : </label>
+			<input name="alias" type="text"/>
+		</div>
+		<div>
+			<label>Rut : </label>
+			<input name="rut" type="text"/>-<input maxlength="1" Onchange="validaDgFR(this)" name="dv" type="text"/>
+			<input checked Onchange="checkValidarRut()" name="validacion" type="checkbox"/>Validar
+		</div>
+		<div>
+			<label>Razon : </label>
+			<input name="razon" type="text"/>
+		</div>
+		<div>
+			<label>Giro : </label>
+			<input name="giro" type="text"/>
+		</div>
+		<input value="SI" name="rutvalidado" type="hidden"/>	
+		<!--<input value="#4DVAR vIdCjNombre" name="cajanombre" type="hidden"/>		-->
+		
+		<p class="set-botones-pop">
+			<button class="btn-general" onclick="closeLightBox('bg-pop-add-prov','modal-pop-add-prov')" type="button">   
+				<span>Cancelar</span>
+			</button>
+			<button class="btn-general" Onclick="saveProveedor(this)" type="button">
+				<span>Aceptar</span>
+			</button>
+		</p>
+	</form>
+</div>

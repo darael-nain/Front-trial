@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getDtcContent-->
+		<title>Documentos de compra</title>
+		<meta charset="utf-8">
+		<script type="text/javascript">
+			var tipo_gasto_asociado = "<!--#4DTEXT _V3_tipo_gasto-->";
+			var monto_maximo_rendir = "<!--#4DTEXT _V3_monto_maximo_rendir-->";
+			var retName = "<!--#4DTEXT _V3_RETName-->";
+			var retRate = parseFloat("<!--#4DTEXT _V3_RETRate-->");
+			var ivaName = "<!--#4DTEXT _V3_IVAName-->";
+			var ivaRate = parseFloat("<!--#4DTEXT _V3_IVARate-->");
+		
+
+			unaBase.ui.unblock()
+		</script>
+		<script type="text/javascript" src="/v3/views/dtc/library/dtc.js?<!- -#4DTEXT _V3_version- ->"></script>
+		<script type="text/javascript" src="/v3/views/dtc/script/dtcnd.js?<!--#4DTEXT _V3_version-->"></script>
+		<script type="text/javascript" src="/v3/views/dtc/script/content.js?<!--#4DTEXT _V3_version-->"></script>
+		<script type="text/javascript" src="/v3/views/dtc/script/proveedor.js?<!--#4DTEXT _V3_version-->"></script>		
+		<script type="text/javascript" src="/v3/script/datepicker_es.js?<!--#4DTEXT _V3_version-->"></script>
+
+		<!--begin added by gin 11-03-15-->
+		<link rel="stylesheet" href="/v3/design/grays.css?<!--#4DTEXT _V3_version-->">
+		<!--end added by gin 11-03-15-->
+	
+		<style type="text/css">
+			.labels > li{
+				display: inline-block;
+				border: 1px solid rgb(220,220,220);
+				background-color:rgb(232, 247, 232);
+				padding:3px;
+				border-radius:3px;
+				font-size:10px!important;
+				font-weight: bold;
+				text-transform: uppercase;
+				margin:2px;
+			}
+			.items tbody tr td{
+    			background-color: white;
+    		}
+	    		.items tbody tr td input{
+	    			background-color: white;
+	    		}
+	    	.required{
+	    		background-color:#f2fe8a!important; 
+	    	}
+	    	.transparent{
+	    		background-color:transparent!important;
+	    	}
+		</style>
+
+	</head>
+	<body>		
+		<section id="sheet-dtc" class="sheet sheet-gastos css-grays" data-id="<!--#4DTEXT [Doc_Tributario_Compra]ID_DOC-->">
+			<input name="id" value="<!--#4DTEXT [Doc_Tributario_Compra]ID_DOC-->" type="hidden">
+			<input name="motivonc" value="CORRECCIÓN DE MONTO" type="hidden">
+			
+			<footer>
+				<article class="info-general">
+					<h1><strong>Información general</strong></h1>
+					<button class="expand active"></button>
+					<h2><strong title="Tipo de documento" data-name="resumen[dtc][doc]">SIN DOCUMENTO</strong> <span title="Número" data-name="resumen[dtc][number]">00000</span> <strong title="Fecha emisión" data-name="resumen[dtc][emision]">00-00-0000</strong> <span title="Referencia" data-name="resumen[dtc][reference]">SIN REFERENCIA</span></h2><br>
+					<ul class="labels">
+						<li data-name="resumen[dtc][state]">POR EMITIR</li>
+						<li data-name="resumen[dtc][register]">SIN EMISOR EL 00-00-0000 A LAS 00:00:00 HRS</li>
+					</ul>
+					<ul class="expandable editable">
+						<li><span>Referencia</span><span><input class="edit" required name="referencia" placeholder="Ingresar aquí concepto o referencia para el documento" type="text"></span></li>
+						<li><span>Tipo documento</span><span><input required readonly name="des_tipo_doc" placeholder="Seleccionar tipo documento" type="search"></span><button type="button" class="show dtc">ver tipos de documentos</button></li>
+						<li><span>Número</span><span><input class="edit" style="width:100px" required placeholder="S/N" type="text" name="folio"></span></li>
+						<li><span>Fecha Emisión</span><span><input style="width:200px" required class="datepicker edit" placeholder="dd-mm-aaaa" type="text" name="fecha_emision"></span></li>
+						<li><span>Fecha Recepción</span><span><input style="width:200px" required class="datepicker edit" placeholder="dd-mm-aaaa" type="text" name="fecha_recepcion"></span></li>
+					</ul>
+								<ul class="editable">
+						<li><span>Archivo adjunto</span><span><input style="width:200px" type="file" name="resumen[dtc][attachment]"> <a name="resumen[dtc][attachment][url]" href="/4DACTION/_V3_getUpload?index=Doc_Tributario_Compra|<!--#4DTEXT [Doc_Tributario_Compra]ID_DOC-->" onclick="unaBase.loadInto.dialog($(this).attr('href'), 'Archivo adjunto', 'large', true); return false;">[Ver adjunto]</a></span></li>
+
+						<!--#4DIF [Tipo_Doctribu]LIBRO_C-->
+
+						<li style="height: 20px; margin-top: 20px" class="edit"><input type="checkbox" name="ivafacturasuperm" value="true"<!--#4DIF [Doc_Tributario_Compra]Ctble_ivafacturasuperm--> checked="checked"<!--#4DENDIF--><!--#4DIF Not(_V3_verifica_permisos_web(_V3_data_username;449))--> disabled="disabled"<!--#4DENDIF-->>&nbsp;<span name="label-ivafacturasuperm">IVA supermercado</span></li>
+
+						<li style="height: 20px;" class="edit"><input type="checkbox" name="ivaactivofijo" value="true"<!--#4DIF [Doc_Tributario_Compra]Ctble_ivaactivofijo--> checked="checked"<!--#4DENDIF--><!--#4DIF Not(_V3_verifica_permisos_web(_V3_data_username;449))--> disabled="disabled"<!--#4DENDIF-->>&nbsp;<span name="label-ivaactivofijo">Activo fijo</span></li>
+
+						<li style="height: 20px;" class="edit"><input type="checkbox" name="ivaaduanero" value="true"<!--#4DIF [Doc_Tributario_Compra]Ctble_ivaaduanero--> checked="checked"<!--#4DENDIF--><!--#4DIF Not(_V3_verifica_permisos_web(_V3_data_username;449))--> disabled="disabled"<!--#4DENDIF-->>&nbsp;<span name="label-ivaaduanero">IVA aduanero</span></li>
+
+						<!--#4DENDIF-->
+
+					</ul>
+					<!--#4DIF [Doc_Tributario_Compra]Ctble_contabilizado-->
+					<ul class="editable">
+						<li style="height: 20px;" class="edit"><input type="checkbox" name="contabilizado" value="true"<!--#4DIF [Doc_Tributario_Compra]Ctble_contabilizado--> checked="checked"<!--#4DENDIF--><!--#4DIF Not(_V3_verifica_permisos_web(_V3_data_username;559))--> disabled="disabled"<!--#4DENDIF-->>&nbsp;<span name="label-contabilizado">¿Contabilizado?</span></li>
+						<li><span>Correlativo</span><span><input class="edit" style="width:100px" readonly type="text" name="correlativo" value="<!--#4DTEXT [Doc_Tributario_Compra]Ctble_correlativo-->"></span></li>
+						<li><span>Fecha contable</span><span><input readonly name="fecha_contable" type="text" value="<!--#4DTEXT Substring(String([Doc_Tributario_Compra]Fecha_Contable);4)-->"></span></li>
+						<li><span>Fecha y hora envío</span><span><input readonly name="fecha_hora_envio" type="text" value="<!--#4DTEXT [Doc_Tributario_Compra]Ctble_fechaenvio--> <!--#4DTEXT [Doc_Tributario_Compra]Ctble_horaenvio-->"></span></li>
+						<li><span>Enviado por</span><span><input readonly name="enviado_por" type="text" value="<!--#4DTEXT [Doc_Tributario_Compra]Ctble_enviadopor-->"></span></li>
+					</ul>
+					<!--#4DENDIF-->
+				</article>
+
+				<article class="info-proveedor">
+					<h1><strong>Información del proveedor</strong></h1>	
+					<button class="expand active"></button>
+					<h2><strong title="Alias" data-name="resumen[contacto][alias]">SIN ALIAS</strong> <span title="Razon social" data-name="resumen[contacto][razon]">SIN RAZÓN SOCIAL</span></h2>
+					<ul class="expandable editable lineal">
+						<li>
+							<span>Buscar</span><span><input data-help="Acá buscas o creas al proveedor, por ejemplo: &laquo;UNA SISTEMAS&raquo;" required id="empresa" type="search" name="contacto[info][alias]" placeholder="Buscar por nombre, alias, RUT, razón social..."></span><button class="profile2 empresa">Perfil</button>
+						</li>
+						<li><span>Razón social</span><span><input readonly type="text" name="contacto[info][razon_social]" placeholder=""></span></li>
+						<li><span>Rut</span><span><input readonly type="text" name="contacto[info][rut]"></span></li>
+						<li><span>Giro</span><span><input readonly type="text" name="contacto[info][giro]" placeholder=""></span></li><br><br>
+						<li><span>Forma de pago</span><span><input readonly name="des_forma_pago" placeholder="Seleccionar forma de pago" type="search" ></span><button type="button" class="show forma-pago">ver formas de pagos</button></li>
+						<input type="hidden" name="contacto[info][id]">
+					</ul>
+				</article>
+
+				<article class="info-items">
+					<h1><strong>Ítems del documento</strong></h1>
+					<table class="items">
+						<thead>
+							<tr>
+								<th class="container-menu-origen" style="background-color:<!--#4DVAR vColorCorporativoCSS--> !important;"><button style="zoom: 140%;display:none" class="ui-icon ui-icon-plus add items"></button></th>
+								<th>Ítem</th>
+								<th>Cuenta</th>
+								<th>Codigo</th>
+								<th>Descripción</th>						
+								<th>Factura</th>
+								<th>Impuesto</th>
+								<th>Cant.</th>
+								<th>P.U.</th>
+								<th>Subtotal</th>						
+								<th>Dscto.</th>
+								<th>Total</th>
+								<th title="No considerar como gasto real">NGR</th>	
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</article>
+
+				<article class="info-totales right" style="position:relative">
+					<h1>Totales</h1>
+					<section>
+						<ul class="css-boxtotales">
+							<li><span>Subtotal</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input type="text" readonly name="sub_total"></span></li>
+							<li><span>Descuento</span><span class="numeric percent"><input readonly class="dscto" type="text" name="porcentaje_descuento"> %</span> <span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input readonly class="dscto" type="text" name="descuento" value="<!--#4DTEXT String([Orden_de_compra]Descuento)-->"></span></li>
+							<li><span>Exento</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input type="text" readonly name="exento"></span></li>
+							<li><span name="label-neto-hono">Neto</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input readonly type="text" name="neto"></span></li>						
+							<li ><span name="label-iva-ret">Impuesto</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input readonly type="text" name="iva"></span></li>							
+							<li><span>Adicional</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input readonly type="text" name="adicional"></span></li>
+							<li><span>Total</span><span class="numeric currency"><label class="container-symbol-new"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input readonly type="text" name="total"></span></li>					
+						</ul>
+					</section>
+				</article>
+
+				<article>					
+					<h1><strong>Información adicional</strong></h1>					
+					<section>
+						<ul>
+							<li><span style="vertical-align:top">Observaciones</span> <span class="full-width"><textarea class="edit" style="height:80px" name="observacion"></textarea></span></li>				
+						<ul>								
+					</section>
+				</article>
+
+				<article class="info-facturas info-nc">
+					<h1>Nota de credito (<span>0</span>)</h1>
+					<table class="facturas-nc nc" width="99%">
+						<thead>
+							<tr>
+								<th width="5%">Número</th>
+								<th width="20%">Documento</th>
+								<th width="20%">Proveedor</th>
+								<th width="20%">Referencia</th>
+								<th width="10%">Emisión</th>
+								<th width="10%">Estado</th>						
+								<th width="10%">Monto</th>						
+							</tr>
+						</thead>
+						<tbody class="ui-selectable"></tbody>
+					</table>
+				</article>
+
+				<article class="info-comprobantes bg-white">
+					<h1>Comprobantes (<span>0</span>)</h1>
+					<table class="comprobantes" width="99%">
+						<thead>
+							<tr>
+								<th width="5%">Numero</th>
+								<th width="35%">Descripcion</th>
+								<th width="30%">fecha Registro</th>
+								<th width="30%">Tipo documento</th>
+							</tr>
+						</thead>
+						<tbody class="ui-selectable">
+							
+						</tbody>
+						<tfoot>						
+						</tfoot>
+					</table>
+				</article>
+
+
+		
+				
+			</footer>
+		</section>
+	</body>
+</html>

@@ -1,0 +1,15 @@
+{
+	"rows": [
+<!--#4DLOOP aChecklistId -->
+		{
+			"id": <!--#4DHTML aChecklistId{aChecklistId}-->,
+			"text": "<!--#4DHTML aChecklistText{aChecklistId}-->",
+			"value": <!--#4DIF aChecklistComplete{aChecklistId}--><!--#4DIF aChecklistValue{aChecklistId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF--><!--#4DIF aChecklistTotal{aChecklistId}>0-->,
+			"progress": {
+				"done": <!--#4DHTML aChecklistDone{aChecklistId}-->,
+				"total": <!--#4DHTML aChecklistTotal{aChecklistId}-->
+			}<!--#4DENDIF-->
+		}<!--#4DIF NOT(aChecklistId{aChecklistId} = aChecklistId{Size of array(aChecklistId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

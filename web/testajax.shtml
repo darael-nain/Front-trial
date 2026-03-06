@@ -1,0 +1,6 @@
+<!--#4DINCLUDE head.shtml-->
+<body>
+	<a id="link" href="#" onclick="javascript:preguntoFecha();"> Consulta Fecha </a>
+	<div id="res"></div>
+</body>
+</html>

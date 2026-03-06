@@ -1,0 +1,145 @@
+<fieldset>
+
+    <div class="div-container">
+        <label for="tipo-ot">Tipo de Orden de Trabajo :</label>
+        <select id="tipo-ot" name="tipoot">
+            <option selected="selected" value="PROYECTO">PROYECTO</option>
+            <option value="GENERAL">GENERAL</option>
+        </select>  
+    </div>
+
+    <div class="div-container buscador-de-proyectos">
+        <div class="inline-block"><label for="buscar-proyecto">Buscar proyecto :</label></div>
+        <input id="idproyecto-select" name="idnvproyecto" type="hidden"/>
+        <div class="inline-block">
+            <input autocomplete="off" class="dym-buscardor-proy border-rojo" id="buscar-proyecto" name="buscar-proyecto" placeholder="buscar por ref, razon, login" type="text" value="">
+            <div class="lista-proyectos-ot" id="result-proyectos"></div>
+        </div>     
+    </div>
+
+    <div class="div-container buscador-de-empresas">
+        <div class="inline-block"><label for="buscar-empresa">Buscar empresa :</label></div>
+        <input id="idempresa-select" name="idempresa" type="hidden"/>
+        <div class="inline-block">
+            <input autocomplete="off" class="dym-buscardor-proy border-rojo" id="buscar-empresa" name="buscar-empresa" placeholder="buscar por razon, rut, email" type="text" value="">
+            <div class="lista-proyectos-ot" id="result-empresas"></div>
+        </div>     
+    </div>
+
+     <div class="div-container">
+        <label for="referencia-ot">Referencia :</label>
+        <input id="referencia-ot" name="referenciaot" type="text"/>       
+    </div>
+
+    <div class="div-container">
+        <label for="area-trabajo">Areas de trabajo :</label>
+        <select id="area-trabajo" name="areatrabajo" onChange="fn_load_user(this.value)" >
+            <option selected="selected" value="-1">[ Seleccionar ]</option>
+            <!--#4dloop aAreaId-->        
+                 <option value="<!--#4dvar aAreaId{aAreaId}-->"><!--#4dvar aAreaNombre{aAreaId}--></option>
+            <!--#4dendloop-->
+        </select>  
+    </div>
+
+    <div class="div-container">
+        <label for="asignados">
+            <button title="Agregar: Responsable, Integrante, Invitado" id="add-asing" type="button">Agregar</button>
+            <button title="Cerrar" id="cerrar-asing" type="button">Cerrar</button>
+            Asignados <span class="cant-asing">0</span> : 
+            <span class="etiqueta-resp">Responsables</span>
+            / <span class="etiqueta-int">Integrantes</span>
+            / <span class="etiqueta-inv">Invitados</span>         
+        </label>
+    </div>    
+
+    <div class="add-invitados">
+        <label>Nombres :</label>
+        <input autocomplete="off" class="cj-busca-invitados" id="nombre-invitado" name="" type="text"/>        
+        <label>Email :</label>
+        <input autocomplete="off" class="cj-busca-invitados" id="correo-invitado" name="" type="text"/>
+        <button title="listo" id="listo-asing" type="button">Listo</button>
+        <div id="list-invitados"></div>   
+    </div>
+
+    <input type="hidden" value="0" id="cant-asing-inicio"/>
+    <div id="box-asignados"></div>
+
+    <div class="div-container">
+        <label for="tipo-tarea">Tipo de tarea :</label>
+        <select id="tipo-tarea" name="tipotarea">
+            <option selected="selected" value="-1">[ Seleccionar ]</option>
+            <!--#4dloop aTareaId-->        
+                 <option value="<!--#4dvar aTareaId{aTareaId}-->"><!--#4dvar aTareaDes{aTareaId}--></option>
+            <!--#4dendloop-->
+        </select>  
+    </div>
+
+    <div class="div-container">
+        <label for="importancia">Importancia :</label>      
+        <select id="importancia" name="importancia">
+            <option selected="selected" value="-1">[ Seleccionar ]</option>           
+            <option value="BAJA">BAJA</option>
+            <option value="MEDIA">MEDIA</option>       
+            <option value="ALTA">ALTA</option>                                 
+        </select>       
+    </div>
+
+    <div class="div-container">
+        <label for="fecha-vcto">Fecha de vencimiento :</label>
+        <input id="fecha-vcto" name="fechavcto" class="datepicker" type="text" value="" />
+
+        <label for="hora">Hora :</label>        
+        <select id="hora" name="hora">
+            <option selected="selected" value="-1">00:00:00</option>
+            <!--#4dloop aHora-->        
+                 <option value="<!--#4dvar aHora{aHora}-->"><!--#4dvar aHora{aHora}--></option>
+            <!--#4dendloop-->
+        </select>    
+    </div>
+
+    <div class="div-container">
+        <label for="contenido">Contenido :</label>
+        <textarea id="enrriquesido" class="text-area-ot-1" name="content"><!--#4dvar vContenidoOT--></textarea>        
+    </div>
+    
+</fieldset>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

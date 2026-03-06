@@ -1,0 +1,56 @@
+{
+	"success": <!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"status":<!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"errorMsg": "<!--#4DTEXT errorMsg-->",
+	"subtotal_cats": "<!--#4DTEXT subTotalcategorias-->",
+	"total": "<!--#4DTEXT totales-->",
+	"records": {
+		"total_records": <!--#4DHTML totalRecords-->
+	},
+	
+
+	
+	"rows": [
+	
+		<!--#4DIF totalRecords > 0-->
+			<!--#4DLOOP allave_categorias-->
+			{
+				"id": "<!--#4DHTML allave_categorias{allave_categorias}-->",
+				"valor": "<!--#4DHTML aTotalScCat_categorias{allave_categorias}-->",
+				"name": "<!--#4DHTML aNameScCat_categorias{allave_categorias}-->"
+			
+			}<!--#4DIF NOT(allave_categorias{allave_categorias} = allave_categorias{Size of array(allave_categorias)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		<!--#4DENDIF-->
+	],
+	"rows2": [
+	
+		<!--#4DIF totalRecords2 > 0-->
+			<!--#4DLOOP aId-->
+			{
+				"id": <!--#4DHTML aId{aId}-->,
+				"valor": "<!--#4DHTML aValue{aId}-->",
+				"porcentaje": "<!--#4DHTML aPercent{aId}-->",
+				"name": "<!--#4DHTML aName{aId}-->",
+				"subtotal":"<!--#4DHTML aSubtotalScTotal{aId}-->"
+			}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		<!--#4DENDIF-->
+	],
+	"rows3": [
+	
+		<!--#4DIF totalRecords3 > 0-->
+			<!--#4DLOOP aIdAd-->
+			{
+				"id": <!--#4DHTML aId{aIdAd}-->,
+				"valor": "<!--#4DHTML aValueAd{aIdAd}-->",
+				"name": "<!--#4DHTML aNameAd{aIdAd}-->",
+				"subtotal":"<!--#4DHTML aSubtotalScTotalAd{aIdAd}-->"
+			}<!--#4DIF NOT(aIdAd{aIdAd} = aIdAd{Size of array(aIdAd)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		<!--#4DENDIF-->
+	]
+	
+
+	
+}

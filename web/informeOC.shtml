@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv=Content-Type content=text/html; charset=UTF-8>
+<title>Untitled Document</title>
+ <link rel="stylesheet" href="/estilos.css"/>
+<style>
+table tr td{ text-align:center}
+.titulo{ text-align:left; color:#FFF; background-color:#666}
+.texto{ text-align:right;color:#000; background-color:#CCC}
+.numeros{ text-align:right;color:#000; background-color:#CCC}
+</style>
+</head>
+
+<body>
+<span class="titulo"><img src=<!--#4DVAR v_urlLogo--></span>
+<table width=100% border=1 align=center>
+  <tr>
+    <td width=5% class=titulo>Folio</td>
+    <td width=5% class=titulo>Fecha</td>
+    <td width=20% class=titulo>Proveedor</td>
+    <td width=10% class=titulo>Tipo</td>
+    <td width=10% class=titulo>Neto</td>
+    <td width=10% class=titulo>Impuesto</td>
+    <td width=10% class=titulo>Total</td>
+    <td width=10% class=titulo>Por consolidar</td>
+    <td width=10% class=titulo>Justificado</td>
+    <td width=10% class=titulo>Estado OC</td>
+  </tr>
+  <!--#4DLOOP aFolioOcx_-->
+              <tr bgcolor="">
+                <td class="texto"><!--#4DVAR aFolioOcx_{aFolioOcx_}--></td>
+                <td class="texto"><!--#4DVAR aFechaOcx_{aFolioOcx_}--></td>
+                <td class="texto"><!--#4DVAR arprovOcx_{aFolioOcx_}--></td>
+                <td class="texto"><!--#4DVAR aTipoOcx_{aFolioOcx_}--></td>
+                <td class="numeros"><!--#4DVAR string(aNetoOcx_{aFolioOcx_};"$ ###.###.###.##0")--></td>
+                <td class="numeros"><!--#4DVAR String(aTotImpOcx_{aFolioOcx_};"$ ###.###.###.##0")--></td>
+                <td class="numeros"><!--#4DVAR String(aTotalOcx_{aFolioOcx_};"$ ###.###.###.##0")--></td>
+                <td class="numeros"><!--#4DVAR String(aSaldoConsoOcx_{aFolioOcx_};"$ ###.###.###.##0")--></td>
+                <td class="numeros"><!--#4DVAR aTotJustifOcx_{aFolioOcx_};"$ ###.###.###.##0")--></td>        
+                <td class="texto"><!--#4DVAR aEstadoOcx_{aFolioOcx_}--></td>     
+              </tr>
+   <!--#4DENDLOOP-->
+</table>
+</body>
+</html>

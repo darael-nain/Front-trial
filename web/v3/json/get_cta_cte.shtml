@@ -1,0 +1,15 @@
+{
+	"defecto": {
+		"id": <!--#4DHTML $idCtaCteDefecto-->,
+		"text": "<!--#4DHTML $desCtaCteDefecto-->"
+	},
+	"rows": [
+<!--#4DLOOP aIdCtacte -->
+		{
+			"id": <!--#4DHTML aIdCtacte{aIdCtacte}-->,
+			"text": "<!--#4DHTML aDesCtacte{aIdCtacte}-->",
+			"default": <!--#4DIF aDefault{aIdCtacte}-->true<!--#4DELSE-->false<!--#4DENDIF-->	
+		}<!--#4DIF NOT(aIdCtacte{aIdCtacte} = aIdCtacte{Size of array(aIdCtacte)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

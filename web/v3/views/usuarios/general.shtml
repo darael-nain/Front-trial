@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getUsuariosContent-->
+		<title>Usuario</title>
+		<meta charset="utf-8">		
+		    <script type="text/javascript" src="/v3/views/usuarios/script/content.js"></script>
+
+		<link rel="stylesheet" href="/v3/design/grays.css?<!--#4DTEXT Random-->">
+		<link rel="stylesheet" href="/v3/views/compras/design/main.css?<!--#4DTEXT Random-->">	
+
+    	<script src="/seguridad/js/passwordRecovery.js"></script>
+		<script type="text/javascript">
+
+
+		
+			var full_fields = function(){				
+				container.find('input:not([type="radio"])').each(function() {
+					if ($(this).val() != "") {						
+						$(this).css("background-color","#FFFFBA");
+					}
+				});
+				if (container.find('textarea').val() != "") {						
+					container.find('textarea').css("background-color","#FFFFBA");
+				}
+			}
+
+		
+
+		$(document).ready(function() {	
+						if(!access._613){
+							$('button.restartPass').closest('span').hide();							
+						}	
+
+
+			    $("#radio").buttonset();
+			    $('.hide').hide();
+			    full_fields();			   
+			    $(".tags li").click(function(){
+			    	$(this).fadeOut('slow');
+			    });
+			    
+			    $('input[name="file"]').fileupload({
+					dataType: 'json',
+					formData: {
+						index: 'Prm_Usuario|<!--#4DTEXT prmUserLogin-->',
+						filename: 'test.gif' 
+					},
+					add: function (e, data) {
+						data.submit();
+					},
+					done: function (e, data) {
+						console.log(data);
+						toastr.success('Imagen cambiada!');
+						if ($('img.picture').css('display') == 'none') {
+							$('div.no-picture').hide();
+							$('img.picture').show();
+						}
+						var href = $('img.picture').attr('src') + '&_r=' + (Math.random() * 10000);
+						$('img.picture').attr('src', href);
+						console.log($('img.picture').attr('src'));
+						// $('#viewport').find('table > tbody > tr[data-id="<!--#4DTEXT [Servicio]Id_Servicio-->"]').find('img').attr('src', href);
+					}
+				});
+
+				$('.element-right figure button').button({
+					icons: {
+						primary: 'ui-icon-image'
+					}
+				});
+
+				$("#input1").keyup(function () {
+			        var value = $(this).val();
+			        $("#input2").val(value);
+    			});
+
+				/*valida que solo se ingresen numeros*/
+				$("#telefono,#celular,#numero").keyup(function () {
+				  this.value = this.value.replace(/[^0-9]/g,''); 
+				});
+				
+
+				//El boton desencadena la accion
+				$('#email').unbind('blur').bind('blur', function(){
+			        if($("#email").val().indexOf('@', 0) == -1 || $("#email").val().indexOf('.', 0) == -1) {
+			            toastr.error('El correo electrónico introducido no es correcto.');
+			             $('input[name="usuario[email]"]').val("");
+			            return false;
+			        }
+
+        
+    			});
+    			// $('.ui-button.ui-widget.ui-corner-all').button();
+
+    			$('button.restartPass').button({
+					icons: {
+						primary: 'ui-icon-key'
+					}
+				});
+
+				$('button.sendCredenciales').button({
+					icons: {
+						primary: 'ui-icon-info'
+					}
+				});
+
+		});
+
+		// function cambiarPass(){
+		// 	unaBase.loadInto.dialog('/v3/views/user-profile/index.shtml?fromUsuarios=true', 'Mi Perfil', 'large');							
+		// }
+
+		function restartPass(){
+			var loginUser = $('input[name=loguinsito]').val();
+			confirm('Mediante esta acción reiniciara la contraseña del usuario: '+loginUser).done(function(data){
+				if(data){		
+					// $.ajax({
+					// 	url: '/4DACTION/_V3_SetRandomPassword',
+					// 	data: {
+					// 		'fromLogin': false,
+					// 		'loginUser': loginUser
+					// 	},
+					// 	async:false,
+					// 	dataType: 'json',
+					// 	success: function(data) {
+					// 		toastr.success('Contraseña reiniciada, verifica tu correo electrónico');
+					// 	}
+					// }).done(function(data) {
+					// 	if (!data.success) {
+					// 		toastr.error('Reinicio fallido.');
+					// 	}
+					// });
+
+					pass(false, null,loginUser);
+
+				}else{
+					toastr.info('Reinicio cancelado.');
+				}
+			});
+		}
+
+		function emailInfoCredenciales(){
+			var loginUser = $('input[name=loguinsito]').val();
+			confirm('Mediante esta acción se enviará email con información de acceso al usuario: '+ loginUser).done(function(data){
+				if(data){		
+					$.ajax({
+						url: '/4DACTION/_V3_SendInfoAcceso',
+						data: {
+							'fromLogin': false,
+							'loginUser': loginUser
+						},
+						async:false,
+						dataType: 'json',
+						success: function(data) {
+							toastr.success('Información enviada al correo del usuario.');
+						}
+					}).done(function(data) {
+						if (!data.success) {
+							toastr.error('Envio fallido. Intente nuevamente. Si el problema persiste comuniquese con soporte.');
+						}
+					});
+				}else{
+					toastr.info('Envio cancelado.');
+				}
+			});
+		}
+		</script>
+		
+		<style type="text/css">
+			label{
+				font-weight: bold;
+			}
+			input[name=reestablecer]{
+				width: initial;
+				height: 100% !important;
+				background-color: initial;
+			}
+			.element-left{
+				
+				float: left;
+ 				width: 70%;
+ 				
+				
+
+			}
+			.element-right{
+
+				
+				float: left;
+				  width: 30%;
+				 
+				
+
+			}
+
+			#contenedor{
+			    overflow: hidden;
+			}
+			
+		</style>
+
+	</head>
+	<body>
+
+		<section class="sheet sheet-usuarios css-grays">	
+			<footer>			
+				<article id="contenedor">
+					<h1><strong>Información General</strong></h1>				
+					<ul>						
+						<li>
+							<div class="element-left">
+							 <input type="hidden" name="ots_valor_hh_recursos" value="<!--#4DTEXT ots_valor_hh_recursos-->">
+						
+							<span><label style="display: inline-block; width: 100px;">Login:</label></span>
+
+							<input type="text" name="usuario_login" style="display:none">
+							<input type="password" name="usuario[pass]" style="display:none">
+
+							<span>
+								<!--4DIF prmUserLogin#""-->								
+									<input style="width: 192px;" autocomplete="false" name="loguinsito" readonly  type="text" placeholder="Ingrese su Nombre de Usuario" value="<!--#4DTEXT prmUserLogin-->">
+								<!--4DELSE-->
+									<input id="input1" autocomplete="off" style="width: 200px;" name="loguinsito" type="text" placeholder="Ingrese su nombre de Usuario" value="">
+								<!--4DENDIF-->
+							</span>
+
+					
+							<span>
+								<label style="display: inline-block; margin-left: 3px; margin-right: 3px;">Contraseña:</label>
+								<!--4DIF new-->
+								<input style="width: 262px;" autocomplete="off" name="clavesita" type="password" placeholder="Ingrese su contraseña" value="<!--#4DTEXT prmUserPass-->">
+								<!--4DELSE-->
+									<!-- <input onclick="cambiarPass();" type="button" name="reestablecer" value="Cambiar contraseña"> -->
+									<button onclick="restartPass();" class="restartPass">Reiniciar contraseña</button>
+								<!--4DENDIF-->
+								<button onclick="emailInfoCredenciales();" class="sendCredenciales">Enviar credenciales de acceso (bienvenida)</button>
+							</span>
+							</br>
+							</br>
+				
+
+							
+							<span>
+								<label style="display: inline-block; width: 100px;">Cargo:</label>
+								<input style="width: 500px;" autocomplete="off" name="usuario[cargo]" type="text" maxlength="50" placeholder="Ingrese su cargo" value="<!--#4DTEXT userCargo-->">
+							</span>
+							</br>
+							</br>
+							
+
+							
+							<span>
+								<label style="display: inline-block; width: 100px;">Tratamiento:</label>
+								<input style="width: 136px;" name="usuario[tratamiento]" maxlength="10" type="text" placeholder="Indique si es sr o sra" value="<!--#4DTEXT userTrato-->">
+							</span>
+
+
+							<span>
+								<label style="display: inline-block; width: 30px;">Rut:</label>
+								<input style="width: 136px;" name="usuario[rut]" type="text" placeholder="Ingrese su rut" value="<!--#4DTEXT userRut-->">
+							</span>
+
+							<span>
+								<label style="display: inline-block; width: 30px;">Alias:</label>
+								<input id="input2" style="width: 136px;" name="usuario[alias]" type="text" placeholder="Ingrese su seudónimo" value="<!--#4DTEXT userAlias-->">
+							</span>
+							</br>
+							</br>
+
+							
+							<span>
+								<label style="display: inline-block; width: 100px;">Nombre(s):</label>
+								<input id="nombre" style="width: 500px;" name="usuario[nombres]" maxlength="50" type="text" placeholder="Ingrese sus nombres" value="<!--#4DTEXT userNombres-->">
+							</span>
+							</br>
+							</br>
+							
+
+							
+							<span>
+								<label style="display: inline-block; width: 100px;">Apellidos</label>
+								<input style="width: 244px;" name="usuario[apellido_paterno]" maxlength="50" type="text" placeholder="Ingrese su Apellido Paterno" value="<!--#4DTEXT userPaterno-->">
+							</span>
+							
+							<span>								
+								<input style="width: 244px;" name="usuario[apellido_materno]" maxlength="50" type="text" placeholder="Ingrese su Apellido Materno" value="<!--#4DTEXT userMaterno-->">
+							</span>
+							</br>
+							</br>
+							
+
+							
+							<span>
+								<label style="display: inline-block; width: 100px;">Telefono:</label>
+								<input id="telefono" style="width: 227px;" name="usuario[telefono]" maxlength="15" type="text" placeholder="Ingrese su telefono fijo" value="<!--#4DTEXT userFono-->">
+							</span>
+							
+							<span>
+								<label style="display: inline-block; width: 30px;">Movil:</label>
+								<input id="celular" style="width: 227px;" name="usuario[movil]" maxlength="15" type="text" placeholder="Ingrese su telefono movil" value="<!--#4DTEXT userCelular-->">
+							</span>
+							</br>
+							</br>
+							
+
+							
+							<span>
+								<label style="display: inline-block; width: 100px;">Email:</label>
+								<input id="email" required style="width: 500px;" name="usuario[email]" type="email" placeholder="Ingrese su direccion de corrreo electronico" value="<!--#4DTEXT userEmail-->">
+							</span>
+							</br>
+							</br>
+							
+
+							
+							<span>
+								<label style="display: inline-block; width: 100px;">Direccion:</label>
+								<input style="width: 227px;" name="usuario[dir_calle]" type="text" placeholder="Ingrese su direccion" value="<!--#4DTEXT userDirCalle-->">
+							</span>
+							
+							<span>
+								
+								<input id="numero" style="width: 260px;" name="usuario[dir_numero]" type="text" placeholder="Ingrese el numero de su direccion" value="<!--#4DTEXT userDirNro-->">
+							</span>
+							</br>
+							</br>
+							
+							<span>
+								<label style="display: inline-block; width: 100px;">Depto:</label>
+								<input style="width: 227px;" name="usuario[dir_depto]" type="text" placeholder="Ingrese su departamento" value="<!--#4DTEXT userDirDepto-->">
+							</span>
+							
+
+							
+							<span>
+								<label style="display: inline-block; width: 30px;">Piso:</label>
+								<input style="width: 227px;" name="usuario[dir_piso]" type="text" placeholder="Ingrese el piso de su departamento" value="<!--#4DTEXT userDirPiso-->">
+							</span>
+							</br>
+							</br>
+							
+							<span>
+								<!--4DIF prmUserLogin#""-->
+									<label style="display: inline-block; width: 100px;">Acceso Web :</label>
+									<input name="usuario[acceso_web]" type="checkbox" value="true"<!--#4DIF userAccesoWeb--> checked<!--#4DENDIF-->>	</br></br>		
+								<!--4DELSE-->
+								<label style="display: inline-block; width: 100px; display:none;">Acceso Web:</label>
+								<input name="usuario[acceso_web]" type="checkbox" style="display:none;" value="true"<!--#4DIF userAccesoWeb--> checked<!--#4DENDIF-->>								
+								<!--4DENDIF-->								
+							</span>
+							
+							
+							<span>
+								<label style="display: inline-block; width: 100px;">Bloqueo Correos:</label>
+								<input name="usuario[bloqueo_correos]" type="checkbox" value="true"<!--#4DIF userBloqueoEmail--> checked<!--#4DENDIF-->>
+							</span>
+							</br>
+							</br>
+
+							
+							<span>
+								<!--4DIF prmUserLogin#""-->
+									<label style="display: inline-block; width: 100px;">Usuario Activo:</label>
+									<input name="usuario[estado]" type="checkbox" value="true" <!--#4DIF userEstado-->checked<!--#4DENDIF-->>
+								<!--4DELSE-->
+									<label style="display: inline-block; width: 100px">Usuario Activo:</label>
+									<input name="usuario[estado]" type="checkbox" value="true" checked>								
+								<!--4DENDIF-->
+							</span>
+
+							</br></br>
+							
+							<span>
+								<label style="display: inline-block; width: 100px;">Perfil Ejecutivo:</label>
+								<input name="usuario[perfil_ejecutivo]" type="checkbox" value="true"<!--#4DIF userPerfilEjecutivo--> checked<!--#4DENDIF-->> 
+							</span>
+							</br>
+							</br>
+							<span>
+								<label style="display: inline-block; width: 100px;">Jefe de proyecto:</label>
+								<input name="usuario[jefe_proyecto]" type="checkbox" value="true"<!--#4DIF userJefeProyecto--> checked<!--#4DENDIF-->> 
+							</span>
+							</br>
+							</br>
+
+							<span>
+								<label style="display: inline-block; width: 100px;">Perfil:</label>
+									<select name="usuario[id_tipo]">
+										<option selected value="01">Administrador</option>										
+										<option value="02">Jefe de Produccion</option>
+										<option value="03">Desarrollador</option>
+									</select>
+							</span>
+							</div>
+
+							<div class="element-right">
+								<figure>
+									<img class="picture" style="max-width: 235px; max-height: 235px;" src="/4DACTION/_V3_getUpload?index=Prm_Usuario|<!--#4DTEXT prmUserLogin-->" onerror="$(this).hide(); $('div.no-picture').show();">
+									<span class="no-picture" style="display: none; font-size: 18px; line-height: 112px;">Sin foto</span>
+									<input style="display: none;" type="file" name="file" data-url="/4DACTION/_V3_setUpload"></br></br>
+									
+									<button onclick="$('input[name=&quot;file&quot;]').trigger('click');">Cambiar foto</button>
+						
+								</figure>
+							</div>	
+							
+							
+						</li>						
+					</ul>	
+										
+				</article>
+							
+						
+			</footer>		
+		</section>		
+	</body>
+</html>

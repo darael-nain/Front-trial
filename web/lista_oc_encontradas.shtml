@@ -1,0 +1,51 @@
+<select id="filters-state-oc" class="listas-especiales2" >
+    <option value="<!--#4DVAR vEstFilterAct-->" selected="selected"><!--#4DVAR vEstFilterAct--></option>
+    <!--#4DLOOP aEstFilter-->
+        <!--#4dif aEstFilter{aEstFilter}#vEstFilterAct-->
+        <option value="<!--#4DVAR aEstFilter{aEstFilter}-->"><!--#4DVAR aEstFilter{aEstFilter}--></option>
+        <!--#4dendif-->      
+    <!--#4DENDLOOP-->
+</select>
+
+<table width="100%" border="1" cellpadding="0" cellspacing="0" hspace="0" vspace="0">
+  <tr bgcolor="#CCCCCC" >
+    <td class="center">NRO</td>
+    <td class="center">FECHA</td>
+    <td class="center">REFERENCIA OC</td>
+    <td class="center">PROVEEDOR</td>
+    <td class="center">REF.NEGOCIO</td>
+    <td class="center">EMISOR</td>
+    <td class="center">TOTAL</td>
+    <td class="center">ESTADO</td>
+    <td class="center">VALIDADO</td>                
+    <td class="center" colspan="2" >ACCION</td>
+  </tr> 		
+<!--#4DLOOP aIdOC-->
+  <tr>
+    <td style="padding:2px" class="center"><!--#4DVAR aNroOC{aIdOC}--></td>
+    <td style="padding:2px"class="center"><!--#4DVAR aFechaOC{aIdOC}--></td>
+    <td style="padding:2px" class="left"><!--#4DVAR aReferenciaOC{aIdOC}--></td>
+    <td style="padding:2px" class="left"><!--#4DVAR aProveedorOC{aIdOC}--></td>
+    <td style="padding:2px" class="left"><!--#4DVAR aRefNegOC{aIdOC}--></td>
+    <td style="padding:2px" class="center"><!--#4DVAR aLoginOC{aIdOC}--></td>
+    <td style="padding:2px" class="right"><!--#4DVAR aTotalOC{aIdOC}--></td>
+    <td style="padding:2px" class="center"><!--#4DVAR aEstadoOC{aIdOC}--></td>
+    <td style="padding:2px" class="center"><!--#4DVAR aValidadoOC{aIdOC}--></td>                
+    <td class="center">
+        <a style="margin:3px" class="link-crear-lista" title="Ver OC." href="/4DACTION/W_VIEW_OC/<!--#4DVAR aIdOC{aIdOC}-->" >
+            <p>
+                <img src="/imagenes/page_white_edit.png" border="0" />
+                <span>Ver OC.</span>
+            </p>
+        </a>
+
+        <!--#4dif (aValidadoOC{aIdOC}="NO") & (vPermisoParaValidarOC)-->         
+        <a class="link-crear-lista2" title="Validar" target="_blank" href="/4DACTION/outEmailOrdVal/<!--#4DVAR aIdOC{aIdOC}-->/<!--#4DVAR aLoginOC{aIdOC}-->/<!--#4DVAR vLogin-->" >
+            <p><span>Validar OC</span></p>                        
+        </a>         
+        <!--#4dendif-->
+
+    </td>                        
+  </tr>
+<!--#4DENDLOOP-->
+</table>

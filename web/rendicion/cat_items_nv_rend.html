@@ -1,0 +1,12 @@
+<select name='dtc' class='select-grilla-det-fr' onChange='get_servicios_rf(this)'>";
+	<!--#4dif Size of array(aCategoriaServicioID)=0-->
+		<option selected value="-1">[Sin Cat.]</option>	
+	<!--#4dendif-->
+	
+	<!--#4dif Size of array(aCategoriaServicioID)>0-->
+		<option selected value="-1">[Seleccionar]</option>
+		<!--#4dloop aCategoriaServicioID-->
+			<option value="<!--#4DVAR aCategoriaServicioID{aCategoriaServicioID}-->"><!--#4DVAR aCategoriaServicio{aCategoriaServicioID}--></option>
+		<!--#4dendloop-->
+	<!--#4dendif-->	
+</select>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Comentarios</title>
+	<meta charset="utf-8">
+	<style>
+		#title {
+			display: block;
+			background-color: #2C3F4D;
+			color: white;
+			padding: 5px !important;
+			font-weight: bold;
+			margin-bottom: 10px !important;
+			font-size: 11px;
+			text-transform: none !important;
+		}
+
+		.input-text {
+			display: inline-block;
+			/* width: calc(100% - 11px); */
+			width: calc(100% - 16px);
+			height: 18px;
+			padding-right: 11px;
+			/* background-image: url(_misc/input.png); */
+			background-position: right center;
+			background-repeat: no-repeat;
+			/* border-bottom: 1px ridge rgb(210,210,210); */
+			border-bottom: 1px ridge rgb(180, 180, 180);
+			text-align: inherit;
+			text-decoration: inherit;
+			text-transform: uppercase;
+			font-weight: inherit;
+			margin-bottom: 10px;
+		}
+
+		article.css-section-comments {
+			background-color: rgb(242, 242, 243);
+		}
+	</style>
+</head>
+
+<body>
+	<article>
+
+		<span id="title">Añadir nuevo enlace</span>
+
+		<div class="row ml-3">
+			<label>
+				<span>Nombre</span>
+				<input type="text" name="link[nombre]" class="input-text">
+			</label>
+			<label>
+				<span>Descripción</span>
+				<input type="text" name="link[descripcion]" class="input-text">
+			</label>
+			<label>
+				<span>URL</span>
+				<input type="url" name="link[href]" class="input-text">
+			</label>
+			<label>
+				<span></span>
+				<input style="width: 14px !important; height: 14px !important" type="checkbox" name="link[visible]"
+					checked value="true">
+				<span style="height: 14px !important;">Visible para el cliente en PDF</span>
+			</label>
+
+		</div>
+		<button class="btn btn-success ml-3 mb-4 btn-save">Guardar</button>
+
+		<div class="row">
+			<div class="col-12">
+				<div class="table-responsive">
+
+					<table class="table table-data">
+						<thead>
+							<tr>
+								<th>Nombre</th>
+								<th>Fecha</th>
+								<th>Usuario</th>
+								<th>Notas</th>
+								<th>Visible a cliente</th>
+								<th>Acción</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</div>
+			</div>
+
+		</div>
+
+
+	</article>
+
+
+	<script>
+		var loadList = function () {
+			$('.ui-dialog table > tbody > *').remove();
+			$.ajax({
+				url: '/4DACTION/_V3_getLinkByCotizacion',
+				data: {
+					id: $('section.sheet').data('id')
+				},
+				dataType: 'json',
+				success: function (data) {
+					var htmlObject;
+					$('.table-data > tbody').empty();
+					$.each(data.rows, function (key, item) {
+						htmlObject = $('<tr data-id="' + item.id + '" data-username="' + item.username + '">' +
+							'<td>' + item.text + '</td>' +
+							'<td>' + ((item.updated_at !== undefined) ? '<time datetime="' + new Date(item.updated_at).toISOString() + '">' + $.datepicker.formatDate('dd-mm-yy', new Date(item.updated_at)) + ' <span>' + new Date(item.updated_at).toTimeString().match(/^([0-9]{2}:[0-9]{2}:[0-9]{2})/)[0].substring(0, 5) + '</span></time>' : 'N/A') + '</td>' +
+							'<td>' + item.username + '</td>' +
+							'<td>' + item.notas + '</td>' +
+							'<td>' + (item.visible ? 'Sí' : 'No') + '</td>' +
+							'<td class="options">' +
+							'<button class="preview"></button>' +
+							'<button class="delete"></button>' +
+							'</td>' +
+							'</tr>');
+						htmlObject.find('button.preview').button({
+							caption: 'Abrir',
+							icons: {
+								primary: 'ui-icon-link'
+							},
+							text: false
+						}).click(function () {
+							/*
+							$.fancybox(
+							{
+								'autoScale'			: true,
+								'type'				: 'iframe',
+								'href'				: item.href
+							});
+							*/
+							window.open(item.href);
+						});
+						htmlObject.find('button.delete').button({
+							caption: 'Eliminar',
+							icons: {
+								primary: 'ui-icon-trash'
+							},
+							text: false
+						}).click(function () {
+							confirm('¿Está seguro que desea eliminar el enlace?').done(function (data) {
+								if (data) {
+									$.ajax({
+										url: '/4DACTION/_V3_removeLink',
+										data: {
+											id: item.id
+										},
+										dataType: 'json',
+										success: function (data) {
+											if (data.success) {
+												toastr.success('El enlace fue eliminado con éxito!');
+												loadList();
+											} else
+												toastr.error('El enlace no pudo eliminarse. Es posible que esté bloqueado.');
+										}
+									});
+								}
+							});
+						});
+						$('.table-data > tbody').append(htmlObject);
+					});
+				}
+			});
+		};
+
+		loadList();
+
+
+		$('.btn-save').click(function () {
+			
+			$.ajax({
+				url: '/4DACTION/_V3_setLinkByCotizacion',
+				type: 'POST',
+				data: {
+					'link[href]': $('[name="link[href]"]').val(),
+					'link[nombre]': $('[name="link[nombre]"]').val(),
+					'link[descripcion]': $('[name="link[descripcion]"]').val(),
+					'link[visible]': $('[name="link[visible]"]').is(':checked'),
+					'fk': $('section.sheet').data('id')
+				},
+				dataType: 'json',
+				success: function (data) {
+					toastr.success('Enlace guardado con éxito!');
+					// $('.ui-dialog fieldset input[name*="link["]:not([type="checkbox"])').val('');
+					// $('.ui-dialog fieldset input[name="link[visible]"]').prop('checked', true);
+					loadList();
+				}
+			});
+		});
+	</script>
+</body>
+
+</html>

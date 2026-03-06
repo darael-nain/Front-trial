@@ -1,0 +1,8 @@
+{
+	"id": <!--#4DTEXT Num(id)-->,
+	"text": "<!--#4DHTML _V3_escapeString($text)-->",
+	"total": {
+		"negocios": <!--#4DTEXT $total_negocios-->,
+		"gastos": <!--#4DTEXT $total_gastos-->
+	}
+}

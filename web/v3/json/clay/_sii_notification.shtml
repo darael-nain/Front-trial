@@ -1,0 +1,46 @@
+{
+	"text": <!--#4DIF Not(Undefined(text))-->"<!--#4DHTML text-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"connection_sii_status": <!--#4DIF Not(Undefined(connection_sii_status))--><!--#4DIF connection_sii_status-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"success": <!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"status":<!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"errorMsg": "<!--#4DTEXT errorMsg-->",
+	"errors": [],
+	"records": {
+			"total_records": <!--#4DHTML totalRecords-->
+	},
+	"data":{
+			<!--#4DIF totalRecords > 0-->
+
+		"rows": [
+			<!--#4DLOOP aIdDoc-->
+			{
+				"folio": "<!--#4DHTML aFolio{aIdDoc}-->",
+				"total": "<!--#4DHTML aTotal{aIdDoc}-->",
+				"fecha": "<!--#4DHTML aFecha{aIdDoc}-->",
+				"tipo": "<!--#4DHTML aTipo{aIdDoc}-->",
+				"proveedor": "<!--#4DHTML  _V3_escapeString(aProveedor{aIdDoc})-->"
+			}<!--#4DIF NOT(aIdDoc{aIdDoc} = aIdDoc{Size of array(aIdDoc)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		],
+		"users": [
+			<!--#4DLOOP aIdUsers-->
+			{
+				"email": "<!--#4DHTML aEmail{aIdUsers}-->",
+				"name": "<!--#4DHTML aName{aIdUsers}-->"
+			}<!--#4DIF NOT(aIdUsers{aIdUsers} = aIdUsers{Size of array(aIdUsers)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		
+		]
+
+
+
+		<!--#4DENDIF-->
+
+	}
+	
+	
+}
+
+
+
+

@@ -1,0 +1,45 @@
+{
+	"rows": [
+		<!--#4DLOOP aId-->
+		{
+			"id": <!--#4DHTML aId{aId}-->,
+
+			"description": "<!--#4DHTML _V3_escapeString(aDescription{aId})-->",
+			"descuento_afecto": "<!--#4DHTML aDescuentoAfecto{aId}-->",
+			"descuento_exento": "<!--#4DHTML aDescuentoExento{aId}-->",
+			"dv": "<!--#4DHTML aDv{aId}-->",
+			"estado": "<!--#4DHTML aEstado{aId}-->",
+			"estado_doc": "<!--#4DHTML aEstadoDoc{aId}-->",
+			"exento": "<!--#4DHTML aExento{aId}-->",
+			"fecha": "<!--#4DHTML aFecha{aId}-->",
+			"fecha_acuse": "<!--#4DHTML aFechaAcuse{aId}-->",
+			"fecha_recepcion": "<!--#4DHTML aFechaRecepcion{aId}-->",
+			"folio": "<!--#4DHTML aFolio{aId}-->",
+			"hora": "<!--#4DHTML aHora{aId}-->",
+			"id_attachment": "<!--#4DHTML aIdAttachment{aId}-->",
+			"id_doc_pendiente": "<!--#4DHTML aIdDocPendiente{aId}-->",
+			"id_tipo_doc": "<!--#4DHTML aIdTipoDoc{aId}-->",
+			"id_tipo_doc_ext": "<!--#4DHTML aIdTipoDocExt{aId}-->",
+			"imp_adicional": "<!--#4DHTML aImpAdicional{aId}-->",
+			"imp_combustible": "<!--#4DHTML aImpCombustible{aId}-->",
+			"imp_ila": "<!--#4DHTML aImpIla{aId}-->",
+			"imp_porc": "<!--#4DHTML aImpPorc{aId}-->",
+			"impuesto": "<!--#4DHTML aImpuesto{aId}-->",
+			"link_pdf": "<!--#4DHTML aLinkPdf{aId}-->",
+			"link_xml": "<!--#4DHTML aLinkXml{aId}-->",
+			"match": "<!--#4DHTML aMatch{aId}-->",
+			"neto": "<!--#4DHTML aNeto{aId}-->",
+			"new": "<!--#4DHTML aNew{aId}-->",
+			"pagado": "<!--#4DHTML aPagado{aId}-->",
+			"pendiente": "<!--#4DHTML aPendiente{aId}-->",
+			"proveedor": "<!--#4DHTML aProveedor{aId}-->",
+			"receptor": "<!--#4DHTML aReceptor{aId}-->",
+			"referencia": "<!--#4DHTML aReferencia{aId}-->",
+			"rut": "<!--#4DHTML aRut{aId}-->",
+			"status": "<!--#4DHTML aStatus{aId}-->",
+			"tipo": "<!--#4DHTML aTipo{aId}-->",
+			"total": "<!--#4DHTML aTotal{aId}-->"
+		}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	]
+}

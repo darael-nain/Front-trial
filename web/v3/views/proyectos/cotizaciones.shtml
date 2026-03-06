@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getListCotByProyecto-->
+		<meta charset="utf-8">
+		<title>Compras</title>
+		<link rel="stylesheet" href="/v3/views/compras/lista.css">
+		<script>
+		$(document).ready(function() {
+			var container = $('section.sheet-list-compras');
+			var id = container.data('id');
+			var detail = container.data('detail');
+			var tbody = container.find('table > tbody');
+			var tfoot = container.find('table > tfoot');
+
+			var total_fxr_otros_v2 = 0;
+
+			var loadComprasNegocio = function(data) {
+
+				total_fxr_otros_v2 = data.total_fxr_otros_v2;
+
+				// Elimina todas las oc de la tabla
+				tbody.find("*").remove();
+
+				var sumaNetos = 0;
+				var sumaTotal = 0;
+
+				var htmlObject;
+				$.each(data.rows, function(key, item) {
+
+					if(item.estado != "ANULADA" && !item.excluir_gasto){
+						sumaNetos = sumaNetos + item.neto;
+						sumaTotal = sumaTotal + ((item.total != 0)? item.total : item.neto);
+						//sumaTotal = sumaTotal + ((item.neto != 0)? item.neto : item.total);
+					}
+
+					var v2 = "";
+					if(item.version != "V3"){
+						v2 = '<strong style="font-size:10px!important;font-weight:bold">*</strong>';
+					}
+
+					var tipo = "";
+					if (item.tipo =='INTERNO' || item.tipo =='INTERIOR' || item.tipo=='ITEMSNV') {
+						tipo = "DIRECTOS";
+					}else{
+						tipo = "OTROS";
+					}
+
+					//htmlObject = $('<tr data-id="'+item.id+'" data-tipo="'+tipo+'" data-version="'+item.version+'" data-neto="'+item.neto+'" data-total="'+item.total+'" data-estado="'+item.estado+'">'+
+					htmlObject = $('<tr data-id="'+item.id+'" data-tipo="'+tipo+'" data-version="'+item.version+'" data-neto="'+item.neto+'" data-total="'+((item.neto != 0)? item.neto : item.total)+'" data-estado="'+item.estado+'">'+
+								'<td>'+v2+'</td>' +
+								'<td>'+item.folio+'</td>' +
+								'<td>'+item.emisor+'</td>' +
+								'<td>'+item.fecha+'</td>' +
+								'<td>'+item.factura_tipo+'</td>' +
+								'<td class="left">'+item.proveedor+'</td>' +
+								'<td class="left">'+item.referencia+'</td>' +
+								//'<td class="currency">'+item.neto+'</td>' +
+								'<td class="currency"' + ( (item.excluir_gasto)? ' style="color: blue;"' : '') + '>'+((item.total != 0)? item.total : item.neto)+'</td>' +
+								//'<td class="currency">'+((item.neto != 0)? item.neto : item.total)+'</td>' +
+								'<td class="status">'+item.estado+'</td>' +
+								'<td>'+((item.saldo_consolidar<=0)? '<input disabled checked type="checkbox">': '<input disabled type="checkbox">')+'</td>' +
+								'</tr>');
+					tbody.append(htmlObject);
+				});
+
+				var htmlObject;
+				var total_footer = 0;
+
+				htmlObject = $('<tr>'+
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							//'<th class="currency right">'+sumaNetos+'</th>' +
+							'<th class="currency right">'+sumaTotal+'</th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'</tr>');
+				tfoot.html(htmlObject);
+
+				if (total_fxr_otros_v2 > 0){
+					htmlObject2 = $('<tr>'+
+								'<th></th>' +
+								'<th></th>' +
+								'<th></th>' +
+								'<th></th>' +
+								'<th></th>' +
+								'<th></th>' +
+								'<th class="right" style="text-transform:none">Otros gastos en rendición:</th>' +
+								'<th class="currency right" style="border-bottom:1px solid gray">'+total_fxr_otros_v2+'</th>' +
+								'<th></th>' +
+								'<th></th>' +
+								'</tr>');
+					tfoot.append(htmlObject2);
+
+					var total_total = sumaNetos + total_fxr_otros_v2;
+					htmlObject2 = $('<tr>'+
+								'<th></th>' +
+								'<th></th>' +
+								'<th></th>' +
+								'<th></th>' +
+								'<th></th>' +
+								'<th></th>' +
+								'<th></th>' +
+								'<th class="currency right">'+total_total+'</th>' +
+								'<th></th>' +
+								'<th></th>' +
+								'</tr>');
+					tfoot.append(htmlObject2);
+				}
+
+
+				formatCurrency();
+
+				$('table.gastos tbody').find('tr[data-estado="ANULADA"]').hide();
+
+			};
+
+			/*
+			$.ajax({
+				url: '/4DACTION/_V3_getOrdenesByNegocio',
+				dataType: 'json',
+				async: false, // para que no avance hasta que la llamada se complete
+				cache: false,
+				data: {
+					id: id,
+					detail: detail
+				},
+				success: loadComprasNegocio
+			}).fail(function(a, b, c) {
+
+			});*/
+
+			formatCurrency();
+
+			
+
+				// ir a detalle
+		    tbody.find('tr').unbind('click').bind('click', function(event) {
+					  	var idCot = $(this).closest("tr").data("id");
+						window.open("http://" + window.location.host + "/4DACTION/wbienvenidos#cotizaciones/content.shtml?id="+ idCot , '_blank');	
+			});
+
+		    // by type
+			$('select.tipo-gasto').change(function(event) {
+				var value = $(this).val();
+				$('table.gastos tbody').find('tr').show();
+				$('table.gastos tbody').find('tr[data-estado="ANULADA"]').hide();
+
+				switch(value) {
+					case 'DIRECTOS':
+						$('table.gastos tbody').find('tr[data-tipo!="DIRECTOS"]').hide();
+						break;
+					case 'OTROS':
+						$('table.gastos tbody').find('tr[data-tipo!="OTROS"]').hide();
+						break;
+				}
+
+				var sumaNetos = 0;
+				var sumaTotal = 0;
+
+				tbody.find('tr:not(:hidden)').each(function() {
+					var item = $(this);
+					if (item.find('td.status') != 'ANULADA'){
+						sumaNetos+= item.data('neto');
+						sumaTotal+= item.data('total');
+					}
+				});
+
+				htmlObject = $('<tr>'+
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							//'<th class="currency right">'+sumaNetos+'</th>' +
+							'<th class="currency right">'+sumaTotal+'</th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'</tr>');
+				tfoot.html(htmlObject);
+
+				if ((total_fxr_otros_v2 > 0) && (value == "OTROS" || value == "")){
+
+					htmlObject2 = $('<tr>'+
+								'<th></th>' +
+								'<th></th>' +
+								'<th></th>' +
+								'<th></th>' +
+								'<th></th>' +
+								'<th></th>' +
+								'<th class="right" style="text-transform:none">Otros gastos en rendición:</th>' +
+								'<th class="currency right" style="border-bottom:1px solid gray">'+total_fxr_otros_v2+'</th>' +
+								'<th></th>' +
+								'<th></th>' +
+								'</tr>');
+					tfoot.append(htmlObject2);
+
+					var total_total = sumaNetos + total_fxr_otros_v2;
+
+					htmlObject2 = $('<tr>'+
+								'<th></th>' +
+								'<th></th>' +
+								'<th></th>' +
+								'<th></th>' +
+								'<th></th>' +
+								'<th></th>' +
+								'<th></th>' +
+								'<th class="currency right">'+total_total+'</th>' +
+								'<th></th>' +
+								'<th></th>' +
+								'</tr>');
+					tfoot.append(htmlObject2);
+				}
+
+				formatCurrency();
+
+			});
+
+			// by state
+			$('select.by-status').change(function(event) {
+				var status = $(this).val();
+
+				// disabled checked
+				$('input.show-hide-null').prop('checked', false);
+
+				$('table.gastos tbody').find('tr').show();
+
+				switch(status) {
+					case 'EMITIDA':
+						$('table.gastos tbody').find('tr[data-estado!="EMITIDA"]').hide();
+						break;
+					case 'CERRADA':
+						$('table.gastos tbody').find('tr[data-estado!="CERRADA"]').hide();
+						break;
+					case 'PAGADA':
+						$('table.gastos tbody').find('tr[data-estado!="PAGADA"]').hide();
+						break;
+					case 'ANULADA':
+						$('table.gastos tbody').find('tr[data-estado!="ANULADA"]').hide();
+						break;
+					case '':
+						$('table.gastos tbody').find('tr[data-estado="ANULADA"]').hide();
+						break;
+				}
+
+				var sumaNetos = 0;
+				var sumaTotal = 0;
+
+				if (status=="") {
+					tbody.find('tr:not(:hidden)').each(function() {
+						var item = $(this);
+						if (item.is(':visible') && item.find('td.status') != 'ANULADA'){
+							sumaNetos+= item.data('neto');
+							sumaTotal+= item.data('total');
+						}
+					});
+				}else{
+					tbody.find('tr:not(:hidden)').each(function() {
+						var item = $(this);
+						sumaNetos+= item.data('neto');
+						sumaTotal+= item.data('total');
+					});
+				}
+
+				htmlObject = $('<tr>'+
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							//'<th class="currency right">'+sumaNetos+'</th>' +
+							'<th class="currency right">'+sumaTotal+'</th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'</tr>');
+				tfoot.html(htmlObject);
+
+				htmlObject2 = $('<tr>'+
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'<th class="right" style="text-transform:none">Otros gastos en rendición:</th>' +
+							'<th class="currency right" style="border-bottom:1px solid gray">'+total_fxr_otros_v2+'</th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'</tr>');
+				tfoot.append(htmlObject2);
+
+				//var total_total = sumaNetos + total_fxr_otros_v2;
+				var suma_total = sumaNetos + total_fxr_otros_v2;
+
+				htmlObject2 = $('<tr>'+
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'<th class="currency right">'+total_total+'</th>' +
+							'<th></th>' +
+							'<th></th>' +
+							'</tr>');
+				tfoot.append(htmlObject2);
+
+				formatCurrency();
+
+			});
+
+			// show / hide null
+			// $('input.show-hide-null').change(function(event) {
+			// 	var checked = $(this);
+			// 	var sumaNetos = 0;
+			// 	var sumaTotal = 0;
+
+			// 	if (checked.prop('checked')){
+			// 		//$('table.gastos tbody').find('tr').show();
+			// 		$('table.gastos tbody').find('tr[data-estado="ANULADA"]').show();
+			// 		tbody.find('tr:not(:hidden)').each(function() {
+			// 			var item = $(this);
+			// 			sumaNetos+= item.data('neto');
+			// 			sumaTotal+= item.data('total');
+			// 		});
+			// 	}else{
+			// 		$('table.gastos tbody').find('tr[data-estado="ANULADA"]').hide();
+			// 		tbody.find('tr:not(:hidden)').each(function() {
+			// 			var item = $(this);
+			// 			if (item.is(':visible') && item.find('td.status') != 'ANULADA'){
+			// 				sumaNetos+= item.data('neto');
+			// 				sumaTotal+= item.data('total');
+			// 			}
+			// 		});
+			// 	}
+
+			// 	htmlObject = $('<tr>'+
+			// 				'<th></th>' +
+			// 				'<th></th>' +
+			// 				'<th></th>' +
+			// 				'<th></th>' +
+			// 				'<th></th>' +
+			// 				'<th></th>' +
+			// 				'<th></th>' +
+			// 				//'<th class="currency right">'+sumaNetos+'</th>' +
+			// 				'<th class="currency right">'+sumaTotal+'</th>' +
+			// 				'<th></th>' +
+			// 				'<th></th>' +
+			// 				'</tr>');
+			// 	tfoot.html(htmlObject);
+			// 	formatCurrency();
+
+			// });
+
+		});
+
+
+		</script>
+	</head>
+	<body>
+		<section class="sheet-list-compras sheet" data-id="<!--#4DTEXT id-->">
+
+			<header style="display:none">
+				<span>
+					<input readonly name="oc[tipo_gastos][des]" placeholder="Seleccionar tipo" type="search" value="<!--#4DTEXT [Orden_de_compra]des_tipo_gasto-->">
+					<button type="button" class="show tiposg">ver tipos</button>
+				</span>
+			</header>
+
+			<!--
+			<section style="height: 25px; padding:3px">
+				<label style="float:left;">
+					Tipo de gasto
+					<select class="tipo-gasto" style="border:1px solid gray; margin:2px">
+						<option value="">Todos</option>
+						<option value="DIRECTOS">Gastos directos</option>
+						<option value="OTROS">Otros gastos</option>
+
+
+					</select>
+				</label>
+				<label style="float:left;">
+					Estado
+					<select class="by-status" style="border:1px solid gray;margin:2px">
+						<option value="">Todos</option>
+						<option value="EMITIDA">Emitida</option>
+						<option value="PAGADA">Pagada</option>
+						<option value="CERRADA">Cerrada</option>
+						<option value="ANULADA">Anulada</option>
+					</select>
+					<span><input class="show-hide-null" type="checkbox" value="ANULADA"> Anuladas</span>
+				</label>
+			</section>
+			-->
+
+			<table class="cotizaciones">
+				<thead>
+					<tr>
+						<!-- <th width=""></th> -->
+						<th width="5%">Número</th>
+						<th width="5%">Ejecutivo</th>
+						<th width="10%">F.Emisión</th>
+						<th width="10%">F. Realización</th>
+						<th width="25%">Cliente</th>
+						<th width="25%">Referencia</th>
+						<th width="10%">Total neto[$]</th>
+						<th width="10%">Estado</th>
+						<th width="5%">Validada</th>
+					</tr>
+				</thead>
+				<tbody class="ui-selectable">
+                    <!--#4DLOOP [Nota_de_venta]-->
+                    <tr data-id="<!--#4DVAR [Nota_de_venta]id_nv-->">
+						<!-- <td></td> -->
+						<td><!--#4DTEXT [Nota_de_venta]Id_Negocio--></td>
+						<td><!--#4DTEXT [Nota_de_venta]ejecutivo_responsable--></td>
+                        <td><!--#4DTEXT [Nota_de_venta]fecha_emision--></td>
+						<td><!--#4DTEXT [Nota_de_venta]Fecha_Vencimiento--></td>
+						<td><!--#4DTEXT [Nota_de_venta]razon_cliente--></td>
+						<td><!--#4DTEXT [Nota_de_venta]referencia--></td>
+						<td class="right"><!--#4DTEXT String([Nota_de_venta]Total_Neto;"$ ###.###.###.##0")--></td>
+						<td><!--#4DTEXT [Nota_de_venta]Estado_NV--></td>
+						<td><!--#4DIF [Nota_de_venta]Validada-->Sí<!--#4DELSE-->No<!--#4DENDIF--></td>
+                    </tr>
+                    <!--#4DENDLOOP-->
+                </tbody>
+			<tfoot class="totales">
+				<th style="text-align:left" colspan="6"></th>
+	            <th class="right"><span data-neto="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol--><!--#4DTEXT String(total_neto;"###.###.###.##0")--></span></th>
+	            
+			</tfoot>
+			</table>
+		</section>
+	</body>
+</html>

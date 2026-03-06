@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//unabase//calendario OT
+X-WR-TIMEZONE:America/Santiago
+<!--#4DLOOP aIndex-->
+BEGIN:VEVENT
+DTSTAMP:20140205T135813Z
+UID:20140205T135813Z-<!--#4DTEXT Random-->@una.cl
+DTSTART;TZID=America/Santiago:<!--#4DTEXT aFechaDesdePlanner{aIndex}-->T130000
+DTEND;TZID=America/Santiago:<!--#4DTEXT aFechaHastaPlanner{aIndex}-->T140000
+SUMMARY:<!--#4DTEXT aDatosOt{aIndex}-->
+DESCRIPTION:<!--#4DTEXT aDatosOt{aIndex}-->
+END:VEVENT
+<!--#4DENDLOOP-->
+END:VCALENDAR

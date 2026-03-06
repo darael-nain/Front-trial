@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getProyectosCompras-->
+		<title>Buscar presupuestos</title>
+		<meta charset="utf-8">
+		<script>
+			$(document).ready(function() {
+				unaBase.toolbox.init();
+				// Inicializamos un buscador
+				var params = {
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/_V3_get_presupuestos_compras' },
+					entity: 'proyectos_compras',
+					// Función que genera cada fila de la tabla, dado el valor de i (índice de posición)
+					// y el valor de rows (array con todos los resultados)
+					// El contenido de rows corresponde al objeto de mismo nombre generado mediante la llamada
+					// a la api JSON. Ver /v3/json/xxxxx.shtml para conocer el formato.
+					row: {
+						html: function(i, rows) {
+							return '<tr data-id="' + rows[i].id_nv + '">' +
+								'<td>' + rows[i].nro + '</td>' +
+								'<td>' + rows[i].emision + '</td>' +
+								'<td class="left">' + rows[i].referencia + '</td>' +
+								'<td class="currency">' + rows[i].gasto_p + '</td>' +
+							'</tr>'
+						}
+					},
+					detail: {
+						url: function(id) {
+							var container = $('#sheet-lista-presupuestos-gastos');
+							var idoc = container.data('id');
+							var from = container.data('from');
+							return '/v3/views/presupuestos/items2.shtml?oc[negocio][id]=' + id +'&oc[id]='+idoc+'&from='+from
+						},
+						iframe: false,
+						dialog: true
+					},
+					// Inflexiones
+					inflection: {
+						singular: 'presupuesto',
+						plural: 'presupuestos',
+						none: 'ningún'
+					},
+					filters: [
+						{ name: 'fecha_asignacion', type: 'month', caption: 'Fecha de asignacion', range: true, currentMonth: true}
+					]
+				};
+
+				unaBase.toolbox.search.init(params);
+
+				unaBase.toolbox.menu.init({
+					entity: 'Presupuestos_compras',
+					buttons: []
+				});
+
+
+			});
+		</script>
+	</head>
+	<body>
+		<section id="sheet-lista-presupuestos-gastos" class="sheet" data-id="<!--#4DTEXT id-->" data-from="<!--#4DTEXT from-->">
+			<table class="results">
+				<thead>
+					<tr>
+						<th>Número</th>
+						<th>Emisión</th>
+						<th>Referencia</th>
+						<th>Total Presup.</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+				<tfoot></tfoot>
+			</table>
+		</section>
+	</body>
+</html>

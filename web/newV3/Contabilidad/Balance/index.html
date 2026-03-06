@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Last-Modified" content="0">
+    <meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <title>Balance</title>
+    <!-- 🔒 GUARD: oculta todo y solo muestra si (1) iframe same-origin + (2) login OK -->
+    <style>
+        html.guard-hide body {
+            display: none !important;
+        }
+    </style>
+    <script>
+        (function guard() {
+            // Oculta todo por defecto (evita que se vea contenido antes del check)
+            document.documentElement.classList.add("guard-hide");
+
+            const deny = () => {
+                // “No aparece nada”: dejamos el body vacío + oculto
+                try { if (document.body) document.body.innerHTML = ""; } catch (_) { }
+                // mantenemos guard-hide activo
+            };
+
+            const allow = () => {
+                document.documentElement.classList.remove("guard-hide");
+            };
+
+            // 1) Debe estar embebido en iframe (si lo abres directo en pestaña => DENY)
+            let isInIFrame = false;
+            try {
+                isInIFrame = (window.self !== window.top);
+            } catch (e) {
+                // Si falla acceder a top, asumimos cross-origin => DENY abajo
+                isInIFrame = true;
+            }
+            if (!isInIFrame) return deny();
+
+            // 2) El parent debe ser same-origin (si no => DENY)
+            try {
+                if (window.top.location.origin !== window.location.origin) return deny();
+            } catch (e) {
+                return deny();
+            }
+
+            // 3) Debe estar logeado (reusa tu misma lógica)
+            const checkUrl =
+                `${window.origin}/4DACTION/_v3_checkLogin?nodeUrl=${encodeURIComponent("https://frank.unabase.com/node")}`;
+
+            fetch(checkUrl, { credentials: "include", cache: "no-store" })
+                .then(r => r.ok ? r.json() : Promise.reject(r))
+                .then(data => {
+                    if (!data || !data.isLogin || data.login == null) return deny();
+                    // OK: recién aquí mostramos
+                    allow();
+                })
+                .catch(() => deny());
+        })();
+    </script>
+    <!-- 🔒 FIN GUARD -->
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
+    <!-- Bootstrap MonthPicker CSS -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+</head>
+
+<style>
+    #loading-screen {
+        background-color: rgba(25, 25, 25, 0.7);
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        z-index: 9999;
+        margin-top: 0;
+        top: 0;
+        text-align: center;
+    }
+
+    #loading-screen img {
+        width: 100px;
+        height: 100px;
+        position: relative;
+        margin-top: -50px;
+        margin-left: -50px;
+        top: 50%;
+    }
+
+    table tbody tr:hover>* {
+        background-color: #d5f2f7;
+    }
+
+    tr {
+        font-size: 10px;
+    }
+
+    .main-table {
+        box-shadow: rgba(0, 0, 0, 0.04) 0px 3px 5px !important;
+        border-radius: 25px;
+    }
+
+    .check-apertura {
+        margin-left: -50px;
+        margin-top: 5px;
+    }
+
+    th {
+        position: sticky;
+    }
+
+    .btn-custom {
+        font-size: 10px;
+        margin-bottom: 10px;
+        background-color: #20A789;
+        color: white;
+        float: right;
+    }
+
+    .loader-line {
+        width: 100%;
+        height: 3px;
+        position: relative;
+        overflow: hidden;
+        background-color: #20A789;
+        -webkit-border-radius: 20px;
+        -moz-border-radius: 20px;
+        border-radius: 20px;
+    }
+
+    .loader-line:before {
+        content: '';
+        position: absolute;
+        left: -50%;
+        height: 3px;
+        width: 40%;
+        background-color: #E4E7EC;
+        -webkit-animation: lineAnim 1s linear infinite;
+        -moz-animation: lineAnim 1s linear infinite;
+        animation: lineAnim 1s linear infinite;
+        -webkit-border-radius: 20px;
+        -moz-border-radius: 20px;
+        border-radius: 20px;
+    }
+
+    @keyframes lineAnim {
+        0% {
+            left: -40%;
+        }
+
+        50% {
+            left: 20%;
+            width: 80%;
+        }
+
+        100% {
+            left: 100%;
+            width: 100%;
+        }
+    }
+
+    #cont-paginado {
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .cont-pagination {
+        display: inline-block;
+    }
+
+    .pagination li {
+        margin: 5px;
+    }
+
+    .pagination a {
+        text-decoration: none;
+    }
+
+    .pagination .active a {
+        font-weight: bold;
+        color: blue;
+    }
+
+    #next-page {
+
+        color: green;
+        cursor: pointer;
+        border-color: black;
+
+
+    }
+
+
+    #prev-page {
+
+        color: green;
+        cursor: pointer;
+        border-color: black;
+    }
+
+    .containerarrows {
+        display: flex;
+
+    }
+
+    #rowsperpage {
+
+        font-size: 13px;
+        margin-left: 20px;
+    }
+
+    /* p1{
+        margin-left: 20px;
+        font-size: 13px;
+    } */
+    p {
+        font-size: 13px;
+        margin-left: 20px;
+    }
+
+    /* .currentPage a{
+        color: red;
+        background-color: green;
+    } */
+    /* .currentPage a {
+        color:red;
+        text-decoration: underline;
+    } */
+
+    .excel-button-wrapper {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 15px;
+        padding: 0 15px;
+    }
+
+    /* ===== Barra de filtros por periodo ===== */
+    /* input del mes */
+    .month-input {
+        width: 120px;
+        min-width: 120px;
+        font-size: 12px;
+        padding: .25rem .5rem;
+    }
+
+    /* popup arriba de todo*/
+    #ui-monthpicker-div {
+        z-index: 99999 !important;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid #eef6ff;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, .14);
+    }
+
+    /* header */
+    #ui-monthpicker-div .ui-datepicker-header {
+        background: #198754;
+        border: 0;
+        padding: .6rem .75rem;
+    }
+
+    /* título (año) centrado */
+    #ui-monthpicker-div .ui-datepicker-title {
+        color: #000000;
+        font-weight: bolder;
+        font-size: 14px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* el select del año (solo el “cerrado”, el dropdown abierto es nativo del navegador) */
+    #ui-monthpicker-div select.ui-datepicker-year {
+        appearance: none;
+        -webkit-appearance: none;
+        background: rgba(255, 255, 255, 0.773);
+        border: 1px solid rgba(255, 255, 255, .25);
+        color: #000000;
+        padding: .25rem .9rem .25rem .6rem;
+        border-radius: 999px;
+        font-size: 13px;
+        line-height: 1.2;
+    }
+
+    /* flechas prev/next */
+    #ui-monthpicker-div .ui-datepicker-prev,
+    #ui-monthpicker-div .ui-datepicker-next {
+        top: 10px;
+        width: 30px;
+        height: 30px;
+        border-radius: 999px;
+    }
+
+    #ui-monthpicker-div .ui-datepicker-prev-hover,
+    #ui-monthpicker-div .ui-datepicker-next-hover {
+        border: 0;
+        background: rgba(255, 255, 255, 0.133);
+    }
+
+    /* grid meses */
+    #ui-monthpicker-div table {
+        margin: 10px 12px 12px;
+    }
+
+    #ui-monthpicker-div td a.ui-state-default {
+        border: 0;
+        background: #f6f7f8;
+        border-radius: 10px;
+        padding: .45rem .25rem;
+        text-align: center;
+    }
+
+    #ui-monthpicker-div td a.ui-state-hover {
+        background: #d5f2f7;
+    }
+
+    #ui-monthpicker-div td a.ui-state-active {
+        background: #198754;
+        color: #ffffff;
+    }
+
+    #dateFrom,
+    #dateTo,
+    #period {
+        background-color: #fff !important;
+        color: inherit !important;
+        -webkit-appearance: auto !important;
+        appearance: auto !important;
+    }
+
+    #dateFrom::-webkit-calendar-picker-indicator,
+    #dateTo::-webkit-calendar-picker-indicator,
+    #period::-webkit-calendar-picker-indicator {
+        opacity: 1 !important;
+        display: block !important;
+        pointer-events: auto !important;
+    }
+</style>
+
+<body>
+
+    <div class="content-wrapper ml-3 mr-3 contenedor-balance">
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h5 class="m-0 text-dark"></h5>
+                    </div>
+
+                </div>
+            </div>
+            <div class="shadow p-3 mb-5 bg-white rounded">
+                <!-- Button trigger modal -->
+                <section class="content">
+                    <div class="box box-info ">
+
+                        <!-- <button type="button" class="btn btn-success" id="new_value" style="background: #f9c003;"
+                            title="Nuevo valor">
+                            <i class="fa fa-plus"></i>
+                        </button> -->
+
+
+                        <!-- <hr class="mt-2 mb-3" /> -->
+
+                        <div class="row mb-4 mt-4">
+                            <div class="col-12">
+                                <a style="font-size: 20px"><i class='fa fa-bank'></i> Balance de 8 columnas</a>
+                            </div>
+
+                        </div>
+
+                        <div class="row g-2 align-items-end mb-4 mt-4 filters-bar"
+                            style="max-width: 1300px; min-width: 1300px;">
+
+                            <!-- ✅ Month picker a la izquierda -->
+                            <div class="col-auto">
+                                <label class="picker-label">Filtro por Mes o Año</label>
+                                <div class="input-group input-group-sm picker-group">
+                                    <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                                    <input autocomplete="off" placeholder="0000-00" type="text" id="period"
+                                        class="form-control picker-input month-input" />
+                                </div>
+                            </div>
+
+                            <div class="col-auto">
+                                <label class="picker-label">Desde</label>
+                                <div class="input-group input-group-sm picker-group">
+                                    <span class="input-group-text"><i class="fa fa-calendar-day"></i></span>
+                                    <input type="date" name="dateFrom" id="dateFrom"
+                                        class="form-control picker-input date-input" value="" onkeydown="return false;">
+                                </div>
+                            </div>
+
+                            <div class="col-auto d-flex align-items-center px-1" style="height:34px;">
+                                <i class="fa fa-arrow-right text-muted"></i>
+                            </div>
+
+                            <div class="col-auto">
+                                <label class="picker-label">Hasta</label>
+                                <div class="input-group input-group-sm picker-group">
+                                    <span class="input-group-text"><i class="fa fa-calendar-day"></i></span>
+                                    <input type="date" name="dateTo" id="dateTo"
+                                        class="form-control picker-input date-input" value="" onkeydown="return false;">
+                                </div>
+                            </div>
+
+                            <div class="col-auto">
+                                <a class="btn btn-success btn-labeled btn-filter-action" role="button"
+                                    id="btn_download">
+                                    <span class="btn-label"><i class="fa fa-download"></i></span>
+                                    <strong>Descargar balance</strong>
+                                </a>
+                            </div>
+                            <div class="col-auto">
+                                <a class="btn btn-success btn-labeled btn-filter-action" role="button"
+                                    id="btn_download_xml">
+                                    <span class="btn-label"><i class="fa fa-download"></i></span>
+                                    <strong>Descargar XML</strong>
+                                </a>
+                            </div>
+                            <!-- ✅ Checkbox mejor presentado (switch) -->
+                            <div class="col-auto d-flex align-items-center">
+                                <div class="form-check form-switch m-0">
+                                    <input class="form-check-input" type="checkbox" value="" id="checkApertura">
+                                    <label class="form-check-label ms-2" for="checkApertura">Solo apertura</label>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div class="row justify-content-start">
+                            <div class="col-md-12 col-2">
+                                <div id="loading-modal"></div>
+                            </div>
+                            <div class="table-responsive main-table">
+
+                                <table class="table table-striped table-hover sticky-header" cellspacing="0"
+                                    width="100%" id="tables">
+                                    <thead class="table-light" id="table-head">
+                                        <tr style="text-align: center;">
+                                            <th class="ml-2" colspan="2"></th>
+                                            <th></th>
+                                            <th class="ml-2" colspan="2">Valores acumulados</th>
+                                            <th></th>
+                                            <th class="ml-2" colspan="2">Saldos</th>
+                                            <th></th>
+                                            <th class="ml-2" colspan="2">Inventario</th>
+                                            <th></th>
+                                            <th class="ml-2" colspan="2">Resultados</th>
+                                        </tr>
+
+                                        <tr style="text-align: center">
+                                            <th scope="col" width="20px">Número</th>
+                                            <th scope="col">Cuenta</th>
+                                            <th></th>
+                                            <th scope="col">Débitos</th>
+                                            <th scope="col">Créditos</th>
+                                            <th></th>
+                                            <th scope="col">Deudor</th>
+                                            <th scope="col">Acreedor</th>
+                                            <th></th>
+                                            <th scope="col">Activo</th>
+                                            <th scope="col">Pasivo</th>
+                                            <th></th>
+                                            <th scope="col">Perdida</th>
+                                            <th scope="col">Ganancia</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table-data">
+
+                                    </tbody>
+                                    <tfoot id="table-footer">
+
+                                        <!-- <tr style="text-align: center">
+                                            <td></td>
+                                            <td>Sub-Totales</td>
+                                        </tr>
+    
+                                        <tr style="text-align: center">
+                                            <td></td>
+                                            <td>Pérdidas / Ganancias</td>
+                                        </tr style="text-align: center">
+    
+                                        <tr style="text-align: center">
+                                            <td></td>
+                                            <td>Total general</td>
+                                        </tr> -->
+
+                                    </tfoot>
+                                </table>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="modalDocs" aria-hidden="true" aria-labelledby="modalValuesLabel" tabindex="-1">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close close_modal" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <h6>Libro Mayor para la cuenta <span id="account-detail"></span></h6>
+
+                        <!-- Buscador -->
+                        <div class="search-container mb-3"
+                            style="background-color: #f8f9fa; border-radius: 10px; padding: 15px; border: 1px solid #e9ecef;">
+                            <div class="row align-items-end">
+                                <div class="col-md-8">
+                                    <label for="search-general" class="form-label"
+                                        style="font-size: 12px; font-weight: 600; color: #495057;">
+                                        <i class="fa fa-search"></i> Búsqueda en Tiempo Real
+                                    </label>
+                                    <input type="text" id="search-general" class="form-control form-control-sm"
+                                        placeholder="Busca por N° de asiento o más información (glosa, razón, obligación)..."
+                                        style="border-radius: 6px; border: 1px solid #ced4da;">
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="d-flex justify-content-end">
+                                        <button id="btn-clear-search" class="btn btn-outline-secondary btn-sm"
+                                            style="border-radius: 6px; height: 31px; width: 100px;">
+                                            <i class="fa fa-times"></i> Limpiar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="containerrows">
+                        <p1>Mostrar</p1>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-12">
+                            <div class="container">
+                                <div style="margin-right: 50px; margin-left: 50px; display: none;" class="mb-2"
+                                    id="loader-line">
+                                    <div class="loader-line"></div>
+                                </div>
+                                <div class="table-responsive">
+                                    <div id="loading-modal"></div>
+                                    <div class="excel-button-wrapper">
+                                        <button id="export-excel-mayor"
+                                            class="btn btn-success btn-sm btn-excel-improved">
+                                            <i class="fa fa-file-excel"></i> Exportar Excel
+                                        </button>
+                                    </div>
+                                    <table class="table table-striped table-hover tabledata" cellspacing="0"
+                                        width="100%">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th style="text-align: left; width: 150px;">FECHA CONTABILIZACIÓN</th>
+                                                <th>Nº ASIENTO</th>
+                                                <th>DEBE</th>
+                                                <th>HABER</th>
+                                                <th>ACUMULADO</th>
+                                                <th>OBLIGACIÓN</th>
+                                                <th>MÁS INFO.</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="table-details">
+
+                                        </tbody>
+                                        <tfoot>
+
+
+                                        </tfoot>
+                                    </table>
+                                    <div id="cont-paginado">
+                                        <div class="cont-pagination">
+                                            <ul class="pagination">
+
+                                            </ul>
+                                        </div>
+
+                                    </div>
+
+                                    <!-- <script src="script.js"></script> -->
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="modal fade" id="modalDetails" aria-hidden="true" aria-labelledby="modalValuesLabel" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content"
+                    style="background-color: #F6F7F8; box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;">
+                    <div class="modal-body">
+
+                        <h6>Detalle de asiento <span id="detail-asiento"></span></h6>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-12">
+                            <div class="container">
+                                <div class="table-responsive">
+                                    <div id="loading-modal"></div>
+                                    <table class="table table-striped table-hover tabledata" cellspacing="0"
+                                        width="100%">
+                                        <thead>
+                                            <tr class="text-center">
+                                                <th style="text-align: left;">Cuenta</th>
+                                                <th>DEBE</th>
+                                                <th>HABER</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="table-detalle-asiento">
+
+                                        </tbody>
+                                        <tfoot id="table-detalle-asiento-footer">
+
+                                        </tfoot>
+                                    </table>
+                                </div>
+
+                                <button type="button" class="btn btn-custom" data-bs-dismiss="modal">Cerrar</button>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://kit.fontawesome.com/ce6248a3c0.js" crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/xlsx.full.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.13.5/jszip.js"></script>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="../../../base_object/general_template.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <!-- COLUMN --->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="../../script/general_functions.js?v=32433" data-from="from-balance"></script>
+
+    <script>
+        function toggleDateInputs(disabled) {
+            const from = document.getElementById("dateFrom");
+            const to = document.getElementById("dateTo");
+
+            if (from && to) {
+                if (disabled) {
+                    from.setAttribute('readonly', true);
+                    to.setAttribute('readonly', true);
+                    from.setAttribute('onkeydown', 'return false;');
+                    to.setAttribute('onkeydown', 'return false;');
+                } else {
+                    from.removeAttribute('readonly');
+                    to.removeAttribute('readonly');
+                    from.setAttribute('onkeydown', 'return false;'); // Mantener bloqueo de teclado
+                    to.setAttribute('onkeydown', 'return false;'); // Mantener bloqueo de teclado
+                }
+            }
+        }
+
+        // Desactivar inputs desde el inicio
+        toggleDateInputs(true);
+
+        // Observar cambios en la tabla directamente
+        const tableData = document.getElementById("table-data");
+
+        const observer = new MutationObserver(function (mutations) {
+            const rows = tableData?.querySelectorAll("tr");
+            const hasRows = rows && rows.length > 0;
+
+            if (hasRows) {
+                toggleDateInputs(false);
+                observer.disconnect();
+            }
+        });
+
+        // Event listeners para cambios de fecha
+        function setupDateListeners() {
+            const dateFrom = document.getElementById("dateFrom");
+            const dateTo = document.getElementById("dateTo");
+
+            if (dateFrom) {
+                dateFrom.addEventListener('change', function () {
+                    toggleDateInputs(true);
+                    observer.observe(tableData, { childList: true, subtree: true });
+                });
+            }
+
+            if (dateTo) {
+                dateTo.addEventListener('change', function () {
+                    toggleDateInputs(true);
+                    observer.observe(tableData, { childList: true, subtree: true });
+                });
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", function () {
+            if (tableData) {
+                observer.observe(tableData, { childList: true, subtree: true });
+            }
+
+            // Configurar listeners de fecha
+            setupDateListeners();
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+    <script>
+        (function ($) {
+            if (!$ || $.fn.zIndex) return;
+
+            $.fn.zIndex = function (zIndex) {
+                if (zIndex !== undefined) return this.css("z-index", zIndex);
+
+                if (!this.length) return 0;
+                let elem = $(this[0]);
+                while (elem.length && elem[0] !== document) {
+                    const position = elem.css("position");
+                    if (position === "absolute" || position === "relative" || position === "fixed") {
+                        const value = parseInt(elem.css("z-index"), 10);
+                        if (!Number.isNaN(value) && value !== 0) return value;
+                    }
+                    elem = elem.parent();
+                }
+                return 0;
+            };
+        })(window.jQuery);
+    </script>
+    
+    <script src="https://dev5.unabase.com/v3/script/jquery/plugins/jquery-ui-monthpicker/jquery.ui.monthpicker.js"></script>
+    
+    <script>
+        jQuery(function ($) {
+            const MIN_DROPDOWN_YEAR = 2015;
+            const NAV_MIN_YEAR = 2010;
+            const MAX_FUTURE_YEARS = 0;
+            const nowY = new Date().getFullYear();
+
+            const MONTH_MAP = {
+                "Ene": "01", "Feb": "02", "Mar": "03", "Abr": "04", "May": "05", "Jun": "06",
+                "Jul": "07", "Ago": "08", "Sep": "09", "Oct": "10", "Nov": "11", "Dic": "12"
+            };
+
+            function pad2(n) { return String(n).padStart(2, "0"); }
+
+            function hideDropdownYearsBelow2020() {
+                const $sel = $("#ui-monthpicker-div select.ui-datepicker-year");
+                if (!$sel.length) return;
+                $sel.find("option").each(function () {
+                    const y = parseInt(this.value, 10);
+                    this.hidden = (Number.isFinite(y) && y < MIN_DROPDOWN_YEAR);
+                });
+            }
+
+            // Lee el año mostrado
+            function readPopupYear() {
+                const $sel = $("#ui-monthpicker-div select.ui-datepicker-year");
+                if ($sel.length) {
+                    const y = parseInt($sel.val(), 10);
+                    if (Number.isFinite(y)) return y;
+                }
+                const t = $("#ui-monthpicker-div .ui-datepicker-title").text();
+                const m = t.match(/\d{4}/);
+                return m ? parseInt(m[0], 10) : NaN;
+            }
+
+            function notifyPeriod() {
+                const el = document.getElementById("period");
+                el.dispatchEvent(new Event("change", { bubbles: true }));
+            }
+
+            function setYearOnly(year) {
+                $("#period").val(String(year));
+                $("#yearFrom").val(String(year));
+                $("#monthOnlyFrom").val("");
+                notifyPeriod();
+            }
+
+            function setYearMonth(year, mm) {
+                $("#period").val(`${year}-${mm}`);
+                $("#yearFrom").val(String(year));
+                $("#monthOnlyFrom").val(mm);
+                notifyPeriod();
+            }
+
+
+
+            // Evita que el input quede con valores raros por tecleo
+            $("#period")
+                .prop("readonly", true)
+                .on("keydown", e => e.preventDefault());
+
+            // Inicial: año-mes actual
+            setYearMonth(nowY, pad2(new Date().getMonth() + 1));
+
+            $("#period").monthpicker({
+                pattern: "yyyy-mm",
+                dateFormat: "yy-mm",
+                changeYear: true,
+
+
+                yearRange: `${NAV_MIN_YEAR}:${nowY + MAX_FUTURE_YEARS}`
+            });
+
+            // Sin fecha al abrir
+            $("#period").on("focus click", function () {
+                setTimeout(function () {
+                    $("#ui-monthpicker-div").data("pickedMonth", false);
+
+                    // ✅ importante: limpiar mes previo para que cambiar año sea "año-only"
+                    $("#monthOnlyFrom").val("");
+
+                    hideDropdownYearsBelow2020();
+                }, 0);
+            });
+
+            // Cambia año por dropdown
+            document.addEventListener('change', function (e) {
+                const sel = e.target;
+                if (!sel.matches('#ui-monthpicker-div select.ui-datepicker-year')) return;
+
+                const y = parseInt(sel.value, 10);
+                if (!Number.isFinite(y)) return;
+
+                // deja que el plugin termine su lógica primero (re-render / writes)
+                requestAnimationFrame(() => requestAnimationFrame(() => {
+                    hideDropdownYearsBelow2020();
+
+                    const picked = $("#ui-monthpicker-div").data("pickedMonth") === true;
+                    const mm = $("#monthOnlyFrom").val();
+
+                    if (!picked) {
+                        $("#monthOnlyFrom").val("");
+                        setYearOnly(y);       // esto debe setear #period y disparar change
+                    } else {
+                        if (mm) setYearMonth(y, mm);
+                        else setYearOnly(y);
+                    }
+                }));
+            }, true); // 👈 CAPTURE
+
+
+
+
+            // Cambia año con flechas
+            $(document).on("click",
+                "#ui-monthpicker-div .ui-datepicker-prev, #ui-monthpicker-div .ui-datepicker-next",
+                function () {
+                    setTimeout(function () {
+                        hideDropdownYearsBelow2020();
+                        const y = readPopupYear();
+                        if (!Number.isFinite(y)) return;
+
+                        // si aún no eligió mes en esta apertura, guardamos solo el año
+                        if (!$("#ui-monthpicker-div").data("pickedMonth")) {
+                            setYearOnly(y);
+                        }
+                    }, 0);
+                }
+            );
+
+            // Click en mes => guardar AÑO-MES
+            $(document).on("click", "#ui-monthpicker-div td a", function () {
+                const y = readPopupYear();
+                if (!Number.isFinite(y)) return;
+
+                const label = $(this).text().trim();
+                const mm = MONTH_MAP[label];
+                if (!mm) return;
+
+                $("#ui-monthpicker-div").data("pickedMonth", true);
+                $("#monthOnlyFrom").val(mm);   // ✅ guarda mes elegido
+                setYearMonth(y, mm);
+            });
+        });
+
+        function toggleDateInputs(disabled) {
+            const ids = ["dateFrom", "dateTo", "period"];
+
+            ids.forEach((id) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+
+                if (disabled) {
+                    el.setAttribute("readonly", true);
+                    el.classList.add("is-disabled");
+                } else {
+                    el.removeAttribute("readonly");
+                    el.classList.remove("is-disabled");
+                }
+
+                el.setAttribute("onkeydown", "return false;");
+            });
+        }
+
+    </script>
+    <input type="hidden" id="yearFrom" name="yearFrom">
+    <input type="hidden" id="monthOnlyFrom" name="monthOnlyFrom">
+</body>
+
+</html>

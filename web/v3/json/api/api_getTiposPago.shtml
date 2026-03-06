@@ -1,0 +1,10 @@
+{
+	"total": <!--#4DHTML $total-->,
+	"rows": [
+<!--#4DLOOP id_tipopago -->
+		{
+			"text": "<!--#4DHTML descripcion_tipopago{id_tipopago}-->",	
+		}<!--#4DIF NOT(id_tipopago{id_tipopago} = id_tipopago{Size of array(id_tipopago)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

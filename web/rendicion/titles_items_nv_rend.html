@@ -1,0 +1,13 @@
+<select name='dtc' class='select-grilla-det-fr' onChange='get_items_titulos_rf(this.value,$(this).parents("tr"))'>";
+	<!--#4dif Size of array(aItemsPRFTllave)=0-->
+		<option selected value="-1">[Sin Items]</option>	
+	<!--#4dendif-->
+	
+	<!--#4dif Size of array(aItemsPRFTllave)>0-->
+		<option selected value="-1">[Seleccionar]</option>
+		<!--#4dloop aItemsPRFTllave-->
+			<option value="<!--#4DVAR aItemsPRFTllave{aItemsPRFTllave}-->"><!--#4DVAR aItemsPRFT{aItemsPRFTllave}--></option>
+		<!--#4dendloop-->
+	<!--#4dendif-->	
+	
+</select>

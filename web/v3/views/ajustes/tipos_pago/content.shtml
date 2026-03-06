@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getTipospago-->
+		<title>Tipos de pago</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/views/ajustes/tipos_pago/tipos_pago.js"></script>
+    	<script type="text/javascript" src="/v3/views/ajustes/tipos_pago/content.js"></script>
+    	<style type="text/css">
+    		.newcolor input,textarea{
+    			background-color: #ffffff !important;
+    		}
+    	</style>
+    	<link href="/css/form1.css" rel="stylesheet">
+	</head>
+	<body>
+		<section class="sheet" id="tipospago" data-id="<!--#4DTEXT id-->">
+			<footer>
+				<article>
+					<h1>Información general - Tipos de pago</h1>
+					<ul class="editable newcolor">
+						<li><input name="estado" id="estado" class="checkbox" type="checkbox"><label for="estado" class="sg-input-title" >Activo</label></li>
+						<li><input name="ingreso" id="ingreso" class="checkbox" type="checkbox"><label for="ingreso" class="sg-input-title" >Ingreso</label></li>
+						<li><input name="egreso" id="egreso" class="checkbox" type="checkbox"><label for="egreso" class="sg-input-title" >Egreso</label></li>
+
+						<li><span class="sg-input-title">Descripción</span> <span><input type="text" class="form-control rise" name="descripcion" ></span></li>
+						<li><span class="sg-input-title">Codigo</span> <span><input type="text" class="form-control rise" name="codigo" ></span></li>
+
+					</ul>
+				</article>
+			</footer>
+		</section>
+	</body>
+</html>

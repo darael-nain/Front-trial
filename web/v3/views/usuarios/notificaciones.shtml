@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_getNotificacionesUsuarios-->		
+		<title>Usuario</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/views/usuarios/script/content.js"></script>
+
+		<script type="text/javascript">
+
+		var set_notificacion = function(id, login, inbox, email){
+				// var modulo =  $('#sheet-usuarios').data('modulo');				
+				$.ajax({
+					url: '/4DACTION/_V3_setNotificacionesUsuarios',
+					data: {
+						"permisos[id]" : id,
+						"permisos[login]": login,					
+						"permisos[inbox]": inbox,
+						"permisos[email]": email
+					},
+					dataType: 'json',
+					type: 'POST',
+					success: function(data) {
+						
+						if (data.success) {
+							toastr.success(NOTIFY.get('SUCCESS_SAVE'));
+						}else{
+							toastr.error(NOTIFY.get('ERROR_RECORD_READONLY', 'Error'));
+						}						
+					},
+					error: function(data) {
+						toastr.error(NOTIFY.get('ERROR_INTERNAL'));
+					}
+				});				
+			}
+
+
+		$(document).ready(function() {
+
+		$("section.notificacion table").on('click','td input[type="checkbox"]', function() {			
+
+					var current = $(this);			
+					var id = current.val();
+					var login =  current.closest('tr').data('login');
+					var inbox;
+					var email;
+
+
+					if (current.attr('name') == 'inbox[check]')
+						inbox = current.prop('checked');
+
+					if (current.attr('name') == 'email[check]')
+						email = current.prop('checked');
+
+					set_notificacion(id, login, inbox, email);
+				});
+				
+		});					
+				
+		</script>
+
+	</head>
+	<body>
+		<section class="sheet sheet-usuarios css-main notificacion" data-id="<!--#4DTEXT prmUserLogin-->">
+			
+			<footer>			
+				<article>
+					<h1>Notificaciones</h1>								
+					<ul>						
+						<li>
+							<table>
+								<thead>
+									<tr>										
+										<th>Modulo</th>
+										<th>Descripcion</th>										
+										<th>Inbox</th>
+										<th>Email</th>										
+									</tr>		
+								</thead>
+								<tbody>
+									<!--#4DLOOP modulo-->
+									<tr data-login="<!--#4DVAR login{modulo}-->">									
+										<td><!--#4DVAR modulo{modulo}--></td>
+										<td><!--#4DVAR desc{modulo}--></td>
+										<td><input name="inbox[check]" class="check" type="checkbox" value="<!--#4DVAR id_notificacion{modulo}-->"<!--#4DIF inbox{modulo}--> checked<!--#4DENDIF-->> </td>
+										<td><input name="email[check]" class="check" type="checkbox" value="<!--#4DVAR id_notificacion{modulo}-->"<!--#4DIF email{modulo}--> checked<!--#4DENDIF-->> </td>
+									<!--#4DENDLOOP-->
+									</tr>	
+								</tbody>
+					  			<tfoot></tfoot>
+							</table>
+
+								
+						</li>						
+					</ul>	
+										
+				</article>	
+			
+			</footer>		
+		</section>		
+	</body>
+</html>

@@ -1,0 +1,82 @@
+<input id="globalSession" type="hidden" value="<!--#4DVAR vSesion-->">
+<input id="globalLogin" type="hidden" value="<!--#4DVAR vLogin-->">
+
+<div id="content-header">
+
+<header>
+
+    <div class="logo">
+        <a href="/4DACTION/wbienvenidos_contratistas">
+        	<!--<img src="/imagenes/logo_empresa.jpg" width="40" height="40" border="0" />-->
+        	<img src="<!--#4DVAR vUrlImagenLogo-->" width="<!--#4DVAR vAnchoPicture-->" height="<!--#4DVAR vAltoPicture-->" border="0"/>
+        </a>
+    </div> 
+  <nav>  
+
+    <!--#4DIF aCheckPermiso{31}-->
+      <!--#4DIF current="ne"-->
+        <li class="current"><a href="/4DACTION/wbienvenidos_contratistas">Home</a></li>
+      <!--#4DELSE-->
+        <li><a href="/4DACTION/wbienvenidos_contratistas">Home</a></li>
+      <!--#4DENDIF-->
+    <!--#4DENDIF--> 
+
+		<!--#4DIF aCheckPermiso{32}-->
+      <!--#4DIF current="ned"-->
+        <li class="current"><a href="/4DACTION/weditarvisita_Contratistas">Visitas t&eacutecnicas</a></li>
+      <!--#4DELSE-->
+        <li><a href="/4DACTION/weditarvisita_Contratistas">Visitas t&eacutecnicas</a></li>
+      <!--#4DENDIF--> 
+    <!--#4DENDIF-->
+
+        <li><a href="/4DACTION/weditarvisita_Contratistas">Ingresar Visitas</a></li>
+     
+  </nav>   
+</header>
+
+<div class="container-user">
+  <div class="info-usuario">
+
+      <div class="nombre">        
+
+        <!--#4DIF vTratamiento="SRTA."-->
+        <span><img src="/imagenes/user_black_female.png" border="0" /></span>
+        <!--#4DENDIF-->
+
+        <!--#4DIF vTratamiento="SRTA"-->
+        <span><img src="/imagenes/user_black_female.png" border="0" /></span>
+        <!--#4DENDIF-->
+
+        <!--#4DIF vTratamiento="SRA"-->
+        <span><img src="/imagenes/user_black_female.png" border="0" /></span>
+        <!--#4DENDIF-->
+
+         <!--#4DIF vTratamiento="SRA."-->
+        <span><img src="/imagenes/user_black_female.png" border="0" /></span>
+        <!--#4DENDIF-->
+
+        <!--#4DIF vTratamiento="SR."-->
+        <span><img src="/imagenes/user_business.png" border="0" /></span>
+        <!--#4DENDIF-->
+
+        <!--#4DIF vTratamiento="SR"-->
+        <span><img src="/imagenes/user_business.png" border="0" /></span>
+        <!--#4DENDIF-->
+
+        <!--#4DIF vTratamiento=""-->
+        <span><img src="/imagenes/user_silhouette.png" border="0" /></span>
+        <!--#4DENDIF-->  
+       
+        <!--#4DVAR vNomUsr-->
+      </div>
+
+      <div class="cerrar">      
+      <a href="/4DACTION/W_CERRAR_SESION_contratistas">
+        <img src="/imagenes/disconnect.png" border="0" />
+        <span>Salir</span>
+      </a>      
+      </div> 
+  </div>
+</div>
+
+</div>

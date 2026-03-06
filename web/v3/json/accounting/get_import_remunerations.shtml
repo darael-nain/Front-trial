@@ -1,0 +1,27 @@
+{
+	"id": <!--#4DIF Not(Undefined(id))--><!--#4DIF Type(id)=Is Text-->"<!--#4DVAR id-->"<!--#4DELSE--><!--#4DVAR id--><!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"index": <!--#4DIF Not(Undefined(index))-->"<!--#4DHTML index-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"text": <!--#4DIF Not(Undefined(text))-->"<!--#4DHTML text-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"folio": <!--#4DIF Not(Undefined(folio))-->"<!--#4DHTML folio-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"success": <!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"errorMsg": "<!--#4DTEXT errorMsg-->",
+	"id_import":<!--#4DIF Not(Undefined(aNegocio))--><!--#4DHTML id_import--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"verifyOk":<!--#4DIF Not(Undefined(verifyOk))--><!--#4DIF verifyOk-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	<!--#4DIF Not(Undefined(aCont))-->
+	"rows":[
+		<!--#4DLOOP aCont -->
+			{
+				"negocio":  <!--#4DIF Not(Undefined(aNegocio))-->"<!--#4DHTML aNegocio{aCont}-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"debe":   <!--#4DIF Not(Undefined(aNegocio))-->"<!--#4DHTML String(aDebe{aCont})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"folio":   <!--#4DIF Not(Undefined(aNegocio))-->"<!--#4DHTML String(aFolio{aCont})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"emision":   <!--#4DIF Not(Undefined(aNegocio))-->"<!--#4DHTML aEmision{aCont}-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"cliente":   <!--#4DIF Not(Undefined(aNegocio))-->"<!--#4DHTML aCliente{aCont}-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"referencia":   <!--#4DIF Not(Undefined(aNegocio))-->"<!--#4DHTML aReferencia{aCont}-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"total_neto":   <!--#4DIF Not(Undefined(aNegocio))-->"<!--#4DHTML String(aTotalNeto{aCont})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"fila": <!--#4DIF Not(Undefined(aNegocio))-->"<!--#4DHTML String(aFila{aCont})-->"<!--#4DELSE-->null<!--#4DENDIF-->
+			}<!--#4DIF NOT(aCont{aCont} = aCont{Size of array(aCont)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+	<!--#4DENDIF-->
+
+	]
+}

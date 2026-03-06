@@ -1,0 +1,85 @@
+{
+	"page": {
+		"current": <!--#4DVAR page-->,
+		"last": <!--#4DVAR -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DVAR $offset-1-->,
+		"to": <!--#4DVAR (Selected record number([Servicio]) - 2)-->,
+		"total": <!--#4DVAR $total-->
+	},
+	"rows": [
+<!--#4DLOOP aProductoId -->
+		{
+			"id": <!--#4DVAR aProductoId{aProductoId}-->,
+			"index": "<!--#4DVAR aProductoIndex{aProductoId}-->",
+			"text": "<!--#4DHTML _V3_escapeString(aProductoNombre{aProductoId})-->",
+			"username": "<!--#4DHTML _V3_escapeString(aProductoUsuario{aProductoId})-->",
+			"status": <!--#4DIF Not(Undefined(aProductoEstado{aProductoId}))--><!--#4DIF aProductoEstado{aProductoId}-->true<!--#4DELSE -->false<!--#4DENDIF--><!--#4DELSE -->false<!--#4DENDIF-->,
+			"ocultar_print": <!--#4DIF Not(Undefined(aProductoOcultarPrint{aProductoId}))--><!--#4DIF aProductoOcultarPrint{aProductoId}-->true<!--#4DELSE -->false<!--#4DENDIF--><!--#4DELSE -->false<!--#4DENDIF-->,
+			"mostrar_carta_cliente": <!--#4DIF Not(Undefined(aProductoMostrarCartaCliente{aProductoId}))--><!--#4DIF aProductoMostrarCartaCliente{aProductoId}-->true<!--#4DELSE -->false<!--#4DENDIF--><!--#4DELSE -->false<!--#4DENDIF-->,
+			"idcategoria": <!--#4DVAR aProductoCategoriaId{aProductoId}-->,
+			"cuenta_contable_categoria": "<!--#4DVAR aProductoCategoriaCuentContable{aProductoId}-->",
+			"categoria": {
+				"id": <!--#4DHTML aProductoCategoriaId{aProductoId}-->,
+				"text": "<!--#4DHTML _V3_escapeString(aProductoCategoriaNombre{aProductoId})-->"
+			},
+			"codigo_cuenta_contable":"<!--#4DIF Not(Undefined(aCuentaContable{aProductoId}))--><!--#4DVAR String(aCuentaContable{aProductoId})--><!--#4DENDIF-->",
+			<!--#4DIF Not(Undefined(aProductoInstancesNegocios))-->"instances": {
+				"negocios": <!--#4DHTML aProductoInstancesNegocios{aProductoId} -->,
+				"gastos": <!--#4DHTML aProductoInstancesGastos{aProductoId}-->
+			},<!--#4DENDIF-->
+			"observacion": "<!--#4DHTML _V3_escapeString(aProductoObservacion{aProductoId})-->",
+			"porcentaje_monto_total": <!--#4DIF Not(Undefined(aProductoPorcentajeMontoTotal))--><!--#4DVAR String(aProductoPorcentajeMontoTotal{aProductoId};"&xml")--><!--#4DELSE -->null<!--#4DENDIF-->,
+			"formula_productor_ejecutivo": <!--#4DIF Not(Undefined(aProductoFormulaProdEjec{aProductoId}))--><!--#4DIF aProductoFormulaProdEjec{aProductoId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+			"formula_productor_ejecutivo_ratio": <!--#4DIF Not(Undefined(aProductoFormulaProdEjec{aProductoId}))--><!--#4DVAR String(aProductoFormulaProdEjecRatio{aProductoId};"&xml")--><!--#4DELSE-->0<!--#4DENDIF-->,
+			"formula_asistente_produccion": <!--#4DIF Not(Undefined(aProductoFormulaAsistProd{aProductoId}))--><!--#4DIF aProductoFormulaAsistProd{aProductoId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+			"formula_horas_extras": <!--#4DIF Not(Undefined(aProductoFormulaHorasExtras{aProductoId}))--><!--#4DIF aProductoFormulaHorasExtras{aProductoId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+			"director_internacional": <!--#4DIF Not(Undefined(aProductoDirectorInternacional{aProductoId}))--><!--#4DIF aProductoDirectorInternacional{aProductoId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+			"margen": <!--#4DIF Not(Undefined(aProductoMargen)) & (String(aProductoMargen{aProductoId})#"I") & ((String(aProductoMargen{aProductoId})#"-I"))--><!--#4DVAR String(aProductoMargen{aProductoId};"&xml")--><!--#4DELSE -->null<!--#4DENDIF-->,
+			"precio": <!--#4DIF (String(aProductoPrecio{aProductoId}) = "I")-->null<!--#4DELSE--><!--#4DVAR String(aProductoPrecio{aProductoId};"&xml")--><!--#4DENDIF-->,
+			"costo": <!--#4DIF (String(aProductoCosto{aProductoId}) = "I")-->null<!--#4DELSE--><!--#4DVAR String(aProductoCosto{aProductoId};"&xml")--><!--#4DENDIF-->,
+			"precio_uf": <!--#4DIF (String(aProductoPrecioUf{aProductoId}) = "I")-->null<!--#4DELSE--><!--#4DVAR String(aProductoPrecioUf{aProductoId};"&xml")--><!--#4DENDIF-->,
+			"costo_uf": <!--#4DIF (String(aProductoCostoUf{aProductoId}) = "I")-->null<!--#4DELSE--><!--#4DVAR String(aProductoCostoUf{aProductoId};"&xml")--><!--#4DENDIF-->,
+			"unidad": "<!--#4DVAR Substring(aProductoUnidad{aProductoId};1;3)-->",
+			<!--#4DIF Not(Undefined(aProductoIsGroup))-->"is_group": <!--#4DIF aProductoIsGroup{aProductoId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,<!--#4DENDIF-->
+			<!--#4DIF Not(Undefined(aProductoParentId))-->"parent": <!--#4DIF (aProductoParentId{aProductoId}=0)-->null<!--#4DELSE--><!--#4DVAR aProductoParentId{aProductoId}--><!--#4DENDIF-->,<!--#4DENDIF-->
+			"tags": [
+				<!--#4DSCRIPT/_V3_proxy_getTagProductoList-->
+				<!--#4DLOOP aIndexTag-->
+				{
+					"tag_id": <!--#4DVAR aIdTag{aIndexTag}-->,
+					"tag_name": "<!--#4DHTML _V3_escapeString(aNameTag{aIndexTag})-->"
+				}<!--#4DIF NOT(aIndexTag{aIndexTag} = aIndexTag{Size of array(aIndexTag)})-->,<!--#4DENDIF-->
+				<!--#4DENDLOOP-->
+			],
+			"costo_directo": <!--#4DIF Not(Undefined(aProductoCostoDirecto{aProductoId}))--><!--#4DIF aProductoCostoDirecto{aProductoId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+			"costo_admin": <!--#4DIF Not(Undefined(aProductoCostoAdmin{aProductoId}))--><!--#4DIF aProductoCostoAdmin{aProductoId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+			"aplica_sobrecargo": <!--#4DIF aProductoAplicaSobrecargo{aProductoId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DIF Num(aProductoTDId{aProductoId})#0-->,
+			"tipo_documento": {
+				"id": <!--#4DVAR Num(aProductoTDId{aProductoId})-->,
+				"text": "<!--#4DHTML _V3_escapeString(aProductoTDNombre{aProductoId})-->",
+				"abbr": "<!--#4DHTML _V3_escapeString(aProductoTDAbbr{aProductoId})-->",
+				"ratio": <!--#4DVAR String(aProductoTDValor{aProductoId};"&xml")-->,
+				"inverse": <!--#4DIF aProductoTDDivision{aProductoId}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+			}<!--#4DENDIF--><!--#4DIF aProductoHoraExtra{aProductoId}-->,
+			"hora_extra": {
+				"factor": <!--#4DVAR String(aProductoHoraExtraFactor{aProductoId};"&xml")-->,
+				"jornada": <!--#4DIF aProductoHoraExtraJornada{aProductoId}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+			}<!--#4DENDIF-->
+		}<!--#4DIF NOT(aProductoId{aProductoId} = aProductoId{Size of array(aProductoId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	],
+	"currency" : {
+	    "code" : "<!--#4DTEXT _V3_defaultCurrencyCode-->",
+	    "name" : "<!--#4DTEXT _V3_defaultCurrencyName-->",
+	    "symbol" : "<!--#4DTEXT _V3_defaultCurrencySymbol-->",
+	    "right" : <!--#4DIF _V3_defaultCurrencyRight-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	    "decimal": <!--#4DTEXT _V3_defaultCurrencyDecimals-->,
+	    "decimal_sep": "<!--#4DTEXT _V3_defaultCurrencyDecimalSep-->",
+	    "thousand_sep" : "<!--#4DTEXT _V3_defaultCurrencyThousandSep-->",
+	    "decimal_text_excel" : "<!--#4DTEXT _V3_defaultCurrencyDecimalsText-->",
+	    "format_code_excel" : "<!--#4DTEXT _V3_defaultCurrencyFormatCode-->",
+	    "label_rut" : "<!--#4DTEXT country_label_rut-->"
+	}
+}

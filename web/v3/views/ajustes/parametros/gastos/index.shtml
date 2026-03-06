@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Gastos</title>
+		<script type="text/javascript" src="/v3/views/ajustes/parametros/gastos/index.js"></script>
+
+    	<link href="/css/form1.css" rel="stylesheet">
+    	<link href="/v3/views/ajustes/parametros/css/params.css" rel="stylesheet">
+</head>
+<script type="text/javascript">
+	$(document).ready(function(){
+
+	  	unaBase.ui.block();    
+	  	ParamGastos.menu();
+	  	ParamGastos.init();
+	  	unaBase.ui.unblock();
+	  	unaBase.ui.expandable.init();
+	});
+
+</script>
+<body>
+	<section class="sheet" id="ParamGastos">
+		<footer>
+			<article class="article-half">
+				<h1>Gastos</h1>
+				<ul class="editable">
+						<!-- <li>
+								<label for="email_not_pago_v3">Emails para notificar solicitud de pago</label>
+								<input class="item" type="text" name="email_not_pago_v3" id="email_not_pago_v3">	
+						</li> -->
+					
+				</ul>
+				<ul class="editable">
+					<li>
+							<label for="v3_anular_gasto_rechazado">Anular gasto rechazado despues de 30 días</label>
+							<input class="item" type="checkbox" name="v3_anular_gasto_rechazado" id="v3_anular_gasto_rechazado">	
+					</li>
+				</ul>
+			</article>
+			
+		</footer>
+		
+	</section>
+</body>
+</html>

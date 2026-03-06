@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--#4DSCRIPT/_V3_proxy_getDtvContent-->
+    <title>Facturas de venta</title>
+    <meta charset="utf-8">
+    <script>
+    var occ_idfact = $('#main-container').data('id');
+    var occ_container = $('#sheet-list-occ');
+    var occ_target = $('table.oc_clientes > tbody');
+    var occ_targetFoot = occ_container.find('table > tfoot');
+    var porcentaje_iva = <!--#4DVAR String(_V3_IVARate;"&xml")-->;
+    // var NO_PEDIR_OCC_pe = <!--#4DIF NO_PEDIR_OCC_FE_pe-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+    var refreshOcc = function() {
+        $.ajax({
+            url: '/4DACTION/_V3_getOcclientes',
+            dataType: 'json',
+            async: false, // para que no avance hasta que la llamada se complete
+            cache: false,
+            data: {
+                fact: occ_idfact
+            },
+            success: loadOcc
+        }).fail(function(a, b, c) {
+            toastr.error(NOTIFY.get('ERROR_INTERNAL', 'Error'));
+        });
+    };
+
+    var loadOcc = function(data) {
+        var occ_target = $('table.oc_clientes > tbody');
+
+        // Elimina todas las oc de la tabla
+        occ_target.find("*").remove();
+
+        // add occ to list
+        var htmlObject;
+        $.each(data.rows, function(key, item) {
+            htmlObject = $('<tr data-id="'+item.id+'">'+
+                        '<td class="center">'+item.folio+'</td>' +
+                        '<td calss="center">'+item.tipo+'</td>' +
+                        '<td class="center">'+item.emision+'</td>' +
+                        '<td class="center">'+item.recepcion+'</td>' +
+                        '<td class="center">'+item.cliente+'</td>' +
+                        '<td class="center">'+item.referencia+'</td>' +
+                        '<td class="right"><span class="numeric currency">'+item.total+'</span></td>' +
+                        '<td class="center"><button class="minus"></button></td>' +
+                        '</tr>');
+            htmlObject.unbind('click').bind('click', function(event) {
+                //unaBase.loadInto.dialog('/v3/views/occlientes/content.shtml?id='+$(this).data('id')+'&neg='+idnv, 'OC. Cliente', 'x-large');
+                unaBase.loadInto.dialog('/v3/views/occlientes/content.shtml?id='+$(this).data('id'), 'OC. Cliente', 'x-large');
+            });
+            occ_target.append(htmlObject);
+        });
+
+        occ_target.find('button.minus').button({icons: {primary: 'ui-icon-circle-minus'},text: false}).click(function(){
+            var row = $(this).closest("tr");
+            var idocc = row.data("id");
+            confirm("¿Está seguro(a) que desea quitar la asociación del documento de esta factura?").done(function(data) {
+                if (data) {
+                    var container = $('#sheet-dtc');
+                    $.ajax({
+                        'url': '/4DACTION/_V3_setDtv',
+                        data: {
+                            'id': dtv.id,
+                            'idocc': idocc,
+                            'minusocc': true
+                        },
+                        dataType: 'json',
+                        success: function(data) {
+                            if (data.success) {
+                                toastr.success("Documento quitado con éxito.");
+                                row.fadeOut("slow");
+                                var counter = $('#scroll_oc_clientes h1 span');
+                                counter.text(parseInt(counter.text()) - 1);
+                            }else{
+                                toastr.error("No fue posible quitar el documento. Intente nuevamente.");
+                            }							},
+                        error: function(xhr, text, error) {
+                            toastr.error(NOTIFY.get('ERROR_INTERNAL', 'Error'));
+                        }
+                    });
+                }
+            });
+        });
+
+        $('#scroll_oc_clientes h1 span').text(data.rows.length.toString());
+
+        var htmlObject;
+        htmlObject = $('<tr>'+
+                    '<td></td>' +
+                    '<td></td>' +
+                    '<td></td>' +
+                    '<td></td>' +
+                    '<td></td>' +
+                    '<td></td>' +
+                    '<td></td>' +
+                    '<td></td>' +
+                    '</tr>');
+
+        occ_targetFoot.append(htmlObject);
+
+    };
+
+
+
+      unaBase.ui.block();
+      $(document).ready(function() {
+        
+        $( "#tabs-dtv" ).tabs();
+        $("#tabs-1").load('/v3/views/dtv/general.shtml', 'id=<!--#4DVAR id-->');
+        $('a[href="#tabs-2"]').click(function() {
+          unaBase.interval.clearAll();
+          $("#tabs-2").empty();
+          $("#tabs-2").load('/v3/views/historial/index.shtml', 'id=<!--#4DVAR id-->&mod=dtv');
+        });
+        $('a[href="#tabs-1"]').trigger('click');
+
+
+
+
+
+
+
+
+
+                
+    
+      });
+    </script>
+    <style>
+      .ui-tabs .ui-tabs-panel {
+        padding: 0 !important;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="main-container" data-id="<!--#4DTEXT id-->">
+      <section id="tabs-dtv">
+        <ul class="infinite-tabs">
+          <li><a href="#tabs-1">General</a></li>
+          <li class="load-historial" data-id="<!--#4DTEXT id-->"><a href="#tabs-2">Historial</a></li>
+        </ul>
+        <article id="tabs-1"></article>
+        <article id="tabs-2"></article>
+      </section>
+    </div>
+  </body>
+</html>

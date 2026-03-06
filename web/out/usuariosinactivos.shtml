@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="/out/style.css"/>
+    <title>REPORTE - <!--#4DVAR vTitle--></title>
+        <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+-->
+     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/out/report.js">        
+    </script>
+
+</head>
+<body>
+<div class="contenedor" align="center">
+ <div class="cuadro2">
+    <div>
+        <h4><!--#4DVAR v_Tit_Informe--></h4>
+
+        <p><!--#4DVAR String(aReporteDesc)--></p>
+
+    </div>
+    <p><img src="<!--#4DVAR vUrlImagenLogo-->" width="<!--#4DVAR vAnchoPicture-->" height="<!--#4DVAR vAltoPicture-->" border="0"/></p>
+
+    <div class="row">
+
+
+
+        <div class="totalreg">Usuarios Inactivos: <!--#4DVAR String(v_TotReg;"###.###.###.##0")--></div>
+
+        <table class="table table-responsive table-bordered" >
+            <thead>
+              <tr >
+                <td class="center-c">Usuario</td>
+                <td class="center-c">Nombre</td>
+                <td class="center-c">Última Conexión</td>
+                <td class="center-c">Días sin conectarse</td>
+              </tr>
+            </thead>
+            <!--#4DLOOP aLogin-->       
+            <tbody>    
+                <tr>
+                    <td class="orden-alfa"><!--#4DVAR aLogin{aLogin}--></td>
+                    <td class="orden-alfa"><!--#4DVAR aNombre{aLogin}--> <!--#4DVAR aApellido{aLogin}--></td>
+                    <td class="orden-alfa"><!--#4DVAR aFechaUltima{aLogin}--></td>
+                    <td class="orden-alfa"><!--#4DVAR aDiasSin{aLogin}--></td>
+
+                 
+                </tr>       
+            </tbody>
+            <!--#4DENDLOOP--> 
+        </table>
+    </div>
+
+    <div class="contenedor-footer">
+        <span class="datos-empresa-izq">
+        <!--#4DVAR nom_empresa--> / <!--#4DVAR dir_empresa--> / <a target="_blank" href="<!--#4DVAR sitio_empresa-->"><!--#4DVAR sitio_empresa--></a></span><em></em>
+    <span class="datos-empresa-der">Reporte enviado por <a href="http://www.unabase.cl" target="_blank" >UnaBase.cl</a></span>
+    </div>
+</div>
+</div>
+</body>
+</html>

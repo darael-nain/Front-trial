@@ -1,0 +1,9 @@
+<!--#4DIF Records in selection([tooltip])=1-->{
+	"success": true,
+	"id": <!--#4DTEXT [tooltip]id-->,
+	"path": "<!--#4DHTML _V3_escapeString([tooltip]path)-->",
+	"title": "<!--#4DHTML _V3_escapeString([tooltip]title)-->",
+	"text": "<!--#4DHTML _V3_escapeString([tooltip]text)-->",
+	"time": <!--#4DTEXT [tooltip]time-->,
+	"demo": <!--#4DIF [tooltip]demo-->true<!--#4DELSE-->false<!--#4DENDIF-->
+}<!--#4DELSE-->{}<!--#4DENDIF-->

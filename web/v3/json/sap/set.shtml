@@ -1,0 +1,9 @@
+{
+	"success": <!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"tipo_mensaje": "<!--#4DVAR $tipo_mensaje-->",
+	"mensaje": "<!--#4DVAR $mensaje_principal-->",
+	"codigo_error": "<!--#4DVAR $codigo_error-->",
+	"id": <!--#4DIF Not(Undefined(id))--><!--#4DIF Type(id)=Is Text-->"<!--#4DVAR id-->"<!--#4DELSE--><!--#4DVAR id--><!--#4DENDIF--><!--#4DELSE--><!--#4DENDIF-->,
+	"folio": <!--#4DIF Not(Undefined(folio))-->"<!--#4DHTML folio-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"readonly": <!--#4DIF Not(Undefined(readonly))--><!--#4DVAR readonly--><!--#4DELSE-->false<!--#4DENDIF-->
+}

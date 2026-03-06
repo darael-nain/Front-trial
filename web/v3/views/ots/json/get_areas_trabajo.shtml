@@ -1,0 +1,10 @@
+{
+	"rows": [
+<!--#4DLOOP aIdAreas-->
+		{
+			"id": <!--#4DTEXT aIdAreas{aIdAreas}-->,
+			"text": "<!--#4DTEXT _V3_escapeString(aNamesAreas{aIdAreas})-->"			
+		}<!--#4DIF NOT(aIdAreas{aIdAreas} = aIdAreas{Size of array(aIdAreas)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

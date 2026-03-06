@@ -1,0 +1,156 @@
+{
+	"id": <!--#4DTEXT [OT]ID_OT-->,
+	"hostname": "<!--#4DTEXT _V3_base_url-->",
+	"nombre" : "<!--#4DHTML _V3_escapeString([OT]Referencia)-->",
+	"motive" : "<!--#4DHTML _V3_escapeString([OT]motivo)-->",
+	"folio" : "<!--#4DTEXT [OT]Folio_OT-->",
+	"estado" : "<!--#4DTEXT [OT]Estado-->",
+	"estado_aux" : "<!--#4DTEXT estado_aux-->",
+	"fecha_creacion" : "<!--#4DTEXT fecha_creacion-->",
+	"hora_creacion" : "<!--#4DTEXT hora_creacion-->",
+	"fecha_inicio" : "<!--#4DTEXT fecha_inicio-->",
+	"hora_inicio" : "<!--#4DTEXT hora_inicio-->",
+	"hora_inicio_ampm" : "<!--#4DTEXT hora_inicio_ampm-->",
+	"fecha_termino" : "<!--#4DTEXT fecha_termino-->",
+	"hora_termino" : "<!--#4DTEXT hora_termino-->",
+	"hora_termino_ampm" : "<!--#4DTEXT hora_termino_ampm-->",
+	"hora_termino_default" : "<!--#4DTEXT hora_termino_default-->",
+	"fecha_final" : "<!--#4DTEXT fecha_final-->",
+	"hora_final" : "<!--#4DTEXT hora_final-->",
+	"fecha_cierre" : "<!--#4DTEXT fecha_cierre-->",
+	"hora_cierre" : "<!--#4DTEXT hora_cierre-->",
+	"motivo" : "<!--#4DTEXT _V3_escapeString(Uppercase([OT]motivo;*))-->",
+	"notas" : "<!--#4DHTML _V3_escapeString([OT]Notas1)-->",
+	"notifyOt" : <!--#4DIF [OT]notificado_ot-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"prioridad" : "<!--#4DTEXT [OT]importancia-->",
+	"clasificacion" : {
+		"id" : "<!--#4DTEXT clasificacion_id-->",
+		"nombre" : "<!--#4DTEXT clasificacion_nombre-->"
+	},
+	"responsable" : {
+		"login" : "<!--#4DTEXT responsable_login-->",
+		"email" : "<!--#4DTEXT responsable_email-->",
+		"nombre" : "<!--#4DTEXT responsable_nombre-->"
+	},
+	"creator" : {
+		"login" : "<!--#4DTEXT creator_login-->",
+		"email" : "<!--#4DTEXT creator_email-->",
+		"nombre" : "<!--#4DTEXT creator_nombre-->"
+	},
+	"origen" : {
+		"id" : "<!--#4DTEXT origen_id-->",
+		"numero" : "<!--#4DTEXT origen_numero-->",
+		"nombre" : "<!--#4DTEXT origen_nombre-->",
+		"referencia" : "<!--#4DHTML _V3_escapeString(origen_referencia)-->",
+		"item_directo" : <!--#4DIF origen_item_directo-->true<!--#4DELSE-->false<!--#4DENDIF-->
+	},
+	"item": {
+		"id" : "<!--#4DTEXT item_id-->",
+		"correlativo" : <!--#4DTEXT item_correlativo-->,
+		"nombre" : "<!--#4DTEXT item_nombre-->"
+	},
+	"cliente" : {
+		"id" : <!--#4DTEXT cliente_id-->,
+		"nombre" : "<!--#4DHTML _V3_escapeString(cliente_nombre)-->"
+	},
+	"cantidad_comentarios" : <!--#4DTEXT cantidad_comentarios-->,
+	"comentarios": [
+	<!--#4DLOOP a_comentario_id-->
+		{
+			"id": <!--#4DHTML a_comentario_id{a_comentario_id}-->,
+			"responsable_login": "<!--#4DHTML a_comentario_login_resp{a_comentario_id}-->",
+			"responsable_nombre": "<!--#4DHTML a_comentario_nombre_resp{a_comentario_id}-->",
+			"responsable_email": "<!--#4DHTML a_comentario_email_resp{a_comentario_id}-->",
+			"texts": "<!--#4DHTML _V3_escapeString(a_comentario_text{a_comentario_id})-->",
+			"fecha": "<!--#4DHTML a_comentario_fecha{a_comentario_id}-->",
+			"hora": "<!--#4DHTML a_comentario_hora{a_comentario_id}-->"
+		}<!--#4DIF NOT(a_comentario_id{a_comentario_id} = a_comentario_id{Size of array(a_comentario_id)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	],
+	"cantidad_participantes" : <!--#4DTEXT cantidad_participantes-->,
+	"participantes": [
+	<!--#4DLOOP a_participantes_id-->
+		{
+			"id": <!--#4DTEXT a_participantes_id{a_participantes_id}-->,
+			"login": "<!--#4DTEXT _V3_escapeString(a_participantes_login{a_participantes_id})-->",
+			"nombre": "<!--#4DTEXT _V3_escapeString(a_participantes_nombre{a_participantes_id})-->",
+			"email": "<!--#4DTEXT _V3_escapeString(a_participantes_email{a_participantes_id})-->",
+			"tipo": "<!--#4DTEXT _V3_escapeString(a_participantes_tipo{a_participantes_id})-->"
+		}<!--#4DIF NOT(a_participantes_id{a_participantes_id} = a_participantes_id{Size of array(a_participantes_id)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	],
+	"timesheet_count" : <!--#4DTEXT timesheet_count-->,
+	"timesheet_total_hour" : "<!--#4DTEXT timesheet_total_hour-->",
+	"timesheet_count_done" : "<!--#4DTEXT timesheet_count_done-->",
+	"task_timesheet": [
+	<!--#4DLOOP timesheet_id-->
+		{
+			"id": <!--#4DTEXT timesheet_id{timesheet_id}-->,
+			"name": "<!--#4DTEXT timesheet_name{timesheet_id}-->",
+			"start_date": "<!--#4DTEXT timesheet_start_date{timesheet_id}-->",
+			"start_time": "<!--#4DTEXT timesheet_start_time{timesheet_id}-->",
+			"end_date": "<!--#4DTEXT timesheet_end_date{timesheet_id}-->",
+			"end_time": "<!--#4DTEXT timesheet_end_time{timesheet_id}-->",
+			"min_hour": "<!--#4DTEXT timesheet_time{timesheet_id}-->",
+			"done": <!--#4DIF timesheet_done{timesheet_id}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"total": "<!--#4DTEXT timesheet_total{timesheet_id}-->"
+		}<!--#4DIF NOT(timesheet_id{timesheet_id} = timesheet_id{Size of array(timesheet_id)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	],
+	"adjuntos": [
+	<!--#4DLOOP a_file_id-->
+		{	
+			"id": <!--#4DTEXT a_file_id{a_file_id}-->,
+			"ruta": "<!--#4DTEXT a_file_ruta{a_file_id}-->",
+			"descripcion": "<!--#4DTEXT _V3_escapeString(a_file_descripcion{a_file_id})-->",
+			"login": "<!--#4DTEXT a_file_login{a_file_id}-->",
+			"formato": "<!--#4DTEXT a_file_formato{a_file_id}-->"
+		}<!--#4DIF NOT(a_file_id{a_file_id} = a_file_id{Size of array(a_file_id)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	],
+	"cantidad_timesheet" : <!--#4DTEXT cantidad_timesheet-->,
+	"timesheet": [
+	<!--#4DLOOP a_timesheet_id-->
+		{	
+			"id": <!--#4DTEXT a_timesheet_id{a_timesheet_id}-->,
+			"hora_inicio": "<!--#4DTEXT a_timesheet_hora_inicio{a_timesheet_id}-->",
+			"hora_fin": "<!--#4DTEXT a_timesheet_hora_fin{a_timesheet_id}-->",
+			"horas": "<!--#4DTEXT a_timesheet_horas{a_timesheet_id}-->",
+			"login": "<!--#4DTEXT a_timesheet_login{a_timesheet_id}-->",
+			"notas": "<!--#4DTEXT _V3_escapeString(a_timesheet_notas{a_timesheet_id})-->"
+		}<!--#4DIF NOT(a_timesheet_id{a_timesheet_id} = a_timesheet_id{Size of array(a_timesheet_id)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	],
+	"historial": [
+	<!--#4DLOOP a_historial_id-->
+		{	
+			"id": <!--#4DTEXT a_historial_id{a_historial_id}-->,
+			"descripcion": "<!--#4DTEXT _V3_escapeString(a_historial_descripcion{a_historial_id})-->",
+			"fecha": "<!--#4DTEXT a_historial_fecha{a_historial_id}-->",
+			"hora": "<!--#4DTEXT a_historial_hora{a_historial_id}-->",
+			"nombre_usuario": "<!--#4DTEXT a_historial_nombre{a_historial_id}-->"
+		}<!--#4DIF NOT(a_historial_id{a_historial_id} = a_historial_id{Size of array(a_historial_id)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	],
+	"costos" : {
+		"horas_asignadas" : "<!--#4DHTML String(horas_asignadas;"&xml")-->",
+		"horas_presupuestadas" : "<!--#4DHTML String(horas_presupuestadas;"&xml")-->",
+		"horas_trabajadas" : "<!--#4DHTML String(horas_trabajadas;"&xml")-->",
+		"costo_hh_unitario" : "<!--#4DHTML String(costo_hh_unitario;"&xml")-->",
+		"total_costo_real" : "<!--#4DHTML String(total_costo_real;"&xml")-->",
+		"total_costo_presupuestado" : "<!--#4DHTML String(total_costo_presupestado;"&xml")-->"
+	},
+	"sid" : "<!--#4DTEXT sid-->",
+	"vLogin": {
+		"login": "<!--#4DHTML _V3_escapeString(vLogin)-->",
+		"name": "<!--#4DHTML _V3_escapeString(vNomUsr2)-->",
+		"email": "<!--#4DHTML _V3_escapeString(vEmail)-->",
+		"google_id": "<!--#4DHTML _V3_escapeString(vGoogle_id)-->",
+		"google_email": "<!--#4DHTML _V3_escapeString(vGoogle_email)-->",
+		"google_name": "<!--#4DHTML _V3_escapeString(vGoogle_name)-->",
+		"google_access_token": "<!--#4DHTML _V3_escapeString(vGoogle_access_token)-->",
+		"google_refresh_token": "<!--#4DHTML _V3_escapeString(vGoogle_refresh_token)-->",
+		"google_img": "<!--#4DHTML _V3_escapeString(vGoogle_img)-->"
+	}
+}
+

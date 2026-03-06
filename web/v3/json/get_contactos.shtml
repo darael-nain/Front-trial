@@ -1,0 +1,70 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Contacto]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP aId -->
+		{
+			"id": <!--#4DTEXT aId{aId}-->,
+			"alias": "<!--#4DHTML _V3_escapeString(aAlias{aId})-->",
+			"razon": "<!--#4DHTML _V3_escapeString(aRazon{aId})-->",
+			"tipo_empresa": "<!--#4DHTML _V3_escapeString(aTipoEmpresa{aId})-->",
+			"giro": "<!--#4DHTML _V3_escapeString(aGiro{aId})-->",
+			"nombre_completo": "<!--#4DHTML _V3_escapeString(aNomCompleto{aId})-->",
+			"nombres": "<!--#4DHTML _V3_escapeString(aNombres{aId})-->",
+			"paterno": "<!--#4DHTML _V3_escapeString(aPaterno{aId})-->",
+			"materno": "<!--#4DHTML _V3_escapeString(aMaterno{aId})-->",
+			"rut": "<!--#4DHTML _V3_escapeString(aRut{aId})-->",
+			"telefono1": "<!--#4DHTML _V3_escapeString(aFono1{aId})-->",
+			"telefono2": "<!--#4DHTML _V3_escapeString(aFono2{aId})-->",
+			"celular": "<!--#4DHTML _V3_escapeString(aCelular{aId})-->",
+			"email": "<!--#4DHTML _V3_escapeString(aEmail{aId})-->",
+			"estado": <!--#4DIF aEstado{aId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"mostrar": "<!--#4DHTML _V3_escapeString(aMostrar{aId})-->",
+			"fmodificacion": "<!--#4DHTML String(aFMod{aId};7)-->",
+			"dir_calle": "<!--#4DHTML _V3_escapeString(aDirCalle{aId})-->",			
+			"dir_depto": "<!--#4DHTML _V3_escapeString(aDirDepto{aId})-->",
+			"dir_comuna": "<!--#4DHTML _V3_escapeString(aDirCmna{aId})-->",
+			"dir_ciudad": "<!--#4DHTML _V3_escapeString(aDirCiudad{aId})-->",
+			"dir_pais": "<!--#4DHTML _V3_escapeString(aDirPais{aId})-->",
+			"dir_region": "<!--#4DHTML _V3_escapeString(aDirRegion{aId})-->",
+			"sitio": "<!--#4DHTML _V3_escapeString(aSitio{aId})-->",
+			"tipo": "<!--#4DHTML _V3_escapeString(aTipo{aId})-->",
+			"fnacimiento": "<!--#4DHTML String(aFechaNacimiento{aId};7)-->",
+			"forma_pago": "<!--#4DHTML _V3_escapeString(aFormaPago{aId})-->",
+			"doc_compra": "<!--#4DHTML _V3_escapeString(aDocCompra{aId})-->",
+			"tipo_pago": "<!--#4DHTML _V3_escapeString(aTipoPago{aId})-->",
+			"banco": "<!--#4DHTML _V3_escapeString(aBanco{aId})-->",
+			"tipo_cuenta": "<!--#4DHTML _V3_escapeString(aTipoCuenta{aId})-->",
+			"nro_cuenta": "<!--#4DHTML _V3_escapeString(aNroCuenta{aId})-->",
+			"tags": [
+				<!--#4DSCRIPT/_V3_proxy_getTagContactoList-->
+				<!--#4DLOOP aIndexTag-->
+				{
+					"tag_id": <!--#4DTEXT aIdTag{aIndexTag}-->,
+					"tag_name": "<!--#4DHTML _V3_escapeString(aNameTag{aIndexTag})-->"			
+				}<!--#4DIF NOT(aIndexTag{aIndexTag} = aIndexTag{Size of array(aIndexTag)})-->,<!--#4DENDIF-->
+				<!--#4DENDLOOP-->
+			]
+		}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	],
+	"currency" : {
+	    "code" : "<!--#4DTEXT _V3_defaultCurrencyCode-->",
+	    "name" : "<!--#4DTEXT _V3_defaultCurrencyName-->",
+	    "symbol" : "<!--#4DTEXT _V3_defaultCurrencySymbol-->",
+	    "right" : <!--#4DIF _V3_defaultCurrencyRight-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	    "decimal": <!--#4DTEXT _V3_defaultCurrencyDecimals-->,
+	    "decimal_sep": "<!--#4DTEXT _V3_defaultCurrencyDecimalSep-->",
+	    "thousand_sep" : "<!--#4DTEXT _V3_defaultCurrencyThousandSep-->",
+	    "decimal_text_excel" : "<!--#4DTEXT _V3_defaultCurrencyDecimalsText-->",
+	    "format_code_excel" : "<!--#4DTEXT _V3_defaultCurrencyFormatCode-->",
+	    "label_rut" : "<!--#4DTEXT country_label_rut-->"
+	}
+}

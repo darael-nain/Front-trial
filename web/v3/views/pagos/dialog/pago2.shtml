@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getPagoContent-->
+		<title>Nueva orden de pago</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/script/datepicker_es.js"></script>
+		<!--<link rel="stylesheet" href="/v3/design/gray_and_white.css">-->
+		<script>
+
+			var op = {
+				"dialog" : $('#dialog-menu'),
+				"container" : $('section#sheetop'),
+				"estado" : $('section#sheetop').data('estado'),
+				"balance" : $('section.sheet input[name="oc[total_por_pagar]"]').val(),
+				"id_origin" : $('#viewport section.sheet').data('id'),
+				"origin" : $('section.sheet input[name="oc[tipo_gastos][des]"]').val(),
+				"number_origin" : $('section.sheet #index').text(),
+				"from_origin" : $('html > body > aside > div > div > ul > li.active').data('name'),
+				display: function(){
+					switch(op.estado) {
+					    case 'POR EMITIR':
+					   		op.dialog.find('li[data-name="discard"]').hide();
+					   		op.dialog.find('li[data-name="boucher_pago"]').hide();
+					    	break;
+					    case 'EMITIDA':
+					    	if(!access._499){ // anular pago
+								op.dialog.find('li[data-name="discard"]').hide();
+							} else {
+								op.dialog.find('li[data-name="discard"]').show();
+							}
+					        break;
+					    case 'PAGADA':
+					    	op.dialog.find('li[data-name="discard"]').hide();
+					    	break;
+					    case 'ANULADA':
+					    	op.dialog.find('li[data-name="discard"]').hide();
+					    	break;
+					}
+				}
+
+			};
+
+			$(document).ready(function() {				
+				$('.ui-dialog fieldset').find('.numeric.currency input').number(true, currency.decimals, ',', '.');				
+				unaBase.toolbox.init();
+				unaBase.toolbox.menu.init({
+					entity: 'Pago',
+					buttons: ['save', 'discard', 'preview_cheque', 'boucher_pago'],
+					data: function() {
+						return {
+							'id': $('.ui-dialog fieldset.pago').data('id'),
+							'fk': op.id_origin,	
+							'from': op.from_origin,
+							'pago[titular]': $('.ui-dialog [name="pago[titular]"]').val(),
+							'pago[abono]': $('.ui-dialog [name="pago[abono]"]').val(),
+							'pago[fecha]': $('.ui-dialog [name="pago[fecha]"]').val(),
+							'pago[observacion]': $('.ui-dialog [name="pago[observacion]"]').val(),
+							'current_doc_id': $('.ui-dialog .doc-pago').data("tipodocid"),
+							'current_doc_date': $('.ui-dialog [name="pago[documento][fecha]"]').val(),
+							'current_doc_type': $('.ui-dialog [name="pago[documento][tipo]"]').val(),
+							'current_doc_number': $('.ui-dialog [name="pago[documento][numero]"]').val(),
+							'current_doc_account': $('.ui-dialog [name="pago[documento][cuenta]"]').data("id"),
+							'current_doc_crossed': $('.ui-dialog [name="pago[documento][check_cruzado]"]').val(),
+							'current_doc_form': $('.ui-dialog [name="pago[documento][form]"]').val()
+						};
+					},
+					validate: function() {
+						var status = true;
+						$('.ui-dialog fieldset.pago input:required').removeClass('invalid');
+						$('.ui-dialog fieldset.pago input:required').each(function() {
+							if (($(this).parent().hasClass('numeric') & $(this).val() == 0) || $(this).val() == '') {
+								status = false;
+								$(this).addClass('invalid');
+							}
+						});
+						return status;
+					}
+				});
+
+				/*$('button.adddocpago').button({
+					caption: 'Agregar documento de pago',
+					icons: {
+						primary: 'ui-icon-circle-plus'
+					},
+					text: true
+				}).click(function() {
+					$('.ui-dialog fieldset.doc-pago').show();
+				 	$('.ui-dialog table#docpago').show();
+				});*/
+
+				var loadList = function() {
+					$('.ui-dialog table > tbody > tr').remove();
+					$.ajax({
+						url: '/4DACTION/_V3_getDocPagoByPago',
+						data: {
+							id: $('.ui-dialog-content fieldset.pago').data('id')
+						},
+						dataType: 'json',
+						success: function(data) {
+							var htmlObject;
+							$.each(data.rows, function(key, item) {
+								htmlObject = $('<tr data-id="' + item.id + '" data-username="' + item.username + '" data-status="'+ item.status +'">' +
+									'<td>' + ((typeof item.pagado !== 'undefined')? '<time datetime="' + Date.parse(item.pagado.at).toISOString() + '">' + $.datepicker.formatDate('dd-mm-yy', Date.parse(item.pagado.at)) + ' <span>' + Date.parse(item.pagado.at).toTimeString().match( /^([0-9]{2}:[0-9]{2}:[0-9]{2})/ )[0].substring(0, 5) +  '</span></time>' : '<time datetime="' + Date.parse(item.created_at).toISOString() + '">' + $.datepicker.formatDate('dd-mm-yy', Date.parse(item.created_at)) + ' <span>' + Date.parse(item.created_at).toTimeString().match( /^([0-9]{2}:[0-9]{2}:[0-9]{2})/ )[0].substring(0, 5) +  '</span></time>' ) + '</td>' +
+									'<td>' + item.created_emision + '</td>' +
+									'<td>' + item.tipo + '</td>' +
+									'<td>' + item.index + '</td>' +
+									'<td>' + ((typeof item.cuenta != 'undefined')? item.cuenta.index : 'N/A') + '</td>' +
+									'<td class="currency">' + item.total + '</td>' +
+									'<td>' + ((item.status)? ( (typeof item.pagado != 'undefined')? 'Pagado' : 'Emitido' ) : 'Nulo') + '</td>' +
+									'<td class="options">' +
+									'<button class="pay"></button>' +
+									'<button class="nullify"></button>' +
+									'<button class="delete"></button>' +
+									'<button class="print"></button>' +
+									'</td>' +
+								'</tr>');
+
+
+
+								
+						
+								htmlObject.find('.currency').formatCurrency({
+									region: 'es-CL',
+									decimalSymbol: ',',
+									digitGroupSymbol: '.',
+									roundToDecimalPlace: currency.decimals,
+									symbol: '<span class="symbol">' + currency.symbol + '</span>',
+									positiveFormat: (currency.is_right)? '%n%s' : '%s%n',
+									negativeFormat: (currency.is_right)? '-%n%s' :'-%s%n'
+								});
+
+								htmlObject.find('button.pay').button({
+									caption: 'Pagar',
+									icons: {
+										primary: 'ui-icon-circle-check'
+									},
+									text: false
+								}).click(function() {
+									
+										if(payment.folio !== ""){
+											confirm('¿El documento se marcará como pagado. ¿Está seguro?').done(function(data) {
+												if (data)
+													$.ajax({
+														url: '/4DACTION/_V3_setDocPagoByPago',
+														data: {
+															id: item.id,
+															fk: $('.ui-dialog fieldset.pago').data('id'),
+															paid: true
+														},
+														dataType: 'json',
+														success: function(data) {
+															if (data.success) {
+																toastr.success('El documento fue pagado con éxito!');
+																loadList();
+																$('.ui-dialog fieldset.pago').data('paid', true);
+																$('#dialog-menu [data-name="discard"]').hide();
+															} else
+																toastr.error('El documento no pudo pagarse. Es posible que esté bloqueado.');
+														}
+													});
+											});
+
+										}else{
+											toastr.warning("Debes guardar el documento antes de validar el pago.");
+										}
+								});
+								htmlObject.find('button.nullify').button({
+									caption: 'Anular',
+									icons: {
+										primary: 'ui-icon-cancel'
+									},
+									text: false
+								}).click(function() {
+									confirm('¿Está seguro que desea anular el documento de pago?').done(function(data) {
+										if (data)
+											$.ajax({
+												url: '/4DACTION/_V3_setDocPagoByPago',
+												data: {
+													id: item.id,
+													fk: $('.ui-dialog fieldset.pago').data('id'),
+													nullified: true
+												},
+												dataType: 'json',
+												success: function(data) {
+													if (data.success) {
+														toastr.success('El documento fue anulado con éxito!');
+														unaBase.toolbox.menu.buttons(['save', 'discard']);
+														// $('.ui-dialog fieldset.doc-pago').show();
+														loadList();
+													} else
+														toastr.error('El documento no pudo anularse. Es posible que esté bloqueado.');
+												}
+											});
+									});
+								});
+
+
+								htmlObject.find('button.delete').button({
+									caption: 'Eliminar',
+									icons: {
+										primary: 'ui-icon-trash'
+									},
+									text: false
+								}).click(function() {
+									confirm('¿Está seguro que desea eliminar el documento de pago?').done(function(data) {
+										if (data)
+											$.ajax({
+												url: '/4DACTION/_V3_removeDocPago',
+												data: {
+													id: item.id
+												},
+												dataType: 'json',
+												success: function(data) {
+													if (data.success) {
+														toastr.success('El documento fue eliminado con éxito!');
+														unaBase.toolbox.menu.buttons(['save', 'discard']);
+														loadList();
+													} else
+														toastr.error('El documento no pudo eliminarse. Es posible que esté bloqueado.');
+												}
+											});
+									});
+								});
+
+
+								//BOTON IMPRIMIR CHEQUE
+								htmlObject.find('button.print').button({
+									caption: 'Imprimir',
+									icons: {
+										primary: 'ui-icon-print' 
+									},
+									text: false
+								}).click(function() {								
+
+									$('#dialog-menu [data-name="preview_cheque"] button').triggerHandler('click'); 
+
+									/*
+									
+									confirm('¿Está seguro que desea eliminar el documento de pago?').done(function(data) {
+										if (data)
+											$.ajax({
+												url: '/4DACTION/_V3_print_cheque',
+												data: {
+													id: item.id
+												},
+												dataType: 'json',
+												success: function(data) {
+													if (data.success) {
+														toastr.success('El documento fue eliminado con éxito!');
+														unaBase.toolbox.menu.buttons(['save', 'discard']);
+														loadList();
+													} else
+														toastr.error('El documento no pudo eliminarse. Es posible que esté bloqueado.');
+												}
+											});
+									});*/
+										
+								});
+								//if (!(item.tipo == 'CHEQUE' && typeof item.pagado == 'undefined'))
+								//	htmlObject.find('button.delete').invisible();
+
+								if (!access._500)
+									htmlObject.find('button.nullify').invisible();
+								if (!access._501)
+									htmlObject.find('button.delete').invisible();
+
+								if (!item.status) {
+									htmlObject.find('button.pay').invisible();
+									htmlObject.find('button.nullify').invisible();
+								} else {
+									if (typeof item.pagado != 'undefined') {
+										htmlObject.find('button.pay').invisible();
+										//htmlObject.find('button.nullify').invisible();
+									}
+								}
+
+								/*if(!(item.tipo == 'CHEQUE' && item.status && item.pagado == undefined)){
+									htmlObject.find('button.print').invisible();
+								}*/
+
+								if(!item.tipo == 'CHEQUE'){
+									htmlObject.find('button.print').invisible();
+								}
+
+
+								$('.ui-dialog table > tbody').append(htmlObject);
+							});
+
+							/*if ($('.ui-dialog table > tbody > tr:not([data-new="true"])').length)
+								$('.ui-dialog fieldset input[name="pago[abono]"]').attr('readonly', true);
+
+							if (
+								$('.ui-dialog table > tbody > tr:not([data-new="true"]):first-of-type > td:nth-of-type(2)').text().toUpperCase() != 'CHEQUE' &&
+								$('.ui-dialog table > tbody > tr:not([data-new="true"]):first-of-type > td:nth-of-type(2)').text().toUpperCase() != ''
+							)
+								 $('.ui-dialog fieldset.doc-pago').hide(); */
+
+							/*if (
+								$('.ui-dialog table > tbody > tr:not([data-new="true"]):first-of-type > td:nth-of-type(6)').text().toUpperCase() == 'PAGADO' || $('.ui-dialog fieldset.pago').data('nullified')) {
+								$('.ui-dialog fieldset.doc-pago').hide();
+								unaBase.toolbox.menu.buttons([]);
+								$('.ui-dialog input, .ui-dialog textarea').attr('readonly', true);
+							}*/
+
+							/*if (
+								$('.ui-dialog table > tbody > tr:not([data-new="true"]):first-of-type > td:nth-of-type(6)').text().toUpperCase() == 'NULO'
+								||
+								!$('.ui-dialog fieldset.pago').data('nullified')
+							)
+								$('.ui-dialog fieldset.doc-pago').show();*/
+						}
+					});
+				};
+
+				if ($('.ui-dialog fieldset.pago').data('id')) {
+					loadList();
+					if ($('.ui-dialog fieldset.pago').data('paid'))
+						$('#dialog-menu [data-name="discard"]').hide();
+					else
+						$('#dialog-menu [data-name="discard"]').show();
+				} else {
+					$('#dialog-menu [data-name="discard"]').hide();
+					//$('.ui-dialog fieldset input[name="pago[fecha]"]').val((new Date()).toISOString().substring(0, 10));
+
+					// Ocultar ingreso de pago y tabla de documentos de pago
+					// $('.ui-dialog fieldset.doc-pago').hide();
+					$('.ui-dialog table').hide();
+				}
+
+				$('.ui-dialog table').bind('refresh', loadList);
+
+				$('.ui-dialog input[name="pago[documento][tipo]"]').autocomplete({
+					source: function(request, response) {
+						$.ajax({
+							url: '/4DACTION/_V3_' + 'getTipoPagos?egreso=true',
+							dataType: 'json',
+							data: {
+								q: request.term
+							},
+							success: function(data) {
+								response($.map(data.rows, function(item) {
+									return item;
+								}));
+							}
+						});
+					},
+					minLength: 0,
+					autoFocus: true,
+					delay: 5,
+					position: { my: "left top", at: "left bottom", collision: "flip" },
+					open: function() {
+						$(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+					},
+					close: function() {
+						$(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+					},
+					focus: function(event, ui) {
+						//$(this).val(ui.item.text);
+						return false;
+					},
+					response: function(event, ui) {
+					},
+					select: function(event, ui) {
+						$('input[name="pago[documento][tipo]"]').val(ui.item.text);
+						$('input[name="pago[documento][tipo]"]').data('id', ui.item.id);
+						$('input[name="pago[documento][tipo]"]').data('nullable', ui.item.nullable);
+						$('input[name="pago[documento][tipo]"]').data('deleteable', ui.item.deleteable);
+						$('input[name="pago[documento][numero]"]').val(null);						
+
+						// Autocompletar banco por defecto
+						// if ($('input[name="pago[documento][cuenta]"]').val() == '')
+						$.ajax({
+							url: '/4DACTION/_V3_' + 'getCuentaBancaria',
+							dataType: 'json',
+							data: {
+								q: '',
+								default: true
+							},
+							success: function(data) {
+								var record = data.rows[0];									
+								$('input[name="pago[documento][cuenta]"]').val(record.text);
+								$('input[name="pago[documento][cuenta]"]').data('id', record.id);
+								if ($('input[name="pago[documento][tipo]"]').val().toUpperCase() == 'CHEQUE')
+									$('input[name="pago[documento][numero]"]').val(record.next);										
+																
+								$('.ui-dialog fieldset input[name="pago[documento][fecha]"]').val($('.ui-dialog fieldset input[name="pago[fecha]"]').val());
+							}
+						});
+
+						switch(ui.item.text) {
+						    case "CHEQUE":
+						        $('.check_cruzado, .check_form, .payment_number, .origin_account').show();	
+						        $('span[name="nametype"]').text("Nro. Cheque:");
+						        if ($('input[name="pago[documento][form]"]').val("ABIERTO") == "") {
+						        	$('imput[name="pago[documento][form]"]').val("ABIERTO");
+						        }						        				        
+						        break;
+						    case "TRANSFERENCIA":
+						    	$('.payment_number, .origin_account').show();	
+						       	$('.check_cruzado, .check_form').hide();
+							    $('span[name="nametype"]').text("Nro. Transferencia:");
+						        break;
+						    case "DEPOSITO":
+						    	$('.check_cruzado, .check_form').hide();
+						        $(".payment_number, .origin_account").show();
+						        $('span[name="nametype"]').text("Nro. Depósito:");
+						        break;
+						    default:
+						        $('.check_cruzado, .check_form, .payment_number, .origin_account').hide();   
+						}						
+
+						return false;
+					}
+
+				}).data('ui-autocomplete')._renderItem = function(ul, item) {
+					return $('<li><a><span>' + item.text + '</span></a></li>').appendTo(ul);
+				};
+
+				$('.ui-dialog input[name="pago[documento][cuenta]"]').autocomplete({
+					source: function(request, response) {
+						$.ajax({
+							url: '/4DACTION/_V3_' + 'getCuentaBancaria',
+							dataType: 'json',
+							data: {
+								q: request.term
+							},
+							success: function(data) {
+								response($.map(data.rows, function(item) {
+									return item;
+								}));
+							}
+						});
+					},
+					minLength: 0,
+					autoFocus: true,
+					delay: 5,
+					position: { my: "left top", at: "left bottom", collision: "flip" },
+					open: function() {
+						$(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+					},
+					close: function() {
+						$(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+					},
+					focus: function(event, ui) {
+						//$(this).val(ui.item.text);
+						return false;
+					},
+					response: function(event, ui) {
+					},
+					select: function(event, ui) {
+						// $('input[name="pago[documento][cuenta]"]').val(ui.item.index);
+						$('input[name="pago[documento][cuenta]"]').val(ui.item.text);
+						$('input[name="pago[documento][cuenta]"]').data('id', ui.item.id);
+						if ($('input[name="pago[documento][tipo]"]').val().toUpperCase() == 'CHEQUE')
+							$('input[name="pago[documento][numero]"]').val(ui.item.next);
+						return false;
+					}
+
+				}).data('ui-autocomplete')._renderItem = function(ul, item) {
+					return $('<li><a><span>' + item.text + '</span></a></li>').appendTo(ul);
+				};
+
+				$('.ui-dialog button.show.tipo-pago').button({
+					icons: {
+						primary: 'ui-icon-carat-1-s'
+					},
+					text: false
+				}).click(function() {
+					$('.ui-dialog input[name="pago[documento][tipo]"]').autocomplete('search', '@').focus();
+				});
+
+				$('.ui-dialog button.show.cuenta-bancaria').button({
+					icons: {
+						primary: 'ui-icon-carat-1-s'
+					},
+					text: false
+				}).click(function() {
+					$('.ui-dialog input[name="pago[documento][cuenta]"]').autocomplete('search', '@').focus();
+				});
+
+				// ----- begin -- cheque form
+				$('.ui-dialog input[name="pago[documento][form]"]').autocomplete({
+					source: function(request, response) {
+						var dataset = [
+							{ id: "ABIERTO", text: 'ABIERTO'},
+							{ id: "A LA ORDEN", text: 'A LA ORDEN'},
+							{ id: "AL PORTADOR", text: 'AL PORTADOR'},
+							{ id: "NOMINATIVO", text: 'NOMINATIVO'}
+						];
+						response($.map(dataset, function(item) {
+							return item;
+						}));
+					},
+					minLength: 0,
+					autoFocus: true,
+					delay: 5,
+					position: { my: "left top", at: "left bottom", collision: "flip" },
+					open: function() {
+						$(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+					},
+					close: function() {
+						$(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+					},
+					focus: function(event, ui) {
+						//$(this).val(ui.item.text);
+						return false;
+					},
+					response: function(event, ui) {
+					},
+					select: function(event, ui) {
+						$(this).val(ui.item.text);
+						return false;
+					}
+
+				}).data('ui-autocomplete')._renderItem = function(ul, item) {
+					return $('<li><a><span>' + item.text + '</span></a></li>').appendTo(ul);
+				};
+
+				$('.ui-dialog button.show.chequeform').button({
+					icons: {
+						primary: 'ui-icon-carat-1-s'
+					},
+					text: false
+				}).click(function() {
+					$('.ui-dialog input[name="pago[documento][form]"]').autocomplete('search', '@').focus();
+				});
+				// ----- end -- cheque form
+
+				$('.ui-dialog fieldset button.add.doc-pago').button({
+					icons: {
+						primary: 'ui-icon-circle-plus'
+					},
+					text: true
+				}).click(function() {					
+					var pushRecord = function() {
+
+						var cruzado = false;
+						if ($('.ui-dialog fieldset [name="pago[documento][check_cruzado]"]').prop('checked')) {
+							cruzado = true;
+						};
+
+						htmlObject = $('<tr data-new="true" data-cruzado="'+ cruzado +'">' +
+							//'<td><time>Ahora</time></td>' +
+							'<td>'+ $('.ui-dialog .sheet-op').data('currentdate') + '</td>' +
+							'<td>'+ $('.ui-dialog fieldset [name="pago[documento][fecha]"]').val() + '</td>' +
+							'<td>' + $('.ui-dialog fieldset [name="pago[documento][tipo]"]').val() + '</td>' +
+							'<td>' + $('.ui-dialog fieldset [name="pago[documento][numero]"]').val() + '</td>' +
+							'<td data-id="' + $('.ui-dialog fieldset [name="pago[documento][cuenta]"]').data('id') + '">' + $('.ui-dialog fieldset [name="pago[documento][cuenta]"]').val() + '</td>' +
+							'<td>' + $('.ui-dialog fieldset [name="pago[abono]"]').val() + '</td>' +
+							'<td>Pendiente</td>' +
+							'<td class="options">' +
+							'<button class="delete"></button>' +
+							'</td>' +
+						'</tr>');
+
+						$('.ui-dialog fieldset [name^="pago[documento]["]').val('').removeData('id');
+
+						$('.ui-dialog table > tbody').prepend(htmlObject);
+
+						htmlObject.find('button.delete').button({
+							caption: 'Eliminar',
+							icons: {
+								primary: 'ui-icon-trash'
+							},
+							text: false
+						}).click(function() {
+							confirm('¿Está seguro que desea eliminar el documento de pago?').done(function(data) {
+								if (data) {
+									htmlObject.remove();
+									toastr.success('El documento fue eliminado con éxito!');
+								}
+							});
+						});
+					};
+
+					// TODO: Acá se debe validar los campos
+					if ($('.ui-dialog fieldset [name^="pago[documento]["]')) {
+						if ($('.ui-dialog table > tbody > tr').length) {
+							var msg; 
+							if ($('.ui-dialog table > tbody > tr[data-new="true"]:first-of-type').length)
+								msg = 'Si agrega un nuevo documento de pago, se reemplazará el último ingresado. ¿Desea hacerlo?';
+							else
+								msg = 'Si agrega un nuevo documento de pago, se anulará el último vigente. ¿Desea hacerlo?';
+
+							confirm(msg).done(function(data) {
+								if (data) {
+									//addRecord();
+									$('.ui-dialog table > tbody > tr[data-new="true"]').remove();
+									pushRecord();
+								}
+								else
+									$('.ui-dialog fieldset [name^="pago[documento]["]').val('').removeData('id');
+							});
+						} else{	
+							//addRecord();
+							pushRecord();
+						}
+							
+						var textButtonAdd = $('button.add.doc-pago > span.ui-button-text');
+						textButtonAdd.text("Agregar");
+						$('.check_cruzado, .check_form').hide();
+
+					}
+						
+				});
+
+				$('.ui-dialog fieldset legend span:nth-of-type(2)').text($('section.sheet input[name="oc[tipo_gastos][des]"]').val());
+				$('.ui-dialog fieldset legend span:nth-of-type(3)').text($('section.sheet #index').text());
+
+				if ( $('.sheet-op').data('folio') == '') {
+					$('.ui-dialog input[name="pago[titular]"]').val($('section.sheet input[name="contacto[info][razon_social]"]').val());
+				}					
+
+				$('.ui-dialog [name="pago[abono]"]').blur(function() {
+					$('.ui-dialog table tbody tr[data-new="true"] td:nth-of-type(5)').text($(this).val());
+					if (parseFloat($(this).val()) > parseFloat($('.ui-dialog [name="pago[total]"]').val()) && $('section.sheet [name="oc[tipo_gastos][des]"]').val().toUpperCase() == 'ORDEN DE COMPRA' ) {
+						toastr.warning('El abono no puede ser mayor al saldo');
+						$(this).val($('.ui-dialog [name="pago[total]"]').val());
+					}
+				});
+
+				$('#dialog-menu [data-name="preview_cheque"]').hide();
+				$('.check_cruzado, .check_form').hide();				
+
+				if (op.estado == 'POR EMITIR') {
+					$('.ui-dialog input[name="pago[total]"]').val(op.balance);
+					$('.ui-dialog input[name="pago[abono]"]').val(op.balance);
+					$('.ui-dialog label[name="origin"]').text(op.origin+" "+op.number_origin);
+				}
+
+				op.display();
+
+				$('.doc-pago').hide();
+				
+			});				
+		</script>
+		<style>
+			.ui-dialog fieldset > label > span > input {
+				display: inline-block;
+				width: calc(100% - 30px) !important;
+			}
+			.estado {
+				font-weight:bold;
+				display: block;
+				text-align: left;
+				text-decoration: underline;
+			}
+
+			.check{
+				position: absolute !important;
+				left:-40px !important;			
+			}
+		</style>
+	</head>
+	<body>
+	<section id="sheetop" class="sheet-op" data-formch="<!--#4DTEXT formch-->" data-folio="<!--#4DTEXT [Orden_Pago]Folio_OPago-->" data-currentdate="<!--#4DTEXT Current date(*)-->" data-estado="<!--#4DTEXT vEstado-->">
+		<fieldset class="pago"<!--#4DIF Not(Undefined(id))--> data-id="<!--#4DTEXT id-->"<!--#4DENDIF--><!--#4DIF ([Orden_Pago]Estado="PAGADA")--> data-paid="true"<!--#4DENDIF--> <!--#4DIF ([Orden_Pago]Estado="ANULADA")--> data-nullified="true"<!--#4DENDIF-->>
+			<legend>Información general<span></legend>
+			<label>
+				<span>Estado:</span>
+				<label><!--#4DTEXT vEstado--></label>
+			</label><br>
+			<label>
+				<span>Nro. Orden de pago:</span>
+				<label name="number_order"><!--#4DIF [Orden_Pago]Folio_OPago#""--><!--#4DTEXT [Orden_Pago]Folio_OPago--><!--#4DELSE-->S/N<!--#4DENDIF--></label>
+			</label>
+			<label>
+				<span>Origen:</span>
+				<label name="origin">Ninguna</label>
+			</label>
+			<label>
+				<span>Emitir a:</span>
+				<input required type="text" name="pago[titular]" value="<!--#4DTEXT [Orden_Pago]EmpresaPago-->">
+			</label>
+			<label>
+				<span>Saldo por pagar (origen):</span>
+				<span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input readonly type="text" name="pago[total]"></span>
+			</label>
+			<label class="numeric currency">
+				<span>Monto a pagar:</span>
+				<span class="numeric currency editable"><!--#4DVAR _V3_defaultCurrencySymbol--> <input required type="text" name="pago[abono]" value="<!--#4DTEXT String([Orden_Pago]Total_Pago;"&xml")-->"></span>
+			</label>
+			<label>
+				<span>Fecha de pago:</span>
+				<!--<input required type="date" name="pago[fecha]" value="<!- -#4DTEXT Substring(String([Orden_Pago]Fecha_Propuesta;ISO Date);1;10)- ->"> -->
+				<input required type="text" class="datepicker" name="pago[fecha]" value="<!--#4DTEXT vDatePropuesta-->">
+
+			</label>			
+		</fieldset>
+		
+		<fieldset class="doc-pago" data-tipodocid="0">
+			<legend>Documento de pago (0)</legend>
+
+			<label>
+				<span>Tipo:</span>
+				<input placeholder="[Seleccionar]" required readonly type="search" name="pago[documento][tipo]" value="<!--#4DTEXT type_payment-->"><button class="show tipo-pago"></button>
+			</label>
+
+			<label class="payment_number">				
+				<span name="nametype"><!--#4DTEXT label_number_payment--></span>
+				<input required type="text" name="pago[documento][numero]" value="<!--#4DTEXT number_payment-->">
+			</label><br>
+
+			<label class="origin_account">
+				<span>Cuenta de origen:</span>
+				<input style="width:230px!important" placeholder="[Seleccionar]" required readonly type="search" name="pago[documento][cuenta]" value="<!--#4DTEXT account_payment-->" data-id="<!--#4DTEXT accountid_payment-->"><button class="show cuenta-bancaria"></button>
+			</label>	
+
+			<label>
+				<span>Fecha:</span>
+				<input required type="text" class="datepicker" name="pago[documento][fecha]" value="<!--#4DTEXT date_payment-->">
+			</label>
+
+			<label class="check_form">
+				<span>Forma:</span>
+				<input placeholder="[Seleccionar]" required readonly type="search" name="pago[documento][form]"><button class="show chequeform"></button>
+			</label><br>
+
+			<label class="check_cruzado">	
+				<span></span>			
+				<span style="display:inline-block!important;vertical-align:middle!important"><input style="width:20px!important" required name="pago[documento][check_cruzado]" type="checkbox" value="false" ><label style="display:inline-block!important;vertical-align:top!important">Cruzado?</label></span>				
+			</label>
+		</fieldset>
+
+		<table id="docpago">
+			<thead>
+				<tr>
+					<th>Registro</th>
+					<th>Emisión</th>
+					<th>Tipo</th>
+					<th>Número</th>
+					<th>Cuenta</th>
+					<th>Monto</th>
+					<th>Estado</th>
+					<th>Acción</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+
+		<fieldset class="doc-pagos">
+			<legend>Observación</legend>
+			<label style="width:100%!important">
+				<textarea style="height:30px" name="pago[observacion]"><!--#4DHTML String([Orden_Pago]observacion_op)--></textarea>
+			</label>
+		</fieldset>
+	</section>
+
+	</body>
+</html>

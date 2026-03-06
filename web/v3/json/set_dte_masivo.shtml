@@ -1,0 +1,5 @@
+{
+	"errorMsg": "<!--#4DTEXT errorMsg-->",
+	"urlDte": <!--#4DIF Not(Undefined(urlDte))-->"<!--#4DHTML urlDte-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+	"success": <!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DENDIF-->
+}

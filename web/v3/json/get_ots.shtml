@@ -1,0 +1,38 @@
+{
+	"total": "<!--#4DHTML total-->",
+	"rows": [
+<!--#4DLOOP aIdOT -->
+		{
+			"id": <!--#4DHTML aIdOT{aIdOT}-->,
+			"folio": "<!--#4DTEXT aFolioOT{aIdOT}-->",
+			"fecha_emision": "<!--#4DTEXT aFechaEmiOT{aIdOT}-->",
+			"fecha_vcto": "<!--#4DTEXT aFechaVctoOT{aIdOT}-->",
+			"hora_vcto": "<!--#4DTEXT aHoraVctoOT{aIdOT}-->",
+			"fecha_inicio": "<!--#4DTEXT aFechaInicio{aIdOT}-->",
+			"hora_inicio": "<!--#4DTEXT aHoraInicio{aIdOT}-->",
+			"fecha_final": "<!--#4DTEXT aFechaFinal{aIdOT}-->",
+			"hora_final": "<!--#4DTEXT aHoraFinal{aIdOT}-->",
+			"horas": "<!--#4DTEXT aHrsAsignadasOT{aIdOT}-->",
+			"horas_reales": "<!--#4DTEXT aHrsRealesOT{aIdOT}-->",
+			"horas_reales_": <!--#4DTEXT String(aHrsRealesOT{aIdOT};"&xml")-->,
+			"cliente": "<!--#4DHTML _V3_escapeString(aClienteProvOT{aIdOT})-->",
+			"folio_negocio": <!--#4DTEXT aFolioNegocioOT{aIdOT}-->,
+			"origen": "<!--#4DHTML _v3_escapeString(aRefProyOT{aIdOT})-->",
+			"referencia": "<!--#4DHTML _v3_escapeString(aReferenciaOT{aIdOT})-->",
+			"responsable": "<!--#4DHTML _V3_escapeString(aResponsableOT{aIdOT})-->",
+			"emisor": "<!--#4DTEXT aEmitidoPorOT{aIdOT}-->",
+			"estado": "<!--#4DTEXT aEstadoOT{aIdOT}-->",
+			"notificado": <!--#4DTEXT aNotificadoProyOT{aIdOT}-->,
+			"area": "<!--#4DTEXT aAreaTrabajo{aIdOT}-->",
+			"motivo": "<!--#4DHTML _V3_escapeString(aMotivo{aIdOT})-->",
+			"validated": <!--#4DIF aValidatedOT{aIdOT}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"fecha_asignacion_neg": "<!--#4DTEXT aFechaAsignacionNeg{aIdOT}-->",
+			"item_negocio": "<!--#4DHTML _V3_escapeString(aItemNegocio{aIdOT})-->",
+			"item_cantidad": <!--#4DTEXT String(aItemCantidadNegocio{aIdOT};"&xml")-->,
+			"item_precio": <!--#4DTEXT String(aItemPrecioNegocio{aIdOT};"&xml")-->,
+			"item_total": <!--#4DTEXT String(aItemTotalNegocio{aIdOT};"&xml")-->,
+			"item_total_real": <!--#4DTEXT String(aItemTotalRealNegocio{aIdOT};"&xml")-->
+		}<!--#4DIF NOT(aIdOT{aIdOT} = aIdOT{Size of array(aIdOT)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

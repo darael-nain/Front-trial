@@ -1,0 +1,10 @@
+{
+	"rows": [
+<!--#4DLOOP aMotivoAnulacionId -->
+		{
+			"id": "<!--#4DHTML aMotivoAnulacionnombre{aMotivoAnulacionId}-->",
+			"text": "<!--#4DHTML aMotivoAnulacionnombre{aMotivoAnulacionId}-->"
+		}<!--#4DIF NOT(aMotivoAnulacionId{aMotivoAnulacionId} = aMotivoAnulacionId{Size of array(aMotivoAnulacionId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

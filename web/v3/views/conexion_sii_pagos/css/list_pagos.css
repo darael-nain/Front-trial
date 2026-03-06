@@ -1,0 +1,149 @@
+html {
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-image: linear-gradient(white, #f2f2f2);
+  min-height: 100vh;
+}
+.t{
+  display: inline; /* the default for span */
+  
+  padding: 5px;   
+}
+
+.a {
+  display: inline-grid; /* the default for span */
+  margin-left: 5px;
+  
+}
+
+.btn:hover {
+  background-color: #dce3de;
+  
+}
+
+button.colorSelector{
+  padding: 0 !important;
+}
+
+
+
+.table-fixed tbody {
+  height: 300px;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.table-fixed thead,
+.table-fixed tbody,
+.table-fixed tr,
+.table-fixed td,
+.table-fixed th {
+    display: block;
+    width: 100%;
+}
+
+.table-fixed tbody td,
+.table-fixed tbody th,
+.table-fixed thead > tr > th {
+  float: left;
+  position: relative;
+
+  &::after {
+      content: '';
+      clear: both;
+      display: block;
+  }
+}
+#tooltip {
+  width: 500px;
+  background-color: rgb(110, 108, 108);
+  color: white;
+  padding: 10px 50px;
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+.imgRedonda{
+  width:30px;
+  height:30px;
+  border-radius:20px;
+}
+
+.santander {
+  background: white url(../css/img/santander.png) no-repeat;
+  background-repeat: round;
+}
+
+.bchile {
+  
+  background: white url(../css/img/chile_banconexion.png) no-repeat;
+  background-repeat: round;
+
+}
+.bci {
+  
+  background: white url(../css/img/bci.png) no-repeat;
+  background-repeat: round;
+
+}
+
+.itau {
+  
+  background: white url(../css/img/itau.jpg) no-repeat;
+  background-repeat: round;
+  
+}
+ 
+i.blue,span.blue  {
+    color: #03D6F9;
+}
+i.purple,span.purple {
+    color: #884d79;
+}
+i.red,span.red {
+    color: #FC4903;
+}
+i.green,span.green {
+    color: #34CC02;
+}
+.v-sep{
+  height:5vh !important;
+  width:.3vw;
+  border-width:0;
+  color:#000;
+  background-color:#000;
+}
+.btn-outline-warning:hover{
+  background-color:#ffc107 !important;
+  color: white;
+}
+.accordion-button{
+  border-radius: 30px !important;
+  color: black !important;
+}
+.accordion-item.mov.purple{
+  border-color:#884d79 !important;
+  border-radius: 30px;
+}
+.accordion-item.mov.red{
+  border-color: #FC4903 !important;
+  border-radius: 30px;
+}
+.accordion-item.mov.blue{
+  border-color:  #03D6F9 !important;
+  border-radius: 30px;
+}
+button.conciliado{
+  opacity: 0.1 !important;
+}
+
+.card{
+  border-radius: 15px;
+  box-shadow: 0 3px 3px rgb(0 0 0 / 0.2);
+  height: 80px;
+  margin: 20px;
+}
+.sup_icon{
+  width:40px;
+  height:40px
+}

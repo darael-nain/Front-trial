@@ -1,0 +1,32 @@
+{	
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([formas_pago]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"sort": {
+		"by": "<!--#4DTEXT sort_by-->",
+		"order": "<!--#4DTEXT sort_order-->"
+	},
+	"rows": [
+<!--#4DLOOP aIdForma -->
+		{
+			"id": "<!--#4DHTML aIdForma{aIdForma}-->",
+			"descripcion": "<!--#4DHTML _V3_escapeString(aDesForma{aIdForma})-->",
+			"estado": <!--#4DIF aEstadoForma{aIdForma}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"compra": <!--#4DIF aCompra{aIdForma}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"venta": <!--#4DIF aVenta{aIdForma}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"observaciones": "<!--#4DHTML _V3_escapeString(aObservacionForma{aIdForma})-->",
+			"id_empresa": "<!--#4DTEXT aIdEmpresa{aIdForma}-->",
+			"suma_dias1": "<!--#4DTEXT aSumaDias1{aIdForma}-->",
+			"suma_dias2": "<!--#4DTEXT aSumaDias2{aIdForma}-->",
+			"suma_dias3": "<!--#4DTEXT aSumaDias3{aIdForma}-->",
+			"personalizado": <!--#4DIF aPersonalizado{aIdForma}-->true<!--#4DELSE -->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aIdForma{aIdForma} = aIdForma{Size of array(aIdForma)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

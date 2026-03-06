@@ -1,0 +1,17 @@
+{
+	"rows": [
+<!--#4DLOOP aIdComOt -->
+		{
+			"id": <!--#4DHTML aIdComOt{aIdComOt}-->,
+			"nro": "<!--#4DHTML aNroComOt{aIdComOt}-->",
+			"foto": "<!--#4DHTML aPhotoRespComOt{aIdComOt}-->",
+			"nombre": "<!--#4DHTML aNomRespComOt{aIdComOt}-->",
+			"email": "<!--#4DHTML aEmailRespComOt{aIdComOt}-->",
+			"tipo": "<!--#4DHTML aTypeRespComOt{aIdComOt}-->",
+			"comentario": "<!--#4DHTML aDesComOt{aIdComOt}-->",
+			"fecha": "<!--#4DHTML aDateComOt{aIdComOt}-->",
+			"hora": "<!--#4DHTML aTimeComOt{aIdComOt}-->"
+		}<!--#4DIF NOT(aIdComOt{aIdComOt} = aIdComOt{Size of array(aIdComOt)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_getPermisosUsuarios-->
+		<title>Usuario</title>
+		<meta charset="utf-8">
+		    <script type="text/javascript" src="/v3/views/usuarios/script/content.js"></script>
+
+		<script type="text/javascript">
+			unaBase.ready(()=>{
+				fetch(`/4DACTION/_V3_getUsuariosActivos`)
+				.then(response => {
+					return response.json()
+				})
+				.then(data => {
+					const selector = document.querySelector('select[name="activeUsers"]');
+					data.rows.forEach( item => {
+						const user = document.createElement('option');
+						user.setAttribute('value', item.login);
+						user.innerHTML = item.name;
+						selector.appendChild(user)
+					})
+				})
+			})
+
+			var set_access = function(id, login, estado){
+				var modulo =  $('#sheet-usuarios').data('modulo');
+				$.ajax({
+					url: '/4DACTION/_V3_setPermisosUsuarios',
+					data: {
+						"permisos[id]" : id,
+						"permisos[login]": login,
+						"permisos[estado]": estado,
+						"permisos[modulo]": modulo
+					},
+					dataType: 'json',
+					type: 'POST',
+					success: function(data) {
+						if (data.success) {
+							toastr.success(NOTIFY.get('SUCCESS_SAVE'));
+							var percent = $('#accordion_ > div[data-option="'+login+'"] > p');
+							percent.find('span[data-percent="general"] > strong').text(data.general_percent);
+							percent.find('span[data-percent="modulo"] > strong').text(data.modulo_percent);
+
+						}else{
+							toastr.error(NOTIFY.get('ERROR_RECORD_READONLY', 'Error'));
+						}
+					},
+					error: function(data) {
+						toastr.error(NOTIFY.get('ERROR_INTERNAL'));
+					}
+				});
+			}
+
+			// Activa y desactiva accesso
+			$("section.sheet-usuarios.acceso table").on('click','td input[type="checkbox"]', function() {
+				var id = $(this).val();
+				var login =  $(this).closest('tr').data('login');
+				var estado = "false";
+				if ($(this).prop("checked")) {
+					estado = "true";
+				}else{
+					estado = "false";
+				}
+				set_access(id, login, estado);
+			});
+
+			$('button.change-profile').click(function() {
+				confirm('¿Desea aplicar el perfil seleccionado?').done(function(data) {
+					if (data) {
+						var id = $('select[name="perfil"]').val();
+						var id_usuario = container.find('input[name="id"]').val();
+				        $("#tabs-2-contacto").load('/v3/views/usuarios/accesos.shtml', 'id='+ id_usuario + '&perfil=' + id);
+					}
+				});
+			});
+
+			$('button.copy-profile').click(function() {
+				confirm('¿Desea copiar los permisos de este usuario? Los actuales permisos serán sobreescritos').done(function(data) {
+					if (data) {
+
+						$.ajax({
+							url: `/4DACTION/_v3_copyAccessFromUser`,
+							data: {
+								source: document.querySelector('select[name="activeUsers"]').value,
+								target: document.querySelector('input[name="loguinsito"]').value
+							},
+							dataType: 'json',
+							type: 'POST',
+							success: function(data) {
+								unaBase.history.back()
+								unaBase.history.forward()
+								toastr.success('perfil actualizado');
+							},
+							error: function(data) {
+								toastr.error(NOTIFY.get('ERROR_INTERNAL'));
+							}
+						})
+					}
+				});
+			});
+
+
+			function checkTodos()
+			        {
+			            $(".check").each(function(){
+			                $(this).prop('checked',true);
+			            });
+			}
+
+		</script>
+
+	</head>
+	<body>
+		<section class="sheet sheet-usuarios acceso css-main" data-id="<!--#4DTEXT prmUserLogin-->">
+
+			<footer>
+				<article>
+					<h1>Permisos</h1>
+					<!-- <label>
+						<span>Cargar accesos desde perfil</span>
+						<select name="perfil">
+							<option selected>[Seleccionar]</option>
+							<!- -#4DLOOP [Perfil]- ->
+							<option value="<!- -#4DTEXT [Perfil]ID_Perfil- ->"><!- -#4DTEXT [Perfil]Nombre- -></option>
+							<!- -#4DENDLOOP- ->
+						</select>
+						<button class="change-profile">Aplicar perfil</button>
+					</label> -->
+
+					<label>
+						<span>Cargar accesos desde usuario</span>
+						<select name="activeUsers">
+							<option selected>[Seleccionar]</option>
+						</select>
+						<button class="copy-profile">Aplicar perfil</button>
+					</label>
+
+
+
+
+					<!--<input type="button" onclick="checkTodos()" value="check todos">-->
+					<ul>
+						<li>
+							<table>
+								<thead>
+									<tr>
+
+										<th>Modulo</th>
+										<th>Funcion</th>
+										<th>Descripcion</th>
+										<th>Estado</th>
+									</tr>
+								</thead>
+								<tbody>
+									<!--#4DLOOP modulo-->
+									<tr data-login="<!--#4DVAR login{modulo}-->" >
+
+										<td><!--#4DVAR modulo{modulo}--></td>
+										<td><!--#4DVAR funcion{modulo}--></td>
+										<td><!--#4DVAR desc{modulo}--></td>
+
+										<td><input name="acceso[check]" class="check" type="checkbox" value="<!--#4DVAR id_acceso{modulo}-->"<!--#4DIF check{modulo}--> checked<!--#4DENDIF-->> </td>
+
+									<!--#4DENDLOOP-->
+									</tr>
+								</tbody>
+					  			<tfoot></tfoot>
+							</table>
+
+
+						</li>
+					</ul>
+
+				</article>
+
+			</footer>
+		</section>
+	</body>
+</html>

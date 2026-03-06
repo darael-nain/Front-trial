@@ -1,0 +1,30 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT((totalRecords/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": 1,
+		"total": <!--#4DHTML totalRecords-->
+	},
+	"sort": {
+		"by": "<!--#4DTEXT sort_by-->",
+		"order": "<!--#4DTEXT sort_order-->"
+	},
+	"rows": [
+	<!--#4DLOOP aIdOC -->
+	{
+		"id": <!--#4DHTML aIdOC{aIdOC}-->,
+		"folio": "<!--#4DHTML aNroOC{aIdOC}-->",
+		"libro": "<!--#4DHTML aTipoCompra{aIdOC}-->",
+		"fechaEmision": "<!--#4DHTML String(aFechaOC{aIdOC})-->",
+		"referencia": "<!--#4DHTML _V3_escapeString(aReferenciaOC{aIdOC})-->",
+		"doc": "<!--#4DHTML aTipoDoc{aIdOC}-->",
+		"total": "<!--#4DHTML _V3_formatCurrency(aTotalOC{aIdOC})-->",
+		"cliente": "<!--#4DHTML _V3_escapeString(aProveedorOC{aIdOC})-->"
+	}<!--#4DIF NOT(aIdOC{aIdOC} = aIdOC{Size of array(aIdOC)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+	
+}

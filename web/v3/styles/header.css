@@ -1,0 +1,150 @@
+:root {
+    --black: #000;
+    --bg-white: #fff;
+    --bg-primary: #20A789;
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+    margin: 0px;
+    position: relative;
+}
+
+.headerUnabase {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    height: 48px;
+    width: 100%;
+    margin-left: auto;
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 20px 0px 220px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-white);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    transition: 0.3s;
+}
+
+.headerUnabase__company {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.headerUnabase__company-logo {
+    width: auto; 
+    max-width: 6rem; 
+    height: auto; 
+    max-height: 2.2rem 
+}
+
+.headerUnabase__company-name {
+    margin: 0px;
+    width: auto;
+    max-width: 600px;
+    font-size: 14px;
+    color: var(--black);
+    font-weight: 500;
+}
+
+.headerUnabase__settings {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    transition: .3s;
+    color: var(--black);
+}
+
+.headerUnabase__settings:hover {
+    color: var(--bg-primary);
+    transition: .3s;
+}
+
+.headerUnabase button {
+    padding: 0px;
+    cursor: pointer;
+    border: none;
+    background-color: var(--white);
+}
+
+.headerUnabase__settings-logo {
+    height: 36px;
+}
+
+.headerUnabase__settings-text {
+    font-size: 14px;
+    color: var(--black);
+}
+
+.headerUnabase__settings-icon {
+    font-size: 20px;
+    color: var(--black);
+}
+
+.headerUnabase__modal {
+    transform: scale(0);
+    transform-origin: top;
+    position: absolute;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: var(--bg-white);
+    width: 250px;
+    height: auto;
+    border-radius: 10px;
+    right: 20px;
+    top: 58px;
+    transition: .3s;
+    z-index: 999;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+.headerUnabase__modal ul {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.headerUnabase__modal ul li button.headerUnabase__modal-btn,  .headerUnabase__modal-a {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    text-align: left;
+    height: 25px;
+    align-items: center;
+    padding: 0px 10px;
+    box-sizing: border-box;
+    transition: .3s;
+    font-size: 14px;
+    line-height: 14px;
+}
+
+.headerUnabase__modal ul li button.headerUnabase__modal-btn:hover, .headerUnabase__modal-a:hover {
+    color: var(--bg-primary);
+    transition: .3s;
+}
+
+.headerUnabase__modal ul li button.headerUnabase__modal-btn .mdi,  .headerUnabase__modal-a .mdi {
+    font-size: 20px;
+}
+
+.headerUnabase__modal.visible {
+    transform: scale(1);
+    transition: transform 0.3s ease;
+  }
+
+  #icon-down {
+    transition: .3s;
+  }
+
+  .headerUnabase__modal-a {
+    text-decoration: none;
+    color: var(--black);
+  }

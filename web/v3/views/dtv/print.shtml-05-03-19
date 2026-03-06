@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+    <!--#4DSCRIPT/_V3_proxy_getDtvContent-->
+    <head>
+        <meta charset="utf-8">
+        <title>Factura</title>
+    </head>
+    <body>
+        <header>
+            <div>
+                <img style="width: 200px; display: inline-block; vertical-align: top;" src="<!--#4DTEXT vUrlImagenLogo-->">
+                <div style="width: 440px; display: inline-block; vertical-align: top; margin-right: 20px;">
+                    <h1 style="font-size: 18px; text-transform: uppercase;"><!--#4DTEXT razonPropietaria--></h1>
+                    <h2 style="font-size: 14px; text-transform: uppercase; font-weight: normal; border-bottom: 1px solid black; width: 100%;"><!--#4DTEXT giroPropietaria--></h2>
+                    <p style="font-size: 14px;">
+                        Dirección<br>
+                        <!--#4DTEXT direccionPropietaria--><br>
+                        <!--#4DTEXT comunaPropietaria--> - <!--#4DTEXT ciudadPropietaria--><br>
+                        Fono: <!--#4DTEXT telefonoPropietaria--><br>
+                        <!--#4DTEXT sitioPropietaria--> / <!--#4DTEXT emailPropietaria-->
+                    </p>
+                </div>
+                <div style="display: inline-block; text-transform: uppercase; color: red; text-align: center; font-weight: bold;">
+                    <div style="width: 240px; border: 3px solid red; vertical-align: top;">
+                        <p>R.U.T.: <!--#4DTEXT rutFormatPropietaria--></p>
+                        <p><!--#4DTEXT [Factura]TIPO_DES_FACT_VTAS--></p>
+                        <p>Nº <!--#4DTEXT [Factura]Folio_Factura--></p>
+                    </div>
+                    <p>S.I.I. - <!--#4DTEXT comunaPropietaria--></p>
+                </div>
+            </div>
+            <div style="text-align: right; font-size: 16px; font-weight: bold;">
+                <p><!--#4DTEXT ciudadPropietaria-->, <!--#4DTEXT String([Factura]Fecha_emision;System date long)--></p>
+            </div>
+            <div style="border: 2px solid black; padding-left: 5px; padding-right: 5px; font-size: 14px;">
+                <ul style="display: inline-block; width: 400px; vertical-align: top; list-style: none; padding: 0;">
+                    <li>
+                        <span style="display: inline-block; font-weight: bold; width: 125px; vertical-align: top;">Señor(es)</span>
+                        <span style="display: inline-block: font-weight: bold; vertical-align: top;">: </span>
+                        <span style="display: inline-block; text-transform: uppercase; width: 250px; vertical-align: top;"><!--#4DTEXT [Factura]EmpresaRazonsocial--></span>
+                    </li>
+                    <li>
+                        <span style="display: inline-block; font-weight: bold; width: 125px; vertical-align: top;">R.U.T.</span>
+                        <span style="display: inline-block: font-weight: bold; vertical-align: top;">: </span>
+                        <span style="display: inline-block; text-transform: uppercase; width: 250px; vertical-align: top;"><!--#4DTEXT String(Num([Factura]EmpresaRut);"###.###.##0")-->-<!--#4DTEXT [Factura]EmpresaRutDV--></span>
+                    </li>
+                    <li>
+                        <span style="display: inline-block; font-weight: bold; width: 125px; vertical-align: top;">Giro</span>
+                        <span style="display: inline-block: font-weight: bold; vertical-align: top;">: </span>
+                        <span style="display: inline-block; text-transform: uppercase; width: 250px; vertical-align: top;"><!--#4DTEXT [Factura]EmpresaGiro--></span>
+                    </li>
+                    <li>
+                        <span style="display: inline-block; font-weight: bold; width: 125px; vertical-align: top;">Dirección</span>
+                        <span style="display: inline-block: font-weight: bold; vertical-align: top;">: </span>
+                        <span style="display: inline-block; text-transform: uppercase; width: 250px; vertical-align: top;"><!--#4DTEXT [Factura]EmpresaDireccCalle--> <!--#4DTEXT [Factura]EmpresaDireccNumero--> <!--#4DTEXT [Factura]EmpresaDepto--></span>
+                    </li>
+                    <li>
+                        <span style="display: inline-block; font-weight: bold; width: 125px; vertical-align: top;">Comuna</span>
+                        <span style="display: inline-block: font-weight: bold; vertical-align: top;">: </span>
+                        <span style="display: inline-block; text-transform: uppercase; width: 250px; vertical-align: top;"><!--#4DTEXT [Factura]EmpresaDireccComuna--></span>
+                    </li>
+                </ul>
+                <ul style="display: inline-block; width: 400px; vertical-align: top; list-style: none; padding: 0;">
+                    <li>
+                        <span style="display: inline-block; font-weight: bold; width: 125px; vertical-align: top;">Teléfono</span>
+                        <span style="display: inline-block: font-weight: bold; vertical-align: top;">: </span>
+                        <span style="display: inline-block; text-transform: uppercase; width: 250px; vertical-align: top;"><!--#4DTEXT [Factura]EmpresaDireccFono--></span>
+                    </li>
+                    <li>
+                        <span style="display: inline-block; font-weight: bold; width: 125px; vertical-align: top;">Vencimiento</span>
+                        <span style="display: inline-block: font-weight: bold; vertical-align: top;">: </span>
+                        <span style="display: inline-block; text-transform: uppercase; width: 250px; vertical-align: top;"><!--#4DTEXT [Factura]Fecha_Vencimiento--></span>
+                    </li>
+                    <li>
+                        <span style="display: inline-block; font-weight: bold; width: 125px; vertical-align: top;">Forma de Pago</span>
+                        <span style="display: inline-block: font-weight: bold; vertical-align: top;">: </span>
+                        <span style="display: inline-block; text-transform: uppercase; width: 250px; vertical-align: top;"><!--#4DTEXT [Factura]CONDICION_FACT--></span>
+                    </li>
+                    <li>
+                        <span style="display: inline-block; font-weight: bold; width: 125px; vertical-align: top;">Ciudad</span>
+                        <span style="display: inline-block: font-weight: bold; vertical-align: top;">: </span>
+                        <span style="display: inline-block; text-transform: uppercase; width: 250px; vertical-align: top;"><!--#4DTEXT [Factura]EmpresaDireccCiudad--></span>
+                    </li>
+                </ul>
+            </div>
+            <ul style="font-size: 14px; display: inline-block; vertical-align: top; list-style: none; padding: 0;">
+                <li>
+                    <!--#4DIF (Size of array(aRefFolio) > 0)-->
+                    <span style="font-weight: bold; width: 125px;">Referencia</span>
+                    <span>:
+                        <ul style="display: inline-block; vertical-align: top; list-style: none; padding: 0;">
+                            <!--#4DLOOP aRefFolio-->
+                            <li>en <!--#4DTEXT aRefTipo{aRefFolio}--> : Nro. <!--#4DTEXT aRefFolio{aRefFolio}--> del <!--#4DTEXT aRefFecha{aRefFolio}--></li>
+                            <!--#4DENDLOOP-->
+                        </ul>
+                    </span>
+                    <!--#4DENDIF-->
+                </li>
+            </ul>
+        </header>
+        <section>
+            <table style="border-spacing: 0; font-size: 14px; width: 100%;">
+                <thead style="background-color: black; color: white;">
+                    <tr>
+                        <th style="padding: 3px; text-align: center;">Ítem</th>
+                        <th style="padding: 3px; text-align: center;">Código</th>
+                        <th style="padding: 3px; text-align: center;">Descripción</th>
+                        <th style="padding: 3px; text-align: center;">U.M.</th>
+                        <th style="padding: 3px; text-align: center;">Cant.</th>
+                        <th style="padding: 3px; text-align: center;">Precio Unit.</th>
+                        <th style="padding: 3px; text-align: center;">Valor Dscto.</th>
+                        <th style="padding: 3px; text-align: center;">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!--#4DLOOP [Detalle_Factura]-->
+                    <tr>
+                        <td style="padding: 3px; text-align: center; vertical-align: top;"><!--#4DTEXT [Detalle_Factura]Secuencia--></td>
+                        <td style="padding: 3px; text-align: center; vertical-align: top;"><!--#4DTEXT [Detalle_Factura]Codigo_producto--></td>
+                        <td style="padding: 3px; text-align: left; vertical-align: top;">
+                            <span style="display: block;"><!--#4DTEXT [Detalle_Factura]Nombre_producto--></span>
+                            <span style="display: block; white-space: pre;"><!--#4DTEXT [Detalle_Factura]des_larga--></span>
+                        </td>
+                        <td style="padding: 3px; text-align: center; vertical-align: top;">UN</td>
+                        <td style="padding: 3px; text-align: right; vertical-align: top;"><!--#4DTEXT String([Detalle_Factura]Cantidad;"#0,00")--></td>
+                        <td style="padding: 3px; text-align: right; vertical-align: top;"><!--#4DTEXT String([Detalle_Factura]Precio_unitario;"###.###.###.###.##0,00")--></td>
+                        <td style="padding: 3px; text-align: right; vertical-align: top;">0,00</td>
+                        <td style="padding: 3px; text-align: right; vertical-align: top;"><!--#4DTEXT String([Detalle_Factura]Subtotal;"###.###.###.###.##0")--></td>
+                    </tr>
+                    <!--#4DENDLOOP-->
+                </tbody>
+            </table>
+            <div>
+                <p style="text-transform: uppercase; font-size: 16px;">SON: <!--#4DTEXT vCadena-->.--</p>
+            </div>
+        </section>
+        <footer>
+            <div style="width: 450px; display: inline-block; vertical-align: top; text-transform: uppercase; color: red; font-size: 24px; text-align: center;">
+                <p style="vertical-align: middle;">No válida</p>
+                <p style="vertical-align: middle;">Solo previsualización</p>
+            </div>
+            <div style="width: 450px; display: inline-block; vertical-align: top;">
+                <ul style="margin-left: 240px; width: 220px;font-size: 14px; display: inline-block; vertical-align: top; list-style: none; padding: 0;">
+                    <!--#4DIF [Factura]Descuento#0-->
+                    <li style="border-bottom: 1px solid black; width: 100%; padding-bottom: 5px; margin-bottom: 5px;">
+                        <span style="width: 100px; display: inline-block;"><!--#4DTEXT String([Factura]Porc_Descuento;"##0,00")-->% Desc.:</span>
+                        <span style="display: inline-block;">$</span>
+                        <span style="width: 100px; display: inline-block; text-align: right;"><!--#4DTEXT String([Factura]Descuento;"###.###.###.###.##0")--></span>
+                    </li>
+                    <!--#4DENDIF-->
+                    <!--#4DIF Not([Factura]Exenta)-->
+                    <li style="border-bottom: 1px solid black; width: 100%; padding-bottom: 5px; margin-bottom: 5px;">
+                        <span style="width: 100px; display: inline-block;">Neto:</span>
+                        <span style="display: inline-block;">$</span>
+                        <span style="width: 100px; display: inline-block; text-align: right;"><!--#4DTEXT String([Factura]Total_Neto;"###.###.###.###.##0")--></span>
+                    </li>
+                    <!--#4DENDIF-->
+                    <!--#4DIF [Factura]Exenta-->
+                    <li style="border-bottom: 1px solid black; width: 100%; padding-bottom: 5px; margin-bottom: 5px;">
+                        <span style="width: 100px; display: inline-block;">Exento:</span>
+                        <span style="display: inline-block;">$</span>
+                        <span style="width: 100px; display: inline-block; text-align: right;"><!--#4DTEXT String([Factura]v3_total_exento;"###.###.###.###.##0")--></span>
+                    </li>
+                    <!--#4DENDIF-->
+                    <!--#4DIF Not([Factura]Exenta)-->
+                    <li style="border-bottom: 1px solid black; width: 100%; padding-bottom: 5px; margin-bottom: 5px;">
+                        <span style="width: 100px; display: inline-block;"><!--#4DTEXT String([Factura]Porc_Iva;"##0,00")-->% I.V.A.:</span>
+                        <span style="display: inline-block;">$</span>
+                        <span style="width: 100px; display: inline-block; text-align: right;"><!--#4DTEXT String([Factura]Total_IVA;"###.###.###.###.##0")--></span>
+                    </li>
+                    <!--#4DENDIF-->
+                    <li>
+                        <span style="width: 100px; display: inline-block;">Total:</span>
+                        <span style="display: inline-block;">$</span>
+                        <span style="width: 100px; display: inline-block; text-align: right;"><!--#4DTEXT String([Factura]Total_Factura;"###.###.###.###.##0")--></span>
+                    </li>
+                </ul>
+                <div style="border: 1px solid black; padding: 5px; min-height: 90px;">
+                    <p style="margin: 0; padding: 0; display: inline-block; vertical-align: top;">Observaciones:</p>
+                    <p style="white-space: pre;"><!--#4DHTML [Factura]Notas--></p>
+                </div>
+                <p>
+                    <span style="display: inline-block;">Cancelado por:</span>
+                    <span style="display: inline-block; border-bottom: 1px solid black; width: 335px;"></span>
+                </p>
+            </div>
+        </footer>
+    </body>
+</html>

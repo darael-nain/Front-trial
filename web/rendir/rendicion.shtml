@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
+	<!-- JQUERY -->
+	<!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="				  crossorigin="anonymous"></script> -->
+			  <!-- BOOTSTRAP POPPER -->
+ 	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script> -->
+ 	<!--  BOOTRAPS -->
+	<!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> -->
+	<!-- RENDIR.JS -->
+
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap-4.4.1-dist/css/bootstrap.min.css">
+	<script src="/v3/script/jquery/jquery.js" ></script>
+	<script src="/v3/script/jquery-ui-1.12.1/jquery-ui.min.js" ></script>
+	<script type="text/javascript" src="/script/popper.min.js"></script>
+	<script type="text/javascript" src="/css/bootstrap-4.4.1-dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/fontawesome5.11.2/css/all.min.css">
+	<script type="text/javascript" src="rendir.js"></script>
+	<!-- JQUERY UI -->
+	<!-- <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js" integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E="	  crossorigin="anonymous"></script> -->
+			  <!-- FORMAT NUMBERS -->
+		<script src="/v3/script/jquery/plugins/jquery-number/jquery.number.js"></script>
+		<!-- FORMAT CURRENCY -->
+		<script src="/v3/script/jquery/plugins/format-currency/jquery.formatCurrency.js"></script>
+	<title>Rendición</title>
+    <link rel="stylesheet" href="css/index.css" >
+	<script type="text/javascript" src="js/loader.js"></script>
+	<script type="text/javascript" src="js/modal.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous">
+	<script type="text/javascript">
+		rendir.session.verify();
+		rendir.navigate.init();
+		rendir.navigate.current();
+		$(document).ready(function() {
+			let container = document.querySelector(".content");
+			
+			let url = new URL(window.location.href);
+			let id = url.searchParams.get("id");
+
+			rendir.getOne(id).then(res => {
+				document.title = `Rendición ${res.number}`;
+				document.querySelector(".navbar-brand").textContent = `Rendición ${res.number}`;
+				container.querySelector(".pagado span").innerHTML = res.pagado;
+				container.querySelector(".total span").innerHTML = res.total;
+				container.querySelector(".rendido span").innerHTML = res.rendido;
+
+				rendir.currency.format("span");
+			}).catch(err => {
+				console.log(err);
+			});
+
+			// dtcs
+			rendir.dtc.get(id).then(res => {
+				let dtcTitle = document.querySelector("div.card-header.dtc");
+				dtcTitle.hidden = !res.rows.length;
+				let dtcContainer = document.querySelector("div.card.dtc");
+				res.rows.forEach(item => {
+					let dtc = document.createElement("div");
+					dtc.classList.add("card-body");
+					dtc.innerHTML = `<h6>[${item.numero}] ${item.referencia}</h6>
+					<small>${item.documento}<span class="floatRight numeric currency"><span>${item.neto}</span> / <b>${item.total}</b></span></small>`;
+					dtcContainer.appendChild(dtc);
+					dtc.addEventListener("click", function(){
+						window.location.href = `/rendir/dtc.shtml?id=${item.id}`;
+					});
+				});
+
+				rendir.currency.format("span");
+				rendir.currency.format("b");
+			}).catch(err => {
+				console.log(err);
+			});
+
+			// items
+			rendir.lines.get(id).then(res => {
+				let items = res.rows.filter(line => line.tipo === "ITEM");
+				console.warn(items);
+				let linesTitle = document.querySelector("div.card-header.lines");
+				linesTitle.hidden = !res.rows.length;
+				let linesContainer = document.querySelector("div.card.lines");
+				rendir.lines.quantity = items.length;
+				items.forEach(item => {
+					let line = document.createElement("div");
+					line.classList.add("card-body");
+					line.classList.add("lines");
+					line.dataset.llave = item.llave;
+					line.dataset.llave_titulo = item.llave_titulo;
+					line.innerHTML = `<h6>[Neg.:${item.nro_nv}] ${item.nombre}</h6>
+					<small><span class=" numeric currency"><span>${item.justificado}</span> / <b>${item.subtotal}</b></span></small>
+					<i class="fas fa-check-circle float-right"></i>`;
+					line.style.cursor = "pointer";
+					linesContainer.appendChild(line);
+					line.addEventListener("click", function(){
+						this.classList.toggle("selectedLine");
+						rendir.lines.selected();
+					});
+				});
+
+				rendir.currency.format("span");
+				rendir.currency.format("b");
+			}).catch(err => {
+				console.log(err);
+			});
+
+			document.querySelector("button.rendir").addEventListener("click", function(){
+				let dtc = {};
+				dtc[`id_gasto_${rendir.doc().id}`] = rendir.doc().id;
+				let lines = rendir.lines.selected();
+				dtc.cantidad_items_seleccionados = lines.length;
+				// dtc[`detalle_oc_llave_titulo_0`] = rendir.doc().id;
+				// dtc[`idetalle_oc_llave_items_0`] = rendir.doc().id;
+				let llaves_titulo = [];
+				for(let i = 0; i < lines.length; i++){
+					if(!llaves_titulo.includes(lines[i].dataset.llave_titulo)){
+						dtc[`detalle_oc_llave_titulo_${i}`] = lines[i].dataset.llave_titulo;
+						llaves_titulo.push(lines[i].dataset.llave_titulo);
+					}
+					dtc[`detalle_oc_llave_items_${i}`] = lines[i].dataset.llave;
+					// console.log("----");
+					// console.log(i);
+					// console.log(lines[i].dataset.llave);
+					// console.log(lines[i].dataset.llave_titulo);
+					// console.log(lines[i]);
+				}
+
+
+				console.log(dtc);
+				rendir.dtc.create(dtc).then(res => {
+					console.log(res);
+			  		if(res.success){
+			  			window.location.href = `/rendir/dtc.shtml?id=${res.id}`
+			  		}
+
+				}).catch(err => {
+					console.warn(err);
+				});
+
+			});
+
+
+			rendir.navbar.bottom.init(document.querySelector(".container"));
+
+			
+			// back button
+			rendir.navbar.bottom.add({
+				action: () => {
+					loading.start();
+					// window.history.back();
+					rendir.navigate.back();
+
+				},
+				classList: ["fas", "d-block", "fa-lg", "fa-arrow-left", "uGreen"],
+				label: "Volver"
+			});
+			// rendir button
+			rendir.navbar.bottom.add({
+				action: () => {
+
+					let dtc = {};
+					dtc[`id_gasto_${rendir.doc().id}`] = rendir.doc().id;
+					let lines = rendir.lines.selected();
+					dtc.cantidad_items_seleccionados = lines.length;
+
+					let llaves_titulo = [];
+					for(let i = 0; i < lines.length; i++){
+						if(!llaves_titulo.includes(lines[i].dataset.llave_titulo)){
+							dtc[`detalle_oc_llave_titulo_${i}`] = lines[i].dataset.llave_titulo;
+							llaves_titulo.push(lines[i].dataset.llave_titulo);
+						}
+						dtc[`detalle_oc_llave_items_${i}`] = lines[i].dataset.llave;
+					}
+
+
+					console.log(dtc);
+					rendir.dtc.create(dtc).then(res => {
+						console.log(res);
+				  		if(res.success){
+				  			window.location.href = `/rendir/dtc.shtml?id=${res.id};`
+				  		}
+
+					}).catch(err => {
+						console.warn(err);
+					});
+
+				},
+				classList: ["far", "d-block", "fa-lg", "fa-file-alt", "uGreen"],
+				label: "Rendir"
+			});
+
+
+
+			// user button
+			modal.create("userProfile");
+			rendir.navbar.top.add({
+				action: () => {
+
+				},
+				// classList: ["fas", "d-block", "fa-lg", "fa-arrow-left", "uGreen"],
+				classList: ["far", "fa-user", "fa-lg"],
+				dataset: {
+					toggle: "modal",
+					target: "#userProfile"
+				},
+				callback: () => {
+					let user = rendir.user.get();
+					modal.set({
+						id: "userProfile",
+						title: `Perfil ${user.name}`,
+						body: `<ul class="list-group">
+									  <li class="btn btn-light list-group-item align-items-center"><a class="anchor-no-style" href="/4DACTION/W_CERRAR_SESION/${user.session}"><span>Cerrar sesión</span> <i class="fas fa-power-off float-right fa-lg"></i></a></li>
+									</ul>`,
+						footer: ``,
+						script: modal => {
+
+						}
+					})
+				}
+			});
+
+		});
+	</script>
+
+</head>
+<body>
+
+	<div class="container">
+		<div class="row">
+			<nav class="navbar sticky-top   w-100 uBgGreen topNavbar">
+			  <a class="navbar-brand white-text" href="#">Rendición</a>
+			  <button hidden="" type="button" class="btn btn-info rendir">Rendir +</button>
+			</nav>
+			
+		</div>
+		<div class="row">
+			<div class="content w-100">
+				<div class="card" >
+				  <ul class="list-group list-group-flush">
+				    <li class="list-group-item numeric currency pagado">Pagado: <span class="floatRight"></span></li>
+				    <li class="list-group-item numeric currency rendido">Justificado: <span class="floatRight"></span></li>
+				    <li class="list-group-item numeric currency total">Total: <span class="floatRight"></span></li>
+				  </ul>
+				</div>
+				<div class="card">
+					<!-- <h3 hidden="" class="dtc">Documentos de compra</h3> -->
+					 <div class="card-header lines uBgGreen white-text" data-toggle="collapse" data-target="#linesList" role="button" aria-expanded="false" aria-controls="linesList">
+					    Items - Seleccionar para rendir
+					  </div>
+					<div class="card collapse lines show" id="linesList">
+					</div>
+					
+				</div>
+				<div class="card">
+					 <div class="card-header dtc uBgGreen white-text" data-toggle="collapse" data-target="#dtcList" role="button" aria-expanded="false" aria-controls="dtcList">
+					    Documentos de compra
+					  </div>
+					<div class="card collapse dtc" id="dtcList">
+					</div>
+					
+				</div>
+			</div>
+		</div>	
+	</div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+	"rows": [
+<!--#4DLOOP aDocId -->
+		{
+			"id": <!--#4DHTML aDocId{aDocId}-->,
+			"index": "<!--#4DHTML aDocIndex{aDocId}-->",
+			"estado": "<!--#4DHTML aDocEstado{aDocId}-->",
+			"cliente": "<!--#4DHTML _V3_escapeString(aDocCliente{aDocId})-->",
+			"monto": <!--#4DHTML String(aDocmonto{aDocId};"&xml")-->,
+			"total_factura": <!--#4DHTML String(aDoctotalFactura{aDocId};"&xml")-->,
+			"tipo_moneda": "<!--#4DHTML aTipoMoneda{aDocId}-->",
+			"valor_cambio": <!--#4DHTML String(aValorCambio{aDocId};"&xml")-->
+		}<!--#4DIF NOT(aDocId{aDocId} = aDocId{Size of array(aDocId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

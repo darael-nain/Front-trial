@@ -1,0 +1,24 @@
+{
+	"username": "<!--#4DHTML _V3_escapeString(vLogin)-->",
+	"iniciales": "<!--#4DHTML _V3_escapeString(vIniciales)-->",
+	"rut": "<!--#4DHTML _V3_escapeString(vRutUser)-->",
+	"name": "<!--#4DHTML _V3_escapeString(vNomUsr2)-->",
+	"email": "<!--#4DHTML _V3_escapeString(vEmail)-->",
+	"google_id": "<!--#4DHTML _V3_escapeString(vGoogle_id)-->",
+	"google_email": "<!--#4DHTML _V3_escapeString(vGoogle_email)-->",
+	"google_name": "<!--#4DHTML _V3_escapeString(vGoogle_name)-->",
+	"google_access_token": "<!--#4DHTML _V3_escapeString(vGoogle_access_token)-->",
+	"google_refresh_token": "<!--#4DHTML _V3_escapeString(vGoogle_refresh_token)-->",
+	"google_calendar_default": "<!--#4DHTML _V3_escapeString(vGoogle_calendar_default)-->",
+	"google_img": "<!--#4DHTML _V3_escapeString(vGoogle_img)-->",
+	"estado": <!--#4DIF Not(Undefined(estado))--><!--#4DIF estado-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"access": {
+	<!--#4DLOOP aIdAccess-->
+		"_<!--#4DHTML aIdAccess{aIdAccess}-->": <!--#4DHTML aEstadoAccess{aIdAccess}--><!--#4DIF NOT(aIdAccess{aIdAccess} = aIdAccess{Size of array(aIdAccess)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	},
+	"params": {
+		"v3_dif_gasto_list_negocios": <!--#4DIF [Parametros]v3_dif_gasto_list_negocios-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+		"v3_mostrar_totales_extendidos": <!--#4DIF [Parametros]v3_mostrar_totales_extendidos-->true<!--#4DELSE -->false<!--#4DENDIF-->
+	}
+}

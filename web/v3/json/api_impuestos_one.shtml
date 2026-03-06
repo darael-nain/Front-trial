@@ -1,0 +1,13 @@
+{
+	"create": <!--#4DIF create-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"creado": <!--#4DIF creado-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"id": <!--#4DTEXT id-->,
+	"descripcion": "<!--#4DHTML _V3_escapeString(descripcion)-->",
+	"tipo": "<!--#4DHTML _V3_escapeString(tipoimp)-->",
+	"valor": "<!--#4DTEXT valor-->",
+	"estado": <!--#4DIF estado-->true<!--#4DELSE-->false<!--#4DENDIF-->
+}
+
+
+
+

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<!--#4DSCRIPT/_V3_proxy_getInfoEmpresaPro-->
+	<!--#4DSCRIPT/_V3_proxy_getParametros-->
+	<head>
+		<title>Notificación</title>
+	</head>
+	<body>
+		<div style="margin:0;padding:0;color:black" data-greeting></div>
+		<p style="margin:0;padding:0;color:black">Has sido copiado en la <label data-link-marker></label> <label style="display:none" data-number></label>.</p>
+		<div style="display:inline-block;margin:10px 0 0 5px;padding:5px;border:1px solid lightgrey;border-radius:5px;">
+			<p style="margin:10px 0;padding:0;">
+				<div><label style="color:black;font-weight:bold">Fecha de inicio:</label> <span style="color:black">24-07-2017</span></div>
+				<div><label style="color:black;font-weight:bold">Responsable de la tarea:</label> <span style="color:black">Juanito Perez</span></div>
+				<div><label style="color:black;font-weight:bold">Negocio:</label> <span style="color:black">002300</span></div>
+				<div><span style="display:inline-block;margin:0;padding:5px;background-color:#dcf8c6;border-radius:5px;color:black">Asociado al ítem:  Productor visual</span></div>
+				<div><label style="color:black;font-weight:bold">Cliente:</label> <span style="color:black">Falabella</span></div>
+				<div><label style="color:black;font-weight:bold">Comentario:</label><br><p data-comment style="display:inline-block;margin:0;padding:5px;background-color:#dcf8c6;border-radius:5px;color:black"></p></div>
+				<p style="margin:10px 0;padding:0;"><label>Ir a la </label><label data-link-marker></label></p>
+			</p>
+		</div>
+	</body>
+</html>
+

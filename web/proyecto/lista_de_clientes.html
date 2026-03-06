@@ -1,0 +1,19 @@
+<!--#4dif Size of array(aIdEmpresaOt)>0-->
+<ol>
+	<!--#4dloop aIdEmpresaOt-->
+	<li>
+		<a href="#" onClick="select_empresa('<!--#4DVAR aIdEmpresaOt{aIdEmpresaOt}-->','<!--#4DVAR aNomEmpresaOt{aIdEmpresaOt}-->')";>
+			<div>
+				<span></span><span></span>
+				<span><!--#4DVAR Lowercase(aNomEmpresaOt{aIdEmpresaOt})--></span>			
+				<span>
+					<span><!--#4DVAR Lowercase(aTipoEmpresaOt{aIdEmpresaOt})--></span><span></span><span><!--#4DVAR Lowercase(aEmailEmpresaOt{aIdEmpresaOt})--></span>					
+				</span>
+			</div>
+		</a>
+	</li>
+	<!--#4dendloop-->
+</ol>
+<!--#4delse-->
+0	
+<!--#4dendif-->

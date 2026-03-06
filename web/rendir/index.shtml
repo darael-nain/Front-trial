@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<!--  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge"> -->
+	<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
+
+	<!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script> -->
+	<!--  <script
+			  src="https://code.jquery.com/jquery-3.4.1.min.js"
+			  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+			  crossorigin="anonymous"></script> -->
+	<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script> -->
+	<link rel="stylesheet" type="text/css" href="/css/bootstrap-4.4.1-dist/css/bootstrap.min.css">
+	<script src="/v3/script/jquery/jquery.js"></script>
+	<script src="/v3/script/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="/script/popper.min.js"></script>
+	<script type="text/javascript" src="/script/popper.min.js"></script>
+	<script type="text/javascript" src="/css/bootstrap-4.4.1-dist/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="/css/fontawesome5.11.2/css/all.min.css">
+	<!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script> -->
+	<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" integrity="sha384-KA6wR/X5RY4zFAHpv/CnoG2UW1uogYfdnP67Uv7eULvTveboZJg0qUpmJZb5VqzN" crossorigin="anonymous"> -->
+	<!-- <link rel="stylesheet" type="text/css" href="css/fontawesome/css/all.min.css"> -->
+	<script type="text/javascript" src="rendir.js"></script>
+	<script type="text/javascript" src="js/metas.js"></script>
+	<script type="text/javascript" src="js/loader.js"></script>
+	<script type="text/javascript" src="js/modal.js"></script>
+	<script src="../v3/script/jquery/plugins/jquery-ui/js/jquery-ui.js"></script>
+	<link rel="stylesheet" href="css/index.css">
+	<link rel="stylesheet" href="../v3/script/jquery/plugins/jquery-ui/css/smoothness/jquery-ui.css">
+	<title>Rendiciones</title>
+	<script type="text/javascript">
+		rendir.session.verify();
+		rendir.navigate.init(true);
+		rendir.navigate.current();
+
+
+		$(document).ready(function () {
+			let container = document.querySelector(".content");
+			let localFilters;
+			let filters;
+			if (window.performance.navigation.type <= 1) {
+				filters = { emitida: true, pagada: true };
+				rendir.local.remove("filters");
+			} else {
+				localFilters = rendir.local.get("filters");
+				filters = localFilters || { emitida: true, pagada: true };
+
+			}
+			rendir.get(container, filters);
+
+			rendir.navbar.bottom.init(document.querySelector(".container.fxr"));
+
+
+			// user button
+			modal.create("userProfile");
+			rendir.navbar.top.add({
+				action: () => {
+
+				},
+				// classList: ["fas", "d-block", "fa-lg", "fa-arrow-left", "uGreen"],
+				classList: ["far", "fa-user", "fa-lg"],
+				dataset: {
+					toggle: "modal",
+					target: "#userProfile"
+				},
+				callback: () => {
+					let user = rendir.user.get();
+					modal.set({
+						id: "userProfile",
+						title: `Perfil ${user.name}`,
+						body: `<ul class="list-group">
+									  <li class="btn btn-light list-group-item align-items-center"><a class="anchor-no-style" href="/4DACTION/W_CERRAR_SESION/${user.session}"><span>Cerrar sesión</span> <i class="fas fa-power-off float-right fa-lg"></i></a></li>
+									</ul>`,
+						footer: ``,
+						script: modal => {
+
+						}
+					})
+				}
+			});
+
+			// back button
+			modal.create("filters");
+			rendir.navbar.bottom.add({
+				action: () => {
+
+
+				},
+				classList: ["fas", "fa-2x", "fa-filter", "uGreen"],
+				dataset: {
+					toggle: "modal",
+					target: "#filters"
+				}
+			});
+			modal.set({
+				id: "filters",
+				title: "Filtrar",
+				body: `<div class="input-group input-group-sm mb-3">
+							<div class="input-group-prepend">
+							    <span class="input-group-text" id="inputGroup-sizing-sm">Buscar</span>
+							  </div>
+							  <input type="text" class="m-right-10 form-control search" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+							  <i class="fas fa-eraser fa-2x eraseSearch"></i>
+							</div>
+							<div class="input-group mb-3 uFilters">
+								<span class="children_inline">
+								  <div class="input-group-prepend">
+								    <div class="input-group-text">
+								      <input type="checkbox" id="emitida" aria-label="Checkbox for following text input">
+								    </div>
+								  </div>
+				    			<label class="input-group-text" for="emitida">Emitida</label>
+									  <div class="input-group-prepend">
+									    <div class="input-group-text">
+									      <input type="checkbox" id="pagada" aria-label="Checkbox for following text input">
+									    </div>
+									  </div>
+					    			<label class="input-group-text" for="pagada">Pagada</label>
+								</span>
+
+							</div>
+							<div class="input-group mb-3 uFilters">
+                  			<input  disabled type="text" class="m-right-10 form-control datepicker" id="fecha_emision" placeholder="Fecha emision">
+						</div>`,
+				footer: `
+			        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+			        <button type="button" class="btn white-text uBgGreen uBorderGreen btnFilter">Filtrar</button>`,
+				script: modal => {
+					let getFilters = () => {
+						return {
+							pagada: modal.querySelector("#pagada").checked,
+							emitida: modal.querySelector("#emitida").checked,
+							q: modal.querySelector(".search").value,
+							year: modal.querySelector("#fecha_emision").dataset.year,
+							month: modal.querySelector("#fecha_emision").dataset.month
+
+
+
+						}
+					}
+					let search = () => {
+						loading.start();
+						rendir.empty();
+						let filters = getFilters();
+						rendir.get(container, filters);
+						rendir.local.set(filters, "filters");
+						$(modal).modal("hide");
+
+						loading.stop();
+					}
+					let toggleFilters = state => {
+						let uFilters = document.querySelectorAll("div.uFilters");
+						uFilters.forEach(div => div.hidden = state);
+					}
+					modal.querySelector(".search").addEventListener("keypress", function (event) {
+						if (event.keyCode == 13) {
+							search();
+						}
+
+						toggleFilters(this !== "");
+					});
+					modal.querySelector(".eraseSearch").addEventListener("click", function (event) {
+						modal.querySelector(".search").value = "";
+						toggleFilters(false);
+					});
+					modal.querySelector(".btnFilter").addEventListener("click", function () {
+						search();
+
+					});
+					$(modal).on('shown.bs.modal', function (e) {
+						$("#fecha_emision").datepicker({
+							changeMonth: true,
+							changeYear: true,
+							changeDate: false,
+							showButtonPanel: true,
+							showOn: "button",
+							buttonImage: "css/calendar-alt-regular.svg",
+							buttonImageOnly: true,
+							buttonText: "Seleccionar fecha",
+							dateFormat: 'mm yy',
+							onClose: function (dateText, inst) {
+								console.log(inst);
+								$(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+								let month = inst.selectedMonth + 1;
+								this.dataset.month = String(month).length === 1 ? `0${month}` : month;
+								this.dataset.year = inst.selectedYear;
+							},
+							beforeShow: function (input, inst) {
+								let div = inst.dpDiv[0];
+								div.classList.add('uDatepicker');
+
+
+
+							}
+						});
+						let localFilters = rendir.local.get("filters");
+						if (localFilters) {
+							modal.querySelector("#pagada").checked = localFilters.pagada;
+							modal.querySelector("#emitida").checked = localFilters.emitida;
+							modal.querySelector(".search").value = localFilters.q || "";
+							if (localFilters.month) {
+								modal.querySelector("#fecha_emision").dataset.month = String(localFilters.month).length === 1 ? `0${localFilters.month.length}` : localFilters.month;
+								modal.querySelector("#fecha_emision").dataset.year = localFilters.year;
+
+								document.querySelector("#fecha_emision").value = `${localFilters.month || ""} ${localFilters.year || ""}`;
+
+
+							} else {
+								modal.querySelector("#pagada").checked = true;
+								modal.querySelector("#emitida").checked = true;
+
+							}
+						}
+					});
+				}
+			})
+		});
+	</script>
+	<style type="text/css">
+		.navbar {
+			padding: .25rem 2.25rem;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container fxr">
+		<div class="row">
+			<nav class="navbar sticky-top navbar-light bg-light w-100 topNavbar">
+				<a class="navbar-brand" href="#">Rendiciones</a>
+			</nav>
+
+		</div>
+		<div class="row">
+			<div class="content w-100">
+
+			</div>
+		</div>
+		<!-- 		<br/>
+			<br/>
+			<br/>
+ -->
+	</div>
+</body>
+
+</html>

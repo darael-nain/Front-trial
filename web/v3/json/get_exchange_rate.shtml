@@ -1,0 +1,6 @@
+{
+	"from": "<!--#4DVAR $from-->",
+	"to": "<!--#4DVAR $to-->",
+	"rate": <!--#4DHTML String($rate;"&xml")-->,
+	"exchange_rate": <!--#4DHTML String($exchange_rate;"&xml")-->
+}

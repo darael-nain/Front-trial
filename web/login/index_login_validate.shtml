@@ -1,0 +1,263 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_serverInfo-->
+		<meta charset="utf-8">
+		<meta name="robots" content="noindex">
+		<title>UNA Base</title>
+		<!-- <link rel="icon" href="/favicon.png"> -->
+		<link rel="icon" href="/faviconNew.png">		<link rel="stylesheet" href="/v3/design/login.css">
+		<link rel="stylesheet" href="/v3/design/tooltip.css">
+    	<link rel="stylesheet" href="/seguridad/css/passwordRecovery.css">
+
+		<script src="/v3/script/jquery/jquery.js"></script>
+		<script src="/script/mobileCheck.js"></script>
+		<script src="/v3/script/jquery/plugins/jquery-ui/js/jquery-ui.js"></script>
+		<script src="/v3/script/hashref.js"></script>
+
+		<script src="/v3/script/jquery/plugins/toasty/toasty-min.js"></script>
+    	<script src="/v3/script/jquery/plugins/tooltipster/js/jquery.tooltipster.js"></script>
+
+    	<link rel="stylesheet" href="/v3/script/jquery/jquery-plugins.css">
+
+    	<script src="/v3/script/jquery/plugins/toastr/toastr.js"></script>
+    	<script src="/seguridad/js/passwordRecovery.js"></script>
+
+    	<style type="text/css">
+    	</style>	
+<!-- 
+    	<script src="https://apis.google.com/js/platform.js" async defer></script>
+		<meta name="google-signin-client_id" content="809687838201-l7nf2ag0dr2r6365gc9fcc0lrtka1fe8.apps.googleusercontent.com"> -->
+
+		<script>
+		var nodejs_port = <!--#4DHTML _V3_nodejs_port-->;
+		var nodejs_public_ipaddr = "<!--#4DHTML _V3_nodejs_public_ipaddr-->";
+		var nodeUrl = 'http://' + nodejs_public_ipaddr + ':' + nodejs_port;
+
+		var SourceWeb = "<!--#4DTEXT SourceWeb-->";
+		var url_string = decodeURIComponent(window.location.href); //window.location.href
+		var urlx = new URL(url_string);
+		var reqUrl = urlx.searchParams.get("reqUrl");
+		// console.log(SourceWeb);
+		// verifica si es mobile lo redirecciona a la version mobile
+			if(mobileCheck() && SourceWeb != "web"){
+				// window.location.replace(nodeUrl+'/agentControl/false');
+				window.location.replace(nodeUrl+'/login_validate?reqUrl='+reqUrl);
+			}
+
+			$(document).ready(function(){
+       			$('input[name="reqUrl"]').val(reqUrl);
+
+
+
+				var content = $('div.passwordRecovery');
+				$('p.passwordLost').tooltipster({
+							content: toolcontent,
+							contentAsHTML: true,  
+							contentCloning: false,
+							interactive: true,
+							maxWidth: 400,
+							trigger: 'click'
+						});
+			});
+			var base_url = "<!--#4DTEXT _V3_base_url-->";
+			$.ajax({
+				url: '/4DACTION/_V3_getTooltip',
+				data: {
+					'path': '/index.shtml'
+				},
+				dataType: 'json',
+				success: function(data) {
+					if (typeof data.success != 'undefined') {
+						$().toasty({
+							title: data.title,
+							message: data.text,
+							autoHide: data.time,
+							position: 'tr'
+						});
+					}
+				}
+			});
+
+
+			// function pass(){
+
+			// 	var vLogin = $('input[name="login"]').val();
+			// 	var mail = $('input[name="mail"]').val();
+			// 	
+			// 	if(vLogin != "" && mail != ""){
+			// 		$.ajax({
+			// 			url: '/4DACTION/_V3_SetRandomPassword',
+			// 			data: {
+			// 				'vLogin': vLogin,
+			// 				'fromLogin': true,
+			// 				'mail': mail
+			// 			},
+			// 			async:false,
+			// 			dataType: 'json',
+			// 			success: function(data) {
+			// 				
+			// 				if(data.success){
+			// 					toastr.success('Contraseña reestablecida, verifique su correo electrónico.');
+			// 					// $('div.passwordRecovery').hide();
+			// 					$('body').trigger('click');
+			// 				}else{
+			// 					toastr.error('Nombre de usuario y/o correo electrónico no coinciden. Por favor comunicarse con soporte para verificar la información.');
+			// 				}
+			// 			}
+			// 		});
+
+			// 	}else{					
+			// 		toastr.error('Complete todos los campos para reestablecer la contraseña');
+			// 	}
+			// }
+
+			function onSignIn(googleUser) {
+			  var profile = googleUser.getBasicProfile();
+			  /*console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+			  console.log('Name: ' + profile.getName());
+			  console.log('Image URL: ' + profile.getImageUrl());
+			  console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.*/
+			}
+
+		</script>
+
+	</head>
+
+	<body class="login">
+
+		<!--#4DSCRIPT/_V3_serverInfo-->
+		<!--#4DIF (_V3_demo)-->
+		<section>
+			<form class="demo" method="post" action="/4DACTION/W_INICIA_SESION">
+				<fieldset>
+					<legend><span>Bienvenido a UNA Base</span></legend>
+					<label>
+						<span>Su nombre</span>
+						<input type="text" name="txtNombre" required>
+					</label>
+					<label>
+						<span>Su email</span>
+						<input type="email" name="txtEmail" required>
+					</label>
+					<label>
+						<span>Su empresa</span>
+						<input type="text" name="txtEmpresa" required>
+					</label>
+					<label>
+						<span>Rubro</span>
+						<select name="txtRubro" required>
+							<option value="">Seleccionar</option>
+							<option value="Administración y finanzas">Administración y finanzas</option>
+							<option value="Agencia de comunicación">Agencia de comunicación</option>
+							<option value="Agencia de publicidad y marketing">Agencia de publicidad y marketing</option>
+							<option value="Agencia Digital">Agencia Digital</option>
+							<option value="Asesorías">Asesorías</option>
+							<option value="Arquitectura">Arquitectura</option>
+							<option value="Audiovisual">Audiovisual</option>
+							<option value="Construcción">Construcción</option>
+							<option value="Consultoría">Consultoría</option>
+							<option value="Contabilidad">Contabilidad</option>
+							<option value="Diseño">Diseño</option>
+							<option value="Educación">Educación</option>
+							<option value="Fotografía">Fotografía</option>
+							<option value="Gobierno">Gobierno</option>
+							<option value="Informática y telecomunicaciones">Informática y telecomunicaciones</option>
+							<option value="Industrial">Industrial</option>
+							<option value="Ingeniería">Ingeniería</option>
+							<option value="Productora de cine y TV">Productora de cine y TV</option>
+							<option value="Productora de eventos y BTL">Productora de eventos y BTL</option>
+							<option value="Profesional Independiente">Profesional Independiente</option>
+							<option value="Salud">Salud</option>
+							<option value="Otros">Otros</option>
+						</select>
+					</label>
+					<button type="submit">Ingresar</button>
+				</fieldset>
+			</form>
+		</section>
+		<footer itemscope itemtype="http://schema.org/Organization"><span itemprop="name">UNA Sistemas Ltda. Todos los derechos reservados.</span> 
+			<address
+				itemprop="address"
+				itemscope
+				itemtype="http://data-vocabulary.org/Address">
+				<span itemprop="street-address">Carmen covarrubias 32 OF - 611</span>,
+				<span itemprop="locality">Ñuñoa</span>,
+				<span itemprop="region">Santiago</span> -
+				<span itemprop="country">Chile</span>
+			</address>
+			<p itemprop="telephone">
+				<a href="tel:+56222398622">(56 - 2) 2239 8622</a>
+			</p>
+			<nav>
+				<ul>
+					<li class="skype"><a href="callto:soporte.unasistemas"><span>Skype</span></a></li>
+					<li class="email"><a href="mail:soporte@una.cl"><span>Email</span></a></li>
+				</ul>
+			</nav>
+		</footer>
+
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+			ga('create', 'UA-58262854-1', 'auto');
+			ga('send', 'pageview');
+		</script>
+
+		<!--#4DELSE-->
+		<section>
+			<form method="post" action="/4DACTION/W_INICIA_SESION_VALIDATE">
+				<fieldset>
+					<legend><span>Bienvenido a UNA Base</span></legend>
+					<label>
+						<span>Usuario</span>
+						<input type="text" name="txtUsuario" required>
+            			<input type="hidden" name="reqUrl" hidden="">
+					</label>
+					<label>
+						<span>Contraseña</span>
+						<input type="password" name="txtPassword" required>
+					</label>
+					<!--<label>
+						<input type="checkbox" name="remember">
+						<span>Recordar contraseña</span>
+					</label>-->
+					<button type="submit">Ingresar</button>
+
+					<div style="display:none">
+						<h2 style="text-align:left!important;font-weight:bold;margin:20px 0 10px 45px;">O BIEN</h2>
+						<div style="margin-left:43px;margin-top:20px" class="g-signin2" data-onsuccess="onSignIn"></div>
+					</div>
+					<br><br>
+				<p class="passwordLost">¿Olvidaste tu contraseña?</p>
+				</fieldset>
+			</form>
+		</section>
+
+		<footer itemscope itemtype="http://schema.org/Organization"><span itemprop="name">UNA Sistemas Ltda. Todos los derechos reservados.</span> 
+			<address
+				itemprop="address"
+				itemscope
+				itemtype="http://data-vocabulary.org/Address">
+				<span itemprop="street-address">Carmen covarrubias 32 OF - 611</span>,
+				<span itemprop="locality">Ñuñoa</span>,
+				<span itemprop="region">Santiago</span> -
+				<span itemprop="country">Chile</span>
+			</address>
+			<p itemprop="telephone">
+				<a href="tel:+56222398622">(56 - 2) 2239 8622</a>
+			</p>
+			<nav>
+				<ul>
+					<li class="skype"><a href="callto:soporte.unasistemas"><span>Skype</span></a></li>
+					<li class="email"><a href="mail:soporte@una.cl"><span>Email</span></a></li>
+				</ul>
+			</nav>
+		</footer>
+		<!--#4DENDIF-->
+	</body>
+</html>

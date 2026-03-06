@@ -1,0 +1,23 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Prm_Cta_Cte]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"companyRut": "<!--#4DHTML rutEmpresa-->",
+	"rows": [
+<!--#4DLOOP aCuentaId -->
+		{
+			"id": <!--#4DHTML Num(aCuentaId{aCuentaId})-->,
+			"index": "<!--#4DHTML aCuentaIndex{aCuentaId}-->",					
+			"default": <!--#4DIF aCuentaDefault{aCuentaId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"next": <!--#4DHTML aCuentaProximoCheque{aCuentaId}-->,
+			"text": "<!--#4DHTML aDesCtacte{aCuentaId}-->"
+		}<!--#4DIF NOT(aCuentaId{aCuentaId} = aCuentaId{Size of array(aCuentaId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

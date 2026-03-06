@@ -1,0 +1,20 @@
+<div class="totales">
+ <table cellpadding="0" cellspacing="0">
+    <tr>
+        <td>SUB TOTAL [$]&nbsp;</td>
+        <td><input name="subtotal_oc_new" id="subtotal_oc_new" readonly class="amarillo-grande" type="text" value="<!--#4DVAR vsubTotales-->" /> </td>
+    </tr>
+    <tr>
+        <td>TOTAL NETO [$]&nbsp;</td>
+        <td><input name="neto_oc_new" id="neto_oc_new" readonly class="amarillo-grande" type="text" value="<!--#4DVAR vtotalNeto-->" /> </td>
+    </tr>
+    <tr>
+        <td id="impuesto-etiqueta">19 % IVA&nbsp;</td>
+        <td><input name="impuesto_oc_new" id="impuesto_oc_new" readonly class="amarillo-grande" type="text" value="<!--#4DVAR vimpuesto-->" /> </td>
+    </tr>
+    <tr>
+        <td>TOTAL [$]&nbsp;</td>
+        <td><input name="total_oc_new" id="total_oc_new" readonly class="amarillo-grande" type="text" value="<!--#4DVAR vtotalGeneral-->" /> </td>
+    </tr>
+    </table>   
+</div>

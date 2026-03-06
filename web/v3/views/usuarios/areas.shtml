@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+	<head>
+
+		<title>Usuario</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/views/usuarios/script/content.js"></script>
+
+		<script type="text/javascript">
+
+		var set_notificacion = function(id, login, inbox, email){
+				// var modulo =  $('#sheet-usuarios').data('modulo');				
+				$.ajax({
+					url: '/4DACTION/_V3_setNotificacionesUsuarios',
+					data: {
+						"permisos[id]" : id,
+						"permisos[login]": login,					
+						"permisos[inbox]": inbox,
+						"permisos[email]": email
+					},
+					dataType: 'json',
+					type: 'POST',
+					success: function(data) {
+						
+						if (data.success) {
+							toastr.success(NOTIFY.get('SUCCESS_SAVE'));
+						}else{
+							toastr.error(NOTIFY.get('ERROR_RECORD_READONLY', 'Error'));
+						}						
+					},
+					error: function(data) {
+						toastr.error(NOTIFY.get('ERROR_INTERNAL'));
+					}
+				});				
+			}
+
+
+		// $(document).ready(function() {
+
+		// $("section.notificacion table").on('click','td input[type="checkbox"]', function() {			
+
+		// 			var current = $(this);			
+		// 			var id = current.val();
+		// 			var login =  current.closest('tr').data('login');
+		// 			var inbox;
+		// 			var email;
+
+
+		// 			if (current.attr('name') == 'inbox[check]')
+		// 				inbox = current.prop('checked');
+
+		// 			if (current.attr('name') == 'email[check]')
+		// 				email = current.prop('checked');
+
+		// 			set_notificacion(id, login, inbox, email);
+		// 		});
+				
+		// });	
+		var getLogin = function(){
+			return $('input[name="loguinsito"]').val();
+		}				
+				
+		$(document).ready(() => {
+			let login = $('input[name="loguinsito"]').val();
+			let container = document.querySelector('section.sheet.areas footer article table tbody');
+			console.log('login::'+login);
+			
+			axios(`/4DACTION/_v3_getAreasNegocio?login=${unaBase.doc.login}`).then(res => {
+				let rows = res.data.rows;
+				let areasByUser = res.data.byUser;
+				for(let item of rows){
+					let html = `<tr data-id="${item.id}">
+									<td>${item.descripcion_centrocosto}</td>
+									<td><input type="checkbox" name="default"></td>
+									<td><input type="checkbox" name="add"></td>
+								</tr>`;
+					container.insertAdjacentHTML('beforeend', html);
+
+				}
+				for(let item of areasByUser){					
+					if(item.default){
+						container.querySelector(`tr[data-id="${item.id}"] input[name="default"]`).checked = true;
+					}			
+						container.querySelector(`tr[data-id="${item.id}"] input[name="add"]`).checked = true;
+					
+				}
+			}).catch(err => {
+				console.log(err);
+			});
+			$("section.areas table").on('click','td input[type="checkbox"]', function() {			
+					let value = this.checked;
+					let name = this.name;
+					let area = $(this).closest('tr')[0].dataset.id;
+
+					let defaultState;
+					let addState;
+					let state;
+					// switch(name){
+					// 	case 'default':
+					// 		defaultState = value;
+					// 	case 'add':
+					// 		addState = value;
+					// }
+					// if(value){
+					// 	state = name === 'default' ? 'default' : 'add';
+					// }else{
+					// 	state = name === 'default' ? 'not' : 'delete';
+					// }
+					axios(`/4DACTION/_V3_setAreaByUsuario?login=${getLogin()}&area=${area}&name=${name}&value=${value}`).then(res => {
+						if (res.data.success) {
+							toastr.success(NOTIFY.get('SUCCESS_SAVE'));
+							if(value && name === 'default'){
+								let defaults = document.querySelectorAll('input[name="default"]');
+								for(let item of defaults){
+									item.checked = false;
+								}
+								document.querySelector(`tr[data-id="${area}"] input[name="default"]`).checked = true;
+								document.querySelector(`tr[data-id="${area}"] input[name="add"]`).checked = true;
+							}else if(!value && name === 'add'){
+								document.querySelector(`tr[data-id="${area}"] input[name="default"]`).checked = false;
+								document.querySelector(`tr[data-id="${area}"] input[name="add"]`).checked = false;
+							}
+						}else{
+								toastr.error(NOTIFY.get('ERROR_RECORD_READONLY', 'Error'));
+						}
+					}).catch(err => {
+								toastr.error(NOTIFY.get('ERROR_RECORD_READONLY', 'Error'));
+					});
+				
+				
+			});	
+		})
+		</script>
+
+	</head>
+	<body>
+		<section class="sheet sheet-usuarios css-main areas" data-id="<!--#4DTEXT prmUserLogin-->">
+			
+			<footer>			
+				<article>
+					<h1>Notificaciones</h1>								
+					<!-- <ul>						
+						<li> -->
+							<table>
+								<thead>
+									<tr>										
+										<th>Area</th>
+										<th>Predeterminada</th>							
+										<th>Asociar</th>							
+									</tr>		
+								</thead>
+								<tbody>
+								</tbody>
+					  			<tfoot></tfoot>
+							</table>
+
+					<!-- 			
+						</li>						
+					</ul>	 -->
+										
+				</article>	
+			
+			</footer>		
+		</section>		
+	</body>
+</html>

@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+	<!--#4DSCRIPT/_V3_proxy-->
+	<!--#4DSCRIPT/_V3_proxy_factPorCobrarReporte-->
+	<head>
+		<title>Reporte por cobrar</title>
+		<meta charset="utf-8">
+		<script src="/v3/script/sorttable.js"></script>
+		<script type="text/javascript" src="/v3/script/datepicker_es.js?<!--#4DTEXT _V3_version-->"></script>
+
+		<script>
+		var containerClientes = $('#container-reportes-clientes-porcobrar > table > tbody');
+		var container = $('#container-reportes-facturas-porcobrar');
+		var tbodyCobros = container.find('table.facturas-por-cobrar > tbody');
+
+		let activeTab = 'clientes';
+		let param = { 
+			text : '',
+			periodo : 'todos'
+		};
+
+		var getClientesPorCobrar = function(param){
+			$.ajax({
+				url: '/4DACTION/_V3_getClientesPorCobrarReporte',
+				data: param,
+				dataType: 'json',
+				beforeSend: function(){
+					containerClientes.find('*').remove();
+					containerClientes.append('<tr><td colspan="9"><div>Cargando...</div></td></tr>');
+				},
+				success: function(data) {
+					containerClientes.find('*').remove();
+					$('.current-cliente > .cantidad').text(data.cliente_por_cobrar + " Clientes");
+					$('.current-cliente.total').text(currency.symbol + " " + $.number(data.total_por_cobrar, currency.decimals, currency.decimals_sep, currency.thousands_sep) );
+					if (data.por_cobrar.length > 0) {
+						var htmlObject;
+						$.each(data.por_cobrar, function(key, item) {
+							htmlObject = $('<tr data-id="'+ item.id + '">' +
+							'<td style="text-align:left;width:250px"><div>'+ item.cliente + '</div></td>' +
+							'<td style="width:100px;text-align:center"><div class="ver-facturas">'+ item.cantidad +'</div></td>' +
+							'<td style="width:100px;text-align:right"><div style="font-weight:bold;">'+ currency.symbol + " " + $.number(item.monto, currency.decimals, currency.decimals_sep, currency.thousands_sep) +'</div></td>' +
+							'</tr>');
+							/*htmlObject.click(function(){
+								
+								idCliente = $(this).data('id');
+								$('a[href="#tabs-1"]').trigger('click');
+							});*/
+							containerClientes.append(htmlObject);
+						});
+					}else{
+						containerClientes.find('*').remove();
+						containerClientes.append('<tr><td colspan="9"><div style="text-align:center;padding:10px;color:green;font-weight:bold;font-size:12px;">No se encontro ningún resultado.</div></td></tr>');
+					}
+				},
+				error: function(xhr, text, error) {
+					console.log("error:" + error);
+				}
+			});
+		}
+
+		var getFacturasPorCobrar = function(param){
+			/*var fields = '';
+			var searchFields = $.param(unaBase.toolbox.search.advancedFilter);
+			var serialFields = $('#search').serializeAnything();
+			fields = searchFields + '&' + serialFields + '&id=<!--#4DTEXT id-->';*/
+			$.ajax({
+				url: '/4DACTION/_V3_getFacturasPorCobrarReporte',
+				data: param,
+				dataType: 'json',
+				beforeSend: function(){
+					tbodyCobros.find('*').remove();
+					tbodyCobros.append('<tr><td colspan="9"><div>Cargando...</div></td></tr>');
+				},
+				success: function(data) {
+					tbodyCobros.find('*').remove();
+					//$('#search').find('*').prop('disabled', true);
+
+					/*if (data.cliente != "") {
+						$('.current-cliente > .name').text(data.cliente);
+					}*/
+					$('.current-dtv > .cantidad').text(data.cantidad + " Facturas");
+					$('.current-dtv.total').text(currency.symbol + " " + $.number(data.total, currency.decimals, currency.decimals_sep, currency.thousands_sep) );
+
+					if (data.facturas.length > 0) {
+						var htmlObject;
+						$.each(data.facturas, function(key, item) {
+							htmlObject = $('<tr data-id="'+ item.id +'" style="vertical-align:middle">' +
+							//'<td><input class="check_options" type="checkbox"></td>' +
+							'<td style="text-align:center;width:250px;vertical-align:middle;"><div style="display:inline-block"><a href="' + '//' + window.location.host + '/4DACTION/wbienvenidos#dtv/content.shtml?id=' +
+							 item.id + '" target="_blank" style="cursor:pointer;text-decoration:underline;color:gray" title="Ir a factura">'+ item.numero +'</a></div></td>' +
+							'<td style="text-align:left;width:250px"><div title="'+ item.cliente +'">'+ ( (item.cliente.length > 25 ) ? item.cliente.substring(0, 25) + "..." : item.cliente) + '</div></td>' +
+							'<td style="text-align:left;width:250px"><div title="'+ item.referencia +'">'+ ( (item.referencia.length > 25 ) ? item.referencia.substring(0, 25) + "..." : item.referencia) + '</div></td>' +
+							'<td style="text-align:center;width:250px"><div>'+ item.vencimiento + '</div></td>' +
+							'<td style="width:100px;text-align:center"><div style="'+ ((item.atraso > 0)? 'color:red' : '') +'">'+ item.atraso +' días.</div></td>' +
+							//'<td style="width:100px;text-align:center">Hoy</td>' +
+							'<td style="width:100px;text-align:right"><div>'+ currency.symbol + " " + $.number(item.total, currency.decimals, currency.decimals_sep, currency.thousands_sep) +'</div></td>' +
+							'<td style="width:100px;text-align:right"><div>'+ currency.symbol + " " + $.number(item.abono, currency.decimals, currency.decimals_sep, currency.thousands_sep) +'</div></td>' +
+							'<td style="width:100px;text-align:right;font-weight:bold;"><div>'+ currency.symbol + " " + $.number(item.saldo, currency.decimals, currency.decimals_sep, currency.thousands_sep) +'</div></td>' +
+							'</tr>');
+							tbodyCobros.append(htmlObject);
+
+							/*htmlObject.find('.check_options').click(function(){
+								let itemsSelected = $('.facturas-por-cobrar > tbody > tr > td > input:checked').length;
+								if (itemsSelected > 0) {
+									$('#dialog-menu').find('ul li[data-name="nueva_tarea"]').show();
+									$('#dialog-menu').find('ul li[data-name="mail_cobranza"]').show();
+									$('#dialog-menu').find('ul li[data-name="agendar_cobro"]').show();
+								}else{
+									$('#dialog-menu').find('ul li[data-name="nueva_tarea"]').hide();
+									$('#dialog-menu').find('ul li[data-name="mail_cobranza"]').hide();
+									$('#dialog-menu').find('ul li[data-name="agendar_cobro"]').hide();
+								}
+							});*/
+
+						});
+
+					}else{
+						tbodyCobros.find('*').remove();
+						tbodyCobros.append('<tr><td colspan="9"><div style="text-align:center;padding:10px;color:green;font-weight:bold;font-size:12px;">No se encontro ningún resultado.</div></td></tr>');
+					}
+
+				},
+				error: function(xhr, text, error) {
+					console.log("error:" + error);
+				}
+			});
+		}	
+
+		var containerCobrosAgendados = $('#container-reportes-cobros-agendados > table > tbody');
+		var getCobrosAgendados = function(param){
+			$.ajax({
+				url: '/4DACTION/_V3_getCobrosAgendadosREPORT',
+				data: param,
+				dataType: 'json',
+				beforeSend: function(){
+					containerCobrosAgendados.find('*').remove();
+					containerCobrosAgendados.append('<tr><td colspan="9"><div>Cargando...</div></td></tr>');
+				},
+				success: function(data) {
+					containerCobrosAgendados.find('*').remove();
+					var htmlObject;
+					if (data.cobros_agendados.length > 0) {
+						$.each(data.cobros_agendados, function(key, item) {
+							htmlObject = $('<tr data-id="'+ item.id + '">' +
+							'<td style="text-align:center"><div>'+ item.numero + '</div></td>' +
+							'<td style="text-align:left"><div>'+ item.cliente + '</div></td>' +
+							'<td style="text-align:left"><div>'+ item.referencia + '</div></td>' +
+							'<td style="text-align:center"><div>'+ item.fecha + '</div></td>' +
+							'<td style="text-align:right"><div style="font-weight:bold;">'+ currency.symbol + " " + $.number(item.monto, currency.decimals, currency.decimals_sep, currency.thousands_sep) +'</div></td>' +
+							'</tr>');
+							/*htmlObject.click(function(){
+								//var id = $(this).data('id');
+								//unaBase.loadInto.dialog('/v3/views/ingresos/dialog/ingreso.shtml?id=' + id, 'Ingreso', 'x-large');
+								//window.open("http://" + window.location.host + "/v3/views/ingresos/dialog/ingreso.shtml?id="+ id, '_blank');
+							});*/
+							containerCobrosAgendados.append(htmlObject);
+						});
+					}else{
+						containerCobrosAgendados.find('*').remove();
+						containerCobrosAgendados.append('<tr><td colspan="9"><div style="text-align:center;padding:10px;color:green;font-weight:bold;font-size:12px;">No se encontro ningún resultado.</div></td></tr>');
+
+					}
+				},
+				error: function(xhr, text, error) {
+					console.log("error:" + error);
+				}
+			});
+		}
+
+		$(document).ready(function() {
+			
+			$('div.totales').draggable({ containment: "parent" });
+			$( "#tabs-rep-cobros" ).tabs();
+
+			$('a[href="#tabs-1"]').click(function() {
+				$('#buscador-text-report').attr('placeholder', 'Buscar por cliente, factura');
+				activeTab = 'clientes';
+				unaBase.interval.clearAll();
+				getClientesPorCobrar(param);
+			});
+
+			$('a[href="#tabs-2"]').click(function() {
+				$('#buscador-text-report').attr('placeholder', 'Buscar por cliente, factura');
+				activeTab = 'facturas';
+				unaBase.interval.clearAll();
+				getFacturasPorCobrar(param);
+			});
+
+			$('a[href="#tabs-3"]').click(function() {
+				$('#buscador-text-report').attr('placeholder', 'Buscar por número, cliente, factura');
+				activeTab = 'agendados';
+				unaBase.interval.clearAll();
+				getCobrosAgendados(param);
+			});
+
+			$('a[href="#tabs-1"]').trigger('click');
+
+			// periodos
+			$('#buscador-periodos-report').change(function(){
+				option = $(this).val();
+				if (option == "seleccionar") {
+					let htmlObjectFecha = $('<section>\
+							<h3 style="font-weight:bold;margin:3px;">Seleccionar periodo</h3>\
+							<input placeholder="Desde" readonly required style="border:1px solid lightgray;padding:2px;" type="text" name="seleccionar_desde">\
+							<input placeholder="Hasta" readonly required style="border:1px solid lightgray;padding:2px;" type="text" name="seleccionar_hasta">\
+					</section>');
+
+					htmlObjectFecha.find('input[name="seleccionar_desde"]').datepicker({
+						onSelect: function(event) {
+							htmlObjectFecha.data('response', $(this).val());
+						}
+					});
+
+					htmlObjectFecha.find('input[name="seleccionar_hasta"]').datepicker({
+						onSelect: function(event) {
+							htmlObjectFecha.data('response', $(this).val());
+						}
+					});
+
+					prompt(htmlObjectFecha).done(function(data) {
+						let from = $('input[name="seleccionar_desde"]').val();
+						let to = $('input[name="seleccionar_hasta"]').val();
+						if (from == '') {
+							from = to;
+							$('input[name="seleccionar_desde"]').val(from);
+						}
+						if (to == '') {
+							to = from;
+							$('input[name="seleccionar_desde"]').val(to);
+						}
+						param.periodo = 'rango';
+					  	param.date_from = from;
+					  	param.date_to = to;
+						switch(activeTab) {
+						  case 'clientes':
+						    getClientesPorCobrar(param);
+						    break;
+						  case 'facturas':
+						    getFacturasPorCobrar(param);
+						    break;
+						  case 'agendados':
+						    getCobrosAgendados(param);
+						    break;
+						}
+						
+					});
+				}else{
+					switch(activeTab) {
+					  case 'clientes':
+					    param.periodo = option;
+					    getClientesPorCobrar(param);
+					    break;
+					  case 'facturas':
+					  	param.periodo = option;
+					    getFacturasPorCobrar(param);
+					    break;
+					  case 'agendados':
+					  	param.periodo = option;
+					   	getCobrosAgendados(param);
+					    break;
+					}
+				}
+			});
+
+			$('#buscador-text-report').on("keyup",function(){
+				param.text = $(this).val();
+				switch(activeTab) {
+				  case 'clientes':
+				  	getClientesPorCobrar(param);
+				    break;
+				  case 'facturas':
+				  	 getFacturasPorCobrar(param);
+				    break;
+				  case 'agendados':
+				  	getCobrosAgendados(param);
+				    break;
+				}
+			});
+
+			$('button.export-info-report').button({icons: { primary: 'ui-icon-calculator'}, text: true }).click(function(){
+				let filters = jQuery.param(param);
+				let sid = '';
+				$.each($.cookie(),function(clave,valor) { if (clave == hash && valor.match(/UNABASE/g)) sid = valor; });
+				let url = nodeUrl + '/export-report-porcobrar/?download=true&sid=' + encodeURIComponent(sid) + '&' + filters + '&hostname=' + window.location.origin;
+				unaBase.log.save('Ha exportado el listado de reportes por cobrar', 'dtv');
+				var download = window.open(url);
+				download.blur();
+				window.focus();
+			});
+
+		});
+
+		</script>
+
+		<style type="text/css">
+
+			/* -- ini -- modificado para mostrar boton volver arriba y los filtros abajo, gin, 28-02-18 */
+			li[data-name="exit"]{
+				top: 10px;
+			    left: 0;
+			    position: absolute;
+			}
+
+			/* -- ini -- modificado para mostrar boton volver arriba y los filtros abajo, gin, 28-02-18 */
+			li[data-name="export"]{
+				top: 10px;
+			    left: 70px;
+			    position: absolute;
+			}
+
+			/*#search{
+			    display: inline-block;
+			    margin: 30px 0 0 -5px;
+			}*/
+			/*#search input[name="estado_compras"]{
+			   width: 110px!important;
+			}*/
+			/* -- fin -- modificado para mostrar boton volver arriba y los filtros abajo, gin, 28-02-18 */
+
+
+			.box-summary-totales{ 
+				display:inline-block;border-right:1px solid lightgray;padding:5px;
+			}
+				.box-summary-totales > div{
+					margin:5px;
+					text-align:center;
+
+				}
+				.box-summary-totales > .name{
+					font-size:10px;
+					color:gray;
+				}
+				.box-summary-totales > .amount{
+					font-size:12px;
+				}
+
+				/*.dialog > header{
+					height:120px;
+				}*/
+		
+				.panel-resumen > div{
+					border:1px solid lightgray;
+					display:inline-block;
+					width:450px;
+					padding:5px;
+					position:relative;
+					margin:5px;
+					vertical-align:top;
+					border-radius:3px;
+				}
+					.panel-resumen > div > table{
+						border:1px solid transparent;
+						margin-top:30px;
+						width:450px;
+					}
+						.panel-resumen > div > table > thead > tr > th{
+							background-color:black!important;
+						}
+						.panel-resumen > div > table > tbody > tr{
+							border-bottom:1px solid lightgray;
+							text-align:center;
+						}
+						.panel-resumen > div > table > tbody > tr > td{
+							text-align:center;
+						}
+						.panel-resumen > div > table > tbody > tr > td > div{
+							vertical-align: middle;
+						}
+					.panel-resumen > div > h3{
+						float:left;
+					}
+					.panel-resumen > div > button{
+						border:1px solid lightgray;
+						border-radius:3px;
+						float:right;
+					}
+
+				tr:not(.title) > td:nth-of-type(2)::before {
+					content: '' !important;
+				}
+
+				.htitle{
+					padding:5px 0 5px 0;
+					font-weight: bold;
+					text-transform: uppercase;
+					vertical-align: middle;
+				}
+
+				.nota{
+					font-size:10px;
+					color:black;
+					font-style: italic;
+					margin-top:20px;
+				}
+
+				.current-cliente > .cantidad{
+					background-color:gray;
+					color:white;
+					padding:5px;
+					border-radius:10px;
+					text-align: center;
+					display:inline-block;
+					cursor:pointer;
+				}
+				.current-cliente > .name{
+					background-color:gray;
+					color:white;
+					padding:5px;
+					border-radius:10px;
+					text-align: center;
+					display:inline-block;
+					cursor:pointer;
+				}
+				.current-cliente.total{
+					background-color:gray;
+					color:white;
+					padding:5px;
+					border-radius:10px;
+					text-align: center;
+					display:inline-block;
+					cursor:pointer;
+					vertical-align: middle;
+					margin-top:5px;
+					margin-right: 5px;
+				}
+
+				table.facturas-por-cobrar > tbody > tr{
+					border-bottom:1px solid lightgray;
+				}
+
+				div.options-report-cobros{
+					/*border:1px solid blue;*/
+					position:relative;
+					height:70px;
+				}
+					.box-periodo{
+						position: absolute;
+						right:5px;
+						top:20px;
+					}
+						.box-periodo > div{
+							display:inline-block;
+							border:1px solid lightgray;
+							padding:5px;
+							border-radius:2px;
+							cursor:pointer;
+						}
+							.box-periodo > div > input{
+								margin:2px;
+								cursor:pointer;
+							}
+							.box-periodo > div > label{
+								cursor:pointer;
+								font-weight:bold;
+								color:gray;
+							}
+
+
+				#buscador-text-report{
+					border: 1px solid lightgray;
+					padding:5px;
+					border-radius:3px;
+					width:200px;
+				}
+				#buscador-periodos-report{
+					border: 1px solid lightgray;
+					border-radius:3px;
+					width:150px;
+					height:25px;
+					padding:5px;
+				}
+				.options{
+					font-weight:bold;
+					text-transform:uppercase;
+					color:red;
+				}
+
+		</style>
+		<script>
+		</script>
+	</head>
+	<body>
+
+		<div class="options-report-cobros">
+			<div class="box-buscador">
+				<input id="buscador-text-report" type="text" placeholder="Buscar por cliente">
+				<select id="buscador-periodos-report">
+					<option class="options" value="todos" selected>Por periodo</option>
+					<option class="options" value="todos">Todos</option>
+					<option class="options" value="vencida">Atrasadas</option>
+					<option class="options" value="hoy">Hoy</option>
+					<option class="options" value="manana">Mañana</option>
+					<option class="options" value="esta_semana">Esta semana</option>
+					<option class="options" value="proxima_semana">Próxima semana</option>
+					<option class="options" value="seleccionar">Seleccionar periodo</option>
+				</select>
+			</div>
+			<div class="box-actions" style="text-align:right;margin-top:15px;">
+				<button class="export-info-report">Exportar</button>
+			</div>
+		</div>
+
+		<section id="tabs-rep-cobros">
+
+			<ul class="infinite-tabs">
+				<li><a href="#tabs-1">Clientes</a></li>
+				<li class="load-facturas" data-id=""><a href="#tabs-2">Facturas</a></li>
+				<!--<li class="load-programacion" data-id=""><a href="#tabs-3">Cobros agendados</a></li>-->
+				<!--<li class="load-acciones" data-id=""><a href="#tabs-4">Acciones</a></li>-->
+			</ul>
+
+			<article id="tabs-1">
+				<section class="sheet items" id="container-reportes-clientes-porcobrar" style="height:400px;overflow:auto;">
+					<div>
+						<h3 style="float:left" class="htitle current-cliente label-info">
+							<span class="cantidad">0</span>
+						</h3>
+						<div style="float:right;" class="htitle current-cliente total label-info">0</div>
+					</div>
+					<table class="items facturas-por-cobrar" width="100%">
+						<thead>
+							<tr>
+								<th width="50%" style="background-color:black">Cliente</th>
+								<th width="20%">Facturas</th>
+								<th width="30%">Por cobrar</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td colspan="3"><div>Cargando...</div></td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+			</article>
+
+			<article id="tabs-2">
+				<section class="sheet items" id="container-reportes-facturas-porcobrar" style="height:400px;overflow:auto;">
+					<article class="lista-docs">
+						<div>
+							<h3 style="float:left" class="htitle current-dtv label-info">
+								<span class="cantidad">0</span>
+							</h3>
+							<div style="float:right;" class="htitle current-dtv total label-info">0</div>
+						</div>
+						<table class="items facturas-por-cobrar" width="100%">
+							<thead>
+								<tr>
+									<th width="20%" style="background-color:black">Número</th>
+									<th width="20%">Cliente</th>
+									<th width="10%">Referencia</th>
+									<th width="10%">Vencimiento</th>
+									<th width="10%">Atraso</th>
+									<!--<th width="10%">F. cobro</th>-->
+									<th width="10%">Total</th>
+									<th width="10%">Cobrado</th>
+									<th width="10%">Por cobrar</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td colspan="9"><div>Cargando...</div></td>
+								</tr>
+							</tbody>
+						</table>
+					</article>
+				</section>
+			</article>
+
+			<article id="tabs-3" style="display:none">
+				<section class="sheet items" id="container-reportes-cobros-agendados" style="height:400px;overflow:auto;">
+					<table class="items facturas-por-cobrar" width="100%">
+						<thead>
+							<tr>
+								<th width="10%" style="background-color:black">Número</th>
+								<th width="30%">Cliente</th>
+								<th width="30%">Referencia</th>
+								<th width="10%">Fecha de cobro</th>
+								<th width="20%">Por cobrar</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td colspan="9"><div>Cargando...</div></td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+			</article>
+
+		</section>
+
+	</body>
+</html>

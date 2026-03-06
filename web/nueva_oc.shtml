@@ -1,0 +1,137 @@
+<!--#4DINCLUDE head.shtml-->
+<body>
+<!--#4DINCLUDE mensajes.shtml-->
+<!--#4DINCLUDE menuSuperior.shtml-->
+	
+<div id="bgtransparent" class="bgtransparent">
+	<div id="bgmodal" class="bgmodal">
+		<img src="/imagenes/cargando.gif" width="50px" height="50px" />
+		<p>Registrando la Orden de Compra, espere un momento...</p>
+	</div>
+</div>
+
+<section>
+    	<h1>Nueva OC</h1>
+         <article>
+            <form name="frmnuevooc" id="frmnuevooc" action="/4DACTION/WINGRESAOC_" method="post" >
+                        <input id="idnvoc" name="idnvoc" type="hidden" value="<!--#4DVAR vidNv-->" />
+                        <input id="tipocnuevo" name="tipocnuevo" type="hidden" value="" />
+                        <input id="idproveedor" name="idproveedor" type="hidden" value="<!--#4DVAR vidproveedor-->" />
+                       
+                        <fieldset>
+                        		<legend>DATOS DE LA EMPRESA PROVEEDORA</legend>
+                                <div><span>Razon social :</span><span><!--#4DVAR v_razon--></span></div>
+                                <div><span>Giro :</span><span><!--#4DVAR v_giro--></span></div>
+                                <div><span>Rut :</span><span><!--#4DVAR v_rut--></span></div>
+                                <div>
+                                <label>Contactos : </label>
+                                <!--#4DIF vcant_contactos>0-->
+                                    <select class="style-cbo2" id="cboContacto" name="cboContacto">
+                                    <option selected="selected" value="<!--#4DVAR v_id_contacto_sel-->"><!--#4DVAR v_nombre_contacto_sel--></option>
+                                        <!--#4DLOOP w_a_id_relacionado-->
+                                            <!--#4DIF v_id_contacto_sel#w_a_id_relacionado{w_a_id_relacionado}-->
+                                                <option value="<!--#4DVAR w_a_id_relacionado{w_a_id_relacionado}-->">
+                                                <!--#4DVAR w_a_nom_relacionado{w_a_id_relacionado}-->
+                                                </option>
+                                        <!--#4DENDIF-->
+                                    <!--#4DENDLOOP-->         			               
+                                    </select>
+                                   <!--#4DELSE-->
+                                   			 <input id="idcontactos" name="idcontactos" type="hidden" value="0" />
+                                   			<span>No se encontraron contactos asociados!</span>
+                                   <!--#4DENDIF-->
+                                </div>                     
+                        </fieldset>
+                        		
+                        <fieldset>                              
+                        		<legend>DATOS DEL NEGOCIO</legend>
+                                 <div><span>Id Negocio :</span><span><!--#4DVAR vidNeg--></span></div>                               
+                                 <div><span>Referencia :</span><span><!--#4DVAR vrefNeg--></span></div>
+
+                                 <div>
+                                     <span>Seleccionar ítem :</span>
+                                     <span>
+                                         <select class="style-cbo2" name="itemNegocio" id="itemNegocio">
+                                                    <!--#4DVAR vLista-->           
+                                         </select>
+                                         
+                                         <div class="gastos-items-neg">
+                                         		<span class="gastoP" >Gasto Presupuestado:</span>
+                                                <span id="gastosP-items-neg"></span>
+                                         </div>
+                                         <div class="gastos-items-neg">
+                                         		<span class="gastoR" >Gasto Real:</span>
+                                                <span id="gastosR-items-neg"></span>
+                                         </div>
+                                         <div class="gastos-items-neg" id="gastosR-items-neg">
+                                         		<span >Diferencia:</span>
+                                                <span id="diferencia-gastos"></span>
+                                         </div>
+
+                                     </span>
+                                 </div>                           
+                                
+                        </fieldset>
+                        		
+                        <fieldset>                              
+                        		<legend><label for="referencia">REFERENCIA OC</label></legend>
+                                 <p>
+								 
+									<div style="color:green;font-weight:bold;">"Incluir una referencia que describa en pocas palabras lo que se está comprando."</div>         
+            						<input class="referencias2" id="referencia" name="referencia" type="text" value="" />
+							
+								</p>                               
+                        </fieldset>
+                        
+                        <fieldset>                              
+                            <legend>ITEMS OC</legend>
+                             <p>
+                                <label for="tipodocto">Tipo Doc.Proveedor : </label>
+                                <select class="style-cbo2" name="tipodocto" id="tipodocto" onChange="calculate_amounts_totales_det_oc()">
+                                <option value="<!--#4DVAR vIdTipoDoc-->" selected="selected"><!--#4DVAR vDesTipoDoc--></option>
+                                <!--#4DLOOP aIDTipoDoc_OC2-->
+                                  <!--#4DIF vIdTipoDoc#aIDTipoDoc_OC2{aIDTipoDoc_OC2}-->
+                                      <option value="<!--#4DVAR aIDTipoDoc_OC2{aIDTipoDoc_OC2}-->"><!--#4DVAR aTipoDoc_OC2{aIDTipoDoc_OC2}--></option>
+                                  <!--#4DENDIF-->
+                                <!--#4DENDLOOP-->
+                                </select>
+                             </p>                 
+                             <div><!--#4DINCLUDE item_oc_nuevo.shtml--></div>
+                         </fieldset>
+                        <!--#4DINCLUDE totales_oc_nuevo.shtml--> 
+                        
+                        <fieldset>
+                        <legend>CONDICIONES</legend>
+                        <p>
+                         <label>Formas de Pago:</label>
+                         <select class="style-cbo2" name="formaspago" id="formaspago">
+                             <option value="<!--#4DVAR vIdFormaPagoOc-->" selected="selected"><!--#4DVAR vDesFormaOc--></option>
+                          <!--#4DLOOP aidformapagos-->                          
+                          <!--#4DIF aidformapagos{aidformapagos}#vIdFormaPagoOc-->
+                          <option value="<!--#4DVAR aidformapagos{aidformapagos}-->"><!--#4DVAR anformapagos{aidformapagos}--></option>                          
+                          <!--#4DENDIF-->                       
+                         <!--#4DENDLOOP-->                
+                         </select>                        
+                        </p>                        
+                        <p>
+                        	<div><label>Observaciones : </label></div>
+                             <textarea class="notas" name="observacion" ><!--#4DVAR vCondicionOC--></textarea>
+                        </p>
+						</fieldset>
+                        <p>          
+                            
+                            <button title="Guardar" class="button-inf" onClick="validar_nueva_oc();" type="button">
+                            <img src="/imagenes/disk.png" border="0" />
+                            <span>Guardar</span>
+                            </button> 
+                            <button title="Deshacer" class="button-inf" type="reset">
+                                <img src="/imagenes/arrow_undo.png" border="0" />
+                                <span>Deshacer</span>
+                            </button>   
+                                                                        
+                        </p>
+                </form>                          
+         </article>         
+    </section>
+</body>
+</html>

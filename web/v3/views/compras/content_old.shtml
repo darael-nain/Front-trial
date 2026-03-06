@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>		
+		<title>Compras</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/views/compras/content.js"></script>
+		<link rel="stylesheet" href="/v3/design/temporal.css?<!--#4DTEXT random-->">		
+	</head>
+	<body>
+		<div id="main-container">
+			<!--4DSCRIPT/_V3_proxy_getComprasContent-->		
+			<form id="form-compras">
+				<input type="hidden" name="id_oc" value="<!--#4DTEXT [Orden_de_compra]Id_OCompra-->">
+				<input type="hidden" name="id_nv" value="<!--#4DTEXT [Orden_de_compra]Id_NV-->">
+				<section class="info-header"><!--#4DINCLUDE info_top.shtml--></section>
+				<section id="dialog-profile-compras">
+					<ul class="infinite-tabs">
+						<li><a class="save-neg" href="#tabs-1">General</a></li>
+						<li><a class="save-neg" href="#tabs-2">Items</a></li>
+						<li><a class="save-neg" href="#tabs-3">Condiciones</a></li>
+						<li><a href="#tabs-4">Documentos de compra</a></li>
+						<!--<li><a href="#tabs-5">Pagos</a></li>-->				
+					</ul>
+					<article id="tabs-1"><!--#4DINCLUDE general.shtml--></article>
+					<article id="tabs-2"><!--#4DINCLUDE items.shtml--></article>
+					<article id="tabs-3"><!--#4DINCLUDE condiciones.shtml--></article>
+					<article id="tabs-4"></article>
+					<article id="tabs-5"></article>			
+				</section>							
+			</form>	
+		</div>
+	</body>
+</html>

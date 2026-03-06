@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_proxy_getDtcPorJustificar-->
+<html>
+	<head>
+		<title>Documentos de compras disponibles</title>
+		<meta charset="utf-8">
+		<style type="text/css">
+			.dialog{
+				position: relative;
+			}
+
+			.dialog #dialog-menu li[data-name="asociar_dct_a_gasto"] > button{
+				position: absolute!important;
+				top: 70px!important;
+				right:20px!important;
+				border: 2px solid gray!important;
+			}
+				.dialog #dialog-menu li[data-name="asociar_dct_a_gasto"] > button > .ui-button-text{
+					font-weight: bold;
+				}
+				
+		</style>
+		
+		<script>
+			$(document).ready(function() {
+				
+
+			});
+		</script>
+	</head>
+	<body>		
+		<section id="dtc-por-justificar" class="sheet" data-oc="<!--#4DTEXT id-->" data-tipo="<!--#4DTEXT tipogasto-->">
+			<table class="results">
+				<thead>
+					<tr>
+						<th width="5%">Número</th>
+						<th width="10%">Emisión</th>
+						<th width="5%">Documento</th>
+						<th width="3%">Estado</th>
+						<th width="20%">Proveedor</th>
+						<th width="20%">Referencia</th>						
+						<th width="10%">Total [$]</th>
+						<!--<th width="10%">Por pagar [$]</th>-->
+						<th width="10%">Por Justificar [$]</th>
+						<th width="2%">Seleccionar para agregar</th>						
+					</tr>
+				</thead>
+				<tbody></tbody>
+				<tfoot></tfoot>
+			</table>
+		</section>
+	</body>
+</html>

@@ -1,0 +1,16 @@
+{
+	"origen": [
+	<!--#4DLOOP a_origen_id-->
+		{	
+			"id": <!--#4DTEXT a_origen_id{a_origen_id}-->,
+			"nombre": "<!--#4DTEXT a_origen_nombre{a_origen_id}-->",
+			"folio": "<!--#4DTEXT a_origen_folio{a_origen_id}-->",
+			"referencia": "<!--#4DTEXT _V3_escapeString(a_origen_referencia{a_origen_id})-->",
+			"extra": "<!--#4DTEXT _V3_escapeString(a_origen_param4{a_origen_id})-->"
+		}<!--#4DIF NOT(a_origen_id{a_origen_id} = a_origen_id{Size of array(a_origen_id)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}
+
+
+

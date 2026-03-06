@@ -1,0 +1,13 @@
+{	
+	"mes": "<!--#4DHTML mes-->",
+	"rows": [
+	<!--#4DLOOP aIndexReportOt -->
+		{
+			"area": "<!--#4DHTML _V3_escapeString(aAreaReportOt{aIndexReportOt})-->",
+			"nombre": "<!--#4DHTML _V3_escapeString(aNombreReportOt{aIndexReportOt})-->",
+			"hpresupuestadas": "<!--#4DHTML String(aPresupuestadaReportOt{aIndexReportOt};"&xml")-->",
+			"hreales": "<!--#4DHTML String(aRealReportOt{aIndexReportOt};"&xml")-->"
+		}<!--#4DIF NOT(aIndexReportOt{aIndexReportOt} = aIndexReportOt{Size of array(aIndexReportOt)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

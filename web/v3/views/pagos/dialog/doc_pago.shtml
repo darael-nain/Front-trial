@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getDocPagoContent-->
+		<title>Documento de pago</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/script/datepicker_es.js"></script>
+		<script>
+			var paid = {
+				"dialog" : $('#dialog-menu'),
+				"container" : $('section#sheetdocpago'),
+				"id" : "<!--#4DTEXT id-->",
+				"estado" : "<!--#4DTEXT estado-->",
+				"tipopago" : "<!--#4DTEXT tipopago-->",
+				"numero" : "<!--#4DTEXT numero-->",
+				"id_cuenta" : "<!--#4DTEXT id_cuenta-->",
+				"cuenta" : "<!--#4DTEXT cuenta-->",
+				"forma" : "<!--#4DTEXT forma-->",
+				"cruzado" : "<!--#4DTEXT cruzado-->",
+				"total" : "<!--#4DTEXT total-->",
+				"fecha_propuesta" : "<!--#4DTEXT fecha_propuesta-->",
+				display: function(){
+					switch(paid.estado) {
+					    case 'POR EMITIR':
+					   		// paid.dialog.find('li[data-name="discard"]').hide();
+					   		// paid.dialog.find('li[data-name="boucher_pago"]').hide();
+					    	break;
+					    case 'EMITIDA':
+					    	/*if(!access._499){ // anular pago
+								paid.dialog.find('li[data-name="discard"]').hide();
+							} else {
+								paid.dialog.find('li[data-name="discard"]').show();
+							}*/
+					        break;
+					    case 'PAGADA':
+					    	// paid.dialog.find('li[data-name="discard"]').hide();
+					    	break;
+					    case 'ANULADA':
+					    	// paid.dialog.find('li[data-name="discard"]').hide();
+					    	break;
+					}
+				}
+
+			};
+
+			$(document).ready(function() {
+				paid.container.find('.numeric.currency input').number(true, currency.decimals, ',', '.');
+				unaBase.toolbox.init();
+				unaBase.toolbox.menu.init({
+					entity: 'DocPagoByPago2',
+					buttons: ['save'],
+					data: function() {
+						return {
+							"id" : paid.id,
+							"estado" : paid.estado,
+							"tipopago" : paid.tipopago,
+							"numero" : paid.numero,
+							"id_cuenta" : paid.id_cuenta,
+							"cuenta" : paid.cuenta,
+							"forma" : paid.forma,
+							"cruzado" : paid.cruzado,
+							"total" : paid.total,
+							"fecha_propuesta" : paid.fecha_propuesta
+						};
+					},
+					validate: function() {
+						var status = true;
+						return status;
+					}
+				});						
+			});
+
+		</script>
+
+		<script>
+			var etiqueta_titulo = "Nro. de pago";
+			if(paid.tipopago != ""){
+				switch(paid.tipopago){
+					case 'CHEQUE':
+						etiqueta_titulo = "Nro. de cheque";
+						break;
+					case 'TRANSFERENCIA':
+						etiqueta_titulo = "Nro. de transferencia";
+						break;
+					case 'DEPOSITO':
+						etiqueta_titulo = "Nro. de depósito";
+						break;							
+				}
+			}
+			var html_form = $('<fieldset><legend>Información general<span></legend>\
+				<label><span>Tipo:</span><input placeholder="[Seleccionar]" required readonly type="search" name="pago[documento][tipo]" value="'+ paid.tipopago +'"><button class="show tipo-pago"></button></label>\
+				<label class="payment_number"><span name="nametype">'+ etiqueta_titulo +'</span><input required type="text" name="pago[documento][numero]" value="'+ paid.numero +'"></label>\
+				<label class="origin_account"><span>Cuenta de origen:</span><input style="width:230px!important" placeholder="[Seleccionar]" required readonly type="search" name="pago[documento][cuenta]" value="'+ paid.cuenta +'" data-id="<!--#4DTEXT accountid_payment-->"><button class="show cuenta-bancaria"></button></label>\
+				<label><span>Fecha:</span><input required type="text" class="datepicker" name="pago[documento][fecha]" value="'+ paid.fecha_propuesta +'"></label>\
+				<label class="check_form"><span>Forma:</span><input placeholder="[Seleccionar]" required readonly type="search" name="pago[documento][form]" value="'+ paid.forma +'"><button class="show chequeform"></button></label>\
+				<label class="check_cruzado"><span></span><span style="display:inline-block!important;vertical-align:middle!important"><input style="width:20px!important" required name="pago[documento][check_cruzado]" type="checkbox" value="false" ><label style="display:inline-block!important;vertical-align:top!important">Cruzado?</label></span></label></fieldset>\
+			');
+			paid.container.append(html_form);
+			paid.display();
+		</script>
+
+		<style>
+			.ui-dialog fieldset > label > span > input {
+				display: inline-block;
+				width: calc(100% - 30px) !important;
+			}
+			.estado {
+				font-weight:bold;
+				display: block;
+				text-align: left;
+				text-decoration: underline;
+			}
+
+			.check{
+				position: absolute !important;
+				left:-40px !important;			
+			}
+		</style>
+	</head>
+	<body><section id="sheetdocpago"></section></body>
+</html>

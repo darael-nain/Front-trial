@@ -1,0 +1,6 @@
+{	
+	"success": <!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"invoices": <!--#4DTEXT invoices-->,
+	"purchases_oc": <!--#4DTEXT purchases_oc-->,
+	"purchases_fxr": <!--#4DTEXT purchases_fxr-->
+}

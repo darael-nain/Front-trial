@@ -1,0 +1,19 @@
+{
+	"rows": [
+<!--#4DLOOP aCompraId -->
+		{
+			"id": <!--#4DHTML aCompraId{aCompraId}-->,
+			"index": "<!--#4DHTML aCompraIndex{aCompraId}-->",
+			"text": "<!--#4DHTML _V3_escapeString(aCompraReferencia{aCompraId})-->",
+			"tipo": "<!--#4DHTML _V3_escapeString(aCompraTipo{aCompraId})-->",
+			"total": <!--#4DHTML String(aCompraTotal{aCompraId};"&xml")-->,
+			"created_at": "<!--#4DHTML Substring(String(aCompraCreatedAtDate{aCompraId};8);1;10)-->"
+		}<!--#4DIF NOT(aCompraId{aCompraId} = aCompraId{Size of array(aCompraId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	],
+	"extra": {
+		"count": <!--#4DHTML String(cantidad;"&xml")-->,
+		"sum": "<!--#4DHTML _V3_formatCurrency(suma)-->",
+		"average": <!--#4DHTML String(promedio;"&xml")-->
+	}
+}

@@ -1,0 +1,27 @@
+{	
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([banco]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"sort": {
+		"by": "<!--#4DTEXT sort_by-->",
+		"order": "<!--#4DTEXT sort_order-->"
+	},
+	"rows": [
+<!--#4DLOOP aIdBanco -->
+		{
+			"banco": "<!--#4DHTML _V3_escapeString(aBanco{aIdBanco})-->",
+			"telefono": "<!--#4DHTML _V3_escapeString(aTelefono{aIdBanco})-->",
+			"nomina_bci": <!--#4DIF aNominaBci{aIdBanco}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"codigo_banco": "<!--#4DHTML _V3_escapeString(aCodigoBanco{aIdBanco})-->",
+			"id": "<!--#4DHTML _V3_escapeString(aIdBanco{aIdBanco})-->",
+			"estado": <!--#4DIF aEstado{aIdBanco}-->true<!--#4DELSE -->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aIdBanco{aIdBanco} = aIdBanco{Size of array(aIdBanco)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

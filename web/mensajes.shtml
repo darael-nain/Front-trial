@@ -1,0 +1,11 @@
+<!--#4DIF vmostrar_mensajes=true-->
+<div class="contenedor-actualizado">		
+        <p class="msg">
+        		<!--#4DIF vErrorWeb=false-->
+                	<span class="correcto"><!--#4DVAR vMensaje--></span>
+        		<!--#4DELSE-->
+                	<span class="incorrecto"><!--#4DVAR vMensaje--></span>
+                <!--#4DENDIF-->
+        </p>
+</div>
+<!--#4DENDIF-->

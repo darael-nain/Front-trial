@@ -1,0 +1,18 @@
+{
+
+	"records": {
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP idDescuento -->
+		{
+			"idDescuento": <!--#4DHTML idDescuento{idDescuento}-->,
+			"description": "<!--#4DHTML _V3_escapeString(description{idDescuento})-->",
+			"legal": <!--#4DIF legal{idDescuento}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"monto": "<!--#4DHTML String(monto{idDescuento};"&xml")-->",
+			"tipoDescuento": "<!--#4DHTML _V3_escapeString(tipoDescuento{idDescuento})-->",
+			"tipo_valor": "<!--#4DHTML _V3_escapeString(tipo_valor{idDescuento})-->"
+		}<!--#4DIF NOT(idDescuento{idDescuento} = idDescuento{Size of array(idDescuento)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

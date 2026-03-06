@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="cache-control" content="max-age=10" />
+	<title>Ajustes del Sistema</title>
+	<style>
+		.options{
+			margin-top: 20px;
+			background-color: white;
+			padding:5px;
+			border-radius:5px;
+			width: calc(100% - 1000px)!important;
+		}
+		.options ul {
+			margin: 5px;
+			font-size: 12px;
+		}
+		.options ul li {
+			margin-bottom: 5px;
+			padding:2px;
+		}
+		h1{
+			margin:5px;
+			font-size: 20px;
+		}
+
+		.options article{
+			border: 1px solid lightgray;
+			margin: 5px;
+		}
+			.options article h2{
+				    display: block;
+				    background-color: #6c6c6c;
+				    color: white;
+				    padding: 5px !important;
+				    font-weight: bold;
+				    margin-bottom: 10px !important;
+				    font-size: 11px;
+				    text-transform: none !important;
+			}
+	</style>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		document.title = nombreEmpresa + ' / Ajustes';
+		$('section.options ul li > a.accesos').click(function() {
+			unaBase.loadInto.dialog('/v3/views/ajustes/accesos/list2.shtml', 'ACCESOS', 'medium');
+		});
+		$(".oculto").hide();
+		unaBase.ui.unblock();
+
+	});
+	unaBase.ready(() => {
+		if(!access._650){
+			document.querySelector('.superAdmin').style.display = 'none';
+		}
+		if(!access._651){
+			document.querySelector('#areaNegocio').style.display = 'none';
+		}
+	})
+	</script>
+</head>
+<body>
+	<h1>Ajustes del sistema</h1>
+	<section class="options">
+		<article>
+			<h2>Generales</h2>
+			<ul>
+				<li><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/ajustes/parametros/index.shtml'); return false;">Parámetros generales</a></li>
+				<li><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/ajustes/validaciones/list.shtml'); return false;">Reglas de validación</a></li>
+				<li><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/reportes2/list.shtml'); return false;">Reportes</a></li>
+				<li><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/ajustes/api key/index.shtml'); return false;">Generador de Api Key v3</a></li>
+				<li><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/ajustes/integrations/index.shtml'); return false;">Integraciones</a></li>
+				<!-- <li><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/ajustes/tipo_doctribu/list.shtml'); return false;">Tipos de documentos tributarios</a></li> -->
+				<li class="oculto"><a href="#">Proyectos</a></li>
+				<li class="oculto"><a href="#">Cotizaciones</a></li>
+				<li class="oculto"><a href="#">Negocios</a></li>
+				<li class="oculto"><a href="#">Órdenes de compra</a></li>
+				<li class="oculto"><a href="#">Rendiciones</a></li>
+			</ul>
+		</article>
+	<!-- 	<article>
+			<h2>Parametros</h2>
+			<ul>
+				<li><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/ajustes/cotizaciones/index.shtml'); return false;">Cotizaciones y negocios</a></li>
+		
+			</ul>
+		</article> -->
+		<article class="oculto">
+			<h2>Bancaría</h2>
+			<ul>
+				<li><a href="#">Bancos</a></li>
+				<li><a href="#">Tipos de cuenta</a></li>
+			</ul>
+		</article>
+		<article class="">
+			<h2>Mantenedores</h2>
+			<ul>
+				<li><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/ajustes/accounting/list.shtml'); return false;">Cuentas contables</a>
+				<!-- <li><a href="#">Documentos tributarios</a></li> -->
+				<li><a href="#"  onclick="unaBase.loadInto.viewport('/v3/views/ajustes/formas_pago/list.shtml'); return false;">Formas de pago</a></li>
+				<li><a href="#"  onclick="unaBase.loadInto.viewport('/v3/views/ajustes/impuestos/list.shtml'); return false;">Impuestos</a></li>
+				<li><a href="#"  onclick="unaBase.loadInto.viewport('/v3/views/ajustes/tipos_dtc/list.shtml'); return false;">Tipos de documentos de compra</a></li>
+				<li><a href="#"  onclick="unaBase.loadInto.viewport('/v3/views/ajustes/banco/list.shtml'); return false;">Bancos</a></li>
+				<li><a href="#"  onclick="unaBase.loadInto.viewport('/v3/views/ajustes/tipos_cuenta/list.shtml'); return false;">Tipos de cuenta</a></li>
+				<li><a href="#"  onclick="unaBase.loadInto.viewport('/v3/views/ajustes/tipos_pago/list.shtml'); return false;">Tipos de pago</a></li>
+				<li id="areaNegocio"><a href="#"  onclick="unaBase.loadInto.viewport('/v3/views/ajustes/area_negocio/list.shtml'); return false;">Areas de negocio</a></li>
+			</ul>
+		</article>
+		<article>
+			<h2>Usuarios</h2>
+			<ul>
+				<li><a href="#" class="accesos">Permisos y accesos</a></li>
+				<li><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/perfiles/index.shtml'); return false;">Perfiles de Usuarios</a></li>
+		</article>
+		<article class="superAdmin">
+			<h2>Parametros</h2>
+			<ul>
+				<li><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/ajustes/parametros/conectividad/index.shtml'); return false;">Conectividad</a></li>
+				<li><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/ajustes/parametros/misc/index.shtml'); return false;">Miscelaneos</a></li>
+				<li><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/ajustes/parametros/negocio/index.shtml'); return false;">Negocio y cotización</a></li>
+				<li><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/ajustes/parametros/egreso/index.shtml'); return false;">Egreso(pagos)</a></li>
+				<li><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/ajustes/parametros/gastos/index.shtml'); return false;">Gastos(fxr y oc)</a></li>
+				<li><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/ajustes/parametros/default/index.shtml'); return false;">Defaults</a></li>
+				<li><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/ajustes/parametros/permisos/index.shtml'); return false;">Permisos</a></li>
+				<li><a href="#" onclick="unaBase.loadInto.viewport('/v3/views/ajustes/parametros/areasMany/index.shtml'); return false;">Areas Many</a></li>
+			</ul>
+		</article>
+	</section>
+</body>
+</html>

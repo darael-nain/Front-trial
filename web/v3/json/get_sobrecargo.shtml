@@ -1,0 +1,23 @@
+{
+	"rows": [
+<!--#4DLOOP aSobrecargoId -->
+		{
+			"id": <!--#4DHTML aSobrecargoId{aSobrecargoId}-->,
+			"nombre": "<!--#4DHTML aSobrecargoNombre{aSobrecargoId}-->",
+			"items": <!--#4DIF aSobrecargoItems{aSobrecargoId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"porcentaje": <!--#4DHTML String(aSobrecargoPorcentaje{aSobrecargoId};"&xml")-->,
+			<!--#4DIF Not(Undefined(aSobrecargoValor)) -->"valor": <!--#4DHTML String(aSobrecargoValor{aSobrecargoId};"&xml")-->,<!--#4DENDIF-->
+			"costo": <!--#4DIF aSobrecargoCosto{aSobrecargoId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"cerrado": {
+				"enabled": <!--#4DIF aSobrecargoCerradoEnabled{aSobrecargoId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+				"writable": <!--#4DIF aSobrecargoCerradoWritable{aSobrecargoId}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+			},
+			"total": <!--#4DIF aSobrecargoTotal{aSobrecargoId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"total_currency":  "<!--#4DHTML aSobrecargoWithCurrency{aSobrecargoId}-->",
+			"ajuste": <!--#4DIF aSobrecargoAjuste{aSobrecargoId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DIF Size of array(aSobrecargoReal) > 0-->,
+			"real": <!--#4DIF aSobrecargoReal{aSobrecargoId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DENDIF-->,
+			"sobre_subtotal_venta": <!--#4DIF aSobrecargoVenta{aSobrecargoId}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aSobrecargoId{aSobrecargoId} = aSobrecargoId{Size of array(aSobrecargoId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getCotizacion-->
+		<title>Cotizaciones</title>
+		<meta charset="utf-8">
+
+		<link rel="stylesheet" href="/v3/views/compras/lista.css?mshsmshjs">
+		<script>
+
+			var mostrar_marca_nocliente = <!--#4DTEXT mostrar_marca_nocliente-->;
+
+			$(document).ready(function() {
+				// current_tab = 0;
+				var id_proyecto = $('div#main-container').attr('data-id');
+				// 
+				unaBase.toolbox.init();
+
+				// Inicializamos un buscador
+				var params = {
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/_V3_getCotizacion' },
+					data: {
+						id_proyecto: id_proyecto
+					},
+					entity: 'Cotizacion',
+					callback : function(data){
+						$('tfoot.totales').find('span[data-neto]').text(data.totales.neto);
+
+						// Fijar header y footer
+						$('#viewport .fht-table-init').fixedHeaderTable('destroy');
+						//$('#viewport table.fixed').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false });
+						// --ini-- corrección para ordenar - GIN - V3_212
+						$('#viewport table.fixed').fixedHeaderTable({
+							footer: true,
+							cloneHeadToFoot: false,
+							fixedColumn: false,
+							create: function() {
+								$('[data-sort-by]').removeClass('sort-order-desc').removeClass('sort-order-asc').removeData('sort-order');
+								$('[data-sort-by="' + data.sort.by + '"]').addClass('sort-order-' + data.sort.order).data('sort-order', data.sort.order);
+							}
+						});
+						// --fin-- corrección para ordenar - GIN - V3_212
+
+						$('#search input[name="parametro"]').attr('placeholder', data.parametros.nombre_param1.toLowerCase()).css('text-transform', 'capitalize');
+					},
+					// Función que genera cada fila de la tabla, dado el valor de i (índice de posición)
+					// y el valor de rows (array con todos los resultados)
+					// El contenido de rows corresponde al objeto de mismo nombre generado mediante la llamada
+					// a la api JSON. Ver /v3/json/get_cotizacion.shtml para conocer el formato.
+					row: {
+						html: function(i, rows) {
+
+							var nombre_cliente = rows[i].empresa;
+							if (mostrar_marca_nocliente) {
+								if (rows[i].marca != "") {
+									nombre_cliente = rows[i].marca;
+								}else{
+									nombre_cliente = ((rows[i].empresa !== undefined)? rows[i].empresa.alias : 'N/A');
+								}
+							}else{
+								nombre_cliente = ((rows[i].empresa !== undefined)? rows[i].empresa.alias : 'N/A');
+							}
+
+							var title = "Área de negocio: " + rows[i].area_negocio + " / Emisor: " + rows[i].username.toUpperCase();
+							//var htmlData = '';
+							//if (typeof rows[i].folio != 'undefined' && rows[i].folio != -1)
+							var htmlData = '<tr data-id="' + rows[i].id + '" data-index="' + rows[i].index + '" data-username="' + rows[i].username + '" data-status="' + rows[i].status + '" data-gasto-real="' + rows[i].gasto_real + '" title="' + title + '">' +
+								'<td data-disabled><input class="selected" type="checkbox" name="selected_one"></td>' +
+								//'<td' + (rows[i].gasto_real? ' style="color: red;"' : '') + '>' + rows[i].folio + '</td>' +
+								'<td>' + rows[i].folio + '</td>' +
+
+								<!--#4DIF (show_codigo_column)-->
+								'<td>' + rows[i].codigo + '</td>' +
+								<!--#4DENDIF-->
+
+								'<td>' + ((rows[i].created_at !== undefined)? '<time datetime="' + Date.parse(rows[i].created_at).toISOString() + '">' + $.datepicker.formatDate('dd-mm-yy', Date.parse(rows[i].created_at)) + ' <span>' + Date.parse(rows[i].created_at).toTimeString().match( /^([0-9]{2}:[0-9]{2}:[0-9]{2})/ )[0].substring(0, 5) +  '</span></time>' : 'N/A' ) + '</td>' +
+								'<td>' + ((rows[i].updated_at !== undefined)? '<time datetime="' + Date.parse(rows[i].updated_at).toISOString() + '">' + $.datepicker.formatDate('dd-mm-yy', Date.parse(rows[i].updated_at)) + ' <span>' + Date.parse(rows[i].updated_at).toTimeString().match( /^([0-9]{2}:[0-9]{2}:[0-9]{2})/ )[0].substring(0, 5) +  '</span></time>' : 'N/A' ) + '</td>' +
+								'<td>' + rows[i].fecha_realizacion + '</td>' +
+								'<td>' + ((rows[i].ejecutivo != '')? rows[i].ejecutivo : 'N/A') + '</td>' +
+								'<td class="left">' + nombre_cliente + '</td>' +
+								'<td class="text">' + rows[i].text + '</td>' +
+
+								(
+									(rows[i].exchange !== undefined && rows[i].exchange.type != currency.code)?
+									'<td width="100" style="text-align: right; position: relative;"><span style="position: absolute; left: 5px;">'+ rows[i].exchange.type + '</span> ' + (rows[i].total_neto / rows[i].exchange.rate).numberFormat(2, ',', '.') + '</td>'
+									:
+									'<td width="100" class="currency">' + rows[i].total_neto + '</td>'
+								) +
+
+								'<td <!--#4DIF (Not(show_validated_column))-->style="display: none;"<!--#4DENDIF-->>' + ((rows[i].validated)? 'Si' : 'No') + '</td>' +
+
+							'</tr>';
+							return htmlData;
+						}
+					},
+					detail: {
+						// Función que genera una URL de detalle, dado el id (identificador de item)
+						url: function(id) { return '/v3/views/cotizaciones/content.shtml?id=' + id },
+					},
+					// Inflexiones
+					inflection: {
+						singular: 'cotización',
+						plural: 'cotizaciones',
+						none: 'ninguna'
+					},
+					// Filtros
+					filters: [
+						{ name: 'created_at', type: 'month', caption: 'Fecha de creación', range: true },
+						//{ name: 'updated_at', type: 'month', caption: 'Fecha últ. modificación', range: true },
+						// Pendiente: agregar datasource remoto y convertir a checkbox
+						// con jquery ui autocomplete
+						{ name: 'area_negocio', type: 'autocomplete', caption: 'Área de negocio', dataSource: 'getAreaNegocio' },
+						{ name: 'ejecutivo_responsable', type: 'autocomplete', caption: 'Ejecutivo responsable', dataSource: 'getUsuarioPerfilEjecutivo' },
+						{ name: 'validated', type: 'autocomplete', caption: 'Según validación', dataObject: [
+							{ id: 'true', text: 'Validadas' },
+							{ id: 'false', text: 'No validadas' }
+						]},
+						{ name: 'oc_proveedor', type: 'autocomplete', caption: 'Según OC Proveedor', dataObject: [
+							{ id: 'true', text: 'Con OC proveedor' },
+							{ id: 'false', text: 'Sin OC proveedor' }
+						]},
+						{ name: 'estado', type: 'checkbox', caption: 'Estado de la cotización', options: [
+							{ caption: 'En proceso', name: 'estado_en_proceso', value: true },
+							{ caption: 'Anulada', name: 'estado_nulo', value: false }
+						] },
+
+						{ name: 'parametro', type: 'autocomplete', caption: '', dataSource: 'Param1' }
+					]
+				};
+
+
+				/*$.ajax({
+					url: '/4DACTION/_V3_getDato',
+					dataType: 'json',
+					async: false,
+					success: function(data) {
+						$.each(data.rows, function(key, item) {
+							if (item.enabled && item.options.length > 0)
+								params.filters.push({
+									name: item.nombre.replace(/ |\(|\)|\/|\?/g,"_"),
+									type: 'autocomplete',
+									caption: item.nombre,
+									dataObject: item.options
+								});
+							//if (item.enabled && item.options.length == 0)
+							//	params.filters.push({
+							//		name: item.nombre.replace(/ |\(|\)|\/|\?/g,"_"),
+							//		type: 'text',
+							//		caption: item.nombre,
+							//		dataObject: item.options
+							//	});
+							//
+						});
+					}
+				});*/
+
+				unaBase.toolbox.search.init(params);
+
+				unaBase.toolbox.menu.init({
+					entity: 'Cotizacion', // especifica entidad sobre la cual se almacenan los datos
+										  // y nombre para referenciar los views
+					/*buttons: [ 'new', 'clone', 'print' ]*/
+					<!--#4DIF _V3_verifica_permisos_web(_V3_data_username;514)-->
+					buttons: [ 'new', 'print','export_list' ]
+					<!--#4DELSE-->
+					buttons: [ 'print' ]
+					<!--#4DENDIF-->
+				});
+
+
+				$("body").on("click", "input.selected", function(){
+					var input = $(this);
+					if (input.attr('name') == "selected_all" ) {
+						if (input.prop("checked")) {
+							$('table tbody input[name="selected_one"]').prop("checked", true);
+							$('#dropdown_launcher').show();
+						}else{
+							$('table tbody input[name="selected_one"]').prop("checked", false);
+							$('#dropdown_launcher').hide();
+						}
+					}else{
+						var cantSelect = $('table tbody td input:checked').length;
+						if (input.prop("checked")) {
+							$('#dropdown_launcher').show();
+						}else{
+							if(cantSelect == 0){
+								$('#dropdown_launcher').hide();
+							}
+						}
+					}
+				});
+
+				// Opciones para listado
+				(function() {
+					var htmlObject;
+
+					htmlObject = $('\
+						<ul id="dropdown_menu" class="dropdown-menu" style="position: absolute; top: 95px; left: 11px; z-index: 1000;"> \
+							<li><a href="#" class="discard-cotizaciones" data-size="small"><span class="ui-icon ui-icon-cancel"></span>Anular cotizaciones</a></li>	\
+						</ul> \
+					');
+
+					htmlObject.find('a.discard-cotizaciones').click(function(event) {
+				
+				        // lógica para cerrar negocios masivo
+						var ids = [];
+						var ids_nulo = [];
+						var ids_gasto = [];
+
+						$('#viewport tbody.ui-selectable tr[data-id] td:first-of-type input.selected:checked').each(function() {
+							ids.push($(this).closest('tr').data('id'));
+							if (!$(this).closest('tr').data('status')) {
+								ids_nulo.push($(this).closest('tr').data('id'));
+							}
+							if ($(this).closest('tr').data('gasto-real')) {
+								ids_gasto.push($(this).closest('tr').data('gasto-real'));
+							}
+						});
+
+						var nulo = (ids_nulo.length > 0);
+						var gasto = (ids_gasto.length > 0);
+
+						if (!nulo && !gasto) {
+							confirm(MSG.get('CONFIRM_DOCUMENT_NULLIFY_BATCH')).done(function(data) {
+							    if (data) {
+							        var htmlObject = $('<section> \
+							            <span>Ingresar motivo anulación</span> \
+							            <input required readonly type="search" name="motivo"> \
+							            <button class="show motivo-anulacion">Ver motivos de anulación</button> \
+							        </section>');
+							        htmlObject.find('input[type="search"]').autocomplete({
+							            source: function(request, response) {
+							                $.ajax({
+							                    url: '/4DACTION/_V3_' + 'getMotivoAnulacion',
+							                    dataType: 'json',
+							                    data: {
+							                        //q: request.term
+							                        modulo: params.entity
+							                    },
+							                    success: function(data) {
+							                        response($.map(data.rows, function(item) {
+							                            return item;
+							                        }));
+							                    }
+							                });
+							            },
+							            minLength: 0,
+							            delay: 5,
+							            position: { my: "left top", at: "left bottom", collision: "flip" },
+							            open: function() {
+							                $(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+							            },
+							            close: function() {
+							                $(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+							            },
+							            focus: function(event, ui) {
+							                $(this).val(ui.item.text);
+							                return false;
+							            },
+							            select: function(event, ui) {
+							                $(this).val(ui.item.text);
+							                htmlObject.data('response', $(this).val());
+							                return false;
+							            }
+
+							        }).data('ui-autocomplete')._renderItem = function(ul, item) {
+							            return $('<li><a><span>' + item.text + '</span></a></li>').appendTo(ul);
+							        };
+
+							        htmlObject.find('button.show.motivo-anulacion').button({
+							            icons: {
+							                primary: 'ui-icon-carat-1-s'
+							            },
+							            text: false
+							        }).click(function() {
+							            htmlObject.find('input[type="search"]').autocomplete('search', '@');
+							        });
+
+							        prompt(htmlObject).done(function(data) {
+										unaBase.ui.block();
+							            var enteredMessage = data;
+							            $.ajax({
+							                url: '/4DACTION/_V3_batchDiscardByCotizacion',
+							                dataType: 'json',
+							                data: {
+							                    ids: ids.join('|'),
+							                    'cotizacion[estado]': false,
+							                    'cotizacion[estado][observaciones]': data,
+							                    'nullify': true, // TODO: este deberia ser el parámetro definitivo para anular genérico
+							                    'comment': data
+							                },
+							                success: function(data) {
+							                    if (data.success) {
+													setTimeout(function() {
+														unaBase.toolbox.search.save();
+														unaBase.toolbox.search.restore();
+													}, 1000);
+							                        toastr.info('Los documentos han sido anulados con éxito.');
+							                        /*unaBase.inbox.send({
+							                            subject: 'Ha anulado la cotización Nº ' + $('section.sheet').data('index') + ' / ' + $('section.sheet').find('input[name="cotizacion[titulo][text]"]').val(),
+							                            into: 'viewport',
+							                            href: '/v3/views/cotizaciones/content.shtml?id=' + data.id,
+							                            tag: 'avisos',
+							                            text: enteredMessage
+							                        });*/
+							                        // refrescar lista
+
+							                    } else {
+							                        if (data.opened) {
+							                            if (data.readonly)
+							                                toastr.error(NOTIFY.get('ERROR_RECORD_READONLY', 'Error'));
+							                        }
+							                    }
+												// unaBase.ui.unblock();
+							                },
+							                complete: function(){
+							                	// alert();
+							                	unaBase.ui.unblock();
+							                },
+							                error: function(xhr, text, error) {
+							                    toastr.error(NOTIFY.get('ERROR_INTERNAL', 'Error'));
+												unaBase.ui.unblock();
+							                }
+							            });
+							        });
+							    }
+							});
+						} else {
+							var msg = "No es posible hacer anulación masiva de cotizaciones porque se han seleccionado:<br>";
+							msg+= nulo? "- Cotizaciones anuladas.<br>" : '';
+							msg+= gasto? "- Cotizaciones con gasto (aplicar filtro OC proveedor para revisar).<br>" : '';
+							toastr.warning(msg);
+						}
+					});
+
+					htmlObject.menu().hide();
+
+					$('#dropdown_launcher').parentTo('header').before(htmlObject);
+					$('#dropdown_launcher').css('float', 'left');
+
+					$('#dropdown_launcher').click(function() {
+						var element = this;
+						$('#dropdown_menu').toggle();
+					});
+				})();
+
+			});
+		</script>
+	</head>
+	<body style="min-width: 900px !important;">
+		<!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->
+		<table class="results fixed" style="min-width: 900px !important; width: 100% !important;">
+			<thead>
+				<tr>
+					<th class="center" width="2%"><div style="padding:2px">Todo</div><div><input class="selected" type="checkbox" name="selected_all"></div></th>
+					<th data-sort-by="folio" data-sort-default="desc">Número</th>
+					<!--#4DIF (show_codigo_column)--><th data-sort-by="codigo" data-sort-default="desc">Código</th><!--#4DENDIF-->
+					<th data-sort-by="created_at" data-sort-default="desc">Fecha Creación</th>
+					<th data-sort-by="updated_at" data-sort-default="desc">Fecha Últ. Mod</th>
+					<th data-sort-by="fecha_realizacion" data-sort-default="desc">Fecha Realización</th>
+					<th data-sort-by="ejecutivo" data-sort-default="asc">Ejecutivo</th>
+					<th data-sort-by="alias" data-sort-default="asc"><!--#4DIF mostrar_marca_nocliente-->Marca<!--#4DELSE-->Cliente<!--#4DENDIF--></th>
+					<th data-sort-by="text" data-sort-default="asc">Referencia</th>
+					<!--#4DIF Not(no_mostrar_total_neto)--><th data-sort-by="total_neto" data-sort-default="desc">Total Neto</th><!--#4DENDIF-->
+					<th <!--#4DIF (Not(show_validated_column))-->style="display: none;"<!--#4DENDIF-->>Validada</th>
+				</tr>
+			</thead>
+			<tfoot class="totales">
+				<th style="text-align:left" colspan="<!--#4DIF (show_codigo_column)-->9<!--#4DELSE-->8<!--#4DENDIF-->"></th>
+	            <th class="center"><span data-neto="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+	            <th <!--#4DIF (Not(show_validated_column))-->style="display: none;"<!--#4DENDIF-->></th>
+			</tfoot>
+			<tbody></tbody>
+		</table>
+	</body>
+
+</html>

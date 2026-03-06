@@ -1,0 +1,126 @@
+{
+	"ventas": {
+		"areas_negocio": [
+			{
+				"name": "Área de negocio 1",
+				"months": [
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 }
+				]
+			},
+			{
+				"name": "Área de negocio 2",
+				"months": [
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 }
+				]
+			}
+		],
+		"suma": {
+			"months": [
+				{ "value": 100000, "percent": 0.1 },
+				{ "value": 100000, "percent": 0.1 },
+				{ "value": 100000, "percent": 0.1 },
+				{ "value": 100000, "percent": 0.1 },
+				{ "value": 100000, "percent": 0.1 },
+				{ "value": 100000, "percent": 0.1 },
+				{ "value": 100000, "percent": 0.1 },
+				{ "value": 100000, "percent": 0.1 },
+				{ "value": 100000, "percent": 0.1 },
+				{ "value": 100000, "percent": 0.1 },
+				{ "value": 100000, "percent": 0.1 },
+				{ "value": 100000, "percent": 0.1 }
+			]
+		}
+	},
+	"gastos_generales": {
+		"clasificaciones": [
+			{
+				"name": "Clasificación GG 1",
+				"months": [
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 }
+				]
+			},
+			{
+				"name": "Clasificación GG 2",
+				"months": [
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 },
+					{ "value": 100000, "percent": 0.1 }
+				]
+			}
+		],
+		"suma": {
+			"months": [
+				{ "value": 100000, "percent": 0.1 },
+				{ "value": 100000, "percent": 0.1 },
+				{ "value": 100000, "percent": 0.1 },
+				{ "value": 100000, "percent": 0.1 },
+				{ "value": 100000, "percent": 0.1 },
+				{ "value": 100000, "percent": 0.1 },
+				{ "value": 100000, "percent": 0.1 },
+				{ "value": 100000, "percent": 0.1 },
+				{ "value": 100000, "percent": 0.1 },
+				{ "value": 100000, "percent": 0.1 },
+				{ "value": 100000, "percent": 0.1 },
+				{ "value": 100000, "percent": 0.1 }
+			]
+		}
+	},
+	"resultado": {
+		"months": [
+			{ "value": 100000, "percent": 0.1 },
+			{ "value": 100000, "percent": 0.1 },
+			{ "value": 100000, "percent": 0.1 },
+			{ "value": 100000, "percent": 0.1 },
+			{ "value": 100000, "percent": 0.1 },
+			{ "value": 100000, "percent": 0.1 },
+			{ "value": 100000, "percent": 0.1 },
+			{ "value": 100000, "percent": 0.1 },
+			{ "value": 100000, "percent": 0.1 },
+			{ "value": 100000, "percent": 0.1 },
+			{ "value": 100000, "percent": 0.1 },
+			{ "value": 100000, "percent": 0.1 }
+		]
+	}
+}

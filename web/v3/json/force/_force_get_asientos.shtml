@@ -1,0 +1,40 @@
+{
+	"total":"<!--#4DHTML $recordCount-->",
+	"pageCount":"<!--#4DHTML $pageCount-->",
+	"startRecord":"<!--#4DHTML $startRecord-->",
+	"endRecord": "<!--#4DHTML $endRecord-->",
+	"details": [
+	<!--#4DLOOP aIdDetail -->
+			{
+				"id_comp": "<!--#4DHTML aIDComp{aIdDetail}-->",
+				"id_comp3": "<!--#4DHTML aIDComp3{aIdDetail}-->",
+				"cod_proyecto": "<!--#4DHTML _V3_escapeString(aCodProyecto{aIdDetail})-->",
+				"nro_proyecto": "<!--#4DHTML _V3_escapeString(aNroProyecto{aIdDetail})-->",
+				"codigoCuenta": "<!--#4DHTML _V3_escapeString(aCodigoCuenta{aIdDetail})-->",
+				"fechaRegistro": "<!--#4DHTML aRegistryDate{aIdDetail}-->",
+				"glosa": "<!--#4DHTML  _V3_escapeString(aGlosa{aIdDetail})-->",
+				"tipoReg": "<!--#4DHTML aTipoReg{aIdDetail}-->",
+				"tipoDoc": "<!--#4DHTML aTipoDoc{aIdDetail}-->",
+				"tipo_cuenta": "<!--#4DHTML aTipoCuenta{aIdDetail}-->",
+				"numReg": "<!--#4DHTML aNumReg{aIdDetail}-->",
+				"automatico": "<!--#4DHTML aAutomatico{aIdDetail}-->",
+				"obligacion": "<!--#4DHTML aObligacion{aIdDetail}-->",
+				"rut": "<!--#4DHTML _V3_escapeString(aRut{aIdDetail})-->",
+				"razon": "<!--#4DHTML _V3_escapeString(aRazon{aIdDetail})-->",
+				"numDoc": "<!--#4DHTML aNumDoc{aIdDetail}-->",
+				"debe": "<!--#4DHTML aDebe{aIdDetail}-->",
+				"correlativo": <!--#4DHTML aCorrelativo{aIdDetail}-->,
+				"haber": "<!--#4DHTML aHaber{aIdDetail}-->",
+				"cuentaContable": "<!--#4DHTML _V3_escapeString(aCuentacontable{aIdDetail})-->"
+			}<!--#4DIF NOT(aIdDetail{aIdDetail} = aIdDetail{Size of array(aIdDetail)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+		],
+		"saldos": [
+	<!--#4DLOOP aCuentasSaldoAnterior -->
+			{
+				"saldo_anterior": <!--#4DHTML aSaldoAnterior{aCuentasSaldoAnterior}-->,
+				"codigoCuenta": "<!--#4DHTML _V3_escapeString(aCuentasSaldoAnterior{aCuentasSaldoAnterior})-->"
+			}<!--#4DIF NOT(aCuentasSaldoAnterior{aCuentasSaldoAnterior} = aCuentasSaldoAnterior{Size of array(aCuentasSaldoAnterior)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+		]
+}

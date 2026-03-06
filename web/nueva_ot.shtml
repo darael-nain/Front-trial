@@ -1,0 +1,95 @@
+<!--#4DINCLUDE headgreen.shtml-->
+<body>
+<!--#4DIF vSesion>0-->
+<!--#4DINCLUDE menu_superior_green.shtml-->
+
+<div id="bgtransparent" class="bgtransparent">
+    <div id="bgmodal" class="bgmodal">       
+        <div id="pop-partipantes">
+            <h2>Agregar Participantes                
+                <span>( </span>
+                <span class="etiqueta-rep">Responsable</span> <span>/</span>
+                <span class="etiqueta-int">Integrante</span> <span>/</span>
+                <span class="etiqueta-inv">Inivitado</span>
+                <span>) </span>
+            </h2>
+            <div class="link-select"><a id="todo-part" href="#">Seleccionar todo</a><a id="ninguno-part" href="#">Ninguno</a></div>
+
+            <div id="container-pop-participantes"></div>
+
+            <h2>Otros</h2>
+            <div class="invitados">
+                <input id="nombre-invitado" placeholder="Nombre" type="text"/>
+                <input id="correo-invitado" placeholder="Correo" type="text"/>
+                <button type="button" id="add-invitado">+</button>
+            </div>
+
+            <p class="set-botones-pop">
+                <button title="Cancelar" class="button-new" id="close-modal" type="button">                       
+                    <span>Cancelar</span>
+                </button>
+                <button title="Aceptar" class="button-new" id="aceptar-participantes" type="button">                       
+                    <span>Aceptar</span>
+                </button>
+            </p>
+        </div>           
+    </div>
+</div>
+
+<!--#4dscript/datos_generales_ot-->
+<section>   	
+    <article>
+        <form name="frmnuevaot" id="frmnuevaot" action="/4DACTION/wsaveot" method="post" enctype="multipart/form-data" >
+            
+            <input id="id-ot" name="idot" type="hidden" value="<!--#4DVAR vIdot-->"/>
+            <input id="login-ot" name="login-ot" type="hidden" value="<!--#4DVAR vLogin-->"/>      
+
+            <h2 class="sub-titulo">NUEVA OT</h2>
+            <ul class="tabs">  
+                <li><a href="#tab1">Datos de la OT</a></li>  
+                <li><a href="#tab2">Revisiones</a></li>
+                <li><a href="#tab3">Archivos</a></li> 
+            </ul> 
+
+            <div class="tab_container">  
+                <div id="tab1" class="tab_content"><!--#4DINCLUDE ot_tabs_datos.shtml--></div>
+                <div id="tab2" class="tab_content"><!--#4DINCLUDE ot_tabs_revision.shtml--></div>
+                <div id="tab3" class="tab_content"><!--#4DINCLUDE ot_tabs_archivos.shtml--></div>             
+               
+                <p class="set-botones">
+                    <button title="Guardar" class="button-new" id="saveot" type="button">                       
+                        <span>Guardar</span>
+                    </button>
+
+                    <button title="Duplicar" class="button-new" type="button">                       
+                        <span>Duplicar</span>
+                    </button>    
+
+                    <button title="Cerrar" class="button-new" type="button">                       
+                        <span>Cerrar</span>
+                    </button>    
+
+                    <button title="Abrir" class="button-new" type="button">                       
+                        <span>Abrir</span>
+                    </button>    
+
+                    <button title="Imprimir" class="button-new" type="button">                       
+                        <span>Imprimir</span>
+                    </button>                 
+                   <!--<a href="/4DACTION/wnotificacionot" >test</a>-->
+                </p>
+            </div>            
+        </form>       
+
+     </article>         
+</section>
+
+<!--#4DELSE-->
+<p>
+    LA SESI&Oacute;N HA EXPIRADO...!!!
+    <a class="enlaces" href="index.shtml?t=<!--#4DVAR String(Milliseconds+Random(2))-->">VOLVER A INICIAR</a>
+</p>
+<!--#4DENDIF-->       
+
+</body>
+</html>

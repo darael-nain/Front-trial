@@ -1,0 +1,14 @@
+<div id="container-popup">
+    <header>
+        <h2>Participantes</h2>
+    </header>
+    <nav>
+        <a href="#">Seleccionar todo</a>
+        <a href="#">Ninguno</a>
+    </nav>
+    <article></article>
+    <footer>
+        <button onclick="return closeDialog();" type="button">Cancelar</button>
+        <button onclick="return closeDialog();" type="button">Aceptar</button> 
+    </footer>
+</div>

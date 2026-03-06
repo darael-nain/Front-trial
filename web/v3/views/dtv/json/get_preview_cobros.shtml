@@ -1,0 +1,21 @@
+{
+	"rows": [
+<!--#4DLOOP aIndexCobrosPre -->
+		{
+			"id": <!--#4DTEXT aIndexCobrosPre{aIndexCobrosPre}-->,
+			"idcli": <!--#4DHTML aIdCliCobrosPre{aIndexCobrosPre}-->,
+			"ncli": "<!--#4DHTML _V3_escapeString(aNombreCobrosPre{aIndexCobrosPre})-->",
+			"total": <!--#4DHTML String(aMontoTotalCobrosPre{aIndexCobrosPre};"&xml")-->,
+			"monto": "<!--#4DTEXT String(aMontoDtvCobroPre{aIndexCobrosPre};"&xml")-->",
+			"dtv": <!--#4DHTML aIdDtvCobrosPre{aIndexCobrosPre}-->,
+			"group": "<!--#4DHTML String(aAgrupadoCobrosPre{aIndexCobrosPre})-->",
+			"show": "<!--#4DHTML String(aShowCobrosPre{aIndexCobrosPre})-->",
+			"tipo_moneda": "<!--#4DHTML aMonedaCobrosPre{aIndexCobrosPre}-->",
+			"diff_cambio": "<!--#4DHTML aDiferenciaCambio{aIndexCobrosPre}-->",
+			"comision": "<!--#4DHTML aComision{aIndexCobrosPre}-->",
+			"valor_cambio": <!--#4DHTML String(aValorCambioCobrosPre{aIndexCobrosPre};"&xml")-->,
+			"valor_cambio_original": <!--#4DHTML String(aValorCambioOriginalCobrosPre{aIndexCobrosPre};"&xml")-->
+		}<!--#4DIF NOT(aIndexCobrosPre{aIndexCobrosPre} = aIndexCobrosPre{Size of array(aIndexCobrosPre)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

@@ -1,0 +1,25 @@
+{
+	"total_fxr_otros_v2": <!--#4DHTML String($total_fxr_otros_v2;"&xml")-->,
+	"rows": [
+<!--#4DLOOP $aidOc -->
+		{
+			"id": <!--#4DHTML $aidOc{$aidOc}-->,
+			"folio": "<!--#4DHTML $afolioOc{$aidOc}-->",
+			"emisor": "<!--#4DHTML $aemisorOc{$aidOc}-->",
+			"fecha": "<!--#4DHTML $afechaOc{$aidOc}-->",
+			"factura_tipo": "<!--#4DHTML $adtcOc{$aidOc}-->",
+			"proveedor": "<!--#4DHTML $aproveedorOc{$aidOc}-->",
+			"referencia": "<!--#4DHTML _V3_escapeString($areferenciaOc{$aidOc})-->",
+			"subtotal": <!--#4DHTML String($asubtotalOc{$aidOc};"&xml")-->,
+			"descuento": <!--#4DHTML String($adescuentoOc{$aidOc};"&xml")-->,
+			"neto": <!--#4DHTML String($anetoOc{$aidOc};"&xml")-->,
+			"total": <!--#4DHTML String($atotalOc{$aidOc};"&xml")-->,
+			"estado": "<!--#4DHTML $aestadoOc{$aidOc}-->",
+			"saldo_consolidar": <!--#4DHTML String($asaldoOc{$aidOc};"&xml")-->,
+			"tipo": "<!--#4DHTML $atipoOc{$aidOc}-->",
+			"version": "<!--#4DHTML $aversionOc{$aidOc}-->",
+			"excluir_gasto": <!--#4DIF $aFree{$aIdOc}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+		}<!--#4DIF NOT($aidOc{$aidOc} = $aidOc{Size of array($aidOc)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

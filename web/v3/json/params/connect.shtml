@@ -1,0 +1,16 @@
+{
+	"urlWeb": "<!--#4DHTML _V3_escapeString(urlWeb)-->",
+	"websiteUrl": "<!--#4DHTML _V3_escapeString(websiteUrl)-->",
+	"ipServer": "<!--#4DHTML ipServer-->",
+	"webPort": <!--#4DHTML webPort-->,
+	"nodeTimeAfterStart": <!--#4DHTML nodeTimeAfterStart-->,
+	"ipAlt1": "<!--#4DHTML ipAlt1-->",
+	"ipAlt2": "<!--#4DHTML ipAlt2-->",
+	"nodePort": <!--#4DHTML nodePort-->,
+	"apiKeyV3": "<!--#4DHTML apiKeyV3-->",
+	"timeToCheckLogin": <!--#4DHTML timeToCheckLogin-->,
+	"checkIsLogin": <!--#4DIF checkIsLogin-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"serviceNode": <!--#4DIF serviceNode-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"serviceNodeUrl": "<!--#4DHTML _V3_escapeString(serviceNodeUrl)-->"
+
+}

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Nueva orden de pago</title>
+		<meta charset="utf-8">
+		<script>
+			$(document).ready(function() {
+
+				unaBase.toolbox.init();
+				unaBase.toolbox.menu.init({
+					entity: 'PagoByCompra',
+					buttons: ['save'],
+					data: function() {
+						
+						var set = $('.ui-dialog fieldset').serializeAnything();
+						
+						
+						return $.unserialize('id=' + $('section.sheet').data('id') + '&' + set);
+					},
+					validate: function() {
+						return true;
+					}
+				});
+
+				$('.ui-dialog input[name="pago[tipo]"]').autocomplete({
+					source: function(request, response) {
+						$.ajax({
+							url: '/4DACTION/_V3_' + 'getTipoPagos?egreso=true',
+							dataType: 'json',
+							data: {
+								q: request.term
+							},
+							success: function(data) {
+								response($.map(data.rows, function(item) {
+									return item;
+								}));
+							}
+						});
+					},
+					minLength: 0,
+					autoFocus: true,
+					delay: 5,
+					position: { my: "left top", at: "left bottom", collision: "flip" },
+					open: function() {
+						$(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+					},
+					close: function() {
+						$(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+					},
+					focus: function(event, ui) {
+						//$(this).val(ui.item.text);
+						return false;
+					},
+					response: function(event, ui) {
+					},
+					select: function(event, ui) {
+						$('input[name="pago[tipo]"]').val(ui.item.text);
+						$('input[name="pago[tipo]"]').data('id', ui.item.id);
+						return false;
+					}
+
+				}).data('ui-autocomplete')._renderItem = function(ul, item) {
+					return $('<li><span>' + item.text + '</span></a></li>').appendTo(ul);
+				};
+
+				$('.ui-dialog button.show.tipo-pago').button({
+					icons: {
+						primary: 'ui-icon-carat-1-s'
+					},
+					text: false
+				}).click(function() {
+					$('.ui-dialog input[name="pago[tipo]"]').autocomplete('search', '@').focus();
+				});
+
+				$('.ui-dialog fieldset legend span:first-of-type').text($('section.sheet input[name="oc[tipo_gastos][des]"]').val());
+				$('.ui-dialog fieldset legend span:last-of-type').text($('section.sheet #index').text());
+				
+			});
+		</script>
+	</head>
+	<body>
+		<fieldset>
+			<legend>Pago para la <span></span> Nº <span></span></legend>
+			<label>
+				<span>Fecha de pago</span>
+				<input required type="date" name="pago[fecha]">
+			</label>
+			<label>
+				<span>Monto</span>
+				<input required type="number" name="pago[monto]">
+			</label>
+			<label>
+				<span>Tipo</span>
+				<input type="search" name="pago[tipo]"><button class="show tipo-pago"></button>
+			</label>
+			<label>
+				<span>Nº pago</span>
+				<input type="number" name="pago[numero]">
+			</label>
+			<label>
+				<span>Cuenta</span>
+				<input type="number" name="pago[cuenta]">
+			</label>
+		</fieldset>
+	</body>
+</html>

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_serverInfo-->
+<html>
+	<head>
+		<title>Compras</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="/v3/views/compras/lista.css?<!--#4DTEXT _V3_version-->">
+		<link rel="stylesheet" type="text/css" href="/v3/views/compras/design/tooltips.css">
+		<script type="text/javascript" src="/v3/views/compras/script/active_menu.js?<!--#4DTEXT _V3_version-->"></script>
+
+		<script type="text/javascript" src="/v3/views/compras/script/formatby3.js?<!--#4DTEXT _V3_version-->"></script>
+		<style type="text/css">
+			.rojoPastel{
+				color:red;
+			}
+		</style>
+		<script>
+
+
+
+
+			$(document).ready(function() {
+				    
+
+
+				unaBase.toolbox.init();
+
+				// Inicializamos un buscador
+				var params = {
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/_V3_getGastosNew' },
+					entity: 'Compras',
+					data: {
+						'tipo_gasto' : "OC"
+					},
+					callback : function(data){
+						$('.especial .totales').find('span[data-neto]').text(data.totales.neto);
+						$('.especial .totales').find('span[data-exento]').text(data.totales.exento);
+						$('.especial .totales').find('span[data-total]').text(data.totales.total);
+						$('.especial .totales').find('span[data-pagado]').text(data.totales.pagado);
+						$('.especial .totales').find('span[data-porpagar]').text(data.totales.porpagar);
+						$('.especial .totales').find('span[data-justificado]').text(data.totales.justificado);
+						$('.especial .totales').find('span[data-porjustificar]').text(data.totales.porjustificar);
+
+						// Fijar header y footer
+						$('#viewport .fht-table-init').fixedHeaderTable('destroy');
+						//$('#viewport table.fixed').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false });
+						// --ini-- corrección para ordenar - V3_212
+						$('#viewport table.fixed').fixedHeaderTable({
+							footer: true,
+							cloneHeadToFoot: false,
+							fixedColumn: false,
+							create: function() {
+								$('[data-sort-by]').removeClass('sort-order-desc').removeClass('sort-order-asc').removeData('sort-order');
+								$('[data-sort-by="' + data.sort.by + '"]').addClass('sort-order-' + data.sort.order).data('sort-order', data.sort.order);
+							}
+						});
+						// --fin-- corrección para ordenar - V3_212
+
+						$('button.infocon').button({icons: { primary: 'ui-icon-notice'}, text: false }).css({"background":"transparent", "border":"none"});
+
+						var infBtn = $('.infocon');
+						for (var p = 0; p < infBtn.length; p++) {
+							infBtn[p].addEventListener("click", function(ev){
+								ev.stopPropagation();
+							}, true);
+						}
+					var ocID = data.id;
+
+
+		$('.tooltipsItem').tooltipster({
+	        // content: tooltipHtml,
+	        contentAsHTML: true,  
+	        contentCloning: false,
+			// trigger: 'click',
+			multiple: true,
+			side: 'right',
+			interactive: true
+	      });
+
+
+					},
+					row: {
+						html: function(i, rows) {
+							var v2 = "";
+							var title = "";
+							if (rows[i].version=="") {
+								//v2 = '<strong style="font-size:8px!important;font-weight:bold">V2</strong>';
+								v2 = '<strong title="oc creada en versión antigua" style="font-size:11px!important;font-weight:bold">*</strong>';
+								title = "Orden de compra creada en versión antigua";
+							}
+
+							var desOrigen = "";
+							if (rows[i].origen == "PROYECTO" || rows[i].origen == "PRESUPUESTO") {
+								desOrigen = rows[i].nro_neg +' - '+ rows[i].referencia_neg_clasif;
+							}else{
+								desOrigen = rows[i].referencia_neg_clasif;
+							}
+
+							/*var color = "";
+							var color_neto = "neto_c";
+							var color_total = "total_c";
+							var color_justificado = "justificado_c";*/
+
+							var color = "";
+							var color_neto = "";
+							var color_total = "";
+							var color_justificado = "";
+
+							if (rows[i].estado == "ANULADA") {
+								color = "rojoPastel";
+								rows[i].saldo_a_justificar = 0;
+								rows[i].justificado = 0;
+								color_neto = color;
+								color_total = color;
+								color_justificado = color;
+							}
+
+							  var tooltipHtml;
+								      $.ajax({
+								                'url':'/4DACTION/_V3_getItemFromOcList',
+								                data:{
+								                  'id_Oc':  rows[i].id
+								                },
+								                dataType:'json',
+								                async: false,
+								                success:function(data){
+
+								                  var trbody;
+
+								                  for(var k = 0; k < data.rows.length; k++){
+
+								                  	var diferencia = parseInt(data.rows[k].aPresupuesto) - parseInt(data.rows[k].aGastoActual);
+                  									var diferenciaV = parseInt(data.rows[k].aPresupuesto) - parseInt(data.rows[k].aGastoActual) - parseInt(data.rows[k].aItem);
+
+								                  	var aVenta = $.number(data.rows[k].aVenta, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+								                  	var aPresupuesto = $.number(data.rows[k].aPresupuesto, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+								                  	var aGastoActual = $.number(data.rows[k].aGastoActual, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+								                  	var aItem = $.number(data.rows[k].aItem, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+								                  	var aDiferencia =  $.number(diferencia, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+                  									var aDiferenciaValidado = $.number(diferenciaV, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+
+								                  if(aVenta<0){
+
+								                  	var tdVenta = "<td class='rightNum redTd'>"+aVenta+"</td>";
+								                  }else {
+								                  	
+								                  	var tdVenta = "<td class='rightNum'>"+aVenta+"</td>";
+								                  }
+
+								                  	if(aPresupuesto<0){
+
+								                  	var tdPresupuesto = "<td class='rightNum redTd'>"+aPresupuesto+"</td>";
+								                  }else {
+								                  	
+								                  	var tdPresupuesto = "<td class='rightNum'>"+aPresupuesto+"</td>";
+								                  }
+
+								                  	if(aGastoActual<0){
+
+								                  	var tdGastoActual = "<td class='rightNum redTd'>"+aGastoActual+"</td>";
+								                  }else {
+								                  	
+								                  	var tdGastoActual = "<td class='rightNum'>"+aGastoActual+"</td>";
+								                  }
+								                  	if(aItem<0){
+
+								                  	var tdItem = "<td class='rightNum redTd'>"+aItem+"</td>";
+								                  }else {
+								                  	
+								                  	var tdItem = "<td class='rightNum'>"+aItem+"</td>";
+								                  }
+
+								                  	if(aDiferencia<0){
+
+								                  	var tdDiferencia = "<td class='rightNum redTd'>"+aDiferencia+"</td>";
+								                  }else {
+								                  	
+								                  	var tdDiferencia = "<td class='rightNum'>"+aDiferencia+"</td>";
+								                  }
+				                                    if(aDiferenciaValidado<0){
+
+				                                    var tdDiferenciaValidado = "<td class='rightNum redTd'>"+aDiferenciaValidado+"</td>";
+				                                  }else {
+				                                    
+				                                    var tdDiferenciaValidado = "<td class='rightNum'>"+aDiferenciaValidado+"</td>";
+				                                  }
+
+
+
+								                  	if(typeof trbody !== 'undefined'){
+									                  	trbody += "<tr>\
+									                      <td>"+data.rows[k].aNegocio+"\
+									                      </td>\
+									                      <td>"+data.rows[k].aNombre+"\
+									                      </td>"+tdVenta+tdPresupuesto+tdGastoActual+tdItem+tdDiferencia+tdDiferenciaValidado+"\
+									                    </tr>";
+								                  		
+								                  	}else {
+									                  	trbody = "<tr>\
+									                      <td>"+data.rows[k].aNegocio+"\
+									                      </td>\
+									                      <td>"+data.rows[k].aNombre+"\
+									                      </td>"+tdVenta+tdPresupuesto+tdGastoActual+tdItem+tdDiferencia+tdDiferenciaValidado+"\
+									                    </tr>";
+								                  		
+								                  	}
+								                  }
+
+								                  tooltipHtml = "<table class='tabletooltip' id='table"+rows[i].id+"' >\
+								                  <thead>\
+								                    <tr>\
+								                      <tr><th colspan='3' class='blacknv'>Costo</th><th class='greynv'>Presupuestado</th><th class='orangenv'>Actual</th><th class='orange2nv'>Por validar</th><th class='greennv' colspan='2'>Diferencia</th></tr>\
+								                      <th class='blacknv'>Negocio\
+								                      </th>\
+								                      <th class='blacknv'>Ítem\
+								                      </th>\
+								                      <th class='blacknv'>Venta\
+								                      </th>\
+								                      <th class='greynv'>Presupuesto\
+								                      </th>\
+								                      <th class='orangenv'>Gasto Real\
+								                      </th>\
+								                      <th class='orange2nv'>Monto\
+								                      </th>\
+								                      <th class='greennv'>Actual\
+								                      </th>\
+								                      <th class='greennv'>Después de validar\
+								                      </th>\
+								                    </tr>\
+								                  </thead>\
+								                  <tbody>\
+								                  "+trbody+"\
+								                  </tbody>\
+								                  </table>";
+
+
+
+								                }
+								            });
+
+
+
+							return '<tr title="'+ title +'" data-id="' + rows[i].id + '"  >' +
+								'<td width="2%" class="center"><input class="selected chk" type="checkbox" name="selected_one"></td>' +
+								'<td width="2%" class="center" ><button title="'+tooltipHtml+'" class="infocon tooltipsItem tool'+rows[i].id+'" >!</button></td>' +
+								'<td width="3%" class="center">' + rows[i].validado + '</td>' +
+								'<td width="5%" class="center">' + v2 + ' ' + rows[i].folio + '</td>' +
+								'<td width="5%" class="center">' + rows[i].emisor + '</td>' +
+								'<td width="2%" class="center" title="' + rows[i].doc + '">' + rows[i].abrev + '</td>' +
+								'<td width="3%" class="center">' + rows[i].formapago + '</td>' +
+								'<td width="5%" class="center">' + rows[i].fecha + '</td>' +
+								'<td width="5%" class="center">' + rows[i].vencimiento + '</td>' +
+								'<td width="5%" class="left"  >' + desOrigen + '</td>' +
+								'<td width="3%" class="center">' + rows[i].estado + '</td>' +
+								'<td width="10%" class="left">' + rows[i].proveedor + '</td>' +
+								'<td width="13%" class="left">' + rows[i].referencia + '</td>' +
+								'<td width="5%" class="right">' + rows[i].neto + '</td>' +
+								'<td width="5%" class="right">' + rows[i].exento + '</td>' +
+								'<td width="5%" class="right">' + rows[i].total + '</td>' +
+								'<td width="5%" class="right">' + rows[i].pago + '</td>' +
+								'<td width="5%" class="right">' + rows[i].saldo_a_pagar + '</td>' +
+								'<td width="5%" class="right">' + rows[i].justificado + '</td>' +
+								'<td width="5%" class="right">' + rows[i].saldo_a_justificar + '</td>' +
+							'</tr>';
+
+
+
+   
+
+						}
+
+					},
+					detail: {
+						url: function(id) { return '/v3/views/compras/content.shtml?id=' + id +'&from=self'},
+						iframe: false
+					},
+					// Inflexiones
+					inflection: {
+						singular: 'gasto',
+						plural: 'gastos',
+						none: 'ningún'
+					},
+					filters: [
+						{ name: 'created_at', type: 'month', caption: 'Fecha de creación', range: true, currentMonth: false },
+						//{ name: 'tipo_gasto', type: 'autocomplete', caption: 'Tipo de gastos', dataSource: 'get_tipo_gasto' },
+						{ name: 'validacion_gasto', type: 'autocomplete', caption: 'Por validación', dataSource: 'get_validacion' },
+						{ name: 'origen', type: 'autocomplete', caption: 'Origen', dataObject: [
+							{ id: "PROYECTO", text: 'NEGOCIOS'},
+							{ id: "GASTO GENERAL", text: 'GASTOS GENERALES'}
+						] },
+						{ name: 'por_negocio', type: 'autocomplete', caption: 'Por negocio', dataSource: 'getNegociosActivos' },
+						{ name: 'por_clasificacion', type: 'autocomplete', caption: 'Por Clasificación', dataSource: 'getClasificacionGG' },
+						/*{ name: 'tipo_doc', type: 'autocomplete', caption: 'Tipo', dataSource: 'get_negocios_activos' },
+						{ name: 'forma_pago', type: 'autocomplete', caption: 'Forma pago', dataSource: 'get_negocios_activos' },*/
+						{ name: 'aprobado_por', type: 'autocomplete', caption: 'Aprobado por', dataSource: 'getUsuarioValidador?entity=Orden_de_compra' },
+
+						{ name: 'tipo_dtc', type: 'autocomplete', caption: 'Tipo Doc.', dataSource: 'getTiposDocDeCompras' },
+
+						{ name: 'formas_de_pago', type: 'autocomplete', caption: 'Forma de pago', dataSource: 'getFormaPagos' },
+						{ name: 'solicitud_pago', type: 'autocomplete', caption: 'Solicitud de Pago', dataObject: [
+							{ id: "True", text: 'Realizada'},
+							{ id: "False", text: 'No realizada'}
+						] },
+
+						{ name: 'justificacion', type: 'autocomplete', caption: 'Por Justificar', dataObject: [
+							{ id: "justificado", text: 'Justificado'},
+							{ id: "xjustificar", text: 'Por Justificar'}
+						]},
+
+						{ name: 'mas', type: 'autocomplete', caption: 'Más filtros', dataObject: [
+							{ id: "abonado", text: 'Con abono'}
+						]},
+
+						{ name: 'estado', type: 'checkbox', caption: 'Estado de la compra', options: [
+							{ caption: 'Emitida', name: 'estado_emitida', value: true },
+							{ caption: 'Pagada', name: 'estado_pagada', value: false },
+							{ caption: 'Cerrada', name: 'estado_cerrada', value: false },
+							{ caption: 'Anulada', name: 'estado_nulo', value: false }
+						]}
+					],
+					container : "listindex"
+				};
+
+				unaBase.toolbox.search.init(params);
+				unaBase.toolbox.menu.init({
+					entity: 'Compras',
+					buttons: ["create_gasto_from_oc", "export_list", "export_list_items_doc"]
+				});
+
+				/*setTimeout(function(){
+					$('.especial').fixedHeaderTable({ footer: false, cloneHeadToFoot: false, fixedColumn: false });
+				}, 100);*/
+
+				if(!access._437) { // crear compra
+					$('#menu ul').find('li[data-name="create_gasto_from_oc"]').hide();
+    			}
+
+    			$('#search').find('input[name="por_negocio"]').closest('.autocomplete').hide();
+    			$('#search').find('input[name="por_clasificacion"]').closest('.autocomplete').hide();
+    			$('#search').find('input[name="origen"]').blur(function(){
+    				switch($(this).val()){
+    					case '' :
+    						$('#search').find('input[name="por_negocio"]').closest('.autocomplete').hide();
+    						$('#search').find('input[name="por_clasificacion"]').closest('.autocomplete').hide();
+    						break;
+    					case 'NEGOCIOS' :
+    						$('#search').find('input[name="por_negocio"]').closest('.autocomplete').show();
+    						$('#search').find('input[name="por_clasificacion"]').closest('.autocomplete').hide();
+    						break;
+    					case 'GASTOS GENERALES' :
+    						$('#search').find('input[name="por_negocio"]').closest('.autocomplete').hide();
+    						$('#search').find('input[name="por_clasificacion"]').closest('.autocomplete').show();
+    						break;
+    				}
+    			});
+
+
+    			// -- ini -- 22-07-16  options list
+				/*var htmlObjectListOptions;
+				htmlObjectListOptions = $('\
+					<ul class="dropdown-menu-options" style="position:absolute;top:47px;left:10px;z-index:1000;text-align:left"> \
+						<li><a href="#"><span style="color:black!important;" class="ui-icon ui-icon-document"></span>Pagar</a></li> \
+						<li><a href="#"><span style="color:black!important;" class="ui-icon ui-icon-radio-on"></span>pagar con rendición</a></li> \
+						<li><a href="#"><span style="color:black!important;" class="ui-icon ui-icon-radio-off"></span>Eliminar</a></li> \
+					</ul> \
+				');
+				htmlObjectListOptions.appendTo('.container-options > div[data-options="mas"]').menu().hide();
+				$('button.options.dtc').button({
+					icons: {
+						primary: 'ui-icon ui-icon-triangle-1-s',
+					},
+					text: true
+				}).click(function() {
+					$('.dropdown-menu-options').toggle();
+				});*/
+				// -- ini -- 22-07-16  options list
+
+				// rgba(169,188,245,.5) !important
+
+
+				$("body").on("click", "input.selected", function(){
+					var input = $(this);
+					if (input.attr('name') == "selected_all" ) {
+						if (input.prop("checked")) {
+							$('table tbody input[name="selected_one"]').prop("checked", true);
+						}else{
+							$('table tbody input[name="selected_one"]').prop("checked", false);
+						}
+					}
+				});
+
+
+
+
+
+			});
+
+
+	
+
+	function infoButton(){
+		$('button.infocon').button({
+			icons: {
+				primary: 'ui-icon ui-icon-info',
+			},
+			text: false
+		});	
+	}
+		</script>
+		<style type="text/css">
+		/* ini --22.07.16 options select */
+	    	.chk{
+				display: inline-block;
+				width: 20px;
+				height: 20px;
+				margin:0px;
+				vertical-align: middle;
+				cursor:pointer;
+			}
+			.container-options{
+				height:30px;
+				margin:5px 0 0 0;
+				padding: 3px;
+				border-color: red;
+			}
+				.container-options > div{
+					display: inline-block;
+				}
+			#selectdtc{
+				height:24px;
+				width:70px;
+				background-color:#e6e6e6;
+			}
+			/* fin --22.07.16 options select */
+
+		</style>
+	</head>
+	<body>
+		<div style="width: 100%; height: calc(100% - 10px); overflow-x: scroll; overflow-y: scroll">
+			<table width="100%" data-tipogasto="OC" class="results especial listindex fixed">
+					<thead>
+						<tr>
+							<th class="center" width="2%"><div style="padding:2px">Todo</div><div><input class="selected chk" type="checkbox" name="selected_all"></div></th>
+							<th class="center" width="2%" ></th>
+							<th class="center" width="3%" data-sort-by="validado" data-sort-default="asc">Validado</th>
+							<th class="center" width="5%" data-sort-by="folio" data-sort-default="desc">Número</th>
+							<th class="center" width="5%" data-sort-by="emisor" data-sort-default="desc">Emisor</th>
+							<th class="center" width="2%" data-sort-by="doc" data-sort-default="desc">Doc.</th>
+							<th class="center" width="3%" data-sort-by="estado" data-sort-default="asc">F. Pago</th>
+							<th class="center" width="5%" data-sort-by="fecha" data-sort-default="desc">Emisión</th>
+							<th class="center" width="5%" data-sort-by="vencimiento" data-sort-default="desc">Vcto.</th>
+							<th class="center" width="5%" data-sort-by="origen" data-sort-default="desc">Neg/GG</th>
+							<th class="center" width="3%" data-sort-by="estado" data-sort-default="asc">Estado</th>
+							<th class="center" width="10%" data-sort-by="proveedor" data-sort-default="asc">Proveedor</th>
+							<th class="center" width="13%" data-sort-by="referencia" data-sort-default="asc">Referencia</th>
+							<th class="center" width="5%" data-sort-by="neto" data-sort-default="desc">Afecto [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+							<th class="center" width="5%">Exento [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+							<th class="center" width="5%" data-sort-by="total" data-sort-default="desc">Total [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+							<th class="center" width="5%" data-sort-by="pago" data-sort-default="desc">Pagado [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+							<th class="center" width="5%" data-sort-by="saldo_a_pagar" data-sort-default="desc">Por pagar [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+							<th class="center" width="5%" data-sort-by="justificado" data-sort-default="desc">Justificado [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+							<th class="center" width="5%" data-sort-by="saldo_a_justificar" data-sort-default="desc">Por Justificar [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+						</tr>
+					</thead>
+					<tfoot class="totales">
+						<th width="2%"></th>
+						<th width="2%"></th>
+						<th width="3%"></th>
+						<th width="5%"></th>
+			            <th width="5%"></th>
+						<th width="2%"></th>
+						<th width="3%"></th>
+						<th width="5%"></th>
+						<th width="5%"></th>
+						<th width="5%"></th>
+						<th width="3%"></th>
+						<th width="10%"></th>
+						<th width="13%"></th>
+			            <th width="5%" class="center"><span data-neto="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+			            <th width="5%" class="center"><span data-exento="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+			          	<th width="5%" class="center"><span data-total="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+			           	<th width="5%" class="center"><span data-pagado="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+			            <th width="5%" class="center"><span data-porpagar="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+			            <th width="5%" class="center"><span data-justificado="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+						<th width="5%" class="center"><span data-porjustificar="" class="label2"><!--#4DVAR _V3_defaultCurrencySymbol-->0</span></th>
+					</tfoot>
+					<tbody></tbody>
+				</table>
+			</div>
+	</body>
+</html>

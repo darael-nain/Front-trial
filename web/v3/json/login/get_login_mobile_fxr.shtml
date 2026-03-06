@@ -1,0 +1,15 @@
+{
+	"username": <!--#4DIF Not(Undefined(vLogin))-->"<!--#4DHTML _V3_escapeString(vLogin)-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"iniciales": <!--#4DIF Not(Undefined(vIniciales))-->"<!--#4DHTML _V3_escapeString(vIniciales)-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"rut": <!--#4DIF Not(Undefined(vRutUser))-->"<!--#4DHTML _V3_escapeString(vRutUser)-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"name": <!--#4DIF Not(Undefined(vNomUsr2))-->"<!--#4DHTML _V3_escapeString(vNomUsr2)-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"email": <!--#4DIF Not(Undefined(vEmail))-->"<!--#4DHTML _V3_escapeString(vEmail)-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"session": <!--#4DIF Not(Undefined(vSesion))--><!--#4DHTML vSesion--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"estado": <!--#4DIF Not(Undefined(uEstado))--><!--#4DIF uEstado-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->
+	<!--#4DIF Not(Undefined(aIdAccess))-->,
+	"access": {
+	<!--#4DLOOP aIdAccess-->
+		"_<!--#4DHTML aIdAccess{aIdAccess}-->": <!--#4DHTML aEstadoAccess{aIdAccess}--><!--#4DIF NOT(aIdAccess{aIdAccess} = aIdAccess{Size of array(aIdAccess)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	}<!--#4DENDIF-->
+}

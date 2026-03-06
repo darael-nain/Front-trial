@@ -1,0 +1,28 @@
+{
+	"showTotals": <!--#4DIF showTotals-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"exchange": {
+		"type": "<!--#4DHTML exchangeType-->",
+		"rate": <!--#4DHTML String(exchangeRate;"&xml")-->
+	},
+	"rows": [
+	<!--#4DLOOP a_llave -->
+		{
+			"id": "<!--#4DHTML a_llave{a_llave}-->",
+			"is_title": <!--#4DIF a_tipo_det{a_llave}="TITULO"-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"isParent": <!--#4DIF aIsParent{a_llave}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"itemParent": "<!--#4DHTML aItemParent{a_llave}-->",
+			"parent": "<!--#4DHTML a_llave_titulo{a_llave}-->",
+			"codigo": "<!--#4DHTML _V3_escapeString(a_cod_det{a_llave};"&xml")-->",
+			"nombre": "<!--#4DHTML _V3_escapeString(a_des{a_llave})-->",
+			"cantidad": <!--#4DHTML String(a_cantidad{a_llave};"&xml")-->,
+			"dias": <!--#4DHTML String(a_cantidad2{a_llave};"&xml")-->,
+			"subtotal_venta": <!--#4DHTML String(a_subtotal{a_llave};"&xml")-->,
+			"subtotal_costo": <!--#4DHTML String(a_gasto_p{a_llave};"&xml")-->,
+			"subtotal_costo_real": <!--#4DHTML String(a_gasto_real{a_llave};"&xml")-->,
+			"diferencia": <!--#4DHTML String(a_gasto_p{a_llave}-a_gasto_real{a_llave};"&xml")-->,
+			"observacion": "<!--#4DHTML _V3_escapeString(a_obs{a_llave})-->",
+			"comentario": "<!--#4DHTML _V3_escapeString(a_com{a_llave})-->"
+		}<!--#4DIF NOT(a_llave{a_llave} = a_llave{Size of array(a_llave)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

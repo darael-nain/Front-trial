@@ -1,0 +1,25 @@
+{
+
+	"total": "<!--#4DTEXT $total-->",
+	"doc": "<!--#4DTEXT $doc-->",
+	"docs": [
+	<!--#4DLOOP $id-->
+		{	
+			"id": <!--#4DTEXT $id{$id}-->,
+			"number": <!--#4DTEXT $number{$id}-->,
+			"name": "<!--#4DTEXT $name{$id}-->",
+			"responsable": "<!--#4DHTML _V3_escapeString($responsable{$id})-->",
+			"responsable_inicials": "<!--#4DHTML _V3_escapeString($responsable_inicials{$id})-->",
+			"responsable_name": "<!--#4DHTML _V3_escapeString($responsable_name{$id})-->",
+			"expiration_date": "<!--#4DHTML $expiration_date{$id}-->",
+			"asign_date": "<!--#4DHTML $asign_date{$id}-->",
+			"last_mod": "<!--#4DHTML $last_mod{$id}-->",
+			"last_mod_time": "<!--#4DHTML $last_mod_time{$id}-->",
+			"emision_date": "<!--#4DHTML $emision_date{$id}-->",
+			"emision_time": "<!--#4DHTML $emision_time{$id}-->",
+			"client": "<!--#4DTEXT $client{$id})-->",
+			"doc_total": "<!--#4DTEXT $docTotal{$id})-->"
+		}<!--#4DIF NOT($id{$id} = $id{Size of array($id)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

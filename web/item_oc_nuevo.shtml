@@ -1,0 +1,13 @@
+<table  id="items-oc-det" width="100%" border="1" cellpadding="0" cellspacing="0" hspace="0" vspace="0">
+<thead>
+	<tr bgcolor="#CCCCCC" >
+		<td width="5%" class="center">ITEM</td>
+		<td width="30%" class="center">DESCRIPCION</td>
+		<td width="5%" class="center">CANT</td>
+		<td width="10%" class="center">P.U.[$]</td>
+		<td width="10%" class="center">SUBTOTAL[$]</td>
+		<td width="10%" class="center"></td>
+	</tr>
+</thead>
+<tbody></tbody>
+</table>

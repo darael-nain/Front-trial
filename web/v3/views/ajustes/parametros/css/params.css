@@ -1,0 +1,42 @@
+article.article-half{
+	display: inline-table;
+}
+
+.editable input:not([type="search"]):not([type="checkbox"]):not(.always-open), .editable textarea:not(.always-open){
+	background-color: white !important;	
+    border-radius: 5px;
+    border-bottom: 0 !important;
+    padding: 5px;
+    float: right;
+    width: 50% !important;
+}
+.editable input:not([type="search"]):not([type="checkbox"]):not([readonly]):not(.always-open):focus, .editable textarea:not(.always-open):focus{
+
+/*    width: 60% !important;
+	background-color: beige;	*/
+}
+input[type="checkbox"]{
+	height: 1rem;
+	width: 1rem;
+    float: right;
+}
+/* On mouse-over, add a grey background color */
+input.item:hover{
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+input.item:checked {
+  background-color: #2196F3;
+}
+label{
+	font-size: 1rem;
+	cursor: pointer;
+}
+.editable li {
+	padding-right: 20px;
+	margin: 15px 0 15px 0;
+}
+html > body.home > section > section#viewport section.sheet > footer > article > ul.editable{
+	margin-top: 5px;
+}

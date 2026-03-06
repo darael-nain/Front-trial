@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Crear reporte desde una plantilla</title>
+		<meta charset="utf-8">
+		<script>
+			$(document).ready(function() {
+
+        /* INICIO: Lógica de botonera integrada */
+        unaBase.toolbox.init();
+        var menu = $('#dialog-menu');
+				menu.parentTo('.ui-dialog').find('header').show();
+
+        var buttons = [];
+        buttons.push({
+          name: 'new_without_template', icon: 'ui-icon-document', caption: 'Nueva plantilla',
+          action: function() {
+            unaBase.loadInto.dialog('/v3/views/generador-reportes/step2.shtml', 'Nueva plantilla de reporte', 'large');
+          }
+        });
+        menu.find('ul > li').remove();
+				menu.parentTo('header').find('button').not(':first-of-type').not('.date').not('.search-button').not('.close-button').remove();
+
+				var button;
+
+				for (i in buttons) {
+					button = $('<li data-name="' + buttons[i].name + '"><button>' + buttons[i].caption + '</button></li>');
+					menu.find('ul').append(button);
+					menu.find('ul > li:last-of-type > button').button({
+						icons: ((typeof buttons[i].icon != 'undefined')? {
+							primary: buttons[i].icon
+						} : buttons[i].icons )
+					}).click(buttons[i].action);
+				}
+
+				button = $('<button id="dropdown_launcher" class="dropdown-button more" style="display: inline-block; float: right;">Más...</button>');
+				button.button({
+					icons: {
+						primary: "ui-icon-gear",
+						secondary: "ui-icon-triangle-1-s"
+					},
+					text: false
+				}).hide();
+				menu.parentTo('header').append(button);
+				menu.show();
+        /* FIN: Lógica de botonera integrada */
+
+				$.ajax({
+					url: '/4DACTION/_V3_getReporteTemplate',
+					dataType: 'json',
+					success: function(data) {
+						var htmlObject;
+						$.each(data.rows, function(key, item) {
+							htmlObject = $('<tr data-id="' + item.id + '" data-username="' + item.username + '">' +
+								'<td><time datetime="' + new Date(item.created_at).toISOString() + '">' + $.datepicker.formatDate('dd-mm-yy', new Date(item.created_at)) + ' <span>' + new Date(item.created_at).toTimeString().match( /^([0-9]{2}:[0-9]{2}:[0-9]{2})/ )[0].substring(0, 5) +  '</span></time></td>' +
+								'<td>' + item.username + '</td>' +
+								'<td class="left">' + item.text + '</td>' +
+								'<td class="options">' +
+								'<button class="download" title="Descargar reporte"></button>' +
+
+								'<button class="edit" title="Modificar"></button>' +
+								'<button class="delete" title="Eliminar"></button>' +
+								'</td>' +
+							'</tr>');
+
+							var id = item.id;
+
+							htmlObject.find('button.download').button({
+								caption: 'Descargar reporte',
+								icons: {
+									primary: 'ui-icon-circle-arrow-s'
+								},
+								text: false
+							}).click(function() {
+								var element = this;
+								var id = $(element).parentTo('tr').data('id');
+								// Descargar Excel
+								var sid = '';
+								$.each($.cookie(),function(clave,valor) {sid+= (valor + ' '); });
+								var url = nodeUrl + '/export-reporte-template/?id=' + id + '&sid=' + encodeURIComponent(sid) + '&hostname=' + window.location.origin;
+								var download = window.open(url).blur();
+								window.focus();
+								download.close();
+								toastr.info('La descarga puede demorar un tiempo. Por favor espere a que la descarga se inicie.');
+							});
+
+							htmlObject.find('button.edit').button({
+								caption: 'Modificar',
+								icons: {
+									primary: 'ui-icon-pencil'
+								},
+								text: false
+							}).click(function() {
+								var element = this;
+								var id = $(element).parentTo('tr').data('id');
+								var name = $(element).parentTo('tr').find('td:nth-of-type(3)').text();
+
+								$(element).parentTo('.ui-dialog-content').dialog('close');
+								unaBase.loadInto.dialog('/v3/views/generador-reportes/step2.shtml?id=' + id, 'Modificar plantilla: ' + name, 'large');
+							});
+
+							htmlObject.find('button.delete').button({
+								caption: 'Eliminar',
+								icons: {
+									primary: 'ui-icon-trash'
+								},
+								text: false
+							}).click(function() {
+								var element = this;
+								var id = $(element).parentTo('tr').data('id');
+
+								prompt('¿Realmente desea eliminar la plantilla? Esta acción no se puede deshacer.').done(function(data) {
+
+
+									if (data !== false)
+										$.ajax({
+											url: '/4DACTION/_V3_removeReporteTemplate',
+											data: {
+												id: id
+											}
+										}).done(function(data) {
+											// TODO: manejador de errores de registro tomado y de error de server
+											$(element).parentTo('tr').remove();
+										});
+								});
+
+							});
+
+							$('.ui-dialog table > tbody').append(htmlObject);
+						});
+
+						formatCurrency();
+
+						/*
+						setTimeout(function() {
+							enjoyhint_instance.trigger('custom_template');
+						}, 5000);
+						*/
+					}
+				});
+
+			});
+		</script>
+	</head>
+	<body>
+		<p>
+		<table>
+			<thead>
+				<tr>
+					<th>Fecha</th>
+					<th>Creada por</th>
+					<th>Título</th>
+					<th>Acción</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</body>
+</html>

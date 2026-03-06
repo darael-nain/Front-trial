@@ -1,0 +1,12 @@
+{
+	"id": <!--#4DTEXT accId-->,
+	"name": "<!--#4DHTML _V3_escapeString(name)-->",
+	"type": "<!--#4DHTML accType-->",
+	"type_account": "<!--#4DHTML accTypeAccount-->",
+	"number": "<!--#4DHTML _V3_escapeString(number)-->",
+	"nivel": "<!--#4DHTML nivel-->"
+}
+
+
+
+

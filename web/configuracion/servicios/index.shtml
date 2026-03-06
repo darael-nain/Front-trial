@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <title>Servicios</title>
+
+    <!-- 🔒 GUARD: oculta todo y solo muestra si (1) iframe same-origin + (2) login OK -->
+    <style>
+        html.guard-hide body {
+            display: none !important;
+        }
+    </style>
+    <script>
+        (function guard() {
+            // Oculta todo por defecto (evita que se vea contenido antes del check)
+            document.documentElement.classList.add("guard-hide");
+
+            const deny = () => {
+                // “No aparece nada”: dejamos el body vacío + oculto
+                try { if (document.body) document.body.innerHTML = ""; } catch (_) { }
+                // mantenemos guard-hide activo
+            };
+
+            const allow = () => {
+                document.documentElement.classList.remove("guard-hide");
+            };
+
+            // 1) Debe estar embebido en iframe (si lo abres directo en pestaña => DENY)
+            let isInIFrame = false;
+            try {
+                isInIFrame = (window.self !== window.top);
+            } catch (e) {
+                // Si falla acceder a top, asumimos cross-origin => DENY abajo
+                isInIFrame = true;
+            }
+            if (!isInIFrame) return deny();
+
+            // 2) El parent debe ser same-origin (si no => DENY)
+            try {
+                if (window.top.location.origin !== window.location.origin) return deny();
+            } catch (e) {
+                return deny();
+            }
+
+            // 3) Debe estar logeado (reusa tu misma lógica)
+            const checkUrl =
+                `${window.origin}/4DACTION/_v3_checkLogin?nodeUrl=${encodeURIComponent("https://frank.unabase.com/node")}`;
+
+            fetch(checkUrl, { credentials: "include", cache: "no-store" })
+                .then(r => r.ok ? r.json() : Promise.reject(r))
+                .then(data => {
+                    if (!data || !data.isLogin || data.login == null) return deny();
+                    // OK: recién aquí mostramos
+                    allow();
+                })
+                .catch(() => deny());
+        })();
+    </script>
+    <!-- 🔒 FIN GUARD -->
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/v/bs4/dt-1.11.3/fc-4.0.1/fh-3.2.0/r-2.2.9/datatables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="/configuracion/css/servicios/servicios.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+</head>
+
+<body>
+    <div class="content-wrapper">
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h5 class="m-0 text-dark"></h5>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item"><a href="#">Inicio</a></li>
+                            <li class="breadcrumb-item active">Configuración</li>
+                            <li class="breadcrumb-item active">Servicios</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            <div class="shadow p-3 mb-5 bg-white rounded">
+                <div class="card-header">
+                    <!-- Button trigger modal -->
+                    <section class="content">
+                        <div class="box box-info">
+                            <a class="btn btn-success btn-labeled" href="/configuracion/index.shtml" role="button"
+                                style="background: #34CC02;">
+                                <span class="btn-label"><i class="fas fa-arrow-circle-left"></i></span>
+                                <strong>Volver</strong></a>
+                            <!-- Boton para crear en caso de necesitarse 
+                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModalCenter" style="background: #03D6F9;">
+                     <i class="fas fa-plus-circle"></i>
+                     </button>
+                     -->
+                            <hr class="mt-2 mb-3" />
+                            <div class="box-body">
+                                <div class="table-responsive">
+                                    <table id="catalogo" class="table table-striped
+                              table-bordered table-sm tablecatalogo rounded" cellspacing="0" width="100%">
+                                        <div id="loading-modal"></div>
+                                        <thead style="height:40px">
+                                            <tr>
+                                                <th style="background-color: #34CC02; color:
+                                       white;text-align:center; width: auto">#</th>
+                                                <th style="background-color: #34CC02; color:
+                                       white;text-align:center; width: 500px">NOMBRE</th>
+                                                <th style="background-color: #34CC02; color:
+                                       white; text-align:center;">CATEGORIA</th>
+                                                <th style="background-color: #34CC02; color:
+                                       white; text-align:center;">CUENTA CONTABLE</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+        <div id="exampleModalCenter" class="modal fade bd-example-modal-lg" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <div class="table-responsive">
+                    <!-- Contenido del modal -->
+                    <div class="modal-content">
+                        <br>
+                        <div class="modal-body">
+                            <div class="custom-control custom-checkbox mb-3">
+                                <input type="checkbox" class="custom-control-input" id="sb_subtotal" required>
+                                <label class="custom-control-label" for="sb_subtotal">Activo</label>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h6>Información básica</h6>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="recipient-bodega" class="col-form-label">Nombre</label>
+                                                    <input type="text" class="form-control" id="sv_nombre">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="recipient-bodega" class="col-form-label">Código</label>
+                                                    <input type="text" class="form-control" id="sv_codigo">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="recipient-bodega"
+                                                        class="col-form-label">Categoría</label>
+                                                    <select class="form-control" id="sv_categoria">
+                                                        <option selected>Seleccione</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row">
+                                        <div class="col-md-10">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="recipient-bodega" class="col-form-label">Precio $
+                                                    </label>
+                                                    <input type="text" class="form-control" id="sv_precio">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="recipient-bodega" class="col-form-label">Costo $
+                                                    </label>
+                                                    <input type="text" class="form-control" id="sv_costo">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="recipient-bodega" class="col-form-label">Precio UF
+                                                    </label>
+                                                    <input type="text" class="form-control" id="sv_preciouf">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="recipient-bodega" class="col-form-label">Costo UF
+                                                    </label>
+                                                    <input type="text" class="form-control" id="sv_costouf">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="recipient-bodega" class="col-form-label">Margen %
+                                                    </label>
+                                                    <input type="text" class="form-control" id="sv_margen">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label for="recipient-bodega" class="col-form-label">Tipo</label>
+                                                    <select class="form-control" id="sv_tipo">
+                                                        <option selected>Seleccione</option>
+                                                        <option value="PRODUCTO">Producto</option>
+                                                        <option value="SERVICIO">Servicio</option>
+                                                        <option value="INVENTARIO">Inventario</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="mt-2 mb-3" />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h6>Observaciones</h6>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="recipient-bodega" class="col-form-label">Observaciones a cliente
+                                        </label>
+                                        <textarea class="form-control" id="sv_obs_cliente" rows="3"></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="recipient-bodega" class="col-form-label">Observaciones internas
+                                        </label>
+                                        <textarea class="form-control" id="sv_obs_internas" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="mt-2 mb-3" />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h6>Adicional</h6>
+                                </div>
+                                <div class="col-md-10">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="recipient-bodega" class="col-form-label">Marca </label>
+                                            <input type="text" class="form-control" id="sv_marca">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="recipient-bodega" class="col-form-label">Unidad</label>
+                                            <select class="form-control" id="sv_unidad">
+                                                <option selected>C/U</option>
+                                                <option value="HH">HH</option>
+                                                <option value="HR">HR</option>
+                                                <option value="Dia">Dia</option>
+                                                <option value="Mes">Mes</option>
+                                                <option value="Año">Año</option>
+                                                <option value="mm">mm</option>
+                                                <option value="Cm">Cm</option>
+                                                <option value="Mt">Mt</option>
+                                                <option value="Km">Km</option>
+                                                <option value="mL">mL</option>
+                                                <option value="GL">GL</option>
+                                                <option value="Lt">Lt</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="recipient-bodega" class="col-form-label">N° de serie</label>
+                                            <input type="text" class="form-control" id="sv_nserie">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="recipient-bodega" class="col-form-label">Código contable
+                                            </label>
+                                            <input type="text" class="form-control" id="sv_contable">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-white">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal"
+                                onclick="setServicio()">Guardar</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="/base_object/general_template.js"></script>
+        <script src="/v3/script/jquery/jquery.js"></script>
+        <script src="/v3/script/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+        <!-- Script modal-->
+        <script type="text/javascript"
+            src="https://cdn.datatables.net/v/bs4/dt-1.11.3/fc-4.0.1/fh-3.2.0/r-2.2.9/datatables.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+        <!-- COLUMN --->
+        <script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
+        <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.colVis.min.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+        <script type="text/javascript" src="/configuracion/script/servicios.js"></script>
+</body>
+
+</html>

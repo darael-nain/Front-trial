@@ -1,0 +1,134 @@
+@charset "utf-8";
+/*@font-face
+{
+	font-family: "unasistemas";
+	src: url("Chantelli_Antiqua-webfont.eot");
+	src: url("Chantelli_Antiqua-webfont.eot?#queque") format("embedded-opentype"),
+		 url("Chantelli_Antiqua-webfont.woff") format("woff"),
+		 url("Chantelli_Antiqua-webfont.ttf") format("truetype"),
+		 url("Chantelli_Antiqua-webfont.svg#ChantelliAntiquaRegular") format("svg");
+}*/
+article, footer, header, nav, section
+{
+	display:block;	
+}
+body
+{	
+	font-family:Arial, Helvetica, sans-serif;
+	font-size:16px;
+	text-align:center;
+}
+header, footer, section 
+{
+	background:#FFF;
+	border-radius:0.5em;
+	-webkit-border-radius:0.5em; /*motor render grohme y safari    extensiones propietarias*/
+	-moz-border-radius:0.5em; 	/*motor render mozilla*/
+	-o-border-radius:0.5em; 	/*motor render opera*/
+	-ms-border-radius:0.5em; 	/*motor render ie*/
+	
+	/*box-shadow: rgba(0,0,0,0.5) 0px 5px 10px inset;*/  /*crear sombras en los bordes*/ /* inset sombra interna*/
+	box-shadow: rgba(0,0,0,0.5) 0px 5px 10px;
+	-webkit-box-shadow: rgba(0,0,0,0.5) 0px 5px 10px; /*motor render grohme y safari    extensiones propietarias*/
+	-moz-box-shadow: rgba(0,0,0,0.5) 0px 5px 10px; 	/*motor render mozilla*/
+	-o-box-shadow: rgba(0,0,0,0.5) 0px 5px 10px; 	/*motor render opera*/
+	-ms-box-shadow: rgba(0,0,0,0.5) 0px 5px 10px; 	/*motor render ie*/
+		
+	margin:1em auto;
+	padding:1em;
+	/*width:90%;*/
+}
+/*header
+{
+	background: url("logo.png") no-repeat 10px 10px,
+				url("mantel.jpg");
+	text-align:left;
+}*/
+header h1
+{
+	font-family:"unasistemas";
+	font-size: 2.5em;
+	margin: 0.5em 0 0.5em 120px;
+	
+	text-shadow: rgba(255,255,255,0.5) 2px 2px 0px;  /*rgba agrega una canal alfa a la sombra de la letra*/
+	-webkit-text-shadow: rgba(255,255,255,0.5) 2px 2px 0px; /*motor render grohme y safari    extensiones propietarias*/
+	-moz-text-shadow: rgba(255,255,255,0.5) 2px 2px 0px; 	/*motor render mozilla*/
+	-o-text-shadow: rgba(255,255,255,0.5) 2px 2px 0px; 	/*motor render opera*/
+	-ms-text-shadow: rgba(255,255,255,0.5) 2px 2px 0px; 	/*motor render ie*/
+}
+#comercial
+{
+	display: none;
+}
+#formulario
+{
+	background: #D2E4F6;
+	
+	border-radius:1.5em;
+	-webkit-border-radius:0.5em; /*motor render grohme y safari    extensiones propietarias*/
+	-moz-border-radius:0.5em; 	/*motor render mozilla*/
+	-o-border-radius:0.5em; 	/*motor render opera*/
+	-ms-border-radius:0.5em; 	/*motor render ie*/
+		
+	font-size: 1.5em;
+	margin: 0 auto;
+	padding: 0.5em;
+	width: 70%;
+}
+#formulario input
+{
+	border: 2px solid #630;
+	display: block;
+	font-size: 18px;
+	margin: 0.5em auto;
+	padding: 0.5em;
+	width: 50%;
+}
+
+#formulario input[type="submit"] /*selectores*/
+{
+	
+	border:none;
+		
+	border-radius: 1em;
+	-webkit-border-radius: 1em; /*motor render grohme y safari    extensiones propietarias*/
+	-moz-border-radius: 1em; 	/*motor render mozilla*/
+	-o-border-radius: 1em; 	/*motor render opera*/
+	-ms-border-radius: 1em; 	/*motor render ie*/
+	
+	box-shadow: rgba(255,255,255,0.5) 0px 5px 10px inset;
+	-webkit-box-shadow: rgba(255,255,255,0.5) 0px 5px 10px inset; /*motor render grohme y safari    extensiones propietarias*/
+	-moz-box-shadow: rgba(255,255,255,0.5) 0px 5px 10px inset; 	/*motor render mozilla*/
+	-o-box-shadow: rgba(255,255,255,0.5) 0px 5px 10px inset; 	/*motor render opera*/
+	-ms-box-shadow: rgba(255,255,255,0.5) 0px 5px 10px inset;	/*motor render ie*/
+	
+	width: 53%;
+}   
+
+#historia
+{
+	column-count:3;
+	-webkit-column-count:3; /*motor render grohme y safari    extensiones propietarias*/
+	-moz-column-count:3; 	/*motor render mozilla*/
+	-o-column-count:3; 	/*motor render opera*/
+	-ms-column-count:3; 	/*motor render ie*/
+	
+	column-gap: 2em;
+	-webkit-column-gap:2em; /*motor render grohme y safari    extensiones propietarias*/
+	-moz-column-gap:2em; 	/*motor render mozilla*/
+	-o-column-gap:2em; 	/*motor render opera*/
+	-ms-column-gap:2em; 	/*motor render ie*/
+	
+	column-rule: 5px dashed #D2E4F6;
+	-webkit-column-rule: 5px dashed #D2E4F6; /*motor render grohme y safari    extensiones propietarias*/
+	-moz-column-rule: 5px dashed #D2E4F6; 	/*motor render mozilla*/
+	-o-column-rule: 5px dashed #D2E4F6; 	/*motor render opera*/
+	-ms-column-rule: 5px dashed #D2E4F6; 	/*motor render ie*/
+	
+	text-align: justify;
+}
+#mapa_canvas
+{
+	height: 400px;
+	width: 600px;	
+}

@@ -1,0 +1,21 @@
+{
+	"rows": 
+	[
+		<!--#4DLOOP aAdicionalImpId -->
+		{
+			"id": <!--#4DHTML aAdicionalImpId{aAdicionalImpId}-->,
+			"name": "<!--#4DHTML aAdicionalImpName{aAdicionalImpId}-->",
+			"id_name": "<!--#4DHTML String(aAdicionalImpIdName{aAdicionalImpId})-->",
+			"value": "<!--#4DHTML aAdicionalImpValue{aAdicionalImpId}-->",
+			"tipo": "<!--#4DHTML String(aAdicionalImpTipo{aAdicionalImpId})-->",
+			"estado": <!--#4DIF aAdicionalImpCheck{aAdicionalImpId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"porc": "<!--#4DHTML String(aAdicionalImpMPorc{aAdicionalImpId})-->",
+			"auto": <!--#4DIF aAdicionalImpAuto{aAdicionalImpId}-->1<!--#4DELSE-->0<!--#4DENDIF-->,
+			"valor_total": "<!--#4DHTML String(aAdicionalImpMValor{aAdicionalImpId})-->"
+		}<!--#4DIF NOT(aAdicionalImpId{aAdicionalImpId} = aAdicionalImpId{Size of array(aAdicionalImpId)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	]
+}
+
+
+

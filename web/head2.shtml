@@ -1,0 +1,65 @@
+<!--4DSCRIPT/web_verificar_sesion-->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js">
+	</script>
+	<![endif]-->
+	<title>INTRANET ::: UNA BASE</title>
+	<meta charset="utf-8"/>
+	<script src="/script/jQuery_v1.7.2.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+	<script src="/script/project.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+
+	<script src="/script/jquery-ui-1.10.2.custom/js/jquery-ui-1.10.2.custom.min.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+	<script src="/script/jquery-ui-1.10.2.custom/js/jquery.ui.datepicker-es.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+	<link rel="stylesheet" href="/script/jquery-ui-1.10.2.custom/css/custom-theme-base1/jquery-ui-1.10.2.custom.min.css?<!--#4DVAR String(Milliseconds+Random)-->"/>
+
+	<script src="/script/prefixfree.min.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+	<script src="/script/dialog.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+	<script src="/script/validaciones.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+	<script src="/script/ajaxfileupload.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+	<link rel="stylesheet" href="/css/main.css?<!--#4DVAR String(Milliseconds+Random)-->"/>
+	<link rel="stylesheet" href="/css/dialog.css?<!--#4DVAR String(Milliseconds+Random)-->"/>
+	<link rel="stylesheet" href="/css/normalize.css?<!--#4DVAR String(Milliseconds+Random)-->" />
+	
+	<script src="/script/jquery.tablesorter/jquery.tablesorter.js?<!--#4DVAR String(Milliseconds+Random)-->"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){			
+			initializeOrderTable();
+		});
+
+		function initializeOrderTable(){			
+			$("#myTable").tablesorter({								
+				sortlist:[[2,0]],
+				sortClassDesc: 'headerSortDown',
+				sortClassAsc: 'headerSortUp',
+				headerClass: 'header',
+				dateFormat: 'dd-mm-yyyy',
+				widgets: ['zebra']		
+				//headers: {1:{sorter: 'fechas'}, 2:{sorter: 'fechas'}}
+			});
+		}
+	</script>
+
+
+
+	<script>
+		if(history.forward(1)){
+			history.replace(history.forward(1));
+		}
+		$(function() {
+			$( ".datepicker" ).datepicker({dateFormat: 'dd/mm/y' , monthNames: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'], dayNamesShort: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa']});
+		});
+	</script>
+</head>
+
+
+<!--
+<script type="text/javascript">	
+$(function() {
+	$( ".datepicker" ).datepicker({dateFormat: 'dd/mm/y' , monthNames: ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'], dayNamesShort: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa']});
+});
+
+</script>
+-->

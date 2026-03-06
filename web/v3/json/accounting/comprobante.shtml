@@ -1,0 +1,57 @@
+{	
+	"active": <!--#4DIF active-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"excluir": <!--#4DIF excluir-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"apertura": <!--#4DIF apertura-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"description": "<!--#4DHTML _V3_escapeString(description)-->",
+	"conciliado": "<!--#4DHTML conciliado-->",
+	"docType": "<!--#4DHTML docType-->",
+	"registryDate": "<!--#4DHTML registryDate-->",
+	"registryHour": "<!--#4DHTML registryHour-->",
+	"docDate": "<!--#4DHTML docDate-->",
+	"docHour": "<!--#4DHTML docHour-->",
+	"provision_sale": <!--#4DIF Not(Undefined(provision_sale))--><!--#4DIF provision_sale-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+	"provision_expense": <!--#4DIF Not(Undefined(provision_expense))--><!--#4DIF provision_expense-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+	"reverse_generated": <!--#4DIF Not(Undefined(reverse_generated))--><!--#4DIF reverse_generated-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+	"id_comprobante_provision": "<!--#4DHTML id_comprobante_provision-->",
+	"id": <!--#4DHTML id-->,
+	"idDoc": <!--#4DHTML idDoc-->,
+	"debe": "<!--#4DHTML debe-->",
+	"haber": "<!--#4DHTML haber-->",
+	"ok": <!--#4DIF Not(Undefined(okey))--><!--#4DIF okey-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+	"records": {
+		"total": <!--#4DIF Not(Undefined($total))--><!--#4DHTML $total--><!--#4DELSE-->0<!--#4DENDIF-->
+	},
+	"details": [
+	<!--#4DLOOP aIdDetail -->
+			{
+				"id": <!--#4DHTML aIdDetail{aIdDetail}-->,
+				"folioDoc": "<!--#4DHTML aFolioDoc{aIdDetail}-->",
+				"idDoc": <!--#4DHTML aIdDoc{aIdDetail}-->,
+				"idCont": <!--#4DIF Not(Undefined(aIdCont{aIdDetail}))--><!--#4DHTML aIdCont{aIdDetail}--><!--#4DELSE-->0<!--#4DENDIF-->,
+				"codigoCuenta": "<!--#4DHTML _V3_escapeString(aCodigoCuenta{aIdDetail})-->",
+				"centro_costo": "<!--#4DHTML _V3_escapeString(aCentroCosto{aIdDetail})-->",
+				"centro_costo_2": "<!--#4DHTML _V3_escapeString(aCentroCosto2{aIdDetail})-->",
+				"id_centro_costo": "<!--#4DHTML _V3_escapeString(aIdCentroCosto{aIdDetail})-->",
+				"cuentaContable": "<!--#4DHTML _V3_escapeString(aCuentacontable{aIdDetail})-->",
+				"glosa": "<!--#4DHTML _V3_escapeString(aGlosa{aIdDetail})-->",
+				"param4":  <!--#4DIF Not(Undefined(aParam4{aIdDetail}))-->"<!--#4DHTML _V3_escapeString(aParam4{aIdDetail})-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+				"auxiliar": <!--#4DIF Not(Undefined(aCuentaAuxiliar{aIdDetail}))--><!--#4DIF aCuentaAuxiliar{aIdDetail}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+				"existe_documento": true,
+				"isGrouped": <!--#4DIF Not(Undefined(aIsGrouped{aIdDetail}))--><!--#4DIF aIsGrouped{aIdDetail}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+				"documento": <!--#4DIF Not(Undefined(aCuentaDocumento{aIdDetail}))--><!--#4DIF aCuentaDocumento{aIdDetail}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+				"typeDoc": "<!--#4DHTML _V3_escapeString(aTypeDoc{aIdDetail})-->",
+				"auxiliar_desc" : <!--#4DIF Not(Undefined(aAuxiliarDesc{aIdDetail}))-->"<!--#4DHTML _V3_escapeString(aAuxiliarDesc{aIdDetail})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"auxiliar_rut" : <!--#4DIF Not(Undefined(aAuxiliarRut{aIdDetail}))-->"<!--#4DHTML _V3_escapeString(aAuxiliarRut{aIdDetail})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+				"debe": "<!--#4DHTML String(aDebe{aIdDetail})-->",
+				"haber": "<!--#4DHTML String(aHaber{aIdDetail})-->",
+				"debe_total": "<!--#4DHTML String(aDebeTotal{aIdDetail})-->",
+				"haber_total": "<!--#4DHTML String(aHaberTotal{aIdDetail})-->",
+				"cuenta_actual": "<!--#4DHTML String(aCuentaActual{aIdDetail})-->"
+			}<!--#4DIF NOT(aIdDetail{aIdDetail} = aIdDetail{Size of array(aIdDetail)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+		]
+}
+
+
+
+

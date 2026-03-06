@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Contactos</title>
+		<meta charset="utf-8">
+		  <link rel="stylesheet" href="/v3/design/tooltipster-custom.css?<!--#4DTEXT random-->"> 
+		<script>
+
+			$(document).ready(function() {
+				
+				$('.credencial tbody').on("click", "tr > td > div.chk > input", function(event){
+					var cantChecked = $('.credencial > tbody > tr > td > div.chk > input:checked').length;
+					var buttonDisable = $('#menu ul li[data-name="disable_contact"]');
+					var buttonMerge = $('#menu ul li[data-name="merge_contact"]');
+					var buttonTag = $('#menu ul li[data-name="tag_contact"]');
+
+					if (cantChecked == 0 ) {
+						buttonDisable.hide();
+						buttonTag.hide();
+						buttonMerge.hide();						
+					}else{
+						if (cantChecked == 1) {
+							buttonDisable.show();
+							buttonTag.show();
+							buttonMerge.hide();
+						}else{
+							if (cantChecked > 1) {
+								buttonDisable.show();
+								buttonTag.show();
+								buttonMerge.show();						
+							}
+						}
+					}					
+				});
+
+				unaBase.toolbox.init();
+
+				// Inicializamos un buscador
+				var params = {
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/_V3_getBox' },
+					entity: 'Box',
+					// Función que genera cada fila de la tabla, dado el valor de i (índice de posición)
+					// y el valor de rows (array con todos los resultados)
+					// El contenido de rows corresponde al objeto de mismo nombre generado mediante la llamada
+					// a la api JSON. Ver /v3/json/get_cotizacion.shtml para conocer el formato.
+					row: {
+						html: function(i, rows) {
+
+							/*var contacto = "";
+							contacto = rows[i].nombre_completo;
+							if (contacto == "") {
+								if (rows[i].razon != "") {
+									contacto = rows[i].razon;
+								}else{
+									contacto = rows[i].nombres+' '+rows[i].paterno;
+								}								
+							}*/
+							var contacto = (rows[i].text != '')? rows[i].text : 'Sin nombre';
+
+							if (contacto.length > 23) {								
+								contacto = contacto.substring(0, 23)+ "...";
+							}
+
+							var fono = rows[i].telefono1;
+							if (fono=="") {								
+								fono = "Ninguno";
+							}
+
+							var email = rows[i].email;
+							if (email=="") {								
+								email = "Ninguno";
+							}
+
+							var cadenaDir ="";
+							/*if (rows[i].dir_calle.trim()!="") {								
+								cadenaDir = rows[i].dir_calle+", "
+							}*/
+							
+							/*if (rows[i].dir_ciudad.trim()!="") {								
+								cadenaDir = cadenaDir + rows[i].dir_comuna+", "
+							}*/
+							
+							/*if (rows[i].dir_comuna.trim()!="") {
+								if (rows[i].dir_ciudad!=rows[i].dir_comuna) {
+									cadenaDir = cadenaDir + rows[i].dir_ciudad+", "
+								}								
+							}*/
+
+							cadenaDir = cadenaDir.substring(0, cadenaDir.length-2);
+
+							var tags = "";
+							/*if (rows[i].tags.length>0) {
+								$.each(rows[i].tags, function(key, item){
+									tags = tags + "<span>#"+ item.tag_name +"</span>";
+								});								
+							}*/							
+
+							/*return '<tr data-id="' + rows[i].id + '">' +
+								//'<td><div>sin foto</div></td>' +
+								'<td><div style="width: 100%; height: 100%; line-height: 100px;"><img style="display: inline-block; max-width: 150px; max-height: 150px; vertical-align: middle; margin-left: -10px; margin-top: -10px;" src="/4DACTION/_V3_getUpload?index=Contacto|' + rows[i].id + '" alt="' + contacto + '" onerror="$(this).after(\'<div>' + contacto.match(/\b(\w)/g).join('').substring(0, 2) + '</div>\'); $(this).remove();"></td>' +
+								'<td>' + contacto + '</td>' +
+								'<td>' + cadenaDir + '</td>' +
+								'<td><span>Tel:</span><a target="_blank" href="tel:' + fono + '">' + fono + '</a></td>' +
+								'<td><span>Email:</span><a target="_blank" href="mailto:' + email + '">' + email + '</a></td>' +
+								'<td><div class="chk"><input type="checkbox" value="' + rows[i].id + '" name="contacto[id]" /></div></td>' +
+								'<td><div class="container-tags">'+ tags +'</div></td>' +						
+							'</tr>';*/
+
+							return '<tr data-id="' + rows[i].id + '">' +
+								'<td><div style="width: 100%; height: 100%; line-height: 100px;"><img style="display: inline-block; max-width: 150px; max-height: 150px; vertical-align: middle; margin-left: -10px; margin-top: -10px;" src="/4DACTION/_V3_getUpload?index=box|' + rows[i].id + '" alt="' + contacto + '" onerror="$(this).after(\'<div>' + contacto.match(/\b(\w)/g).join('').substring(0, 2) + '</div>\'); $(this).remove();"></td>' +
+								'<td>' + contacto + '</td>' +
+								'<td>' + cadenaDir + '</td>' +
+								/* Agregar contador de archivos */
+								'<td></td>' +
+								'<td></td>' +
+								'<td><div class="chk"><input type="checkbox" value="' + rows[i].id + '" name="contacto[id]" /></div></td>' +
+								'<td><div class="container-tags">'+ tags +'</div></td>' +						
+							'</tr>';
+
+						}
+					},
+					detail: {
+						// Función que genera una URL de detalle, dado el id (identificador de item)
+						//url: function(id) { return '/v3/views/contactos/pop_perfil.shtml?id=' + id },
+						url: function(id) { return '/v3/views/box/content.shtml?id=' + id },
+						iframe:false,
+						dialog:true,
+						size:'large'
+											
+					},
+					// Inflexiones
+					inflection: {
+						singular: 'contenedor',
+						plural: 'contenedores',
+						none: 'ningún'
+					},
+					// Filtros
+					filters: [
+						{ name: 'tags', type: 'autocomplete', caption: 'Etiquetas', dataSource: 'getTags' },
+						{ name: 'estado', type: 'checkbox', caption: 'Estado', options: [
+							{ caption: 'Activo', name: 'estado_activo', value: true },
+							{ caption: 'Inactivo', name: 'estado_inactivo', value: false }
+						] }
+					]
+				};
+				
+				unaBase.toolbox.search.init(params);
+				unaBase.toolbox.menu.init({
+					entity: 'Box',
+					//buttons: [ 'new_contact', 'merge_contact', 'tag_contact' ]
+					buttons: [ 'new_box' ]
+				});
+
+				// disabled buttons
+				$('#menu ul li[data-name="disable_contact"]').hide();
+				$('#menu ul li[data-name="merge_contact"]').hide();
+				$('#menu ul li[data-name="tag_contact"]').hide();			
+				
+			});
+		</script>
+
+		<style type="text/css">
+		/*.credencial{
+			text-align: center;
+		}*/
+		.credencial > thead > tr{
+			display:none;
+		}
+		.credencial > tbody{
+			text-align: left;
+		}
+		.credencial tr{
+			/*float: right;*/
+			/*width: calc(100%/3-5px*3*2)!important;*/
+			width: 360px;
+			height: 128px!important;
+			border:1px solid gray;
+			display: inline-block;
+			margin:5px;
+			position: relative;
+			padding:8px!important;
+		}
+
+		.credencial tbody > tr > td{			
+			position: absolute;
+			/*border:1px solid blue;*/
+			display: block;			
+		}
+
+		/*.credencial tbody > tr > td:nth-child(1){
+			border:1px ridge lightgray;
+			width:100px;
+			height:110px;
+		}*/
+
+		.credencial tbody > tr > td:nth-child(1){
+			border:1px ridge lightgray;
+			width:100px;
+			height:100px;
+			margin-top: 5px;
+			vertical-align: middle;
+			border-radius: 60px;
+			overflow: hidden;
+			border: 2px solid lightgrey;
+			background-color: white;
+		}
+		.credencial tbody > tr > td:nth-child(1) div{
+			vertical-align: middle;
+			font-size: 30px;
+			text-align: center;
+		}
+		/*.credencial tbody > tr > td:nth-child(1) div{
+			vertical-align: middle;
+		}*/
+
+		.credencial tbody > tr > td:nth-child(2){
+			color: black;
+			font-size:15px;
+			left:120px;
+			text-align:left;
+		}
+		
+		.credencial tbody > tr > td:nth-child(3){			
+			left:120px;
+			top: 30px;
+			font-size:11px;
+			text-align: left!important;
+		}
+
+		.credencial tbody > tr > td:nth-child(4){			
+			left:120px;
+			top:95px;
+			font-size:12px;
+		}
+		.credencial tbody > tr > td:nth-child(4) a{			
+			text-transform: lowercase!important;
+			margin-left:3px;
+		}
+
+		.credencial tbody > tr > td:nth-child(5){			
+			left:120px;
+			top:110px;
+			font-size:12px;			
+		}
+		.credencial tbody > tr > td:nth-child(5) a{			
+			text-transform: lowercase!important;
+			margin-left:3px;
+		}	
+
+		.credencial tbody > tr > td:nth-child(6){
+			position: absolute;
+			top:0;
+			right:0;			
+		}
+		.credencial tbody > tr > td:nth-child(6) > div.chk > input{
+			width: 25px;
+			height: 25px;
+		}
+
+		.credencial tbody > tr > td:nth-child(7){
+			text-align:left;		
+			font-size:9px;
+			font-weight:bold;
+			top:128px;
+		}
+		.credencial tbody > tr > td:nth-child(7) span{
+			margin:5px 5px 5px 0px;
+			/*font-style: italic;*/
+			text-decoration:none;	
+		}
+
+		</style>
+
+		
+	</head>
+	<body>		
+		<div id="dialog-form" title="Perfil contacto"></div>
+		<!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->
+		<table class="credencial">
+			<thead>			
+				<tr>
+					<th>Foto</th>
+					<th>Razon/Nombre/alias</th>
+					<th>Dirección</th>					
+					<th>Telefono</th>
+					<th>Email</th>
+					<th>Tags</th>					
+				</tr>
+			</thead>
+			<tbody></tbody>
+			<tfoot style="display:none!important"></tfoot>
+		</table>
+	</body>
+
+</html>

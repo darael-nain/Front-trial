@@ -1,0 +1,9 @@
+{
+    "type": "ftp",
+    "host": "desarrollo.unabase.cl",
+    "username": "basedesarrollo.v3",
+    "password": "54321unawebv3",
+    "port": 21,
+    "remotePath": "/v3/",
+    "uploadOnSave": true
+}

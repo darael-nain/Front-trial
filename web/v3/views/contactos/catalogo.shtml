@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_serverInfo-->
+<html>
+  <head>    
+    <title>Perfil</title>
+    <meta charset="utf-8">
+    <script type="text/javascript">     
+      $(document).ready(function() {
+      	var id = $('.form-contact').find('input[name="id"]').val();
+
+      	// update tarifa compra
+      	/*$('table.contact_compras > tbody').on('blur', 'tr > td > input[name="compra[tarifa]"]', function(){
+      		var target = $(this);
+      		var currentVal = $(this).data('currentval');
+      		var newVal = $(this).val();
+      		if (currentVal != newVal) {
+      			$.ajax({
+					url: '/4DACTION/_V3_setContactoCatalogo',
+					dataType: 'json',
+					data:{
+						"id": $(this).closest('tr').data('id'),	          	
+						"compra[tarifa]": newVal
+					},
+					success: function(data) {
+						if (data.success) {
+							target.data('currentval', newVal);
+							toastr.success('La tarifa se guardó exitosamente!');
+						}else {
+							if (data.opened) {
+								if (data.readonly)
+									toastr.error(NOTIFY.get('ERROR_RECORD_READONLY', 'Error'));
+							}							
+						}					
+					},
+					error: function(xhr, text, error) {
+						toastr.error(NOTIFY.get('ERROR_INTERNAL', 'Error'));
+					}
+				});
+      		}			
+		});*/
+
+		// update tarifa venta
+      	/*$('table.contact_ventas > tbody').on('blur', 'tr > td > input[name="venta[tarifa]"]', function(){
+      		var target = $(this);
+      		var currentVal = $(this).data('currentval');
+      		var newVal = $(this).val();
+      		if (currentVal!=newVal) {
+      			$.ajax({
+					url: '/4DACTION/_V3_setContactoCatalogo',
+					dataType: 'json',
+					data:{
+						"id": $(this).closest('tr').data('id'),	          	
+						"venta[tarifa]": $(this).val()
+					},
+					success: function(data) {
+						if (data.success) {
+							target.data('currentval', newVal);				
+							toastr.success('La tarifa se guardó exitosamente!');
+						}else {
+							if (data.opened) {
+								if (data.readonly)
+									toastr.error(NOTIFY.get('ERROR_RECORD_READONLY', 'Error'));
+							}				
+						}					
+					},
+					error: function(xhr, text, error) {
+						toastr.error(NOTIFY.get('ERROR_INTERNAL', 'Error'));
+					}
+		        });
+      		}			
+		});*/
+
+		// update sugerir compra
+      	/*$('table.contact_compras > tbody').on('change', 'tr > td > input[name="compra[sugerida]"]', function(){       		 		
+			$.ajax({
+				url: '/4DACTION/_V3_setContactoCatalogo',
+				dataType: 'json',
+				data:{
+					"id": $(this).closest('tr').data('id'),
+					"compra[sugerida]": $(this).prop("checked")
+				},
+				success: function(data) {
+					if (data.success) {		
+						toastr.success('Sugerir se guardó exitosamente!');
+					}else {
+						if (data.opened) {
+							if (data.readonly)
+								toastr.error(NOTIFY.get('ERROR_RECORD_READONLY', 'Error'));
+						}							
+					}					
+				},
+				error: function(xhr, text, error) {
+					toastr.error(NOTIFY.get('ERROR_INTERNAL', 'Error'));
+				}
+	        });
+		});*/
+
+
+      	// get contacto_catalogo / compras
+        $.ajax({
+          url: '/4DACTION/_v3_getContactoCatalogo',
+          dataType: 'json',
+          data:{
+          	'contacto' : id,
+          	'compras' : true 	
+          },
+          success: function(data) {
+
+          	// Compras
+          	var htmlObject;
+          	var tbody = $('table.contact_compras > tbody');
+          	var cant = 0;
+            $.each(data.rows, function(key, item){
+            	if (item.compra_prom > 0) {
+            		cant++;
+            		/*var sugerida = '<input type="checkbox" name="compra[sugerida]">';
+            		if (item.compra_sugerida) {
+            			sugerida = '<input type="checkbox" checked name="compra[sugerida]">';
+            		}*/
+            		htmlObject = $('<tr data-id="'+item.id+'" data-servicio="'+ item.servicio_id +'" style="background:white">' +
+						'<td class="left">' + item.servicio_nombre + ' </td>' +
+						'<td class="currency right">' + Math.round(item.compra_prom) + '</td>' +
+						/*'<td class="numeric currency">$ <input data-currentval="'+Math.round(item.compra_tarifa)+'" style="width:100px;text-align:right" type="text" name="compra[tarifa]" value="'+Math.round(item.compra_tarifa)+'"></td>' +
+						'<td class="center">' + sugerida + '</td>' + */
+					'</tr>');
+					tbody.append(htmlObject);
+					htmlObject.find('.numeric.currency input').number(true, 2, ',', '.');
+					formatCurrency();
+
+					// detalle compras
+		            var htmlObject2;
+		            htmlObject2 = $('<tr class="detail" style="border:1px inset gray!important">' +
+						'<td colspan="2">' +
+							'<table>' +
+								'<thead>' +
+									'<tr>' +
+										'<th>Nº</th>' +
+										'<th>Fecha</th>' +
+										'<th>Referencia</th>' +
+										'<th>Tipo</th>' +
+										'<th>Total</th>' +
+									'</tr>' +
+								'</thead>' +
+								'<tbody></tbody>' +
+							'</table>' +
+						'</td>' +
+					'</tr>');
+					tbody.append(htmlObject2);
+
+            	}            	
+            });
+            if (cant==0) {
+            	$('table.contact_compras').remove();
+            	$('.msg-compras').text('No existen compras realizadas!');            	
+            }         
+
+          }
+        });
+
+		// get contacto_catalogo / ventas
+        $.ajax({
+          url: '/4DACTION/_v3_getContactoCatalogo',
+          dataType: 'json',
+          data:{
+          	'contacto' : id,
+          	'ventas' : true 	
+          },
+          success: function(data) {          
+
+            // Ventas
+          	var htmlObject;
+          	var tbody2 = $('table.contact_ventas > tbody');
+          	var cant2 = 0;
+
+            $.each(data.rows, function(key, item){              
+            	if (item.venta_prom > 0) {
+            		cant2++;
+            		htmlObject = $('<tr data-id="' + item.id + '" data-servicio="'+ item.servicio_id +'" style="background:white">' +
+						'<td class="left">' + item.servicio_nombre + ' </td>' +
+						'<td class="currency right">' + Math.round(item.venta_prom) + '</td>' +
+						/*'<td class="numeric currency">$ <input data-currentval="'+Math.round(item.venta_tarifa)+'" style="width:100px;text-align:right" type="text" name="venta[tarifa]" value="'+Math.round(item.venta_tarifa)+'"></td>' +		*/								
+					'</tr>');
+					tbody2.append(htmlObject);
+					htmlObject.find('.numeric.currency input').number(true, 2, ',', '.');
+					formatCurrency();
+            	}  
+            });           
+
+            if (cant2==0) {
+            	$('table.contact_ventas').remove();
+            	$('.msg-ventas').text('No existen ventas realizadas!');            	
+            }
+
+          }
+        });
+
+		// show detalle promedio
+		$('table.contact_compras > tbody').on('click', 'tr', function(){			
+	    	var that = this;
+	    	if (!$(this).hasClass('selected')) {
+		    	var subtable = $(this).next().find('table > tbody');
+		    	if (!$(this).hasClass('loaded')) {
+			    	$.ajax({
+			    		url: '/4DACTION/_V3_getComprasByServicio',
+			    		data: {
+			    			contacto: id,
+			    			servicio: $(that).data('servicio')
+			    		},
+			    		dataType: 'json',
+			    		success: function(data) {			    					
+			    			subtable.parentTo('table').parent().prepend('<div style="font-weight: bold; text-align: right;">Cantidad: <span class="currency" style="width: 110px; display: inline-block;">' + Math.round(data.extra.count) + '</span></div>');
+			    			subtable.parentTo('table').parent().prepend('<div style="font-weight: bold; text-align: right;">Suma: <span class="currency" style="width: 110px; display: inline-block;">' + data.extra.sum + '</span></div>');
+			    			$.each(data.rows, function(key, item) {
+			    				subtable.append('\
+			    					<tr>								\
+			    						<td>' + item.index + '</td>		\
+			    						<td>							\
+			    							<time datetime="' + Date.parse(item.created_at).toISOString() + '">' + $.datepicker.formatDate('dd-mm-yy', Date.parse(item.created_at)) + '</time></td>	\
+			    						<td class="left">' + item.text + '</td>		\
+			    						<td>' + item.tipo + '</td>		\
+			    						<td class="currency"><span class="symbol">' + currency.symbol + '</span> <span class="value">' + item.total + '</span></td>		\
+			    					</tr>								\
+			    				');
+			    			});
+			    			subtable.find('td.currency > span.value').number(true, currency.decimals, ',', '.')
+			    			$(that).next().show();
+			    			$(that).addClass('loaded');
+			    		}
+			    	});
+				} else {
+					$(that).next().show();
+				}
+				$(this).addClass('selected');
+			} else {
+				$(that).next().hide();
+				$(this).removeClass('selected');
+			}	
+
+	    	event.preventDefault();
+	    });
+		
+
+      });      
+    </script>
+    <style type="text/css">
+    	.ggg{
+    		background:white;
+    	}
+    	table.contact_compras > tbody > tr{
+    		cursor: pointer;
+    	}
+
+    	tr.detail {
+			display: none;		
+		}
+
+		tr.detail > thead > tr > th {		
+			border:1px solid red!important;
+		}
+
+		tr.detail > td > table > * > tr {
+			height: 20px !important;
+		}
+
+		tr.detail > td > table > thead > tr {
+			background-color: rgb(128,128,128);
+		}
+
+		tr.detail > td > table > thead > tbody > tr:nth-of-type(odd) {
+			background-color: rgb(255,255,255) !important;
+		}
+
+		tr.detail > td > table > thead > tbody > tr:nth-of-type(even) {
+			background-color: rgb(255,255,255) !important;
+		}
+
+		tr.selected {
+			background-color: rgba(169,188,245,.5) !important;
+		}
+
+    </style>
+  </head>
+  <body>    
+    <section class="sheet">
+    	<fieldset>
+	        <legend><strong>Compras</strong></legend>
+	        <div class="msg-compras"></div>
+        	<table class="contact_compras">
+		      	<thead>
+		      		<tr>
+		      			<th class="center">Servicio</th>
+		      			<th class="right"><!--#4DVAR _V3_defaultCurrencySymbol--> Promedio</th>
+		      			<!--<th class="right">$ Tarifa</th>
+		      			<th class="center">Sugerir?</th>-->
+		      		</tr>      		
+		      	</thead>
+		      	<tbody></tbody>
+	      	</table>
+      </fieldset>
+      <fieldset>
+	        <legend><strong>Ventas</strong></legend>
+	        <div class="msg-ventas"></div>
+		    <table class="contact_ventas">
+		      	<thead>
+		      		<tr>
+		      			<th class="center">Servicio</th>
+		      			<th class="right"><!--#4DVAR _V3_defaultCurrencySymbol--> Promedio</th>
+		      			<!--<th class="right">$ Tarifa</th>-->     			
+		      		</tr>      		
+		      	</thead>
+		      	<tbody></tbody>
+	      	</table>
+      </fieldset>     
+    </section>
+  </body>
+</html>
+

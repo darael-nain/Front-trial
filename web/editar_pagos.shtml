@@ -1,0 +1,194 @@
+<!--#4DINCLUDE head.shtml-->
+<body onUnload="goAway()">
+<!--#4DIF vSesion>0-->
+<!--#4DINCLUDE mensajes.shtml-->
+<!--#4DINCLUDE menuSuperior.shtml-->
+
+
+<section>
+
+<!--#4DINCLUDE info_usuario.shtml-->
+
+
+<select id="ctasnroch">
+    <!--#4DLOOP aIdCuentaBancariaMov-->
+    <option value="<!--#4DVAR aIdCuentaBancariaMov{aIdCuentaBancariaMov}-->"><!--#4DVAR aNroChequeActual{aIdCuentaBancariaMov}--></option>
+    <!--#4DENDLOOP-->   
+</select>
+
+<input id="cantidademitidosx" type="text" value="<!--#4DVAR vCantEmitidos-->" />
+
+<div id="valorctapordefecto">
+    <input id="idctacte" type="text" value="<!--#4DVAR vIdPorDefecto_x-->" />
+    <input id="desctactex" type="text" value="<!--#4DVAR vDesPorDefecto_x-->" />
+    <input id="nroactualch" type="text" value="<!--#4DVAR vNroChequeActual-->" />   
+</div>
+
+<form  name="inprimirboucher" id="inprimirboucher" action="/4DACTION/W_PRINT_BOUCHER" method="post">
+    <input name="idop" type="hidden" value="<!--#4DVAR vIdOp-->" />    
+</form>
+
+<form  name="accionespago" id="accionespago" action="/4DACTION/W_ACCIONES_PAGO" method="post">
+    <input name="idop" type="hidden" value="<!--#4DVAR vIdOp-->" />
+    <input name="idpago" id="idpago" type="hidden" value="<!--#4DVAR vIdOp-->" />
+    <input name="opcionaccion" id="opcionaccion" type="hidden" value="" />
+    <input name="motivoanulacion" id="motivoanulacion" type="hidden" value="" />    
+</form>
+
+<!--#4DIF vError#""--> 
+<div class="muestra-box-aviso">
+    <a title="Mostrar" href="javascript:mostrar_aviso_rut()">...</a>
+</div>
+<div class="box-aviso-existe-rut2">    
+    <a title="Cerrar" href="javascript:cerrar_aviso_rut2()">cerrar x</a>
+    <p class="title"><span class="color-rojo">ATENCION :</span>
+        El Nro de Cheque ingresado (<!--#4DVAR vNroChDup-->) ya se encuentra registrado, intente con un Nro. de Cheque distinto.       
+    </p>      
+</div>
+<!--#4DENDIF-->
+
+<!-- ================================================= -->
+
+<div id="bgtransparent" class="bgtransparent">
+    <div id="bgmodal" class="bgmodal">
+        <img src="/imagenes/cargando.gif" width="50px" height="50px" />
+        <p>Registrando los datos del pago, espere un momento...</p>
+    </div>
+</div>
+ 
+<h1>Editar Orden de pago</h1>
+    <article>
+        <form  name="frmeditarpago" id="frmeditarpago" action="/4DACTION/W_ACTUALIZA_PAGO" method="post">
+            <input name="idpago" type="hidden" value="<!--#4DVAR vIdOp-->" />
+            <input id="validadar-pago" name="validadarpago" type="hidden" value="" />               
+            
+            <div class="container-fieldset-izq">        
+                <fieldset class="fieldset-especiales">
+                    <legend>DATOS DEL PAGO</legend>
+                    <div><span>Nro OP : </span><span><!--#4DVAR vNroOP--></span></div>
+                    <div><span>Referencia : </span><span><!--#4DVAR vRefOP--></span></div>
+                    <div><span>Rut : </span><span><!--#4DVAR vRutResp--></span></div>
+
+                    <p >
+                        <div class="emitira">Emitir a : </div>
+                        <div>Razon Social : <span><!--#4DVAR vRazonEmp--></span></div>
+                        <div>Rut : <span><!--#4DVAR vRutEmp-->-<!--#4DVAR vDVEmp--></span></div>
+                        <div class="tr">Cuenta : <span><!--#4DVAR vNroCuentaDes--></span></div>
+                        <div class="tr">Banco : <span><!--#4DVAR vBancoDes--></span></div>
+                        <div class="tr">Tipo Cuenta : <span><!--#4DVAR vTipoCuentaDes--></span></div>
+                        <div>Email : <span><!--#4DVAR vEmailDes--></span></div>
+                    </p>
+    				                                       
+                </fieldset>                
+                
+                <fieldset class="fieldset-especiales">
+                    <legend>DATOS DE LA OC</legend>
+                    <div><span>Nro : </span><span><!--#4DVAR vFolioOc--></span></div>
+                    <div><span>Fecha Emision : </span><span><!--#4DVAR string(vFechaEmisionOc;5)--></span></div>
+                    <div><span>Referencia : </span><span><!--#4DVAR vReferenciaOc--></span></div>                                          
+                </fieldset>         
+            </div>
+
+            <div class="container-fieldset-der">
+                <fieldset class="fieldset-especiales-derecho">                              
+                    <legend>TOTALES PAGO</legend>
+                    <div><span class="labels totalapagar">TOTAL A PAGAR :</span><span class=" valor totalapagar"><!--#4DVAR t_Saldo--></span></div>            
+                    <div><span class="labels">TOTAL ABONO :</span><span class=" valor verde"><!--#4DVAR t_TotalPago--></span></div>        
+                    <hr/>
+                    <div><span class="labels">SALDO PENDIENTE :</span><span class="valor amarillo"><!--#4DVAR t_Saldo2--></span></div>               
+                </fieldset>
+            </div>            
+
+            <fieldset>                              
+                <legend>DATOS DE DOCUMENTO(S) DE COMPRA(S)</legend>
+                <div style= "overflow:auto"><!--#4DINCLUDE dtc_pagos.shtml--></div>                                      
+            </fieldset>
+
+            <fieldset id="det-items">                              
+                <legend>CHEQUES / TRANSFERENCIAS</legend>
+
+                <!--#4DIF vCantEmitidos=0-->            
+                <select class="listas-especiales" id="tipo-pago" onChange="fn_agregar_row_pago(this.value)">                    
+                    <option value="-1">+ DOC</option>
+                    <option value="cheque">CHEQUE</option>
+                    <option value="transferencia">TRANSFERENCIA</option>
+                </select>
+	            <!--#4DENDIF-->
+
+
+                <div id="box-tr-ch">
+                    <h2>Tipo Pago : </h2>
+                        <p>Fecha OP : <span><!--#4DVAR vFechaOp--></span></p>
+                        <p>Fecha Emision : <span><!--#4DVAR vFechaEmision--></span></p>
+                        <p>Tipo Pago : <input class="pag-tipo" id="pag-tipo" name="tipopago" type="text" readonly value="TRANSFERENCIA"/></p>
+                        <p>Total a Pagar : <span><!--#4DVAR t_TotalPago--></span></p>
+
+                    <h2>Emitir A : </h2>
+                        <p>Razon Social : <span><!--#4DVAR vRazonEmp--></span></p>
+                        <p>Rut : <span><!--#4DVAR vRutEmp-->-<!--#4DVAR vDVEmp--></span></p>
+                        <p class="tr">Cuenta : <span><!--#4DVAR vNroCuentaDes--></span></p>
+                        <p class="tr">Banco : <span><!--#4DVAR vBancoDes--></span></p>
+                        <p class="tr">Tipo Cuenta : <span><!--#4DVAR vTipoCuentaDes--></span></p>
+                        <p>Email : <span><!--#4DVAR vEmailDes--></span></p>
+
+                    <h2>Datos del Pago : </h2>
+                        <p>Cta Origen : 
+                            <select id="ctacte" name="ctacte" onChange="fn_ultimo_nro_ch(this.value);">
+                                <option selected value="<!--#4DVAR vIdPorDefecto_x-->"><!--#4DVAR vDesPorDefecto_x--></option>
+                                <!--#4DLOOP aIdCuentaBancariaMov-->
+                                <!--#4DIF aIdCuentaBancariaMov{aIdCuentaBancariaMov}#vIdPorDefecto_x-->
+    <option value="<!--#4DVAR aIdCuentaBancariaMov{aIdCuentaBancariaMov}-->"><!--#4DVAR aCuentaBancariaMov{aIdCuentaBancariaMov}--></option>
+                                <!--#4DENDIF-->           
+                                <!--#4DENDLOOP-->
+                            </select>
+                        </p>
+                        <p class="tr">Nro Transferencia : <input id="nrotr" name="nrotr" type="text" value=""/></p>
+<p class="ch">Nro Cheque : <input onkeyup="fn_valida_numero(this.id,this.value);" id="nroch" name="nroch" type="text" value="<!--#4DVAR vNroChequeActual-->"/></p>
+                        <p class="ch">Tipo : 
+                            <select name="tipoch">                    
+                                <option selected value="ABIERTO">ABIERTO</option>
+                                <option value="A LA ORDEN">A LA ORDEN</option>
+                                <option value="AL PORTADOR">AL PORTADOR</option>
+                                <option value="NOMINATIVO">NOMINATIVO</option>
+                            </select>
+                        </p>
+                        <p class="ch"><input name="cruzado" type="checkbox" checked value="cruzado"/>Cruzado?</p>
+
+                    <p><label id="label-fecha">Fecha pago : </label><input class="datepicker" id="fechapag" name="fechapropuesta" type="text" value=""/></p>
+
+                    <h2>Observacion : </h2>
+                    <textarea placeholder="Escribe una observacion..." name="observacion"></textarea>
+
+<p class=""><input onclick="fn_confirmar_email()" id="notificacionpago" name="notificacionpago" type="checkbox" value="notif"/>Desea notificar el pago al proveedor?</p>
+<p class="mailenvio">Confirmar el E-mail de envio : <input id="mailenvio" name="mailenvio" type="text" value="<!--#4DVAR vEmailDes-->"/></p>
+
+                </div>
+				<div id="lista-ch-tr" style= "overflow:auto"><!--#4DINCLUDE lista_tr_ch_pagos.shtml--></div>                                        
+            </fieldset>        
+
+            <p class="set-botones">           
+            	<button title="Guardar rendicion" class="button-inf" onClick="validate_send_pago()" type="button">
+                	<img src="/imagenes/disk.png" border="0" />
+                	<span>Guardar</span>
+                </button>
+
+                <button title="Imprimir Boucher" class="button-inf" onClick="fn_imprimir_boucher()" type="button">
+                    <img src="/imagenes/printer.png" border="0" />
+                    <span>Imprimir Boucher</span>
+                </button>
+                                                  
+            </p>
+
+           
+
+        </form>                          
+    </article>         
+</section>
+<!--#4DELSE-->
+<p>
+    LA SESI&Oacute;N HA EXPIRADO...!!!
+    <a class="enlaces" href="index.shtml?t=<!--#4DVAR String(Milliseconds+Random(2))-->">VOLVER A INICIAR</a>
+</p>
+<!--#4DENDIF-->       
+</body>
+</html>

@@ -1,0 +1,18 @@
+{	
+	"rows": [
+<!--#4DLOOP aId -->
+		{
+			"id": "<!--#4DTEXT aId{aId}-->",		
+			"description": "<!--#4DTEXT description{aId}-->",		
+			"totalNeto": "<!--#4DTEXT totalNeto{aId}-->",		
+			"exchange": "<!--#4DTEXT exchange{aId}-->",		
+			"folio": "<!--#4DTEXT folio{aId}-->",		
+			"user": "<!--#4DTEXT user{aId}-->",	
+			"userLogin": "<!--#4DTEXT userLogin{aId}-->",		
+			"name": "<!--#4DTEXT name{aId}-->",
+			"email": "<!--#4DTEXT email{aId}-->",
+			"block" : <!--#4DIF block{aId}-->true<!--#4DELSE-->false<!--#4DENDIF-->		
+		}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

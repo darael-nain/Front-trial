@@ -1,0 +1,25 @@
+{	
+	"suma_pagado": <!--#4DTEXT String(sumaPagado;"&xml")-->,
+	"suma_docs": <!--#4DTEXT String(sumaDocs;"&xml")-->,
+	"documents": [
+<!--#4DLOOP aIdOccFxR-->
+		{
+			"id": "<!--#4DTEXT aIdOccFxR{aIdOccFxR}-->",
+			"numero": "<!--#4DTEXT aNumberOccFxR{aIdOccFxR}-->",
+			"login" : "<!--#4DTEXT aResponsibleOcFxR{aIdOccFxR}-->",
+			"emision" : "<!--#4DTEXT aEmissionDateOcFxR{aIdOccFxR}-->",			
+			"proveedor" : "<!--#4DHTML _V3_escapeString(aSupplierOcFxR{aIdOccFxR})-->",
+			"proveedorId": "<!--#4DTEXT aSupplierIDOcFxR{aIdOccFxR}-->",
+			"referencia" : "<!--#4DHTML _V3_escapeString(aReferenceOcFxR{aIdOccFxR})-->",	
+			"total": <!--#4DTEXT String(aTotalOcFxR{aIdOccFxR};"&xml")-->,
+			"abono": <!--#4DTEXT String(aAbonoOcFxR{aIdOccFxR};"&xml")-->,
+			"version": "<!--#4DTEXT aVersionOcFxR{aIdOccFxR}-->",
+			"estado" :"<!--#4DTEXT  _V3_escapeString(aEstadoOcFxR{aIdOccFxR})-->",
+			"tipo_doc" :"<!--#4DTEXT  _V3_escapeString(aTipoDocOcFxR{aIdOccFxR})-->",
+			"oc" :"<!--#4DTEXT  _V3_escapeString(aFolioOcAsociadoFxR{aIdOccFxR})-->",
+			"monedaTipo": "<!--#4DHTML aMonedaTipoOcFxR{aIdOccFxR}-->",
+			"monedaValorCambio": <!--#4DHTML  String(aMonedaValorCambioOcFxR{aIdOccFxR};"&xml")-->
+		}<!--#4DIF NOT(aIdOccFxR{aIdOccFxR} = aIdOccFxR{Size of array(aIdOccFxR)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

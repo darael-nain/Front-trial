@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<title>Documentos</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="/v3/views/compras/lista.css?54656gg4gdfdfs">
+	<link
+		href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+		rel="stylesheet">
+	<link rel="stylesheet" href="/v3/styles/listados.css?<!--#4DTEXT _V3_version-->">
+</head>
+
+<body style="overflow:hidden">
+	<div class="padre">
+		<div class="list-layout">
+
+			<!-- ════ KPI BAR ════ -->
+			<!-- ════ KPI BAR ASIENTOS ════ -->
+			<div class="kpi-bar">
+
+				<div class="kpi-card c-gray" id="kpi-count-card">
+					<div class="kpi-label">Asientos</div>
+					<div class="kpi-value" id="kpi-count">—</div>
+				</div>
+
+				<div class="kpi-card c-green">
+					<div class="kpi-label">Conciliados</div>
+					<div class="kpi-value" id="kpi-conciliados">—</div>
+					<div class="kpi-progress">
+						<div class="kpi-progress-track">
+							<div class="kpi-progress-fill" id="kpi-progress-bar"></div>
+						</div>
+						<span class="kpi-progress-pct" id="kpi-progress-pct">0%</span>
+					</div>
+				</div>
+
+				<div class="kpi-card c-orange">
+					<div class="kpi-label">Pendientes conciliar</div>
+					<div class="kpi-value" id="kpi-no-conciliados">—</div>
+				</div>
+
+				<div class="kpi-card c-red" id="kpi-descuadrados-card">
+					<div class="kpi-label">Descuadrados</div>
+					<div class="kpi-value" id="kpi-descuadrados">—</div>
+				</div>
+
+				<div class="kpi-card c-blue">
+					<div class="kpi-label">Automáticos</div>
+					<div class="kpi-value" id="kpi-auto">—</div>
+					<div class="kpi-subvalue" id="kpi-manual">Manual: —</div>
+				</div>
+
+			</div>
+			<!-- /KPI BAR ASIENTOS -->
+			<!-- /KPI BAR -->
+
+
+			<!-- ════ TOOLBAR ════ -->
+			<div class="table-toolbar">
+				<div class="toolbar-left">
+
+					<!-- Botón Filtros -->
+					<button class="btn-filtros" id="btnFiltros" onclick="toggleDrawer()">
+						<span class="btn-filtros-icon">
+							<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+								stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+								<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+							</svg>
+						</span>
+						Filtros
+						<span class="filtros-badge" id="filtrosBadge">0</span>
+					</button>
+
+					<!-- Tags de filtros activos -->
+					<div class="active-filter-tags" id="activeFilterTags"></div>
+					<button class="btn-clear-all" id="btnClearAll" style="display:none" onclick="clearAllFilters()">
+						Limpiar todo ✕
+					</button>
+
+				</div>
+				<div class="toolbar-right">
+					<span id="result-count-toolbar" style="font-size:11px;font-weight:600;color:var(--text3)"></span>
+				</div>
+			</div>
+			<!-- /TOOLBAR -->
+
+			<!-- ════ TABLE ════ -->
+			<div class="table-wrap">
+				<div class="table-responsive">
+					<table width="100%" class="results especial listpayout fixed">
+
+						<thead id="table-header-dtc">
+							<tr>
+								<th class="col-info"></th>
+								<th class="col-num" data-sort-by="numero" data-sort-default="desc">Folio</th>
+								<th class="col-doc" data-sort-by="doc" data-sort-default="asc">Fecha registro</th>
+								<th class="col-cod" data-sort-by="codigo" data-sort-default="asc">Fecha comprobante</th>
+								<th class="col-fpago" data-sort-by="doc" data-sort-default="asc">Glosa</th>
+								<th class="col-oc" data-sort-by="oc" data-sort-default="desc">Tipo</th>
+								<th class="col-fecha" data-sort-by="emision" data-sort-default="desc">Conciliado</th>
+							</tr>
+						</thead>
+
+						<tbody></tbody>
+
+						<tfoot class="totales">
+							<tr>
+								<th colspan="20">
+									<div style="display:flex;align-items:center;gap:16px;padding:0 4px">
+										<div class="totalseleccionado">
+											<label>Total seleccionado</label>
+											<span class="numeric currency"><strong>0</strong></span>
+										</div>
+										<span id="result-count" style="margin-left:auto">—</span>
+									</div>
+								</th>
+							</tr>
+						</tfoot>
+
+					</table>
+				</div>
+			</div>
+			<!-- /TABLE -->
+
+			<div id="pagination" class="pagination"></div>
+		</div>
+	</div>
+
+	<!-- Scripts del sistema -->
+	<script src="/v3/views/comprobantes/listado.js"></script>
+
+	<!-- ════ FILTER DRAWER ════ -->
+	<div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+
+	<div class="filter-drawer" id="filterDrawer">
+
+		<div class="drawer-header">
+			<div class="drawer-title">
+				<div class="drawer-title-icon">
+					<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+						stroke-linecap="round" stroke-linejoin="round">
+						<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+					</svg>
+				</div>
+				<div>
+					Filtros
+					<span class="drawer-title-sub">Afina los resultados de tu búsqueda</span>
+				</div>
+			</div>
+			<button class="btn-drawer-close" onclick="closeDrawer()">✕</button>
+		</div>
+
+		<div class="drawer-body" id="drawerBody">
+			<!-- Renderizado dinámicamente por unaBase.toolbox.search.newInit -->
+		</div>
+
+		<div class="drawer-footer">
+			<button class="btn-reset-filters" onclick="window._niReset && window._niReset()">
+				<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+					<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+					<path d="M3 3v5h5" />
+				</svg>
+				Limpiar
+			</button>
+			<button class="btn-apply-filters" onclick="window._niApply && window._niApply()">
+				<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+					<polyline points="20 6 9 17 4 12" />
+				</svg>
+				Aplicar filtros
+			</button>
+		</div>
+
+	</div>
+	<!-- /FILTER DRAWER -->
+
+	<script>
+		// ── DRAWER BRIDGE ─────────────────────────────
+		// La lógica de filtros está en unaBase.toolbox.search.newInit (dtc_lista.js)
+		// Solo mantenemos las funciones de apertura/cierre del drawer aquí
+
+		function toggleDrawer() {
+			const open = document.getElementById('filterDrawer').classList.contains('open');
+			open ? closeDrawer() : openDrawer();
+		}
+
+		function openDrawer() {
+			document.getElementById('filterDrawer').classList.add('open');
+			document.getElementById('drawerOverlay').classList.add('open');
+			document.getElementById('btnFiltros').classList.add('active');
+		}
+
+		function closeDrawer() {
+			document.getElementById('filterDrawer').classList.remove('open');
+			document.getElementById('drawerOverlay').classList.remove('open');
+			// No quitar 'active' del botón si hay filtros aplicados — newInit lo maneja
+		}
+
+		// Fallback por si newInit aún no sobreescribió clearAllFilters
+		window.clearAllFilters = window.clearAllFilters || function () {
+			document.querySelectorAll('#drawerBody .ni-filter').forEach(el => {
+				if (el.type === 'checkbox') el.checked = false;
+				else el.value = '';
+			});
+			closeDrawer();
+		};
+	</script>
+
+
+</body>
+
+</html>

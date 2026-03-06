@@ -1,0 +1,11 @@
+{
+	"rows": [
+<!--#4DLOOP [Pais]-->
+		{
+			"id": <!--#4DHTML [Pais]Id_Pais-->,
+			"text": "<!--#4DHTML _V3_escapeString([Pais]Des_Pais)-->",
+			"des_document_id": "<!--#4DHTML _V3_escapeString([Pais]des_documento_id)-->"
+		}<!--#4DIF Selected record number([Pais])<Records in selection([Pais])-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

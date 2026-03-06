@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+	<!--#4DSCRIPT/_V3_proxy-->
+	<head>
+		<title>Reporte Ventas por Área de Negocio</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/views/reportes/script/content.js"></script>
+		<script src="/v3/script/sorttable.js"></script>
+		<script>
+		var container = $('#container-reportes');
+		var tbody = container.find('table.reportes > tbody');
+
+		var getCategorias = function(){
+			unaBase.ui.block();
+			$.ajax({
+				url: '/4DACTION/_V3_getVentasAreanegReporte',
+				data: $('#search').serializeAnything(),
+				dataType: 'json',
+				success: function(data) {
+						tbody.find('*').remove();
+						$('#search').find('*').prop('disabled', true);
+
+						var rows = '';
+						var total_neto = 0;
+						var total_utilidad = 0;
+						$.each(data.areas, function(key, item){
+							if (item.neto != 0) {
+								var class_ = "name";
+								rows = rows + '<tr class="title" data-id="'+item.id+'" data-categoria="'+item.id+'">';
+								rows = rows + '<th></th>';
+								rows = rows + '<th class="numeric percent" style="width: 80px;"><input style="display: inline-block; width: 40px !important; padding: 0; border-bottom: none; color: inherit;" disabled value="' + item.porcentaje + '">&nbsp;%</th>';
+								rows = rows + '<th class="'+class_+'">'+ item.nombre +'<!-- <span style="vertical-align:top"></span>--></th>';
+								rows = rows + '<th class="ventas numeric currency">'+ currency.symbol +' <input style="display: inline-block; width: 80px !important; padding: 0; border-bottom: none; color: inherit;" disabled value="' + item.neto + '"></th>';
+								rows = rows + '<th class="ventas numeric currency">'+ currency.symbol +' <input style="display: inline-block; width: 80px !important; padding: 0; border-bottom: none; color: inherit;" disabled value="' + item.utilidad_final + '"></th>';
+								rows = rows + '<th class="numeric percent" style="width: 80px;"><input style="display: inline-block; width: 40px !important; padding: 0; border-bottom: none; color: inherit;" disabled value="' + item.margen_utilidad_final + '">&nbsp;%</th>';
+								rows = rows + '</tr>';
+								total_neto+= item.neto;
+								total_utilidad+= item.utilidad_final;
+							}
+						});
+						tbody.html(rows);
+
+
+						$(".numero_servicios").text('(' + data.areas.length + ' ítems)');
+
+						//montos totales
+						totalNeto = total_neto;
+						totalUtilidad = total_utilidad;
+
+						//$("#total_ventas").html(totalNeto.toString().replace('.', ',')).number(true, 0, ',', '.');
+						//$("#total_utilidad").html(totalUtilidad.toString().replace('.', ',')).number(true, 0, ',', '.');
+
+						$("#total_ventas").html($.number(totalNeto, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+						$("#total_utilidad").html($.number(totalUtilidad, currency.decimals, currency.decimals_sep, currency.thousands_sep));
+
+						$.each(data.areas, function(key, item) {
+							var title = tbody.find('tr.title[data-categoria="' + item.id + '"]');
+							var total = title.nextUntil('tr.title').length;
+							var total_items = 0;
+							title.find('th.name span').text('(' + total + ' ítems)');
+						});
+
+
+						tbody.find('.numeric.currency input').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep, true);
+						tbody.find('.numeric.percent span').number(true, 2, ',', '.', true);
+
+						$('#search').find('*').prop('disabled', false);
+
+					unaBase.ui.unblock();
+				}
+			});
+		}
+		$(document).ready(function() {
+			unaBase.toolbox.init();
+			unaBase.toolbox.search.init({
+				callback: function() {
+					var status = $('#search').find('*').prop('disabled');
+					if (!status) {
+						getCategorias();
+					}
+					return false;
+				},
+				inflection: {
+					singular: 'categoria',
+					plural: 'categorias',
+					none: 'ninguna'
+				},
+				filters: [
+					{ name: 'date_from', type: 'month', caption: 'Desde', range: true, currentYear: true },
+					{ name: 'date_to', type: 'month', caption: 'Hasta', range: true, currentYear: true },
+					{ name: 'cliente', type: 'autocomplete', caption: 'Cliente', dataSource: 'getEmpresaList' },
+					<!--#4DIF _V3_marcaEnabled-->
+					{ name: 'param_1', type: 'autocomplete', caption: 'Marca', dataSource: 'Param1' },
+					<!--#4DENDIF-->
+					{ name: 'estado_compras', type: 'autocomplete', caption: 'Estado de las compras', dataObject: [
+						{
+							id: true,
+							text: 'Abiertas para compras'
+						},
+						{
+							id: false,
+							text: 'Cerradas para compras'
+						}
+					]},
+					{ name: 'tipo_fecha', type: 'radio', preventSearch: true, caption: 'Tipo de fecha', options: [
+						{ caption: 'F. Asignación', name: 'fecha_asignacion', value: true },
+						{ caption: 'F. Realización', name: 'fecha_realizacion', value: false },
+						{ caption: 'F. Facturación', name: 'fecha_facturacion', value: false }
+					] },
+					{ name: 'estado', type: 'checkbox', caption: 'Estado negocios', options: [
+						{ caption: 'En proceso', name: 'estado_en_proceso', value: true },
+						{ caption: 'Cerrado', name: 'estado_cerrado', value: true }
+					] }
+				],
+				hideSearchBox: true
+			});
+
+			unaBase.toolbox.menu.init({
+				entity: 'VentasAreanegReporte',
+				buttons: [ 'exit', 'export_reporte']
+
+			});
+
+
+			$('.currency-symbol').text(currency.symbol);
+
+		});
+		</script>
+		<style type="text/css">
+
+
+		.name{color: black;}
+		.name_rojo{color: red;}
+		.name > span{color: #AF6D44;}
+		.ventas{color: black;}
+		.ventas > span{color: black;}
+
+		div.totales {
+            	position: absolute;
+            	right: 15px;
+            	bottom: 30px;
+            	z-index: 1000;
+            	width: 515px;
+            	height: 190px;
+            	padding: 3px;
+
+            	opacity: 0.9;
+            	background-color: darkgrey;
+            	color: black;
+            	font-size: 14px;
+            	cursor: move;
+            	border-radius: 4px;
+            	box-shadow: -4px 4px 8px 1px rgba(48, 48, 48, 0.75);
+            }
+
+            div.totales > span {
+            	display: block;
+            }
+
+            div.totales > span > span {
+            	display: inline-block;
+            }
+
+            div.totales > span > span:first-of-type {
+            	width: 85px;
+            }
+
+            div.totales > span > span:nth-of-type(2) {
+            	width: 135px;
+            }
+
+            div.totales > span > span:nth-of-type(3) {
+            	width: 135px;
+            }
+
+            div.totales > span > span:nth-of-type(4) {
+            	width: 145px;
+            }
+
+
+
+
+            div.totales > span > span.numeric {
+            	text-align: right;
+            }
+
+            span.total_comisiones {
+				/* color: #CF8D64; */
+				background-color: #2DC800;
+				color: black;
+				margin-top: 10px;
+			}
+
+			span.total_ventas {
+				/* color: #64CF8D; */
+				background-color: #FFFF11;
+				color: black;
+				text-align: left!important;
+			}
+
+			span.total_descuentos {
+				background-color: #FF3333;
+				color: black;
+			}
+
+			span.total_Facturado {
+				background-color: #F781BE;
+				color: black;
+			}
+
+			span.total_diferencia {
+				background-color: #22FF22;
+				color: black;
+			}
+
+			span.sumaTotalesVentas {
+				background-color: #8258FA;
+				color: black;
+			}
+
+			span.saldo_por_cobrar {
+				background-color: #FFFF11;
+				color: black;
+			}
+
+			span.real {
+				-webkit-filter: hue-rotate(270deg);
+			}
+
+			section.sheet table.items{
+				width: 100% !important;
+				margin-left: auto;
+				margin-right: auto;
+			}
+
+			.label{
+				color:black!important;
+				font-weight:bold!important;
+				padding:3px!important;;
+				border-radius:2px!important;
+				display:inline-block!important;
+				min-width:80px!important;
+			}
+
+			.fn_blue{
+				background-color: #2F74D0
+			}
+			.fn_yellow{
+				background-color: #fde601
+
+			}
+
+			.fn_green{
+				background-color: #3bc372
+			}
+
+			.fn_red{
+				background-color: #ff6961
+			}
+
+			.fn_orange{
+				background-color: #FFB347
+			}
+
+			.uno{
+				display:none;
+			}
+
+			.htitle{
+				padding:5px 0 5px 0;
+				font-weight: bold;
+				text-transform: uppercase;
+			}
+
+			/* -- ini -- ajustado para mejorar posición de filtros y botones, gin, 17-08-18*/
+			li[data-name="exit"]{
+				top: 10px;
+			    left: 0;
+			    position: absolute;
+			}
+			li[data-name="export_reporte"]{
+				top:120px;
+				position: absolute;
+			   	left:0!important;
+			}
+			.local-css-fechas{
+				display: inline-block;
+				position: relative;
+				top:-50px;
+				left:5px;
+			}
+			#search{
+			    display: inline-block;
+			    margin: 35px 0 0 -5px;
+			    padding-top:20px;
+			}
+			.local-css-estados{
+				display: inline-block;
+				position: relative;
+				left:-291px;
+			}
+			.full-height {
+				height:140px;
+			}
+			/* -- fin -- ajustado para mejorar posición de filtros y botones, gin, 17-08-18*/
+
+
+			.scrollable-table{
+				height:1500px;
+  				overflow-y:scroll;
+				overflow-x:scroll;
+			}
+
+			table {
+			  border-collapse: collapse;
+			}
+
+			th, td {
+			  padding: .25em;
+			 /* border: 1px solid darkgrey;*/
+			}
+
+			body {
+			  margin: 2em;
+			}
+
+
+		</style>
+		<script>
+			$(document).ready(function() {
+				$('div.totales').draggable({ containment: "parent" });
+				$('input[name="tipo_fecha"]').closest('label').hide();
+
+				// agregado para ajustar estilo css (mas arriba)
+				$('input[name="fecha_asignacion"], input[name="fecha_realizacion"], input[name="fecha_facturacion"]').closest('label').addClass('local-css-fechas');
+				$('input[name="estado_en_proceso"], input[name="estado_cerrado"]').closest('label').addClass('local-css-estados');
+			});
+		</script>
+
+
+
+	</head>
+	<body>
+		<section class="sheet items" id="container-reportes">
+			<!--<input type="button" id="btnExport" value=" Export Table data into Excel " />-->
+			<h3 class="htitle">Ventas por área de negocio</h3>
+			<div class="scrollable-table">
+				<table class="items reportes">
+					<thead>
+						<tr>
+							<th style="background-color: <!--#4DVAR vColorCorporativoCSS--> !important; width: 30px !important;"></th>
+							<th style="text-align: left;">Porcentaje</th>
+							<th style="text-align: left; width: 250px !important;">Área Negocio<!-- <span class="numero_servicios" style="vertical-align:top; font-color: red !important;">--></span></th>
+							<th style="text-align: left; width: 120px !important;">Neto</th>
+							<th style="text-align: left; width: 120px !important;">Util. final</th>
+							<th style="text-align: left; width: 120px !important;">% Margen Util. final</th>
+						</tr>
+					</thead>
+					<tfoot>
+						<tr>
+					        <th colspan="3"></th>
+					        <th style="text-align: left;"><span>Total Neto</span></th>
+							<th style="text-align: left;"><span>Total Utilidad</span></th>
+							<th></th>
+				        </tr>
+			           	<tr>
+				            <th colspan="2"></th>
+				           	<th style="text-align: right;"><span></span></th>
+				           	<th style="text-align: left;"><span class="label fn_yellow"><label class="currency-symbol"></label> <span id="total_ventas">0</span></th>
+							<th style="text-align: left;"><span class="label fn_yellow"><label class="currency-symbol"></label> <span id="total_utilidad">0</span></th>
+							<th></th>
+			           	</tr>
+					</tfoot>
+
+					<tbody></tbody>
+				</table>
+			</div>
+		</section>
+	</body>
+</html>

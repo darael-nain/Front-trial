@@ -1,0 +1,52 @@
+<!--#4dscript/areas_de_trabajo-->
+<div class="single-tarea" id="<!--#4DVAR vIdTareaCreada-->">
+	<div class="title">
+		<a class="contraer-expandir-tarea">+</a>
+		<h6 class="nombre"></h6>
+		<div class="actions"><a class="delete-tarea">Eliminar</a></div>
+	</div>
+	<div class="content">		
+		<div class="primera">
+			<label>Tarea : </label>
+			<input name="nombre-tarea" class="save-tarea" placeholder="Ingresar nombre de la tarea..."
+			value="" >
+			<label for="">Area de Trabajo : </label>
+			<select name="area-trabajo" class="save-tarea" >
+				<option selected="selected" value="0">[ Seleccionar ]</option>    		
+	    		<!--#4dloop aAreaId-->    	
+					<option value="<!--#4dvar aAreaId{aAreaId}-->">
+						<!--#4dvar aAreaNombre{aAreaId}-->
+					</option>		    	
+		    	<!--#4dendloop-->
+	    	</select>
+	    	<label for="">Responsable : </label>
+			<select class="save-tarea" id="res-<!--#4DVAR vIdTareaCreada-->" name="responsables">
+				<option selected="selected" value="">[ Seleccionar ]</option>				
+			</select>
+			<label for="">F.Vcto : </label>
+			<input value="" name="fecha-vcto" class="datepicker save-tarea" type="text" >
+			<label for="">Importancia : </label>
+			<select name="prioridad" class="save-tarea">
+				<option selected="selected" value="">[ Seleccionar ]</option>
+				<option value="ALTA">ALTA</option>
+				<option value="MEDIA">MEDIA</option>
+				<option value="BAJA">BAJA</option>			
+			</select>
+		</div>
+		<div class="segunda">
+			<label>Descripción : </label>
+			<textarea name="descripcion" class="save-tarea"></textarea>
+		</div>
+
+		<div class="block-componentes" id="<!--#4DVAR vIdTareaCreada-->">
+			<div class="title">
+				<a class="contraer-expandir-comp">+</a>			
+				<div class="actions"><a class="add-componentes">+ Componentes</a></div>
+			</div>
+			<div class="content">
+				<div class="add-componente"></div>				
+				<div class="list-componente"></div>
+			</div>			
+		</div>
+	</div>
+</div>	

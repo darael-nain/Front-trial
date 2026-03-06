@@ -1,0 +1,41 @@
+{
+	"id": <!--#4DHTML [Doc_Tributario_Compra]ID_DOC-->,
+	"referencia" : "<!--#4DHTML _V3_escapeString([Doc_Tributario_Compra]REFERENCIA_DOCUMENTO)-->",
+	"folio" : "<!--#4DHTML [Doc_Tributario_Compra]FOLIO_DOCUMENTO-->",
+	"fecha_emision" : "<!--#4DHTML [Doc_Tributario_Compra]FECHA_EMISION-->",
+	"fecha_registro" : "<!--#4DHTML [Doc_Tributario_Compra]FECHA_REGISTRO-->",
+	"hora_registro" : "<!--#4DHTML [Doc_Tributario_Compra]HORA_REGISTRO-->",
+	"estado" : "<!--#4DHTML [Doc_Tributario_Compra]ESTADO_DOCUMENTO-->",
+	"tipo_documento" : "<!--#4DHTML [Doc_Tributario_Compra]TIPO_DOCUMENTO-->",
+	"des_tipo_doc" : "<!--#4DHTML _V3_escapeString([Doc_Tributario_Compra]des_tipo_doc)-->",
+	"emisor" : "<!--#4DHTML [Doc_Tributario_Compra]RESPONSABLE_REGISTRO-->",
+	"observacion" : "<!--#4DHTML _V3_escapeString([Doc_Tributario_Compra]Observaciones)-->",
+	"moneda" : {
+		"code" : "<!--#4DHTML [Doc_Tributario_Compra]v3_moneda-->",
+		"cambio" : <!--#4DHTML String([Doc_Tributario_Compra]v3_valor_cambio;"&xml")-->
+	},
+	"contacto" : {
+		"id" : <!--#4DHTML [Doc_Tributario_Compra]ID_EMPRESA-->,
+		"razon_social" : "<!--#4DHTML _V3_escapeString(razon)-->",
+		"giro" : "<!--#4DHTML _V3_escapeString(giro)-->",
+		"nombre_completo" : "<!--#4DHTML _V3_escapeString(nombre_completo)-->",
+		"alias" : "<!--#4DHTML _V3_escapeString(alias)-->",
+		"rut" : "<!--#4DHTML rut-->"
+	},
+	"id_forma_pago" : "<!--#4DHTML [Doc_Tributario_Compra]ID_FORMAPAGO-->",
+	"des_forma_pago" : "<!--#4DHTML _V3_escapeString([Doc_Tributario_Compra]des_forma_pago)-->",
+	"montos" : {
+		"sub_total" : <!--#4DHTML String([Doc_Tributario_Compra]SUBTOTAL;"&xml")-->,
+		"descuento" : <!--#4DHTML String([Doc_Tributario_Compra]TOTAL_DESCUENTO;"&xml")-->,
+		"exento" : <!--#4DHTML String([Doc_Tributario_Compra]MONTO_EXENTO;"&xml")-->,
+		"neto" : <!--#4DHTML String([Doc_Tributario_Compra]TOTAL_NETO;"&xml")-->,
+		"iva" : <!--#4DHTML String([Doc_Tributario_Compra]TOTAL_IMPUESTO;"&xml")-->,
+		"adicional" : <!--#4DHTML String([Doc_Tributario_Compra]TOTAL_OTROSIMPUESTOS;"&xml")-->,
+		"total" : <!--#4DHTML String([Doc_Tributario_Compra]TOTAL_DOCUMENTO;"&xml")-->,
+		"por_justificar" : <!--#4DHTML String([Doc_Tributario_Compra]SALDO_JUSTIFICAR;"&xml")-->,
+		"justificado" : <!--#4DHTML String([Doc_Tributario_Compra]JUSTIFICADO;"&xml")-->
+	},
+	"items": [],
+	"gastos": [],
+	"nota_creditos" : []
+}

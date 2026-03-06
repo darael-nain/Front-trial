@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <title>Parametros</title>
+
+    <!-- 🔒 GUARD: oculta todo y solo muestra si (1) iframe same-origin + (2) login OK -->
+    <style>
+        html.guard-hide body {
+            display: none !important;
+        }
+    </style>
+    <script>
+        (function guard() {
+            // Oculta todo por defecto (evita que se vea contenido antes del check)
+            document.documentElement.classList.add("guard-hide");
+
+            const deny = () => {
+                // “No aparece nada”: dejamos el body vacío + oculto
+                try { if (document.body) document.body.innerHTML = ""; } catch (_) { }
+                // mantenemos guard-hide activo
+            };
+
+            const allow = () => {
+                document.documentElement.classList.remove("guard-hide");
+            };
+
+            // 1) Debe estar embebido en iframe (si lo abres directo en pestaña => DENY)
+            let isInIFrame = false;
+            try {
+                isInIFrame = (window.self !== window.top);
+            } catch (e) {
+                // Si falla acceder a top, asumimos cross-origin => DENY abajo
+                isInIFrame = true;
+            }
+            if (!isInIFrame) return deny();
+
+            // 2) El parent debe ser same-origin (si no => DENY)
+            try {
+                if (window.top.location.origin !== window.location.origin) return deny();
+            } catch (e) {
+                return deny();
+            }
+
+            // 3) Debe estar logeado (reusa tu misma lógica)
+            const checkUrl =
+                `${window.origin}/4DACTION/_v3_checkLogin?nodeUrl=${encodeURIComponent("https://frank.unabase.com/node")}`;
+
+            fetch(checkUrl, { credentials: "include", cache: "no-store" })
+                .then(r => r.ok ? r.json() : Promise.reject(r))
+                .then(data => {
+                    if (!data || !data.isLogin || data.login == null) return deny();
+                    // OK: recién aquí mostramos
+                    allow();
+                })
+                .catch(() => deny());
+        })();
+    </script>
+    <!-- 🔒 FIN GUARD -->
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/v/bs4/dt-1.11.3/fc-4.0.1/fh-3.2.0/r-2.2.9/datatables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTables.min.css">
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/3.4.0/css/bootstrap-colorpicker.css"
+        integrity="sha512-HcfKB3Y0Dvf+k1XOwAD6d0LXRFpCnwsapllBQIvvLtO2KMTa0nI5MtuTv3DuawpsiA0ztTeu690DnMux/SuXJQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/configuracion/css/parametros/parametros.css">
+
+</head>
+
+<body>
+    <div class="wrapper ml-3 mr-3">
+        <div id="loading-screen">
+            <img src="../script/img/spinning-circles.svg">
+        </div>
+        <div class="content-wrapper">
+            <!-- Button trigger modal -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-primary card-tabs">
+                        <div class="card-header">
+                            <ul class="nav nav-pills mb-3" id="ex1" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home"
+                                        role="tab" aria-controls="pills-home" aria-selected="true">General</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile"
+                                        role="tab" aria-controls="pills-profile" aria-selected="false">Conectividad</a>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact"
+                                        role="tab" aria-controls="pills-contact" aria-selected="false">Reportes</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+
+
+                            <a class="btn btn-success btn-labeled" href="/configuracion/index.shtml" role="button"
+                                style="background: #20A789;">
+                                <span class="btn-label"><i class="fas fa-arrow-circle-left"></i></span>
+                                <strong>Volver</strong></a>
+                            <button type="button" class="btn btn-success" style="background: #03D6F9;"
+                                onclick="setParamGeneral()">
+                                <i class="fa fa-save"></i>
+                            </button>
+                            <hr class="mt-2 mb-3" />
+
+
+                            <div class="tab-content" id="pills-tabContent">
+                                <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
+                                    aria-labelledby="pills-home-tab">
+                                    <div class="overlay-wrapper">
+                                        <!--
+                                        <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i>
+                                            <div class="text-bold pt-2">Cargando...</div>
+                                        </div>
+                                        -->
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Color de tabla en
+                                                        print tipo 2:</label>
+                                                    <div class="col-sm-4">
+                                                        <div class="input-group cpicker">
+                                                            <input type="text" class="form-control input-lg"
+                                                                value="#000000" id="table-color">
+                                                            <span class="input-group-append">
+                                                                <span id="cp_dashboardHeaderColor"
+                                                                    class="input-group-text colorpicker-input-addon"><i></i></span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Modo
+                                                        contabilidad</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox" class="form-contro" id="accounting-mode">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Ver boton sica</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="btn_sica">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Modo nocturno</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox" class="form-contro" id="night_mode">
+                                                    </div>
+                                                </div>
+                                            </div> -->
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Actualizacion de tipo cambio</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="tipo_cambio">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Ver fecha estimada de facturacion</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="btn_fecha_estimacion">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Ocultar unidad en PRINT</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="btn_mostrar_unidad">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Contabilidad - Multiples servicios</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="multiplesXServicio">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Usar items en categorias</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="items_categoria">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">accounting_anticipos_contactos</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="accounting_anticipos_contactos">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Portal de proveedores</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="portal_proveedores">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">SAP LOTUS</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="export_sap_lotus">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Datos extras para contactos en OC para MX</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="datos_extras_banco_contacto">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Ocultar columna valor unitario en gasto presupuestado</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="ocultar_columna_gastop_unit">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Valor unitario venta es el mismo que valor unitario presupuestado</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="valorventa_mismo_valorcosto">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Usar PDF de bandeja en print oc</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="pdf_print_oc">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Ocultar seccion sobrecargos en cotizacion/negocios</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="ocultar_seccion_sc">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Agregar DTC en Compras no validas</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="add_dtc_compras_no_validas">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Conexion Syncfy</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="conexion_syncfy">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Conexion SII</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="conexion_sii">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Ocultar montos y adicionales</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="ocultar_montos_adicionales">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Integracion SAP</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="sap_integration">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Incluir codigo item en PDF</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="incluir_codigo_item_pdf">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Ver dialogo de tipo de cambio al facturar negocios</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="dialogo_tipo_cambio_facturar">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Ocultar lupa de documentos en detalle asiento</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="ocultar_lupa_doc_asiento">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Ver boton DIOT en asientos</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="export_diot">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Facturar sin Rut</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="facturar_sin_rut">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Ocultar totales en negocio movil</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="esconder_totales_negocio_movil">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Actualizar fecha de asignacion al convertir</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="update_fecha_asig">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Nueva forma de asientos para DTV (Repartir monto)</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox"  id="new_dtv_accounting">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Observaciones en rendiciones</label>
+                                                    <div class="col-sm-4">
+                                                        <textarea class="form-control" id="observaciones_fxr" rows="3"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Nombre custom para PDF de cotizaciones</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text"  id="nombre_custom_pdf_cot">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Nombre custom para PDF de negocios</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="text"  id="nombre_custom_pdf_neg">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Parametro Negocio - DTV (Invoice Number)</label>
+                                                    <div class="col-sm-4">
+                                                        <select class="form-control select_id_param">
+                                                            <option value="" selected>Seleccione</option>
+                                                            <option value="1" selected>1</option>
+                                                            <option value="2" selected>2</option>
+                                                            <option value="3" selected>3</option>
+                                                            <option value="4" selected>4</option>
+                                                            <option value="5" selected>5</option>
+                                                            <option value="6" selected>6</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="pills-profile" role="tabpanel"
+                                    aria-labelledby="pills-profile-tab">
+                                    <div class="overlay-wrapper">
+                                        <!--
+                                        <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i>
+                                            <div class="text-bold pt-2">Cargando...</div>
+                                        </div>
+                                        -->
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Url
+                                                        node.js:</label>
+                                                    <div class="col-sm-4">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control input-lg" value=""
+                                                                id="url_node">
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Url web:</label>
+                                                    <div class="col-sm-4">
+                                                        <div class="input-group">
+                                                            <input type="text" class="form-control input-lg" value=""
+                                                                id="url_web">
+
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="pills-contact" role="tabpanel"
+                                    aria-labelledby="pills-contact-tab">
+                                    <div class="overlay-wrapper">
+                                        <!--
+                                        <div class="overlay"><i class="fas fa-3x fa-sync-alt fa-spin"></i>
+                                            <div class="text-bold pt-2">Cargando...</div>
+                                        </div>
+                                        -->
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Hora ejecucion</label>
+                                                    <div class="col-sm-4">
+                                                        <div class="input-group">
+                                                            <input type="time"  value="10:05 AM" id="hora_exe"/>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label class="control-label col-sm-6" for="email">Nombre maestro</label>
+                                                    <div class="col-sm-4">
+                                                        <input type="checkbox" class="form-contro" id="name_shift">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/v3/script/jquery/jquery.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/v3/script/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <!-- Script modal-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/3.4.0/js/bootstrap-colorpicker.js"
+        integrity="sha512-YFnmLQFOKs4p/gDLhgmMfqdYO9rzXjgeYhjZjomhAXHrJ23AI59keb31/krV4AISRQHGwJhAKfSzzcYF64BxIA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <script src="../../newV3/script/general_functions.js?v=4374" data-from="parametros"></script>
+</body>
+
+</html>

@@ -1,0 +1,3 @@
+{
+	"v3_anular_gasto_rechazado": <!--#4DIF v3_anular_gasto_rechazado-->true<!--#4DELSE-->false<!--#4DENDIF-->
+}

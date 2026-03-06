@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="cache-control" content="max-age=10" />
+	<title>Novedades</title>
+	<style>
+		.options{
+			margin-top: 20px;
+			background-color: white;
+			padding:5px;
+			border-radius:5px;
+			width: calc(100% - 1000px)!important;
+		}
+		.options ul {
+			margin: 5px;
+			font-size: 12px;
+		}
+		.options ul li {
+			margin-bottom: 5px;
+			padding:2px;
+		}
+		h1{
+			margin:5px;
+			font-size: 20px;
+		}
+
+		.options article{
+			border: 1px solid lightgray;
+			margin: 5px;
+		}
+			.options article h2{
+				    display: block;
+				    background-color: #6c6c6c;
+				    color: white;
+				    padding: 5px !important;
+				    font-weight: bold;
+				    margin-bottom: 10px !important;
+				    font-size: 11px;
+				    text-transform: none !important;
+			}
+	</style>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$('section.options ul li > a.accesos').click(function() {
+			unaBase.loadInto.dialog('/v3/views/ajustes/accesos/list2.shtml', 'ACCESOS', 'medium');
+		});
+		$(".oculto").hide();
+	});
+	</script>
+	<style type="text/css">
+		.options ul li a{
+			color: gray;
+			font-size:12px;
+			text-decoration: underline;
+		}
+	</style>
+</head>
+<body>
+	<h1>Novedades última versión actualizada (3.212.8.1)  </h1>
+	<section class="options">
+		<article>
+			<h2>Cotizaciones</h2>
+			<ul>
+				<li>Anulación de cotizaciones masivas. <a href="#">Ver tutorial</a></li>
+			</ul>
+		</article>
+		<article>
+			<h2>Negocios</h2>
+			<ul>
+				<li>Cierre de negocios masivos. <a href="#">Ver tutorial</a></li>
+				<li>Creación de ordenes de compras desde negocios. <a href="#">Ver tutorial</a></li>
+				<li>Exportar resumen. <a href="#">Ver tutorial</a></li>
+			</ul>
+		</article>
+		<article>
+			<h2>Órdenes de compra</h2>
+			<ul>
+				<li>Texto remarcable en condiciones al imprimir orden de compra. <a href="#">Ver tutorial</a></li>
+			</ul>
+		</article>
+		<article>
+			<h2>Documentos de venta</h2>
+			<ul>
+				<li>Emisión de notas de crédito. <a href="#">Ver tutorial</a></li>
+			</ul>
+		</article>
+		<article>
+			<h2>Revisar versiones anteriores</h2>
+			<ul>
+				<li><a href="#">Versión 3.212.8</a></li>
+				<li><a href="#">Versión 3.212.7</a></li>
+				<li><a href="#">Versión 3.212.6</a></li>
+				<li><a href="#">Versión 3.212.5</a></li>
+				<li><a href="#">Versión 3.212.4</a></li>
+			</ul>
+		</article>
+	</section>
+</body>
+</html>

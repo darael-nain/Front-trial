@@ -1,0 +1,28 @@
+{
+	"clientes" : [
+	<!--#4DLOOP aInformeFC_idcliente-->
+		{
+			"id": <!--#4DHTML aInformeFC_idcliente{aInformeFC_idcliente}-->,
+			"cliente": "<!--#4DHTML _V3_escapeString(aInformeFC_cliente{aInformeFC_idcliente})-->",
+			"ventas": <!--#4DHTML String(aInformeFC_venta{aInformeFC_idcliente};"&xml")-->,
+			"porcentaje": <!--#4DHTML String(aInformeFC_porc{aInformeFC_idcliente};"&xml")-->,
+			"total_neto": <!--#4DHTML String(aInformeFC_totalneto_NV{aInformeFC_idcliente};"&xml")-->,
+			"gasto_real": <!--#4DHTML String(aInformeFC_gastoreal_NV{aInformeFC_idcliente};"&xml")-->,
+			"por_gastar": <!--#4DHTML String(aInformeFC_porgastar_NV{aInformeFC_idcliente};"&xml")-->,
+			"desglose_areas": "<!--#4DHTML _V3_escapeString(aInformeFC_desglose_por_area{aInformeFC_idcliente})-->"
+		}<!--#4DIF NOT(aInformeFC_idcliente{aInformeFC_idcliente} = aInformeFC_idcliente{Size of array(aInformeFC_idcliente)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	],
+	"currency" : {
+        "code" : "<!--#4DTEXT _V3_defaultCurrencyCode-->",
+        "name" : "<!--#4DTEXT _V3_defaultCurrencyName-->",
+        "symbol" : "<!--#4DTEXT _V3_defaultCurrencySymbol-->",
+        "right" : <!--#4DIF _V3_defaultCurrencyRight-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+        "decimal": <!--#4DTEXT _V3_defaultCurrencyDecimals-->,
+        "decimal_sep": "<!--#4DTEXT _V3_defaultCurrencyDecimalSep-->",
+        "thousand_sep" : "<!--#4DTEXT _V3_defaultCurrencyThousandSep-->",
+        "decimal_text_excel" : "<!--#4DTEXT _V3_defaultCurrencyDecimalsText-->",
+        "format_code_excel" : "<!--#4DTEXT _V3_defaultCurrencyFormatCode-->",
+        "label_rut" : "<!--#4DTEXT country_label_rut-->"
+    }
+}

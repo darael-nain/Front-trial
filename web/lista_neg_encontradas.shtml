@@ -1,0 +1,51 @@
+<table border="1" cellpadding="0" cellspacing="0" hspace="0" vspace="0">
+
+              <tr bgcolor="#CCCCCC" >
+                <td class="center">NRO</td>
+                <td class="center">FECHA</td>
+                <td class="center">USUARIO</td>
+                <td class="center">CLIENTE</td>
+                <td class="center">PROYECTO</td>
+                <!--#4DIF vPerfil="01"--><td class="center">TOT. NETO</td><!--#4DENDIF-->
+                <!-- <td class="center">UTILIDAD</td>-->
+                <td class="center">TIPO</td>
+                 <td class="center">ESTADO</td>      
+                <td class="center" colspan="2" >ACCION</td>
+              </tr> 
+     		
+        <!--#4DLOOP w_a_nro_neg-->
+              <tr bgcolor="">
+                <td class="center"><!--#4DVAR w_a_nro_neg{w_a_nro_neg}--></td>
+                <td class="center"><!--#4DVAR w_a_fecha_neg{w_a_nro_neg}--></td>
+                <td class="center"><!--#4DVAR w_a_usuario_neg{w_a_nro_neg}--></td>
+                <td class="left"><!--#4DVAR w_a_cliente_neg{w_a_nro_neg}--></td>
+                <td class="left"><!--#4DVAR w_a_proyecto_neg{w_a_nro_neg}--></td>
+                <!--#4DIF vPerfil="01"--><td class="right"><!--#4DVAR String(w_a_totalneto_neg{w_a_nro_neg};"$###.###.###.###")--></td><!--#4DENDIF-->
+               <!-- <td class="right">#4DVAR String(w_a_utilidad_neg{w_a_nro_neg};"$###.###.###.###")</td>-->
+                <td class="center"><!--#4DVAR w_a_tipo_neg{w_a_nro_neg}--></td>
+                <td class="center"><!--#4DVAR w_a_estado{w_a_nro_neg}--></td>        
+                <td>			 
+			 
+                <div align="center">				
+              		<!--#4DIF vPerfil="01"-->
+              		<a class="link-crear-lista" title="Entrar al proyecto" href="/4DACTION/W_EDITAR_NEGOCIO/<!--#4DVAR w_a_IDNV_neg{w_a_nro_neg}-->">
+                      <p>
+                          <img src="/imagenes/page_white_edit.png" border="0" />
+                          <span>Editar</span>
+                      </p>                        
+                  </a>
+                  <!--#4DENDIF-->
+				
+              		<!--#4DIF vPerfil="02"-->
+                  <a class="link-crear-lista" title="Ver proyecto" href="/4DACTION/WVERPROYECTOS/<!--#4DVAR w_a_IDNV_neg{w_a_nro_neg}-->">
+                    <p>
+                      <img src="/imagenes/page_white_edit.png" border="0" />
+                      <span>Editar</span>
+                    </p>                        
+                  </a>				
+              	  <!--#4DENDIF-->				 
+                </div>                
+                </td>                
+              </tr>
+         <!--#4DENDLOOP-->
+            </table>

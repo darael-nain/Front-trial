@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!--#4DSCRIPT/_V3_proxy_getInfoPlanning-->
+	<meta charset="utf-8">	
+	<title>Planificador</title>
+	<script src="/script/jquery-ui-1.10.2.custom/js/jquery.ui.datepicker-es.js?<!--#4DTEXT String(Milliseconds+Random)-->"></script>
+	<script src="/v3/script/jquery/plugins/serializeanything/jquery.serializeanything.js"></script>
+	<!--<script src="/v3/views/ots/planning.js?<!- -#4DTEXT String(Milliseconds+Random)- ->"></script>-->
+	<script src="/v3/views/timesheet/script/register.js?<!--#4DTEXT String(Milliseconds+Random)-->"></script>
+	<link rel="stylesheet" href="/v3/views/ots/planning.css?<!--#4DTEXT String(Milliseconds+Random)-->"/>
+</head>
+<body>
+	<input type="text" class="invisible">
+	<form id="frmPlanner" class="popup-planner">
+		<input type="hidden" name="timesheet[id_ot]" value="<!--#4DTEXT idot-->">
+		<input type="hidden" name="timesheet[fechaDesdeCalendar]" value="<!--#4DTEXT vFechaActualCalendar-->">
+		<input type="hidden" name="timesheet[fechaHastaCalendar]" value="<!--#4DTEXT vFechaHastaCalendar-->">
+		<input type="hidden" name="timesheet[id_plan]" value="<!--#4DTEXT idplan-->">			
+		<div class="container-in">
+			<div class="allday">	
+				<label>Todo el día</label>
+				<!--4DIF allday--><input checked name="timesheet[all_day]" type="checkbox"><!--4DELSE--><input name="timesheet[all_day]" type="checkbox"><!--4DENDIF-->				
+			</div>		
+			<div class="dates">				
+				<label>Del</label>
+				<input data-types="dates" name="timesheet[start_date]" class="datepicker" type="text" value="<!--#4DTEXT startDate-->"/>
+				<input data-types="times" name="timesheet[start_time]" type="text" value="<!--#4DTEXT startTime-->"/>		
+			</div>
+			<div class="dates">
+				<label>Al</label>
+				<input data-types="dates" name="timesheet[end_date]" class="datepicker" type="text" value="<!--#4DTEXT endDate-->"/>
+				<input data-types="times" list="list-times"  name="timesheet[end_time]" type="text" value="<!--#4DTEXT endTime-->"/>				
+			</div>
+			<div class="text">
+				<label>Nota</label>
+				<textarea placeholder="Ninguna" name="timesheet[nota]"><!--#4DTEXT nota--></textarea>				
+			</div>			
+			<div>
+				<button name="timesheet[save]" type="button">Guardar</button>
+				<button name="timesheet[delete]" type="button">Eliminar</button>			
+			</div>
+		</div>
+	</form>
+</body>
+</html>
+
+

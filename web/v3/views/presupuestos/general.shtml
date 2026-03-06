@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getCotizacionContent-->
+		<title>Negocios</title>
+		<meta charset="utf-8">
+		<script>
+		<!--#4DIF _V3_verifica_permisos_web(_V3_data_username;485)-->
+		var convertir_en_cotizacion = true;
+		<!--#4DENDIF-->
+
+
+		<!--#4DIF compartir_totales_titulos-->
+		var compartir_totales_titulos = true;
+		<!--#4DELSE-->
+		var compartir_totales_titulos = false;
+		<!--#4DENDIF-->
+
+		<!--#4DIF compartir_items-->
+		var compartir_items = true;
+		<!--#4DELSE-->
+		var compartir_items = false;
+		<!--#4DENDIF-->
+
+		<!--#4DIF compartir_totales_items-->
+		var compartir_totales_items = true;
+		<!--#4DELSE-->
+		var compartir_totales_items = false;
+		<!--#4DENDIF-->
+
+		<!--#4DIF compartir_totales_cotizacion-->
+		var compartir_totales_cotizacion = true;
+		<!--#4DELSE-->
+		var compartir_totales_cotizacion = false;
+		<!--#4DENDIF-->
+
+		var editCodigoItems = <!--#4DIF _V3_editCodigoItems-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+		</script>
+		<script type="text/javascript" src="/v3/views/presupuestos/script/library/general.js"></script>
+		<script type="text/javascript" src="/v3/views/presupuestos/script/startup/general.js"></script>
+
+				<script>
+			$(document).ready(function() {
+				
+				if ($('input[name="cotizacion[ejecutivo][id]"]').length > 0)
+					$('input[name="cotizacion[ejecutivo][id]"]').autocomplete({
+						source: function(request, response) {
+							$.ajax({
+								url: '/4DACTION/_V3_' + 'getUsuario',
+								dataType: 'json',
+								data: {
+									q: request.term,
+									ejecutivo: true
+								},
+								success: function(data) {
+									response($.map(data.rows, function(item) {
+										return item;
+									}));
+								}
+							});
+						},
+						minLength: 0,
+						autoFocus: true,
+						delay: 5,
+						position: { my: "left top", at: "left bottom", collision: "flip" },
+						open: function() {
+							$(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+						},
+						close: function() {
+							$(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+						},
+						focus: function(event, ui) {
+							//$(this).val(ui.item.text);
+							return false;
+						},
+						response: function(event, ui) {
+						},
+						select: function(event, ui) {
+							$('input[name="cotizacion[ejecutivo][id]"]').val(ui.item.nombres + ' ' + ui.item.ap_pat + ((ui.item.ap_mat)? ' ' + ui.item.ap_mat : ''));
+							$('input[name="cotizacion[ejecutivo][id]"]').data('id', ui.item.id);
+							return false;
+						}
+
+					}).data('ui-autocomplete')._renderItem = function(ul, item) {
+						return $('<li><a><strong class="highlight">' +  item.ap_pat + ((item.ap_mat)? ' ' + item.ap_mat : '') + ', ' + item.nombres + '</strong><em>' + item.cargo + '</em><span>' + item.email + '</span></a></li>').appendTo(ul);
+					};
+
+				$('button.show.ejecutivo').click(function() {
+					var target = $(this).parentTo('ul');
+					target.find('input[name="cotizacion[ejecutivo][id]"][type="search"]').autocomplete('search', '@').focus();
+				});
+
+				/*
+				$.ajax({
+					url: '/4DACTION/_V3_getDatoByCotizacion',
+					data: {
+						id: $('section.sheet').data('id')
+					},
+					dataType: 'json',
+					success: function(data) {
+						var htmlObject;
+						var i = 0;
+						$.each(data.rows, function(key, item) {
+							if (item.enabled && i < 2) {
+								i++;
+								if (item.options.length > 0) {
+									htmlObject = $(' \
+										<ul class="editable" style="margin-top: 0 !important;"> \
+											<li> \
+												<span>' + item.nombre + '</span> \
+												<span><input readonly type="search" name="dato[' + item.id + '][valor]" value="' + item.valor + '"></span> \
+												<button class="show dato_' + item.id + '">Ver</button> \
+											</li> \
+										</ul> \
+									');
+									htmlObject.find('input').autocomplete({
+										source: function(request, response) {
+											response($.map(item.options, function(jtem) {
+												return jtem;
+											}));
+										},
+										minLength: 0,
+										delay: 5,
+										position: { my: "left top", at: "left bottom", collision: "flip" },
+										open: function() {
+											$(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+										},
+										close: function() {
+											$(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+										},
+										focus: function(event, ui) {
+											$(this).val(ui.item.text);
+											return false;
+										},
+										select: function(event, ui) {
+											$(this).val(ui.item.text);
+											return false;
+										}
+
+									}).data('ui-autocomplete')._renderItem = function(ul, item) {
+										return $('<li><a>' + item.text + '</a></li>').appendTo(ul);
+									};
+									$('article.general-data').append(htmlObject);
+									$('article.general-data').find('button.show.dato_' + item.id).button({
+										icons: {
+											primary: 'ui-icon-carat-1-s'
+										},
+										text: false
+									}).click(function() {
+										$('article.general-data').find('input[name="dato[' + item.id + '][valor]"]').autocomplete('search', '@').focus();
+									});
+								} else {
+									htmlObject = $(' \
+										<ul class="editable" style="margin-top: 0 !important;"> \
+											<li> \
+												<span>' + item.nombre + '</span> \
+												<span><input type="text" name="dato[' + item.id + '][valor]" value="' + item.valor + '"></span> \
+											</li> \
+										</ul> \
+									');
+									$('article.general-data').append(htmlObject);
+								}
+							}
+						});
+					}
+				});
+				*/
+
+
+			});
+		</script>
+		<style>
+
+			table.items > tbody {
+				counter-reset: item;
+			}
+
+			table.items > tbody > tr:not(.title) > td:nth-of-type(2):before {
+				counter-increment: item;
+				content: counter(item);
+				font-weight: bold;
+			}
+
+			/* Segunda cantidad */
+			<!--#4DIF NOT(vUsarsegunda_cantidad)-->
+			.segunda-cantidad {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			.block-utilidades-gastos {
+				/* nunca se muestra en presupuesto */
+				display: none !important;
+			}
+
+			.block-resumenes {
+				/* nunca se muestra en presupuesto */
+				display: none !important;
+			}
+
+			/* Márgenes según parámetro */
+
+			<!--#4DIF _V3_param_showMargenDesdeCompra-->
+			table .margen-desde-venta {
+				display: none;
+			}
+			<!--#4DELSE-->
+			table .margen-desde-compra {
+				display: none;
+			}
+			<!--#4DENDIF-->
+
+			section.sheet table .collapsed {
+				display: none;
+			}
+
+			table .moving-src, table .moving-dst {
+				outline: 1px dashed black;
+				opacity: .3;
+			}
+
+			section.sheet table th:last-of-type {
+				width: 28px;
+			}
+
+			/* Nuevo */
+
+			input.movimiento {
+				background-color: #94BDFF;
+			}
+
+			input.indicador {
+				background-color: #ADAD84;
+			}
+
+			.checklist > li > span:first-of-type {
+				width: calc(40% - 2px) !important;
+				font-size: 14px;
+				font-weight: normal !important;
+			}
+
+			.checklist > li > span:first-of-type > em {
+				/* color: #84ADEF;*/
+				color: #648DCF;
+			}
+
+			li.strikeout > span {
+				text-decoration: line-through !important;
+			}
+
+			/* Costo según permiso */
+
+			/*
+			<!--#4DIF NOT(_V3_permission_showCosto)-->
+			.costo {
+				display: none;
+			}
+			<!--#4DENDIF-->
+			*/
+
+			/* Utilidad según permiso */
+			/*
+			<!--#4DIF NOT(_V3_permission_showUtilidad)-->
+			.utilidad {
+				display: none;
+			}
+			<!--#4DENDIF-->
+			*/
+
+		</style>
+	</head>
+	<body>
+		<!-- Formularios de contenido -->
+		<section class="sheet" data-id="<!--#4DVAR vid_nv-->" data-index="<!--#4DVAR vid_negocio-->"<!--#4DIF vNuevo--> data-new="true"<!--#4DENDIF--><!--#4DIF vAnulada--> data-readonly="true"<!--#4DENDIF--> <!--#4DIF [Nota_de_venta]Estado_NV="NULO"--> data-null="true" <!--#4DELSE--> data-null="false" <!--#4DENDIF--> >
+			<footer>
+				<article class="general-data">
+					<h1>Información general</h1>
+					<h2><span id="index"><!--#4DIF vid_negocio=0-->Borrador<!--#4DELSE--><!--#4DIF vid_negocio=-1-->Plantilla<!--#4DELSE-->Nº <!--#4DVAR vid_negocio--><!--#4DENDIF--><!--#4DENDIF--></span> <strong>Presupuesto</strong> <input data-text placeholder="Ingresa el nombre del proyecto..." type="text" name="cotizacion[titulo][text]" value="<!--#4DVAR vreferencia-->"></h2>
+					<p><!--#4DVAR vestado--> - Creada por <!--#4DVAR vDeEmisor--> el <!--#4DVAR vFechaEmi1--> a las <!--#4DVAR vHoraEmi1--><!--#4DIF vCerradaCompras--><br>
+						<span class="ui-icon ui-icon-locked" style="display: inline-block; vertical-align: bottom; margin-bottom: -2px;"></span>Cerrado para compras<!--#4DENDIF--></p>
+					
+					<ul class="editable area-neg-presup">
+						<!-- TODO: Falta permiso para modificar àrea de negocio; el permiso define si es readonly -->
+						<li><span>Área de negocio</span> <span><input required type="search"
+						<!--#4DIF Not(_V3_verifica_permisos_web(_V3_data_username;668))-->readonly<!--#4DENDIF--> 
+						name="cotizacion[area_negocio]" data-id="<!--#4DVAR vid_areanegocio-->" 
+						value="<!--#4DVAR vareanegocio-->" placeholder="Buscar..."></span>
+						<!--#4DIF _V3_verifica_permisos_web(_V3_data_username;668)-->
+						<button class="show area-negocio">Ver mis áreas de negocio</button>
+						<!--#4DENDIF--></li>
+					</ul>
+					<ul class="editable ejecutivo-responsable-presup">
+						<li><span>Ejec. Responsable</span> <span><input id="ejecutivo" readonly required type="search" name="cotizacion[ejecutivo][id]" data-id="<!--#4DVAR vEjecutivoDefaultLogin-->" value="<!--#4DVAR vEjecutivoDefaultNombre-->" placeholder="Buscar por Alias, Nombre o Apellidos..."></span><button class="show ejecutivo">Ver todos los ejecutivos</button></li>
+					</ul>
+					<ul class="editable" style="display:none">
+						<li><span>Tipo</span> <span><input required type="search" name="cotizacion[tipo_presupuesto]" data-id="<!--#4DVAR vtipo_presupuesto-->" value="<!--#4DVAR vtipopresupuesto-->" placeholder="Buscar..."></span><button class="show tipo-presupuesto">Ver tipos de presupuesto</button></li>
+					</ul>
+				</article>
+				<article style="display: none !important;">
+					<h1>Check List</h1>
+					<h2><strong>Estado</strong> <span></span></h2>
+					<button class="expand active"></button>
+					<ul class="editable expandable checklist"></ul>
+					<ul class="editable expandable checklist"></ul>
+				</article>
+				<article class="block-utilidades-gastos">
+					<h1>Utilidades y gastos</h1>
+					<h2>
+						<span class="switchable">
+							Utilidad P.
+							<span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol-->
+								<span data-name="presupuestado-utilidad-value"></span>
+							</span>
+							<span class="numeric percent">
+								<span data-name="presupuestado-utilidad-ratio"></span>
+							%</span>
+						</span>
+						<span class="switchable">
+							Util. Final
+							<span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol-->
+								<span data-name="real-utilidad-value"></span>
+							</span>
+							<span class="numeric percent">
+								<span data-name="real-utilidad-ratio"></span>
+							%</span>
+						</span>
+						<span class="switchable">
+							Por Gastar
+							<span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol-->
+								<span data-name="indicador-diferencia-costos-value"></span>
+							</span>
+							<!--
+							<span class="numeric percent">
+								<span data-name="indicador-diferencia-costos-ratio"></span>
+							%</span>
+							-->
+						</span>
+						<span class="switchable">
+							Utilidad Esperada
+							<span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol-->
+								<span data-name="indicador-utilidad-esperada-value"></span>
+							</span>
+						</span>
+						<span class="switchable">
+							Eficiencia
+							<span class="numeric percent">
+								<span data-name="indicador-eficiencia-ratio"></span>
+							%</span>
+						</span>
+
+					</h2>
+					<button class="expand active"></button>
+					<section class="expandable third-width">
+						<h1>Presupuestado</h1>
+						<ul class="summary">
+							<li><span class="costo numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="presupuestado-costo-value"></span></span> <span>Gasto P.</span> <span class="costo numeric percent"><span data-name="presupuestado-costo-ratio"></span> %</span></li>
+							<li><span class="utilidad numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="presupuestado-utilidad-value"></span></span> <span>Utilidad P.</span> <span class="utilidad numeric percent"><span data-name="presupuestado-utilidad-ratio"></span> %</span></li>
+						</ul>
+					</section>
+					<section class="expandable third-width">
+						<h1>Real</h1>
+						<ul class="summary">
+							<li><span class="costo numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="real-costo-value"></span></span> <span>Gasto R.</span> <span class="costo numeric percent"><span data-name="real-costo-ratio"></span> %</span></li>
+							<li><span class="utilidad numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="real-utilidad-value"></span></span> <span>Util. Final</span> <span class="utilidad numeric percent"><span data-name="real-utilidad-ratio"></span> %</span></li>
+						</ul>
+					</section>
+					<section class="expandable third-width">
+						<h1>Indicadores</h1>
+						<ul class="summary">
+							<li><span class="indicador numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="indicador-diferencia-costos-value"></span></span> <span>Por gastar</span> <span class="indicador numeric percent"></span></li>
+							<li><span class="indicador numeric currency"></span> <span>Eficiencia</span> <span class="indicador numeric percent"><span data-name="indicador-eficiencia-ratio"></span> %</span></li>
+							<li><span class="indicador numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="indicador-utilidad-esperada-value"></span></span> <span>Util. esperada</span> <span class="indicador numeric percent"></span></li>
+						</ul>
+					</section>
+				</article>
+				<article class="block-resumenes">
+					<h1>Resúmenes</h1>
+					<section class="third-width">
+						<h1>Gastos reales</h1>
+						<ul class="summary" style="width: calc(359px * 2);">
+							<li style="display: inline-block !important;"><span class="costo numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="gasto-real-directo-value"></span></span> <span>Gastos directos</span> <span class="costo numeric percent"></span></li>
+							<li style="display: inline-block !important;"><span class="costo numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="gasto-real-interno-value"></span></span> <span>Gastos internos (OT)</span> <!-- <span class="costo numeric percent"></span> --> <label style="position: relative; left: 0px; font-size: small;"><input type="checkbox" name="negocio[gasto_real_interno_enabled]"> ¿Considerado?</label></li>
+							<!-- <li><span class="costo numeric currency">$ <span data-name="gasto-real-interno-value"></span></span> <span>Gastos internos (OT)</span> <label style="position: relative; left: 0px; font-size: small;"><input type="checkbox" name="negocio[gasto_real_interno_enabled]"> ¿Considerado?</label></li> -->
+							<li><span class="costo numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="gasto-real-otros-value"></span></span> <span>Otros gastos</span> <span class="costo numeric percent"></span></li>
+							<li><span class="costo numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="gasto-real-sobrecargos-value"></span></span> <span>Sobrecargos</span> <span class="costo numeric percent"></span></li>
+							<li><span class="total numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="gasto-real-total-value"></span></span> <span>Total</span> <span class="total numeric percent"></span></li>
+						</ul>
+						<!--
+						<h1>Gasto interno</h1>
+						<ul class="summary">
+							<li><span class="costo numeric currency">$ <span data-name="gasto-real-interno-value"></span></span> <span>Gastos internos (OT)</span> <label style="position: relative; left: 0px; font-size: small;"><input type="checkbox" name="negocio[gasto_real_interno_enabled]"> ¿Considerado?</label></li>
+						</ul> -->
+					</section>
+					<section style="display:none" class="third-width">
+						<h1>Justificación de gastos</h1>
+						<ul class="summary">
+							<li><span class="costo numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="justificacion-pending-value"></span></span> <span>Por justificar</span> <span class="costo numeric percent"></span></li>
+							<li><span class="costo numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="justificacion-done-value"></span></span> <span>Justificado</span> <span class="costo numeric percent"></span></li>
+						</ul>
+					</section>
+					<section style="display:none" class="third-width">
+						<h1>Cobros</h1>
+						<ul class="summary">
+							<li><span class="movimiento numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="cobro-pending-value"></span></span> <span>Por cobrar</span> <span class="movimiento numeric percent"></span></li>
+							<li><span class="movimiento numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="cobro-done-value"></span></span> <span>Cobrado</span> <span class="movimiento numeric percent"></span></li>
+						</ul>
+					</section>
+					<section style="display:none" class="third-width">
+						<h1>Pagos</h1>
+						<ul class="summary">
+							<li><span class="movimiento numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="pago-pending-value"></span></span> <span>Por pagar</span> <span class="movimiento numeric percent"></span></li>
+							<li><span class="movimiento numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="pago-done-value"></span></span> <span>Pagado</span> <span class="movimiento numeric percent"></span></li>
+						</ul>
+					</section>
+					<section style="display:none" class="third-width">
+						<h1>Impuestos</h1>
+						<ul class="summary">
+							<li><span class="movimiento numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="impuesto-iva-value"></span></span> <span><!--#4DVAR <>_V3_IVAName--></span> <span class="movimiento numeric percent"></span></li>
+							<li><span class="movimiento numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <span data-name="impuesto-retenciones-value"></span></span> <span>Retenciones</span> <span class="movimiento numeric percent"></span></li>
+						</ul>
+					</section>
+				</article>
+				<article>
+					<h1>Información adicional</h1>
+					<section>
+						<ul>
+
+							<li><span>Fecha de asignación</span> <span class="full-width"><input type="date" name="cotizacion[condiciones][fecha_proyecto]" value="<!--#4DVAR Substring(String(vFechaProyecto;ISO Date);1;10)-->"></span></li>
+
+							<li><span>Fecha de realización</span> <span class="full-width"><input type="text" name="cotizacion[condiciones][fecha_entrega_datepicker]" value="<!--#4DVAR Substring(String(vFechaVencimiento);1;10)-->"><input type="hidden" name="cotizacion[condiciones][fecha_entrega]" value="<!--#4DVAR Substring(String(vFechaVencimiento;ISO Date);1;10)-->"></span></li>
+							<script>
+							$(document).ready(function() {
+								$('input[name="cotizacion[condiciones][fecha_entrega_datepicker]"]').datepicker({
+									dateFormat: 'dd-mm-yy',
+									altField: 'input[name="cotizacion[condiciones][fecha_entrega]',
+									altFormat: 'yy-mm-dd'
+								});
+
+
+								// $('.area-neg-presup').hide();
+								// $('.ejecutivo-responsable-presup').hide();
+
+
+							});
+							</script>
+
+						</ul>
+
+
+					</section>
+				</article>
+			</footer>
+		</section>
+		<!-- <script type="text/javascript" src="/v3/script/customAutocomplete.js" defer></script> -->
+	</body>
+
+</html>

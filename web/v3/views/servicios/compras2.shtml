@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getDetalleServicios3-->
+		<meta charset="utf-8">
+		<title>Servicios - compras</title>
+		<script>
+		$(document).ready(function() {
+			var container = $('.sheet.gastos-servicios');
+			var tbody = container.find('table > tbody');
+			var fecha_from = $('#search').find('input[name="fecha_from"]').val();
+			var fecha_to = $('#search').find('input[name="fecha_to"]').val();
+			var sumatotal = 0;
+			unaBase.ui.block();			
+			$.ajax({
+				url: '/4DACTION/_V3_proxy_getDetalleServicios3',
+				data : {
+					'id' : <!--#4DTEXT id-->,
+					'compras' : true,
+					'fecha_from' : fecha_from,
+					'fecha_to' : fecha_to
+				},
+				dataType: 'json',
+				success: function(data){
+					var rows = '';
+					$.each(data.compras, function(key, item){
+						rows = rows + '<tr data-id="'+item.id+'">';
+						rows = rows + '<td>'+ item.folio +'</td>';
+						rows = rows + '<td>'+ item.documento +'</td>';
+						rows = rows + '<td>'+ item.emision +'</td>';
+						rows = rows + '<td>'+ item.estado +'</td>';
+						rows = rows + '<td class="left">'+ item.proveedor +'</td>';
+						rows = rows + '<td class="left">'+ item.referencia +'</td>';
+						rows = rows + '<td class="right numeric currency">$ <span>'+ item.total +'</span></td>';
+						rows = rows + '</tr>';
+						sumatotal += item.total;
+					});
+					tbody.html(rows);
+					tbody.find('tr').click(function(){
+						window.open('/4DACTION/wbienvenidos#compras/content.shtml?id=' + $(this).data('id'));
+					});
+					$('.sumatotal > span').text(sumatotal).number(true, 0, ',', '.');
+					$('.numeric.currency span').number(true, 0, ',', '.');
+					unaBase.ui.unblock();
+				}
+			});
+		});
+		</script>
+		<style type="text/css">
+			.gastos-servicios > table > tbody > tr:hover{
+				cursor: pointer;
+			}
+		</style>
+	</head>
+	<body>
+		<section class="sheet gastos-servicios" data-id="<!--#4DTEXT id-->">
+			<div style="margin:5px; font-size:12px" class="sumatotal right">Total suma $ <span style="font-weight:bold">0</span></div>
+			<table class="gastos-items">
+				<thead>
+					<tr>					
+						<th width="5%">Número</th>
+						<th width="5%">Documento</th>
+						<th width="5%">Emisión</th>					
+						<th width="10%">Estado</th>						
+						<th width="25%" class="center">Proveedor</th>
+						<th width="25%" class="center">Referencia</th>
+						<th width="10%" class="right">Costo total [$]</th>						
+					</tr>		
+				</thead>				
+				<tbody></tbody>
+			  	<tfoot></tfoot>
+			</table>
+		</section>
+	</body>
+</html>

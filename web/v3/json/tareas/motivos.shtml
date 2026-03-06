@@ -1,0 +1,10 @@
+{
+	"motivos": [
+	<!--#4DLOOP a_motivo_id-->
+		{	
+			"id": <!--#4DTEXT a_motivo_id{a_motivo_id}-->,
+			"nombre": "<!--#4DTEXT _V3_escapeString(a_motivo_nombre{a_motivo_id})-->"
+		}<!--#4DIF NOT(a_motivo_id{a_motivo_id} = a_motivo_id{Size of array(a_motivo_id)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

@@ -1,0 +1,24 @@
+{
+	"success": <!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"status":<!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"errorMsg": "<!--#4DTEXT errorMsg-->",
+	"records": {
+		"total_records": <!--#4DHTML totalRecords-->
+	},
+	
+
+	"data": [
+	
+		<!--#4DIF totalRecords > 0-->
+			<!--#4DLOOP aId-->
+			{
+				"id": <!--#4DHTML aId{aId}-->,
+				"number": "<!--#4DHTML aCuentaContable{aId}-->",
+				"nombre_cuenta": "<!--#4DHTML aNombreCuenta{aId}-->"
+			}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		<!--#4DENDIF-->
+	]
+
+	
+}

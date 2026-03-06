@@ -1,0 +1,5 @@
+{
+	"rand": <!--#4DIF rand-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"pass_too_old": <!--#4DIF pass_too_old-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"success": <!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF-->
+}

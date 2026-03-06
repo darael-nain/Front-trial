@@ -1,0 +1,34 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Relacionados]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP aContactoUniqueId -->
+		{
+			"uuid": "<!--#4DHTML aContactoUniqueId{aContactoUniqueId}-->",
+			"id": <!--#4DHTML aContactoId{aContactoUniqueId}-->,
+			"default": <!--#4DIF aContactoDefault{aContactoUniqueId}-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+			"text": "<!--#4DHTML _V3_escapeString(aContactoAlias{aContactoUniqueId})-->",
+			"ap_pat": "<!--#4DHTML _V3_escapeString(aContactoApPat{aContactoUniqueId})-->",
+			"ap_mat": "<!--#4DHTML _V3_escapeString(aContactoApMat{aContactoUniqueId})-->",
+			"nombres": "<!--#4DHTML _V3_escapeString(aContactoNombres{aContactoUniqueId})-->",
+			"nombre_completo": "<!--#4DHTML _V3_escapeString(aContactoNombreCompleto{aContactoUniqueId})-->",
+			"direccion": "<!--#4DHTML _V3_escapeString(aContactoDireccion{aContactoUniqueId})-->",
+			"telefonos": "<!--#4DHTML _V3_escapeString(aContactoTelefonos{aContactoUniqueId})-->",
+			"empresa": {
+				"id": "<!--#4DHTML aContactoEmpresaId{aContactoUniqueId}-->",
+				"text": "<!--#4DHTML _V3_escapeString(aContactoEmpresaAlias{aContactoUniqueId})-->"
+			},
+			"email": "<!--#4DHTML aContactoEmail{aContactoUniqueId}-->",
+			"email_programacion": "<!--#4DHTML aCorreoProgramacion{aContactoUniqueId}-->",
+			"cargo": "<!--#4DHTML _V3_escapeString(aContactoCargo{aContactoUniqueId})-->"
+		}<!--#4DIF NOT(aContactoUniqueId{aContactoUniqueId} = aContactoUniqueId{Size of array(aContactoUniqueId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

@@ -1,0 +1,10 @@
+{
+	"recientes": [
+	<!--#4DLOOP a_id-->
+		{	
+			"id": <!--#4DTEXT a_id{a_id}-->,
+			"criterio": "<!--#4DTEXT a_criterio{a_id}-->"
+		}<!--#4DIF NOT(a_id{a_id} = a_id{Size of array(a_id)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

@@ -1,0 +1,34 @@
+{
+	"success": <!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"status":<!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"errorMsg": "<!--#4DTEXT errorMsg-->",
+	"records": {
+		"total_records": <!--#4DHTML totalRecords-->
+	},
+	"rows": [
+	
+		<!--#4DIF totalRecords > 0-->
+			<!--#4DLOOP aId-->
+			{
+				"id": <!--#4DHTML aId{aId}-->,
+				"des_banco": "<!--#4DHTML aDesBanco{aId}-->",
+				"nombre_banco": "<!--#4DHTML aNombreBanco{aId}-->",
+				"cuenta_corriente": "<!--#4DHTML aCuentaCorriente{aId}-->"
+			}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		<!--#4DENDIF-->
+	],
+	"cuentas":{
+		"rows": [
+			<!--#4DLOOP aIdCuenta-->
+			{
+				"id": <!--#4DHTML aIdCuenta{aIdCuenta}-->,
+				"nombre": "<!--#4DHTML aCuentaNombre{aIdCuenta}-->",
+				"cuenta": "<!--#4DHTML aCuentaC{aIdCuenta}-->",
+				"tipo": "<!--#4DHTML aCuentaTipo{aIdCuenta}-->"	
+			}<!--#4DIF NOT(aIdCuenta{aIdCuenta} = aIdCuenta{Size of array(aIdCuenta)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		]
+	}
+	
+}

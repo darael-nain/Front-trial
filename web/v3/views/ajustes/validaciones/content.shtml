@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getRValidacionContent-->
+		<title>Validaciones</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/views/ajustes/validaciones/script/library/content.js"></script>
+		<script type="text/javascript" src="/v3/views/ajustes/validaciones/script/startup/content.js"></script>
+		<style>
+
+			table.items > tbody {
+				counter-reset: section;
+				counter-reset: item;
+			}
+
+			table.items > tbody > tr.title {
+				counter-increment: section;
+				counter-reset: item;
+			}
+
+			table.items > tbody > tr.title > th:nth-of-type(3):before {
+				content: "Jerarquía Nº " counter(section);
+			}
+
+			table.items > tbody > tr:not(.title) > td:nth-of-type(2):before {
+				counter-increment: item;
+				content: counter(section) "." counter(item);
+				font-weight: bold;
+			}
+
+			section.sheet table .collapsed {
+				display: none;
+			}
+
+			table .moving-src, table .moving-dst {
+				outline: 1px dashed black;
+				opacity: .3;
+			}
+
+			section.sheet table th:last-of-type {
+				width: 28px;
+			}
+
+			/* Contenedores para reunir los items */
+			.multi-search--gastos {
+				display: inline-block;
+				max-width: 100%;       
+			}
+
+			.chips-container {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 4px;
+				max-width: 100%;
+			}
+
+
+			.chip {
+				display: inline-flex !important; 
+				align-items: center;
+				background: #e5e5e5;
+				border-radius: 2px;
+				padding: 2px 4px;
+				font-size: 11px;
+
+				max-width: 30ch;                  
+				box-sizing: border-box;
+			}
+
+
+			.chip-text {
+				display: block !important;         
+				flex: 1 1 auto;
+				min-width: 0;                       
+				max-width: 100%;
+
+				overflow: hidden !important;
+				white-space: nowrap !important;
+				text-overflow: ellipsis !important;
+			}
+
+			/* Botón de eliminar */
+			.chip-remove {
+				flex: 0 0 auto;
+				margin-left: 4px;
+				cursor: pointer;
+				font-weight: bold;
+			}
+
+
+
+			/* Nuevpo */
+
+			section.sheet > footer > article {
+				position: relative;
+			}
+
+		</style>
+	</head>
+	<body>
+		<!-- Formularios de contenido -->
+		<section class="sheet" data-id="<!--#4DVAR [regla_validacion]id-->" data-index="<!--#4DVAR [regla_validacion]prioridad-->">
+			<footer>
+				<article>
+					<h1>Información general</h1>
+					<h2><span id="text"><!--#4DVAR [criterio_validacion]text--></span> <strong>Regla de validación</strong> </h2>
+					<p>Creada por <!--#4DVAR [regla_validacion]login_usuario--> el <!--#4DVAR String([regla_validacion]created_at_date)--> a las <!--#4DVAR [regla_validacion]created_at_time--></p>
+					<ul class="editable">
+						<li><span>Aplica a</span> <span><input required readonly type="search" name="regla_validacion[criterio]" data-id="<!--#4DVAR [regla_validacion]id_criterio_validacion-->" value="<!--#4DVAR [criterio_validacion]text-->" placeholder="Buscar..."></span><button class="show criterio-validacion">Ver criterios de validación</button></li>
+					</ul>
+
+					<ul class="editable" style="display: none;">
+						<li><span>Valor</span> <span><input required type="search" name="regla_validacion[valor]" value="<!--#4DVAR [regla_validacion]value-->" placeholder="Buscar..."></span><button class="show valor">Ver todos los valores</button></li>
+					</ul>
+
+					<ul class="editable" style="display: none;">
+						<li><span>Valor 2</span> <span><input required type="search" name="regla_validacion[valor2]" value="<!--#4DVAR [regla_validacion]value2-->" placeholder="Buscar..."></span><button class="show valor2">Ver todos los valores</button></li>
+					</ul>
+
+					<ul class="editable">
+						<li><span>Operador</span> <span><input type="text" name="regla_validacion[operador]" value="<!--#4DVAR [regla_validacion]operator-->"></span></li>
+					</ul>
+
+					<ul class="editable categoria-negocio" style="display: none;">
+						<li><span>Item Negocio</span> <span><input type="text" name="regla_validacion[item_negocio]" id="input-categoria-negocio" value=""></span></li>
+					</ul>
+
+				</article>
+			</footer>
+			<table class="items">
+				<!-- <caption><input placeholder="Ingresa el nombre del proyecto..." type="text" name="cotizacion[titulo][text]" value="< ! - -#4DVAR vreferencia - ->"></caption> -->
+				<thead>
+					<tr>
+						<th style="background-color: <!--#4DVAR vColorCorporativoCSS--> !important;"><button class="ui-icon ui-icon-tag add categoria" title="Agregar nivel encima" data-help="Haz clic en este botón para agregar un nivel"></button></th>
+						<th></th>
+						<th>Jerarquía / Usuario</th>
+						<th>Obligatorio</th>
+						<th>Bloquear email</th>
+						<th>Ejecutivo</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+				<!--
+				<tfoot>
+					<tr>
+						<th colspan="4"></th>
+						<th class="segunda-cantidad"></th>
+						<th></th>
+						<th class="numeric currency">$ <span><input readonly name="cotizacion[precios][subtotal]" type="text" value="0"></span></th>
+						<th></th>
+						<th class="numeric currency costo">$ <span><input readonly name="cotizacion[costos][subtotal]" type="text" value="0"></span></th>
+						<th class="numeric currency utilidad">$ <span><input readonly name="cotizacion[utilidades][subtotal]" type="text" value="0"></span></th>
+						<th class="numeric percent margen-desde-venta utilidad"><span><input readonly name="cotizacion[margenes][margen_venta]" type="text" value="0"> %</span></th>
+						<th class="numeric percent margen-desde-compra utilidad"><span><input readonly name="cotizacion[margenes][margen_compra]" type="text" value="0"> %</span></th>
+						<th colspan="1"></th>
+					</tr>
+				</tfoot>
+				-->
+			</table>
+		</section>
+	</body>
+
+</html>

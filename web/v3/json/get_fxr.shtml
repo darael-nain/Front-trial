@@ -1,0 +1,29 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Solicitud_Fondos]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP aIdFxr -->
+		{
+			"id": <!--#4DHTML aIdFxr{aIdFxr}-->,
+			"numero": "<!--#4DHTML aNumeroFxr{aIdFxr}-->",
+			"emision": "<!--#4DHTML String(aEmisionFxr{aIdFxr};7)-->",
+			"responsable": "<!--#4DHTML _V3_escapeString(aResponsableFxr{aIdFxr})-->",
+			"origen": "<!--#4DHTML aOrigenFxr{aIdFxr}-->",
+			"referencia": "<!--#4DHTML _V3_escapeString(aReferenciaFxr{aIdFxr})-->",
+			"saldo": "<!--#4DHTML _V3_formatCurrency(aSaldoFxr{aIdFxr})-->",
+			"pagado": "<!--#4DHTML _V3_formatCurrency(aPagadoFxr{aIdFxr})-->",
+			"rendido": "<!--#4DHTML _V3_formatCurrency(aRendidoFxr{aIdFxr})-->",			
+			"estado": "<!--#4DHTML _V3_formatCurrency(aEstadoFxr{aIdFxr})-->",
+			"vcto": "<!--#4DHTML String(aVencicmientoFxr{aIdFxr};7)-->",
+			"dias_vcto": <!--#4DHTML aDiasVctoFxr{aIdFxr}-->			
+		}<!--#4DIF NOT(aIdFxr{aIdFxr} = aIdFxr{Size of array(aIdFxr)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

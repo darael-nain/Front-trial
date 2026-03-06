@@ -1,0 +1,204 @@
+.box-long{	
+	border-radius:5px;
+	-webkit-border-radius:5px;
+	-moz-border-radius:5px;
+	-o-border-radius:5px;
+	-ms-border-radius:5px;
+	/*background-color:#F79F81;*/
+	background-color: rgba(255,0,0,.5);
+	color:white;
+	display:block;
+	margin:7px 0 0 0;	
+	position:absolute;
+	padding:2px;
+	z-index:1;	
+}
+
+	.box-long:hover{	
+		background-color: rgba(206,146,146,.5);
+		cursor:pointer;
+	}
+	
+	.box-long a{
+		border-bottom:solid 1px white;
+		color:#0080FF;
+		display:block;
+		font-size:11px;
+		padding:2px;		
+		margin:5px;
+		text-align:left;
+		text-decoration:none;
+	}
+	.box-long a:hover{		
+		background:white;
+		border-radius:5px;
+		-webkit-border-radius:5px;
+		-moz-border-radius:5px;
+		-o-border-radius:5px;
+		-ms-border-radius:5px;	
+	}
+
+.hours-on{	
+	border-radius:5px;
+	-webkit-border-radius:5px;
+	-moz-border-radius:5px;
+	-o-border-radius:5px;
+	-ms-border-radius:5px;	
+	color:white;
+	display:block;	
+	padding:2px;
+	margin:2px;
+	text-align:left;
+	position:relative;
+	z-index:2;	
+}
+	.hours-on:nth-child(even){	
+		background-color:#819FF7;		
+	}
+
+	.hours-on:nth-child(odd){	
+		background-color:#5882FA;		
+	}
+	.hours-on:hover{
+		cursor:pointer;		
+	}
+
+.hours-on-vcto{	
+	border-radius:5px;
+	background-color:black;		
+	-webkit-border-radius:5px;
+	-moz-border-radius:5px;
+	-o-border-radius:5px;
+	-ms-border-radius:5px;	
+	color:white;
+	display:block;	
+	padding:2px;
+	margin:2px;
+	text-align:left;
+	position:relative;
+	z-index:2;	
+}
+	.hours-on-vcto:hover{
+		cursor:pointer;		
+	}
+
+
+#table-calendar{
+	position:relative;
+}
+
+.table-simple{
+	text-align:center;
+	font-size:12px;
+}
+
+.table-simple-sub{
+	border:1px solid gray;
+	display:inline-block;
+	margin:0px;
+	padding:0;
+}
+	.table-simple-sub tr{
+		border:1px solid #A4A4A4;
+	}
+
+	.table-simple-sub tr td{
+		border:1px solid #F2F2F2;
+		height:25px;
+		margin:0;
+		padding:0;
+		text-align:center;
+		width:30px;
+	}
+
+.column-name-days td{
+	border:1px solid #BDBDBD;
+	font-weight:bold;	
+}
+
+.cal-m-box-name-recurso{
+	border:2px solid gray;
+	border-radius:3px;
+	height:200px;
+	font-weight:bold;
+	margin:auto;
+	padding:5px;
+	width:100px;
+}
+
+.column-ots{
+	cursor:pointer;
+}
+
+.column-ots td{
+	position:relative;	
+}
+
+.column-numbers-days td{ 
+	background:#848484;
+	border:1px solid #BDBDBD;
+	color:white;
+	font-weight:bold;
+}
+
+.par_{
+	background:#F3E2A9;
+}
+.impar_{
+	background:#F5DA81;
+}
+
+.style-casillas-1{background:#F7FE2E;}
+.style-casillas-2{background:#58ACFA;}
+.style-casillas-3{background:#FF8000;}
+.style-casillas-4{background:#00BFFF;}
+.style-casillas-5{background:#FF8000;}
+.style-casillas-6{background:#FF8000;}
+.style-casillas-7{background:#FF8000;}
+.style-casillas-8{background:#FF8000;}
+.style-casillas-9{background:#FF8000;}
+.style-casillas-10{background:#FF8000;}
+
+.dias-de-trabajo-vence{
+	background:black;
+}
+
+.dias-de-trabajo-rev{
+	background:green;
+}
+
+.float-des{
+	text-shadow:1px 1px 1px white;
+	font-weight:bold;
+	color:#08088A;
+	padding:1px;
+	position:absolute;	
+	width:920px;
+	text-align:left;
+	top:3px;
+	left:2px;
+	z-index:1;	
+}
+
+.float-des-red{
+	text-shadow:1px 1px 1px white;
+	font-weight:bold;
+	color:red;
+	padding:1px;
+	position:absolute;	
+	width:920px;
+	text-align:left;
+	top:3px;
+	left:2px;
+	z-index:1;	
+}
+
+#container-all-calendar{
+	width:100%;
+	overflow:auto;
+}
+
+
+.align{
+	text-align:right;
+}

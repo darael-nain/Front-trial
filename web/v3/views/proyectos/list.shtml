@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getCotizacion-->
+		<title>Presupuestos</title>
+		<meta charset="utf-8">
+
+		<link rel="stylesheet" href="/v3/views/compras/lista.css?mshsmshjsus">
+		<script>
+
+			$(document).ready(function() {
+
+				unaBase.toolbox.init();
+
+				// Inicializamos un buscador
+				var params = {
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/_V3_getProyecto' },
+					entity: 'Proyecto',
+					callback : function(data){
+						$('#viewport .fht-table-init').fixedHeaderTable('destroy');
+						$('#viewport table.fixed').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false });
+
+						$('.ver-costos-totales').hide();
+						if (access._623) {
+							$('.ver-costos-totales').show();
+						}
+
+					},
+					row: {
+						html: function(i, rows) {
+							var htmlData = '<tr data-id="' + rows[i].id + '" data-username="' + rows[i].username + '" data-status="' + rows[i].status + '">' +
+								'<td>' + rows[i].folio + '</td>' +
+								'<td><strong style="font-weight: bold !important;">' + (rows[i].tareas_totales > 0? Math.round((rows[i].tareas_completadas / rows[i].tareas_totales) * 100) : 0).toString() + '% completado</strong><br>' + rows[i].tareas_completadas.toString() + ' de ' + rows[i].tareas_totales.toString() + ' tareas</td>' +
+								'<td class="text">' + rows[i].text + '</td>' +
+								'<td class="text">' + rows[i].cliente.razon_social + '</td>' +
+								'<td>' + rows[i].fecha_inicio + '</td>' +
+								'<td>' + rows[i].fecha_termino + '</td>' +
+								'<td class="left">' + ((rows[i].nombre_responsable != '')? rows[i].nombre_responsable : 'N/A') + '</td>' +
+								'<td class="text right ver-costos-totales">' + rows[i].costo_total_hh + '</td>' +
+							'</tr>';
+							return htmlData;
+						}
+					},
+					detail: {
+						// Función que genera una URL de detalle, dado el id (identificador de item)
+						url: function(id) { return '/v3/views/proyectos/content.shtml?id=' + id },
+					},
+					// Inflexiones
+					inflection: {
+						singular: 'presupuesto',
+						plural: 'presupuestos',
+						none: 'ningún'
+					},
+					// Filtros
+					filters: [
+						{ name: 'created_at', type: 'month', caption: 'Fecha de creación', range: true },
+						{ name: 'updated_at', type: 'month', caption: 'Fecha últ. modificación', range: true },
+						/*
+						{ name: 'usuario', type: 'autocomplete', caption: 'Usuario', dataSource: 'getUsuarioPerfilEjecutivo' },
+						{ name: 'estado', type: 'checkbox', caption: 'Estado de la cotización', options: [
+							{ caption: 'En proceso', name: 'estado_en_proceso', value: true },
+							{ caption: 'Anulada', name: 'estado_nulo', value: false }
+						] },
+
+						*/
+					]
+				};
+
+				unaBase.toolbox.search.init(params);
+
+				unaBase.toolbox.menu.init({
+					entity: 'Proyecto',
+					buttons: [ 'new' , 'exit']
+				});
+
+				if (!access._581) {
+					$('.toolbox [data-name="new"]').remove();
+				}
+
+				$('.ver-costos-totales').hide();
+				if (access._623) {
+					$('.ver-costos-totales').show();
+				}
+
+
+			});
+		</script>
+	</head>
+	<body style="min-width: 900px !important;">
+		<!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->
+		<table class="results fixed" style="min-width: 900px !important; width: 100% !important;">
+			<thead>
+				<tr>
+					<th data-sort-by="folio">Número</th>
+					<th data-sort-by="folio">Avance</th>
+					<th data-sort-by="text">Proyecto</th>
+					<th data-sort-by="text">Cliente</th>
+					<th data-sort-by="created_at">Fecha Inicio</th>
+					<th data-sort-by="created_at" data-sort-default="desc">Fecha Término</th>
+					<th data-sort-by="ejecutivo">Responsable</th>
+					<th data-sort-by="ejecutivo" class="ver-costos-totales">Costo total (hh)</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</body>
+
+</html>

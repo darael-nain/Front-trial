@@ -1,0 +1,19 @@
+{
+	"idx":"<!--#4DVAR vId-->",
+	"giro":"<!--#4DVAR vGiro-->",
+	"direccion":"<!--#4DVAR vDireccion-->",
+	"rut":"<!--#4DVAR vRut-->",
+	"dv":"<!--#4DVAR vDv-->",
+	"fono":"<!--#4DVAR vFono-->",
+	"razon":"<!--#4DVAR vRazon-->",
+	"contactos":
+	[
+		<!--#4DLOOP w_a_id_relacionado-->
+			{
+				"idcontacto":"<!--#4Dvar w_a_id_relacionado{w_a_id_relacionado}-->",
+				"nombres":"<!--#4Dvar w_a_nom_relacionado{w_a_id_relacionado}-->"
+			}
+			<!--#4DIF w_index{w_a_id_relacionado}<Size of array(w_a_id_relacionado)-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	]
+}

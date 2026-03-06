@@ -1,0 +1,29 @@
+{
+	"comuna": <!--#4DIF Not(Undefined(comuna))-->"<!--#4DHTML comuna-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"ciudad": <!--#4DIF Not(Undefined(ciudad))-->"<!--#4DHTML ciudad-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"rut": <!--#4DIF Not(Undefined(rut))-->"<!--#4DHTML rut-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"nombre_empresa": <!--#4DIF Not(Undefined(nombre_empresa))-->"<!--#4DHTML nombre_empresa-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"giro": <!--#4DIF Not(Undefined(giro))-->"<!--#4DHTML giro-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"direccion": <!--#4DIF Not(Undefined(direccion))-->"<!--#4DHTML direccion-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"fecha": <!--#4DIF Not(Undefined(fecha))-->"<!--#4DHTML fecha-->"<!--#4DELSE-->null<!--#4DENDIF-->,	
+	"details": [
+	<!--#4DLOOP aIdDetail -->
+			{
+				"id": <!--#4DHTML aIdDetail{aIdDetail}-->,
+				"idCom": <!--#4DHTML aIdComprobante{aIdDetail}-->,
+				"codigoCuenta": "<!--#4DHTML _V3_escapeString(aCodigoCuenta{aIdDetail})-->",
+				"tipoDoc": "<!--#4DHTML _V3_escapeString(aTipoDoc{aIdDetail})-->",
+				"fechaRegistro": "<!--#4DHTML aRegistryDate{aIdDetail}-->",
+				"proveedor": "<!--#4DHTML _V3_escapeString(aProveedor{aIdDetail})-->",
+				"proveedor_id": "<!--#4DHTML aProveedorId{aIdDetail}-->",
+				"cuentaContable": "<!--#4DHTML _V3_escapeString(aCuentacontable{aIdDetail})-->",
+				"debe": "<!--#4DHTML aDebe{aIdDetail}-->",
+				"haber": "<!--#4DHTML aHaber{aIdDetail}-->",
+				"glosa": "<!--#4DHTML _V3_escapeString(aGlosa{aIdDetail})-->",
+				"tipoComp":  "<!--#4DHTML _V3_escapeString(aTipoComp{aIdDetail})-->",
+				"nro_proyecto":  "<!--#4DHTML _V3_escapeString(aNroProyecto{aIdDetail})-->",
+				"nroDoc": "<!--#4DHTML _V3_escapeString(aNroDoc{aIdDetail})-->"
+			}<!--#4DIF NOT(aIdDetail{aIdDetail} = aIdDetail{Size of array(aIdDetail)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+		]
+}

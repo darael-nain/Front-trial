@@ -1,0 +1,70 @@
+<table id="tablas">
+	<thead>
+		<tr>
+			<th>DESCRIPCION</th>
+			<th>CANT</th>
+			<!--#4DIF vUsarsegunda_cantidad-->
+			<th>DIAS</th>
+			<!--#4DENDIF-->
+			<th>P.U.[ $ ]</th>
+			<th>SUBTOTAL[ $ ]</th>
+			<th>GASTO P.[ $ ]</th>
+			<th>UTILIDAD P.[ $ ]</th>
+			<th>MARGEN P.[ % ]</th>
+			<th>*</th>
+		</tr>
+	<thead>
+	<tbody>
+	<!--#4DLOOP a_llave-->
+	<input name="llave" type="hidden"  value="<!--#4DVAR a_llave{a_llave}-->">  
+	<!--#4DIF a_tipo_det{a_llave}="TITULO"-->	
+	<tr class="titulos">
+		<td><input name="titulo" type="text" value="<!--#4DVAR a_des{a_llave}-->" /></td>
+		<td><!--#4DVAR a_cantidad{a_llave}--></td>
+		<!--#4DIF vUsarsegunda_cantidad-->
+		<td><!--#4DVAR a_cantidad2{a_llave}--></td>  
+		<!--#4DENDIF-->
+		<td>$<!--#4DVAR a_pu1{a_llave}--></td>
+		<td>$<!--#4DVAR a_subtotal{a_llave}--></td>
+		<td>$<!--#4DVAR a_gasto_p{a_llave}--></td>
+		<td>$<!--#4DVAR a_utilidad{a_llave}--></td>
+		<td>%<!--#4DVAR a_margen{a_llave}--></td>
+		<td></td>
+	</tr>
+	<!--#4DELSE-->
+	<tr class="items" id="<!--#4DVAR a_llave{a_llave}-->">
+		<td>			
+			<input name="items" class="des calculo" type="text" value="<!--#4DVAR a_des{a_llave}-->" />
+		</td>
+		<td>
+			<input name="items" class="cantidad calculo" type="text" value="<!--#4DVAR a_cantidad{a_llave}-->"/>
+			<!--#4DIF vUsarsegunda_cantidad=False-->
+			<input name="items" type="hidden" value="0">
+			<!--#4DENDIF-->
+		</td>
+		<!--#4DIF vUsarsegunda_cantidad-->
+		<td>
+			<input name="items" class="dias calculo" type="text" value="<!--#4DVAR a_cantidad2{a_llave}-->"/>
+		</td>  
+		<!--#4DENDIF--> 
+		<td>
+			<input name="items" class="pu calculo" type="text" value="<!--#4DVAR a_pu1{a_llave}-->"/>
+		</td>
+		<td class="subtotal calculo otros"><!--#4DVAR a_subtotal{a_llave}--></td>
+		<td>
+			<input name="items" class="gp calculogp" type="text" value="<!--#4DVAR a_gasto_p{a_llave}-->"/>
+		</td>		
+		<td class="utilidad calculo otros"><!--#4DVAR a_utilidad{a_llave}--></td>
+		<td class="margen calculo otros"><!--#4DVAR a_margen{a_llave}--></td>
+		<td>
+		<!--#4DIF a_chk_comision{a_llave}=true-->
+			<input disabled class="afectox" type="checkbox" value="afecto"  checked="checked" />
+		<!--#4DELSE-->
+			<input disabled class="afectox" type="checkbox" value="noafecto"  />
+		<!--#4DENDIF-->
+		</td>
+	</tr>
+	<!--#4DENDIF-->    
+	<!--#4DENDLOOP-->
+	</tbody>
+</table>

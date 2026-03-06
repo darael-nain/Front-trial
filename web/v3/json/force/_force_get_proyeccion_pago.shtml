@@ -1,0 +1,20 @@
+{
+	"records": {
+		"total": <!--#4DVAR $total-->
+	},
+	"venta":<!--#4DIF Not(Undefined(venta))--><!--#4DIF venta-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+	"compra":<!--#4DIF Not(Undefined(compra))--><!--#4DIF compra-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+	"personalizado":<!--#4DIF Not(Undefined(personalizado))--><!--#4DIF personalizado-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+	"rows": [
+<!--#4DLOOP aId -->
+		{
+			"id": <!--#4DVAR aId{aId}-->,
+			"dia": "<!--#4DHTML aDia{aId}-->",
+			"porcentaje": "<!--#4DHTML aPorcentaje{aId}-->",
+			"id_forma_pago": <!--#4DVAR aIdFormaPago{aId}-->
+			
+		}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+
+}

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- <!-  -#4DSCRIPT/_V3_proxy_getCotizacionContent- -> -->
+		<meta charset="utf-8">
+		<title>OC Clientes</title>
+		<script>
+
+		// Permite llamar a occlientes desde otros módulos
+		function getQueryParam(name) {
+			const params = new URLSearchParams(window.location.search || "");
+			return params.get(name);
+		}
+
+		// Cargar ots del negocio
+		var idnv = getQueryParam("neg") || $('#main-container').data('id'); // Modificacion por darael, si error, eliminar "getQueryParam("neg") ||"
+		var container = $('#sheet-list-occ');
+		var target = container.find('table > tbody');
+		var targetFoot = container.find('table > tfoot');
+
+		var refreshOcc = function() {
+			$.ajax({
+				url: '/4DACTION/_V3_getOcclientes',
+				dataType: 'json',
+				// async: false, // para que no avance hasta que la llamada se complete
+				cache: false,
+				data: {
+					id: idnv
+				},
+				success: loadOcc
+			}).fail(function(a, b, c) {
+				toastr.error(NOTIFY.get('ERROR_INTERNAL', 'Error'));
+			});
+		};
+
+		var loadOcc = function(data) {
+
+			// Elimina todas las oc de la tabla
+			target.find("*").remove();
+
+			// add occ to list
+			var htmlObject;
+			$.each(data.rows, function(key, item) {
+				htmlObject = $('<tr data-id="'+item.id+'">'+
+							'<td>'+item.folio+'</td>' +
+							'<td>'+item.tipo+'</td>' +
+							'<td>'+item.emision+'</td>' +
+							'<td>'+item.recepcion+'</td>' +
+							'<td>'+item.referencia+'</td>' +
+							'<td>'+item.cliente+'</td>' +
+							'<td>'+item.contacto+'</td>' +
+							//'<td class="currency">'+ item.total +'</td>' +
+							'<td>'+ currency.symbol + ' ' +$.number(item.total, currency.decimals, currency.decimals_sep, currency.thousands_sep) +'</td>' +
+							'</tr>');
+				htmlObject.unbind('click').bind('click', function(event) {
+					unaBase.loadInto.dialog('/v3/views/occlientes/content.shtml?id='+$(this).data('id')+'&neg='+idnv, 'OC. Cliente', 'x-large');
+				});
+				target.append(htmlObject);
+			});
+
+			var htmlObject;
+			htmlObject = $('<tr>'+
+						'<td></td>' +
+						'<td></td>' +
+						'<td></td>' +
+						'<td></td>' +
+						'<td></td>' +
+						'<td></td>' +
+						'<td></td>' +
+						'<td></td>' +
+						'</tr>');
+
+			targetFoot.append(htmlObject);
+		};
+
+		$(document).ready(function() {
+			refreshOcc();
+			formatCurrency();
+			$('button.new_occ').button({icons: {primary: 'ui-icon-document'},text:true, caption:"Cear"}).click(function(){
+				//unaBase.loadInto.dialog('/v3/views/occlientes/content.shtml?id=0&neg='+idnv, 'Nueva OC. Cliente', 'x-large');
+				unaBase.loadInto.dialog('/v3/views/occlientes/content.shtml?neg='+idnv, 'Nueva OC. Cliente', 'x-large');
+			});
+
+			// viene de la lista de neogcio y cotizacion
+			$(".titulofinal").text($("#main-container").data("titulofinal"));
+			
+
+			let footerInfoGeneral = document.getElementById("footerInfoGeneralOcClient");
+
+
+			addInfo(footerInfoGeneral, unaBase.doc);
+
+		
+
+		});
+		</script>
+	</head>
+	<body>
+		<section id="sheet-list-occ" class="sheet">
+
+			<footer id="footerInfoGeneralOcClient">
+
+				
+			</footer>
+			<!-- <!- -4DINCLUDE ../negocios/infogeneral.shtml- -> -->
+			<button style="margin:5px" type="button" class="new_occ">Crear</button>
+			<table>
+				<thead>
+					<tr>
+						<th width="10%">Número</th>
+						<th width="10%">Tipo</th>
+						<th width="10%">Emisión</th>
+						<th width="10%">Recepción</th>
+						<th width="20%">Referencia</th>
+						<th width="20%">Cliente</th>
+						<th width="10%">Contacto</th>
+						<th width="10%">Total</th>
+					</tr>
+				</thead>
+				<tbody class="ui-selectable" style="box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;"></tbody>
+			  	<tfoot></tfoot>
+			</table>
+		</section>
+	</body>
+</html>

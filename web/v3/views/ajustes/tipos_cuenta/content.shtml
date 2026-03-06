@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getTiposCuenta-->
+		<title>Tipos de Cuenta</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/views/ajustes/tipos_cuenta/tipos_cuenta.js"></script>
+    	<script type="text/javascript" src="/v3/views/ajustes/tipos_cuenta/content.js"></script>
+    	<style type="text/css">
+    		.newcolor input,textarea{
+    			background-color: #ffffff !important;
+    		}
+    	</style>
+    	<link href="/css/form1.css" rel="stylesheet">
+	</head>
+	<body>
+		<section class="sheet" id="tiposcuenta" data-id="<!--#4DTEXT id-->">
+			<footer>
+				<article>
+					<h1>Información general - Tipos de cuenta</h1>
+					<ul class="editable newcolor">
+						<li><input name="estado_tipocuenta" class="checkbox" type="checkbox"><label class="sg-input-title" >Activo</label></li>
+
+						<li><span class="sg-input-title">Descripcion</span> <span><input class="form-control rise" type="text" name="descripcion_tipocuenta"></span></li>
+						<li><span class="sg-input-title">Codigo</span> <span><input type="text" class="form-control rise" name="codigo_tipocuenta"></span></li>
+					</ul>
+				</article>
+			</footer>
+		</section>
+	</body>
+</html>

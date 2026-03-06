@@ -1,0 +1,48 @@
+{
+	"records": {
+			"total_records": <!--#4DHTML totalRecords-->
+	},
+	"data":{
+
+			<!--#4DIF totalRecords > 0-->
+			"iddoc": "<!--#4DHTML id-->",
+			"rows": [
+				<!--#4DLOOP aIdOc-->
+				{
+					"idoc": <!--#4DHTML aIdOc{aIdOc}-->,
+					"folio": "<!--#4DHTML aFolioOc{aIdOc}-->",
+					"estado": "<!--#4DHTML aEstadoOc{aIdOc}-->",
+					
+					<!--#4DHTML _sii_getItemsGasto(aIdOc{aIdOc};idCarga)-->
+					"items": [
+						<!--#4DLOOP aIdItem-->
+							{
+								"id": "<!--#4DHTML aId{aIdItem}-->",
+								"name": "<!--#4DHTML _V3_escapeString(aName{aIdItem})-->",
+								"id_titulo": "<!--#4DHTML aIdItemTitulo{aIdItem}-->",
+								"id_item_nv": "<!--#4DHTML aIdItemNv{aIdItem}-->",
+								"id_oc": "<!--#4DHTML aIdOcItem{aIdItem}-->",
+								"id_product": "<!--#4DHTML aIdProducto{aIdItem}-->",
+								"id_impuesto": "<!--#4DHTML aImpuesto{aIdItem}-->",
+								"tipo": "<!--#4DHTML aTipo{aIdItem}-->",
+								"total": "<!--#4DHTML aTotal{aIdItem}-->",
+								"id_nv": "<!--#4DHTML aIdNv{aIdItem}-->"
+							}<!--#4DIF NOT(aIdItem{aIdItem} = aIdItem{Size of array(aIdItem)})-->,<!--#4DENDIF-->
+						<!--#4DENDLOOP-->
+							],
+					
+					"total_oc": "<!--#4DHTML aTotalOc{aIdOc}-->",
+					"fecha_emision": "<!--#4DHTML aFechaOc{aIdOc}-->",
+					"tipodoc": "<!--#4DHTML aTipoOc{aIdOc}-->",
+					"referencia": "<!--#4DHTML  _V3_escapeString(aRefOc{aIdOc})-->",
+					"proveedor": "<!--#4DHTML  _V3_escapeString(aProveedorOc{aIdOc})-->"
+
+				}<!--#4DIF NOT(aIdOc{aIdOc} = aIdOc{Size of array(aIdOc)})-->,<!--#4DENDIF-->
+				<!--#4DENDLOOP-->
+			]
+
+
+		<!--#4DENDIF-->
+
+	}
+}

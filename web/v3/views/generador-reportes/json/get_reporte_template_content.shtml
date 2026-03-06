@@ -1,0 +1,28 @@
+{
+		"id" : <!--#4DHTML $id-->,
+		"nombre": "<!--#4DHTML _V3_escapeString($nombre)-->",
+		"modulo": {
+			"id": <!--#4DHTML $id_modulo-->
+		},
+		"fecha": {
+			"range": "<!--#4DHTML $fecha_range-->",
+			"from": "<!--#4DHTML Substring(String($fecha_from;8);1;10)-->",
+			"to": "<!--#4DHTML Substring(String($fecha_to;8);1;10)-->"
+		},
+		"filtros": [
+			<!--#4DLOOP $aFiltroId-->
+			{
+				"id": <!--#4DHTML $aFiltroId{$aFiltroId}-->,
+				"value": "<!--#4DHTML $aFiltroValue{$aFiltroId}-->"
+			}<!--#4DIF NOT($aFiltroId{$aFiltroId} = $aFiltroId{Size of array($aFiltroId)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		],
+		"columnas": [
+			<!--#4DLOOP $aColumnaId-->
+			{
+				"id": <!--#4DHTML $aColumnaId{$aColumnaId}-->,
+				"status": <!--#4DIF $aColumnaStatus{$aColumnaId}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+			}<!--#4DIF NOT($aColumnaId{$aColumnaId} = $aColumnaId{Size of array($aColumnaId)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		]
+}

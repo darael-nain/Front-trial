@@ -1,0 +1,135 @@
+<!--#4DINCLUDE headgreen.shtml-->
+<body>
+<!--#4DINCLUDE menu_superior_green.shtml-->
+<section id="main-container">
+    <div class="base"> 
+       
+
+        <div class="box-button">            
+             <!--#4DIF aCheckPermiso{19}=true-->
+            <a class="boton" href="/4DACTION/nueva_ot" target="_blank">Nueva OT</a>
+            <!--#4DENDIF-->             
+
+            <!--#4DIF aCheckPermiso{16}=true-->
+            <button id="btn-planner-ot" type="button">Planificador</button>          
+            <!--#4DENDIF-->
+
+            <!--#4DIF aCheckPermiso{25}=true-->
+            <button id="btn-mycalendar-ot" type="button">Mi Calendario</button>
+            <!--#4DENDIF-->  
+
+            <span class="label-view-weekly">( Vista mensual )</span>
+
+        </div>
+
+         <h2 class="sub-title">
+            <img class="img-title-calendar" src="/imagenes_green/img_calendar_time.png">
+            <!--#4DVAR subTitle-->            
+        </h2>        
+
+        <div class="planner-box-filters">            
+            <button id="btn-view-weekly" type="button" class="buttonBkn especial2">
+                Ir a vista semanal
+            </button>
+        </div>
+
+        <div style="text-align:right;margin-right:15px;">
+
+        <label>Responsable:</label>
+        <select class="planner-cbo cal-filtros-all-mensual" id="mesual-rep">
+            <option selected="selected" value="<!--#4DVAR vLoginActual-->"><!--#4DVAR vNomLogin--></option>
+            <!--#4DIF aCheckPermiso{26}=true-->
+                <!--#4DLOOP aLoginAreaResp1x-->
+                    <!--4dif aLoginAreaResp1x{aLoginAreaResp1x}#vLoginActual -->
+                        <option value="<!--#4DVAR aLoginAreaResp1x{aLoginAreaResp1x}-->">
+                        <!--#4DVAR aNombresAreaResp1x{aLoginAreaResp1x}-->
+                        </option>
+                    <!--4dendif-->                      
+                <!--#4DENDLOOP-->
+            <option value="-1">TODOS</option>
+            <!--4dendif--> 
+        </select>
+
+        <label>Mes :</label>
+        <select class="planner-cbo cal-filtros-all-mensual" id="mesual-mes">  
+           <option selected="selected" value="<!--#4DVAR vIdMesActualSearch-->"><!--#4DVAR vMesActualSearch--></option>
+           <!--#4DLOOP aIdMesess-->
+                <!--#4Dif aIdMesess{aIdMesess}#vIdMesActualSearch-->
+                    <option value="<!--#4DVAR aIdMesess{aIdMesess}-->">
+                        <!--#4DVAR aDesMesess{aIdMesess}-->
+                    </option>
+                <!--#4Dendif-->                
+           <!--#4DENDLOOP-->
+        </select>
+
+        <label>Año :</label>
+        <select class="planner-cbo cal-filtros-all-mensual" id="mesual-ano">  
+           <option selected="selected" value="<!--#4DVAR defaultYear-->"><!--#4DVAR defaultYear--></option>
+           <!--#4DLOOP aYearSearch-->
+                <!--#4Dif aYearSearch{aYearSearch}#defaultYear-->
+                    <option value="<!--#4DVAR aYearSearch{aYearSearch}-->">
+                        <!--#4DVAR aYearSearch{aYearSearch}-->
+                    </option>
+                <!--#4Dendif-->
+           <!--#4DENDLOOP-->           
+        </select>
+
+        </div>
+        
+        <div id="container-all-calendar">            
+            <div id="content-list-ot-monthly" class="content"><!--begin contents-->
+                <table class="table-simple" width="100%" border="0" cellspacing="5" cellspadding="0">   
+                   
+                    <!--#4DLOOP aLoginAreaResp1-->           
+                    <tr>
+                        <td align="center" valign="top" width="10%">
+                            <div class="cal-m-box-name-recurso"><!--#4DVAR aNombresAreaResp1{aLoginAreaResp1}--></div>
+                        </td>                   
+                        <td align="left" valign="top" width="85%">    
+                          
+                            <table class="table-simple-sub" border="0" cellspacing="0" cellspadding="0">
+                                <tr class="column-name-days">                                  
+                                 <!--#4DLOOP aDesDias-->
+                                    <td class="<!--#4DVAR aBackDias{aDesDias}-->">
+                                        <!--#4DVAR aDesDias{aDesDias}-->
+                                    </td>
+                                 <!--#4DENDLOOP--> 
+                                </tr>
+
+                                <tr class="column-numbers-days">
+                                    <!--#4DLOOP aIndiceDias-->
+                                        <td><!--#4DVAR aNumeroDias{aIndiceDias}--></td>
+                                    <!--#4DENDLOOP-->                             
+                                </tr>
+
+                                <!--#4dscript/get_ot_user-->
+                                <!--#4DLOOP aIdOtUser_monthly-->
+                                <tr title="Ir a OT" class="column-ots" id="<!--#4DVAR aIdOtUser_monthly{aIdOtUser_monthly}-->">
+                                    <!--#4DLOOP aIndiceDias-->
+                                       <!--#4dscript/get_planned-->                               
+                                        <td style="<!--#4DVAR style-->">
+                                            <!--#4dif vdesOt#""-->
+                                                <!--#4dif aAtrazadosOtUser_monthly{aIdOtUser_monthly}="no"-->
+                                                    <div class="float-des"><!--#4DVAR vdesOt--></div>
+                                                <!--#4delse-->
+                                                    <div class="float-des-red"><!--#4DVAR vdesOt--></div>
+                                                <!--#4dendif-->    
+                                            <!--#4dendif-->              
+                                        </td>
+                                    <!--#4DENDLOOP-->
+                                </tr>
+                                <!--#4DENDLOOP-->
+                                     
+                            </table>
+                           
+                        </td>
+                    </tr>
+                    <tr><td colspan="7"><hr/></td></tr>
+                    <!--#4DENDLOOP-->   
+                </table>
+            </div><!--end contents-->
+        </div>
+    </div>      
+</section>
+</body>
+</html>

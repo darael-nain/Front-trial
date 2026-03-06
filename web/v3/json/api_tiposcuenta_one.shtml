@@ -1,0 +1,8 @@
+{
+	"create": <!--#4DIF create-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"creado": <!--#4DIF creado-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"id": "<!--#4DTEXT id-->",
+	"descripcion": "<!--#4DTEXT descripcion-->",
+	"codigo": "<!--#4DTEXT codigo-->",
+	"estado": <!--#4DIF estado-->true<!--#4DELSE-->false<!--#4DENDIF-->
+}

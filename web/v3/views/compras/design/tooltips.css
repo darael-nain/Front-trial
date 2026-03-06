@@ -1,0 +1,64 @@
+
+.tabletooltip{
+	border: 4px solid #04a76b;	
+	border-radius: 5px;
+
+}
+.redTd{
+	color: red;
+    font-weight: bold;
+}
+.tabletooltip, .tabletooltip th, .tabletooltip td, .tabletooltip tr{
+	padding: 5px;
+	/*background-color: white;*/
+}
+.tabletooltip th, .tabletooltip tr{				
+	/*border: 1px solid lightgrey;	*/
+	border: 0;	
+}
+.tabletooltip td{		
+	border: 1px solid lightgrey;	
+
+}
+.tabletooltip th{
+	/*background-color: #bebcc0;*/
+	/*color: white;*/
+}
+.rightNum{
+	text-align: right;
+}
+.blacknv{	
+	background-color: black;
+	color: white;
+}
+.greynv{
+	background-color: #777577;
+	color: white;
+}
+.orangenv{	
+	background-color: #d2b47f;
+	color: black;
+}
+.orange2nv{	
+	background-color: #FF6103;
+	color: black;
+}
+.greennv{
+	background-color: #68aa6b;
+	color: white;
+}
+.tooltipster-default .tooltipster-content{
+	padding: 0;
+}
+table.tabletooltip{
+	border-collapse: initial;
+	padding: 0;
+}
+.boldtext{
+	font-weight: bold;
+}
+.tooltipsItem{
+	font-size: 9px !important;
+	font-weight: normal !important;
+
+}

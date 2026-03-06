@@ -1,0 +1,85 @@
+.master-modal-container {
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.master-modal-box {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    max-width: 100%;
+    max-height: 80%;
+    height: 600px;
+    overflow-y: auto;
+}
+
+.master-modal-close-button {
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+
+
+.master-modal-actions{
+    display:grid  !important;
+    width: 70px;
+    margin-right: 2px;
+    border-right: 1px solid black;
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    max-width: 100%;
+    max-height: 80%;
+    overflow-y: auto;
+    align-self: auto;
+    height: 600px;    
+}
+.master-modal-actions span{
+    justify-self: center;
+    height: 30px;
+}
+.master-modal-actions a{
+    padding: 0 !important;
+    height: fit-content !important;
+    
+}
+.master-modal-actions a:not([disabled]):hover {
+    background-color: rgb(224, 220, 220);
+    /* color: white; */
+}
+
+.master-modal-box table tbody td{
+    max-width: 250px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis
+}
+.master-modal-box table{
+    font-family: math;
+}
+
+
+.item-row {
+    background-color: #F4FDFA;
+}
+
+
+.titulo-row {
+    background-color: #E8FBF5;
+}
+
+.item-title {
+    margin-left: 10px; /* Ajusta según tus necesidades */
+}

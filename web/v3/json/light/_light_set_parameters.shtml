@@ -1,0 +1,14 @@
+{
+	
+	"text": <!--#4DIF Not(Undefined(text))-->"<!--#4DHTML text-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"connection_sii_status": <!--#4DIF Not(Undefined(connection_sii_status))--><!--#4DIF connection_sii_status-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"success": <!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"status":<!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"errorMsg": "<!--#4DTEXT errorMsg-->",
+	"enable": <!--#4DIF Not(Undefined(enable))--><!--#4DIF enable-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+	"nextDate": <!--#4DIF Not(Undefined(nextDate))-->"<!--#4DHTML nextDate-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"restantes": <!--#4DIF Not(Undefined(restantes))-->"<!--#4DHTML restantes-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+	"errors": []
+
+	
+}

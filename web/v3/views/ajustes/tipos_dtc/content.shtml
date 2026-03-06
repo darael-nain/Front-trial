@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_gettiposdtc-->
+		<!-- Simon Gomes UnaBase may/2017 -->
+		<title>Tipos de documento de compra</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/views/ajustes/impuestos/impuestos.js"></script>
+		<script type="text/javascript" src="/v3/views/ajustes/tipos_dtc/tiposdtc.js"></script>
+    	<script type="text/javascript" src="/v3/views/ajustes/tipos_dtc/content.js"></script>
+    	<style type="text/css">
+    		.newcolor input,textarea{
+    			background-color: #ffffff !important;
+    		}
+	/*		 table{
+			 	width: 30% !important;
+			 }*/
+	/*		 table#imp_desc_sel tr td:nth-child(1), table#imp_desc_sel tr td:nth-child(2), table#imp_desc_sel tr th:nth-child(1), table#imp_desc_sel tr th:nth-child(2){
+			 	width: 62% !important;	
+			 	text-align: left !important;
+			 	padding-left: 0.5em !important;
+			 }
+			 table#imp_desc_sel tr td:nth-child(3){
+			 	width: 10% !important;	
+			 }
+			 table#imp_desc_sel tr td:nth-child(4){
+			 	width: 10% !important;	
+			 }
+			 table#imp_desc_sel tr td button{
+			 	margin: 0 !important;	
+			 }
+			 table#imp_desc_sel tr th {
+			 	font-weight: bold;	
+			 }*/
+			 section footer article div {	
+			  	margin-bottom: 4px;
+			 }
+			 html > body.home > section > section#viewport section.sheet > footer > article:nth-child(2) > h1 {
+			 	margin-bottom: 5px !important;
+			 }
+			 input[name=select_imp].ui-autocomplete-input{
+			 	width: 20% !important;
+			 	margin-bottom: 0.5em;	
+			 	margin-top: 0.5em;
+			 	margin-left: 0.5em;
+			 }
+			 .show.impuesto{
+			 	width: 18px;
+			 	height: 18px;
+			 }
+			 article ul {
+			 	margin-top: 5px !important;
+			 	margin-bottom: 5px !important;
+			 }
+			 article:nth-child(2) div {
+			 	margin-top: 10px !important;
+			 	margin-bottom: 10px !important;
+			 }
+			/*#imp_desc_sel {
+			    border: solid 1px #DDEEEE;
+			    border-collapse: collapse;
+			    border-spacing: 0;
+			}
+			#imp_desc_sel thead th {
+			    background-color: #DDEFEF;
+			    border: solid 1px #DDEEEE;
+			    color: #336B6B;
+			    padding: 10px;
+			    text-align: left;
+			    text-shadow: 1px 1px 1px #fff;
+			}
+			#imp_desc_sel tbody td {
+			    border: solid 1px #DDEEEE;
+			    color: #333;
+			    padding: 10px;
+			    text-shadow: 1px 1px 1px #fff;
+			}
+			#imp_desc_sel {
+			    border: none;
+			}
+			#imp_desc_sel thead th {
+			    background-color: #CFAD70;
+			    border: none;
+			    text-shadow: 1px 1px 1px #ccc;
+			    color: #333;
+			}
+			#imp_desc_sel thead th:first-child {
+			    border-radius: 10px 0 0 0;
+			}
+			#imp_desc_sel thead th:last-child {
+			    border-radius: 0 10px 0 0;
+			}
+			#imp_desc_sel tbody tr:last-child td:first-child {
+			    border-radius: 0 0 0 10px;
+			}
+			#imp_desc_sel tbody tr:last-child td:last-child {
+			    border-radius: 0 0 10px 0;
+			}*/
+    	</style>
+  		<link href="/css/form1.css" rel="stylesheet">
+  		<script type="text/javascript">
+  			// REMUEVE EL IMPUESTO ASOCIADO AL DOCUMENTO
+	    	function del_imp(dataid,deft){
+				$.ajax({
+				    url: '/4DACTION/_V3_del_tipo_doc_impuesto',
+				    dataType: 'json',
+				    data: {
+				    	'id_doc_impuesto': dataid,
+				    	'default': deft
+				    },
+				    async: false,
+				    success: function(data) {
+				    	var imp = $('[data-id='+dataid+']');
+				    	if(!deft){
+					    	imp.hide();
+				    	}else{
+				    		alert("No se puede eliminar el impuesto ya que es el Predeterminado para este tipo de documento, Selecciona otro como Predeterminado para poder eliminar");
+				    	}
+
+					},
+					error: function() {
+						alert("No se puede eliminar el impuesto ya que es el Predeterminado para este tipo de documento, Selecciona otro como Predeterminado para poder eliminar");
+					}
+				});
+
+			}
+			// HACE PREDETERMINADO EL IMPUESTO SELECCIONADO PARA EL DOCUMENTO ACTUAL
+			function def_imp(dataid){
+	    		$.ajax({
+				    url: '/4DACTION/_V3_def_tipo_doc_impuesto',
+				    dataType: 'json',
+				    data: {
+				      'id_doc_impuesto': dataid,
+				      'docid': dtc.id
+				    },
+				    async: false,
+				    success: function(data) {
+					    alert("al predeterminar un impuesto asociado al tipo de documento, este sera el selecionado siempre que se cree una Orden de Compra");
+					    // LIMPIA Y ACTUALIZA EL LISTADO DE IMPUESTOS ASOCIADOS
+					    get_imp();
+					},
+				});    	
+				
+			}
+			// DEVUELVE LOS IMPUESTOS ASOCIADOS AL DOCUMENTO ACTUAL 	
+			function get_imp(){
+
+				$('tbody[name=imp_desc_sel]').empty();
+ 				$.ajax({
+				    url: '/4DACTION/_V3_getImpuestos',
+				    dataType: 'json',
+				    data: {
+				      'dtc[id]': dtc.id
+				    },
+				    async: false,
+				    success: function(data) {
+					    for (var i = 0; i < data.rows.length; i++){
+					    	var iddoc = data.rows[i].id_tipo_doc
+					    	var trObj = $('<tr data-id='+iddoc+' ><td    value="'+data.rows[i].des+'" >'+ data.rows[i].des +'</td><td    value="'+data.rows[i].tipo+'" >'+ data.rows[i].tipo +'</td><td    value="'+data.rows[i].valor+'" >'+ data.rows[i].valor +'</td><td ><button data-def="'+iddoc+'" data-id='+data.rows[i].default+' value='+data.rows[i].default+' onclick="def_imp('+iddoc+')" name=""></button></td><td  ><button onclick="del_imp('+iddoc+','+data.rows[i].default+')"  title="Remover impuesto asocaciado al documento">Quitar</button></td></tr>');
+					    	$('[name="imp_desc_sel"]').append(trObj);
+					    	trObj.find('button:first').button({icons: { primary: 'ui-icon-radio-off'}, text: false });
+					    	trObj.find('button:last').button({icons: { primary: 'ui-icon-minus'}, text: false });
+					    	var defbutton = $('button[data-id=true]');
+					    	defbutton.button({icons: { primary: 'ui-icon-check'}, text: false });
+					    }
+					}
+ 				});		
+
+			}
+			//MODIFICA TEXTO DEL BOTON CREAR(IMPUESTOS) PARA MAS DETALLE
+			function tet(){
+				$('li[data-name="create_impuesto_from_tipodtc"]').find('button:first').find('span:last').html('Crear nuevo impuesto');
+
+			}
+			// SE EJECUTA LUEGO DE CARGAR POR COMPLETO LA PAGINA(IMAGENES Y RECURSOS)
+			window.onload = tet();
+
+
+ 			$(document).ready(function(){		
+
+
+ 				get_imp();
+ 				// al hacer click vuelve el campo search un autocomplete
+				$('button.show.impuesto').click(function() {
+					$('input[name="select_imp"]').autocomplete('search', '@').focus();
+				});
+
+				// ingresa los impuestos en el campo search
+				if ($('input[name="select_imp"]').length > 0)
+						$('input[name="select_imp"]').autocomplete({
+							source: function(request, response) {
+								$.ajax({
+									url: '/4DACTION/api_impuestos_search',
+									dataType: 'json',
+									data: {										
+									},
+									success: function(data) {
+										response($.map(data.rows, function(item) {
+											return item;
+										}));
+									}
+								});
+							},
+							minLength: 0,
+							autoFocus: true,
+							delay: 5,
+							position: { my: "left top", at: "left bottom", collision: "flip" },
+							open: function() {
+								$(this).removeClass('ui-corner-all').addClass('ui-corner-top');
+							},
+							close: function() {
+								$(this).removeClass('ui-corner-top').addClass('ui-corner-all');
+							},
+							focus: function(event, ui) {
+								//$(this).val(ui.item.text);
+								return false;
+							},
+							response: function(event, ui) {
+							},
+							select: function(event, ui) {
+								$.ajax({
+							        'url':'/4DACTION/_V3_setTipo_doc_imp',
+							        data:{
+							          "idDtc" : dtc.id,
+							          "idImp" : ui.item.id,
+							          "create_tdi" : true
+							        },
+							        dataType:'json',
+							        async: false,
+							        success:function(data){
+							        	console.log('success')
+							        }
+						      	});
+
+							    get_imp();
+								return false;
+							}
+
+						}).data('ui-autocomplete')._renderItem = function(ul, item) {
+							return $('<li><a><strong class="highlight">' +  item.descripcion +   '</strong><em>' + item.tipo + '</em><span>' + item.valor + '</span></a></li>').appendTo(ul);
+						};
+				// activa tooltips de jquery ui en la pagina
+ 				$( document ).tooltip();
+
+ 				//botton de crear impuesto
+ 				var createButton = $('[data-name="create_impuesto_from_tipodtc"]');
+ 				//botton de asociar impuesto
+ 				var addButton = $('.show.impuesto');
+ 				//barra de busqueda autocompleta de asociar impuestos
+ 				var searchBar = $('input[name="select_imp"]');
+ 				// activa boton de jquery ui
+ 				addButton.button({icons: { primary: 'ui-icon-carat-1-s"'}, text: false }).click(function() {
+
+				});
+				//reubica boton crear impuesto antes de la barra de busqueda de asociar impuesto
+ 				createButton.insertBefore(searchBar);
+ 				// le da estilo al botton crear impuesto
+ 				createButton.css({'margin-top':'auto','margin-left':'10px','display':'inline'});
+ 			});
+
+  		</script> 
+	</head>
+	<body>
+		<section class="sheet" id="tiposdtc" data-id="<!--#4DTEXT id-->">
+				
+			<footer>
+				<article>
+					<h1>Información general - Tipos de documentos tributarios de compra</h1>
+					<ul class="editable newcolor">
+						<li> <label title="Activa o desactiva este tipo de documento" class="sg-input-title" for="valido"><input id="valido" name="valido" class="checkbox" type="checkbox">Activo</label></li>
+
+						<li><label class="sg-input-title"><input name="oc" type="checkbox" class="checkbox" >Orden de Compra</label></li>
+						<li><label class="sg-input-title"><input name="especial" type="checkbox" class="checkbox" >Especial </label></li>
+						<li><label class="sg-input-title"><input name="libro_c" type="checkbox" class="checkbox" >Libro de Compras </label></li>
+						<li><label class="sg-input-title"><input name="libro_boletas" type="checkbox" class="checkbox" >Libro de Boletas </label></li>
+
+
+						<li><label class="sg-input-title"> <input name="ventas" type="checkbox" class="checkbox" >Ventas</label></li>
+						<li><label class="sg-input-title"><input name="afecto_ventas" type="checkbox" class="checkbox" >Afecto Ventas </label></li>
+						<li><label class="sg-input-title"><input name="ventas_default" type="checkbox" class="checkbox" >Ventas Default </label></li>
+						<li><label class="sg-input-title"><input name="justifica_automatico" type="checkbox" class="checkbox" >Justifica Automatico </label></li>
+
+
+						<li><label class="sg-input-title"> <input name="negocio" type="checkbox" class="checkbox" >Negocio</label></li>
+						<li><label class="sg-input-title"><input name="contrato_jornada" type="checkbox" class="checkbox" >Contrato Jornada </label></li>
+						<li><label class="sg-input-title"> <input name="afecto_horas_extras" type="checkbox" class="checkbox" >Afecto Horas Extras </label></li>
+						<li><label class="sg-input-title"><input name="boleta_leycine" type="checkbox" class="checkbox" >Boleta Leycine </label></li>
+						<li><label class="sg-input-title"><input name="excluir_gastos" type="checkbox" class="checkbox" >Excluir Gastos </label></li>
+
+
+						<li><label class="sg-input-title"><input name="valor_usd" type="checkbox" class="checkbox" >Valor USD </label></li>
+					</ul>
+					<ul class="editable newcolor" >
+
+						<li title="Descripción del tipo de documento tributario de compra"><span class="sg-input-title">Descripción</span> <span><input type="text" class="rise" name="descripcion" ></span></li>
+						<li><span class="sg-input-title">Abreviatura</span> <span><input type="text" class="rise" name="abreviatura"></span></li>
+						<li><span class="sg-input-title">Correlativo Sugerido</span> <span><input type="text" class="rise" name="correlativo_sugerido"></span></li>
+						<li><span class="sg-input-title">Tipo de Doc Contable Softland o SAP</span> <span><input type="text"  name="ctble_tipodocsoftland"></span></li>
+						<li><span class="sg-input-title">Tipo de Doc Contable Softland Venta</span> <span><input type="text"  name="ctble_tipodocsoftlandventa"></span></li>						
+					</ul>
+				</article>
+				
+				<article>
+					<h1>Impuestos asociados al documento</h1>
+					<div>
+						<input type="search" name="select_imp" placeholder="Asociar impuesto existente" >
+						<button  class="show impuesto"></button>
+					</div>
+					<table id="imp_desc_sel"  class="results" style="display: table;" >
+						<thead>
+							<tr>
+								<th >Nombre del Impuesto</th>
+								<th >Tipo</th>
+								<th >Valor</th>
+								<th  title="Este impuesto se carga por defecto al utilizar el tipo de documento">Predeterminado</th>
+								<th  title="Remueve la asociación de este impuesto con el tipo de documento">Quitar</th>
+							</tr>
+						</thead>
+						<tbody name="imp_desc_sel" class="ui-selectable">
+							
+						</tbody>	
+					</table>
+				</article>
+			</footer>
+		</section>    	
+	</body>
+</html>

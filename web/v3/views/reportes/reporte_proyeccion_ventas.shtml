@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+	<!--#4DSCRIPT/_V3_proxy-->
+	<head>
+		<title>Reporte de proyección de ventas</title>
+		<meta charset="utf-8">
+		<style>
+			table.reportes.proyeccion > thead > tr > th{
+				width:8%;
+			}
+		</style>
+	</head>
+	<body>
+		<section class="sheet items" id="container-reportes" style="height:200px;overflow:auto;">
+			<table class="reportes proyeccion anterior">
+				<thead>
+					<tr style="background-color:black;">
+						<th>Área</th>
+						<th>ENE</th>
+						<th>FEB</th>
+						<th>MAR</th>
+						<th>ABR</th>
+						<th>MAY</th>
+						<th>JUN</th>
+						<th>JUL</th>
+						<th>AGO</th>
+						<th>SEP</th>
+						<th>OCT</th>
+						<th>NOV</th>
+						<th>DIC</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr style="background-color:green;color:white">
+						<td></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+					</tr>
+					<tr style="background-color:lightgray">
+						<td><div style="font-weight:bold;text-align:left;">FICCIÓN</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+					</tr>
+					<tr style="background-color:white">
+						<td><div style="font-weight:bold;text-align:left;text-transform:capitalize;">Victor Espinoza</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+					</tr>
+					<tr style="background-color:white">
+						<td><div style="font-weight:bold;text-align:left;text-transform:capitalize;">Barbara Tapía</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+					</tr>
+					<tr style="background-color:lightgray">
+						<td><div style="font-weight:bold;text-align:left;">PUBLICIDAD</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+					</tr>
+					<tr style="background-color:white">
+						<td><div style="font-weight:bold;text-align:left;text-transform:capitalize;">Victor Espinoza</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+					</tr>
+					<tr style="background-color:white">
+						<td><div style="font-weight:bold;text-align:left;text-transform:capitalize;">Barbara Tapía</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+					</tr>
+					<tr style="background-color:lightgray">
+						<td><div style="font-weight:bold;text-align:left;">CINE</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+					</tr>
+					<tr style="background-color:white">
+						<td><div style="font-weight:bold;text-align:left;text-transform:capitalize;">Victor Espinoza</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+					</tr>
+					<tr style="background-color:white">
+						<td><div style="font-weight:bold;text-align:left;text-transform:capitalize;">Barbara Tapía</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+						<td><div>1000</div></td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+	</body>
+</html>

@@ -1,0 +1,12 @@
+{
+	"rows": [
+<!--#4DLOOP aUsuarioId -->
+		{
+			"id": "<!--#4DHTML aUsuarioId{aUsuarioId}-->",
+			"text": "<!--#4DHTML aUsuarioText{aUsuarioId}-->",
+			"email": "<!--#4DHTML aUsuarioEmail{aUsuarioId}-->",
+			"subscription_id": "<!--#4DHTML aUsuarioSubscription{aUsuarioId}-->"
+		}<!--#4DIF NOT(aUsuarioId{aUsuarioId} = aUsuarioId{Size of array(aUsuarioId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

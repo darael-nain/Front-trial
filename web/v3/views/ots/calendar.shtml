@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<!--#4DSCRIPT/_V3_info_configuracion_general-->
+	<title>INTRANET ::: UNA BASE</title>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="/v3/design/reset.css">
+	<link href='/v3/script/jquery/plugins/fullcalendar-1.6.4/fullcalendar/fullcalendar.css' rel='stylesheet' />
+	<link href='/v3/script/jquery/plugins/fullcalendar-1.6.4/fullcalendar/fullcalendar.print.css' rel='stylesheet' media='print' />
+	<script src="/v3/script/jquery/jquery.js"></script>
+	<script src="/v3/script/jquery/plugins/jquery-ui/js/jquery-ui.js"></script> 
+	<script src="/v3/script/jquery/plugins/fullcalendar-1.6.4/fullcalendar/fullcalendar.min.js"></script>
+	<link rel="stylesheet" href="/v3/script/jquery/jquery-plugins.css">
+<script>
+
+	$(document).ready(function() {	
+		/*var date = new Date();
+		var d = date.getDate();
+		var m = date.getMonth();
+		var y = date.getFullYear();*/
+		$('.calendar-icon').button({icons:{primary:"ui-icon-calendar"}},{text:true});
+		$('#calendar').fullCalendar({
+			header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'month,agendaWeek,agendaDay'
+			},			
+			buttonText: {today:'Hoy',month:'Mensual', week:'Semanal',day:'Diario'},
+		    dayNames:['Domingo', 'Lunes', 'Martes', 'Miércoles','Jueves', 'Viernes', 'Sabado'],
+		    dayNamesShort:['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+		    monthNames:['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio','Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+		    monthNamesShort:['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun','Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+			editable: false,
+			agenda: 'h:mm{ - h:mm}',			
+			allDayText:'Todo el día',
+			timeFormat: 'H:mm{ - H:mm}',
+			axisFormat:'H(:mm)tt',
+			events: {		      
+		        url: '/4DACTION/_V3_get_planned_ot',
+		        type: 'POST',		     
+		        data: {
+		        	type: 'calendar',
+		        	format_fecha:'yyyy-mm-dd',
+		            custom_param1: 'something',
+		            custom_param2: 'somethingelse'
+		        },
+		        error: function() {		       
+		            alert('OCURRIO UN ERROR AL CARGAR LOS DATOS, INTENTE NUEVAMENTE!');
+		        }
+		    },
+		    eventClick: function(event) {
+		        if (event.url) {
+		            window.open(event.url);
+		            return false;
+		        }
+    		}	
+		});
+
+	});
+
+</script>
+<style>
+	body {		
+		margin-top: 40px;
+		text-align: center;
+		font-size: 14px;
+		font-family: "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
+		}
+
+	#calendar {
+		width: 900px;
+		margin: 0 auto;
+		}
+
+	.fc-event-inner span{
+		display:block;
+	}
+	.get-calendar{
+		margin:10px 115px;
+		text-align:left;		
+	}
+	.get-calendar input{
+		background-color:#F7F5FE;
+		border:1px solid gray;
+		border-radius:3px;
+		font-weight:bold;
+		padding:5px;
+		width:500px;
+		color:#2966B8;
+	}
+</style>
+</head>
+<body>
+<div id='calendar'></div>
+<div class="get-calendar">
+	<input type="text" readonly value="<!--#4DTEXT UrlHttpCal-->">
+	<a class="calendar-icon" href="<!--#4DTEXT UrlWebCal-->">Abrir ical</a>
+</div>
+</body>
+</html>

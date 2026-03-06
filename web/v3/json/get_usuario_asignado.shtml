@@ -1,0 +1,14 @@
+{	
+	"rows":[
+	<!--#4DLOOP login -->
+		<!--#4DIF estado{login}-->
+			{
+				"nombre": "<!--#4DHTML _V3_escapeString(nombre{login})-->",
+				"cargo": "<!--#4DHTML _V3_escapeString(cargo{login})-->",
+				"login": "<!--#4DHTML _V3_escapeString(login{login})-->",
+				"mail": "<!--#4DHTML _V3_escapeString(mail{login})-->"
+			}<!--#4DIF NOT(login{login} = login{Size of array(login)})-->,<!--#4DENDIF-->
+		<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

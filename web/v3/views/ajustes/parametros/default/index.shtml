@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Parametros Default</title>
+		<script type="text/javascript" src="/v3/views/ajustes/parametros/default/index.js"></script>
+
+    	<link href="/css/form1.css" rel="stylesheet">
+    	<link href="/v3/views/ajustes/parametros/css/params.css" rel="stylesheet">
+</head>
+<script type="text/javascript">
+	$(document).ready(function(){
+
+	  	axios('/4DACTION/_V3_getTiposDocDeCompras').
+	  	then(res => {
+	  		// let container = document.getElementById('tipoDtc');
+	  		// for(let doc of res.data.rows){
+	  			
+	  		// 	console.warn(doc);
+	  		// 	let option = document.createElement('option');
+	  		// 	option.text = doc.text;
+	  		// 	option.value = doc.id;
+	  		// 	container.add(option);
+	  		// }
+	  		// res.data.text = 'text'
+	  		// res.data.id = 'id'
+	  		// res.data.docs = 'rows'
+	  		setterHtml(res.data.rows ,'#tipoDtc', {text:'text', id: 'id', docs: 'rows'});
+	  	}).catch(err => {
+	  		console.log(err);
+	  	}).then(res => {
+		  	unaBase.ui.block();    
+		  	defaultParam.menu();
+		  	defaultParam.init();
+		  	unaBase.ui.unblock();
+		  	unaBase.ui.expandable.init();
+	  		
+	  	});
+	});
+
+</script>
+<body>
+	<section class="sheet" id="defaultParam">
+		<footer>
+				<article class="article-half">
+					<h1>Defaults</h1>
+					<ul class="editable">
+						<li>
+								<label for="tipoDtc">Tipo DTC</label>
+								<select class="item" name="tipoDtc" id="tipoDtc"></select>
+						</li>
+	<!-- 					<li>
+								<label for="noIncluyeCotizacion">Observación <b>OCULTA</b> cotización</label>
+								<textarea class="item" type="text" name="noIncluyeCotizacion" id="noIncluyeCotizacion">	</textarea>
+						</li>
+						<li>
+								<label for="condicion_negocio">Observación cotización</label>
+								<textarea class="item" type="text" name="condicion_negocio" id="condicion_negocio">	</textarea>
+						</li> -->
+			
+						
+					</ul>
+					<ul class="editable">
+			<!-- 			<li>				
+								<label for="paramc4">Activo param 4</label>
+								<input class="item" type="checkbox" name="paramc4" id="paramc4">	
+						</li>		
+						<li>
+							<label for="calculoSubcategoria">Calculo subcategoría</label>
+							<input class="item" type="checkbox" name="calculoSubcategoria" id="calculoSubcategoria">
+						</li>
+						<li>
+							<label for="v3_no_cambiar_ejecutivo_dup" title="mantiene el ejecutivo responsable, de lo contrario sera el usuario que duplica la cot/neg">Duplicar ejecutivo responsable</label>
+							<input class="item" type="checkbox" name="v3_no_cambiar_ejecutivo_dup" id="v3_no_cambiar_ejecutivo_dup">
+						</li>
+						<li>
+							<label for="disBusquedaGastoFijo">Diferencia Busqueda Gasto Fijo</label>
+							<input class="item" type="checkbox" name="disBusquedaGastoFijo" id="disBusquedaGastoFijo">
+						</li>
+						<li>
+							<label for="v3_sobrecargos_cinemagica">Modo sobrecargos</label>
+							<input class="item" type="checkbox" name="v3_sobrecargos_cinemagica" id="v3_sobrecargos_cinemagica">
+						</li>
+						<li>
+							<label for="v3_block_cot_neg">Desactivar bloqueo de cotización y negocio</label>
+							<input class="item" type="checkbox" name="v3_block_cot_neg" id="v3_block_cot_neg">
+						</li>
+						<li>
+							<label for="v3_ejecutivos_inluir_historicos">Filtrar ejecutivos historicos</label>
+							<input class="item" type="checkbox" name="v3_ejecutivos_inluir_historicos" id="v3_ejecutivos_inluir_historicos">
+						</li> -->
+					</ul>
+				</article>
+
+			
+				
+			
+		</footer>
+		
+	</section>
+</body>
+</html>

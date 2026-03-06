@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--#4DSCRIPT/_V3_proxy_getNcVentasContent-->
+    <title>Documentos de venta</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="/v3/views/dtv/nc/notas.js"></script>
+    <script type="text/javascript" src="/v3/views/dtv/nc/content.js"></script>
+    <link rel="stylesheet" href="/v3/views/compras/design/main.css?<!--#4DTEXT Random-->">
+    <link rel="stylesheet" href="/v3/design/grays.css?<!--#4DTEXT Random-->">
+    <script type="text/javascript" src="/v3/script/datepicker_es.js"></script>
+
+
+    <style>
+
+      /* ajustes diseño */
+      .labels > span{
+        display: inline-block;
+        border: 1px solid rgb(220,220,220);
+        /*background-color: #C9DECB;
+        background-color:rgb(232, 247, 232);*/
+        padding:3px;
+        border-radius:3px;
+        font-size:10px!important;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin:2px;
+      }
+      .labels > span.link{
+        text-decoration: underline;
+        cursor: pointer;
+      }
+      .labels > span.false{
+        color:red!important
+      }
+      .labels > span.important{
+        color:red!important
+      }
+      select.combos{
+        border:1px solid lightgray!important;
+        padding:3px!important;
+        font-size: 12px!important;
+      }
+      .valor-moneda {
+        border:1px solid gray;
+        background-color:white;
+        border-radius: 2px;
+        padding:2px;
+        margin:2px;
+        width:100px!important;
+      }
+      .cssdatevcto{
+        background-color:transparent!important;
+        width:150px!important;
+      }
+
+      table.items.nc {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-family: 'Segoe UI', Tahoma, sans-serif;
+        background-color: #f9fafa;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        padding-left: 5px;
+        padding-right: 5px;
+
+      }
+
+      /* CABECERA */
+      table.items.nc thead {
+        background-color: #f0f2f5;
+        color: #6c7a89;
+        font-weight: 600;
+        font-size: 13px;
+        text-align: left;
+        border-bottom: 1px solid #e0e4e8;
+      }
+
+      table.items.nc thead th {
+        padding: 14px 16px;
+        white-space: nowrap;
+      }
+
+      /* BORDES SUPERIORES REDONDEADOS */
+      table.items.nc thead th:first-child {
+        border-top-left-radius: 8px;
+      }
+
+      table.items.nc thead th:last-child {
+        border-top-right-radius: 8px;
+      }
+
+      /* FILAS DEL BODY */
+      table.items.nc tbody tr {
+        background-color: #fff;
+        transition: background 0.2s ease;
+      }
+
+      table.items.nc tbody tr:hover {
+        background-color: #f3f6fa;
+      }
+
+      table.items.nc tbody td {
+        padding: 12px 16px;
+        font-size: 14px;
+        color: #333;
+        border-top: 1px solid #f0f2f5;
+        white-space: nowrap;
+      }
+
+      /* ALINEAR NUMÉRICAS A LA DERECHA */
+      table.items.nc td:nth-child(4),
+      table.items.nc td:nth-child(5),
+      table.items.nc td:nth-child(6) {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+
+      /* BLOQUEAR COLUMNAS */
+      table.items.nc td[readonly] {
+        color: #bbb;
+        cursor: not-allowed;
+      }
+
+      /* PRIMERA COLUMNA (ICONO) */
+      table.items.nc td:first-child,
+      table.items.nc th:first-child {
+        width: 36px;
+        text-align: center;
+        color: #ccc;
+      }
+
+    </style>
+
+  </head>
+  <body>
+    <section id="sheet-notas" class="sheet css-grays" data-id="<!--#4DTEXT id-->" data-type="nc">
+      <footer>
+
+        <article>
+          <h1>Información general</h1>
+          <button class="expand"></button>
+
+          <h2><strong title="TIPO DE DOCUMENTO" data-name="tipo_documento"></strong> <span title="NÚMERO DEL DOCUMENTO" data-name="folio"></span> <strong title="FECHA DE EMISIÓN DEL DOCUMENTO" data-name="fecha_emision"></strong> <span title="REFERENCIA DEL DOCUMENTO" data-name="referencia"></span></h2>
+
+          <p class="labels"><span data-name="estado"></span> <span>Creada por <label data-name="login_registro"></label> el <label data-name="fecha_registro"></label> a las <label data-name="hora_registro"></label> hrs.</span></p>
+
+          <p class="labels"><span>Motivo: <label data-name="motivo-nc">CORRECCION DE MONTO</label></span></p>
+          <p class="labels box-motivo-sunat"><span>Motivo sunat: <label data-name="motivo-nc-sunat"></label></span></p>
+
+          <!--<p class="labels"><span style="background-color:yellow">En esta opción podrás generar una NC para corregir los montos y/o cantidades de la factura.</span></p>-->
+
+          <ul class="expandable editable">
+            <li>
+              <span>Tipo</span><span><input readonly name="des_tipo_doc" placeholder="Seleccionar tipo factura" type="search" value=""></span><button type="button" class="show tipo full edit">ver tipos de nc</button><input name="id_tipo_doc" type="hidden" value="0">
+            </li>
+            <!--<li>
+              <span>Referencia</span><span><input class="edit" name="referencia" placeholder="Ingresar aquí referencia para la factura" value="" type="text"></span>
+            </li>-->
+            <li>
+              <span>Número</span><span><input class="edit" placeholder="S/N" type="text" name="folio" value=""></span>
+            </li>
+            <li>
+              <span>Fecha de emisión</span><span><input class="edit datepicker" placeholder="dd-mm-aaaa" type="text" name="fecha_emision" value=""></span>
+            </li>
+          </ul>
+
+        </article>
+
+        <article>
+          <h1><strong>Información del cliente</strong></h1>
+          <button class="expand"></button>
+
+          <h2><strong data-name="alias">{alias}</strong> <span data-name="razon">{razon}</span> <span data-name="contacto">{contacto}</span></h2>
+
+          <ul class="expandable editable lineal">
+            <li>
+              <span>Buscar</span><span><input class="sc-full" data-help="Acá buscas o creas el cliente, por ejemplo: &laquo;UNA SISTEMAS&raquo;" required type="search" name="contacto[info][alias]" value="{alias}" placeholder="Buscar por nombre, alias, RUT, razón social..."></span><button class="profile cliente">Perfil</button>
+              <input name="contacto[info][id]" type="hidden" value="0">
+            </li>
+            <li><span>Razón social</span> <span><input readonly required type="text" name="contacto[info][razon_social]" value="{razon}"></span></li>
+            <li><span class="country-label-rut">Rut</span> <span><input readonly required type="text" name="contacto[info][rut]" placeholder="Ej. 12.345.678-K ó 12345678-K" value="{rut}"></span></li>
+            <li><span>Giro</span> <span><input readonly required type="text" name="contacto[info][giro]" placeholder="" value="{giro}"></span></li><br>
+
+            <!--<li>
+              <span>Forma de pago:</span><span> <input class="edit" readonly name="des_forma_pago" placeholder="Seleccionar forma de pago" type="search" value=""></span><button type="button" class="show forma-pago edit">ver formas de pagos</button><input name="id_forma_pago" type="hidden" value="">
+            </li>
+            <li>
+              <span>Vencimiento:</span><span><input class="datepicker cssdatevcto" placeholder="dd-mm-aaaa" type="text" name="fecha_vencimiento" value="{vencimiento}"></span>
+            </li>-->
+
+          </ul>
+
+          <ul class="expandable editable lineal">
+            <li>
+              <span>Para</span><span><input class="sc-full" required data-help="Acá ingresas a quien enviarás la cotización, por ejemplo: &laquo;JUAN PÉREZ&raquo;" type="search" name="relacionado[info][nombre]" value="{contacto}" placeholder="Buscar por Alias, Nombre o Apellidos..."></span><button style="display:none" class="show contacto">Ver todos los contactos</button><button class="unlock contacto" style="display:none">Modificar datos de contacto</button><button class="profile contacto">Perfil</button>
+              <input name="relacionado[info][id]" type="hidden" value="0">
+            </li>
+            <li><span>Cargo</span><span><input readonly type="text" name="relacionado[info][cargo]" value="{cargo}"></span></li>
+            <li><span>Email</span><span><input readonly type="email" name="relacionado[info][email]" value="{email}"></span><button class="edit save contacto">Guardar cambios a datos de contacto</button><button class="edit discard contacto">Descartar cambios a datos de contacto</button></li>
+          </ul>
+        </article>
+
+        <article class="exchange-section" style="display:none">
+          <h1><strong>Información moneda de cambio (USD)</strong></h1>
+          <div>
+            <label style="display:inline-block;font-weight:bold;">Valor de cambio:</label>
+            <input style="display:inline-block;width:100px;margin-left:5px;" readonly type="text" name="exchange[rate]">
+          </div>
+          <div>
+            <label style="display:inline-block;font-weight:bold;">Monto (USD):</label>
+            <input style="display:inline-block;width:100px;margin-left:5px;" readonly type="text" name="exchange[monto]">
+          </div>
+        </article>
+
+      </footer>
+
+      <table class="items nc">
+          <thead>
+              <th class="container-menu-origen"></th>
+              <th>Código</th>
+              <th>Descripción</th>
+              <th class="tooltip tooltip-fixed-amount" title="Modificar cantidad">Cantidad.</th>
+              <th title="Modificar precio">P.U.[$]</th>
+              <th>Subtotal [$]</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+
+      <footer>
+        <article style="position:relative;text-align:right">
+
+          <h1>Totales</h1>
+            <!--<section class="totales-post-save">
+              <ul class="css-boxtotales">
+                <li><span>Total a cobrar</span><span class="numeric currency"><!- -#4DVAR _V3_defaultCurrencySymbol- -> <input class="decinot" readonly type="text" name="total_por_cobrar" value="0"></span></li>
+                <li><span>Cobrado</span><span class="numeric currency"><!- -#4DVAR _V3_defaultCurrencySymbol- -> <input class="decinot" readonly type="text" name="total_cobrado" value="0"></span></li>
+                <li><span>Saldo a cobrar</span><span class="numeric currency"><!- -#4DVAR _V3_defaultCurrencySymbol- -> <input class="decinot" readonly type="text" name="saldo_por_cobrar" value="0"></span></li>
+              </ul>
+            </section>-->
+            <section>
+              <ul class="css-boxtotales">
+                <li><span>Subtotal</span><span class="numeric currency"><label class="label-curency-total"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input readonly type="text" name="sub_total" value="0"></span></li>
+                <li><span>Descuento</span><span class="numeric percent"><input class="edit" readonly type="text" name="porc_descuento" value="0"> %</span> <span class="numeric currency"><label class="label-curency-total"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input class="edit" readonly type="text" name="descuento" value="0"></span></li>
+                <li><span>Exento</span><span class="numeric currency"><label class="label-curency-total"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input readonly type="text" name="exento" value="0"></span></li>
+                <li><span>Neto</span><span class="numeric currency"><label class="label-curency-total"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input readonly type="text" name="neto" value="0"></span></li>
+                <li><span><!--#4DVAR <>_V3_IVAName--></span><span class="numeric currency"><label class="label-curency-total"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input readonly type="text" name="impuesto" value="0"></span></li>
+                <li><span>Adicional</span><span class="numeric currency"><label class="label-curency-total"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input class="edit" type="text" name="adicional" value="0"></span></li>
+                 <li><span>Total</span><span class="numeric currency"><label class="label-curency-total"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input readonly type="text" name="total" value="0"></span></li>
+              </ul>
+            </section>
+        </article>
+
+        <article id="scrollfacturas" class="bg">
+          <h1>Facturas de venta (<span>0</span>)</h1>
+          <!--<div style="margin:5px 0 5px 0"><button class="add nc">Crear</button></div>-->
+          <table class="facturas" width="100%">
+            <thead>
+              <tr>
+                <th width="5%">Número</th>
+                <th width="5%">Tipo</th>
+                <th width="10%">Emisor</th>
+                <th width="10%">F. Emisión</th>
+                <th width="10%" class="country-label-rut">Rut</th>
+                <th width="10%">Cliente</th>
+                <th width="10%" class="right">Neto [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+                <th width="10%" class="right">Exento [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+                <th width="10%" class="right">Iva [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+                <th width="10%" class="right">Total [<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+                <th width="10%">Estado</th>
+              </tr>
+            </thead>
+            <tbody class="ui-selectable"></tbody>
+            <!--<tfoot>
+              <tr>
+                <th colspan="6"></th>
+                <th class="numeric currency"><!- -#4DVAR _V3_defaultCurrencySymbol- -><input style="width:200px!important;text-align:right" readonly name="dtv[suma_nc]" type="text" value="0"></th>
+              </tr>
+            </tfoot>-->
+          </table>
+        </article>
+
+
+        <article id="scrollncnd" class="bg">
+          <h1>Notas de debito (<span>0</span>)</h1>
+          <div style="margin:5px 0 5px 0"><button class="add nd">Crear</button></div>
+          <table class="nd" width="100%">
+            <thead>
+              <tr>
+                <th width="5%">Número</th>
+                <th width="5%">Tipo</th>
+                <th width="10%">Emisor</th>
+                <th width="10%">F. Emisión</th>
+                <th width="10%" class="country-label-rut">Rut</th>
+                <th width="10%">Cliente</th>
+                <th width="10%" class="right">Neto</th>
+                <th width="10%" class="right">Exento</th>
+                <th width="10%" class="right">Iva</th>
+                <th width="10%" class="right">Total</th>
+                <th width="10%">Estado</th>
+              </tr>
+            </thead>
+            <tbody class="ui-selectable"></tbody>
+            <!--<tfoot>
+              <tr>
+                <th colspan="6"></th>
+                <th class="numeric currency"><!- -#4DVAR _V3_defaultCurrencySymbol- -><input style="width:200px!important;text-align:right" readonly name="dtv[suma_nc]" type="text" value="0"></th>
+              </tr>
+            </tfoot>-->
+          </table>
+        </article>
+
+
+        
+
+        <article id="scrollcomprobantes" class="bg">
+          <h1>Comprobantes(<span>0</span>)</h1>
+          <table class="comprobantes" width="100%">
+            <thead>
+             <tr>
+                <th width="5%">Numero</th>
+                <th width="35%">Descripcion</th>
+                <th width="30%">fecha Registro</th>
+                <th width="30%">Tipo documento</th>
+              </tr>
+            </thead>
+            <tbody class="ui-selectable">
+              
+            </tbody>
+            <tfoot>           
+            </tfoot>
+          </table>
+        </article>
+
+        <article style="display:none">
+          <h1>Información adicional</h1>
+          <section>
+            <ul>
+              <li><span style="vertical-align:top">Observaciones</span> <span class="full-width"><textarea class="edit" style="height:80px" name="observacion"></textarea></span></li>
+            </ul>
+          </section>
+        </article>
+
+      </footer>
+    </section>
+  </body>
+</html>

@@ -1,0 +1,10 @@
+{	
+	"rows": [
+<!--#4DLOOP aIdNv-->
+		{
+			"id": "<!--#4DTEXT aIdNv{aIdNv}-->",
+			"text": "<!--#4DHTML aIdNegocio{aIdNv}--> - <!--#4DHTML _V3_escapeString(aReferencia{aIdNv})-->"
+		}<!--#4DIF NOT(aIdNv{aIdNv} = aIdNv{Size of array(aIdNv)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

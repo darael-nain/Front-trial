@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Imprimir</title>
+		<style type="text/css">
+			body {
+				margin: 0;
+				padding: 0;
+			}
+
+			iframe {
+				width: 100vw;
+				height: 100vh;
+				margin: 0;
+				padding: 0;
+				border: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<!--#4DSCRIPT/_V3_proxy_printItem-->
+		<iframe
+			name="pdf"
+			src="http://desarrollo.unabase.cl:8281/?entity=<!--#4DVAR entity-->&id=<!--#4DVAR id-->&folio=<!--#4DVAR folio-->&sid=<!--#4DVAR sessionEncrypted-->">
+		</iframe>
+		<script>
+			var printPdf = function() {
+				document.pdf.focus();
+				document.pdf.print();
+			};
+
+			setTimeout('printPdf();', 5000);
+		</script>
+	</body>
+</html>

@@ -1,0 +1,20 @@
+{
+	"saldo": <!--#4DIF Not(Undefined(saldo))--><!--#4DVAR saldo--><!--#4DELSE-->0<!--#4DENDIF-->,
+	"success": <!--#4DIF Not(Undefined( success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+	"errorMsg": "<!--#4DVAR errorMsg-->",
+	"one_contact": <!--#4DIF Not(Undefined( one_contact))--><!--#4DIF one_contact-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+	"rows": [
+		<!--#4DIF totalRecords > 0-->
+			<!--#4DLOOP aId-->
+			{
+				"id": <!--#4DHTML aId{aId}-->,
+				"estado": "<!--#4DHTML aEstado{aId}-->",
+				"estado_cierre_prod": <!--#4DIF Not(Undefined( aEstadoCierreP{aId}))--><!--#4DIF aEstadoCierreP{aId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+				"estado_cierre_admin": <!--#4DIF Not(Undefined( aEstadoCierreAdmin{aId}))--><!--#4DIF aEstadoCierreAdmin{aId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+				"total_oc": "<!--#4DHTML aTotalOc{aId}-->",
+				"total_saldo": "<!--#4DHTML aSaldo{aId}-->"
+			}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+			<!--#4DENDLOOP-->
+		<!--#4DENDIF-->
+	]
+}

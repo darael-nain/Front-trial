@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Parámetros del sistema</title>
+		<meta charset="utf-8">
+		<script>
+			$(document).ready(function() {
+
+				$( "#tabs-parametros" ).tabs();
+
+				$("#tabs-1").load('/v3/views/ajustes/parametros/empresa.shtml');
+				$("#tabs-2").load('/v3/views/ajustes/parametros/conectividad.shtml');
+				$("#tabs-3").load('/v3/views/ajustes/parametros/cotizaciones_y_negocios.shtml');
+				$("#tabs-4").load('/v3/views/ajustes/parametros/contactos_y_catalogo.shtml');
+				// $("#tabs-5").load('/v3/views/ajustes/parametros/marcas.shtml');
+				
+				$('a[href="#tabs-1"]').click(function() {
+					unaBase.interval.clearAll();
+				}).trigger('click');
+
+				$('a[href="#tabs-2"]').click(function() {
+					unaBase.interval.clearAll();
+				});
+
+				$('a[href="#tabs-3"]').click(function() {
+					unaBase.interval.clearAll();
+				});
+
+				$('a[href="#tabs-4"]').click(function() {
+					unaBase.interval.clearAll();
+				});
+
+				$('a[href="#tabs-5"]').click(function() {
+					unaBase.interval.clearAll();
+					$("#tabs-5").empty();					
+					$("#tabs-5").load('/v3/views/ajustes/parametros/marcas.shtml');					
+				});
+
+
+			});
+		</script>
+		<style>
+			.ui-tabs .ui-tabs-panel {
+				padding: 0 !important;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="main-container">			
+			<section id="tabs-parametros">
+				<ul class="infinite-tabs">
+					<li><a href="#tabs-1">Empresa</a></li>
+					<li><a href="#tabs-2">Conectividad</a></li>
+					<li><a href="#tabs-3">Cotizaciones y negocios</a></li>
+					<li><a href="#tabs-4">Contactos y catálogo</a></li>
+					<li><a href="#tabs-5">Marcas</a></li>
+				</ul>
+				<article id="tabs-1">Empresa</article>
+				<article id="tabs-2">Conectividad</article>
+				<article id="tabs-3">Cotizaciones y negocios</article>
+				<article id="tabs-4">Contactos y catálogo</article>
+				<article id="tabs-5">Marcas</article>
+			</section>
+		</div>
+	</body>
+</html>

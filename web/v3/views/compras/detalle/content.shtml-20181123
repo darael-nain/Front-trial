@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_proxy_getDetalleItemsOc-->
+<html>
+	<head>
+		<title>Items</title>
+		<meta charset="utf-8">		
+		<script type="text/javascript" src="/v3/views/compras/detalle/content.js"></script>
+		<link rel="stylesheet" href="/v3/design/temporal.css?<!--#4DTEXT random-->">
+		<script>		
+			$(document).ready(function() {
+				var container = $('.sheet-detalle-items-oc');
+				var containerCompras = $('#sheet-compras');
+				var targetObservacion = container.find('textarea[name="detail[descripcion_larga]"]');
+				
+				// var id = container.data('id');
+				// var targetRow = containerCompras.find('table > tbody > tr[data-llave="'+ id +'"]');
+				// var observacion = targetRow.find('input[name="oc[detalle_item][observacion_item]"]').val();
+				// targetObservacion.val(observacion);
+
+				// visualización objetos según estado de la compra
+				var estado = containerCompras.data("estado");
+				var folio = containerCompras.data("folio");
+				var validada = containerCompras.find('input[name="oc[validado]"]').val();
+				if (estado != "EMITIDA") {
+					targetObservacion.prop('readonly', true);
+				}else{
+					if (folio != "") {
+						if (validada){
+							if (!access._450) { // modificar validadas
+								targetObservacion.prop('readonly', true);
+							}							
+						}else{
+							if(!(access._448 || access._450)) { // modificar validadas y no
+								targetObservacion.prop('readonly', true);
+			    			}
+						}
+					}
+				}
+			});
+		</script>
+		<style>
+			.ui-tabs .ui-tabs-panel {
+				padding: 0 !important;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="main-container" class="sheet-detalle-items-oc" data-id="<!--#4DTEXT llave-->">			
+			<section class="tabs">
+				<ul class="infinite-tabs">
+					<li><a href="#tabs-1-detail-oc"></a></li>			
+				</ul>
+				<article id="tabs-1-detail-oc">
+					<!--#4DINCLUDE general.shtml-->
+				</article>				
+			</section>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,370 @@
+html {	
+	background-attachment: fixed;
+	font-family: 'Lucida Sans', 'Bitstream Vera Sans', sans-serif;
+	font-size: 10px;
+}
+
+html > body > #main-container > article > table,
+table {
+	position: relative;
+	width: 100%;
+	text-align: left;
+	font-size: 10px;
+	text-transform: uppercase;
+}
+
+html > body > #main-container > article > table > tbody,
+html > body > #main-container > article > table > tfoot,
+table > tbody,
+table > tfoot {
+	margin-top: 5px;
+}
+
+html > body > #main-container > article > table > thead > tr,
+table > thead > tr {
+	background-color: rgb(189,189,192);
+	color: white;
+}
+
+html > body > #main-container > article > table > thead > tr > th,
+table > thead > tr > th {
+	text-align: center;
+	text-transform: uppercase;
+	min-width:70px;
+}
+
+html > body > #main-container > article > table > tbody,
+table > tbody {
+	color: rgb(103,103,103);
+}
+
+html > body > #main-container > article > table > tbody > tr:nth-of-type(odd),
+table > tbody > tr:nth-of-type(odd) {
+	background-color: rgb(240,240,241);
+}
+
+html > body > #main-container > article > table > tbody > tr:nth-of-type(even),
+table > tbody > tr:nth-of-type(even) {
+	background-color: white;
+}
+
+html > body > #main-container > article > table > * > tr,
+table > * > tr {
+	height: 39px;
+	padding: 3px;
+}
+
+html > body > #main-container > article > table > * > tr > *,
+table > * > tr > * {
+	padding: 3px;
+	vertical-align: middle;
+	text-align: center;
+}
+
+html > body > #main-container > article > table > * > tr > td.currency,
+html > body > #main-container > article > table > * > tr > td.number,
+table > * > tr > td.currency,
+table > * > tr > td.number {
+	position: relative;
+	text-align: right;
+	padding-left: 10px;
+}
+
+html > body > #main-container > article > table > tbody > tr > td.options > button,
+table > tbody > tr > td.options > button {
+	width: 20px;
+	height: 20px;
+}
+
+html > body > #main-container > article > table > * > tr > td.currency > span.symbol,
+table > * > tr > td.currency > span.symbol {
+	position: absolute;
+	left: 0;
+}
+
+html > body > #main-container > article > table > * > tr > td.currency > span.negative,
+table > * > tr > td.currency > span.negative {
+	color: red;
+}
+
+html > body > #main-container > article > table > * > tr > td > time > span,
+table > * > tr > td > time > span {
+	color: rgb(67,165,24);
+}
+
+
+html > body > #main-container > article > table > tbody > tr:hover{
+	background-color: rgba(169,188,245,.5) !important;
+	cursor: pointer!important;
+}
+
+/*html > body > #main-container > article > table > thead > tr > th.header{
+    background-image: url(./imagenes/bg.gif);
+    cursor: pointer;
+    background-repeat: no-repeat; 
+    background-position: center left; 
+}
+
+html > body > #main-container > article > table > thead > tr > th.headerSortUp{
+    background-image: url(./imagenes/asc.gif);   
+    background-color:#F3E2A9;
+}
+
+html > body > #main-container > article > table > thead > tr > th.headerSortDown{
+    background-image: url(./imagenes/desc.gif); 
+    background-color:#F3E2A9;
+}*/
+
+
+/*  plantilla lista */
+#main-container{
+	display:block;
+	width:100%;
+}
+	#main-container > nav{
+		display:block;
+		padding:5px;
+		background-color:rgb(227,227,228);
+		text-align:left;
+		
+	}
+	#main-container > header{
+		display:block;
+		padding:5px;
+		background-color:rgb(227,227,228);
+		text-align:right;	
+	}
+	#main-container > header > form > div > select{
+		border:1px solid gray;
+		border-radius:3px;
+		padding:3px; 
+	}
+	#main-container > header > form > div > input{
+		border:1px solid gray;
+		border-radius:3px;
+		padding:3px;
+	}
+	#main-container > header > form > div > select[name="ots[responsables]"]{
+		height:100px;
+	}
+	#main-container > header > form > div > input[name="ots[texto]"]{
+		width:300px;
+		padding:5px;
+	}	
+	#main-container > header > form > div{
+		display:inline-block;
+		vertical-align:bottom;
+		text-align:right;
+		margin:auto;
+	}
+	#main-container > header > form > div > label{
+		display:block;
+		font-weight:bold;
+	}
+	#main-container > header > form > div > select{
+		display:block;
+	}	
+	#main-container > article{
+		display:block;
+		padding:5px;	
+		
+		background-color:rgb(227,227,228);
+	}
+
+
+.left{text-align:left!important}
+.center{text-align:center!important}
+.right{text-align:right!important}
+
+.gris{color:gray;font-weight:bold}
+.verde{color:green;font-weight:bold}
+.azul{color:blue;font-weight:bold}
+.rojo{color:red;font-weight:bold}
+
+.punto-notificado{
+	color:red!important;
+	font-size:20px!important;
+	font-weight:bold!important;
+	padding:5px;
+	display:inline-block;
+}
+
+
+/* Content */
+
+#container-ot{
+	position:relative;		
+	margin:5px 10% 0 10% ;
+	border-radius:5px;
+	border:1px solid gray;
+	margin-bottom:20px;
+}
+
+/* Info header oc */
+#container-ot .info-header{
+	min-height:70px;
+	padding:5px;
+	position:relative;
+	text-align:left;
+}
+	#container-ot .info-header > article{
+		display:block;
+		margin-top:5px;
+	}
+	#container-ot .info-header > article.derecho{
+		position:absolute;		
+		top:0px;	
+		right:40px;
+		text-align:right;
+	}			
+		#container-ot .info-header > .derecho > h4{	
+			font-weight:bold;
+			font-size:15px;		
+		}
+		#container-ot .info-header  > .derecho > h3{		
+			font-weight:bold;
+			margin-top:3px;
+			font-size:12px;	
+		}
+		#container-ot .info-header  > .derecho > h2{		
+			font-weight:bold;
+			margin-top:10px;
+			font-size:15px;
+			/*font-style:italic;*/
+		}
+	#container-ot .info-header > article > div{		
+		display:inline-block!important;
+		font-size:12px;
+		margin-right:10px;
+	}
+	#container-ot .info-header > article > div.cerrado-compras{		
+		color:red;
+		font-size: 10px;
+		font-weight:bold;
+	}
+	#container-ot .info-header > article > div.notificado{font-size: 12px;font-weight:bold}
+		#main-container .info-header > article > div.notificado .si{color:green}
+		#main-container .info-header > article > div.notificado .no{color:red}
+
+	#container-ot .info-header > article > div > label{	
+		color:black;font-weight:bold;text-align:right;		
+	}
+	#container-ot .info-header > article > div > label{		
+		vertical-align:middle;
+	}
+	#container-ot .info-header > article > div > span{
+		font-size:12px;vertical-align:middle;text-transform: uppercase;
+	}
+
+
+/* de referencia para abajo */
+		
+	/* top block */
+	#container-ot > form > #tab-1-datos-ot > .top-block{
+		padding:5px;text-align:left
+	}
+	#container-ot > form > #tab-1-datos-ot > .top-block > article{		
+		text-align:left;
+	}
+	#container-ot > form > #tab-1-datos-ot > .top-block > article > div{		
+		margin-left:100px;
+	}
+	#container-ot > form > #tab-1-datos-ot > .top-block > article > div > label{		
+		display:inline-block;color:gray;font-weight:bold;text-align:right;vertical-align:middle;width:100px;
+	}
+	#container-ot > form > #tab-1-datos-ot > .top-block > article > div > input{	
+		font-size:11px;margin-left:5px;text-transform:normal;padding:2px;vertical-align:middle;width:720px;
+	}
+
+	/* left and right block */
+	#container-ot > form > #tab-1-datos-ot > .middle-block{		
+		display:inline-block;text-align:left;vertical-align:top;width:40%;
+	}	
+	#container-ot > form > #tab-1-datos-ot > .middle-block > article > div > label{	
+		display:inline-block;color:gray;font-weight:bold;text-align:right;vertical-align:middle;width:100px;
+	}
+	#container-ot > form > #tab-1-datos-ot > .middle-block > article > div > select{
+		margin-left:4px;padding:2px;vertical-align:middle;width:300px
+	}
+	#container-ot > form > #tab-1-datos-ot > .middle-block > article > div > input{	
+		margin-left:5px;text-transform:normal;padding:2px;vertical-align:middle;width:300px
+	}
+
+	/* bottom block */
+	#container-ot > form > #tab-1-datos-ot > .bottom-block{
+		padding:5px;text-align:left
+	}
+	#container-ot > form > #tab-1-datos-ot > .bottom-block > article{		
+		text-align:left;
+	}
+	#container-ot > form > #tab-1-datos-ot > .bottom-block > article > div{		
+		margin-left:100px;
+	}
+	#container-ot > form > #tab-1-datos-ot > .bottom-block > article > div > label{		
+		display:inline-block;color:gray;font-weight:bold;text-align:right;vertical-align:top;width:100px;
+	}	
+	#container-ot > form > #tab-1-datos-ot > .bottom-block > article > div > textarea{	
+		width:720px;height:200px
+	}	
+
+	/* bottom block > group */
+	#container-ot > form > #tab-1-datos-ot > .bottom-block > article > div.group > label{	
+		margin:0;display:inline-block;color:gray;font-weight:bold;text-align:right;vertical-align:middle
+	}
+	#container-ot > form > #tab-1-datos-ot > .bottom-block > article > div.group > input{	
+		text-transform:normal;padding:2px;vertical-align:middle;width:40px
+	}
+
+	/* bottom block > file */
+	#container-ot > form > #tab-1-datos-ot > .bottom-block > article > div > button{}
+	#container-ot > form > #tab-1-datos-ot > .bottom-block > article > div > div.file-container{	
+		border-radius:3px;background-color:#FAFAFA;margin-left:100px;width:745px
+	}
+
+	/* bottom block > comment */
+	#container-ot > form > #tab-1-datos-ot > .bottom-block > article > div > button[name="comment"]{	
+		display:inline-block;margin-top:-20px
+	}
+	#container-ot > form > #tab-1-datos-ot > .bottom-block > article > div > textarea.comment{	
+		width:400px;height:50px
+	}
+	#container-ot > form > #tab-1-datos-ot > .bottom-block > article > div > div.comment-container{	
+		border-radius:3px;background-color:#FAFAFA;margin-left:100px;width:745px
+	}
+
+
+	/* footer block */
+	#container-ot > form > #tab-1-datos-ot > footer{
+		padding:5px;text-align:left;margin-top:20px;
+	}
+	#container-ot > form > #tab-1-datos-ot > footer > article{		
+		text-align:left;
+	}
+	#container-ot > form > #tab-1-datos-ot > footer > article > div{		
+		background-color:#FAFAFA;margin-left:200px;padding:5px;width:740px
+	}	
+
+
+.link-ots-copiados2{
+		text-align:left;	
+		margin:7px 7px 7px 0;
+
+	}
+
+	.link-ots-copiados2 a{
+
+		color:gray;
+
+		font-size:13px;
+
+		font-weight:bold;
+
+		text-decoration:underline;		
+
+	}
+
+	.link-ots-copiados2 a:hover{
+
+		color:black;
+
+	}

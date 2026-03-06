@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_proxy_getPerfilContacto2-->
+<html>
+  <head>
+    <title>Perfil</title>
+    <meta charset="utf-8">
+    <script type="text/javascript">
+      $(document).ready(function() {
+        // get formas pagos
+   
+        const idContact = <!--#4DVAR id-->;
+
+        var optionsObject;
+        var select = $('select[name="contact[forma]"]');
+        let formaPagoType = "";
+        try {
+            let inputElement = $('input[name="contact[tipo]"]');
+            if (inputElement.length > 0 && inputElement.val() !== undefined) {
+                formaPagoType = inputElement.val().toLowerCase() === "cliente" ? '?venta=true' : '?compra=true';
+            } else {
+                formaPagoType = '';  // Default value if element doesn't exist or has no value.
+            }
+        } catch(err) {
+            console.log(err);
+        }
+
+        $.ajax({
+          url: '/4DACTION/_V3_' + 'getFormaPagos'+formaPagoType,
+          dataType: 'json',
+          data:{},
+          success: function(data) {
+            $.each(data.rows, function(key, item){
+              optionsObject = $('<option value="'+ item.id +'">'+ item.text +'</option>');
+              select.append(optionsObject);
+            });
+          }
+        });
+
+        // get dtc
+        var optionsObject;
+        var select2 = $('select[name="contact[dtc]"]');
+        $.ajax({
+          url: '/4DACTION/_V3_' + 'getTiposDocDeCompras',
+          dataType: 'json',
+          data:{},
+          success: function(data) {
+            $.each(data.rows, function(key, item){
+              optionsObject = $('<option value="'+ item.id +'">'+ item.des +'</option>');
+              select2.append(optionsObject);
+            });
+          }
+        });
+
+        // get bancos
+        var optionsObject;
+        var select3 = $('select[name="contact[banco]"]');
+        $.ajax({
+          url: '/4DACTION/_V3_' + 'getBancos',
+          dataType: 'json',
+          data:{},
+          success: function(data) {
+            $.each(data.rows, function(key, item){
+              optionsObject = $('<option value="'+ item.id +'">'+ item.des +'</option>');
+              select3.append(optionsObject);
+            });
+          }
+        });
+
+          // Get cuentas contacto
+        var optionsObject;
+        var select4 = $('select[name="contact[cuenta]"]');
+          $.ajax({
+            url: '/4DACTION/_V3_getCuentasContacto',
+            dataType: 'json',
+            data:{
+              "id": idContact
+              
+            },
+            success: function(data) {
+            $.each(data.rows, function(key, item){
+              if (item.accountId==1) {
+                optionsObject = $('<option selected value="'+ item.accountId +'">Cuenta '+ item.accountId +'</option>');
+              }else{
+                optionsObject = $('<option value="'+ item.accountId +'">Cuenta '+ item.accountId +'</option>');
+              }
+              select4.append(optionsObject);
+            });
+           
+          }
+        });
+
+
+        let tipopagodefault= "<!--#4DTEXT Uppercase([Contacto]Tipo_Pago;*)-->";
+        let tipocuentadefault="<!--#4DTEXT Uppercase(accountType;*)-->";
+
+          // Get tipos de pagos
+        var optionsObject;
+        var select6 = $('select[name="contact[tipo_pago]"]');
+        $.ajax({
+            url: '/4DACTION/_V3_getTipoPagos?egreso=true',
+            data: {
+                q: ''
+            },
+            dataType: 'json',
+            success: function(data) {
+                let selected="";
+                 $.each(data.rows, function(key, item){  
+
+                  if (tipopagodefault== item.text ) {
+                   selected="selected";
+                  }         
+
+                  optionsObject = $('<option '+ selected+' value="'+ item.text +'">'+ item.text +'</option>');
+                  select6.append(optionsObject);
+                  selected="";
+                });
+           
+            }
+        });
+
+          // Get tipos de cuentas
+        var optionsObject;
+        var select7 = $('select[name="contact[tipo_cuenta]"]');
+        $.ajax({
+            url: '/4DACTION/_V3_getTiposCuentas?egreso=true',
+            data: {
+                q: ''
+            },
+            dataType: 'json',
+            success: function(data) {
+              let selected="";
+                 $.each(data.rows, function(key, item){  
+
+                  if (tipocuentadefault== item.text ) {
+                   selected="selected";
+                  }        
+
+
+                    optionsObject = $('<option value="'+ item.text +'">'+ item.text +'</option>');
+                    select7.append(optionsObject);
+                    selected="";
+                });
+           
+            }
+        });
+
+
+          
+        // Get cuenta contacto
+        $('select[name="contact[cuenta]"]').on('change', function(){
+          let num=this.value;
+          $.ajax({
+            url: '/4DACTION/_V3_getCuentasContacto',
+            dataType: 'json',
+            data:{
+              "id": idContact,
+              "numCuenta": num
+            },
+            success: function(data) {
+              
+
+              if (num=="new") {
+                 var select5 = $('select[name="contact[cuenta]"]');
+                 
+                 let optionsObject = $('<option value="'+ data.rows[0].accountId +'">Cuenta '+ data.rows[0].accountId +'</option>');
+
+                  select5.append(optionsObject);
+              }
+
+              $('select#cuentas option[selected]').removeAttr( "selected" )
+              $('select#cuentas option[value="'+data.rows[0].accountId+'"]').attr("selected","selected");
+              
+              $('select#banco option[selected]').removeAttr( "selected")
+              $('select#banco option[value="'+data.rows[0].idBank+'"]').attr("selected","selected");
+
+              $('select#tipocuenta option[selected]').removeAttr( "selected" )
+              $('select#tipocuenta option[value="'+data.rows[0].accountType+'"]').attr("selected","selected");
+
+              $('select#cuenta_asig option[selected]').removeAttr( "selected" )
+              $('select#cuenta_asig option[value="'+data.rows[0].asig+'"]').attr("selected","selected");
+
+              $('input[name="contact[nro_cuenta]"]').val(data.rows[0].accountNumber);
+              $('input[name="contact[mx_clabe]"]').val(data.rows[0].accountMxClabe);
+              
+              
+                           
+
+             }
+          });
+
+
+          
+
+         
+
+
+
+          
+        });
+
+        if(accountingMode){
+          document.getElementById('tabs-2-contacto').style.height = '750px'
+          document.getElementById('accounting-account').style.display = ''
+          $.ajax({
+            url: window.origin + "/4DACTION/_force_getPlanAccounts",
+            data: {
+							only_accounts: true
+						},
+            dataType: "json",
+            success: function (data) {
+              let div = document.getElementById('contenedor_cuenta')
+              let account = document.querySelector('#cuenta_contable_input') ? document.querySelector('#cuenta_contable_input').value : ''
+              div.children[1].style.display = ''
+              let select = document.getElementById('cuentas_contables')
+              data.rows.forEach(v => {
+                let option = document.createElement('option'); // creas una nueva opción
+                option.text = v.number + ' / ' + v.name; // estableces el texto de la opción. Asume que 'nombre' es la propiedad del objeto que quieres mostrar
+                option.value = v.number; // estableces el valor de la opción. Asume que 'valor' es la propiedad del objeto que quieres utilizar como valor
+                select.appendChild(option); // agregas la opción al select
+              })
+              // Inicializar Tom Select
+              let settings = {
+                create: true,
+                sortField: {
+                  field: "text",
+                  direction: "asc"
+                }
+              };
+              let tomSelect = new TomSelect(select, settings);
+              tomSelect.setValue(account);
+            },
+            error: function (xhr, text, error) {
+              toastr.error(
+              NOTIFY.get("ERROR_INTERNAL", "Error")
+              );
+            }
+          });
+        }
+
+      });
+    </script>
+  </head>
+  <body>
+    <section class="sheet">
+      <fieldset>
+        <legend><strong>Información comercial</strong></legend>
+        <article>
+
+            <div>
+              <label for="fpago">Forma de pago:</label>
+              <select name="contact[forma]" id="fpago">
+                <!--#4DIF [Formas_Pago]Desc_forma_pago#""--><option selected="selected" value="<!--#4DTEXT [Formas_Pago]ID_forma-->"><!--#4DTEXT Uppercase([Formas_Pago]Desc_forma_pago;*)--></option><!--#4DELSE--><option selected="selected" value="">[Seleccionar]</option><!--#4DENDIF-->
+              </select>
+            </div>
+            <div>
+              <label for="dtc">Documento de compra:</label>
+              <select name="contact[dtc]" id="dtc">
+                <!--#4DIF [Tipo_Doctribu]DESCRIPCION_TIPO#""--><option selected="selected" value="<!--#4DTEXT [Tipo_Doctribu]ID_TIPODOC-->"><!--#4DTEXT Uppercase([Tipo_Doctribu]DESCRIPCION_TIPO;*)--></option><!--#4DELSE--><option selected="selected" value="">[Seleccionar]</option><!--#4DENDIF-->
+              </select>
+            </div>
+            <div>
+              <label for="tipopago">Tipo de pago:</label>
+              <select name="contact[tipo_pago]" id="tipopago">
+                <!--#4DIF [Contacto]Tipo_Pago=""--><option selected="selected" value="">[Seleccionar]</option><!--#4DENDIF-->
+              </select>
+            </div>
+        </article>
+      </fieldset>
+      <fieldset>
+        <legend><strong>Información Bancaria</strong></legend>
+        <!--#4DIF [parametros]v3_new_account_system-->
+        <article id="new_account_system">
+            <div>
+              <label for="cuentas">Cuenta de pago:</label>
+              <select name="contact[cuenta]" id="cuentas">
+                <option value="new">Nueva...</option>
+              </select>
+               <label for="cuentas">Predeterminado para:</label>
+               <select name="contact[cuenta_asig]" id="cuenta_asig">
+                <option  value="">[Seleccionar...]</option>
+                <option  <!--#4DIF assignament="oc"-->selected <!--#4DENDIF-->  value="oc">Orden de compra</option>
+                <option  <!--#4DIF assignament="fxr"-->selected <!--#4DENDIF-->  value="fxr">Rendición</option>
+              </select>
+              <hr>
+               
+            </div>
+            <br>
+            <div>
+              <label for="banco">Banco:</label>
+              <select name="contact[banco]" id="banco">
+                <!--#4DIF bank#""--><option selected value="<!--#4DTEXT idBank-->"><!--#4DTEXT Uppercase(bank;*)--></option><!--#4DELSE--><option selected="selected" value="">[Seleccionar]</option><!--#4DENDIF-->
+              </select>
+            </div>
+            <div>
+              <label for="tipocuenta">Tipo de cuenta:</label>
+              <select name="contact[tipo_cuenta]" id="tipocuenta">
+                
+                <!--#4DIF accountType=""--><option selected="selected" value="">[Seleccionar]</option> <!--#4DENDIF-->
+               
+               
+              </select>
+            </div>
+            <div><label>Nro. cuenta:</label><input name="contact[nro_cuenta]" value="<!--#4DTEXT accountNumber-->" type="text"></div>
+            <!--#4DIF [parametros]v3_modo_mx-->
+            <div><label>Clabe Interbancaria:</label><input name="contact[mx_clabe]" value="<!--#4DTEXT accountMxClabe-->" type="text"></div>
+            <!--#4DENDIF-->
+        </article>
+        <!--#4DELSE-->
+        <article>
+            <div>
+              <label for="banco">Banco:</label>
+              <select name="contact[banco]" id="banco">
+                <!--#4DIF [Banco]Banco#""--><option selected value="<!--#4DTEXT [Banco]Id_banco-->"><!--#4DTEXT Uppercase([Banco]Banco;*)--></option></option><!--#4DELSE--><option selected="selected" value="">[Seleccionar]</option><!--#4DENDIF-->
+              </select>
+
+            </div>
+            <div>
+              <label for="tipocuenta">Tipo de cuenta:</label>
+              <input type="hidden" value="<!--#4DTEXT [Contacto]Tipo_Cuenta-->" name="contact[tipo_cuenta_default]">
+              <select name="contact[tipo_cuenta]" id="tipocuenta">
+                
+                <!--#4DIF [Contacto]Tipo_Cuenta#""--><option selected value="<!--#4DTEXT Uppercase([Contacto]Tipo_Cuenta;*)-->"><!--#4DTEXT Uppercase([Contacto]Tipo_Cuenta;*)--></option><!--#4DELSE--><option selected="selected" value="">[Seleccionar]</option> <!--#4DENDIF-->
+                
+                
+                <!-- <option value="CORRIENTE">CORRIENTE</option>
+                <option value="CHEQUERA ELECTRONICA">CHEQUERA ELECTRONICA</option>
+                <option value="DE AHORRO">DE AHORRO</option>
+                <option value="VISTA">VISTA</option>
+                <option value="CUENTA RUT">CUENTA RUT</option> -->
+
+
+
+                <!--<option value="CORRIENTE SOLES">CORRIENTE SOLES</option>
+                <option value="CORRIENTE DOLARES">CORRIENTE DOLARES</option>
+                <option value="AHORROS SOLES">AHORROS SOLES</option>
+                <option value="AHORROS DOLARES">AHORROS DOLARES</option>
+                <option value="CORRIENTE INTERBANCARIA SOLES">CORRIENTE INTERBANCARIA SOLES</option>
+                <option value="CORRIENTE INTERBANCARIA DOLARES">CORRIENTE INTERBANCARIA DOLARES</option>
+                <option value="CORRIENTE AHORROS SOLES">CORRIENTE AHORROS SOLES</option>
+                <option value="CORRIENTE AHORROS DOLARES">CORRIENTE AHORROS DOLARES</option>-->
+              </select>
+            </div>
+            <div><label>Nro. cuenta:</label><input name="contact[nro_cuenta]" value="<!--#4DTEXT [Contacto]Nro_Cuenta-->" type="text"></div>
+            <!--#4DIF [parametros]v3_modo_mx-->
+            <div><label>Clabe Interbancaria:</label><input name="contact[mx_clabe]" value="<!--#4DTEXT [Contacto]mx_clabe-->" type="text"></div>
+            <!--#4DENDIF-->
+        </article>
+
+
+
+        <!--#4DENDIF-->
+      </fieldset>
+      <fieldset>
+        <legend><strong>Softland</strong></legend>
+        <article>
+            <div><label>Cuenta contable:</label><input name="contact[cuenta_contable_costo]" value="<!--#4DTEXT [Contacto]v3_CuentaContableCosto-->" type="text"></div>
+        </article>
+      </fieldset>
+
+      <fieldset id="accounting-account" style="display: none;">
+        <legend><strong>Contabilidad</strong></legend>
+        <article>
+            <div style="display: none;"><input id="cuenta_contable_input" value="<!--#4DTEXT [Contacto]v3_CuentaContableCosto-->" type="text"></div>
+            <div style="display: flex; align-items: center;" id="contenedor_cuenta">
+              <label>Cuenta contable:</label>
+              <select class="cuentas_contables" id="cuentas_contables" name="contact[cuenta_contable]"></select>
+            </div>
+        </article>
+      </fieldset>
+    </section>
+  </body>
+</html>

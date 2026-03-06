@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Perfiles</title>
+		<meta charset="utf-8">
+		<script>
+
+			$(document).ready(function() {
+
+				unaBase.toolbox.init();
+
+				// Inicializamos un buscador
+				var params = {
+					// Función que genera una URL de listado JSON
+					url: function() { return '/4DACTION/_V3_getPerfiles' },
+					entity: 'Perfiles',
+					callback : function(){
+						$('table').fixedHeaderTable({ footer: true, cloneHeadToFoot: false, fixedColumn: false });
+					},
+					// Función que genera cada fila de la tabla, dado el valor de i (índice de posición)
+					// y el valor de rows (array con todos los resultados)
+					// El contenido de rows corresponde al objeto de mismo nombre generado mediante la llamada
+					// a la api JSON. Ver /v3/json/get_cotizacion.shtml para conocer el formato.
+					row: {
+						html: function(i, rows) {
+							var htmlData = '';
+							//if (typeof rows[i].folio != 'undefined' && rows[i].folio != -1)
+								//htmlData = '<tr data-id="' + rows[i].id + '" data-username="' + rows[i].username + '" data-status="' + rows[i].status + '">' +
+								htmlData = '<tr data-id="' + rows[i].id + '">' +
+									'<td>' + rows[i].nombre + '</td>' +
+									'<td>' + rows[i].observaciones + '</td>' +
+									'<td>' + rows[i].activo + '</td>' +
+								'</tr>';
+							return htmlData;
+						}
+					},
+					detail: {
+						// Función que genera una URL de detalle, dado el id (identificador de item)
+						url: function(id) { return '/v3/views/ajustes/validaciones/content.shtml?id=' + id },
+					},
+					// Inflexiones
+					inflection: {
+						singular: 'perfil',
+						plural: 'perfiles',
+						none: 'ninguno'
+					}/*,
+					// Filtros
+					filters: [
+						{ name: 'created_at', type: 'month', caption: 'Fecha de creación', range: true },
+						//{ name: 'updated_at', type: 'month', caption: 'Fecha últ. modificación', range: true },
+						// Pendiente: agregar datasource remoto y convertir a checkbox
+						// con jquery ui autocomplete
+						{ name: 'area_negocio', type: 'autocomplete', caption: 'Área de negocio', dataSource: 'getAreaNegocio' },
+						{ name: 'ejecutivo_responsable', type: 'autocomplete', caption: 'Ejecutivo responsable', dataSource: 'getUsuario' },
+						{ name: 'estado', type: 'checkbox', caption: 'Estado de la cotización', options: [
+							{ caption: 'En proceso', name: 'estado_en_proceso', value: true },
+							{ caption: 'Anulada', name: 'estado_nulo', value: false }
+						] }
+					]*/
+				};
+
+
+				unaBase.toolbox.search.init(params);
+
+				unaBase.toolbox.menu.init({
+					entity: 'Perfiles', // especifica entidad sobre la cual se almacenan los datos
+										  // y nombre para referenciar los views
+					/*buttons: [ 'new', 'clone', 'print' ]*/
+					buttons: [ 'new' ]
+				});
+
+
+			});
+		</script>
+	</head>
+	<body>
+		<!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->
+		<table class="results">
+			<thead>
+				<tr>
+					<th>Nombre</th>
+					<th>Observacion</th>
+					<th>Estado</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+			<tfoot></tfoot>
+		</table>
+	</body>
+
+</html>

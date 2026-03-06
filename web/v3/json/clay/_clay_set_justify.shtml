@@ -1,0 +1,21 @@
+{
+	"text": <!--#4DIF Not(Undefined(text))-->"<!--#4DHTML text-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+	"success": <!--#4DIF Not(Undefined(success))--><!--#4DIF success-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+	"conciliado": <!--#4DIF Not(Undefined(conciliado))--><!--#4DIF conciliado-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+	"conciliado_bandeja": <!--#4DIF Not(Undefined(conciliado_bandeja))--><!--#4DIF conciliado_bandeja-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->false<!--#4DENDIF-->,
+	"idcom": <!--#4DIF Not(Undefined($idmovsys))-->"<!--#4DTEXT $idmovsys-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+	"iddoc": <!--#4DIF Not(Undefined($idDocDef))-->"<!--#4DTEXT $idDocDef-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+	"tipo_doc": <!--#4DIF Not(Undefined($tipoDocDef))-->"<!--#4DTEXT $tipoDocDef-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+	"folio_doc": <!--#4DIF Not(Undefined($folioDocDef))-->"<!--#4DTEXT $folioDocDef-->"<!--#4DELSE-->""<!--#4DENDIF-->,
+	"errorMsg": "<!--#4DTEXT errorMsg-->",
+	"row": [
+	<!--#4DLOOP aIdCuenta -->
+			{
+				"numero_cuenta_contable": "<!--#4DHTML aNumeroCuenta{aIdCuenta}-->",
+				"total_debe": "<!--#4DHTML aTotalDebe{aIdCuenta}-->",
+				"total_haber": "<!--#4DHTML aTotalHaber{aIdCuenta}-->",
+				"Id_cuenta_contable": "<!--#4DHTML aIdCuenta{aIdCuenta}-->"
+			}<!--#4DIF NOT(aIdCuenta{aIdCuenta} = aIdCuenta{Size of array(aIdCuenta)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

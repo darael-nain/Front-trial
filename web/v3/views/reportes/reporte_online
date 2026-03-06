@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<!--#4DSCRIPT/_V3_get_reportdata_online-->
+<html>
+	<head>
+		<title>Reporte Online</title>
+		<meta charset="utf-8">		
+		<script>			
+		</script>
+	</head>
+	<body>
+		<!-- Maqueta de la tabla que contendrá los resultados de búsqueda -->
+		<table>
+			<thead>
+				<tr>
+					<th>Hola</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+			<tfoot></tfoot>
+		</table>
+	</body>
+</html>

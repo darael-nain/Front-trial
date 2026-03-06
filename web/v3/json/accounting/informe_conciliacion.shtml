@@ -1,0 +1,43 @@
+{
+    "comuna": <!--#4DIF Not(Undefined(comuna))-->"<!--#4DHTML comuna-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+    "ciudad": <!--#4DIF Not(Undefined(ciudad))-->"<!--#4DHTML ciudad-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+    "rut": <!--#4DIF Not(Undefined(rut))-->"<!--#4DHTML rut-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+    "nombre_empresa": <!--#4DIF Not(Undefined(nombre_empresa))-->"<!--#4DHTML nombre_empresa-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+    "giro": <!--#4DIF Not(Undefined(giro))-->"<!--#4DHTML giro-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+    "direccion": <!--#4DIF Not(Undefined(direccion))-->"<!--#4DHTML direccion-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+    "fecha": <!--#4DIF Not(Undefined(fecha))-->"<!--#4DHTML fecha-->"<!--#4DELSE-->null<!--#4DENDIF-->,    
+    "saldo_contable": <!--#4DIF Not(Undefined($saldo_contable))-->"<!--#4DHTML $saldo_contable-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+    "saldo_contable_conciliado": <!--#4DIF Not(Undefined($saldo_contable_conciliado))-->"<!--#4DHTML $saldo_contable_conciliado-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+    "saldo_cartola_bancaria": <!--#4DIF Not(Undefined($saldo_cartola_bancaria))-->"<!--#4DHTML $saldo_cartola_bancaria-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+    "nombre_banco": <!--#4DIF Not(Undefined($nombre_banco))-->"<!--#4DHTML $nombre_banco-->"<!--#4DELSE-->null<!--#4DENDIF-->,    
+    "details": [
+    <!--#4DLOOP aId -->
+            {
+                "id": "<!--#4DHTML aId{aId}-->",
+                "folio": "<!--#4DHTML aFolio{aId}-->",
+                "fecha": "<!--#4DHTML aFecha{aId}-->",
+                "total": "<!--#4DHTML aTotal{aId}-->",
+                "referencia": "<!--#4DHTML aReferencia{aId}-->",
+                "descripcion": "<!--#4DHTML aDescripcion{aId}-->",
+                "abono": <!--#4DIF Not(Undefined(aAbono))--><!--#4DIF aAbono{aId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->,
+                "rut": "<!--#4DHTML aRut{aId}-->",
+                "nombre_banco": "<!--#4DHTML aNombreBanco{aId}-->",
+                "numero_cuenta_bancaria": "<!--#4DHTML aNumeroCuentaBancaria{aId}-->",
+                "contraparte": "<!--#4DHTML aContraparte{aId}-->",
+                "conciliado": <!--#4DIF Not(Undefined(aConciliado))--><!--#4DIF aConciliado{aId}-->true<!--#4DELSE-->false<!--#4DENDIF--><!--#4DELSE-->null<!--#4DENDIF-->
+            }<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+    <!--#4DENDLOOP-->
+    ],
+    "non_realized_abonos": [
+    <!--#4DLOOP aIdNoRealizado -->
+            {
+                "id": "<!--#4DHTML aIdNoRealizado{aIdNoRealizado}-->",
+				"nro": "<!--#4DHTML aNroAsientoNoRealizado{aIdNoRealizado}-->",
+				"rut": "<!--#4DHTML aRutNoRealizado{aIdNoRealizado}-->",
+                "fecha": "<!--#4DHTML aFechaNoRealizado{aIdNoRealizado}-->",
+                "haber": "<!--#4DHTML aHaberNoRealizado{aIdNoRealizado}-->",
+                "descripcion": "<!--#4DHTML aDescripcionNoRealizado{aIdNoRealizado}-->"
+            }<!--#4DIF NOT(aIdNoRealizado{aIdNoRealizado} = aIdNoRealizado{Size of array(aIdNoRealizado)})-->,<!--#4DENDIF-->
+    <!--#4DENDLOOP-->
+    ]
+}

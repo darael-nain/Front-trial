@@ -1,0 +1,20 @@
+{	
+	"rows": [
+	<!--#4DLOOP aIncrement -->
+		{
+			"aNegocio": <!--#4DIF Not(Undefined(aNegocio))-->"<!--#4DHTML _V3_escapeString(aNegocio{aIncrement})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+			"aNegocioID": <!--#4DHTML aNegocioID{aIncrement}-->,
+			"aNegocioNumber": <!--#4DHTML aNegocioNumber{aIncrement}-->,
+			"aCodigo": <!--#4DIF Not(Undefined(aCodigo))-->"<!--#4DHTML _V3_escapeString(aCodigo{aIncrement})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+			"aNombre": <!--#4DIF Not(Undefined(aNombre))-->"<!--#4DHTML _V3_escapeString(aNombre{aIncrement})-->"<!--#4DELSE-->null<!--#4DENDIF-->,
+			"aVenta": <!--#4DHTML String(aVenta{aIncrement};"&xml")-->,
+			"aItem": "<!--#4DHTML String(aItem{aIncrement};"###.###.###.##0,##")-->",
+			"aPresupuesto": "<!--#4DHTML String(aPresupuesto{aIncrement};"###.###.###.##0,##")-->",
+			"aDiferencia": "<!--#4DHTML String(aDiferencia{aIncrement};"###.###.###.##0,##")-->",
+			"aGastoActual": "<!--#4DHTML String(aGastoActual{aIncrement};"###.###.###.##0,##")-->",
+			"ocValidada": <!--#4DIF ocValidada-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"aIncrement": "<!--#4DHTML _V3_escapeString(aIncrement{aIncrement})-->"
+		}<!--#4DIF NOT(aIncrement{aIncrement} = aIncrement{Size of array(aIncrement)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

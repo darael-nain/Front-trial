@@ -1,0 +1,49 @@
+<!--#4DINCLUDE head.shtml-->
+<body>
+<!--#4DIF vSesion>0-->
+<!--#4DINCLUDE menuSuperior.shtml-->
+<!--#4DINCLUDE mensajes2.shtml-->
+    <section>     
+     <h1>Buscar orden de compra</h1> 
+     <article>
+            <h3>OC Encontradas: <!--#4DVAR vcantocing--></h3>
+            <p id="buscar-oc">
+                <form id="frmbuscadores" class="frmbuscadores" action="/4DACTION/W_BUSCAR_OC" method="post" >
+                    <!--<label for="folio">Ingresar nro de OC : </label>-->                        
+                    <label for="cboBuscarpor">Buscar x:</label>      
+                    <select name="opcionbuscaroc" id="opcionbuscarneg" class="listas-especiales2" >
+                     <option value="nrooc" selected="selected">Nro de OC</option>
+                     <option value="nroneg">Nro de Negocio</option>
+                     <option value="referencia">Referencia</option>
+                     <option value="proveedor">Proveedor</option>
+                     <option value="Proyecto">Proyecto</option>
+                    </select>
+                    <input required autofocus class="txtbuscar" id="txtbuscar" name="txtbuscar" type="text"/>
+                    <button  id="buttonbuscar"class="buttonbuscar" type="submit">
+                        <img src="/imagenes/search.gif" border="0" /> Buscar
+                    </button>
+                </form>
+            </p>
+            <!--#4DIF vcantocing>0-->
+                <p><!--#4DINCLUDE lista_oc_encontradas.shtml--></p>
+                <!--#4DIF vcantocing>20-->
+                        <p><!--#4DVAR vcantocing--> ultimas oc</p>
+                <!--#4DELSE-->
+                        <p><!--#4DVAR vcantocing--> ultimas oc</p>
+                <!--#4DENDIF-->
+            <!--#4DELSE-->
+            <p>                    		
+                   NO SE ENCONTRARON ORDENES DE COMPRA...!!!                                 
+            </p>
+            <!--#4DENDIF-->                
+     </article>
+        
+    </section>
+<!--#4DELSE-->
+  <p>
+    	LA SESI&Oacute;N HA EXPIRADO...!!!
+		<a class="enlaces" href="index.shtml?t=<!--#4DVAR String(Milliseconds+Random(2))-->">VOLVER A INICIAR</a>
+    </p>
+<!--#4DENDIF-->       
+</body>
+</html>

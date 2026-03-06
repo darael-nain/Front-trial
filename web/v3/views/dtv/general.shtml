@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--#4DSCRIPT/_V3_proxy_getDtvContent-->
+     <title>Documentos de venta</title>
+    <meta charset="utf-8">
+    <script type="text/javascript" src="/v3/views/dtv/script/dtv.js"></script>
+    <script type="text/javascript" src="/v3/views/dtv/script/content.js"></script>
+    <link rel="stylesheet" href="/v3/views/compras/design/main.css?<!--#4DTEXT Random-->">
+    <link rel="stylesheet" href="/v3/design/grays.css?<!--#4DTEXT Random-->">
+    <script type="text/javascript" src="/v3/script/datepicker_es.js"></script>
+    
+    <style>
+      
+      /* ajustes diseño */
+      .labels > span{
+        display: inline-block;
+        border: 1px solid rgb(220,220,220);
+        /*background-color: #C9DECB;
+        background-color:rgb(232, 247, 232);*/
+        padding:3px;
+        border-radius:3px;
+        font-size:10px!important;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin:2px;
+      }
+      .labels > span.link{
+        text-decoration: underline;
+        cursor: pointer;
+      }
+      .labels > span.false{
+        color:red!important
+      }
+      .labels > span.important{
+        color:red!important
+      }
+      select.combos{
+        border:1px solid lightgray!important;
+        padding:3px!important;
+        font-size: 12px!important;
+      }
+      .valor-moneda {
+        border:1px solid gray;
+        background-color:white;
+        border-radius: 2px;
+        padding:2px;
+        margin:2px;
+        width:100px!important;
+      }
+      .cssdatevcto{
+        background-color:transparent!important;
+        width:150px!important;
+      }
+      #openModalButton {
+        background-color: var(--bg-primary);
+        color: var(--white);
+        font-weight: 500;
+        height: 30px;
+        padding-right: 20px;
+        border-radius: 10px;
+        font-size: 11px !important;
+        transition: .3s;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #openModalButton svg {
+        transform: scale(0.4);
+      }
+      #openModalButton:hover {
+        filter: brightness(120%);
+        transition: .3s;
+      }
+
+      .dtv-ul li {
+        padding: 5px 0;
+      }
+    </style>
+
+    <script>
+      generateCurrencyModalHTML(dtv.data.id, "_getDtv_general_params", "_set_currency_by_dtv", "dtv", "right")
+    
+      $(document).ready(function(){
+        document.title = 'DTV Nº ' + dtv.data.folio + " / <!--#4DTEXT _V3_nombre_empresa-->";
+
+
+
+        if(accountingMode && unaBase.parametros.accounting_anticipos_contactos){
+          document.getElementById('section_cuenta_cte_nv').style.display = ''
+          $.ajax({
+            url: window.origin + "/4DACTION/_light_get_param_cuentascte",
+            data: {
+              only_accounts: true
+            },
+            dataType: "json",
+            success: function (data) {
+              let account = document.querySelector('#cuenta_cte_dtv_input').value;
+              let select = document.getElementById('cuenta_cte_dtv');
+              
+              // Crear opción "Seleccione cuenta contable" y agregarla al principio
+              let defaultOption = document.createElement('option');
+              defaultOption.text = "Seleccione cuenta corriente";
+              defaultOption.value = "0"; // Sin valor
+              select.appendChild(defaultOption);
+              
+              // Añadir las otras opciones desde data.rows
+              data.rows.forEach(v => {
+                let option = document.createElement('option');
+                option.text = v.cuenta_corriente + ' / ' + v.des_banco;
+                option.value = v.id;
+                select.appendChild(option);
+              });
+
+              // Inicializar Tom Select
+              let settings = {
+                sortField: {
+                  field: "text",
+                  direction: "asc"
+                },
+                render:{
+                  no_results: function( data, escape ){
+                    return '<div class="no-results">Sin resultados</div>';
+                  },
+                },
+              };
+              let tomSelect = new TomSelect(select, settings);
+              if (account === "") {
+                tomSelect.setValue("0"); // Establecer la opción "Seleccione cuenta contable"
+              } else {
+                tomSelect.setValue(account, true);
+              }
+              
+            },
+            error: function (xhr, text, error) {
+              toastr.error(
+                NOTIFY.get("ERROR_INTERNAL", "Error")
+              );
+            }
+          });
+
+          }
+      });
+      
+    </script>
+
+  </head>
+  <body>
+    <section id="sheet-dtv" class="sheet css-grays" data-id="<!--#4DTEXT id-->" data-new-index="<!--#4DVAR siguiente_folio-->">
+      <footer>
+
+        <article>
+          <h1>Información general</h1>
+          <button class="expand"></button>
+
+          <h2><strong title="TIPO DE DOCUMENTO" data-name="tipo_documento">{tipo_factura}</strong> <span title="NÚMERO DEL DOCUMENTO" data-name="folio">{folio}</span> <strong title="FECHA DE EMISIÓN DEL DOCUMENTO" data-name="fecha_emision">{fecha_emision}</strong> <span title="REFERENCIA DEL DOCUMENTO" data-name="referencia">{referencia}</span></h2>
+
+          <p class="labels"><span data-name="estado">{estado}</span> <span>Creada por <label data-name="login_registro">{login_registro}</label> el <label data-name="fecha_registro">{fecha_registro}</label> a las <label data-name="hora_registro">{hora_registro}</label> hrs.</span></p>
+
+          <ul class="expandable editable dtv-ul">
+            <li>
+              <span>Tipo factura</span><span><input readonly  class="inputCustom" name="des_tipo_doc" placeholder="Seleccionar tipo factura" type="search" value="{tipo_factura}"></span><button type="button" class="show tipo full edit">ver tipos de facturas</button><input name="id_tipo_doc" type="hidden" value="0">
+            </li>
+            <li>
+              <span>Referencia</span><span><input class="edit inputCustom" name="referencia" placeholder="Ingresar aquí referencia para la factura" value="{referencia}" type="text"></span>
+            </li>
+            <li>
+              <span>Número</span><span><input class="edit inputCustom" placeholder="S/N" type="text" name="folio" value="{folio}"></span>
+            </li>
+            <li>
+              <span>Fecha de emisión</span><span><input class="edit inputCustom" class="datepicker" placeholder="dd-mm-aaaa" type="text" name="fecha_emision" value="{fecha_emision}"></span>
+            </li>
+            <li>
+              <span>Invoice number</span><span><input class="edit inputCustom" type="text" name="invoice_number"></span>
+            </li>
+          </ul>
+
+        </article>
+
+        <article>
+          <h1><strong>Información del cliente</strong></h1>
+          <button class="expand"></button>
+
+          <h2><strong data-name="alias">{alias}</strong> <span data-name="razon">{razon}</span> <span data-name="contacto">{contacto}</span></h2>
+
+          <ul class="expandable editable lineal dtv-ul">
+            <li>
+              <span>Buscar</span><span><input class="sc-full inputCustom" data-help="Acá buscas o creas el cliente, por ejemplo: &laquo;UNA SISTEMAS&raquo;" required type="search" name="contacto[info][alias]" value="{alias}" placeholder="Buscar por nombre, alias, RUT, razón social..."></span><button class="profile cliente">Perfil</button>
+              <input name="contacto[info][id]" type="hidden" value="0">
+            </li>
+            <li><span>Razón social</span> <span><input class="inputCustom" readonly required type="text" name="contacto[info][razon_social]" value="{razon}"></span></li>
+            <li><span class="country-label-rut">Rut</span> <span><input class="inputCustom" readonly required type="text" name="contacto[info][rut]" value="{rut}"></span></li>
+            <li><span>Giro</span> <span><input class="inputCustom" readonly required type="text" name="contacto[info][giro]" placeholder="" value="{giro}"></span></li><br>
+
+            <li>
+              <span>Fecha de recepción</span><span><input class="datepicker cssdatevcto edit inputCustom" placeholder="dd-mm-aaaa" type="text" name="fecha_recepcion" value="{fecha_recepcion}"></span>
+            </li>
+
+            <li>
+              <span>Forma de pago:</span><span> <input class="edit inputCustom" readonly name="des_forma_pago" placeholder="Seleccionar forma de pago" type="search" value="{forma_pago}"></span><button type="button" class="show forma-pago edit">ver formas de pagos</button><input name="id_forma_pago" type="hidden" value="{id_forma}">
+            </li>
+            <li>
+              <span>Vencimiento:</span><span><input class="datepicker cssdatevcto edit inputCustom" placeholder="dd-mm-aaaa" type="text" name="fecha_vencimiento" value="{vencimiento}"></span>
+            </li>
+          </ul>
+
+          <ul class="expandable editable lineal dtv-ul">
+            <li>
+              <span>Para</span><span><input class="sc-full inputCustom" required data-help="Acá ingresas a quien enviarás la cotización, por ejemplo: &laquo;JUAN PÉREZ&raquo;" type="search" name="relacionado[info][nombre]" value="{contacto}" placeholder="Buscar por Alias, Nombre o Apellidos..."></span><button class="show contacto">Ver todos los contactos</button><button class="unlock contacto">Modificar datos de contacto</button><button class="profile contacto">Perfil</button>
+              <input name="relacionado[info][id]" type="hidden" value="0">
+            </li>
+            <li><span>Cargo</span><span><input class="inputCustom" readonly type="text" name="relacionado[info][cargo]" value="{cargo}"></span></li>
+            <li><span>Email</span><span><input class="inputCustom" readonly type="email" name="relacionado[info][email]" value="{email}"></span><button class="edit save contacto">Guardar cambios a datos de contacto</button><button class="edit discard contacto">Descartar cambios a datos de contacto</button></li>
+          </ul>
+
+        </article>
+
+        <!-- <article class="exchange-section" style="display:none"> Revisar -->
+        <article class="exchange-section" style="position: relative;">
+          <h1><strong>Información moneda de cambio (<span class="exchange_label_change"></span>)</strong></h1>
+          <div style="display: flex; align-items: flex-end;">
+            <label style="display:inline-block;font-weight: normal; font-size: 12px;; color: var(--bg-primary); margin-right: 20px;">Moneda Utilizada: <span class="exchange_money_factura" style="font-weight: bold; font-size: 14px;"></span></label>
+            <!-- <input style="display:inline-block;width:100px;margin-left:5px;" class="edit" type="text" name="exchange[rate]" onkeyup="unaBase.utilities.general.formater(this)"> -->
+            <button id="openModalButton" onclick="upModal()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 35 35" fill="none">
+                <g>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M22.1494 24.0236C22.7646 22.7379 23.1295 22.1196 24.3095 21.4672C25.4055 20.8609 27.0014 20.7306 28.2344 21.2444C28.8073 21.483 29.3047 21.8829 28.9292 22.6252C28.5299 23.4143 27.7782 22.7922 27.1952 22.6446C25.8808 22.3123 24.2955 23.1462 24.0487 24.0252C24.899 24.0217 26.9607 23.7139 26.551 25.0753C26.2799 25.9767 24.5289 25.5137 23.5592 25.6466L23.5573 26.1019C24.5052 26.2334 26.3594 25.7425 26.5685 26.7336C26.8541 28.0865 24.9878 27.676 24.0167 27.7389C24.3045 28.2992 24.5278 28.5599 25.1759 28.8543C27.4049 29.8672 28.3035 27.9578 28.9316 29.1115C29.7773 30.6648 26.2861 31.3432 24.2996 30.2786C23.0292 29.5977 22.8166 29.0689 22.1308 27.7249C21.4109 27.7279 20.7062 27.7473 20.6786 26.9604C20.6674 26.6412 20.8188 26.3769 21.0667 26.2471C21.4969 26.0213 21.802 26.317 21.8862 25.9614C22.0163 25.4129 21.5224 25.7373 21.0656 25.4982C20.7571 25.3366 19.8977 24.0263 22.1494 24.0238V24.0236ZM34.8614 26.7811C35.4373 21.4499 31.3784 17.217 26.6631 16.705C21.3004 16.1229 16.9975 20.1429 16.5039 24.8692C15.9375 30.2928 19.9762 34.5416 24.7304 35.0268C30.1654 35.5814 34.3459 31.5523 34.8614 26.7811Z" fill="white"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M9.829 8.28638C10.7575 8.75923 12.7511 8.8661 12.8402 11.0262C12.9307 13.2191 11.1989 13.5509 9.90745 13.9002C9.78992 14.9014 9.98835 15.5675 8.80896 15.164C8.65262 14.6726 8.68077 14.4529 8.67312 13.8381C5.51048 13.5255 4.86188 11.6723 5.95081 11.3823C6.83856 11.1459 7.14906 12.2862 8.73188 12.3841L8.73024 9.7227C7.68368 9.19272 5.84066 9.08914 5.76276 7.0034C5.72914 6.10143 6.04702 5.51897 6.57016 5.00868C7.08647 4.50467 7.8105 4.27234 8.67339 4.1898C8.6835 3.68059 8.76851 3.28783 9.30012 3.3045C9.85798 3.32227 9.77926 3.77079 9.94107 4.18488C10.7364 4.39014 12.4466 4.73481 12.4406 5.64224C12.4305 7.12995 10.6375 5.87347 9.85606 5.67367L9.82873 8.28693L9.829 8.28638ZM8.44817 0.122457C3.5953 0.529983 -0.452637 4.65035 -0.0574102 9.98045C0.302011 14.8265 4.51695 18.8886 9.8536 18.4819C14.6961 18.1129 18.7771 13.9182 18.3469 8.5567C17.9615 3.75712 13.7026 -0.318962 8.44817 0.122184V0.122457Z" fill="white"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.31144 23.6683C6.64035 26.3444 8.64354 28.1379 11.0554 29.7637L11.3235 29.97C10.957 30.3281 10.2611 30.3617 10.4043 31.2273C10.5043 31.8327 11.1076 32.064 11.7357 31.7658C14.9644 30.2321 14.7272 30.0534 13.9512 28.6023C13.3065 27.3961 12.9566 26.1774 11.9461 26.595C11.2937 26.8645 11.4632 27.468 11.6698 28.0855C10.1804 27.3051 8.36748 25.3514 7.47426 23.9645C6.07292 21.7889 6.04368 20.0049 5.35107 19.7898C4.72735 19.5963 4.20858 20.0035 4.19983 20.5857C4.18808 21.3611 5.00641 23.0544 5.31117 23.6683H5.31144Z" fill="white"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M23.153 7.09033C24.436 7.6542 26.5524 9.93673 27.3458 11.1984C27.8517 12.0025 28.356 12.9222 28.6876 13.9568C28.8674 14.5176 28.9215 15.149 29.4001 15.3475C30.0515 15.6175 30.6159 15.2078 30.6263 14.5729C30.6386 13.8029 29.8481 12.2026 29.5392 11.5603C28.5361 9.47454 27.913 9.12796 26.9301 7.97316C26.7133 7.71843 26.6792 7.69355 26.4223 7.4738C25.7474 6.89654 25.8373 6.82438 24.6948 6.01261C24.2925 5.72671 23.885 5.50969 23.4643 5.21013C23.8522 4.87312 24.4464 4.84688 24.4363 4.09688C24.4278 3.48081 23.8694 3.09952 23.2183 3.33786C22.8187 3.48409 20.6636 4.70803 20.5154 4.92314C20.1065 5.51735 21.1135 7.07639 21.5634 7.87258C21.8427 8.36675 22.0674 8.83359 22.8209 8.5958C23.5236 8.37413 23.3758 7.70613 23.1527 7.0906L23.153 7.09033Z" fill="white"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M9.82764 10.382L9.82791 11.8396V12.1129L9.83884 12.465C11.6909 12.2493 11.6985 10.3842 9.82873 9.97745L9.82764 10.382Z" fill="white"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M8.73381 7.9931L8.73107 5.59195C7.00066 5.64743 6.87794 7.71021 8.73381 7.9931Z" fill="white"/>
+                </g>
+              </svg>
+              Moneda
+            </button>
+          </div>
+        </article>
+
+      </footer>
+
+      <table class="items">
+          <thead>
+              <th class="container-menu-origen" style="background-color:<!--#4DVAR vColorCorporativoCSS--> !important;"></th>
+              <th>Código</th>
+              <th>Descripción</th>
+              <th>Origen</th>
+              <th style="text-align:center;display:none" class="exchange-section">Monto en <span class="exchange_label" style="vertical-align:top;"></span></th>
+              <th>Cantidad.</th>
+              <th>PU</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+
+      <footer>
+        <article style="position:relative;text-align:right">
+          <h1>Totales</h1>
+            <section class="totales-post-save charges">
+              <ul class="css-boxtotales">
+                <li><span>Total a cobrar</span><span class="numeric currency"><label class=""><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input class="decinot" readonly disabled type="text" name="total_por_cobrar" value="0"></span></li>
+                <li><span>Cobrado</span><span class="numeric currency"><label class=""><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input class="decinot" readonly disabled type="text" name="total_cobrado" value="0"></span></li>
+                <li class="comision-dtv"><span>Comision Bancaria</span><span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input class="decinot" readonly type="text" name="comision_banco" value="0"></span></li>
+                <li class="diff-dtv"><span>Diferencia Cambio</span><span class="numeric currency"><!--#4DVAR _V3_defaultCurrencySymbol--> <input class="decinot" readonly type="text" name="diff_cambio" value="0"></span></li>
+                <li><span>Saldo a cobrar</span><span class="numeric currency"><label class=""><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input class="decinot" readonly disabled type="text" name="saldo_por_cobrar" value="0"></span></li>
+              </ul>
+            </section>
+            <section>
+              <ul class="css-boxtotales">
+                <li><span>Subtotal</span><span class="numeric currency"><label class="label-curency-total"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input readonly disabled type="text" name="sub_total" value="0"></span></li>
+                <li><span>Exento</span><span class="numeric currency"><label class="label-curency-total"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input readonly disabled type="text" name="exento" value="0"></span></li>
+                <li><span>Neto</span><span class="numeric currency"><label class="label-curency-total"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input readonly disabled type="text" name="neto" value="0"></span></li>
+                <li><span><!--#4DVAR <>_V3_IVAName--></span><span class="numeric currency"><label class="label-curency-total"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input readonly disabled type="text" name="impuesto" value="0"></span></li>
+                 <li><span>Total</span><span class="numeric currency"><label class="label-curency-total"><!--#4DVAR _V3_defaultCurrencySymbol--></label> <input readonly disabled type="text" name="total" value="0"></span></li>
+              </ul>
+            </section>
+        </article>
+
+        <article>
+          <h1>Información adicional</h1>
+          <section>
+            <ul id="section_cuenta_cte_nv" >
+              <input id="cuenta_cte_dtv_input" value="<!--#4DVAR [Factura]id_cuentacte-->" type="text" style="display: none;">
+              <li><span style="vertical-align:top">Cuenta corriente</span> <span class="full-width"><select class="cuentas_contables" id="cuenta_cte_dtv" name="dtv[cuenta_cte]"></select></span></li>
+            </ul>
+            <ul>
+              <li><span style="vertical-align:top">Observaciones</span> <span class="full-width"><textarea class="edit" style="height:80px" name="observacion">{observacion}</textarea></span></li>
+            </ul>
+          </section>
+        </article>
+
+        <article id="scroll_oc_clientes">
+         <h1>Documentos del cliente (<span>0</span>)</h1>
+         <div style="margin-bottom:5px"><button class="add occ">Crear OC cliente</button></div>
+          <table class="oc_clientes" width="99%">
+            <thead>
+              <tr>
+                <th class="center" width="5%">Número</th>
+                <th class="center" width="10%">Tipo</th>
+                <th class="center" width="10%" class="left">F. Emisión</th>
+                <th class="center" width="10%" class="left">F. Recepción</th>
+                <th class="center" width="25%">Cliente</th>
+                <th class="center" width="25%">Referencia</th>
+                <th class="center" width="10%">Total</th>
+                <th class="center" width="5%"></th>
+              </tr>
+            </thead>
+            <tbody class="ui-selectable"></tbody>
+            <!--<tfoot>
+              <tr>
+                <th colspan="7"></th>
+                <th class="numeric currency"><!- -#4DVAR _V3_defaultCurrencySymbol- -><input style="width:100px!important" readonly name="dtv[suma_justificado]" type="text" value=""></th>
+              </tr>
+            </tfoot>-->
+          </table>
+        </article>
+
+        <article id="scrollingreso">
+         <h1>Ordenes de ingreso (<span>0</span>)</h1>
+         <!--<div style="margin:2px;"><button class="add cobro">Agregar</button></div>-->
+          <table class="ordenesingreso" width="99%">
+            <thead>
+              <tr>
+                <th class="center" width="5%">Número</th>
+                <th class="center" width="20%">Documento</th>
+                <th class="center" width="20%" class="left">Proveedor</th>
+                <th class="center" width="20%" class="left">Referencia</th>
+                <th class="center" width="10%">Fecha</th>
+                <th class="center" width="10%">Estado</th>
+                <th class="center" width="10%">Monto</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody class="ui-selectable"></tbody>
+            <tfoot style="display: none !important;">
+              <tr>
+                <th colspan="6"></th>
+                <th class="numeric currency"><!- -#4DVAR _V3_defaultCurrencySymbol- -><input style="width:100px!important" readonly name="dtv[suma_ingresos]" type="text" value=""></th>
+              </tr>
+            </tfoot>
+          </table>
+        </article>
+
+        <article id="scrollncnd" class="bg">
+          <h1>Notas de crédito (<span>0</span>)</h1>
+          <div style="margin:5px 0 5px 0"><button class="add nc">Crear</button></div>
+          <table class="nc" width="100%">
+            <thead>
+              <tr>
+                <th width="5%">Número</th>
+                <th width="5%">Tipo</th>
+                <th width="10%">Emisor</th>
+                <th width="10%">F. Emisión</th>
+                <th width="10%" class="country-label-rut">Rut</th>
+                <th width="10%">Cliente</th>
+                <th width="10%" class="right">Neto</th>
+                <th width="10%" class="right">Exento</th>
+                <th width="10%" class="right">Iva</th>
+                <th width="10%" class="right">Total</th>
+                <th width="10%">Estado</th>
+              </tr>
+            </thead>
+            <tbody class="ui-selectable"></tbody>
+            <!--<tfoot>
+              <tr>
+                <th colspan="6"></th>
+                <th class="numeric currency"><!- -#4DVAR _V3_defaultCurrencySymbol- -><input style="width:200px!important;text-align:right" readonly name="dtv[suma_nc]" type="text" value="0"></th>
+              </tr>
+            </tfoot>-->
+          </table>
+        </article>
+
+        <article id="scrollcomprobantes" class="bg">
+          <h1>Comprobantes(<span>0</span>)</h1>
+          <table class="comprobantes" width="100%">
+            <thead>
+             <tr>
+                <th width="5%">Numero</th>
+                <th width="35%">Descripcion</th>
+                <th width="30%">fecha Registro</th>
+                <th width="30%">Tipo documento</th>
+              </tr>
+            </thead>
+            <tbody class="ui-selectable">
+              
+            </tbody>
+            <tfoot>           
+            </tfoot>
+          </table>
+        </article>
+
+      </article>
+
+        <article id="section_ftg" class="bg">
+          <h1>Factoring (<span>0</span>)</h1>
+      </article>
+      </footer>
+
+    </section>
+  </body>
+</html>

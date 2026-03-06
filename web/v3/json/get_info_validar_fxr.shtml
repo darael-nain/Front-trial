@@ -1,0 +1,12 @@
+{
+	"solicitante": "<!--#4DHTML solicitante-->",
+	"cantidad": <!--#4DHTML cantidad-->,	
+	"rows": [
+	<!--#4DLOOP aFxrPendientesId-->
+			{
+				"id": <!--#4DTEXT aFxrPendientesId{aFxrPendientesId}-->,
+				"folio": "<!--#4DTEXT aFxrPendientesFolio{aFxrPendientesId}-->"						
+			}<!--#4DIF NOT(aFxrPendientesId{aFxrPendientesId} = aFxrPendientesId{Size of array(aFxrPendientesId)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

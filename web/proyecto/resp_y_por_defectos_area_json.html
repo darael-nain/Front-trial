@@ -1,0 +1,22 @@
+{
+	"responsables":
+	[
+		<!--#4DLOOP aLoginAreaResp-->
+			{
+				"login_rep":"<!--#4Dvar aLoginAreaResp{aLoginAreaResp}-->",
+				"nombres_resp":"<!--#4Dvar aNombresAreaResp{aLoginAreaResp}-->"
+			}
+			<!--#4DIF aIndex{aLoginAreaResp}<Size of array(aNombresAreaResp)-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	],
+	"pordefecto":
+	[
+		<!--#4DLOOP aLoginAsig-->
+			{
+				"login_def":"<!--#4Dvar aLoginAsig{aLoginAsig}-->",
+				"nombres_def":"<!--#4Dvar aNombreAsig{aLoginAsig}-->"
+			}
+			<!--#4DIF aIndexAsig{aLoginAsig}<Size of array(aLoginAsig)-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	]
+}

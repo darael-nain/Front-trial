@@ -1,0 +1,53 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([Orden_Pago]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"totales": {
+		"total": "<!--#4DHTML _V3_formatCurrency(vTotal)-->"
+	},
+	"rows": [
+<!--#4DLOOP aIndex -->
+		{
+			"id": <!--#4DHTML aIdCobro{aIndex}-->,
+			"conciliado": <!--#4DIF aConciliado{aIndex}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"folio": "<!--#4DHTML _V3_escapeString(aFolioCobro{aIndex})-->",
+			"origen": "<!--#4DHTML aOrigenCobro{aIndex}-->",
+			"fecha_emision": "<!--#4DHTML aFechaEmision{aIndex}-->",
+			"fecha_vencimiento": "<!--#4DHTML aFechaVencimiento{aIndex}-->",
+			"emisor": "<!--#4DHTML _V3_escapeString(aEmisor{aIndex})-->",
+			"estado": "<!--#4DHTML _V3_escapeString(aEstadoCobro{aIndex})-->",
+			"nombre_cliente": "<!--#4DHTML _V3_escapeString(aNombreCliente{aIndex})-->",
+			"referencia": "<!--#4DHTML _V3_escapeString(aReferencia{aIndex})-->",
+			"monto_total": "<!--#4DHTML aMontoTotalCobro{aIndex}-->",
+			"monto_total_raw": <!--#4DHTML String(aMontoTotalCobro{aIndex};"&xml")-->,
+			"tipo_cobro": "<!--#4DHTML _V3_escapeString(aTipoDeCobro{aIndex})-->",
+			"numero_cobro": "<!--#4DHTML _V3_escapeString(aNumeroCobro{aIndex})-->",
+			"fecha_cobro": "<!--#4DHTML aFechaCobro{aIndex}-->",
+			"total": <!--#4DHTML Round(aTotalCobro{aIndex};0)-->,
+			"total_raw": <!--#4DHTML String(aTotalCobro{aIndex};"&xml")-->,
+			"version": "<!--#4DHTML aVersionCobro{aIndex}-->",
+			"id_factura_fxr": <!--#4DHTML aIdFactura_FXR{aIndex}-->,
+			"tipo_moneda": "<!--#4DHTML aTipoMonedaCobro{aIndex}-->",
+			"valor_cambio": <!--#4DHTML String(aValorCambioCobro{aIndex};"&xml")-->
+		}<!--#4DIF NOT(aIndex{aIndex} = aIndex{Size of array(aIndex)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	],
+	"currency" : {
+	    "code" : "<!--#4DTEXT _V3_defaultCurrencyCode-->",
+	    "name" : "<!--#4DTEXT _V3_defaultCurrencyName-->",
+	    "symbol" : "<!--#4DTEXT _V3_defaultCurrencySymbol-->",
+	    "right" : <!--#4DIF _V3_defaultCurrencyRight-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	    "decimal": <!--#4DTEXT _V3_defaultCurrencyDecimals-->,
+	    "decimal_sep": "<!--#4DTEXT _V3_defaultCurrencyDecimalSep-->",
+	    "thousand_sep" : "<!--#4DTEXT _V3_defaultCurrencyThousandSep-->",
+	    "decimal_text_excel" : "<!--#4DTEXT _V3_defaultCurrencyDecimalsText-->",
+	    "format_code_excel" : "<!--#4DTEXT _V3_defaultCurrencyFormatCode-->",
+	    "label_rut" : "<!--#4DTEXT country_label_rut-->"
+	}
+}

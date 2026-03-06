@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Carga XML</title>
+	<script type="text/javascript">
+		
+			$(document).ready(function() {
+				var importLoad = function(append, element) {
+					unaBase.ui.block();
+
+					var data = new FormData();
+					const tableItems = document.querySelector('#items-gastos tbody').children.length;
+					var attachment = $('.ui-dialog fieldset [name="upload[attachment]"]').get(0).files[0];
+
+					if (attachment) {
+						data.append('file', attachment);
+						data.append('id', compras.id);
+						data.append('sid', unaBase.sid.encoded());
+						data.append('append_items', append);
+						
+						$.ajax({
+							url: `${nodeUrl}/import-dtc-load-xml?hostname=${window.location.origin}&id=${compras.id}`,
+							type: 'POST',
+							contentType: false,
+							data: data,
+							processData: false,
+							cache: false,
+							success: function (data1) {
+								
+								if(!data1.success){
+									unaBase.ui.unblock();
+									toastr.error(data1.errorMsg.replaceAll('.SL', '<br>'));
+									return;
+								}
+								var pdfAttachment = $('input[name="upload[attachment_pdf]"]').get(0).files[0];
+								
+								if (pdfAttachment) {
+									var nameFile = pdfAttachment.name;
+
+									var pdfData = new FormData();
+									pdfData.append('file', pdfAttachment);
+									pdfData.append('filename', nameFile);
+									pdfData.append('index', 'Doc_Tributario_Compra|' + data1.id);
+
+									$.ajax({
+										url: '/4DACTION/_V3_setUpload',
+										type: 'POST',
+										contentType: false,
+										data: pdfData,
+										dataType: 'json',
+										processData: false,
+										cache: false,
+										success: function (data) {
+											
+											toastr.success('Archivo PDF cargado con éxito!');
+											document.querySelector('.ui-icon-closethick').click()
+											unaBase.loadInto.viewport(
+												`/v3/views/compras/content.shtml?id=${compras.id}`,
+												undefined,
+												undefined,
+												true
+											);
+										},
+										error: function () {
+											toastr.error('Error al cargar el archivo PDF. Inténtalo nuevamente.');
+											unaBase.loadInto.viewport(
+												`/v3/views/compras/content.shtml?id=${compras.id}`,
+												undefined,
+												undefined,
+												true
+											);
+										},
+										complete: function () {
+											unaBase.ui.unblock();
+										}
+									});
+								} else {
+									toastr.warning('No se seleccionó un archivo PDF para cargar.');
+									unaBase.loadInto.viewport(
+										`/v3/views/compras/content.shtml?id=${compras.id}`,
+										undefined,
+										undefined,
+										true
+									);
+									unaBase.ui.unblock();
+								}
+							},
+							error: function () {
+								unaBase.ui.unblock();
+								toastr.error('No fue posible realizar la carga de los datos debido a un problema con el servidor. Por favor, intente nuevamente. <p><small>Si el inconveniente persiste, por favor comuníquese con Unabase.</small></p>');
+							}
+						});
+					} else {
+						unaBase.ui.unblock();
+						alert("Falta seleccionar archivo excel.");
+					}
+
+					
+				};
+
+
+
+				$('.ui-dialog fieldset.import button').button({
+						icons: {
+							primary: 'ui-icon-circle-arrow-n'
+						},
+						text: true
+					}).click(function() {
+						let element = this;
+						
+					
+						confirm("¿Seguro que desea cargar este archivo?").done(function(data) {
+							 if (data) {
+		                    	importLoad(true,element);
+		                   
+		                  	}
+							
+					});
+			
+
+
+
+				});
+
+				if(unaBase.doc.number == 0){
+					document.querySelector("fieldset.import").innerHTML = `<h1>Debes guardar la cotización antes de importar.</h1>`
+				}
+				
+			});
+	</script>
+</head>
+<body>
+		<fieldset class="import">
+			<legend>Importar desde XML</legend>
+			<label>
+				<span>Archivo XML</span>
+				<input type="file" name="upload[attachment]" multiple="true" accept="application/xml" style="width: 100% !important; display: block !important;">
+			</label>
+
+			<label>
+				<span>Archivo PDF</span>
+				<input type="file" name="upload[attachment_pdf]" multiple="true" accept="application/pdf" style="width: 100% !important; display: block !important;">
+			</label>
+			<br>
+			<button>Subir</button>
+		</fieldset>
+</body>
+</html>

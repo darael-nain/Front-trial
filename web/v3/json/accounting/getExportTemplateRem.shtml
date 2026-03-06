@@ -1,0 +1,20 @@
+{
+	"docs": [
+		<!--#4DLOOP aIndexDocs-->
+			{
+				"id_docs": <!--#4DTEXT aIndexDocs{aIndexDocs}-->,
+				"llave_docs": "<!--#4DHTML aKeyDocs{aIndexDocs}-->",
+				"nombre_docs": "<!--#4DHTML _V3_escapeString(aNamesDocs{aIndexDocs})-->"
+			}<!--#4DIF NOT(aIndexDocs{aIndexDocs} = aIndexDocs{Size of array(aIndexDocs)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	],
+	"count": [
+		<!--#4DLOOP aIndexCount-->
+			{
+				"id_count": <!--#4DTEXT aIndexCount{aIndexCount}-->,
+				"count_num": "<!--#4DHTML aCountNum{aIndexCount}-->",
+				"count_name": "<!--#4DHTML _V3_escapeString(aCountName{aIndexCount})-->"
+			}<!--#4DIF NOT(aIndexCount{aIndexCount} = aIndexCount{Size of array(aIndexCount)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	]
+}

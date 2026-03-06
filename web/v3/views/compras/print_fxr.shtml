@@ -1,0 +1,266 @@
+<!--#4DSCRIPT/_V3_serverInfo-->
+
+<section>
+	<h2>Totales (<!--#4DIF [Orden_de_compra]des_tipo_gasto = "FACTORING"-->Factoring<!--#4DELSE-->Rendición<!--#4DENDIF-->)</h2>
+	<article class="fn-totales">
+		<table class="right" width="99%">
+			<tbody>
+				<tr>
+					<td width="80%">Solicitado</td>
+					<td width="20%"><!--#4DTEXT totalPrint--></td>
+				</tr>
+				<tr>
+					<td width="80%">Pagado</td>
+					<td width="20%"><!--#4DTEXT totalAbonosFxr--></td>
+				</tr>
+				<tr>
+					<td width="80%">Rendido (justificado)</td>
+					<td width="20%"><!--#4DTEXT totalJustificadoFxr--></td>
+				</tr>
+				<tr>
+					<td width="80%">Despositado (o devuelto)</td>
+					<td width="20%"><!--#4DTEXT totalIngresosFxr--></td>
+				</tr>
+				<tr>
+					<td width="80%">Saldo</td>
+					<td width="20%" ><!--#4DTEXT saldoTotalFxr--></td>
+				</tr>
+			</tbody>
+		</table>
+	</article>
+</section>
+<section>
+
+<!--#4DIF vCantDtc > 0-->
+	<h2><!--#4DHTML vCantDtc--> Documento(s) de compra(s)</h2>
+	<article>
+	 	<table class="dtcs borders" width="99%">
+			<thead>
+				<tr>
+					 <th width="1%" class="center">Número</th>
+	          <th width="10%" class="center">Emisión</th>
+	          <th width="10%" class="center">Documento</th>
+	          <th width="15%" class="center">Proveedor</th>               
+	          <th width="19%" class="center">Referencia</th>
+	          <th width="12%" class="center">Código</th>                
+	          <th width="12%" class="center">Neto[<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+	          <th width="10%" class="center">Total[<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>    
+	          <th width="11%" class="center">Gasto real[<!--#4DVAR _V3_defaultCurrencySymbol-->]</th>
+				</tr>
+			</thead>
+			<tbody class="ui-selectable">
+				<!--#4DLOOP [Doc_Tributario_Compra]-->
+					<tr>
+						<td class="center"><!--#4DIF [Doc_Tributario_Compra]has_attachment--><a href="<!--#4DTEXT _V3_base_url-->/4DACTION/_V3_getUpload?index=Doc_Tributario_Compra|<!--#4DTEXT [Doc_Tributario_Compra]ID_DOC-->"><!--#4DHTML [Doc_Tributario_Compra]FOLIO_DOCUMENTO--></a><!--#4DELSE--><!--#4DHTML [Doc_Tributario_Compra]FOLIO_DOCUMENTO--><!--#4DENDIF--></td>
+						<td class="center"><!--#4DHTML [Doc_Tributario_Compra]FECHA_EMISION--></td>
+						<td class="center"><!--#4DHTML [Doc_Tributario_Compra]des_tipo_doc--></td>
+						<td style="text-align:left!important"><!--#4DHTML [Doc_Tributario_Compra]RAZON_SOCIAL--></td>
+						<td style="text-align:left!important"><!--#4DHTML [Doc_Tributario_Compra]REFERENCIA_DOCUMENTO--></td>
+						<td class="center"><span style="display:inline-block!important"><!--#4DHTML [Doc_Tributario_Compra]v3_codigo_servicio--></span><!--#4DIF vIncluirCodContable--><span style="display:inline-block!important;margin-left:5px!important;font-weight:bold"><!--#4DHTML [Doc_Tributario_Compra]v3_cod_contable--></span><!--#4DENDIF--></td>
+
+						
+						<td class="right"><!--#4DHTML tipoMonedaGasto--><!--#4DIF monedaTipoCambio#""--> <!--#4DHTML _V3_formatCurrencyNoSymbol ([Doc_Tributario_Compra]TOTAL_NETO/monedaValorCambio2)--><!--#4DELSE--><!--#4DHTML _V3_formatCurrencyNoSymbol (round([Doc_Tributario_Compra]TOTAL_NETO;0))--> <!--#4DENDIF--></td>
+						<td class="right"><!--#4DHTML tipoMonedaGasto--><!--#4DIF monedaTipoCambio#""--> <!--#4DHTML _V3_formatCurrencyNoSymbol ([Doc_Tributario_Compra]TOTAL_DOCUMENTO/monedaValorCambio2)--><!--#4DELSE-->  <!--#4DHTML _V3_formatCurrencyNoSymbol (round([Doc_Tributario_Compra]TOTAL_DOCUMENTO;0))--> <!--#4DENDIF--></td>
+            <td class="right"><!--#4DHTML _V3_formatCurrency(round([Doc_Tributario_Compra]GASTO_REAL;0))--></td>
+
+					</tr>
+				<!--#4DENDLOOP-->
+			</tbody>
+			<tfoot>
+				<tr>
+					<th colspan="6" style="border:0px"></th>
+					<th class="right" style="border:0px"><!--#4DHTML tipoMonedaGasto--><!--#4DIF monedaTipoCambio#""-->  <!--#4DHTML _V3_formatCurrencyNoSymbol (vSumaJustificadoNetoFxr/monedaValorCambio2)--><!--#4DELSE--> <!--#4DHTML _V3_formatCurrencyNoSymbol (vSumaJustificadoNetoFxr)--> <!--#4DENDIF--> </th>
+					<th class="right" style="border:0px"><!--#4DHTML tipoMonedaGasto--><!--#4DIF monedaTipoCambio#""-->  <!--#4DHTML _V3_formatCurrencyNoSymbol (vSumaJustificadoTotalFxr/monedaValorCambio2)--><!--#4DELSE--> <!--#4DHTML _V3_formatCurrencyNoSymbol (vSumaJustificadoTotalFxr)--> <!--#4DENDIF--> </th>	
+					<th class="right" style="border:0px"><!--#4DHTML tipoMonedaGasto--><!--#4DIF monedaTipoCambio#""-->  <!--#4DHTML _V3_formatCurrencyNoSymbol (vSumaGastoReal/monedaValorCambio2)--><!--#4DELSE--> <!--#4DHTML _V3_formatCurrencyNoSymbol (vSumaGastoReal)--> <!--#4DENDIF--> </th>	
+				</tr>
+			</tfoot>
+		</table>
+	  </article>
+<!--#4DELSE-->
+	<h2>No existen documentos de compras asociados</h2>
+<!--#4DENDIF--> 
+</section>
+
+<!--#4DIF Size of array(aid_dtc_nc) > 0-->
+<section>
+  <h2><!--#4DHTML Size of array(aid_dtc_nc)--> Notas(s) de crédito</h2>
+  <article>
+    <table class="dtcs borders" width="99%">
+      <thead>
+        <tr>
+          <th class="center" width="5%">Número</th>
+          <th class="center" width="5%">Emisión</th>
+          <th class="center" width="5%">Factura Ref.</th>
+          <th class="center" width="15%">Proveedor</th>
+          <th class="center" width="5%">Motivo</th>
+          <th class="center" width="10%">Neto</th>
+          <th class="center" width="10%">Total</th>        
+        </tr>
+      </thead>
+      <tbody class="ui-selectable">
+        <!--#4DLOOP aid_dtc_nc-->
+          <tr>
+            <td class="center"><!--#4DHTML afolio_dtc_nc{aid_dtc_nc}--></td>
+            <td class="center"><!--#4DHTML afecha_dtc_nc{aid_dtc_nc}--></td>
+            <td class="center"><!--#4DHTML afolio_factura_dtc_nc{aid_dtc_nc}--></td>
+            <td class="center"><!--#4DHTML arazon_dtc_nc{aid_dtc_nc}--></td>         
+            <td class="center"><!--#4DHTML amotivo_factura_dtc_nc{aid_dtc_nc}--></td>
+            <td class="right"><!--#4DHTML tipoMonedaGasto--> <!--#4DHTML _V3_formatCurrencyNoSymbol (aneto_dtc_nc{aid_dtc_nc}/monedaValorCambio2)--></td>
+			<td class="right"><!--#4DHTML tipoMonedaGasto--> <!--#4DHTML _V3_formatCurrencyNoSymbol (atotal_dtc_nc{aid_dtc_nc}/monedaValorCambio2)--></td>
+          </tr>
+        <!--#4DENDLOOP--> 
+      </tbody>
+      <tfoot style="display:none">
+        <tr>
+          <th colspan="6" style="border:0px"></th>
+          <th class="right" style="border:0px"><!--#4DHTML tipoMonedaGasto--> <!--#4DHTML _V3_formatCurrencyNoSymbol (0/monedaValorCambio2)--></th>
+          <th class="right" style="border:0px"><!--#4DHTML tipoMonedaGasto--> <!--#4DHTML _V3_formatCurrencyNoSymbol (0/monedaValorCambio2)--></th> 
+        </tr>                   
+      </tfoot>
+    </table>
+    </article>
+</section>
+<!--#4DENDIF--> 
+
+<!--#4DIF [Orden_de_compra]des_tipo_gasto = "FACTORING"-->
+	<section>
+	<!--#4DIF vCantDTV > 0-->
+		<h2><!--#4DHTML vCantDTV--> Documento(s) de venta(s)</h2>
+		<article>
+		 	<table class="dtcs borders" width="99%">
+				<thead>
+					<tr>
+						<th width="1%" class="center">Nro.</th>
+						<th width="13%" class="center">Tipo</th>
+						<th width="19%" class="center">Cliente</th>								
+						<th width="19%" class="center">Referencia</th>							
+						<th width="12%" class="center">Estado</th>
+						<th width="12%" class="center">Total</th>
+					</tr>
+				</thead>
+				<tbody class="ui-selectable">
+					<!--#4DLOOP aIdsDtvFactoring-->
+						<tr>
+							<td class="center"><!--#4DTEXT aFolioDtvFactoring{aIdsDtvFactoring}--></td>
+							<td class="center"><!--#4DTEXT aTipoDtvFactoring{aIdsDtvFactoring}--></td>
+							<td class="center"><!--#4DTEXT aClienteDtvFactoring{aIdsDtvFactoring}--></td>
+							<td class="center"><!--#4DTEXT aRefDtvFactoring{aIdsDtvFactoring}--></td>
+							<td class="center"><!--#4DTEXT aEstadoDtvFactoring{aIdsDtvFactoring}--></td>
+							<td class="center"><!--#4DHTML  _V3_formatCurrency(Round(aTotalDtvFactoring{aIdsDtvFactoring};_V3_defaultCurrencyDecimals))--></td>
+						</tr>
+					<!--#4DENDLOOP-->
+				</tbody>
+				<tfoot>
+					<tr>
+						<th colspan="5" style="border:0px"></th>							
+						<th class="right" style="border:0px"><!--#4DHTML _V3_formatCurrency(Round(vSumaDtvs;_V3_defaultCurrencyDecimals))--></th>	
+					</tr>							
+				</tfoot>
+			</table>
+		  </article>
+	<!--#4DELSE-->
+		<h2>No existen documentos de ventas asociadas</h2>
+	<!--#4DENDIF--> 
+</section>
+<!--#4DENDIF-->
+
+<section>
+<!--#4DIF vCantPagos > 0-->
+	<h2><!--#4DHTML vCantPagos--> Pago(s)</h2>
+	<article>
+	   	<table class="pagos borders" width="99%">
+			<thead>
+				<tr>
+					<th class="center">Número</th>
+					<th class="center">Emisión</th>
+					<th class="center">Fecha de pago</th>								
+					<th class="center">Tipo</th>
+					<th class="center">Ch/Tr</th>				
+					<th class="center">Estado</th>								
+					<th class="center">Monto</th>							
+				</tr>
+			</thead>
+			<tbody class="ui-selectable">
+				<!--#4DLOOP aOCOP_id-->
+					<tr>
+						<td class="center"><!--#4DHTML aOCOP_folio{aOCOP_id}--></td>
+						<td class="center"><!--#4DHTML aOCOP_fechaemision{aOCOP_id}--></td>
+						<td class="center"><!--#4DHTML aOCOP_fechavencimiento{aOCOP_id}--></td>
+						<td class="center"><!--#4DHTML aOCOP_tipo{aOCOP_id}--></td>         
+						<td class="center"><!--#4DHTML aOCOP_documento{aOCOP_id}--></td>
+						<td class="center"><!--#4DHTML aOCOP_estado{aOCOP_id}--></td>
+						<td class="right"><!--#4DHTML tipoMonedaGasto--><!--#4DIF monedaTipoCambio#""--> <!--#4DHTML_V3_formatCurrencyNoSymbol (aOCOP_abono{aOCOP_id}/monedaValorCambio2)--><!--#4DELSE--><!--#4DHTML _V3_formatCurrencyNoSymbol (aOCOP_abono{aOCOP_id})--> <!--#4DENDIF--></td>
+					</tr>					
+				<!--#4DENDLOOP-->
+			</tbody>
+			<tfoot>
+				<tr>
+					<th colspan="6" style="border:0px"></th>
+					<th class="right" style="border:0px"><!--#4DHTML tipoMonedaGasto--><!--#4DIF monedaTipoCambio#""--> <!--#4DHTML _V3_formatCurrencyNoSymbol (vPagosOPOC/monedaValorCambio2)--><!--#4DELSE--> <!--#4DHTML _V3_formatCurrencyNoSymbol (vPagosOPOC)--> <!--#4DENDIF--></th>
+				</tr>							
+			</tfoot>			
+		</table>
+	  </article>   
+<!--#4DELSE-->
+	<h2>No existen pagos asociados</h2>
+<!--#4DENDIF-->  
+</section>
+
+<section>
+<!--#4DIF vCantDepositos > 0-->
+	<h2><!--#4DHTML vCantDepositos--> Depósito(s)</h2>
+	<article>
+	   	<table class="depositos borders" width="99%">
+			<thead>
+				<tr>
+					<th class="center">Número</th>
+					<th class="center">Emisión</th>
+					<th class="center">Cta. Cte</th>								
+					<th class="center">Tipo</th>
+					<th class="center">Estado</th>				
+					<th class="center">Monto</th>							
+				</tr>
+			</thead>
+			<tbody class="ui-selectable">
+				<!--#4DLOOP aIdCobro-->
+					<tr>
+						<td class="center"><!--#4DHTML aNroCobro{aIdCobro}--></td>
+						<td class="center"><!--#4DHTML aEmisionCobro{aIdCobro}--></td>
+						<td class="center"><!--#4DHTML aCtaCobro{aIdCobro}--></td>
+						<td class="center"><!--#4DHTML aTipoCobro{aIdCobro}--></td>         
+						<td class="center"><!--#4DHTML aEstadoCobro{aIdCobro}--></td>
+						<td class="right"><!--#4DHTML tipoMonedaGasto--> <!--#4DHTML _V3_formatCurrencyNoSymbol (aMontoCobro{aIdCobro}/monedaValorCambio2)--></td>
+					</tr>					
+				<!--#4DENDLOOP-->
+			</tbody>
+			<tfoot>
+				<tr>
+					<th colspan="5" style="border:0px"></th>							
+					<th class="right" style="border:0px"><!--#4DHTML tipoMonedaGasto--><!--#4DIF monedaTipoCambio#""--> <!--#4DHTML _V3_formatCurrencyNoSymbol (vSumaDepositos/monedaValorCambio2)--><!--#4DELSE--> <!--#4DHTML _V3_formatCurrencyNoSymbol (vSumaDepositos)--><!--#4DENDIF-->  </th>	
+				</tr>							
+			</tfoot>			
+		</table>
+	  </article>   
+<!--#4DELSE-->
+	<h2>No existen depósitos asociados</h2>
+<!--#4DENDIF-->  
+</section>
+
+<!--#4DIF [Orden_de_compra]v3_comentario_rxf#""-->
+<section>
+  <h2>Condiciones</h2>
+  <article>
+    <div><strong>Observaciones:</strong></div>
+    <p style="white-space:pre-wrap;page-break-inside: avoid"><!--#4DHTML Replace string(Replace string(Replace string(Replace string(Replace string([Orden_de_compra]v3_comentario_rxf;Char(13);"");Char(10);Char(10));"\"";"\\\"");Char(8232);Char(10));Char(9);Char(9))--></p>
+  </article>
+</section>
+<!--#4DENDIF-->
+
+<!--#4DIF Size of array(aUsuarioCompraUsername) > 0-->
+<section>
+	<h2>Responsables de rendir</h2>
+	<!--#4DLOOP aUsuarioCompraUsername-->
+	<div><!--#4DVAR aUsuarioCompraNombre{aUsuarioCompraUsername}--> (<!--#4DVAR aUsuarioCompraUsername{aUsuarioCompraUsername}-->)</div>
+	<!--#4DENDLOOP-->
+</section>
+<!--#4DENDIF-->

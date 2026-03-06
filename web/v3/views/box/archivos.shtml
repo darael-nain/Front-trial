@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getBoxContent-->
+		<title>Archivos adjuntos</title>
+		<meta charset="utf-8">
+		<script>
+			$(document).ready(function() {
+
+				var loadList = function() {
+					$('.ui-dialog table.upload > tbody > *').remove();
+					$.ajax({
+						url: '/4DACTION/_V3_getUpload',
+						data: {
+							index: 'box|<!--#4DTEXT [box]id-->|@',
+							list: true
+						},
+						dataType: 'json',
+						success: function(data) {
+							var htmlObject;
+							$.each(data.rows, function(key, item) {
+								htmlObject = $('<tr data-id="' + item.id + '" data-username="' + item.username + '" data-index="' + item.index + '">' +
+									'<td>' + item.filename + '</td>' +
+									'<td>' + ((item.created_at !== undefined)? '<time datetime="' + new Date(item.created_at).toISOString() + '">' + $.datepicker.formatDate('dd-mm-yy', new Date(item.created_at)) + ' <span>' + new Date(item.created_at).toTimeString().match( /^([0-9]{2}:[0-9]{2}:[0-9]{2})/ )[0].substring(0, 5) +  '</span></time>' : 'N/A' ) + '</td>' +
+									'<td>' + item.username + '</td>' +
+									'<td class="options">' +
+									'<button class="preview"></button>' +
+									'<button class="download"></button>' +
+									'<button class="delete"></button>' +
+									'</td>' +
+								'</tr>');
+
+								var is_supported = false;
+								$.each(navigator.mimeTypes, function(index, mimetype) {
+									if (item.mimetype == mimetype.type) {
+										is_supported = true;
+										return false;
+									}
+								});
+
+								if (!is_supported) {
+									switch(item.mimetype) {
+										case 'image/jpeg':
+											is_supported = true;
+											break;
+										case 'image/png':
+											is_supported = true;
+											break;
+										case 'image/gif':
+											is_supported = true;
+											break;
+										default:
+											is_supported = false;
+											break;
+									}
+								}
+
+								if (is_supported)
+									htmlObject.find('button.preview').button({
+										caption: 'Vista previa',
+										icons: {
+											primary: 'ui-icon-search'
+										},
+										text: false
+									}).click(function() {
+										$.fancybox(
+										{
+											'autoScale'			: true,
+											'type'				: 'iframe',
+											'href'				: '/4DACTION/_V3_getUpload?index=' + $(event.target).parentTo('tr').data('index')
+										});
+									});
+								htmlObject.find('button.download').button({
+									caption: 'Descargar',
+									icons: {
+										primary: 'ui-icon-circle-arrow-s'
+									},
+									text: false
+								}).click(function(event) {
+									window.open('/4DACTION/_V3_getUpload?index=' + $(event.target).parentTo('tr').data('index') + '&download=true');
+								});
+								htmlObject.find('button.delete').button({
+									caption: 'Eliminar',
+									icons: {
+										primary: 'ui-icon-trash'
+									},
+									text: false
+								}).click(function(event) {
+									confirm('¿Está seguro que desea eliminar el adjunto?').done(function(accept) {
+										if (accept)
+											$.ajax({
+												url: '/4DACTION/_V3_removeUpload',
+												data: {
+													index: $(event.target).parentTo('tr').data('index')
+												},
+												dataType: 'json',
+												success: function(data) {
+													if (data.success) {
+														toastr.success('El adjunto fue eliminado con éxito!');
+														$('.ui-dialog fieldset.upload [name="attachment["]').val('');
+														loadList();
+													} else
+														toastr.error('El adjunto no pudo eliminarse. Es posible que esté bloqueado.');
+												}
+											});
+									});
+								});
+								$('.ui-dialog table.upload > tbody').append(htmlObject);
+							});
+						}
+					});
+				};
+
+				loadList();
+
+				$('.ui-dialog fieldset.upload button').button({
+					icons: {
+						primary: 'ui-icon-circle-arrow-n'
+					},
+					text: true
+				}).click(function() {
+					var is_valid = true;
+					$('.ui-dialog fieldset.upload input[required]').each(function(key, element) {
+						if ($(element).val() == '') {
+							is_valid = false;
+							return false;
+						}
+					});
+
+					if (is_valid) {
+						var data = new FormData();
+						data.append('file', $('.ui-dialog fieldset.upload [name="upload[attachment]"]').get(0).files[0]);
+						data.append('filename', $('.ui-dialog fieldset.upload [name="upload[attachment]"]').get(0).files[0].name);
+						data.append('index', 'box|<!--#4DTEXT [box]id-->|' + Math.floor(Math.random() * 2147483647));
+						$.ajax({
+							url: '/4DACTION/_V3_setUpload',
+							type: 'POST',
+							contentType: false,
+							data: data,
+							processData: false,
+							cache: false,
+							success: function(data) {
+								toastr.success('Archivo cargado con éxito!');
+								$('.ui-dialog fieldset.upload input[required]').val(undefined);
+								loadList();
+							}
+						});
+					} else
+						toastr.error(NOTIFY.get('ERROR_DATA'));
+				});
+				
+			});
+		</script>
+	</head>
+	<body>
+		<fieldset class="upload">
+			<legend>Subir nuevo archivo</legend>
+			<label>
+				<span>Archivo</span>
+				<input type="file" name="upload[attachment]" required>
+			</label>
+			<button>Subir</button>
+		</fieldset>
+		<table class="upload">
+			<thead>
+				<tr>
+					<th>Nombre</th>
+					<th>Fecha</th>
+					<th>Usuario</th>
+					<th>Acción</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</body>
+</html>

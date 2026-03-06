@@ -1,0 +1,12 @@
+<select name='dtc' class='select-grilla-det-fr'>";
+	<!--#4dif Size of array(aServicioID)=0-->
+		<option selected value="-1">[Sin Serv.]</option>	
+	<!--#4dendif-->
+	
+	<!--#4dif Size of array(aServicioID)>0-->
+		<option selected value="-1">[Seleccionar]</option>
+		<!--#4dloop aServicioID-->
+			<option value="<!--#4DVAR aServicioID{aServicioID}-->"><!--#4DVAR aServicio{aServicioID}--></option>
+		<!--#4dendloop-->
+	<!--#4dendif-->	
+</select>

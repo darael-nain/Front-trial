@@ -1,0 +1,21 @@
+{
+	"page": {
+		"current": <!--#4DHTML page-->,
+		"last": <!--#4DHTML -INT(($total/results)* -1)-->
+	},
+	"records": {
+		"from": <!--#4DHTML $offset-1-->,
+		"to": <!--#4DHTML (Selected record number([perfil]) - 2)-->,
+		"total": <!--#4DHTML $total-->
+	},
+	"rows": [
+<!--#4DLOOP aPerfilId -->
+		{
+			"id": <!--#4DHTML aPerfilId{aPerfilId}-->,
+			"nombre": "<!--#4DHTML _V3_escapeString(aPerfilNombre{aPerfilId})-->",
+			"observaciones": "<!--#4DHTML _V3_escapeString(aPerfilObservaciones{aPerfilId})-->",
+			"activo": <!--#4DIF aPerfilActivo{aPerfilId}-->true<!--#4DELSE-->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aPerfilId{aPerfilId} = aPerfilId{Size of array(aPerfilId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

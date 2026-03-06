@@ -1,0 +1,48 @@
+{
+	"rows":[
+		<!--#4DLOOP aId -->
+		{
+			"id":<!--#4DHTML aId{aId}-->,
+			"id_task":<!--#4DHTML aIdTask{aId}-->,
+			"date_archive":"<!--#4DHTML aDate{aId}-->",
+			"name":"<!--#4DHTML _V3_escapeString(aName{aId})-->",
+			"size_archive":"<!--#4DHTML aSize{aId}-->",
+			"link" :"<!--#4DHTML aLink{aId}-->",
+			"type" :"<!--#4DHTML aType{aId}-->"
+		}<!--#4DIF NOT(aId{aId} = aId{Size of array(aId)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	],
+	"img":[
+		<!--#4DLOOP aIdImg -->
+		{
+			"id":<!--#4DHTML aIdImg{aIdImg}-->,
+			"link":"<!--#4DHTML _V3_escapeString(aImg{aIdImg})-->"
+		}<!--#4DIF NOT(aIdImg{aIdImg} = aIdImg{Size of array(aIdImg)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	
+	],
+	"stakeholders":[
+		<!--#4DLOOP aIdSh -->
+		{
+			"id":<!--#4DHTML aIdSh{aIdSh}-->,
+			"id_task":<!--#4DHTML aIdTaskSh{aIdSh}-->,
+			"login":"<!--#4DHTML aLoginSh{aIdSh}-->",
+			"name":"<!--#4DHTML _V3_escapeString(aNameSh{aIdSh})-->",
+			"email":"<!--#4DHTML _V3_escapeString(aEmailSh{aIdSh})-->",
+			"block" : <!--#4DIF aBlock{aIdSh}-->true<!--#4DELSE -->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aIdSh{aIdSh} = aIdSh{Size of array(aIdSh)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	],
+	"comments":[
+		<!--#4DLOOP aIdComment -->
+		{
+			"id":<!--#4DHTML aIdComment{aIdComment}-->,
+			"id_task":<!--#4DHTML aIdTaskComment{aIdComment}-->,
+			"text":"<!--#4DHTML _V3_escapeString(aTextComment{aIdComment})-->",
+			"login":"<!--#4DHTML aLoginComment{aIdComment}-->",
+			"date":"<!--#4DHTML aDateComment{aIdComment}-->",
+			"sent" : <!--#4DIF aSent{aIdComment}-->true<!--#4DELSE -->false<!--#4DENDIF-->
+		}<!--#4DIF NOT(aIdComment{aIdComment} = aIdComment{Size of array(aIdComment)})-->,<!--#4DENDIF-->
+		<!--#4DENDLOOP-->
+	]
+}

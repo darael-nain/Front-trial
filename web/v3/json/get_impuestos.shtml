@@ -1,0 +1,18 @@
+{	
+	"rows":[
+	<!--#4DLOOP aIdImp-->
+		{
+			"id":<!--#4DHTML aId{aIdImp}-->,
+			"idTax":<!--#4DHTML aId{aIdImp}-->,
+			"des":"<!--#4DHTML _V3_scapeString(aDesImp{aIdImp})-->",
+			"tipo":"<!--#4DHTML _V3_scapeString(aTipoImp{aIdImp})-->",
+			"estado": <!--#4DHTML aEstadoImp{aIdImp}-->,
+			"valor": <!--#4DHTML string(aValorImp{aIdImp};"&xml")-->,
+			"default": <!--#4DIF aDefaultImp{aIdImp}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"defecto": <!--#4DIF aDefaultImp{aIdImp}-->true<!--#4DELSE -->false<!--#4DENDIF-->,
+			"id_tipo_doc": <!--#4DHTML aIdTipoDoc{aIdImp}-->,
+			"correlativo": "<!--#4DTEXT aCorrelativoDoc{aIdImp}-->"
+		}<!--#4DIF NOT(aIdImp{aIdImp} = aIdImp{Size of array(aIdImp)})-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

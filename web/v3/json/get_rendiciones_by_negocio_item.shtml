@@ -1,0 +1,30 @@
+{	
+	"rows": [
+<!--#4DLOOP aIdFXR -->
+		{
+			"id": <!--#4DHTML aIdFXR{aIdFXR}-->,
+			"version": "<!--#4DHTML aVersionFXR{aIdFXR}-->",
+			"folio": "<!--#4DHTML aNroFXR{aIdFXR}-->",
+			"fecha": "<!--#4DHTML String(aFechaFXR{aIdFXR};7)-->",
+			"estado": "<!--#4DHTML aEstadoFXR{aIdFXR}-->",
+			"proveedor": "<!--#4DHTML _V3_escapeString(aProveedorFXR{aIdFXR})-->",
+			"referencia": "<!--#4DHTML _V3_escapeString(aReferenciaFXR{aIdFXR})-->",
+			"solicitado_": <!--#4DHTML String(aSolicitadoFXR{aIdFXR};"&xml")-->,
+			"pagado_": <!--#4DHTML String(aPagadoFXR{aIdFXR};"&xml")-->,
+			"rendido_": <!--#4DHTML String(aRendidoFXR{aIdFXR};"&xml")-->,
+			"saldo_": <!--#4DHTML String(aSaldoFXR{aIdFXR};"&xml")-->,
+			"costoempresa_": <!--#4DHTML String(aCostoEmpresaFXR{aIdFXR};"&xml")-->,
+			"solicitado": "<!--#4DHTML _V3_formatCurrency(aSolicitadoFXR{aIdFXR})-->",
+			"pagado": "<!--#4DHTML _V3_formatCurrency(aPagadoFXR{aIdFXR})-->",
+			"rendido": "<!--#4DHTML _V3_formatCurrency(aRendidoFXR{aIdFXR})-->",
+			"saldo": "<!--#4DHTML _V3_formatCurrency(aSaldoFXR{aIdFXR})-->",
+			"costoempresa": "<!--#4DHTML _V3_formatCurrency(aCostoEmpresaFXR{aIdFXR})-->",
+			"validado": "<!--#4DHTML aValidadoFXR{aIdFXR}-->",	
+			"vencimiento": "<!--#4DHTML String(aVencimientoFXR{aIdFXR};7)-->",
+			"dias_atrasados_fxr": "<!--#4DHTML aDiasAtrasadosFXR{aIdFXR}-->",
+			"excluir_gasto": <!--#4DHTML aFreeFXR{aIdFXR}-->,
+			"tipo": "<!--#4DHTML aTipoFXR{aIdFXR}-->"			
+		}<!--#4DIF NOT(aIdFXR{aIdFXR} = aIdFXR{Size of array(aIdFXR)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

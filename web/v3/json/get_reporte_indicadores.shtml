@@ -1,0 +1,8 @@
+{	
+	"por_facturar": "<!--#4DHTML xFacturar-->",
+	"por_cobrar": "<!--#4DHTML xCobrar-->",
+	"por_pagar": "<!--#4DHTML xPagar-->",
+	"por_justificar": "<!--#4DHTML xJustificar-->",
+	"por_vencer": "<!--#4DHTML xVencer-->"
+	
+}

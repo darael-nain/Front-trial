@@ -1,0 +1,29 @@
+<table id="grilla-pagos" class="list-grilla" border="0" cellpadding="0" cellspacing="0" hspace="0" vspace="0">
+	<thead>
+		<tr bgcolor="#CCCCCC">
+			<th>Nro OP</th>
+			<th>Item Asociado</th>
+			<th>Fecha Pago</th>
+			<th>Estado</th>
+			<th>Tipo</th>
+			<th>Monto</th>			
+		</tr>
+	</thead>
+	<tbody>
+		<!--#4DLOOP idOpPagoRend-->
+		<tr bgcolor="#F5ECCE">
+			<td><!--#4DVAR nroOpPagoRend{idOpPagoRend}--></td>
+			<td style="padding-left:2px" class="left"><!--#4DVAR nomItemsAsoc{idOpPagoRend}--></td>
+			<td><!--#4DVAR fechaPagoRend{idOpPagoRend}--></td>
+			<td><!--#4DVAR estadoPagoRend{idOpPagoRend}--></td>
+			<td><!--#4DVAR tipoPagoRend{idOpPagoRend}--></td>
+			<td class="right"><!--#4DVAR totalPagoRend{idOpPagoRend}--></td>
+		</tr>
+		<!--#4DENDLOOP-->
+	</tbody>
+	<tfoot>
+	    <tr>	      
+	      <td colspan="6" class="right">Total Pagos :  <!--#4DVAR vSumaPagosRendicion--></td>
+	    </tr>
+    </tfoot>	
+</table>

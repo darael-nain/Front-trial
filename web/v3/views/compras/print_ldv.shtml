@@ -1,0 +1,492 @@
+<!DOCTYPE HTML>
+
+<html>
+<head>
+  <!--#4DSCRIPT/_V3_serverInfo-->
+    <!--#4DSCRIPT/_v3_print_oc-->
+    <meta charset="utf-8"/>
+
+    <link rel="stylesheet" media="print" href="/v3/design/print.css"/>
+    <title>NRO <!--#4DTEXT [Orden_de_compra]Folio_OC--></title>
+    <style>
+
+    @media print {
+
+      @page {
+          size: auto;   /* auto is the initial value */
+          margin: 0 10 0 10;  /* this affects the margin in the printer settings */
+      }
+
+      .footer,
+      #non-printable {
+          display: none !important;
+      }
+      #printable {
+          display: block;
+      }
+      <!--#4DIF (nullified="true")-->
+      html > body:before {
+        display: block;
+        position: absolute;
+        top: 235px;
+        left: 120px;
+        width: 100vw;
+        text-align: center;
+        content: 'ANULADO';
+        color: rgba(0,0,0,.3);
+        font-size: 145px;
+        font-weight: bold;
+        -webkit-transform: rotate(-45deg);
+      }
+      <!--#4DELSE-->
+      <!--#4DIF (preview="true")-->
+      html > body:before {
+        display: block;
+        position: absolute;
+        top:180px;
+        left:50px;
+        width:100vw;
+        text-align: center;
+        content: 'COPIA NO VALIDA';
+        color: rgba(0,0,0,.3);
+        font-size:140px;
+        font-weight: bold;
+        -webkit-transform: rotate(-45deg);
+      }
+      <!--#4DENDIF-->
+      <!--#4DENDIF-->
+
+
+    }
+      
+    
+
+      .cuadradito {
+          background-color: <!--#4DVAR vColorCorporativoCSS--> !important;
+      }
+      .underline{
+        text-decoration:underline;
+      }
+      .borders td, th{
+        border:1px solid gray;
+        padding:2px;
+      }
+
+      .info-extra{
+        padding:0px;
+        position:absolute;
+        right:-100px;
+        top:70px;
+        font-size:20px;
+      }
+      .info-extra > span{
+        display:block;
+        font-weight:bold;
+        text-align: right;
+      }
+
+      .tituloSuperior{
+        text-align:right;
+        margin-top:5px;
+        font-size:25px;
+        color:rgb(67,175,124);
+        font-weight: bold;
+      }
+
+    </style>
+
+    <style>
+      .observacion-items p {
+        display: block;
+        margin: 5px 0;
+      }
+
+      .observacion-items table {
+        border: 1px solid grey !important;
+        width: 100% !important;
+        border-collapse: collapse !important;
+      }
+
+      .observacion-items table > tbody > tr:nth-child(odd),
+      .observacion-items table > tbody > tr:nth-child(odd) > td,
+      .observacion-items table > tbody > tr:nth-child(even),
+      .observacion-items table > tbody > tr:nth-child(even) > td {
+        border: 1px solid grey !important;
+        background-color: transparent !important;
+        text-transform: none !important;
+        padding: 5px !important;
+        color: grey !important;
+      }
+
+    </style>
+    <script type="text/javascript">
+      
+      var printPdf = () => {
+        window.print();
+      }
+    </script>
+</head>
+<body>
+<div class="contenedor" align="center">
+
+  <!--#4DIF v3_Subir_titulo -->
+    <div class="tituloSuperior"><!--#4DTEXT [Orden_de_compra]des_tipo_gasto--></div>
+  <!--#4DENDIF-->
+
+ <div class="cuadro" style="1px solid red">
+<section class="new-header">
+
+  <!--#4DIF pg_usar_logo_por_area-->
+      <img src="<!--#4DTEXT vUrlImagenLogoPorArea-->" width="<!--#4DTEXT vAnchoPictureLogoArea-->" height="<!--#4DTEXT vAltoPictureLogoArea-->" style="max-width: 500px; max-height: 500px; padding: 10px; margin-left: 30px;">
+  <!--#4DELSE-->
+      <img src="<!--#4DTEXT vUrlImagenLogo-->" width="<!--#4DTEXT vAnchoPicture-->" height="<!--#4DTEXT vAltoPicture-->" style="max-width: 500px; max-height: 500px; padding: 10px; margin-left: 30px;">
+  <!--#4DENDIF-->
+
+  <p>
+    <label><!--#4DTEXT razonPropietaria--></label>
+    <label><!--#4DTEXT giroPropietaria--></label>
+    <label><!--#4DTEXT rutPropietaria--></label>
+    <label><!--#4DTEXT direccionPropietaria--></label>
+    <label><!--#4DTEXT telefonoPropietaria--></label>
+    <label><!--#4DTEXT comunaPropietaria--> - <!--#4DTEXT ciudadPropietaria--></label>
+  </p>
+
+  <p class="atributos" style="top:0px! important;">
+    <!--#4DIF [Orden_de_compra]des_tipo_gasto = "FACTORING"-->
+       <span>N&deg; <!--#4DTEXT [Orden_de_compra]factoring_folio--></span>
+    <!--#4DELSE-->
+       <span>N&deg; <!--#4DTEXT [Orden_de_compra]Folio_OC--></span>
+    <!--#4DENDIF-->
+    <span><!--#4DTEXT [Orden_de_compra]fecha--></span>
+
+    <!--#4DIF ((vFechaRendicion#!00-00-0000!) & ([Orden_de_compra]des_tipo_gasto#"ORDEN DE COMPRA"))-->
+    <span><strong>F. Rendición:</strong> <!--#4DTEXT vFechaRendicion--></span><br>
+    <!--#4DENDIF-->
+
+  </p>
+
+</section>
+
+<!--#4DIF showInfoArribaInfo-->
+  <div class="info-extra"><span><!--#4DIF showNombreEmpresa--><!--#4DTEXT nombrePropietaria--><!--#4DELSE--><!--#4DTEXT razonPropietaria--><!--#4DENDIF--></span><span><!--#4DTEXT rutPropietaria--></span></div>
+<!--#4DENDIF-->
+
+<!--#4DIF [Orden_de_compra]des_tipo_gasto = "FACTORING"-->
+  <section>
+    <article class="from">
+      <h5>CEDENTE</h5>
+      <div><strong>Razón social :</strong><span><!--#4DIF cedenteRazon#""--><!--#4DTEXT cedenteRazon--><!--#4DELSE-->N/A<!--#4DENDIF--></span></div>
+      <div><strong><!--#4DTEXT nameRUT-->:</strong><span><!--#4DIF cedenteRut#""--><!--#4DTEXT cedenteRut--><!--#4DELSE-->N/A<!--#4DENDIF--></span></div>
+    </article>
+    <article class="to">
+      <h5>CESIONARIO</h5>
+      <div><strong>Razón social :</strong><span><!--#4DIF cesionarioRazon#""--><!--#4DTEXT cesionarioRazon--><!--#4DELSE-->N/A<!--#4DENDIF--></span></div>
+      <div><strong><!--#4DTEXT nameRUT-->:</strong><span><!--#4DIF cesionarioRut#""--><!--#4DTEXT cesionarioRut--><!--#4DELSE-->N/A<!--#4DENDIF--></span></div>
+    </article>
+  </section>
+<!--#4DELSE-->
+  <section>
+    <article class="from">
+      <div><strong>De:</strong><span><!--#4DIF nombreEmisor#""--><!--#4DVAR nombreEmisor--><!--#4DELSE-->N/A<!--#4DENDIF--></span></div>
+      <div><strong>Email:</strong><span><!--#4DIF emailEmisor#""--><!--#4DVAR emailEmisor--><!--#4DELSE-->N/A<!--#4DENDIF--></span></div>
+      <!--#4DIF Not(Undefined(nombreCliente))-->
+      <div><strong>Cliente:</strong><span><!--#4DIF nombreCliente#""--><!--#4DVAR nombreCliente--><!--#4DELSE-->N/A<!--#4DENDIF--></span></div>
+      <!--#4DENDIF-->
+    </article>
+    <article class="to">
+
+      <!--#4DIF nombreContacto#""--><div><strong>Para:</strong><span><!--#4DIF nombreContacto#""--><!--#4DVAR nombreContacto--><!--#4DELSE-->N/A<!--#4DENDIF--></span></div><!--#4DENDIF-->
+
+      <!--#4DIF razonEmp#""--><div><strong>Proveedor:</strong><span><!--#4DIF razonEmp#""--><!--#4DVAR razonEmp--><!--#4DELSE-->N/A<!--#4DENDIF--></span></div><!--#4DENDIF-->
+
+      <!--#4DIF rutEmp#""--><div><strong><!--#4DTEXT nameRUT-->:</strong><span><!--#4DIF rutEmp#""--><!--#4DVAR rutEmp--><!--#4DELSE-->N/A<!--#4DENDIF--></span></div><!--#4DENDIF-->
+
+      <!--#4DIF direccionEmp#""--><div><strong>Dirección:</strong><span><!--#4DIF direccionEmp#""--><!--#4DVAR direccionEmp--><!--#4DELSE-->N/A<!--#4DENDIF--></span></div><!--#4DENDIF-->
+
+      <!--#4DIF fono1Emp#""--><div><strong>Teléfono:</strong><span><!--#4DIF fono1Emp#""--><!--#4DVAR fono1Emp--><!--#4DELSE-->N/A<!--#4DENDIF--></span></div><!--#4DENDIF-->
+      
+     <!--#4DIF emailEmp#""--> <div><strong>Email:</strong><span><!--#4DIF emailEmp#""--><!--#4DVAR emailEmp--><!--#4DELSE-->N/A<!--#4DENDIF--></span></div><!--#4DENDIF-->
+
+      <!--#4DIF ((print_datos_bancarios_oc) & (nombreBancoEmp#"") & (nroCuentaEmp#"") & (tipoCuentaEmp#""))-->
+      <div>
+        <strong>Cta. bancaria:</strong>
+        <span>Nº <!--#4DVAR nroCuentaEmp--> - <!--#4DVAR tipoCuentaEmp--> - <!--#4DVAR nombreBancoEmp--></span>
+      </div>
+      <!--#4DENDIF-->
+      <!--#4DIF tipodepago#""-->
+      <div>
+        <strong>Tipo de pago:</strong>
+        <span><!--#4DTEXT tipodepago--></span>
+      </div>
+      <!--#4DENDIF-->
+
+    </article>
+  </section>
+<!--#4DENDIF-->
+
+<table class="tabla-detalle" border="0" cellpadding="1" cellspacing="0">
+
+  <tr>
+    <td colspan="6" class="tipooc">
+       <div style="font-weight:bold;font-size:20px"><!--#4DTEXT vInfoNegocio--></div>
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan="6" class="tipooc">
+        <div style="font-weight:bold;font-size:20px">
+          <!--#4DIF [Orden_de_compra]FacturaTipo#"RENDICION"--><!--#4DTEXT [Orden_de_compra]FacturaTipo--><!--#4DENDIF--></div>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="6" class="tipooc">
+      <div style="font-weight:bold;font-size:16px"><!--#4DIF (([Orden_de_compra]estado_cierre_admin_fxr=True) & (([Orden_de_compra]id_tipo_gasto="FXR") || ([Orden_de_compra]id_tipo_gasto="FTG")))-->Rendición cerrada por <!--#4DTEXT [Orden_de_compra]login_cierre_admin_fxr --> el <!--#4DTEXT [Orden_de_compra]fecha_cierre_admin_fxr--> a las <!--#4DTEXT [Orden_de_compra]hora_cierre_admin_fxr--><!--#4DENDIF--></div>
+    </td>
+  </tr>
+  <tr>
+
+    <td colspan="<!--#4DIF mostrar_columna_dias-->7<!--#4DELSE-->6<!--#4DENDIF-->" class="referencia">
+      <div style="text-align:left;font-weight:normal"><!--#4DTEXT vReferenciagasto--></div>
+      <!--#4DIF Not(v3_Subir_titulo)-->
+      <div style="text-align:right;margin-top:5px;font-size:25px;color:rgb(67,175,124)"><!--#4DTEXT [Orden_de_compra]des_tipo_gasto--></div>
+      <!--#4DENDIF-->
+
+      <!--#4DIF [Orden_de_compra]pe_aplica_detraccion-->
+      <div style="position:absolute;right:-80px;top:350px;">
+          <span style="display:inline-block;">DETRACCIÓN <!--#4DTEXT [Orden_de_compra]pe_cod_detraccion--> (<!--#4DTEXT [Orden_de_compra]pe_porcentaje_detraccion-->%)</span><br>
+      </div>
+      <div style="position:absolute;right:-80px;top:375px;">
+          <span style="text-align:right;display:inline-block;"><!--#4DTEXT pe_monto_detraccion--></span>
+      </div>
+      <br>
+      <!--#4DENDIF-->
+
+    </td>
+  </tr>
+  <tr bgcolor="#000000">
+    <td class="left-h"><div class="cuadradito"></div>Item</td>
+    <td class="center-h">Código</td>
+    <td class="center-h">Nombre</td>
+    <td class="center-h">Cant.</td>
+    <!--#4DIF mostrar_columna_dias--><td class="center-h">Días</td><!--#4DENDIF-->
+    <td class="center-h">P.U.</td>
+    <td class="center-h">Subtotal</td>
+  </tr>
+   <!--#4DLOOP a_llave_detalle_oc-->
+    <!--#4DIF a_titulo{a_llave_detalle_oc}="TITULO"-->
+      <tr class="tr-titulo" bgcolor="#DDDDDD">
+        <td></td>
+        <td></td>
+        <td colspan="5" style="text-align:left;font-weight:bold"><!--#4DTEXT a_des{a_llave_detalle_oc}--></td>
+      </tr>
+    <!--#4DELSE-->
+        <tr class="tr-item"> 
+            <td class="orden-alfa"><!--#4DIF habilitarCorrelativoNegEnGASTOS--><!--#4DVAR a_correlativo{a_llave_detalle_oc}--><!--#4DELSE--><!--#4DVAR a_llave_detalle_oc{a_llave_detalle_oc}--><!--#4DENDIF--></td>
+
+            <td class="orden-alfa"><span style="display:inline-block!important"><!--#4DTEXT a_codigo{a_llave_detalle_oc}--></span><!--#4DIF vIncluirCodContable--><span style="display:inline-block!important;margin-left:10px!important;font-weight:bold"><!--#4DHTML a_codigoCont{a_llave_detalle_oc}--></span><!--#4DENDIF--></td>
+			<td class="items"><!--#4DVAR a_des{a_llave_detalle_oc}-->
+             	
+             	<!--#4DIF a_titulo{a_llave_detalle_oc}#"TITULO"-->
+                <!--#4DIF vShowBusinessArea-->
+              <br>
+              <spam style="font-weight:bold; font-size: 12px" ><!--#4DTEXT aNameBusinessArea{a_llave_detalle_oc}--> </spam>
+              <!--#4DENDIF-->
+             	<!--#4DIF vShowParam1-->
+             	<br>
+          		<spam style="font-weight:bold; font-size: 12px" > <!--#4DTEXT aNameParam1--><!--#4DTEXT aParam1{a_llave_detalle_oc}--></spam>
+             	<!--#4DENDIF-->
+             	
+             	<!--#4DIF vShowParam2-->
+             	<br>
+             	<spam style="font-weight:bold; font-size: 12px" > <!--#4DTEXT aNameParam2--><!--#4DTEXT aParam2{a_llave_detalle_oc}--></spam>
+             	<!--#4DENDIF-->
+             	
+             	<!--#4DIF vShowParam3-->
+             	<br>
+             	<spam style="font-weight:bold; font-size: 12px" > <!--#4DTEXT aNameParam3--><!--#4DTEXT aParam3{a_llave_detalle_oc}--></spam>
+             	<!--#4DENDIF-->
+              <!--#4DENDIF-->
+             </td>
+
+            <td class="nro-items-cant"><!--#4DTEXT a_cantidad{a_llave_detalle_oc}--></td>
+            <!--#4DIF mostrar_columna_dias--><td class="nro-items-cant"><!--#4DTEXT a_dias{a_llave_detalle_oc}--></td><!--#4DENDIF-->
+            <td class="nro-items-subtotal"><!--#4DTEXT a_pu1{a_llave_detalle_oc}--></td>
+            <td class="nro-items-subtotal"><!--#4DTEXT a_subtotal{a_llave_detalle_oc}--></td>
+        </tr>
+
+        <!--#4DIF ((v3_mostrar_justificado_item) & ([Orden_de_compra]id_tipo_gasto="FXR"))-->
+        <tr>
+          <td colspan="<!--#4DIF mostrar_columna_dias-->7<!--#4DELSE-->6<!--#4DENDIF-->">
+            <div style="margin:3px 0 10px 0; padding:5px 0 5px 0; color:black; font-style:italic; text-align:right">Monto justificado: <!--#4DTEXT a_justificadoItem{a_llave_detalle_oc}--> / Monto por justificar: <!--#4DTEXT a_porjustificarItem{a_llave_detalle_oc}--></div>
+          </td>
+        </tr>
+        <!--#4DENDIF-->
+
+        <!--#4DIF v3_mostrar_infoNegocio-->
+        <tr>
+            <td colspan="<!--#4DIF mostrar_columna_dias-->7<!--#4DELSE-->6<!--#4DENDIF-->">
+              <div style="margin:3px 0 10px 0; padding:5px 0 5px 0; color:black; font-style:italic; font-weight: bold"><!--#4DIF a_id_neg{a_llave_detalle_oc}="GG"-->CLASIFICACIÓN<!--#4DELSE--><!--#4DIF a_presupuesto{a_llave_detalle_oc}-->PRESUPUESTO DE GASTO<!--#4DELSE-->NEGOCIO<!--#4DENDIF--><!--#4DENDIF-->: <!--#4DTEXT a_id_neg{a_llave_detalle_oc}--> / <!--#4DTEXT a_desc_neg{a_llave_detalle_oc}--></div>
+            </td>
+        </tr>
+        <!--#4DENDIF-->
+        <!--#4DIF mostrar_detalle_item & (a_observ_items{a_llave_detalle_oc}#"")-->
+        <tr>
+          <td class="observacion-items" colspan="999" style="color: darkgrey !important; padding-top: 15px; padding-bottom: 30px; display: table-cell; width: 100%;page-break-inside: avoid;font-size:<!--#4DTEXT vSizeTextoObervacionItemOC-->"><!--#4DHTML a_observ_items{a_llave_detalle_oc}--></td>
+        </tr>
+        <!--#4DENDIF-->
+
+    <!--#4DENDIF-->
+    <!--#4DENDLOOP-->
+</table>
+
+<div align="right" class="totales">
+<table border="0">
+  <tr>
+      <td align="right" valign="top">
+    <table class="bloque2" border="0" cellpadding="0" cellspacing="0">
+
+       <!--#4DIF [Orden_de_compra]id_tipo_gasto="OC"-->
+
+        <!--#4DIF [Orden_de_compra]Descuento>0-->
+        <tr>
+          <td class="etiquetas-valores">SUBTOTAL</td>
+          <td class="valores-totales"><!--#4DTEXT subtotalPrint--></td>
+        </tr>
+        <tr>
+          <td class="etiquetas-valores">DESCUENTO</td>
+          <td class="valores-totales"><!--#4DTEXT descuentoPrint--></td>
+        </tr>
+        <!--#4DENDIF-->
+        <tr>
+          <!--#4DIF [Orden_de_compra]FacturaTipo="BOLETA DE HONORARIOS @"-->
+            <td class="etiquetas-valores">TOTAL HONORARIO</td>
+          <!--#4DELSE-->
+            <td class="etiquetas-valores">TOTAL NETO</td>
+          <!--#4DENDIF-->
+          <td class="valores-totales"><!--#4DTEXT netoPrint--></td>
+        </tr>
+          <!--#4DIF [Orden_de_compra]Total_Exento>0-->
+        <tr>
+          <td class="etiquetas-valores">EXENTO</td>
+          <td class="valores-totales"><!--#4DTEXT exentoPrint--></td>
+        </tr>
+        <!--#4DENDIF-->
+
+        <!--#4DIF vImpuesto-->
+        <tr>
+          <td class="etiquetas-valores"><!--#4DTEXT labelImpuestos--></td>
+          <td class="valores-totales"><!--#4DTEXT ivaPrint--></td>
+        </tr>
+        <!--#4DELSE-->
+        
+          <!--#4DIF vImpuestoMultiple-->
+            <!--#4DLOOP aIdImp-->
+            <tr>
+              <td class="etiquetas-valores"><!--#4DTEXT aNameImp{aIdImp}--></td>
+
+              <td class="valores-totales"><!--#4DTEXT aValorImp{aIdImp}--></td>
+            </tr>
+            <!--#4DENDLOOP-->
+          <!--#4DENDIF-->
+        <!--#4DENDIF-->
+
+
+        <!--#4DIF [Orden_de_compra]pe_porcentaje_servicio>0-->
+         <tr>
+          <td class="etiquetas-valores-total">SERVICIOS</td>
+          <td class="valores-totales"><!--#4DTEXT adicionalPrint--></td>
+        </tr>        
+        <!--#4DENDIF-->
+
+      <!--#4DENDIF-->
+
+        <tr>
+          <td class="etiquetas-valores-total">TOTAL</td>
+          <td class="valores-totales"><!--#4DTEXT totalPrint--></td>
+        </tr>
+
+        </table>
+    </td>
+  </tr>
+</table>
+</div>
+
+<!--#4DIF [Orden_de_compra]id_tipo_gasto="OC"-->
+  <!--#4DINCLUDE print_oc.shtml-->
+<!--#4DELSE-->
+  <!--#4DINCLUDE print_fxr.shtml-->
+<!--#4DENDIF-->
+
+
+<section<!--#4DIF Not(mostrar_validacion)--> style="display: none;"<!--#4DENDIF-->>
+  <h2>Validado por</h2>
+  <article>
+    <table class="dtcs borders" width="99%">
+      <thead>
+        <tr>
+          <th width="20%" class="center">Usuario</th>
+          <th width="10%" class="center">Fecha</th>
+          <th width="10%" class="center">Hora</th>
+          <th width="60%" class="center">Regla</th>
+        </tr>
+      </thead>
+      <tbody class="ui-selectable">
+        <!--#4DLOOP [log_validacion]-->
+          <tr>
+            <td class="center"><!--#4DHTML [log_validacion]login_usuario--></td>
+            <td class="center"><!--#4DHTML [log_validacion]updated_at_date--></td>
+            <td class="center"><!--#4DHTML [log_validacion]updated_at_time--></td>
+            <td style="text-align:left!important"><!--#4DHTML [log_validacion]motivo--></td>
+          </tr>
+        <!--#4DENDLOOP-->
+      </tbody>
+    </table>
+    </article>
+</section>
+
+<section<!--#4DIF Not(mostrar_validacion_v2)--> style="display: none;"<!--#4DENDIF-->>
+  <h2>Validado por</h2>
+  <article>
+    <table class="dtcs borders" width="99%">
+      <thead>
+        <tr>
+          <th width="20%" class="center">Usuario</th>
+          <th width="10%" class="center">Fecha</th>
+          <th width="10%" class="center">Hora</th>
+          <th width="60%" class="center">Detalle</th>
+        </tr>
+      </thead>
+      <tbody class="ui-selectable">
+          <!--#4DIF [Orden_de_compra]validacion_oc -->
+          <tr>
+            <td class="center"><!--#4DHTML [Orden_de_compra]resp_validacion--></td>
+            <td class="center"><!--#4DHTML [Orden_de_compra]fecha_validacion--></td>
+            <td class="center"><!--#4DHTML [Orden_de_compra]hora_validacion--></td>
+            <td style="text-align:left!important">Validación</td>
+          </tr>
+          <!--#4DENDIF-->
+          <!--#4DIF [Orden_de_compra]ValidaOC2_Validada -->
+          <tr>
+            <td class="center"><!--#4DHTML [Orden_de_compra]ValidaOC2_Responsable--></td>
+            <td class="center"><!--#4DHTML [Orden_de_compra]ValidaOC2_Fecha--></td>
+            <td class="center"><!--#4DHTML [Orden_de_compra]ValidaOC2_Hora--></td>
+            <td style="text-align:left!important">Pre-validación</td>
+          </tr>
+          <!--#4DENDIF-->
+      </tbody>
+    </table>
+    </article>
+</section>
+
+<section style="text-align:left;margin-top:20px;padding:0px!important;">
+  <div>
+    <!-- <img src="http://www.unabase.cl/images/logo_unabase.jpg" width="30" height="20" style="display:inline-block;vertical-align:bottom;opacity: 0.5;"> -->
+    <img src="https://statics-v3.s3.amazonaws.com/img/logo_icono.png" width="30" height="25" style="display:inline-block;vertical-align:bottom;">
+    <span style="display:inline-block;vertical-align:center;color:gray"></span>
+    <a href="http://unabase.com/" target="_blank" style="color:#01a96c;display:inline-block;vertical-align:center;text-decoration:none;font-size:13px;">UNABASE.COM</a></div>
+</section>
+
+</div>
+</div>
+</body>
+</html>

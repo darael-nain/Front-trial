@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Tareas</title>
+		<script>
+
+		// Cargar ots del negocio
+		var idnv = $('#main-container').data('id');
+		var container = $('#sheet-list-tasks');
+		var target = container.find('table > tbody');
+		var targetFoot = container.find('table > tfoot');
+
+		var refreshTasks = function() {
+			$.ajax({
+				url: '/4DACTION/_task_get_task_nv',
+				dataType: 'json',
+				async: false,
+				cache: false,
+				data: {
+					id_nv: idnv,
+					all: true,
+					sid:unaBase.sid.encoded()
+				},
+				success: loadOcc
+			}).fail(function(a, b, c) {
+				toastr.error(NOTIFY.get('ERROR_INTERNAL', 'Error'));
+			});
+		};
+
+		var loadOcc = function(data) {
+
+			// Elimina todas las oc de la tabla
+			target.find("*").remove();
+
+			// add occ to list
+			var htmlObject;
+			$.each(data.rows, function(key, item) {
+				htmlObject = $('<tr data-id="'+item.id+'">'+
+							'<td>'+item.folio+'</td>' +
+							'<td>'+item.descripcion+'</td>' +
+							'<td>'+item.fecha.entrega+'</td>' +
+							'<td>'+item.status+'</td>' +
+							'<td>'+item.responsable+'</td>' +
+							'<td>'+item.info.cliente.name+'</td>' +
+							'<td>'+item.info.contacto.name+'</td>' +
+							//'<td class="currency">'+ item.total +'</td>' +
+							'</tr>');
+				htmlObject.unbind('click').bind('click', function(event) {
+					// unaBase.loadInto.dialog('/v3/views/occlientes/content.shtml?id='+$(this).data('id')+'&neg='+idnv, 'OC. Cliente', 'x-large');
+				});
+				target.append(htmlObject);
+			});
+
+			var htmlObject;
+			htmlObject = $('<tr>'+
+						'<td></td>' +
+						'<td></td>' +
+						'<td></td>' +
+						'<td></td>' +
+						'<td></td>' +
+						'<td></td>' +
+						'<td></td>' +
+						'</tr>');
+
+			targetFoot.append(htmlObject);
+		};
+
+		$(document).ready(function() {
+			refreshTasks()
+		});
+		</script>
+	</head>
+	<body>
+		<section id="sheet-list-tasks" class="sheet">
+
+			<footer id="footerInfoGeneralOcClient">
+
+				
+			</footer>
+			<table>
+				<thead>
+					<tr>
+						<th width="10%">Folio</th>
+						<th width="10%">Descripción</th>
+						<th width="10%">Fecha entrega</th>
+						<th width="10%">Estado</th>
+						<th width="20%">Responsable</th>
+						<th width="20%">Cliente</th>
+						<th width="10%">Contacto</th>
+					</tr>
+				</thead>
+				<tbody class="ui-selectable" style="box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;"></tbody>
+			  	<tfoot></tfoot>
+			</table>
+		</section>
+	</body>
+</html>

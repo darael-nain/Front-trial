@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>		
+		<title>Negocios</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/views/compras/content.js"></script>
+		<link rel="stylesheet" href="/v3/design/temporal.css?<!--#4DTEXT random-->">		
+	</head>
+	<body>
+		<div id="main-container">				
+			<form id="form-compras">
+				<input type="hidden" name="id_oc" value="<!--#4DTEXT [Orden_de_compra]Id_OCompra-->">
+				<input type="hidden" name="id_nv" value="<!--#4DTEXT [Orden_de_compra]Id_NV-->">
+				<section class="info-header"></section>
+				<section id="dialog-profile-compras">
+					<ul class="infinite-tabs">
+						<li><a class="save-neg" href="#tabs-1">General</a></li>
+						<li><a class="save-neg" href="#tabs-2">Items</a></li>
+						<li><a class="save-neg" href="#tabs-3">Condiciones</a></li>
+						<li><a href="#tabs-4">Documentos de compra</a></li>									
+					</ul>
+					<article id="tabs-1"></article>
+					<article id="tabs-2"></article>
+					<article id="tabs-3"></article>
+					<article id="tabs-4"></article>
+					<article id="tabs-5"></article>			
+				</section>							
+			</form>	
+		</div>
+	</body>
+</html>

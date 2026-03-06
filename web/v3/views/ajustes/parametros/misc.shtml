@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Miscelaneos</title>
+	<meta charset="utf-8">
+	<script type="text/javascript">
+	</script>
+</head>
+<body>
+	<section class="sheet">
+		<footer>
+			<article>
+				<h1>Miscelaneos (DEPRECATED MODULE)</h1>
+				<ul>
+					<li>
+						<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary">
+							<span class="ui-button-text">
+								<a href='#' id='cacheClearUrl' target="_blank">Limpiar cache Web</a>	
+							</span>
+						</button>
+						<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" id="cacheClear4d">
+							<span class="ui-button-text">
+								Limpiar cache 4D	
+							</span>
+						</button>
+						<button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" id="checkBlockEmails">
+							<span class="ui-button-text">
+								Checkear block-email usuarios últimos 30 días
+							</span>
+						</button>
+				
+							
+					</li>
+					</br>
+					<li>						
+						<h3>notificar creación de usuarios(separar con coma)</h3>
+						<input type="text" name="notifyUsers" placeholder="email de notificación  de creación de usuarios">	
+					</li>
+					</br>
+					<li>						
+						<h3>Email de notificacion de pago</h3>
+						<input type="text" name="emailPago" placeholder="email de notificación de pago">	
+					</li>
+					</br>
+					<li>
+						<h3><label for="pdfMicroservice">Activar Microservicio Pdf</label></h3>
+
+						<input type="checkbox" name="pdfMicroservice" id="pdfMicroservice">
+					</li>
+
+					<li>
+						<h3><label for="calculoSubcategoria">Deshabilitar Calculo Subcategoria</label></h3>
+
+						<input type="checkbox" name="calculoSubcategoria" id="calculoSubcategoria">
+					</li>
+
+					<li>
+						<h3><label for="disBusquedaGastoFijo">Diferenciar Busqueda Categoria por Gasto fijo</label></h3>
+
+						<input type="checkbox" name="disBusquedaGastoFijo" id="disBusquedaGastoFijo">
+					</li>
+
+			<!-- 		<li>
+						<h3><label for="pdfApiKey">Api key pdf Microservice</label></h3>
+
+						<input type="text" name="pdfApiKey" id="pdfApiKey">
+					</li>
+					<li>
+						<h3><label for="pdfUrl">Api Url</label></h3>
+
+						<input type="text" name="pdfUrl" id="pdfUrl">
+					</li>
+ -->
+
+
+
+					</br>
+					<button id="saveMisc" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" \>
+						<span class="ui-button-text">
+							Guardar	
+						</span>
+					</button>
+				</ul>
+			</article>
+			<article>
+				<h1>Unidad de fomento</h1>
+		
+					<label>
+						Url
+						<input type="text" name="ufUrl">
+					</label>
+					<button id="updateUf" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary" \>
+						<span class="ui-button-text">
+							Actualizar Uf	
+						</span>
+					</button>
+			</article>
+			
+		</footer>
+	</section>
+</body>
+</html>

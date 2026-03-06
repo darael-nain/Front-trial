@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getCotizacionContent/light-->
+		<!--#4DSCRIPT/_V3_proxy_getNegocioContent-->
+		<!--#4DSCRIPT/_V3_saveLog/Ha ingresado al negocio/negocios-->
+		<title>Negocios</title>
+		<meta charset="utf-8">
+		<meta http-equiv="Expires" content="0">
+ 
+		<meta http-equiv="Last-Modified" content="0">
+		 
+		<meta http-equiv="Cache-Control" content="no-cache, mustrevalidate">
+		 
+		<meta http-equiv="Pragma" content="no-cache">
+		
+		
+		
+		
+		<style>
+			
+			.toggleTh{
+				width: 6%;
+			}
+			.client-mode thead th.heading-presupuestado,
+			.client-mode thead th.heading-presupuestado,
+			.client-mode thead th.heading-real,
+			.client-mode thead th.heading-eficiencia,
+			.client-mode thead th:last-of-type,
+			.client-mode tfoot th:nth-last-of-type(1),
+			.client-mode tfoot th:nth-last-of-type(2),
+			.client-mode tfoot th:nth-last-of-type(3),
+			.client-mode tfoot th:nth-last-of-type(4),
+			.client-mode tbody tr th:last-of-type,
+			.client-mode tbody tr td:last-of-type,
+			.client-mode tbody tr td.fit,
+			.client-mode tbody tr.title th[colspan],
+			.client-mode th.costo,
+			.client-mode td.costo,
+			.client-mode th.utilidad,
+			.client-mode td.utilidad,
+			.client-mode th.margen,
+			.client-mode td.margen,
+			.client-mode th.eficiencia,
+			.client-mode td.eficiencia,
+			.client-mode th.aplica-sobrecargo,
+			.client-mode td.aplica-sobrecargo,
+			.client-mode th.costo-interno,
+			.client-mode td.costo-interno,
+			.client-mode th.ocultar-print,
+			.client-mode td.ocultar-print,
+			.client-mode article.block-totales,
+			.client-mode div.totales {
+				display: none !important;
+			}
+		</style>
+		<style>
+			.ui-tabs .ui-tabs-panel {
+				padding: 0 !important;
+				overflow: hidden;
+			}
+
+			section#dialog-profile-negocio{
+				width:100%!important;
+			}
+			.infinite-tabs.ui-tabs-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all{
+				width:99%!important;
+			}
+
+			[data-name="offline_mode"].active button {
+				color: orange !important;
+				border: 1px solid orange !important;
+			}
+
+		</style>
+
+		<script>
+			let idnv = <!--#4DTEXT id-->
+			unaBase.begin.getTipoDocumentoByNv(idnv) 
+		</script>
+	</head>
+	<body>
+		<section id="content-cot-neg-fixed" data-id="<!--#4DVAR id-->"></section>
+		<span class="view-active" style="display: none;">Cotizaciones > Listado</span>
+		<span class="view-active time-version" style="font-size: 10px; background-color: #E8FBF5;"><i class="far fa-clock"></i>&nbsp;La última modificación se realizó: <span id="time-version-text"></span></span>
+
+		<div id="main-container" class="mt-2" data-titulofinal="<!--#4DVAR vreferencia-->" data-codarea="<!--#4DTEXT cod_areanegocio-->" data-codmarca="<!--#4DTEXT codMarca-->" data-correlativoactual="<!--#4DTEXT correlativoactual-->" data-codigoauto="<!--#4DTEXT vCodigoAutomaticoParam4-->" data-codconsultado="false" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->" data-index="<!--#4DTEXT [Nota_de_venta]ID_Negocio-->" data-closed-compras="<!--#4DIF [Nota_de_venta]Check_Cerrada_compras-->true<!--#4DELSE-->false<!--#4DENDIF-->" data-closed-ventas="<!--#4DIF [Nota_de_venta]Check_Cerrada_ventas-->true<!--#4DELSE-->false<!--#4DENDIF-->" data-closed="<!--#4DIF [Nota_de_venta]Estado_NV="CERRADO"-->true<!--#4DELSE-->false<!--#4DENDIF-->">
+			<section id="dialog-profile-negocio">
+				<ul class="infinite-tabs">
+					<li><a href="#tabs-1">General</a></li>
+					<li style="display: none !important;" class="load-detalle" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-2">Detalle</a></li>
+					<li class="load-detalle-2" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-2a">Detalle</a></li>
+					<li class="load-compras" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-3">Órdenes de compra</a></li>
+					<!--#4DIF _V3_verifica_permisos_web (_V3_data_username;579)-->
+					<li class="load-ftg" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-14">Factoring</a></li>
+					<!--#4DENDIF-->
+					<li class="load-rendiciones" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-4">Rendiciones</a></li>
+					<li class="load-ots" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-5">Órdenes de trabajo</a></li>
+					<!--#4DIF _V3_verifica_permisos_web (_V3_data_username;493)-->
+					<li class="load-staff" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-6">Staff / Equipo</a></li>
+					<!--#4DENDIF-->
+					<!--#4DIF _V3_verifica_permisos_web (_V3_data_username;524)-->
+					<li class="load-occliente" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-7">OC. Cliente</a></li>
+					<!--#4DENDIF-->
+					<li class="load-task" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-71">Tareas</a></li>
+					<!--#4DIF _V3_verifica_permisos_web (_V3_data_username;522)-->
+					<li class="load-resumen" data-id="<!--#4DTEXT [Nota_de_venta]ID_NV-->"><a href="#tabs-8">Resumen</a></li>
+					<!--#4DENDIF-->
+					<!--#4DIF _V3_verifica_permisos_web (_V3_data_username;525)-->
+					<li class="load-facturas" data-id="<!--#4DTEXT id-->"><a href="#tabs-9">Documentos de venta</a></li>
+					<!--#4DENDIF-->
+					<!--#4DIF _V3_verifica_permisos_web (_V3_data_username;523)-->
+					<li class="load-historial" data-id="<!--#4DTEXT id-->"><a href="#tabs-10">Historial</a></li>
+					<!--#4DENDIF-->
+
+
+					<li class="load-archivos-adjuntos" data-id="<!--#4DTEXT id-->"><a href="#tabs-11">Url Enlazadas</a></li>
+
+					<li class="load-archivos-adjuntos" data-id="<!--#4DTEXT id-->"><a href="#tabs-12">Archivos adjuntos</a></li>
+				</ul>
+				<article id="tabs-1"></article>
+				<article id="tabs-2"></article>
+				<article id="tabs-2a"></article>
+				<article id="tabs-3"></article>
+				<!--#4DIF _V3_verifica_permisos_web (_V3_data_username;579)-->
+				<article id="tabs-14"></article>
+				<!--#4DENDIF-->
+				<article id="tabs-4"></article>
+				<article id="tabs-5"></article>
+				<article id="tabs-6"></article>
+				<!--#4DIF _V3_verifica_permisos_web (_V3_data_username;524)-->
+				<article id="tabs-7"></article>
+				<!--#4DENDIF-->
+				<article id="tabs-71"></article>
+
+				<!--#4DIF _V3_verifica_permisos_web (_V3_data_username;522)-->
+				<article id="tabs-8"></article>
+				<!--#4DENDIF-->
+				<!--#4DIF _V3_verifica_permisos_web (_V3_data_username;525)-->
+				<article id="tabs-9"></article>
+				<!--#4DENDIF-->
+				<!--#4DIF _V3_verifica_permisos_web (_V3_data_username;523)-->
+				<article id="tabs-10"></article>
+				<!--#4DENDIF-->
+
+				<article id="tabs-11"></article>
+				<article id="tabs-12"></article>
+			</section>
+		</div>
+
+		<input type="checkbox" id="block_by_use" checked="" hidden="">
+
+		
+		<script src="/v3/script/idle.js"></script>
+		<script type="text/javascript" src="/v3/views/negocios/script/negocios.js?<!--#4DTEXT _V3_version-->"></script>
+		<script defer src="/v3/script/block_by_use.js?<!--#4DTEXT _V3_version-->"></script>
+		<script defer src="/v3/script/unblock.js?<!--#4DTEXT _V3_version-->"></script>
+		<script defer src="/v3/script/requestUnblock.js?<!--#4DTEXT _V3_version-->"></script>
+		<script src="/v3/views/negocios/script/notify.js?<!--#4DTEXT _V3_version-->"></script>
+		
+		<script type="text/javascript" src="/v3/script/negCotCommon/itemParent.js?<!--#4DTEXT _V3_version-->"></script>
+		<script type="text/javascript" src="/v3/script/negCotCommon/functionsNeg.js?<!--#4DTEXT _V3_version-->"></script>
+		<script type="text/javascript" src="/v3/script/negCotCommon/hideItemUnused.js?<!--#4DTEXT _V3_version-->"></script>
+		<script type="text/javascript" src="/v3/script/negCotCommon/common.js?<!--#4DTEXT _V3_version-->"></script>
+		<script type="text/javascript" src="/v3/script/negCotCommon/addInfoGeneral.js?<!--#4DTEXT _V3_version-->"></script>
+		<script>
+			
+     		 uVar.ableToDownload = true;
+			var v3_block_cot_neg = <!--#4DIF v3_block_cot_neg-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			var autoriza_modificacion = <!--#4DIF _V3_negocio_autorizado-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+			var negocioFacturado = <!--#4DIF _V3_negocioFacturado-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			var cerradoCompras = <!--#4DIF _V3_cerradoCompras-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+		
+			unaBase.doc.id = <!--#4DTEXT id-->;
+			unaBase.doc.currencyCode = "<!--#4DTEXT exchangeType-->";
+			unaBase.doc.view_decimals = "<!--#4DTEXT exchange_decimals-->";
+			unaBase.doc.currencyCodePrint = "<!--#4DTEXT exchangeTypePrint-->";
+			var exchange_rate_print = "<!--#4DTEXT exchangeRatePrint-->";
+			unaBase.doc.type = "<!--#4DTEXT docType-->";
+			unaBase.doc.state = "<!--#4DTEXT vestado-->";
+			unaBase.doc.id_sap = "<!--#4DTEXT id_sap-->";
+			unaBase.doc.number = <!--#4DTEXT [Nota_de_venta]Id_Negocio-->;
+			unaBase.doc.blocked = <!--#4DIF block_by_use_one-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			unaBase.doc.vIDOrigen = <!--#4DTEXT vIDOrigen-->;
+			unaBase.doc.modoCine = <!--#4DIF formulario_cinemagica-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			unaBase.doc.isCurrentUserStaff = <!--#4DIF isCurrentUserStaff-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			unaBase.doc.reaperMode = <!--#4DIF nvInReaperMode--> true <!--#4DELSE--> false <!--#4DENDIF-->
+			unaBase.doc.separate_sc = <!--#4DIF separate_sc--> true <!--#4DELSE--> false <!--#4DENDIF-->
+
+			var v3_mod_gastop_compras_cerradas = <!--#4DIF v3_mod_gastop_compras_cerradas-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+			var id_empresa = <!--#4DVAR String(vid_empresa;"&xml") -->;
+			var id_empresa2 = <!--#4DVAR String(vid_empresa2;"&xml") -->;
+			var id_contacto = <!--#4DVAR String(vid_contacto;"&xml") -->;
+			var id_contacto2 = <!--#4DVAR String(vid_contacto2;"&xml") -->;
+
+			var idNegocio = <!--#4DTEXT id-->;
+			var nvNumber = <!--#4DTEXT [Nota_de_venta]Id_Negocio-->;
+			var vIDOrigen = <!--#4DTEXT vIDOrigen-->;
+			// -- ini -- agregado el 16-01-18 por gin para guadar en un objeto general al gunos datos del negocio
+			negocios.id = <!--#4DTEXT new_negocio_id-->;
+			negocios.folio = <!--#4DTEXT new_negocio_folio-->;
+			negocios.tipo = "<!--#4DTEXT new_negocio_tipo-->";
+			negocios.estado = "<!--#4DTEXT new_negocio_estado-->";
+			negocios.cerrado_ventas = <!--#4DIF new_negocio_cerrado_ventas-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			negocios.cerrado_compras = <!--#4DIF new_negocio_cerrado_compras-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			// -- fin -- agregado el 16-01-18 por gin para guadar en un objeto general al gunos datos del negocio
+
+			// var idCotizacion = <!--#4DTEXT id-->;
+			var blocked = <!--#4DTEXT block_by_use_one-->;
+
+
+
+
+			// window.onbeforeunload = function() {
+			// 	if(!v3_block_cot_neg){
+			// 		var cot = {
+			// 			id: $('#main-container .sheet').data('id'),
+			// 			folio: $('#main-container .sheet').data('index'),
+			// 			user: $('html > body.menu.home > aside > div > div > h1').data('username'),
+			// 			user_email: $('html > body.menu.home > aside > div > div > h1').data('email'),
+			// 			name: $('html > body.menu.home > aside > div > div > h1').text(),
+			// 			doc_name: $('.titulofinal').val(),
+			// 			total: $('input[name="cotizacion[ajuste]"]').val(),
+			// 			exchange: $('select[name="cotizacion[currency][working]"]').val(),
+			// 			module: "negocios",
+			// 			block: false,
+			// 			from: "onbeforeunload---"
+			// 		}
+			// 		block_by_use(cot);
+			// 		return '¿Está seguro que desea salir?';
+			// 	}
+			// };
+		
+			var cot = {
+				id: idNegocio,
+				folio: nvNumber,
+				user: $('html > body.menu.home > aside > div > div > h1').data('username'),
+				doc_name: $('.titulofinal').val(),
+				total: $('input[name="cotizacion[ajuste]"]').val(),
+				name: $('html > body.menu.home > aside > div > div > h1').text(),
+				module: "negocios",
+				block: false,
+				from: "onbeforeunload---"
+			}
+			// window.onbeforeunload = function() {
+			//     var nv = {
+			//         id: idNegocio,
+			//         folio: $('#main-container .sheet').data('index'),
+			//         user: $('html > body.menu.home > aside > div > div > h1').data('username'),
+			//         module: "negocios",
+			//         block: false,
+			//         from: "onbeforeunload---"
+			//     }
+			//     block_by_use(nv);
+			//     // socketNew.emit('sendblockAdd', cot);
+			//     return '¿Está seguro que desea salir?';
+			// };
+
+
+				var nv = {
+					id: idNegocio,
+					folio: $('#main-container .sheet').data('index'),
+					user: $('html > body.menu.home > aside > div > div > h1').data('username'),
+					module: "negocios",
+					block: false,
+					from: "onbeforeunload---"
+				}
+
+			// idleJs(nv);
+		</script>
+		<script type="text/javascript" src="/v3/views/negocios/content<!--#4DIF formulario_cinemagica-->_cinemagica<!--#4DENDIF-->.js"></script>
+		<link rel="stylesheet" href="/v3/design/temporal.css?<!--#4DTEXT random-->">
+		<script type="text/javascript" src="/v3/script/negCotCommon/totales.js?<!--#4DTEXT _V3_version-->"></script>
+		<script type="text/javascript" src="/v3/script/negCotCommon/utilities.js?<!--#4DTEXT _V3_version-->"></script>
+		<script type="text/javascript" src="/v3/script/negCotCommon/sobrecargos.js?<!--#4DTEXT _V3_version-->"></script>
+		
+		<script>
+
+			
+			/* Cotización */
+
+			var exchange_rate = 1;
+
+			var contentLoaded = false;
+			var contentChanged = false;
+			var contentReady = false;
+
+			<!--#4DIF compartir_ocultar_cantidades-->
+				var compartir_ocultar_cantidades = true;
+			<!--#4DELSE-->
+				var compartir_ocultar_cantidades = false;
+			<!--#4DENDIF-->
+
+			var aplica_sobrecargo_items = <!--#4DIF aplica_sobrecargo_items-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			var fixedTotalCliente = <!--#4DIF _V3_param_totalClienteFijo-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			// var totalNeto = <!--#4DTEXT String([Nota_de_venta]Total_Neto;"&xml")-->;
+			var deferReglaValidacion = <!--#4DIF _V3_param_diferirRV-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			var scDirectInput = <!--#4DIF _V3_param_scSinPorcentaje-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+			var editCodigoItems = <!--#4DIF _V3_editCodigoItems-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			var showCodigoItems = <!--#4DIF mostrar_codigo_items-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+			var v3_show_tipodoc_items = <!--#4DIF v3_show_tipodoc_items-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+			var mostrar_compartir_carta_cliente = <!--#4DIF mostrar_compartir_carta_cliente-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+			var texto_carta_cliente = "<!--#4DHTML _V3_escapeString(texto_carta_cliente)-->";
+			var texto_observaciones = "<!--#4DHTML _V3_escapeString(vNotas)-->";
+			// var texto_no_incluye = "<!--#4DHTML _V3_escapeString([Nota_de_venta]no_incluye)-->";
+			var texto_no_incluye = "<!--#4DHTML _V3_escapeString(vNoIncluye)-->";
+
+			var v3_sobrecargos_cinemagica = <!--#4DIF v3_sobrecargos_cinemagica-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+			var v3_cot_cliente_como_agencia = <!--#4DIF v3_cot_cliente_como_agencia-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+			<!--#4DIF Not(Undefined(template))-->
+				var fromTemplate = true;
+			<!--#4DENDIF-->
+
+			var selected_currency = undefined;
+			/*var valor_usd = <!--#4DTEXT String(valor_usd;"&xml")-->;
+			var valor_clf = <!--#4DTEXT String(valor_clf;"&xml")-->;*/
+			var valor_usd = 0;
+			var valor_clf = 0;
+
+			$.ajax({
+			url: '/4DACTION/_V3_getExchangeRate',
+			data: {
+				from: 'USD',
+				to: '<!--#4DVAR <>_V3_defaultCurrencyCode-->'
+			},
+			async: false,
+			dataType: 'json',
+			success: function (data) {
+				valor_usd = parseFloat(data.rate);
+				if (valor_usd == 0)
+					valor_usd = 1;
+			}
+			});
+
+			if (valor_usd == 0)
+			valor_usd = 1;
+
+
+			$.ajax({
+			url: '/4DACTION/_V3_getExchangeRate',
+			data: {
+				from: 'CLF',
+				to: '<!--#4DVAR <>_V3_defaultCurrencyCode-->'
+			},
+			async: false,
+			dataType: 'json',
+			success: function (data) {
+				valor_clf = parseFloat(data.rate);
+				if (valor_clf == 0)
+					valor_clf = 1;
+			}
+			});
+
+			if (valor_clf == 0)
+			valor_clf = 1;
+
+			if (valor_clf == 0)
+				valor_clf = 1;
+
+			var valor_usd_cotizacion = <!--#4DTEXT String([Nota_de_venta]param_dolar;"&xml")-->;
+			var valor_clf_cotizacion = <!--#4DTEXT String([Nota_de_venta]UF_ValorCambio;"&xml")-->;
+
+
+			var _V3_defaultCurrencyCode='<!--#4DVAR <>_V3_defaultCurrencyCode-->'
+
+
+			var selected_currency = "<!--#4DTEXT String([Nota_de_venta]working_currency;"&xml")-->";
+
+			if(selected_currency=="")
+				selected_currency=_V3_defaultCurrencyCode;
+
+			var exchange_rate =   unaBase.utilities.transformNumber("<!--#4DVAR exchange_rate-->");
+
+			if (exchange_rate == 0)
+					exchange_rate = 1;
+
+			let selected_currency_decimals = <!--#4DVAR exchange_currency_decimals-->
+
+			var new_currency_system = true;
+
+
+			
+
+
+			let totalNetoVar = <!--#4DTEXT String([Nota_de_venta]Total_Neto;"&xml")-->
+
+			var totalNeto = totalNetoVar / exchange_rate;
+
+
+
+			<!--#4DIF formulario_cinemagica-->
+				var formulario_cinemagica = true;
+			<!--#4DENDIF-->
+
+
+			/* Negocio */
+
+			var scDirectInput = <!--#4DIF _V3_param_scSinPorcentaje-->true<!--#4DELSE-->false<!--#4DENDIF-->;
+
+
+			$(document).ready(function() {
+
+				
+				$('input[name="toUnblock"]').prop('checked', false);
+				// block_by_use blockea al entrar
+				// 
+				if(blocked && !v3_block_cot_neg && !superUsers.includes(currentUser.username)){
+					unaBase.history.back();
+				}
+				var blockUser = $('html > body.menu.home > aside > div > div > h1').data('username');
+				var folio = <!--#4DVAR [Nota_de_venta]ID_Negocio-->;
+				var blockName = $('.u-user-profile').text();
+				if(!v3_block_cot_neg){
+					var cotizacionBlock = {
+						id: idNegocio,
+						folio: folio,
+						user: blockUser,
+						name: blockName,
+						block: true,
+						module: "negocios",
+						from: "entra a una cot---",
+						user_email: $('html > body.menu.home > aside > div > div > h1').data('email'),
+						doc_name: $('input[name="cotizacion[titulo][text]"]').val(),
+						total: $('input[name="cotizacion[ajuste]"]').val(),
+						exchange: $('select[name="cotizacion[currency][working]"]').val()
+
+					};
+					block_by_use(cotizacionBlock);
+				}
+
+		        
+		        // unaBase.print.url({
+		        // 	aliasfiles: 'NEG_',
+				// 	entity: 'cotizaciones',
+				// 	preview: false,
+				// 	nullified: false,
+				// 	form: 'print',
+				// 	hostname: window.location.origin,
+				// 	folio: folio,
+				// 	id: idNegocio,
+		        // });
+				if ($('#main-container').data('closed')) {
+					$('[data-name="open_compras_negocio"]').hide();
+					$('[data-name="convert_cotizacion"]').hide();
+				}
+
+				
+
+				$('#tabs-1').load('/v3/views/negocios/general.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+				// $('#tabs-2').load('/v3/views/negocios/detalle.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+		
+				<!--#4DIF Not(Undefined(working_currency))-->
+				$("#tabs-2a").load('/v3/views/negocios/detalle2<!--#4DIF formulario_cinemagica-->_cinemagica<!--#4DENDIF-->.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->&rand=<!--#4DTEXT random-->&working_currency=<!--#4DVAR working_currency-->');
+				<!--#4DELSE-->
+				$("#tabs-2a").load('/v3/views/negocios/detalle2<!--#4DIF formulario_cinemagica-->_cinemagica<!--#4DENDIF-->.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->&rand=<!--#4DTEXT random-->');
+				<!--#4DENDIF-->
+
+
+
+				$('a[href="#tabs-2a"]').click(function() {
+					unaBase.interval.clearAll();
+					//$("#tabs-1").parentTo('section').find('article').empty();
+					//$("#tabs-1").load('/v3/views/negocios/general.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+				}).trigger('click');
+
+				/*$('a[href="#tabs-2"]').click(function() {
+					unaBase.interval.clearAll();
+					//$("#tabs-2").parentTo('section').find('article').empty();
+					//$("#tabs-2").load('/v3/views/negocios/detalle.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+				});*/
+
+				$('a[href="#tabs-2a"]').click(function() {
+					unaBase.interval.clearAll();
+					//$("#tabs-2a").parentTo('section').find('article').empty();
+					//$("#tabs-2a").load('/v3/views/negocios/detalle2.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->&rand=<!--#4DTEXT random-->');
+
+					// iguala titulo final
+					$(".titulofinal").text($("#main-container").data("titulofinal"));
+
+				});
+
+				$('a[href="#tabs-3"]').click(function() {
+					unaBase.interval.clearAll();
+					//$("#tabs-3").parentTo('section').find('article').empty();
+
+					
+					$("#tabs-3").load('/v3/views/negocios/ocs.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+
+					// iguala titulo final
+					$(".titulofinal").text($("#main-container").data("titulofinal"));
+
+				});
+
+				$('a[href="#tabs-14"]').click(function() {
+					unaBase.interval.clearAll();
+					//$("#tabs-3").parentTo('section').find('article').empty();
+
+					
+					$("#tabs-14").load('/v3/views/negocios/factoring.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+
+					// iguala titulo final
+					$(".titulofinal").text($("#main-container").data("titulofinal"));
+
+				});
+
+				$('a[href="#tabs-4"]').click(function() {
+					unaBase.interval.clearAll();
+					//$("#tabs-4").parentTo('section').find('article').empty();
+
+					
+					$("#tabs-4").load('/v3/views/negocios/fxr.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+
+					// iguala titulo final
+					$(".titulofinal").text($("#main-container").data("titulofinal"));
+
+				});
+
+				$('a[href="#tabs-5"]').click(function() {
+					unaBase.interval.clearAll();
+					//$("#tabs-5").parentTo('section').find('article').empty();
+					$("#tabs-5").load('/v3/views/negocios/ots.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+
+					// iguala titulo final
+					$(".titulofinal").text($("#main-container").data("titulofinal"));
+
+				});
+
+				<!--#4DIF _V3_verifica_permisos_web (_V3_data_username;493)-->
+				$('a[href="#tabs-6"]').click(function() {
+					unaBase.interval.clearAll();
+					//$("#tabs-6").parentTo('section').find('article').empty();
+					$("#tabs-6").load('/v3/views/negocios/staff.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+
+					// iguala titulo final
+					$(".titulofinal").text($("#main-container").data("titulofinal"));
+
+				});
+				<!--#4DENDIF-->
+
+				$('a[href="#tabs-7"]').click(function() {
+					unaBase.interval.clearAll();
+					//$("#tabs-7").parentTo('section').find('article').empty();
+					$("#tabs-7").load('/v3/views/occlientes/list.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+
+					// iguala titulo final
+					$(".titulofinal").text($("#main-container").data("titulofinal"));
+
+				});
+				$('a[href="#tabs-71"]').click(function() {
+					unaBase.interval.clearAll();
+					//$("#tabs-7").parentTo('section').find('article').empty();
+					$("#tabs-71").load('/v3/views/tasks/list.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+
+					// iguala titulo final
+					$(".titulofinal").text($("#main-container").data("titulofinal"));
+
+				});
+				$('a[href="#tabs-8"]').click(function() {
+					unaBase.interval.clearAll();
+					//$("#tabs-8").parentTo('section').find('article').empty();
+					$("#tabs-8").load('/v3/views/negocios/resumen.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+
+					// iguala titulo final
+					$(".titulofinal").text($("#main-container").data("titulofinal"));
+
+				});
+
+				$('a[href="#tabs-9"]').click(function() {
+					unaBase.interval.clearAll();
+					//$("#tabs-10").parentTo('section').find('article').empty();
+					$("#tabs-9").load('/v3/views/negocios/facturas.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->');
+
+					// iguala titulo final
+					$(".titulofinal").text($("#main-container").data("titulofinal"));
+
+				});
+
+				$('a[href="#tabs-10"]').click(function() {
+					unaBase.interval.clearAll();
+					//$("#tabs-9").parentTo('section').find('article').empty();
+					$("#tabs-10").load('/v3/views/historial/index.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->&mod=negocios');
+				});
+
+				$('a[href="#tabs-11"]').click(function() {
+					unaBase.interval.clearAll();
+					//$("#tabs-9").parentTo('section').find('article').empty();
+					$("#tabs-11").load('/v3/views/url_enlazadas/index.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->&mod=negocios');
+				});
+
+				$('a[href="#tabs-12"]').click(function() {
+					unaBase.interval.clearAll();
+					//$("#tabs-9").parentTo('section').find('article').empty();
+					$("#tabs-12").load('/v3/views/archivos_adjuntos/index.shtml', 'id=<!--#4DVAR [Nota_de_venta]ID_NV-->&mod=negocios');
+				});
+
+
+				<!--#4DIF Undefined(changed_working_currency)-->
+				$('a[href="#tabs-1"]').trigger('click');
+				<!--#4DELSE-->
+				$('a[href="#tabs-2a"]').trigger('click');
+				<!--#4DENDIF-->
+
+				if ($('#main-container').data('closed'))
+					$('#menu li[data-name="close_negocio"]').hide();
+				else
+					$('#menu li[data-name="open_negocio"]').hide();
+
+				var htmlObject;
+
+
+
+				
+				htmlObject = $('\
+					<ul id="dropdown_menu" class="dropdown-menu" style="position: absolute; top: 49px; right: 13px; z-index: 1000;left:80%;"> \
+						<!--#4DIF Not(_V3_verifica_permisos_web(_V3_data_username;600))--><li><a href="/v3/views/cotizaciones/dialog/dato_adicional.shtml" data-size="medium"><span class="ui-icon ui-icon-wrench"></span>Datos adicionales</a></li> <!--#4DENDIF-->\
+						<!--#4DIF Not(_V3_verifica_permisos_web(_V3_data_username;601))--><li><a href="/v3/views/cotizaciones/dialog/version.shtml" data-size="x-large"><span class="ui-icon ui-icon-note"></span>Versiones</a></li> <!--#4DENDIF-->\
+						<!--#4DIF Not(_V3_verifica_permisos_web(_V3_data_username;602))--><li><a href="/v3/views/cotizaciones/dialog/attachment.shtml" data-size="x-large"><span class="ui-icon ui-icon-image"></span>Imágenes adjuntas</a></li> <!--#4DENDIF-->\
+						<!--#4DIF Not(_V3_verifica_permisos_web(_V3_data_username;603))--><li><a href="/v3/views/cotizaciones/dialog/links.shtml" data-size="x-large"><span class="ui-icon ui-icon-link"></span>Archivos enlazados</a></li> <!--#4DENDIF-->\
+						<!--#4DIF _V3_verifica_permisos_web(_V3_data_username;546)--><li><a href="#" class="print-negocio"><span class="ui-icon ui-icon-print"></span>Imprimir negocio</a></li> \
+						<!--#4DENDIF-->\
+						<!--#4DIF Not(_V3_verifica_permisos_web(_V3_data_username;604))--><li><a href="/v3/views/negocios/dialog/period_actuals.shtml" data-size="small"><span class="ui-icon ui-icon-document"></span>Periodo actual</a></li> <!--#4DENDIF-->\
+						<li><a href="/v3/views/negocios/dialog/reporte_costo.shtml" data-size="xm2-small"><span class="ui-icon ui-icon-document"></span>Estimated cost report</a></li>\
+						<!--#4DIF _V3_verifica_permisos_web(_V3_data_username;683)--><li><a href="/v3/views/negocios/dialog/reporte_costo_amz.shtml" data-size="small"><span class="ui-icon ui-icon-document"></span>Cost report amazon</a></li><!--#4DENDIF-->\
+						<!--#4DIF v3_sobrecargos_cinemagica--><li><a href="#" class="export-previo" data-size="small"><span class="ui-icon ui-icon-document"></span>Exportar previo</a></li><!--#4DENDIF--> \
+					</ul> \
+				');
+
+				htmlObject.find('a.print-negocio').click(function(event) {
+					var sid = '';
+					$.each($.cookie(),function(clave,valor) { if (clave == hash && valor.match(/UNABASE/g)) sid = valor; });
+
+					var url = nodeUrl + '/print/?entity=negocios&id=' + $('#main-container').data('id') + '&folio=' + ((typeof $('#main-container').data('index') != 'undefined')? $('#main-container').data('index') : 'S/N') + '&sid=' + encodeURIComponent(sid) + '&nullified=' + $('#main-container').data('readonly') + '&horizontal=true&hostname=' + window.location.origin;
+					unaBase.loadInto.dialog(url, 'Datos del negocio', 'x-large', true);
+					event.preventDefault();
+				});
+
+				htmlObject.find('a.export-previo').click(function(event) {
+					var sid = '';
+					$.each($.cookie(),function(clave,valor) { if (clave == hash && valor.match(/UNABASE/g)) sid = valor; });
+					var url = nodeUrl + '/export-previo/?download=true&entity=cotizaciones&id=' + $('#main-container').data('id') + '&folio=' + (($('#main-container').data('index') > 0)? $('#main-container').data('index') : 'S/N')+ '&sid=' + encodeURIComponent(sid) + '&preview=false&nullified=' + $('#main-container').data('readonly') + '&hostname=' + window.location.origin;
+					var url = nodeUrl + '/export-previo/?download=true&entity=cotizaciones&id=' + $('#main-container').data('id') + '&folio=' + (($('#main-container').data('index') > 0)? $('#main-container').data('index') : 'S/N')+ '&sid=' + encodeURIComponent(sid) + '&preview=false&nullified=' + $('#main-container').data('readonly') + '&hostname=' + window.location.origin;
+					var download = window.open(url).blur();
+					window.focus();
+					download.close();
+				});
+
+				htmlObject.find('a[href!="#"]').each(function() {
+					$(this).click(function(event) {
+						unaBase.loadInto.dialog($(this).attr('href'), $(this).text(), $(this).data('size'));
+						$(this).parentTo('ul').hide();
+						event.preventDefault();
+					});
+				});
+
+				htmlObject.menu().hide();
+
+				$('#dropdown_launcher').parentTo('header').before(htmlObject);
+				$('#dropdown_launcher').show();
+
+				$('#dropdown_launcher').click(function() {
+					var element = this;
+					$('#dropdown_menu').toggle();
+				});
+
+				// Modo cliente
+				if (is_modo_cliente) {
+					$('#main-container').addClass('client-mode');
+				} else {
+					$('#main-container').removeClass('client-mode');
+				}
+				// block_by_use blockea al entrar
+				// var negocioBlock = {
+				//     id: idNegocio,
+				//     folio: <!--#4DVAR [Nota_de_venta]ID_Negocio-->,
+				//     user: $('html > body.menu.home > aside > div > div > h1').data('username'),
+				//     block: true,
+				//     module: "negocios",
+				//     from: "entra a un neg---"
+
+				//  };
+				// block_by_use(negocioBlock);
+			});
+		</script>
+			<!-- <script type="text/javascript" src="/v3/script/current_tab.js"></script> -->
+	<script>
+		$(document).ready(function(){
+			setInitTotals();
+			// iniciar en pestaña detalle
+			// $('#main-container').tabs({active: 2});
+			$(".toggle.all").click()
+			
+			if(nvNumber > 0 && $('article.general-data h2 span').text() != "Borrador"){
+
+			var cotizacion_to_block2 = {
+				id: $('section.staff').attr('data-id'),
+				folio: Number($('article.general-data h2 span').text().replace('Nº ','')),
+				user: $('html > body.menu.home > aside > div > div > h1').data('username'),
+				doc_name: $('.titulofinal').val(),
+				total: $('input[name="cotizacion[ajuste]"]').val(),
+				name: $('html > body.menu.home > aside > div > div > h1').text(),
+				module: "cotizaciones",
+				block: false,
+				from: "onbeforeunload---"
+			}
+				
+				/*idleJs(get_cot_cata(), idleTime);*/
+			}
+
+			
+
+			// --ini-- por gin el 16-01-18 para verifica estados del negocios para ocultar, bloquear, mostrar objetos
+			negocios.display();
+			// --ini-- por gin el 16-01-18 para verifica estados del negocios para ocultar, bloquear, mostrar objetos
+
+		});
+	</script>
+
+	</body>
+	
+
+</html>
+
+
+
+

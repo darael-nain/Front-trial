@@ -1,0 +1,12 @@
+{
+	"total": <!--#4DHTML $total-->,
+	"items": [
+<!--#4DLOOP aJdtNum -->
+		{
+			"aJdtNum": "<!--#4DHTML aJdtNum{aJdtNum}-->",
+			"aReferenceDate": "<!--#4DHTML aReferenceDate{aJdtNum}-->",
+			"aMemo": "<!--#4DHTML aMemo{aJdtNum}-->"
+		}<!--#4DIF NOT(aJdtNum{aJdtNum} = aJdtNum{Size of array(aJdtNum)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

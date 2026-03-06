@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getAreaNegocio-->
+		<title>Area de negocio</title>
+		<meta charset="utf-8">
+		<script type="text/javascript" src="/v3/views/ajustes/area_negocio/index.js"></script>
+		<script type="text/javascript" src="/v3/views/ajustes/area_negocio/content.js"></script>
+    	<style type="text/css">
+    		.newcolor input,textarea{
+    			background-color: #ffffff !important;
+    		}
+	/*		 table{
+			 	width: 30% !important;
+			 }*/
+	/*		 table#imp_desc_sel tr td:nth-child(1), table#imp_desc_sel tr td:nth-child(2), table#imp_desc_sel tr th:nth-child(1), table#imp_desc_sel tr th:nth-child(2){
+			 	width: 62% !important;	
+			 	text-align: left !important;
+			 	padding-left: 0.5em !important;
+			 }
+			 table#imp_desc_sel tr td:nth-child(3){
+			 	width: 10% !important;	
+			 }
+			 table#imp_desc_sel tr td:nth-child(4){
+			 	width: 10% !important;	
+			 }
+			 table#imp_desc_sel tr td button{
+			 	margin: 0 !important;	
+			 }
+			 table#imp_desc_sel tr th {
+			 	font-weight: bold;	
+			 }*/
+			 section footer article div {	
+			  	margin-bottom: 4px;
+			 }
+			 html > body.home > section > section#viewport section.sheet > footer > article:nth-child(2) > h1 {
+			 	margin-bottom: 5px !important;
+			 }
+			 input[name=select_imp].ui-autocomplete-input{
+			 	width: 20% !important;
+			 	margin-bottom: 0.5em;	
+			 	margin-top: 0.5em;
+			 	margin-left: 0.5em;
+			 }
+			 .show.impuesto{
+			 	width: 18px;
+			 	height: 18px;
+			 }
+			 article ul {
+			 	margin-top: 5px !important;
+			 	margin-bottom: 5px !important;
+			 }
+			 article:nth-child(2) div {
+			 	margin-top: 10px !important;
+			 	margin-bottom: 10px !important;
+			 }
+			/*#imp_desc_sel {
+			    border: solid 1px #DDEEEE;
+			    border-collapse: collapse;
+			    border-spacing: 0;
+			}
+			#imp_desc_sel thead th {
+			    background-color: #DDEFEF;
+			    border: solid 1px #DDEEEE;
+			    color: #336B6B;
+			    padding: 10px;
+			    text-align: left;
+			    text-shadow: 1px 1px 1px #fff;
+			}
+			#imp_desc_sel tbody td {
+			    border: solid 1px #DDEEEE;
+			    color: #333;
+			    padding: 10px;
+			    text-shadow: 1px 1px 1px #fff;
+			}
+			#imp_desc_sel {
+			    border: none;
+			}
+			#imp_desc_sel thead th {
+			    background-color: #CFAD70;
+			    border: none;
+			    text-shadow: 1px 1px 1px #ccc;
+			    color: #333;
+			}
+			#imp_desc_sel thead th:first-child {
+			    border-radius: 10px 0 0 0;
+			}
+			#imp_desc_sel thead th:last-child {
+			    border-radius: 0 10px 0 0;
+			}
+			#imp_desc_sel tbody tr:last-child td:first-child {
+			    border-radius: 0 0 0 10px;
+			}
+			#imp_desc_sel tbody tr:last-child td:last-child {
+			    border-radius: 0 0 10px 0;
+			}*/
+    	</style>
+  		<link href="/css/form1.css" rel="stylesheet">
+  		<script type="text/javascript">
+
+  	
+
+  		</script> 
+	</head>
+	<body>
+		<section class="sheet" id="area" data-id="<!--#4DIF Not(Undefined(id))--><!--#4DHTML id--><!--#4DELSE-->null<!--#4DENDIF-->">
+				
+			<footer>
+				<article>
+					<h1>Area de negocio</h1>
+					<ul class="editable newcolor">
+
+						<li><label class="sg-input-title" for="estado"><input id="estado" name="estado" type="checkbox" class="checkbox" >Estado</label></li>
+						<li><label class="sg-input-title" for="default"><input id="default" name="default" type="checkbox" class="checkbox" >Default </label></li>
+						<li><span class="sg-input-title" for="descripcion_centrocosto">Descripción</span> <span><input id="descripcion_centrocosto" type="text" class="form-control rise" name="descripcion_centrocosto"></span></li>
+						<li><span class="sg-input-title" for="cuenta_contable">Cuenta contable</span> <span><input type="text" class="form-control rise" name="cuenta_contable"></span></li>
+						<li><span class="sg-input-title" for="inicial">Abreviatura</span> <span><input type="text" class="form-control rise" name="inicial"></span></li>
+						<li hidden="" ><span class="sg-input-title" for="id">id</span> <span><input type="number" class="form-control rise" name="id"></span></li>
+
+
+					</ul>
+				</article>
+				
+		
+			</footer>
+		</section>    	
+	</body>
+</html>

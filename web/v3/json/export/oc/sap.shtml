@@ -1,0 +1,27 @@
+{
+	"total": "<!--#4DHTML $total-->",
+	"items": [
+<!--#4DLOOP aIdnum -->
+		{
+			"aDocNum": "<!--#4DHTML aDocNum{aIdnum}-->",
+			"aDocType": "<!--#4DHTML aDocType{aIdnum}-->",
+			"aCardName": "<!--#4DHTML _V3_escapeString(aCardName{aIdnum})-->",
+			"aComments": "<!--#4DHTML _V3_escapeString(aComments{aIdnum})-->",
+			"aDocDate": "<!--#4DHTML aDocDate{aIdnum}-->",
+			"aTaxDate": "<!--#4DHTML aTaxDate{aIdnum}-->",
+			"aDocDueDate": "<!--#4DHTML aDocDueDate{aIdnum}-->",
+			"aCardCode": "<!--#4DHTML _V3_escapeString(aCardCode{aIdnum})-->",
+			"aNumAtCard": "<!--#4DHTML aNumAtCard{aIdnum}-->",
+			"aDocTotal": "<!--#4DHTML aDocTotal{aIdnum}-->",
+			"aJournalMemo": "<!--#4DHTML _V3_escapeString(aJournalMemo{aIdnum})-->",
+			"aIndicator": "<!--#4DHTML _V3_escapeString(aIndicator{aIdnum})-->",
+			"aProject": "<!--#4DHTML _V3_escapeString(aProject{aIdnum})-->",
+			"aFolioPrefixString": "<!--#4DHTML _V3_escapeString(aFolioPrefixString{aIdnum})-->",
+			"aIdnum": <!--#4DHTML aIdnum{aIdnum}-->,
+			"aFolioNumber": "<!--#4DHTML aFolioNumber{aIdnum}-->",
+			"aDocEntry": "<!--#4DHTML aDocEntry{aIdnum}-->", // Agregado
+			"aSalesPersonal": "<!--#4DHTML aSalesPersonal{aIdnum}-->" // Agregado
+		}<!--#4DIF NOT(aIdnum{aIdnum} = aIdnum{Size of array(aIdnum)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

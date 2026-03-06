@@ -1,0 +1,69 @@
+{
+	"id": <!--#4DTEXT [Nota_Credito_Debito]Id_Nota-->,
+	"referencia" : "<!--#4DHTML _V3_escapeString([Nota_Credito_Debito]Referencia)-->",
+	"next_folio" : "<!--#4DTEXT siguiente_folio-->",
+	"folio" : "<!--#4DTEXT [Nota_Credito_Debito]Folio_Nota-->",
+	"fecha_registro" : "<!--#4DTEXT [Nota_Credito_Debito]Fecha_Emision-->",
+	"hora_registro" : "<!--#4DTEXT [Nota_Credito_Debito]Hora_Emision-->",
+	"login_registro" : "<!--#4DTEXT [Nota_Credito_Debito]Login_Responsable-->",
+	"current_date" : "<!--#4DTEXT String(Current date(*))-->",
+	"fecha_emision" : "<!--#4DTEXT [Nota_Credito_Debito]Fecha_Impresion-->",
+	"hora_emision" : "<!--#4DTEXT [Nota_Credito_Debito]Hora_Impresion-->",
+	"login_emision" : "<!--#4DTEXT [Nota_Credito_Debito]Resp_Impresion-->",
+	"estado" : "<!--#4DTEXT [Nota_Credito_Debito]Estado_Nota-->",
+	"id_tipo_doc" : "<!--#4DTEXT [Nota_Credito_Debito]TIPO_ID_DTE-->",
+	"des_tipo_doc" : "<!--#4DHTML _V3_escapeString([Nota_Credito_Debito]Tipo)-->",
+	"motivo" : "<!--#4DHTML _V3_escapeString([Nota_Credito_Debito]Motivo)-->",
+	"exento" : <!--#4DIF [Nota_Credito_Debito]exento-->true<!--#4DELSE-->false<!--#4DENDIF-->,
+	"exchange": {
+
+		"v3_exchange_rate" : <!--#4DHTML String([Nota_Credito_Debito]v3_exchange_rate;"&xml")-->,
+		"v3_exchange_monto_facturado" : <!--#4DHTML String([Nota_Credito_Debito]v3_exchange_monto_facturado;"&xml")-->,
+		"v3_exchange_type" : "<!--#4DTEXT [Nota_Credito_Debito]v3_exchange_type-->"
+	},
+	"negocio" : {
+		"id" : <!--#4DTEXT [Nota_Credito_Debito]Id_NV-->,
+		"folio" : "<!--#4DTEXT [Nota_Credito_Debito]Folio_Negocio-->",
+		"referencia" :  "<!--#4DHTML _V3_escapeString([Nota_Credito_Debito]Referencia_neg)-->"
+	},
+	"cliente" : {
+		"id" : <!--#4DTEXT [Nota_Credito_Debito]Id_Empresa-->,
+		"razon" : "<!--#4DHTML _V3_escapeString([Nota_Credito_Debito]EmpresaRazon)-->",
+		"giro" : "<!--#4DHTML _V3_escapeString([Nota_Credito_Debito]EmpresaGiro)-->",
+		"alias" : "<!--#4DHTML _V3_escapeString([Nota_Credito_Debito]EmpresaAlias)-->",
+		"rut" : "<!--#4DTEXT [Nota_Credito_Debito]EmpresaRut-->",
+		"dv" : "<!--#4DTEXT [Nota_Credito_Debito]EmpresaDV-->",
+		"nombre_completo" : "<!--#4DHTML _V3_escapeString([Nota_Credito_Debito]EmpresaRazon)-->"
+	},
+	"relacionado" : {
+		"id" : <!--#4DTEXT [Nota_Credito_Debito]Id_Contacto-->,
+		"nombre" : "<!--#4DHTML _V3_escapeString(nombreContacto)-->",
+		"cargo" : "<!--#4DHTML _V3_escapeString(cargoContacto)-->",
+		"email" : "<!--#4DHTML _V3_escapeString(emailContacto)-->"
+	},
+	"montos" : {
+		"sub_total" : <!--#4DHTML String([Nota_Credito_Debito]Subtotal;"&xml")-->,
+		"porc_descuento" : <!--#4DHTML String([Nota_Credito_Debito]FacturaPorcDesc;"&xml")-->,
+		"descuento" : <!--#4DHTML String([Nota_Credito_Debito]FacturaDescuento;"&xml")-->,
+		"exento" : <!--#4DHTML String([Nota_Credito_Debito]total_exento;"&xml")-->,
+		"neto" : <!--#4DHTML String([Nota_Credito_Debito]Total_Neto;"&xml")-->,
+		"iva" : <!--#4DHTML String([Nota_Credito_Debito]Total_IVA;"&xml")-->,
+		"adicional" : <!--#4DHTML String([Nota_Credito_Debito]total_Adic;"&xml")-->,
+		"total" : <!--#4DHTML String([Nota_Credito_Debito]Total_Nota;"&xml")-->
+	},
+	"items": [
+	<!--#4DLOOP [Detalle_Nota_Credito_Debito]-->
+		{
+			"det_id": "<!--#4DHTML [Detalle_Nota_Credito_Debito]Llave_Detalle_Nota-->",
+			"det_correlativo": <!--#4DHTML [Detalle_Nota_Credito_Debito]Correlativo-->,
+			"det_codigo": "<!--#4DHTML [Detalle_Nota_Credito_Debito]Codigo_Producto-->",
+			"det_descripcion": "<!--#4DHTML _V3_escapeString([Detalle_Nota_Credito_Debito]Nombre_Producto)-->",
+			"det_descripcion_larga": "<!--#4DHTML _V3_escapeString([Detalle_Nota_Credito_Debito]des_larga)-->",
+			"det_cantidad": <!--#4DHTML String([Detalle_Nota_Credito_Debito]Cantidad;"&xml")-->,
+			"det_precio": <!--#4DHTML String([Detalle_Nota_Credito_Debito]Precio_Unitario;"&xml")-->,
+			"det_subtotal": <!--#4DHTML String([Detalle_Nota_Credito_Debito]Subtotal;"&xml")-->,
+			"v3_exchange_monto_facturado": <!--#4DHTML String([Detalle_Nota_Credito_Debito]v3_exchange_monto_facturado;"&xml")-->
+		}<!--#4DIF Selected record number([Detalle_Nota_Credito_Debito])<Records in selection([Detalle_Nota_Credito_Debito])-->,<!--#4DENDIF-->
+	<!--#4DENDLOOP-->
+	]
+}

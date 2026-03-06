@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <link rel="stylesheet" href="/out/style.css"/>
+    <title></title>
+</head>
+<body>
+<div class="contenedor" align="center">
+ <div class="cuadro2">
+
+<table class="tabla-headerx" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td valign="top" class="left"><BR/><img src="<!--#4DVAR vUrlImagenLogo-->" width="<!--#4DVAR vAnchoPicture-->" height="<!--#4DVAR vAltoPicture-->" border="0"/></td>
+        <td valign="top" class="right"></td>
+      </tr>
+ </table>
+ <table class="totaleshead">
+    <tr>
+        <t	d><h4 class="totaleshead"><!--#4DVAR v_Tit_Informe--></h4></td>
+    </tr>
+</table>
+<table class="totaleshead">
+     <tr>
+     	<td width="80%">Total registros:</td>
+        <td><h5><!--#4DVAR String(v_TotReg;"###.###.###.##0")--></h5></td>
+     </tr>
+    <tr>
+        <td width="80%">Total neto:</td>
+        <td><!--#4DVAR String(V_NVTotal;"$ ###.###.###.##0")--></td>
+    </tr>
+    <tr>
+        <td width="80%">Total facturado:</td>
+        <td><!--#4DVAR String(V_NVAbono;"$ ###.###.###.##0")--></td>
+    </tr>
+    </tr>
+    <tr>
+        <td width="80%">Total por facturar:</td>
+        <td><!--#4DVAR String(V_NVSaldo;"$ ###.###.###.##0")--></td>
+    </tr>
+</table>
+<table class="tabla-detalley" border="1" cellpadding="1" cellspacing="0">
+	<!--<tr>
+    <td colspan="5" class="tipooc"></td>    
+  </tr>-->
+  <tr>
+    
+   
+  </tr>
+  <tr bgcolor="#000000">
+    <td class="center-h">Numero</td>
+    <td class="center-h">Fecha</td>
+    <td class="center-h">Cliente</td>
+    <td class="center-h">Proyecto</td>
+    <td class="center-h">T.Neto</td>
+    <td class="center-h">T.Facturado</td>
+    <td class="center-h">T. por facturar</td>  
+  </tr>
+ 	 <!--#4DLOOP aFolioNV_-->           
+    <tr>
+        <td class="orden-alfa-9"><!--#4DVAR aFolioNV_{aFolioNV_}--></td>
+        <td class="items-9"><!--#4DVAR aFechaNV_{aFolioNV_}--></td>
+        <td class="items-9"><!--#4DVAR aClienteNV_{aFolioNV_}--></td>
+        <td class="items-9"><!--#4DVAR aRefNVRF_{aFolioNV_}--><!--#4DVAR aEstadoNV_{aFolioNV_}--></td>
+        <td class="nro-items-subtotal"><!--#4DVAR  string(aNetoNV_{aFolioNV_};"$ ###.###.###.##0")--></td>
+        <td class="nro-items-subtotal"><!--#4DVAR String(aFacturadoNV_{aFolioNV_};"$ ###.###.###.##0")--></td>    
+        <td class="nro-items-subtotal"><!--#4DVAR String(aSaldoxFacturarNV_{aFolioNV_};"$ ###.###.###.##0")--></td>        
+    </tr>       
+    <!--#4DENDLOOP--> 
+</table>
+
+<div class="contenedor-footer">
+	<span class="datos-empresa-izq">
+    <!--#4DVAR nom_empresa--> / <!--#4DVAR dir_empresa--> / <a target="_blank" href="<!--#4DVAR sitio_empresa-->"><!--#4DVAR sitio_empresa--></a></span><em></em>
+    <span class="datos-empresa-der">Reporte enviado por UNABASE</span>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+	"rows": [
+<!--#4DLOOP aMotivoValidacionId -->
+		{
+			"id": "<!--#4DHTML aMotivoValidacionId{aMotivoValidacionId}-->",
+			"username": "<!--#4DHTML aMotivoValidacionUsername{aMotivoValidacionId}-->",
+			"text": "<!--#4DHTML _V3_escapeString(aMotivoValidacionText{aMotivoValidacionId})-->",
+			"record": {
+				"id": <!--#4DHTML aMotivoValidacionRecordId{aMotivoValidacionId}-->
+			},
+			"detail": "<!--#4DHTML _V3_escapeString(aMotivoValidacionDetail{aMotivoValidacionId})-->"
+		}<!--#4DIF NOT(aMotivoValidacionId{aMotivoValidacionId} = aMotivoValidacionId{Size of array(aMotivoValidacionId)})-->,<!--#4DENDIF-->
+<!--#4DENDLOOP-->
+	]
+}

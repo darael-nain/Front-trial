@@ -1,0 +1,38 @@
+        <!--#4DIF (show_item) & ((compartir_ocultar_items_cero & (a_subtotal_raw{a_tipo_det}#0)) | Not(compartir_ocultar_items_cero))-->
+        <!--#4DIF (Not((special_item_summary) & (a_especial{a_tipo_det})) & Not(a_items_ocultar_print{a_tipo_det}))-->
+        <!--#4DIF Not([Nota_de_venta]ver_solo_items_usados) | ([Nota_de_venta]ver_solo_items_usados & (a_subtotal_raw{a_tipo_det}#0))-->
+        <tr class="tr-item">
+            <td class="orden-alfa"><!--#4DIF (Not(no_mostrar_nro_item_pdf))--><!--#4DVAR a_orden_alfa_det{a_tipo_det}--><!--#4DENDIF--></td>
+            <td class="items">
+              <!--#4DIF show_code--><!--#4DVAR a_codigo{a_tipo_det}--><!--#4DENDIF-->
+              <!--#4DVAR Uppercase(a_des{a_tipo_det};*)--><!--#4DIF mostrar_tipo_doc & (a_tipo_doc{a_tipo_det}#"")--><br><small style="text-transform: uppercase;">Tipo de documento: <!--#4DTEXT a_tipo_doc{a_tipo_det}--></small><!--#4DENDIF-->
+              <div class="observacion-items"><!--#4DHTML Replace string(Replace string(Replace string(Replace string(_V3_escapeString(a_observ_items{a_tipo_det});"<";"&lt");">";"&gt;");"\\n";"<br>");"\\t";"    ")--></div>
+            </td>
+            <!--#4DIF porcentaje_valor_plataforma#0-->
+            <!--#4DIF ((tipoCambio="PESOS") | (tipoCambio=<>_V3_defaultCurrencyName))-->
+            <td class="nro-items-subtotal"><!--#4DVAR _V3_formatCurrency(Num(a_pu1{a_tipo_det})/(porcentaje_valor_plataforma/100))--></td>
+            <!--#4DENDIF-->
+            <!--#4DIF tipoCambio="DOLARES"-->
+            <td class="nro-items-subtotal"><!--#4DVAR String(Num(a_pu1{a_tipo_det})/(porcentaje_valor_plataforma/100);"US$  ###.###.###.##0,00")--></td>
+            <!--#4DENDIF-->
+            <!--#4DIF tipoCambio="UF"-->
+            <td class="nro-items-subtotal"><!--#4DVAR String(Num(a_pu1{a_tipo_det})/(porcentaje_valor_plataforma/100);"###.###.###.##0,00 UF")--></td>
+            <!--#4DENDIF-->
+            <td class="nro-items-cant"><!--#4DVAR 100-porcentaje_valor_plataforma--> %</td>
+            <!--#4DENDIF-->
+            <!--#4DIF Not(compartir_ocultar_cantidades)-->
+            <td class="nro-items-cant"><!--#4DVAR a_cantidad{a_tipo_det}--><!--#4DIF cantidad_como_hh--> HH<!--#4DENDIF--></td>
+            <!--#4DIF v3_show_unidad-->
+            <td class="nro-items-cant"><!--#4DVAR a_unidad{a_tipo_det}--></td>
+            <!--#4DENDIF-->
+            <!--#4DIF vUsarsegunda_cantidad-->
+            <td class="nro-items-cant"><!--#4DVAR a_cantidad2{a_tipo_det}--></td>
+            <!--#4DENDIF-->
+
+            <td class="nro-items-subtotal" style="white-space: nowrap;padding-left: 5px;"><!--#4DIF (show_total_item)--><!--#4DVAR a_pu1{a_tipo_det}--><!--#4DENDIF--></td>
+            <!--#4DENDIF-->
+            <td class="nro-items-subtotal" style="white-space: nowrap;padding-left: 5px;"><!--#4DIF (show_total_item)--><!--#4DVAR a_subtotal{a_tipo_det}--><!--#4DENDIF--></td>
+        </tr>
+        <!--#4DENDIF-->
+        <!--#4DENDIF-->
+        <!--#4DENDIF-->

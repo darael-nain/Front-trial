@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html>
+	<!--#4DSCRIPT/_V3_proxy-->
+	<!--#4DSCRIPT/_V3_proxy_factPorPagarReporte-->
+	<head>
+		<title>Reporte por pagar</title>
+		<meta charset="utf-8">
+		<script src="/v3/script/sorttable.js"></script>
+		<script type="text/javascript" src="/v3/script/datepicker_es.js?<!--#4DTEXT _V3_version-->"></script>
+
+		<script>
+
+		let activeTab = 'prov';
+		let param = { 
+			text : '',
+			periodo : 'todos'
+		};
+
+		var containerProveedores = $('#container-reportes-proveedor-porpagar > table > tbody');
+		var getProveedoresPorPagar = function(param){
+			$.ajax({
+				url: '/4DACTION/_V3_getProvPorPagarReporte',
+				data: param,
+				dataType: 'json',
+				beforeSend: function(){
+					containerProveedores.find('*').remove();
+					containerProveedores.append('<tr><td colspan="9"><div>Cargando...</div></td></tr>');
+				},
+				success: function(data) {
+					containerProveedores.find('*').remove();
+					var htmlObject;
+					if (data.por_pagar.length > 0) {
+						$.each(data.por_pagar, function(key, item) {
+							htmlObject = $('<tr data-id="'+ item.id + '">' +
+							'<td style="text-align:left;width:250px"><div>'+ item.proveedor + '</div></td>' +
+							'<td style="width:100px;text-align:center"><div class="ver-facturas">'+ item.cantidad +'</div></td>' +
+							'<td style="width:100px;text-align:right"><div style="font-weight:bold;">'+ currency.symbol + " " + $.number(item.monto, currency.decimals, currency.decimals_sep, currency.thousands_sep) +'</div></td>' +
+							'</tr>');
+							containerProveedores.append(htmlObject);
+						});
+					}else{
+						containerProveedores.find('*').remove();
+						containerProveedores.append('<tr><td colspan="9"><div style="text-align:center;padding:10px;color:green;font-weight:bold;font-size:12px;">No se encontro ningún resultado.</div></td></tr>');
+					}
+				},
+				error: function(xhr, text, error) {
+					console.log("error:" + error);
+				}
+			});
+		}
+
+		var containerOCFxr = $('#container-reportes-ocs-porpagar > table > tbody');
+		var getOcsFxrPorPagar = function(param){	
+			$.ajax({
+				url: '/4DACTION/_V3_getGastosPorPagarReporte',
+				data: param,
+				dataType: 'json',
+				beforeSend: function(){
+					containerOCFxr.find('*').remove();
+					containerOCFxr.append('<tr><td colspan="9"><div>Cargando...</div></td></tr>');
+				},
+				success: function(data) {
+					containerOCFxr.find('*').remove();
+
+					$('.current-cliente > .cantidad').text(data.cantidad + " Documentos");
+					$('.current-cliente.total').text(currency.symbol + " " + $.number(data.total, currency.decimals, currency.decimals_sep, currency.thousands_sep) );
+
+					if (data.gastos.length > 0) {
+						var htmlObject;
+						$.each(data.gastos, function(key, item) {
+							htmlObject = $('<tr style="vertical-align:middle;border-bottom:1px solid lightgray">' +
+							'<td style="text-align:left;width:250px"><div><a href="' + '//' + window.location.host + '/4DACTION/wbienvenidos#compras/content.shtml?id=' + item.id + '" target="_blank" style="cursor:pointer;color:gray" title="ver detalle documento"><span style="font-weight:bold;">'+ ((item.tipo == "OC") ? 'ORDEN DE COMPRA' : 'RENDICIÓN')  +'</span> ' + item.numero +'</a></div>' + ((item.tipo != 'FXR') ? '<div style="margin-top:3px;font-size:9px;color:gray;">' + item.tipoDOC + '</div>' : '') +'</td>' + 
+							'<td style="text-align:left;width:250px"><div style="font-weight:bold;">'+ item.cliente + '</div><div style="font-size:10px;margin-top:5px;">'+ item.referencia + '</div></td>' +
+							'<td style="text-align:center;width:250px"><div>'+ item.vencimiento + '</div></td>' +
+							'<td style="width:100px;text-align:center"><div style="'+ ((item.atraso > 0)? 'color:red' : '') +'">'+ item.atraso +' días.</div></td>' +
+							'<td style="width:100px;text-align:right"><div>'+ currency.symbol + " " + $.number(item.total, currency.decimals, currency.decimals_sep, currency.thousands_sep) +'</div></td>' +
+							'<td style="width:100px;text-align:right"><div>'+ currency.symbol + " " + $.number(item.abono, currency.decimals, currency.decimals_sep, currency.thousands_sep) +'</div></td>' +
+							'<td style="width:100px;text-align:right;font-weight:bold;"><div>'+ currency.symbol + " " + $.number(item.saldo, currency.decimals, currency.decimals_sep, currency.thousands_sep) +'</div></td>' +
+							'</tr>');
+							containerOCFxr.append(htmlObject);
+						});
+					}else{
+						containerOCFxr.find('*').remove();
+						containerOCFxr.append('<tr><td colspan="9"><div style="text-align:center;padding:10px;color:green;font-weight:bold;font-size:12px;">No se encontro ningún resultado.</div></td></tr>');
+					}
+				},
+				error: function(xhr, text, error) {
+					console.log("error:" + error);
+				}
+			});
+		}
+
+		var container = $('#container-reportes-facturas-porpagar');
+		var tbodyCobros = container.find('table.facturas-por-cobrar > tbody');
+		var getFacturasPorPagar = function(param){
+			$.ajax({
+				url: '/4DACTION/_V3_getFacturasPorPagarReporte',
+				data: param,
+				dataType: 'json',
+				beforeSend: function(){
+					tbodyCobros.find('*').remove();
+					tbodyCobros.append('<tr><td colspan="9"><div>Cargando...</div></td></tr>');
+				},
+				success: function(data) {
+					tbodyCobros.find('*').remove();
+
+					$('.current-cliente > .cantidad').text(data.cantidad + " Documentos");
+					$('.current-cliente.total').text(currency.symbol + " " + $.number(data.total, currency.decimals, currency.decimals_sep, currency.thousands_sep) );
+
+					if (data.facturas.length > 0) {
+						var htmlObject;
+						$.each(data.facturas, function(key, item) {
+							htmlObject = $('<tr style="vertical-align:middle;border-bottom:1px solid lightgray">' +
+							'<td style="text-align:left;width:250px"><div><a href="' + '//' + window.location.host + '/4DACTION/wbienvenidos#dtc/content.shtml?id=' + item.id + '" target="_blank" style="cursor:pointer;color:gray" title="Ir a factura"><span style="font-weight:bold;">'+ item.tipo_des +'</span> ' +item.numero +'</a></div></td>' +
+							'<td style="text-align:left;width:250px"><div style="font-weight:bold;">'+ item.cliente + '</div><div style="font-size:10px;margin-top:5px;">'+ item.referencia + '</div></td>' +
+							'<td style="text-align:center;width:250px"><div>'+ item.vencimiento + '</div></td>' +
+							'<td style="width:100px;text-align:center"><div style="'+ ((item.atraso > 0)? 'color:red' : '') +'">'+ item.atraso +' días.</div></td>' +
+							'<td style="width:100px;text-align:right"><div>'+ currency.symbol + " " + $.number(item.total, currency.decimals, currency.decimals_sep, currency.thousands_sep) +'</div></td>' +
+							'<td style="width:100px;text-align:right"><div>'+ currency.symbol + " " + $.number(item.abono, currency.decimals, currency.decimals_sep, currency.thousands_sep) +'</div></td>' +
+							'<td style="width:100px;text-align:right;font-weight:bold;"><div>'+ currency.symbol + " " + $.number(item.saldo, currency.decimals, currency.decimals_sep, currency.thousands_sep) +'</div></td>' +
+							'</tr>');
+							tbodyCobros.append(htmlObject);
+						});
+						//$('#search').find('*').prop('disabled', false);
+					}else{
+						tbodyCobros.find('*').remove();
+						tbodyCobros.append('<tr><td colspan="9"><div style="text-align:center;padding:10px;color:green;font-weight:bold;font-size:12px;">No se encontro ningún resultado.</div></td></tr>');
+					}
+
+				},
+				error: function(xhr, text, error) {
+					console.log("error:" + error);
+				}
+			});
+		}
+
+		var containerPagosAgendados = $('#container-reportes-pagos-agendados > table > tbody');
+		var getPagosAgendados = function(param){
+			$.ajax({
+				url: '/4DACTION/_V3_getPagosAgendadosREPORT',
+				data: param,
+				dataType: 'json',
+				beforeSend: function(){
+					containerPagosAgendados.find('*').remove();
+					containerPagosAgendados.append('<tr><td colspan="9"><div>Cargando...</div></td></tr>');
+				},
+				success: function(data) {
+					containerPagosAgendados.find('*').remove();
+					var htmlObject;
+					if (data.pagos_agendados.length > 0) {
+						$.each(data.pagos_agendados, function(key, item) {
+							htmlObject = $('<tr data-id="'+ item.id + '">' +
+							'<td style="text-align:center"><div>'+ item.numero + '</div></td>' +
+							'<td style="text-align:left"><div title="'+ item.proveedor +'">'+ ((item.proveedor.length > 50 ) ? item.proveedor.substring(0, 50) + "..." : item.proveedor) + '</div></td>' +
+							'<td style="text-align:left"><div title="'+ item.referencia +'">'+ ((item.referencia.length > 50 ) ? item.referencia.substring(0, 50) + "..." : item.referencia) + '</div></td>' +
+							'<td style="text-align:center"><div>'+ item.fecha + '</div></td>' +
+							'<td style="text-align:right"><div style="font-weight:bold;">'+ currency.symbol + " " + $.number(item.monto, currency.decimals, currency.decimals_sep, currency.thousands_sep) +'</div></td>' +
+							'</tr>');
+							containerPagosAgendados.append(htmlObject);
+						});
+					}else{
+						containerPagosAgendados.find('*').remove();
+						containerPagosAgendados.append('<tr><td colspan="9"><div style="text-align:center;padding:10px;color:green;font-weight:bold;font-size:12px;">No se encontro ningún resultado.</div></td></tr>');
+					}
+				},
+				error: function(xhr, text, error) {
+					console.log("error:" + error);
+				}
+			});
+		}
+
+		$(document).ready(function() {
+
+			$( "#tabs-rep-pagos" ).tabs();
+
+			$('a[href="#tabs-1"]').click(function() {
+				$('#buscador-text-report').attr('placeholder', 'Buscar por proveedor');
+				activeTab = 'prov';
+				unaBase.interval.clearAll();
+				getProveedoresPorPagar(param);
+			});
+
+			$('a[href="#tabs-2"]').click(function() {
+				$('#buscador-text-report').attr('placeholder', 'Buscar por proveedor, oc, fxr');
+				activeTab = 'gastos';
+				unaBase.interval.clearAll();
+				getOcsFxrPorPagar(param);
+			});
+
+			$('a[href="#tabs-3"]').click(function() {
+				$('#buscador-text-report').attr('placeholder', 'Buscar por proveedor, facturas');
+				activeTab = 'facturas';
+				unaBase.interval.clearAll();
+				getFacturasPorPagar(param);
+			});
+
+			$('a[href="#tabs-4"]').click(function() {
+				$('#buscador-text-report').attr('placeholder', 'Buscar por proveedor, facturas');
+				activeTab = 'agendados';
+				unaBase.interval.clearAll();
+				getPagosAgendados(param);
+			});
+
+			$('a[href="#tabs-1"]').trigger('click');
+
+			// periodos
+			$('#buscador-periodos-report').change(function(){
+				option = $(this).val();
+				if (option == "seleccionar") {
+					let htmlObjectFecha = $('<section>\
+							<h3 style="font-weight:bold;margin:3px;">Seleccionar periodo</h3>\
+							<input placeholder="Desde" readonly required style="border:1px solid lightgray;padding:2px;" type="text" name="seleccionar_desde">\
+							<input placeholder="Hasta" readonly required style="border:1px solid lightgray;padding:2px;" type="text" name="seleccionar_hasta">\
+					</section>');
+
+					htmlObjectFecha.find('input[name="seleccionar_desde"]').datepicker({
+						onSelect: function(event) {
+							htmlObjectFecha.data('response', $(this).val());
+						}
+					});
+
+					htmlObjectFecha.find('input[name="seleccionar_hasta"]').datepicker({
+						onSelect: function(event) {
+							htmlObjectFecha.data('response', $(this).val());
+						}
+					});
+
+					prompt(htmlObjectFecha).done(function(data) {
+						let from = $('input[name="seleccionar_desde"]').val();
+						let to = $('input[name="seleccionar_hasta"]').val();
+						if (from == '') {
+							from = to;
+							$('input[name="seleccionar_desde"]').val(from);
+						}
+						if (to == '') {
+							to = from;
+							$('input[name="seleccionar_desde"]').val(to);
+						}
+						param.periodo = 'rango';
+					  	param.date_from = from;
+					  	param.date_to = to;
+						switch(activeTab) {
+						  case 'prov':
+						    getProveedoresPorPagar(param);
+						    break;
+						  case 'gastos':
+						    getOcsFxrPorPagar(param);
+						    break;
+						  case 'facturas':
+						    getFacturasPorPagar(param);
+						    break;
+						  case 'agendados':
+						    getPagosAgendados(param);
+						    break;
+						}
+						
+					});
+				}else{
+					switch(activeTab) {
+					  case 'prov':
+					    param.periodo = option;
+					    getProveedoresPorPagar(param);
+					    break;
+					  case 'gastos':
+					  	param.periodo = option;
+					    getOcsFxrPorPagar(param);
+					    break;
+					  case 'facturas':
+					  	param.periodo = option;
+					   	getFacturasPorPagar(param);
+					    break;
+					  case 'agendados':
+					  	param.periodo = option;
+					   	getPagosAgendados(param);
+					    break;
+					}
+				}
+			});
+
+			$('#buscador-text-report').on("keyup",function(){
+				param.text = $(this).val();
+				switch(activeTab) {
+				  case 'prov':
+				    getProveedoresPorPagar(param);
+				    break;
+				  case 'gastos':
+				    getOcsFxrPorPagar(param);
+				    break;
+				  case 'facturas':
+				   	getFacturasPorPagar(param);
+				    break;
+				  case 'agendados':
+				   	getPagosAgendados(param);
+				    break;
+				}
+			});
+
+			$('button.export-info-report').button({icons: { primary: 'ui-icon-calculator'}, text: true }).click(function(){
+				let filters = jQuery.param(param);
+				let sid = '';
+				$.each($.cookie(),function(clave,valor) { if (clave == hash && valor.match(/UNABASE/g)) sid = valor; });
+				let url = nodeUrl + '/export-report-porpagar/?download=true&sid=' + encodeURIComponent(sid) + '&' + filters + '&hostname=' + window.location.origin;
+				unaBase.log.save('Ha exportado el listado de reportes por pagar', 'dtc');
+				var download = window.open(url);
+				download.blur();
+				window.focus();
+			});
+
+		});
+		</script>
+		<style type="text/css">
+
+			/* -- ini -- modificado para mostrar boton volver arriba y los filtros abajo, gin, 28-02-18 */
+			li[data-name="exit"]{
+				top: 10px;
+			    left: 0;
+			    position: absolute;
+			}
+
+			/* -- ini -- modificado para mostrar boton volver arriba y los filtros abajo, gin, 28-02-18 */
+			li[data-name="export"]{
+				top: 10px;
+			    left: 70px;
+			    position: absolute;
+			}
+
+			#search{
+			    display: inline-block;
+			    margin: 30px 0 0 -5px;
+			}
+			#search input[name="estado_compras"]{
+			   width: 110px!important;
+			}
+			/* -- fin -- modificado para mostrar boton volver arriba y los filtros abajo, gin, 28-02-18 */
+
+
+			.box-summary-totales{ 
+				display:inline-block;border-right:1px solid lightgray;padding:5px;
+			}
+				.box-summary-totales > div{
+					margin:5px;
+					text-align:center;
+
+				}
+				.box-summary-totales > .name{
+					font-size:10px;
+					color:gray;
+				}
+				.box-summary-totales > .amount{
+					font-size:12px;
+				}
+
+				header.full-height{
+					/*background-color:white!important;*/
+					height:60px;
+				}
+		
+				.panel-resumen > div{
+					border:1px solid lightgray;
+					display:inline-block;
+					width:450px;
+					padding:5px;
+					position:relative;
+					margin:5px;
+					vertical-align:top;
+					border-radius:3px;
+				}
+					.panel-resumen > div > table{
+						border:1px solid transparent;
+						margin-top:30px;
+						width:450px;
+					}
+						.panel-resumen > div > table > thead > tr > th{
+							background-color:black!important;
+						}
+						.panel-resumen > div > table > tbody > tr{
+							border-bottom:1px solid lightgray;
+							text-align:center;
+						}
+						.panel-resumen > div > table > tbody > tr > td{
+							text-align:center;
+						}
+						.panel-resumen > div > table > tbody > tr > td > div{
+							vertical-align: middle;
+						}
+					.panel-resumen > div > h3{
+						float:left;
+					}
+					.panel-resumen > div > button{
+						border:1px solid lightgray;
+						border-radius:3px;
+						float:right;
+					}
+
+				tr:not(.title) > td:nth-of-type(2)::before {
+					content: '' !important;
+				}
+
+				.htitle{
+					padding:5px 0 5px 0;
+					font-weight: bold;
+					text-transform: uppercase;
+					vertical-align: middle;
+				}
+
+				.nota{
+					font-size:10px;
+					color:black;
+					font-style: italic;
+					margin-top:20px;
+				}
+
+				.current-cliente > .cantidad{
+					background-color:gray;
+					color:white;
+					padding:5px;
+					border-radius:10px;
+					text-align: center;
+					display:inline-block;
+					cursor:pointer;
+				}
+				.current-cliente > .name{
+					background-color:gray;
+					color:white;
+					padding:5px;
+					border-radius:10px;
+					text-align: center;
+					display:inline-block;
+					cursor:pointer;
+				}
+				.current-cliente.total{
+					background-color:gray;
+					color:white;
+					padding:5px;
+					border-radius:10px;
+					text-align: center;
+					display:inline-block;
+					cursor:pointer;
+					vertical-align: middle;
+					margin-top:5px;
+					margin-right: 5px;
+				}
+
+				div.options-report-cobros{
+					/*border:1px solid blue;*/
+					position:relative;
+					height:70px;
+				}
+					.box-periodo{
+						position: absolute;
+						right:5px;
+						top:20px;
+					}
+						.box-periodo > div{
+							display:inline-block;
+							border:1px solid lightgray;
+							padding:5px;
+							border-radius:2px;
+							cursor:pointer;
+						}
+							.box-periodo > div > input{
+								margin:2px;
+								cursor:pointer;
+							}
+							.box-periodo > div > label{
+								cursor:pointer;
+								font-weight:bold;
+								color:gray;
+							}
+
+				#buscador-text-report{
+					border: 1px solid lightgray;
+					padding:5px;
+					border-radius:3px;
+					width:200px;
+				}
+				#buscador-periodos-report{
+					border: 1px solid lightgray;
+					border-radius:3px;
+					width:150px;
+					height:25px;
+					padding:5px;
+				}
+				.options{
+					font-weight:bold;
+					text-transform:uppercase;
+					color:red;
+				}
+
+		</style>
+		<script>
+			$(document).ready(function() {
+				$('div.totales').draggable({ containment: "parent" });
+			});
+		</script>
+	</head>
+	<body>
+
+		<div class="options-report-cobros">
+			<div class="box-buscador">
+				<input id="buscador-text-report" type="text" placeholder="Buscar por proveedor">
+				<select id="buscador-periodos-report">
+					<option class="options" value="todos" selected>Por periodo</option>
+					<option class="options" value="todos">Todos</option>
+					<option class="options" value="vencida">Atrasadas</option>
+					<option class="options" value="hoy">Hoy</option>
+					<option class="options" value="manana">Mañana</option>
+					<option class="options" value="esta_semana">Esta semana</option>
+					<option class="options" value="proxima_semana">Próxima semana</option>
+					<option class="options" value="seleccionar">Seleccionar periodo</option>
+				</select>
+			</div>
+			<div class="box-actions" style="text-align:right;margin-top:15px;">
+				<button class="export-info-report">Exportar</button>
+			</div>
+		</div>
+
+		<section id="tabs-rep-pagos">
+
+			<ul class="infinite-tabs">
+				<li><a href="#tabs-1">PROVEEDORES</a></li>
+				<li class="load-ocs" data-id=""><a href="#tabs-2">OC - RENDICIONES</a></li>
+				<li class="load-documentos" data-id=""><a href="#tabs-3">DOC. DE COMPRAS</a></li>
+				<!--<li class="load-programacion" data-id=""><a href="#tabs-4">PAGOS AGENDADOS</a></li>-->
+			</ul>
+
+			<article id="tabs-1">
+				<section class="sheet items" id="container-reportes-proveedor-porpagar" style="height:400px;overflow:auto;">
+					<table class="items facturas-por-cobrar" width="100%">
+						<thead>
+							<tr>
+								<th width="50%" style="background-color:black">Proveedor</th>
+								<th width="20%">Documento</th>
+								<th width="30%">Por pagar</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td colspan="3"><div>Cargando...</div></td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+			</article>
+
+			<article id="tabs-2">
+				<section class="sheet items" id="container-reportes-ocs-porpagar" style="height:400px;overflow:auto;">
+					<div>
+						<h3 style="float:left" class="htitle current-cliente">
+							<span class="cantidad">0</span>
+						</h3>
+						<div style="float:right;" class="htitle current-cliente total">0</div>
+					</div>
+					<table class="items facturas-por-cobrar" width="100%">
+						<thead>
+							<tr>
+								<th width="20%" style="background-color:black">Tipo Documento</th>
+								<th width="20%">Proveedor</th>
+								<th width="10%">Vencimiento</th>
+								<th width="10%">Atraso</th>
+								<th width="10%">Total</th>
+								<th width="10%">Pagado</th>
+								<th width="10%">Por pagar</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td colspan="9"><div>Cargando...</div></td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+			</article>
+
+			<article id="tabs-3">
+				<section class="sheet items" id="container-reportes-facturas-porpagar" style="height:400px;overflow:auto;">
+					<article class="lista-docs">
+						<div>
+							<h3 style="float:left" class="htitle current-cliente">
+								<span class="cantidad">0</span>
+							</h3>
+							<div style="float:right;" class="htitle current-cliente total">0</div>
+						</div>
+						<table class="items facturas-por-cobrar" width="100%">
+							<thead>
+								<tr>
+									<th width="20%" style="background-color:black">Tipo Documento</th>
+									<th width="20%">Proveedor</th>
+									<th width="10%">Vencimiento</th>
+									<th width="10%">Atraso</th>
+									<th width="10%">Total</th>
+									<th width="10%">Pagado</th>
+									<th width="10%">Por pagar</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td colspan="9"><div>Cargando...</div></td>
+								</tr>
+							</tbody>
+						</table>
+					</article>
+				</section>
+			</article>
+
+			<article id="tabs-4" style="display:none;">
+				<section class="sheet items" id="container-reportes-pagos-agendados" style="height:400px;overflow:auto;">
+					<table class="items facturas-por-cobrar" width="100%">
+						<thead>
+							<tr>
+								<th width="10%" style="background-color:black">Número</th>
+								<th width="30%">Proveedor</th>
+								<th width="30%">Referencia</th>
+								<th width="10%">Fecha de pago</th>
+								<th width="20%">Por pagar</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td colspan="9"><div>Cargando...</div></td>
+							</tr>
+						</tbody>
+					</table>
+				</section>
+			</article>
+
+		</section>
+	</body>
+</html>

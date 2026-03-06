@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getAccesoContent-->
+		<title>Acceso al módulo</title>
+		<meta charset="utf-8">
+		<script>
+			var load_access = function(user,modulo){
+				//alert();		
+				$.ajax({
+					url: '/4DACTION/_V3_getAccesoByUser',
+					data: {
+						user: user,
+						modulo:modulo
+					},
+					dataType: 'json',
+					success: function(data) {						
+						var htmlObject;
+						var target = $('#accordion_ > div[data-option="'+user+'"] > ul');
+						var percent = $('#accordion_ > div[data-option="'+user+'"] > p');
+						target.find("*").remove();
+
+						var admin = $('.sheet-pop-access').data('admin');
+						var disabled = "disabled";
+						if (admin) {
+							disabled = "";
+						};										
+
+						if (data.rows.length==0) {							
+							htmlObject = $('<ol style="list-style-type:decimal;font-weight:bold">No existen permisos para este módulo</ol>');
+							target.append(htmlObject);
+						}else{
+							percent.find('span[data-percent="general"] > strong').text(data.general_percent);
+							percent.find('span[data-percent="modulo"] > strong').text(data.modulo_percent);
+							$.each(data.rows, function(key, item) {
+								if (item.estado) {
+									htmlObject = $('<li title="'+item.id+'"><input class="css-size-chk-medium" '+disabled+' value="'+item.id+'" type="checkbox" checked> <strong style="font-weight:bold;text-transform:capitalize;">'+item.modulo+'</strong> - '+item.nombre+'</li>');
+								}else{
+									htmlObject = $('<li><input class="css-size-chk-medium" data-name="'+item.nombre+'" '+disabled+' value="'+item.id+'" type="checkbox"> <strong style="font-weight:bold;text-transform:capitalize;">'+item.modulo+'</strong> - '+item.nombre+' ' + ( (!admin)? '<a class="unlocked" data-name="'+item.nombre+'" data-id="'+item.id+'" href="#">(Solicitar acceso)</a>' : '' ) + '</li>');
+								}															
+								target.append(htmlObject);
+								//$('#accordion_ > div > ul > li > a.unlocked').button({icons: {primary: 'ui-icon-unlocked'},text: false});			
+							});
+						}						
+					}
+				});
+			}
+
+			var set_access = function(id, login, estado){				
+				var modulo =  $('.sheet-pop-access').data('modulo');				
+				$.ajax({
+					url: '/4DACTION/_V3_SetPermisos',
+					data: {
+						"permisos[id]" : id,
+						"permisos[login]": login,
+						"permisos[estado]": estado,
+						"permisos[modulo]": modulo
+					},
+					dataType: 'json',
+					type: 'POST',
+					success: function(data) {
+						if (data.success) {
+							// toastr.success(NOTIFY.get('SUCCESS_SAVE'));
+							$('strong[data-alert="true"]').fadeIn('slow', function() {
+							    $(this).fadeOut(2000);
+							});
+
+							var percent = $('#accordion_ > div[data-option="'+login+'"] > p');
+							percent.find('span[data-percent="general"] > strong').text(data.general_percent);
+							percent.find('span[data-percent="modulo"] > strong').text(data.modulo_percent);
+
+						}else{
+							// toastr.error(NOTIFY.get('ERROR_RECORD_READONLY', 'Error'));
+							$('strong[data-alert="false"]').fadeIn('slow', function() {
+							    $(this).fadeOut(2000);
+							});
+						}						
+					},
+					error: function(data) {
+						// toastr.error(NOTIFY.get('ERROR_INTERNAL'));
+						$('strong[data-alert="false"]').fadeIn('slow', function() {
+						    $(this).fadeOut(2000);
+						});
+					}
+				});
+			}
+
+			var accordion_init = function(admin){
+				if (admin) {
+					$("#accordion_").accordion({					 
+						collapsible: false,
+						active : true,
+						heightStyle: "content",
+						header: "h3"
+					});
+				}else{
+					$("#accordion_").accordion({						
+						heightStyle: "content",
+						header: "h3"
+					});
+				}
+			}
+
+			$(document).ready(function() {
+				$('strong[data-alert]').hide();
+
+				var admin = $('.sheet-pop-access').data('admin');
+				var modulo = $('.sheet-pop-access').data('modulo');
+				var login = $('.sheet-pop-access').data('login');
+
+				accordion_init(admin);
+
+				if (!admin) {
+					load_access(login, modulo);
+				}				
+
+				// Click en usuario para cargar info
+				$("#accordion_ > h3").click(function(){
+					var user = $(this).data('user');
+					load_access(user, modulo);
+				});
+
+				// Activa y desactiva accesso
+				$("#accordion_ div ul").on('click','li input[type="checkbox"]', function(event) {				
+					var id = $(this).val();
+					var login =  $(this).closest('div').data('option');
+					var estado = "false";
+					if ($(this).prop("checked")) {
+						estado = "true";
+					}else{
+						estado = "false";
+					}
+					set_access(id, login, estado);
+					event.stopPropagation();
+				});
+
+				$('article[data-box="solicitud"]').hide();
+				
+				// Solicitar acceso
+				$("#accordion_ > div > ul").on('click','li > a.unlocked', function() {
+					//.ui-dialog > dialog > header > nav.toolbox > ul > li > button
+					var dialog = $('.ui-dialog');
+					var prevTitle = dialog.find('.ui-dialog-title').text();
+
+					var idAccess = $(this).data('id');
+					var nameAccess = $(this).data('name');					
+
+					$('article[data-box="accesos"]').fadeOut('fast', function(){
+						$('article[data-box="solicitud"]').fadeIn('fast', function(){
+
+							$('article[data-box="solicitud"]').data('idaccess', idAccess);
+							$('article[data-box="solicitud"]').data('nameaccess', nameAccess);
+
+							dialog.find('.ui-dialog-title').text('SOLICITUD DE ACCESO');					
+
+							unaBase.toolbox.init();
+							unaBase.toolbox.menu.init({
+								entity: 'Accesos',
+								buttons: ['solicitud_permiso'],
+								data: function(){     
+								  return $('.sheet-pop-access').serializeAnything();            
+								},
+								validate:function(){
+								  return true;
+								}    
+							});
+							
+							// Add button volver									
+							var button = $('<li data-name="back"><button>Volver</button></li>');
+							button.button({
+								icons: {
+									primary: "ui-icon-circle-arrow-w"
+								},
+								text: true
+							}).click(function(){
+								$('article[data-box="solicitud"]').fadeOut('fast', function(){
+									dialog.find('.dialog > header').hide();
+									dialog.find('.ui-dialog-title').text(prevTitle);
+									$('article[data-box="accesos"]').fadeIn('fast');							
+								});
+							});							
+
+							dialog.find('.dialog > header > nav.toolbox > ul').prepend(button);
+
+						});
+					});
+				});
+				
+			});		
+
+		</script>
+
+		<style type="text/css">
+			h1{
+				font-size:bold;
+				font-size:13px;
+				text-align:right;
+			}
+			#accordion_ > h3 {
+				text-transform: capitalize;
+				font-size:12px;
+				font-weight:bold;
+			}
+			#accordion_ > div > p {
+				text-align: right;
+			}
+			#accordion_ > div > p > span{
+				margin:5px;
+				text-transform: capitalize;
+			}
+			#accordion_ > div > ul > li {
+				list-style-type:decimal;
+				margin:10px;
+				font-size:12px;
+				text-transform: capitalize;
+			}
+			#accordion_ > div > ul > li > a {
+				color: gray;
+				font-size:11px;
+			}
+
+			.info{
+				text-align: right;
+				margin:2px;
+			}
+			.info div{
+				font-weight:bold;
+			}
+			.si{color:green}
+			.no{color:red}
+
+			.sheet-pop-access textarea{
+				width: calc(100% - 9px);
+				height:200px;
+				border: 1px solid lightgray;
+				border-radius: 3px;
+			}
+
+			.alert{
+				height:15px;
+				font-size:12px;				
+				position:absolute;
+				right:20px;
+				top:20px;
+				z-index:2;
+				color:white;
+			}
+			.alert > .success{
+				background-color:#51A351;
+				padding:5px;
+				border:1px solid #51A351;
+				border-radius:3px;
+			}
+			.alert > .error{
+				background-color:#BD362f;
+				padding:5px;
+				border:1px solid red;
+				border-radius:3px;
+			}
+			
+		</style>
+
+		<link rel="stylesheet" href="/v3/design/grays.css?<!--#4DTEXT Random-->">
+
+	</head>
+	<body>
+		<section class="sheet-pop-access css-grays" data-emails="<!--4DTEXT adminEmails-->" data-modulo="<!--4DTEXT modulo-->" data-admin="<!--4DTEXT admin-->" data-admin-usernames="<!--4DTEXT adminUsernames-->" data-login="<!--4DTEXT vLogin-->">
+
+		<div class="alert">
+			<strong data-alert="true" class="success">Guardado correctamente!</strong>
+			<strong data-alert="false" class="error">Ocurrió un error, por favor intentar nuevamente!</strong>
+		</div>
+
+		<article data-box="accesos">
+			<h1><!--4DTEXT Records in selection([Prm_Usuario])--> usuarios</h1>				
+			<div id="accordion_">				
+			<!--4DLOOP [Prm_Usuario]-->
+				<h3 data-user="<!--4DTEXT [Prm_Usuario]Login-->"><!--4DTEXT Lowercase([Prm_Usuario]Nombres+" "+[Prm_Usuario]ApePaterno)--></h3>
+				<div data-option="<!--4DTEXT [Prm_Usuario]Login-->">
+					<p>							
+						<span style="display:none" data-percent="general"><label>General: </label><strong>0%</strong></span>
+						<span data-percent="modulo"><label style="display:none"><!--4DTEXT Lowercase(modulo;*)-->: </label><strong></strong></span>
+					</p>
+					<ul></ul>
+				</div>
+			<!--4DENDLOOP-->		 
+			</div>
+		</article>
+
+		<article data-box="solicitud" data-idaccess="" data-nameaccess="">
+			<textarea placeholder="Ingrese un comentario...(obligatorio)"></textarea>
+		</article>
+
+		</section>		
+	</body>
+</html>

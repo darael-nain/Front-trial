@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_proxy_getDocsAsociarBanco-->
+		<title>DOCS disponibles</title>
+		<meta charset="utf-8">
+		<script>
+
+			var globalBalanceMov = <!--#4DTEXT String(globalBalanceMov;"&xml")-->;
+			var defaultMoneda = "<!--#4DTEXT _V3_defaultCurrencyCode-->";
+			var moneda = "<!--#4DTEXT MONEDA-->";
+			var restante = globalBalanceMov;
+			var idempresaSelected = 0;
+
+			function asociarBanco(){
+				var element = $(this);
+				var selectedDOCS = document.querySelectorAll('#containerDocsAsociar > tbody > tr > td > input.select:checked');
+				var docsToAssociate = {};
+				for (let input of selectedDOCS) {
+					var monto = input.closest('tr').querySelector('input[name="montoaconciliar"]').value;
+					var tipoDocs2 = input.closest('tr').dataset.tipodoc2;
+					eval("obj = {'docs-"+ input.value +"' : '" + monto + "'}");
+					$.extend(docsToAssociate, docsToAssociate,obj);
+				}
+				var infoMovimiento = {
+					'id':'<!--#4DTEXT idAUX-->',
+					'tipodocs' : '<!--#4DTEXT tipodocAUX-->',
+					'tipodocs2' : tipoDocs2
+				};
+				var finalobj = $.extend({}, infoMovimiento, docsToAssociate);
+				if (selectedDOCS.length > 0) {
+					$.ajax({
+						'url':'/4DACTION/_V3_setAsociarDocsBanco',
+						data: finalobj,
+						dataType:'json',
+						success: function(data) {
+							if (data.success) {
+								toastr.success("Asociado con éxito.");
+								$('.ui-dialog-content').dialog('close');
+								$('#search [name="q"]').data("manual", true).trigger('keydown');
+								$('#search [name="q"]').data("manual", true).trigger('keyup');
+							}else{
+								toastr.error("No fue posible asociar el documento. Intente nuevamente.");
+							}
+						},
+						error: function(data) {
+							toastr.error(NOTIFY.get('ERROR_INTERNAL'));
+						}
+					});
+				}else{
+					alert("Debes seleccionar al menos un documento.");
+				}
+			}
+
+			function enabledAndDisabled(suma, globalBalanceMov){
+				var objButton = document.querySelector('.css-button-asociar > li > button');
+				if (suma == globalBalanceMov) {
+					objButton.disabled = false;
+					objButton.classList.add("border-on");
+				}else{
+					objButton.disabled = true;
+					objButton.classList.remove("border-on");
+				}
+			}
+
+			function counter(){
+				let listToInsert = document.querySelectorAll('#containerDocsAsociar > tbody > tr > td > input[name="montoaconciliar"]');
+				
+				var suma = 0;
+				for (let input of listToInsert) {
+					var PreEnteredValue = "0";
+					if (currency.code == "PEN") {
+						var PreEnteredValue = input.value.replace(/,/g, ''); // 2,544.00 to 2544.00
+					}else{
+						var PreEnteredValue = input.value.replace(/./g, ''); // 2.544,00 to 2544,00
+						var PreEnteredValue = PreEnteredValue.replace(/,/g, '.'); // 2544,00 to 2544.00
+					}
+					var enteredValue = parseFloat(PreEnteredValue);
+					var toPay = parseFloat(input.closest('tr').dataset.saldo);
+					if (enteredValue > toPay) {
+						toastr.warning("Monto excede al total del documento.");
+						input.value = 0;
+					}else{
+						suma += enteredValue;
+					}
+				}
+
+				document.querySelector(".totales-suma").innerHTML = currency.symbol + " " + $.number(suma, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+				restante = globalBalanceMov - suma;
+				document.querySelector(".total-restante").innerHTML = currency.symbol + " " + $.number(restante, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+				enabledAndDisabled(suma, globalBalanceMov);
+
+				if (suma < globalBalanceMov) {
+					document.querySelector('.totales-suma').classList.add("color-black");
+					document.querySelector('.totales-suma').classList.remove("color-green");
+					document.querySelector('.totales-suma').classList.remove("color-red");
+				}else if (suma == globalBalanceMov) {
+					document.querySelector('.totales-suma').classList.remove("color-black");
+					document.querySelector('.totales-suma').classList.add("color-green");
+					document.querySelector('.totales-suma').classList.remove("color-red");
+				}else{
+					document.querySelector('.totales-suma').classList.remove("color-black");
+					document.querySelector('.totales-suma').classList.remove("color-green");
+					document.querySelector('.totales-suma').classList.add("color-red");
+				}
+
+			}
+
+			function goInsert(event){
+
+				// -- assign value
+				var target = event.currentTarget;
+				var saldo = target.dataset.saldo;
+
+				if (saldo > restante) {
+					target.closest('tr').querySelector('input[name="montoaconciliar"]').value = $.number(restante, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+				}else{
+					target.closest('tr').querySelector('input[name="montoaconciliar"]').value = $.number(saldo, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+				}
+
+				// -- reset check
+				if (!target.checked) {
+					target.closest('tr').querySelector('input[name="montoaconciliar"]').value = 0;
+				}
+
+				counter();
+
+			}
+
+			$(document).ready(function() {
+				var containerdtc = $('#sheet-dtc');
+				unaBase.toolbox.init();
+				var params = {
+					url: function() { return '/4DACTION/_V3_getDocsParaAsociarBanco' },
+					entity: 'Banco',
+					data: {
+						'id' : "<!--#4DTEXT idAUX-->",
+						'tipodoc' : "<!--#4DTEXT tipodocAUX-->"
+					},
+					row: {
+						html: function(i, rows) {
+							return '<tr style="background-color:white;border-bottom:1px solid lightgray;" data-id="' + rows[i].id + '" data-tipodoc2="' + rows[i].tipo_doc + '" data-saldo="' + rows[i].saldo + '" data-idempresa="' + rows[i].id_empresa + '">' +
+								'<td style="text-align:center">' + rows[i].documento + '</td>' +
+								'<td>' + rows[i].folio + '</td>' +
+								'<td class="left">' + rows[i].cliente + '</td>' +
+								'<td class="left">' + rows[i].referencia + '</td>' +
+
+								'<td style="text-align:right;">' + currency.symbol + " " + $.number(rows[i].saldo, currency.decimals, currency.decimals_sep, currency.thousands_sep) + '</td>' +
+
+								'<td style="text-align:right;"><input name="montoaconciliar" type="text" value="'+ $.number(0, currency.decimals, currency.decimals_sep, currency.thousands_sep) +'" style="background-color:yellow;padding:5px;text-align:right;width:60px;border:1px solid lightgray;" onmouseout="counter()" onblur="counter()"/></td>' +
+
+								'<td><input onclick="goInsert(event);" data-saldo="'+ rows[i].saldo + '" style="width:20px!important;height:20px!important" class="select" name="ocselect[id]'+ rows[i].id +'" value="'+ rows[i].id +'" type="checkbox"></td>' +
+
+							'</tr>'
+						}
+					},
+					inflection: {
+						singular: 'negocio',
+						plural: 'negocios',
+						none: 'ningún'
+					},
+					filters: [
+						//{ name: 'tipo_doc', type: 'autocomplete', caption: 'Tipo Doc.', dataSource: 'getTiposDocDeCompras' }
+
+						{ name: 'otros_filtros', type: 'autocomplete', caption: 'Otros filtros', dataObject: [
+							{ id: "docs_otros_montos", text: 'Mostrar Docs. con otros montos'},
+							{ id: "incluir_oc", text: 'Mostrar órdenes de compra'}
+						]}
+
+					]
+				};
+
+				unaBase.toolbox.search.init(params);
+
+				unaBase.toolbox.menu.init({
+					entity: 'banco',
+					buttons: ["asociar_banco_a_docs"]
+				});
+
+				$('[data-name="asociar_banco_a_docs"]').closest('ul').addClass('css-button-asociar');
+				document.querySelector('.css-button-asociar > li > button').disabled = true;
+
+				if (moneda != "" && moneda != defaultMoneda) {
+
+					document.querySelector('.global-balance').innerHTML = moneda + " " + $.number(globalBalanceMov, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+					document.querySelector('.totales-suma').innerHTML = moneda + " " + $.number(0, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+					document.querySelector('.total-restante').innerHTML = moneda + " " + $.number(0, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+				}else{
+
+					document.querySelector('.global-balance').innerHTML = currency.symbol + " " + $.number(globalBalanceMov, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+					document.querySelector('.totales-suma').innerHTML = currency.symbol + " " + $.number(0, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+					document.querySelector('.total-restante').innerHTML = currency.symbol + " " + $.number(0, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+				}
+
+				//$('.numeric.currency input').number(true, currency.decimals, currency.decimals_sep, currency.thousands_sep);
+
+				// $("#tabs-docs-conciliar").tabs();
+
+			});
+		</script>
+		<style>
+			.css-button-asociar{
+				width:780px;
+				text-align:right;
+			}
+			.border-on{
+				border:1px solid green!important;
+				color:green;
+				font-weight:bold;
+			}
+			.color-green{
+				color:green;
+			}
+			.color-red{
+				color:red;
+			}
+			.color-black{
+				color:black;
+			}
+
+			.box-detail-mov{
+				border:1px solid lightgray;
+				padding:5px;
+				position:absolute;
+				top:58px;
+				right:100px;
+				font-size:15px;
+				text-align:left;
+			}
+				.box-detail-mov h5{
+					font-size:10px;
+					font-weight:bold;
+					color:gray;
+				}
+				.box-detail-mov > div{
+					margin-top:5px;
+					font-weight:bold;
+					text-align:right;
+				}
+
+
+			.total-restante{
+				color: gray;
+				text-align:left;
+				font-size:10px;
+			}
+		</style>
+	</head>
+	<body>
+		<section id="docs-por-asociar" class="sheet">
+
+			<div class="box-detail-mov">
+				<h5><!--#4DHTML _V3_escapeString(referenciaMovimiento)--></h5>
+				<div style="text-align:left;">
+					<div><span class="global-balance"></span> = <span class="totales-suma"></span></div>
+					<div class="total-restante"></div>
+				</div>
+			</div>
+
+			<!--<section id="tabs-docs-conciliar">
+				<ul class="infinite-tabs">
+					<li><a href="#tabs-1">Facturas de venta</a></li>
+					<li class="load-staff" data-id="<!- -#4DTEXT id- ->"><a href="#tabs-2">Ingresos</a></li>
+				</ul>
+				<article id="tabs-1"></article>
+				<article id="tabs-2"></article>
+			</section>-->
+
+			<table class="results" id="containerDocsAsociar">
+				<thead>
+					<tr>
+						<th width="10%">Documento</th>
+						<th width="10%">Número</th>
+						<th width="30%"><!--#4DIF tipodocAUX="DTC"-->Proveedor<!--#4DELSE-->Cliente<!--#4DENDIF--></th>
+						<th width="20%">Referencia</th>
+						<th width="20%">Por pagar</th>
+						<th width="20%">Monto a conciliar</th>
+						<th width="10%">Seleccionar</th>
+					</tr>
+				</thead>
+				<tbody></tbody>
+				<tfoot></tfoot>
+			</table>
+		</section>
+	</body>
+</html>

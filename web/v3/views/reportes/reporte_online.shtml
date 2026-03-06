@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!--#4DSCRIPT/_V3_get_reportdata_online-->
+		<title>Reporte Online</title>
+		<meta charset="utf-8">		
+		<script language="JavaScript"> 
+		$(document).ready(function() {
+
+				xFacturar = <!--#4DTEXT xfacturar-->;
+				$("#xFacturar").html(xFacturar).number(true, 0, ',', '.');
+
+				xPagar = <!--#4DTEXT xpagar-->;
+				$("#xPagar").html(xPagar).number(true, 0, ',', '.');
+
+				xCobrar = <!--#4DTEXT xcobrar-->;
+				$("#xCobrar").html(xCobrar).number(true, 0, ',', '.');
+
+				xJustificar = <!--#4DTEXT xjustificar-->;
+				$("#xJustificar").html(xJustificar).number(true, 0, ',', '.');
+
+				xGastar = <!--#4DTEXT xgastar-->;
+				$("#xGastar").html(xGastar).number(true, 0, ',', '.');
+
+				Entradas = <!--#4DTEXT entradas-->;
+				$("#Entradas").html(Entradas).number(true, 0, ',', '.');
+
+				Salidas = <!--#4DTEXT salidas-->;
+				$("#Salidas").html(Salidas).number(true, 0, ',', '.');
+
+				Numero = <!--#4DTEXT numonline-->;
+				$("#Numero").html(Numero).number(true, 0, ',', '.');
+
+				unaBase.toolbox.init();				
+				unaBase.toolbox.menu.init({
+					entity: 'Reporte_online',
+					buttons: [ 'exit' ]
+				});
+			});
+  		</script>
+		<style type="text/css">
+			.tg  {border-collapse:collapse;border-spacing:0;border-color:#bbb;border-width:1px;border-style:solid;}
+			.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;border-color:#bbb;color:#594F4F;background-color:#E0FFEB;}
+			.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:0px;overflow:hidden;word-break:normal;border-color:#bbb;color:#493F3F;background-color:#9DE0AD;}
+			.tg .tg-ugh9{background-color:#C2FFD6}
+			.tg .tg-031e{font-weight:bold}
+	</style>
+	</head>
+	<body>
+		<table class="default tg">
+		  <tr>
+		    <td class="tg-031e">xFacturar</td>
+		    <td class="tg-ugh9">$ <span id="xFacturar">0</span></td>
+		    <td class="tg-031e">xPagar</th>
+		    <td class="tg-ugh9">$ <span id="xPagar">0</span></td>
+		    <td class="tg-031e"></td>
+		    <td class="tg-ugh9"></td>
+		  </tr>
+		  <tr>
+		    <td class="tg-031e">xCobrar</td>
+		    <td class="tg-ugh9">$ <span id="xCobrar">0</span></td>
+		    <td class="tg-031e">xJustificar</td>
+		    <td class="tg-ugh9">$ <span id="xJustificar">0</span></td>
+		    <td class="tg-031e"></td>
+		    <td class="tg-ugh9"></td>
+		  </tr>
+		  <tr>
+		    <td class="tg-031e"></td>
+		    <td class="tg-ugh9"></td>
+		    <td class="tg-031e">xGastar</td>
+		    <td class="tg-ugh9">$ <span id="xGastar">0</span></td>
+		    <td class="tg-031e"></td>
+		    <td class="tg-ugh9"></td>
+		  </tr>
+		  <tr>
+		    <td class="tg-031e">Entradas</td>
+		    <td class="tg-ugh9">$ <span id="Entradas">0</span></td>
+		    <td class="tg-031e">Salidas</td>
+		    <td class="tg-ugh9">$ <span id="Salidas">0</span></td>
+		    <td class="tg-031e">Numero</td>
+		    <td class="tg-ugh9">$ <span id="Numero">0</span></td>
+		  </tr>
+		</table>
+	</body>
+</html>
