@@ -3,21 +3,10 @@
   "rewrites": [
     { "source": "/home", "destination": "/bienvenida.shtml" },
     { "source": "/app/home", "destination": "/bienvenida.shtml" },
-    { "source": "/app/home/", "destination": "/bienvenida.shtml" },
-    { "source": "/app/home/index.html", "destination": "/bienvenida.shtml" },
+    { "source": "/app/home/:path*", "destination": "/:path*" },
     { "source": "/node/:path*", "destination": "https://dev5.unabase.com/node/:path*" }
   ],
   "redirects": [
     { "source": "/4DACTION/wbienvenidos", "destination": "/home", "permanent": false }
-  ],
-  "headers": [
-    {
-      "source": "/home",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, max-age=0" },
-        { "key": "Pragma", "value": "no-cache" },
-        { "key": "Expires", "value": "0" }
-      ]
-    }
   ]
 }
